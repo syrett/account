@@ -1,0 +1,32 @@
+html,
+body {
+    height: 100%;
+}
+
+.page-container {
+    margin: 0 auto -60px;
+    padding: 60px 0;
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+}
+
+.content {
+    background-color: #eee;
+    border-radius: 6px;
+}
+
+.page-footer {
+    height: 60px;
+    background-color: #f5f5f5;
+}
+
+.copyright {
+    margin: 20px 0;
+}
+
+.form-login {
+    margin: 0 auto;
+    padding: 15px;
+    max-width: 590px;
+}
