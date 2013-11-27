@@ -7,8 +7,8 @@
 // CWebApplication properties can be configured here.
 return array(
     'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
-    'name'=>'My Web Application',
-    'theme'=>'classic',
+    'name'=>'Wojia',
+    'theme'=>'account',
     // preloading 'log' component
     'preload'=>array('log'),
 
@@ -25,7 +25,7 @@ return array(
             'class'=>'system.gii.GiiModule',
             'password'=>'development',
             // If removed, Gii defaults to localhost only. Edit carefully to taste.
-            'ipFilters'=>array('127.0.0.1','::1','192.168.72.28','192.168.1.2'),
+            'ipFilters'=>array('127.0.0.1','::1','192.168.72.28'),
         ),
 
     ),
@@ -48,6 +48,7 @@ return array(
         ),
         */
         // uncomment the following to use a MySQL database
+
         'db'=>array(
             'connectionString' => 'mysql:host=localhost;dbname=testdrive',
             'emulatePrepare' => true,
@@ -55,6 +56,7 @@ return array(
             'password' => 'lrc207107',
             'charset' => 'utf8',
         ),
+
         'errorHandler'=>array(
             // use 'site/error' action to display errors
             'errorAction'=>'site/error',
