@@ -1,4 +1,5 @@
 assets/*
 protected/runtime/*
+protected/config/
 themes/classic/views/
 /framework/*
