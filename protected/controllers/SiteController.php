@@ -106,4 +106,19 @@ class SiteController extends Controller
 		Yii::app()->user->logout();
 		$this->redirect(Yii::app()->homeUrl);
 	}
+
+    /*
+     *  ajax test
+    */
+    public function actionAppendix()
+    {
+        if(Yii::app()->request->isPostRequest)
+        {
+            $data = '<select id="appdendix" ><option></option></select>';
+            return $data;
+
+        }
+        else
+            throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
+    }
 }
