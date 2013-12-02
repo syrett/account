@@ -11,35 +11,10 @@ $this->pageTitle = Yii::app()->name;
     $(document).ready(function () {
         //your code here
         $('#dp1').datepicker();
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#test').select2({
-                minimumInputLength: 3,
-                placeholder: 'Search',
-                ajax: {
-                    url: "http://www.weighttraining.com/sm/search",
-                    dataType: 'jsonp',
-                    quietMillis: 100,
-                    data: function(term, page) {
-                        return {
-                            types: ["exercise"],
-                            limit: -1,
-                            term: term
-                        };
-                    },
-                    results: function(data, page ) {
-                        return { results: data.results.exercise }
-                    }
-                },
-                formatResult: function(exercise) {
-                    return "<div class='select2-user-result'>" + exercise.term + "</div>";
-                },
-                formatSelection: function(exercise) {
-                    return exercise.term;
-                },
-                initSelection : function (element, callback) {
-                    var elementText = $(element).attr('data-init-text');
-                    callback({"term":elementText});
-                }
+                placeholder: "Select a State",
+                allowClear: true
             });
         });
     });
@@ -73,26 +48,30 @@ $this->pageTitle = Yii::app()->name;
                     <div class="col-md-1">
                         <?php
                         $this->widget('Select2', array(
-                        'name' => '',
-                        'value' => 2,
-                        'data' => array( 1=> '借', 2=> '贷'),
+                            'name' => '',
+                            'value' => 2,
+                            'data' => array(1 => '借', 2 => '贷'),
                         ));
                         ?>
                     </div>
                     <div class="col-md-3">
+                        <div>
+                                <?php
+                                $data = array();
+                                for ($i = 1; $i < 200; $i++) {
+                                    echo '<select id="test"><option value="'. $i.' " >提取未到期责任准备金<!--tqwd--></option></select>';
+                                }
+                                ?>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
                         <?php
+
                         $data = array();
-                        for($i=1; $i<200; $i++){
-                            $data += array( $i => $i. '提取未到期责任准备金 '. $i);
+                        for ($i = 1; $i < 200; $i++) {
+                            echo '<select id="test"><option value="'. $i.' " >提取未到期责任准备金<!--tqwd--></option></select>';
                         }
-                        $this->widget('Select2', array(
-                            'name' => 'inputName',
-                            'value' => 2,
-                            'data' => $data,
-                            'htmlOptions' => array('title'=>$i.'存放中央银行款项', 'class' => 'v-subject'),
-                        ));
                         ?></div>
-                    <div class="col-md-1">.col-md-4</div>
                     <div class="col-md-4">
                         <button type="button" class="close" aria-hidden="true">&times;</button>
                     </div>
