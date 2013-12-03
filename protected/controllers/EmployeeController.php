@@ -4,7 +4,10 @@ class EmployeeController extends Controller
 {
 	public function actionIndex()
 	{
-		$this->render('index');
+		$dataProvider=new CActiveDataProvider('Employee');
+		$this->render('index',array(
+			'dataProvider'=>$dataProvider,
+		));
 	}
 
 	// Uncomment the following methods and override them if needed
