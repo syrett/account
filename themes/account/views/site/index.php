@@ -11,12 +11,6 @@ $this->pageTitle = Yii::app()->name;
     $(document).ready(function () {
         //your code here
         $('#dp1').datepicker();
-        $(document).ready(function () {
-            $('#test').select2({
-                placeholder: "Select a State",
-                allowClear: true
-            });
-        });
     });
 </script>
 <div class="panel panel-default voucher">
@@ -26,7 +20,7 @@ $this->pageTitle = Yii::app()->name;
         <div class="row">
             <div class="col-md-4"><h5>凭证号: *****</h5></div>
             <div class="col-md-4"><h5>日期:
-                    <input type="text" class="span2" value="<?php echo date("m/d/Y"); ?>" id="dp1" readonly>
+                    <input type="text" class="span2" value="<?php echo date("m/d/Y"); ?>" id="dp1" readonly />
                 </h5></div>
             <div class="col-md-4"><h5></h5></div>
         </div>
@@ -49,30 +43,41 @@ $this->pageTitle = Yii::app()->name;
                         <?php
                         $this->widget('Select2', array(
                             'name' => '',
-                            'value' => 2,
+                            'id' => 's1',
+                            'value' => 1,
                             'data' => array(1 => '借', 2 => '贷'),
                         ));
                         ?>
                     </div>
                     <div class="col-md-3">
-                        <div>
-                                <?php
-                                $data = array();
-                                for ($i = 1; $i < 200; $i++) {
-                                    echo '<select id="test"><option value="'. $i.' " >提取未到期责任准备金<!--tqwd--></option></select>';
-                                }
-                                ?>
-                        </div>
-                    </div>
-                    <div class="col-md-1">
                         <?php
+                        $this->widget('Select2', array(
+                            'name' => '',
+                            'id' => 's1',
+                            'value' => 1,
+                            'data' => array(1 => '请选择'),
+                        ));
+                        ?>
+                        </div>
+                    <div class="col-md-1">.col-md-1
 
-                        $data = array();
-                        for ($i = 1; $i < 200; $i++) {
-                            echo '<select id="test"><option value="'. $i.' " >提取未到期责任准备金<!--tqwd--></option></select>';
-                        }
-                        ?></div>
+                        </div>
                     <div class="col-md-4">
+
+                        <script language="javascript">
+                            $("#").change(function(){
+                                url = <? echo '"'. Yii::app()->createAbsoluteUrl("site/productlist"). '"'?>;
+                                jQuery.ajax({
+                                    'url':url,
+                                    'type': "POST",
+                                    'cache':false,
+                                    'success':function(html){
+                                        jQuery("#quote-of-the-day").html(html)
+                                    }
+                                });
+                            });
+                        </script>
+
                         <button type="button" class="close" aria-hidden="true">&times;</button>
                     </div>
                 </div>
