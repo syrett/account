@@ -148,6 +148,75 @@ LOCK TABLES `project` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `subjects`
+--
+
+DROP TABLE IF EXISTS `subjects`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `subjects` (
+  `id` int(11) NOT NULL,
+  `sbj_name` varchar(20) DEFAULT NULL,
+  `sbj_cat` varchar(100) DEFAULT NULL,
+  `sub_table` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `subjects`
+--
+
+LOCK TABLES `subjects` WRITE;
+/*!40000 ALTER TABLE `subjects` DISABLE KEYS */;
+/*!40000 ALTER TABLE `subjects` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `transition`
+--
+
+DROP TABLE IF EXISTS `transition`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `transition` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `entry_num_prefix` varchar(10) DEFAULT NULL,
+  `entry_num` int(11) NOT NULL,
+  `entry_date` datetime NOT NULL,
+  `entry_memo` varchar(100) DEFAULT NULL,
+  `entry_transaction` tinyint(1) NOT NULL,
+  `entry_subject` int(11) NOT NULL,
+  `entry_amount` int(11) NOT NULL,
+  `entry_appendix` varchar(100) DEFAULT NULL,
+  `entry_editor` int(11) NOT NULL,
+  `entry_reviewer` int(11) NOT NULL,
+  `entry_deleted` tinyint(1) NOT NULL DEFAULT '0',
+  `entry_reviewed` tinyint(1) NOT NULL DEFAULT '0',
+  `entry_posting` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `entry_closing` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `subject_id_idx` (`entry_subject`),
+  KEY `re_employee_id_idx` (`entry_reviewer`),
+  KEY `ed_employee_id_idx` (`entry_editor`),
+  CONSTRAINT `subject_id` FOREIGN KEY (`entry_subject`) REFERENCES `subjects` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `ed_employee_id` FOREIGN KEY (`entry_editor`) REFERENCES `employee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `re_employee_id` FOREIGN KEY (`entry_reviewer`) REFERENCES `employee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `transition`
+--
+
+LOCK TABLES `transition` WRITE;
+/*!40000 ALTER TABLE `transition` DISABLE KEYS */;
+/*!40000 ALTER TABLE `transition` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `users`
 --
 
@@ -213,4 +282,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-11-25 21:18:06
+-- Dump completed on 2013-12-04 12:02:53
