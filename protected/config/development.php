@@ -50,7 +50,7 @@ return array(
         // uncomment the following to use a MySQL database
 
         'db'=>array(
-            'connectionString' => 'mysql:host=localhost;dbname=testdrive',
+            'connectionString' => 'mysql:host=localhost;dbname=account',
             'emulatePrepare' => true,
             'username' => 'jason',
             'password' => 'lrc207107',
@@ -76,6 +76,14 @@ return array(
                 */
             ),
         ),
+        // custom CGridView widget style
+        'widgetFactory'=>array(
+            'widgets'=>array(
+                'CGridView'=>array(
+                    'cssFile' => '/css/gridview.css',
+                ),
+            )
+        )
     ),
 
     // application-level parameters that can be accessed
