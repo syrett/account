@@ -1,18 +1,22 @@
-<?php
-/* @var $this SubjectsController */
-/* @var $model Subjects */
-
-$this->breadcrumbs=array(
-	'Subjects'=>array('index'),
-	'Manage',
-);
-
-$this->menu=array(
-	array('label'=>'List Subjects', 'url'=>array('index')),
-	array('label'=>'Create Subjects', 'url'=>array('create')),
-);
-
-Yii::app()->clientScript->registerScript('search', "
+<div class="panel panel-default voucher">
+    <!-- Default panel contents -->
+    <div class="panel-heading">科目表管理</div>
+    <div class="panel-body v-title">
+        <div class="row">
+            <?php
+            /* @var $this SubjectsController */
+            /* @var $model Subjects */
+            $this->beginWidget('zii.widgets.CPortlet', array(
+                'title'=>'',
+            ));
+            $this->widget('zii.widgets.CMenu', array(
+                'items'=>array(
+                    array('label' => '添加科目', 'url' => array('create'),),
+                ),
+                'htmlOptions'=>array('class'=>'operations', 'style'=>'list-style: none',),
+            ));
+            $this->endWidget();
+            Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
 	$('.search-form').toggle();
 	return false;
@@ -24,33 +28,31 @@ $('.search-form form').submit(function(){
 	return false;
 });
 ");
-?>
+            ?>
+            <p>
+                你可以通过比较符号 (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
+                或者 <b>=</b>) 来进行搜索
+            </p>
 
-<h1>Manage Subjects</h1>
+            <!-- search-form -->
 
-<p>
-You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
-or <b>=</b>) at the beginning of each of your search values to specify how the comparison should be done.
-</p>
+            <?php $this->widget('zii.widgets.grid.CGridView', array(
+                'id' => 'subjects-grid',
+                'dataProvider' => $model->search(),
+                'filter' => $model,
+                'columns' => array(
+                    'sbj_number',
+                    'sbj_name',
+                    'sbj_cat',
+                    'sub_table',
+                    array(
+                        'class' => 'CButtonColumn',
+                        'template' => '{update} {delete}',
+                    ),
+                ),
+                'itemsCssClass' => 'table',
+            )); ?>
 
-<?php echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
-<div class="search-form" style="display:none">
-<?php $this->renderPartial('_search',array(
-	'model'=>$model,
-)); ?>
-</div><!-- search-form -->
-
-<?php $this->widget('zii.widgets.grid.CGridView', array(
-	'id'=>'subjects-grid',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
-	'columns'=>array(
-		'id',
-		'sbj_name',
-		'sbj_cat',
-		'sub_table',
-		array(
-			'class'=>'CButtonColumn',
-		),
-	),
-)); ?>
+        </div>
+    </div>
+</div>

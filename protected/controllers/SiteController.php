@@ -108,15 +108,32 @@ class SiteController extends Controller
 	}
 
     /*
-     *  ajax test
+     *  return corresponding appendix
     */
     public function actionAppendix()
     {
+        $subject = $_POST["Name"];
         if(Yii::app()->request->isPostRequest)
         {
-            $data = '<select id="appdendix" ><option></option></select>';
-            return $data;
+            switch($subject){
+                case 1122 :     // 应付账款，列出供应商
+                    $html = '<option value=*** >***</option>';
+                    break;
+                case 2202 :     // 应收账款，列出客户列表
+                    $html = '<option value=*** >***</option>';
+                    break;
+                default :
+                    if(in_array($subject, array(1, 2))){  //全部 费用 类科目
+                        $html = '<option value=*** >'.$subject.'</option>';
+                    }
+                    if(in_array($subject, array(1, 2))){  //全部 收入 类科目
+                        $html = '<option value=*** >'.$subject.'</option>';
+                    }
+                    break;
 
+            }
+            $data = '<select id="appdendix1" >'. $html. '</select>';
+            echo $data;
         }
         else
             throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');

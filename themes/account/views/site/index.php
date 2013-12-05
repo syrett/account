@@ -51,11 +51,16 @@ $this->pageTitle = Yii::app()->name;
                     </div>
                     <div class="col-md-3">
                         <?php
+                        $data = array();
+                        for ($i = 1; $i < 200; $i++) {
+                            $data += array($i => $i . '提取未到期责任准备金 ' . $i);
+                        }
                         $this->widget('Select2', array(
-                            'name' => '',
-                            'id' => 's1',
-                            'value' => 1,
-                            'data' => array(1 => '请选择'),
+                            'name' => 'subject',
+                            'id' => 'subject',
+                            'value' => 2,
+                            'data' => $data,
+                            'htmlOptions' => array('title' => $i . '存放中央银行款项', 'class' => 'v-subject'),
                         ));
                         ?>
                         </div>
@@ -63,16 +68,17 @@ $this->pageTitle = Yii::app()->name;
 
                         </div>
                     <div class="col-md-4">
-
+                        <span id="appendix" ></span>
                         <script language="javascript">
-                            $("#").change(function(){
-                                url = <? echo '"'. Yii::app()->createAbsoluteUrl("site/productlist"). '"'?>;
+                            $("#subject").change(function(){
+                                url = <? echo '"'. Yii::app()->createAbsoluteUrl("site/Appendix"). '"'?>;
                                 jQuery.ajax({
                                     'url':url,
                                     'type': "POST",
-                                    'cache':false,
+                                    'datatype': "json",
+                                    'data' : {"Name": $("#subject").val()},
                                     'success':function(html){
-                                        jQuery("#quote-of-the-day").html(html)
+                                        jQuery("#appendix").html(html)
                                     }
                                 });
                             });

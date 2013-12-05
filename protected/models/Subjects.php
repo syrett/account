@@ -5,6 +5,7 @@
  *
  * The followings are the available columns in table 'subjects':
  * @property integer $id
+ * @property integer $sbj_number
  * @property string $sbj_name
  * @property string $sbj_cat
  * @property string $sub_table
@@ -27,14 +28,13 @@ class Subjects extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id', 'required'),
-			array('id', 'numerical', 'integerOnly'=>true),
+			array('sbj_number', 'numerical', 'integerOnly'=>true),
 			array('sbj_name', 'length', 'max'=>20),
 			array('sbj_cat', 'length', 'max'=>100),
 			array('sub_table', 'length', 'max'=>200),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, sbj_name, sbj_cat, sub_table', 'safe', 'on'=>'search'),
+			array('id, sbj_number, sbj_name, sbj_cat, sub_table', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -56,6 +56,7 @@ class Subjects extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
+			'sbj_number' => 'Sbj Number',
 			'sbj_name' => 'Sbj Name',
 			'sbj_cat' => 'Sbj Cat',
 			'sub_table' => 'Sub Table',
@@ -81,12 +82,20 @@ class Subjects extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
+		$criteria->compare('sbj_number',$this->sbj_number);
 		$criteria->compare('sbj_name',$this->sbj_name,true);
 		$criteria->compare('sbj_cat',$this->sbj_cat,true);
 		$criteria->compare('sub_table',$this->sub_table,true);
+//        $criteria->order = 'convert(sbj_name using gbk)';
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+            'sort'=>array('attributes'=>array(  //设置中文拼音排序
+                'sbj_number'=>array('asc'=>'convert(t.sbj_number using gbk)','desc'=>'convert(t.sbj_number using gbk) desc'),
+                'sbj_name'=>array('asc'=>'convert(t.sbj_name using gbk)','desc'=>'convert(t.sbj_name using gbk) desc'),
+                'sbj_cat'=>array('asc'=>'convert(t.sbj_cat using gbk)','desc'=>'convert(t.sbj_cat using gbk) desc'),
+                'sbj_table'=>array('asc'=>'convert(t.sbj_table using gbk)','desc'=>'convert(t.sbj_table using gbk) desc'),
+            )),
 		));
 	}
 

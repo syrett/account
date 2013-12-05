@@ -22,6 +22,7 @@ $this->menu=array(
 	'data'=>$model,
 	'attributes'=>array(
 		'id',
+		'sbj_number',
 		'sbj_name',
 		'sbj_cat',
 		'sub_table',
