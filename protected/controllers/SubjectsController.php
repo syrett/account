@@ -128,6 +128,29 @@ class SubjectsController extends Controller
 		));
 	}
 
+    /**
+     * 列出一级科目
+     */
+    public function actionListFirst()
+    {
+      //todo
+      $sql = "select * from Subjects where sbj_number < 10000"; // 一级科目的为1001～9999
+      $First = Subjects::model()->findAllBySql($sql);
+      $arr = array();
+      foreach($First as $row) {
+        array_push($arr, $row['sbj_number'], $row['sbj_name']);
+      }
+      return json_encode($arr);
+    }
+
+    /*
+     * 列出二级,三级科目
+     */
+    public function actionListSub($sbj_number)
+    {
+      //todo
+    }
+
 	/**
 	 * Manages all models.
 	 */

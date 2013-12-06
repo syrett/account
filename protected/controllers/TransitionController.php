@@ -56,12 +56,19 @@ class TransitionController extends Controller
 		));
 	}
 
+
+
+    public function actionAppendix()
+    {
+      
+    }
 	/**
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
 	public function actionCreate()
 	{
+
 		$model=new Transition;
 
 		// Uncomment the following line if AJAX validation is needed
@@ -122,10 +129,12 @@ class TransitionController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Transition');
+
+
+        		$dataProvider=new CActiveDataProvider('Transition');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
-		));
+            ));
 	}
 
 	/**
