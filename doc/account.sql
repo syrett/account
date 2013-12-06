@@ -1,108 +1,90 @@
-CREATE DATABASE  IF NOT EXISTS `account` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `account`;
--- MySQL dump 10.13  Distrib 5.6.13, for osx10.6 (i386)
+-- phpMyAdmin SQL Dump
+-- version 3.3.2deb1ubuntu1
+-- http://www.phpmyadmin.net
 --
--- Host: 127.0.0.1    Database: account
--- ------------------------------------------------------
--- Server version	5.6.13
+-- 主机: localhost
+-- 生成日期: 2013 年 12 月 06 日 21:10
+-- 服务器版本: 5.1.66
+-- PHP 版本: 5.3.2-1ubuntu4.18
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `client`
+-- 数据库: `account`
 --
 
-DROP TABLE IF EXISTS `client`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `client` (
-  `id` int(11) NOT NULL,
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `client`
+--
+
+CREATE TABLE IF NOT EXISTS `client` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `vat` varchar(45) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
   `add` varchar(100) DEFAULT NULL,
   `memo` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
--- Dumping data for table `client`
+-- 转存表中的数据 `client`
 --
 
-LOCK TABLES `client` WRITE;
-/*!40000 ALTER TABLE `client` DISABLE KEYS */;
-/*!40000 ALTER TABLE `client` ENABLE KEYS */;
-UNLOCK TABLES;
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `department`
+-- 表的结构 `department`
 --
 
-DROP TABLE IF EXISTS `department`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `department` (
+CREATE TABLE IF NOT EXISTS `department` (
   `id` int(11) NOT NULL,
   `name` varchar(100) DEFAULT NULL,
   `memo` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `department`
+-- 转存表中的数据 `department`
 --
 
-LOCK TABLES `department` WRITE;
-/*!40000 ALTER TABLE `department` DISABLE KEYS */;
-/*!40000 ALTER TABLE `department` ENABLE KEYS */;
-UNLOCK TABLES;
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `employee`
+-- 表的结构 `employee`
 --
 
-DROP TABLE IF EXISTS `employee`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `employee` (
+CREATE TABLE IF NOT EXISTS `employee` (
   `id` int(11) NOT NULL,
   `name` varchar(100) DEFAULT NULL,
   `memo` varchar(200) DEFAULT NULL,
   `department_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`),
-  CONSTRAINT `department_id` FOREIGN KEY (`id`) REFERENCES `department` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `employee`
+-- 转存表中的数据 `employee`
 --
 
-LOCK TABLES `employee` WRITE;
-/*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-/*!40000 ALTER TABLE `employee` ENABLE KEYS */;
-UNLOCK TABLES;
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `options`
+-- 表的结构 `options`
 --
 
-DROP TABLE IF EXISTS `options`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `options` (
+CREATE TABLE IF NOT EXISTS `options` (
   `id` int(11) NOT NULL,
   `name` varchar(100) DEFAULT NULL,
   `support` varchar(100) DEFAULT NULL,
@@ -111,76 +93,104 @@ CREATE TABLE `options` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `options`
+-- 转存表中的数据 `options`
 --
 
-LOCK TABLES `options` WRITE;
-/*!40000 ALTER TABLE `options` DISABLE KEYS */;
-/*!40000 ALTER TABLE `options` ENABLE KEYS */;
-UNLOCK TABLES;
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `project`
+-- 表的结构 `project`
 --
 
-DROP TABLE IF EXISTS `project`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `project` (
+CREATE TABLE IF NOT EXISTS `project` (
   `id` int(11) NOT NULL,
   `name` varchar(60) DEFAULT NULL,
   `memo` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `project`
+-- 转存表中的数据 `project`
 --
 
-LOCK TABLES `project` WRITE;
-/*!40000 ALTER TABLE `project` DISABLE KEYS */;
-/*!40000 ALTER TABLE `project` ENABLE KEYS */;
-UNLOCK TABLES;
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `subjects`
+-- 表的结构 `subject`
 --
 
-DROP TABLE IF EXISTS `subjects`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `subjects` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `subject` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `no` int(12) NOT NULL DEFAULT '0',
+  `name` varchar(256) CHARACTER SET gbk COLLATE gbk_bin DEFAULT NULL,
+  `category` int(2) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `no` (`no`),
+  KEY `id` (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
+
+--
+-- 转存表中的数据 `subject`
+--
+
+INSERT INTO `subject` (`id`, `no`, `name`, `category`) VALUES
+(1, 1001, '库存现金', 1),
+(2, 1002, '银行存款', 1),
+(3, 1003, '存放中央银行款项', 1),
+(4, 1102, '短期投资跌价准备', 1),
+(5, 100101, '库存现金01', 1),
+(6, 100102, '库存现金02', 1),
+(7, 1021, '结算备付金', 1),
+(8, 1031, '存出保证金', 1),
+(9, 1101, '交易性金融资产', 1),
+(10, 1111, '买入返售金融资产', 1),
+(11, 1121, '应收票据', 1),
+(12, 1122, '应收账款', 1);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `subjects`
+--
+
+CREATE TABLE IF NOT EXISTS `subjects` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `sbj_number` int(12) NOT NULL DEFAULT '0',
   `sbj_name` varchar(20) DEFAULT NULL,
   `sbj_cat` varchar(100) DEFAULT NULL,
   `sub_table` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `No` (`sbj_number`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=15 ;
 
 --
--- Dumping data for table `subjects`
+-- 转存表中的数据 `subjects`
 --
 
-LOCK TABLES `subjects` WRITE;
-/*!40000 ALTER TABLE `subjects` DISABLE KEYS */;
-/*!40000 ALTER TABLE `subjects` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `subjects` (`id`, `sbj_number`, `sbj_name`, `sbj_cat`, `sub_table`) VALUES
+(1, 1001, '库存现金', '1', ''),
+(2, 1002, '银行存款', '1', NULL),
+(3, 1003, '存放中央银行款项', '1', NULL),
+(4, 1102, '短期投资跌价准备', '1', NULL),
+(8, 1, '', '1', ''),
+(9, 1021, '结算备付金', '1', ''),
+(10, 0, 'wer', '12', ''),
+(14, 12, '', '2', '');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `transition`
+-- 表的结构 `transition`
 --
 
-DROP TABLE IF EXISTS `transition`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `transition` (
+CREATE TABLE IF NOT EXISTS `transition` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `entry_num_prefix` varchar(10) DEFAULT NULL,
   `entry_num` int(11) NOT NULL,
@@ -200,30 +210,21 @@ CREATE TABLE `transition` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `subject_id_idx` (`entry_subject`),
   KEY `re_employee_id_idx` (`entry_reviewer`),
-  KEY `ed_employee_id_idx` (`entry_editor`),
-  CONSTRAINT `subject_id` FOREIGN KEY (`entry_subject`) REFERENCES `subjects` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `ed_employee_id` FOREIGN KEY (`entry_editor`) REFERENCES `employee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `re_employee_id` FOREIGN KEY (`entry_reviewer`) REFERENCES `employee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  KEY `ed_employee_id_idx` (`entry_editor`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
--- Dumping data for table `transition`
+-- 转存表中的数据 `transition`
 --
 
-LOCK TABLES `transition` WRITE;
-/*!40000 ALTER TABLE `transition` DISABLE KEYS */;
-/*!40000 ALTER TABLE `transition` ENABLE KEYS */;
-UNLOCK TABLES;
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- 表的结构 `users`
 --
 
-DROP TABLE IF EXISTS `users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `users` (
+CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL,
   `userid` varchar(100) DEFAULT NULL,
   `password` varchar(100) DEFAULT NULL,
@@ -235,25 +236,19 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `users`
+-- 转存表中的数据 `users`
 --
 
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-UNLOCK TABLES;
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `vendor`
+-- 表的结构 `vendor`
 --
 
-DROP TABLE IF EXISTS `vendor`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `vendor` (
+CREATE TABLE IF NOT EXISTS `vendor` (
   `id` int(11) NOT NULL,
   `vat` varchar(45) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
@@ -262,24 +257,26 @@ CREATE TABLE `vendor` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `vendor`
+-- 转存表中的数据 `vendor`
 --
 
-LOCK TABLES `vendor` WRITE;
-/*!40000 ALTER TABLE `vendor` DISABLE KEYS */;
-/*!40000 ALTER TABLE `vendor` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+--
+-- 限制导出的表
+--
 
--- Dump completed on 2013-12-04 12:02:53
+--
+-- 限制表 `employee`
+--
+ALTER TABLE `employee`
+  ADD CONSTRAINT `department_id` FOREIGN KEY (`id`) REFERENCES `department` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- 限制表 `transition`
+--
+ALTER TABLE `transition`
+  ADD CONSTRAINT `subject_id` FOREIGN KEY (`entry_subject`) REFERENCES `subjects` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `ed_employee_id` FOREIGN KEY (`entry_editor`) REFERENCES `employee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `re_employee_id` FOREIGN KEY (`entry_reviewer`) REFERENCES `employee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
