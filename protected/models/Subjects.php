@@ -28,10 +28,11 @@ class Subjects extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
+            array('sbj_number, sbj_name, sbj_cat', 'required'),
 			array('sbj_number', 'numerical', 'integerOnly'=>true),
 			array('sbj_name', 'length', 'max'=>20),
-			array('sbj_cat', 'length', 'max'=>100),
-			array('sub_table', 'length', 'max'=>200),
+			array('sbj_cat', 'length', 'max'=>2),
+			array('sub_table', 'length', 'max'=>2, 'tooLong'=>'输入文字太长'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, sbj_number, sbj_name, sbj_cat, sub_table', 'safe', 'on'=>'search'),

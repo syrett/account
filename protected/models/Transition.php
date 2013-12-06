@@ -20,7 +20,7 @@
  * @property integer $entry_posting
  * @property integer $entry_closing
  */
-class Transition extends CActiveRecord
+class Transition extends MyActiveRecord
 {
 	/**
 	 * @return string the associated database table name
@@ -122,6 +122,11 @@ class Transition extends CActiveRecord
 		));
 	}
 
+
+    /*    public function save()
+    {
+      
+    }*/
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!

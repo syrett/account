@@ -13,14 +13,14 @@
             ));
             $this->widget('zii.widgets.CMenu', array(
                 'items'=>array(
-                    array('label' => '管理科目', 'url' => array('admin'),),
+                    array('label' => '科目管理', 'url' => array('admin'),),
                 ),
                 'htmlOptions'=>array('class'=>'operations', 'style'=>'list-style: none',),
             ));
             $this->endWidget();
             ?>
 
-            <h1>Create Subjects</h1>
+            <h4>&nbsp;</h4>
 
             <?php $this->renderPartial('_form', array('model' => $model)); ?>
         </div>

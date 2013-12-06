@@ -41,7 +41,7 @@
 
                 <?php $this->widget('zii.widgets.CMenu', array(
                     'items' => array(
-                        array('label' => '凭证', 'url' => array('/site/index')),
+                        array('label' => '凭证', 'url' => array('/transition/index')),
                         array('label' => '科目表', 'url' => array('/subjects/admin'), 'active'=>$this->id=='subjects'?true:false),     //Subjects下所有操作高亮
                         array('label' => '审核', 'url' => array('/site/page', 'view' => 'about')),
                         array('label' => '过账', 'url' => array('/site/contact')),
