@@ -37,7 +37,7 @@ body {
 }
 
 .row div {
-    border: 1;
+    border: 1px;
 }
 
 .v-detail {
@@ -48,4 +48,14 @@ body {
 .v-subject {
     width: 200px;
     text-align: left;
+}
+
+.control-label {
+    text-align: right;
+    padding-top: 7px;
+}
+
+.error {
+    border-color: #b94a48;
+    color: #b94a48;
 }
