@@ -32,7 +32,7 @@ class SubjectsController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+                  'actions'=>array('create','update', 'listfirst', 'listsub'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -138,17 +138,34 @@ class SubjectsController extends Controller
       $First = Subjects::model()->findAllBySql($sql);
       $arr = array();
       foreach($First as $row) {
-        array_push($arr, $row['sbj_number'], $row['sbj_name']);
-      }
-      return json_encode($arr);
+        $arr[$row['sbj_number']] = array($row['sbj_name'], $row['has_sub']);
+        //        array_push($arr, $row['sbj_number'], $row['sbj_name']);
+      };
+      $this->render('list', array(
+                                  'list'=>$arr,
+                                  ));
+     
     }
 
     /*
      * 列出二级,三级科目
      */
-    public function actionListSub($sbj_number)
+    public function actionListSub($sbj_number=1001)
     {
       //todo
+      //      $sbj_number = $_POST['sbj_number'];
+      $sql = "select * from Subjects where sbj_number > :min and sbj_number < :max";
+      $min = (int)(((string)$sbj_number)."00");
+      $max = (int)(((string)$sbj_number)."99");
+      $data = Subjects::model()->findAllBySql($sql, array(':min'=>$min,
+                                                          ':max'=>$max));
+      foreach($data as $row) {
+        $arr[$row['sbj_number']] = array($row['sbj_name'], $row['has_sub']);
+        //        array_push($arr, $row['sbj_number'], $row['sbj_name']);
+      };
+      $this->render('list', array(
+                                  'list'=>$arr,
+                                  ));
     }
 
 	/**
