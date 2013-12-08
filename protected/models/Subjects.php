@@ -29,12 +29,11 @@ class Subjects extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-            array('sbj_number, sbj_name, sbj_cat', 'required'),
+            array('sbj_number, sbj_name, sbj_cat', 'required', 'message'=>'{attribute}不能为空'),
+            array('sbj_number,sbj_name','unique','message'=>'{attribute}:{value} 已经存在!'),
 			array('sbj_number', 'numerical', 'integerOnly'=>true),
 			array('sbj_name', 'length', 'max'=>20),
-			array('sbj_cat', 'length', 'max'=>2),
-			array('sbj_table', 'length', 'max'=>2, 'tooLong'=>'输入文字太长'),
-			array('has_sub', 'length', 'max'=>1),
+			array('sbj_cat', 'length', 'max'=>1),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, sbj_number, sbj_name, sbj_cat, sbj_table, has_sub', 'safe', 'on'=>'search'),
@@ -59,11 +58,10 @@ class Subjects extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'sbj_number' => 'Sbj Number',
-			'sbj_name' => 'Sbj Name',
-			'sbj_cat' => 'Sbj Cat',
-			'sbj_table' => 'Sbj Table',
-			'has_sub' => 'Has Sub subjects',
+			'sbj_number' => '科目编号',
+			'sbj_name' => '科目名称',
+			'sbj_cat' => '科目类别',
+			'sub_table' => '报表名称',
 		);
 	}
 
@@ -86,7 +84,7 @@ class Subjects extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('sbj_number',$this->sbj_number);
+		$criteria->compare('sbj_number',$this->sbj_number, true);
 		$criteria->compare('sbj_name',$this->sbj_name,true);
 		$criteria->compare('sbj_cat',$this->sbj_cat,true);
 		$criteria->compare('sbj_table',$this->sbj_table,true);
@@ -101,6 +99,9 @@ class Subjects extends CActiveRecord
                 'sbj_cat'=>array('asc'=>'convert(t.sbj_cat using gbk)','desc'=>'convert(t.sbj_cat using gbk) desc'),
                 'sbj_table'=>array('asc'=>'convert(t.sbj_table using gbk)','desc'=>'convert(t.sbj_table using gbk) desc'),
             )),
+            'pagination' => array(
+                'pageSize' => 30,
+            ),
 		));
 	}
 
