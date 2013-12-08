@@ -55,7 +55,18 @@ body {
     padding-top: 7px;
 }
 
-.error {
+
+div.form div.error input,
+div.form div.error textarea,
+div.form div.error select,
+div.form input.error,
+div.form textarea.error,
+div.form select.error
+{
+    /*background: #b94a48;*/
     border-color: #b94a48;
+}
+
+.errorMessage {
     color: #b94a48;
 }
