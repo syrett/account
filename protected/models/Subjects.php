@@ -8,7 +8,8 @@
  * @property integer $sbj_number
  * @property string $sbj_name
  * @property string $sbj_cat
- * @property string $sub_table
+ * @property string $sbj_table
+ * @property string $has_sub
  */
 class Subjects extends CActiveRecord
 {
@@ -32,10 +33,11 @@ class Subjects extends CActiveRecord
 			array('sbj_number', 'numerical', 'integerOnly'=>true),
 			array('sbj_name', 'length', 'max'=>20),
 			array('sbj_cat', 'length', 'max'=>2),
-			array('sub_table', 'length', 'max'=>2, 'tooLong'=>'输入文字太长'),
+			array('sbj_table', 'length', 'max'=>2, 'tooLong'=>'输入文字太长'),
+			array('has_sub', 'length', 'max'=>1),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, sbj_number, sbj_name, sbj_cat, sub_table', 'safe', 'on'=>'search'),
+			array('id, sbj_number, sbj_name, sbj_cat, sbj_table, has_sub', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -60,7 +62,8 @@ class Subjects extends CActiveRecord
 			'sbj_number' => 'Sbj Number',
 			'sbj_name' => 'Sbj Name',
 			'sbj_cat' => 'Sbj Cat',
-			'sub_table' => 'Sub Table',
+			'sbj_table' => 'Sbj Table',
+			'has_sub' => 'Has Sub subjects',
 		);
 	}
 
@@ -86,7 +89,8 @@ class Subjects extends CActiveRecord
 		$criteria->compare('sbj_number',$this->sbj_number);
 		$criteria->compare('sbj_name',$this->sbj_name,true);
 		$criteria->compare('sbj_cat',$this->sbj_cat,true);
-		$criteria->compare('sub_table',$this->sub_table,true);
+		$criteria->compare('sbj_table',$this->sbj_table,true);
+		$criteria->compare('has_sub',$this->has_sub,true);
 //        $criteria->order = 'convert(sbj_name using gbk)';
 
 		return new CActiveDataProvider($this, array(

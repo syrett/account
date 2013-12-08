@@ -56,12 +56,15 @@ class TransitionController extends Controller
 		));
 	}
 
+
 	/**
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
 	public function actionCreate()
 	{
+      
+
 		$model=new Transition;
 
 		// Uncomment the following line if AJAX validation is needed
@@ -69,9 +72,19 @@ class TransitionController extends Controller
 
 		if(isset($_POST['Transition']))
 		{
+
+          $post_arr = $_POST['Transition'];
+          
+          if($post_arr['entry_editor'] == $post_arr['entry_reviewer'])
+            {
+              $model->addError('editor_reviewer', "审核者不能是自己");
+              
+            }else
+            {
 			$model->attributes=$_POST['Transition'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+              $this->redirect(array('view','id'=>$model->id));
+            }
 		}
 
 		$this->render('create',array(
@@ -122,10 +135,12 @@ class TransitionController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Transition');
+
+
+        		$dataProvider=new CActiveDataProvider('Transition');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
-		));
+            ));
 	}
 
 	/**
@@ -143,6 +158,10 @@ class TransitionController extends Controller
 		));
 	}
 
+    public function actionReview()
+    {
+      //todo
+    }
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
