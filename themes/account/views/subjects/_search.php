@@ -23,7 +23,15 @@
 
     <div class="col-md-3">
 		<?php echo $form->label($model,'sbj_cat'); ?>
-		<?php echo $form->textField($model,'sbj_cat',array('size'=>10,'maxlength'=>100)); ?>
+        <?php
+        $data = Yii::app()->params['sbj_cat'];
+        $this->widget('Select2', array(
+            'model' => $model,
+            'attribute' => 'sbj_cat',
+            'value' => 1,
+            'data' => $data,
+        ));
+        ?>
 	</div>
 
     <div class="col-md-3">

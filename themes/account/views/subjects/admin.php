@@ -4,6 +4,10 @@
     <div class="panel-body v-title">
         <div class="row">
             <?php
+            Yii::import('ext.select2.Select2');
+            $cs = Yii::app()->clientScript;
+            $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/checkinput.js', CClientScript::POS_HEAD);
+            $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/subjects.js', CClientScript::POS_HEAD);
             /* @var $this SubjectsController */
             /* @var $model Subjects */
             $this->beginWidget('zii.widgets.CPortlet', array(
@@ -36,13 +40,21 @@ $('.search-form form').submit(function(){
 
             <!-- search-form -->
 
-            <?php $this->widget('zii.widgets.grid.CGridView', array(
+            <?php
+
+            $this->widget('zii.widgets.grid.CGridView', array(
                 'id' => 'subjects-grid',
                 'dataProvider' => $model->search(),
                 'filter' => $model,
+                'filterCssClass'=>'filter',
+//                'filterSelector'=>'{filter}, #sbj_cat',
                 'columns' => array(
                     'sbj_number',
                     'sbj_name',
+//                    array(
+//                        'name'=>'sbj_cat',
+//                            'filter'=>Select2::dropDownList('Subjects[sbj_cat]',$model->sbj_cat,CHtml::listData(Subjects::model()->findall(), 'sbj_cat', 'sbj_cat')),
+//                    ),
                     'sbj_cat',
                     'sub_table',
                     array(
@@ -51,8 +63,10 @@ $('.search-form form').submit(function(){
                     ),
                 ),
                 'itemsCssClass' => 'table',
-            )); ?>
-
+            ));
+//            echo Select2::dropDownList('Subjects[sbj_cat]',$model->sbj_cat,array('1'=>'资产类','2'=>'负债类','3'=>'权益类','4'=>'收入类','5'=>'费用类',));
+//            echo Select2::dropDownList('sbj_cat',$model->attribute,CHtml::listData(Subjects::model()->findall(), 'sbj_cat', 'sbj_cat'),'');
+?>
         </div>
     </div>
 </div>
