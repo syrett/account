@@ -21,8 +21,12 @@
 	<?php echo CHtml::encode($data->sbj_cat); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('sub_table')); ?>:</b>
-	<?php echo CHtml::encode($data->sub_table); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('sbj_table')); ?>:</b>
+	<?php echo CHtml::encode($data->sbj_table); ?>
+	<br />
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('has_sub')); ?>:</b>
+	<?php echo CHtml::encode($data->has_sub); ?>
 	<br />
 
 

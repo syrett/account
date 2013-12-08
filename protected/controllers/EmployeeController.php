@@ -4,30 +4,10 @@ class EmployeeController extends Controller
 {
 	public function actionIndex()
 	{
-            $sql = "select * from employee";
-
-      $First = Employee::model()->findAllBySql($sql);
-      
-      echo "<pre>";
-      var_dump($First);
-      echo "</pre>";
-      foreach($First as $row) { 
-        $array = array(
-                       'id' => $row['id'],
-                       'name' => $row['name']
-                       );
-
-        echo json_encode($row);
-        echo json_encode($array);
-        echo "<br />";  
-        echo $row['id'] . " " . $row['name'];
-        echo "<br />";  
-      }
-
-        /*		$dataProvider=new CActiveDataProvider('Employee');
+      $dataProvider=new CActiveDataProvider('Employee');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
-            ));*/
+            ));
 	}
 
 	// Uncomment the following methods and override them if needed
