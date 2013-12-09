@@ -44,7 +44,7 @@ $('.search-form form').submit(function(){
                     'sbj_number',
                     'sbj_name',
                     'sbj_cat',
-                    'sub_table',
+                    'sbj_table',
                     array(
                         'class' => 'CButtonColumn',
                         'template' => '{update} {delete}',

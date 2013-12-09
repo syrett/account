@@ -27,6 +27,6 @@
                     '科目编号'=>'sbj_number',
                     '科目名称'=>'sbj_name',
                     '科目分类'=>'sbj_cat',
-                    '科目报表'=>'sub_table',
+                    '科目报表'=>'sbj_table',
                 ),
             )); ?>

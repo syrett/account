@@ -50,8 +50,8 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/subjects.js', C
 	<div class="form-group modal-open">
 		<?php echo $form->labelEx($model,'报表名称',array('class'=>'col-lg-2 control-label')); ?>
         <div class="col-lg-10">
-		<?php echo $form->textField($model,'sub_table',array('class'=>'form-control','size'=>60,'maxlength'=>200,'onkeyup'=>"if(this.value.replace(/^ +| +$/g,'')=='')alert('不能为空!')")); ?>
-		<?php echo $form->error($model,'sub_table'); ?>
+		<?php echo $form->textField($model,'sbj_table',array('class'=>'form-control','size'=>60,'maxlength'=>200,'onkeyup'=>"if(this.value.replace(/^ +| +$/g,'')=='')alert('不能为空!')")); ?>
+		<?php echo $form->error($model,'sbj_table'); ?>
         </div>
 	</div>
 

@@ -27,8 +27,8 @@
 	</div>
 
     <div class="col-md-3">
-		<?php echo $form->label($model,'sub_table'); ?>
-		<?php echo $form->textField($model,'sub_table',array('size'=>20,'maxlength'=>200)); ?>
+		<?php echo $form->label($model,'sbj_table'); ?>
+		<?php echo $form->textField($model,'sbj_table',array('size'=>20,'maxlength'=>200)); ?>
 	</div>
 
 	<div class="row buttons">
