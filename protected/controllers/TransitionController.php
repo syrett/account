@@ -205,15 +205,14 @@ class TransitionController extends Controller
     public function tranSuffix($prefix=""){
         if($prefix=="")
             $prefix = date("Ym",time());
-        $num = 0;
         $data = Yii::app()->db->createCommand()
             ->select('max(a.entry_num) b')
             ->from('transition as a')
             ->where('entry_num_prefix="'. $prefix. '"')
             ->queryRow();
         if($data['b']=='')
-            $num = 0;
-        $num = $num + 1;
+            $data['b'] = 0;
+        $num = $data['b'] + 1;
         $num = substr(strval($num+10000),1,4);  //数字补0
         return $num;
     }
