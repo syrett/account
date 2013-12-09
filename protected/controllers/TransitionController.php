@@ -32,13 +32,13 @@ class TransitionController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+				'actions'=>array('create','update','getTranSuffix',),
 				'users'=>array('@'),
 			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
-			),
+            array('allow', // allow admin user to perform 'admin' and 'delete' actions
+                'actions'=>array('admin','delete'),
+                'users'=>array('admin'),
+            ),
 			array('deny',  // deny all users
 				'users'=>array('*'),
 			),
@@ -189,4 +189,47 @@ class TransitionController extends Controller
 			Yii::app()->end();
 		}
 	}
+
+    /*
+     * return transition number entry_num
+     */
+    public function tranNumber($result=""){
+        if($result=="")
+            $result = date("Ym",time());
+        $result .= $this->tranSuffix($result);
+        return $result;
+    }
+    /*
+     * return transition number entry_num suffix
+     */
+    public function tranSuffix($prefix=""){
+        if($prefix=="")
+            $prefix = date("Ym",time());
+        $num = 0;
+        $data = Yii::app()->db->createCommand()
+            ->select('max(a.entry_num) b')
+            ->from('transition as a')
+            ->where('entry_num_prefix="'. $prefix. '"')
+            ->queryRow();
+        if($data['b']=='')
+            $num = 0;
+        $num = $num + 1;
+        $num = substr(strval($num+10000),1,4);  //数字补0
+        return $num;
+    }
+
+    /*
+     * ajax return transition number entry_num suffix
+     */
+    public function actionGetTranSuffix(){
+        if(Yii::app()->request->isPostRequest){
+            if(!isset($_POST['entry_prefix'])||$_POST['entry_prefix']=="")
+                $prefix = date("Ym",time());
+            else
+                $prefix = $_POST['entry_prefix'];
+            echo $this->tranSuffix($prefix);
+        }
+        else
+            echo 0;
+    }
 }
