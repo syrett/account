@@ -61,7 +61,7 @@ class Subjects extends CActiveRecord
 			'sbj_number' => '科目编号',
 			'sbj_name' => '科目名称',
 			'sbj_cat' => '科目类别',
-			'sub_table' => '报表名称',
+			'sbj_table' => '报表名称',
 		);
 	}
 

@@ -200,8 +200,9 @@ CREATE TABLE `subjects` (
 -- Dumping data for table `subjects`
 --
 
-
-INSERT INTO `subjects` (`id`, `sbj_number`, `sbj_name`, `sbj_cat`, `sub_table`) VALUES
+LOCK TABLES `subjects` WRITE;
+/*!40000 ALTER TABLE `subjects` DISABLE KEYS */;
+INSERT INTO `subjects` (`id`, `sbj_number`, `sbj_name`, `sbj_cat`, `sbj_table`) VALUES
 (24, 1001, '库存现金', '1', NULL),
 (25, 1002, '银行存款', '1', NULL),
 (26, 1003, '存放中央银行款项', '1', NULL),
@@ -345,9 +346,6 @@ INSERT INTO `subjects` (`id`, `sbj_number`, `sbj_name`, `sbj_cat`, `sub_table`) 
 (340, 6711, '营业外支出', '5', NULL),
 (341, 6801, '所得税费用', '5', NULL),
 (342, 6901, '以前年度损益调整', '5', NULL);
-LOCK TABLES `subjects` WRITE;
-/*!40000 ALTER TABLE `subjects` DISABLE KEYS */;
-INSERT INTO `subjects` VALUES (1,1001,'库存现金','1','',0),(2,1002,'银行存款','1',NULL,0),(3,1003,'存放中央银行款项','1',NULL,0),(4,1102,'短期投资跌价准备','1',NULL,0),(9,1021,'结算备付金','1','',0),(10,100101,'wer','12','',0);
 /*!40000 ALTER TABLE `subjects` ENABLE KEYS */;
 UNLOCK TABLES;
 

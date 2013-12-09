@@ -56,7 +56,7 @@ $('.search-form form').submit(function(){
 //                            'filter'=>Select2::dropDownList('Subjects[sbj_cat]',$model->sbj_cat,CHtml::listData(Subjects::model()->findall(), 'sbj_cat', 'sbj_cat')),
 //                    ),
                     'sbj_cat',
-                    'sub_table',
+                    'sbj_table',
                     array(
                         'class' => 'CButtonColumn',
                         'template' => '{update} {delete}',
