@@ -32,7 +32,7 @@ class TransitionController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update','getTranSuffix',),
+				'actions'=>array('create','update','getTranSuffix','Appendix', 'ListFirst'),
 				'users'=>array('@'),
 			),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -230,5 +230,112 @@ class TransitionController extends Controller
         }
         else
             echo 0;
+    }
+
+    /*
+     *  getVendorlist
+     */
+    public function getUserlist(){
+        $data = User::model()->findAll();
+        return $data;
+    }
+
+    /*
+     *  getVendorlist
+     */
+    public function getVendorlist(){
+        $data = Vendor::model()->findAll();
+        return $data;
+    }
+
+    /*
+     *  getClientlist
+     */
+    public function getClientlist(){
+        $data = Client::model()->findAll();
+        return $data;
+    }
+
+    /*
+     *  getSubjectID get id list by group
+     *  1：资产 2：负债 3：权益 4：收入 5：费用
+     */
+    public function getSubjectID($group){
+        $data = Yii::app()->db->createCommand()
+            ->select('*')
+            ->from('subjects as a')
+            ->where('sbj_cat = '. $group)
+            ->queryAll();
+        $arr = array();
+        foreach($data as $item){
+            array_push($arr, $item['sbj_number']);
+        }
+        return $arr;
+    }
+
+    /*
+     *  return corresponding appendix
+    */
+    public function actionAppendix()
+    {
+        $subject = $_POST["Name"];
+        $html = "";
+        if(Yii::app()->request->isPostRequest)
+        {
+            switch($subject){
+                case 1122 :     // 应付账款，列出供应商
+                    $data = $this->getVendorlist();
+                    foreach($data as $item){
+                        $html .= "<option value=".$item['id'] .">". $item['company']."</options>";
+                    }
+                    break;
+                case 2202 :     // 应收账款，列出客户列表
+                    $data = $this->getClientlist();
+                    foreach($data as $item){
+                        $html .= "<option value=".$item['id'] .">". $item['company']."</options>";
+                    }
+                    break;
+                default :
+                    $list = $this->getSubjectID(4);
+                    if(in_array($subject, $list)){  //全部 4:收入 类科目  列出项目project
+                        $data = Project::model()->findAll();
+                        foreach($data as $item){
+                            $html .= "<option value=".$item['id'] .">". $item['name']."</options>";
+                        }
+                        break;
+                    }
+                    $list = $this->getSubjectID(5);
+                    if(in_array($subject, $list)){  //全部 5:费用 类科目   列出员工employee
+                        $data = Employee::model()->findAll();
+                        foreach($data as $item){
+                            $html .= "<option value=".$item['id'] .">". $item['name']."</options>";
+                        }
+                        break;
+                    }
+
+            }
+            if($html!="")
+                echo '<select>'.$html.'</select>';
+            else
+                echo '';
+        }
+        else
+            throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
+    }
+
+
+    /**
+     * 列出一级科目
+     */
+    public function actionListFirst()
+    {
+        //todo
+        $sql = "select * from subjects where sbj_number < 10000"; // 一级科目的为1001～9999
+        $First = Subjects::model()->findAllBySql($sql);
+        $arr = array();
+        foreach($First as $row) {
+            $arr += array( $row['sbj_number']=> $row['sbj_number'].$row['sbj_name']);
+        };
+        return $arr;
     }
 }

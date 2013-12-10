@@ -44,137 +44,119 @@ $this->pageTitle = Yii::app()->name;
         <tr>
             <td>
                 <div class="row">
-                    <div class="col-md-3">
-                        <?php echo $form->labelEx($model, 'entry_memo'); ?></div>
+                    <div class="col-md-3">凭证摘要</div>
                     <div class="col-md-1">借/贷</div>
                     <div class="col-md-3">科目</div>
                     <div class="col-md-1">金额</div>
                     <div class="col-md-4">附加</div>
                 </div>
-                <div class="row v-detail">
-                    <div class="col-md-3">
-                        <?php echo $form->textField($model, 'entry_memo', array('size' => 60, 'maxlength' => 100)); ?>
-                        <?php echo $form->error($model, 'entry_memo'); ?>
-                    </div>
-                    <div class="col-md-1">
-                        <?php
-                        $this->widget('Select2', array(
-                            'name' => '',
-                            'id' => 's1',
-                            'value' => 1,
-                            'data' => array(1 => '借', 2 => '贷'),
-                        ));
-                        ?>
-                    </div>
-                    <div class="col-md-3">
-                        <?php
-                        $data = array();
-                        for ($i = 1; $i < 200; $i++) {
-                            $data += array($i => $i . '提取未到期责任准备金 ' . $i);
-                        }
-                        $this->widget('Select2', array(
-                            'name' => 'subject',
-                            'id' => 'subject',
-                            'value' => 2,
-                            'data' => $data,
-                            'htmlOptions' => array('title' => $i . '存放中央银行款项', 'class' => 'v-subject'),
-                        ));
-                        ?>
-                    </div>
-                    <div class="col-md-1">.col-md-1
-
-                    </div>
-                    <div class="col-md-4">
-                        <span id="appendix"></span>
-                        <input type="hidden" value="<? echo Yii::app()->createAbsoluteUrl("site/Appendix") ?>"
-                               id="entry_appendix"/>
-
-                        <button type="button" class="close" aria-hidden="true">&times;</button>
-                    </div>
-                </div>
-
                 <div>
+                    <?
+                    $i = 0;
+                    for($i; $i<5; $i++){
+                    ?>
+                        <div id="row_<?= $i ?>" class="row v-detail">
+                            <div class="col-md-3">
+                                <?php echo $form->textField($model, "entry_memo[$i]", array('class' => 'form-control input-size')); ?>
+                                <?php echo $form->error($model, 'entry_memo[$i]'); ?>
+                            </div>
+                            <div class="col-md-1">
+                                <?php
+                                $this->widget('Select2', array(
+                                    'name' => 'Transition[entry_transaction][$i]',
+                                    'id' => "Transition_entry_transaction_$i",
+                                    'value' => 1,
+                                    'data' => array(1 => '借', 2 => '贷'),
+                                ));
+                                ?>
+                            </div>
+                            <div class="col-md-3">
+                                <?php
+                                $data = $this->actionListFirst();
+                                $this->widget('Select2', array(
+                                    'name' => 'Transition[entry_subject][$i]',
+                                    'id' => "Transition_entry_subject_$i",
+                                    'data' => $data,
+                                    'htmlOptions' => array('class' => 'v-subject'),
+                                ));
+                                ?>
+                                <input type="hidden" value="<?= $i ?>"/>
+                            </div>
+                            <div class="col-md-1">
+                                <?php echo $form->textField($model, "entry_amount[$i]", array('class' => 'form-control input-size')); ?>
+                            </div>
+                            <div class="col-md-4">
+                        <span id="appendix_<?= $i; ?>" style="display: none; float: left">
 
+                        </span>
 
+                                <?php echo $form->textField($model, 'entry_appendix[$i]', array('style' => 'width: 60%', 'class' => 'form-control input-size', 'maxlength' => 100)); ?>
 
-                    <?php echo $form->errorSummary($model); ?>
+                                <button type="button" class="close" aria-hidden="true" name="<?=$i?>" onclick="rmRow(this)">&times;</button>
+                            </div>
+                        </div>
+                    <? } ?>
 
+                </div>
+            </td>
+        </tr>
 
-
+        <tr>
+            <td>
+                <div>
                     <div class="row">
-                        <?php echo $form->labelEx($model, 'entry_transaction'); ?>
-                        <?php echo $form->textField($model, 'entry_transaction'); ?>
-                        <?php echo $form->error($model, 'entry_transaction'); ?>
+                        <?php
+                        echo CHtml::button('继续添加', array(
+                                'style' => 'float: right',
+                                'name' => 'btnBack',
+                                'class' => 'btn btn-info',
+                                'onclick' => "addRow()",
+                            )
+                        );
+                        ?>
                     </div>
-
-                    <div class="row">
-                        <?php echo $form->labelEx($model, 'entry_subject'); ?>
-                        <?php echo $form->textField($model, 'entry_subject'); ?>
-                        <?php echo $form->error($model, 'entry_subject'); ?>
-                    </div>
-
-                    <div class="row">
-                        <?php echo $form->labelEx($model, 'entry_amount'); ?>
-                        <?php echo $form->textField($model, 'entry_amount'); ?>
-                        <?php echo $form->error($model, 'entry_amount'); ?>
-                    </div>
-
-                    <div class="row">
-                        <?php echo $form->labelEx($model, 'entry_appendix'); ?>
-                        <?php echo $form->textField($model, 'entry_appendix', array('size' => 60, 'maxlength' => 100)); ?>
-                        <?php echo $form->error($model, 'entry_appendix'); ?>
-                    </div>
-
-                    <div class="row">
-                        <?php echo $form->labelEx($model, 'entry_editor'); ?>
-                        <?php echo $form->textField($model, 'entry_editor'); ?>
-                        <?php echo $form->error($model, 'entry_editor'); ?>
-                    </div>
-
-                    <div class="row">
-                        <?php echo $form->labelEx($model, 'entry_reviewer'); ?>
-                        <?php echo $form->textField($model, 'entry_reviewer'); ?>
+                    <div class="row table-buttom">
+                        <strong>审核人员</strong>
+                        <?
+                        $data = $this->getUserlist();
+                        $arr = array();
+                        foreach($data as $row) {
+                            $arr += array( $row['id']=> $row['fullname']);
+                        };
+                        $data = $arr;
+                        $this->widget('Select2', array(
+                            'name' => 'Transition[entry_reviewer]',
+                            'id' => 'Transition_entry_reviewer',
+                            'data' => $data,
+                            'htmlOptions' => array('class' => 'v-subject'),
+                        )); ?>
                         <?php echo $form->error($model, 'entry_reviewer'); ?>
                     </div>
+                    <div class="form-group buttons text-center">
 
-                    <div class="row">
-                        <?php echo $form->labelEx($model, 'entry_deleted'); ?>
-                        <?php echo $form->textField($model, 'entry_deleted'); ?>
-                        <?php echo $form->error($model, 'entry_deleted'); ?>
+                        <?php echo $form->errorSummary($model); ?>
+
+                        <?php echo CHtml::submitButton($model->isNewRecord ? '添加' : '保存', array('class'=>'btn btn-primary',)); ?>
+                        <?php
+                        echo CHtml::button('返回', array(
+                                'name' => 'btnBack',
+                                'class' => 'btn btn-warning',
+                                'onclick' => "history.go(-1)",
+                            )
+                        );
+                        ?>
                     </div>
-
-                    <div class="row">
-                        <?php echo $form->labelEx($model, 'entry_reviewed'); ?>
-                        <?php echo $form->textField($model, 'entry_reviewed'); ?>
-                        <?php echo $form->error($model, 'entry_reviewed'); ?>
-                    </div>
-
-                    <div class="row">
-                        <?php echo $form->labelEx($model, 'entry_posting'); ?>
-                        <?php echo $form->textField($model, 'entry_posting'); ?>
-                        <?php echo $form->error($model, 'entry_posting'); ?>
-                    </div>
-
-                    <div class="row">
-                        <?php echo $form->labelEx($model, 'entry_closing'); ?>
-                        <?php echo $form->textField($model, 'entry_closing'); ?>
-                        <?php echo $form->error($model, 'entry_closing'); ?>
-                    </div>
-
-                    <div class="row buttons">
-                        <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
-                    </div>
-
-
                 </div>
                 <!-- form -->
             </td>
         </tr>
     </table>
 
+    <?php echo $form->textField($model, 'entry_num_prefix', array('hidden' => 'true', 'value' => date('Ym', time()))); ?>
+    <?php echo $form->textField($model, 'entry_num', array('hidden' => 'true', 'value' => $this->tranSuffix(""))); ?>
+    <?php echo $form->textField($model, 'entry_date', array('hidden' => 'true', 'value' => time())); ?>
+    <?php echo $form->textField($model, 'entry_editor', array('hidden' => 'true', 'value' => 1)); ?>
+    <input type="hidden" value="<? echo Yii::app()->createAbsoluteUrl("transition/Appendix") ?>" id="entry_appendix"/>
     <?php $this->endWidget(); ?>
 </div>
-<?php echo $form->textField($model, 'entry_num_prefix', array('hidden' => 'true', 'value' => date('Ym', time()))); ?>
-<?php echo $form->textField($model, 'entry_num', array('hidden' => 'true', 'value' => $this->tranSuffix(""))); ?>
-<?php echo $form->textField($model, 'entry_date', array('hidden' => 'true', 'value' => time())); ?>
 <div></div>
