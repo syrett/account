@@ -156,6 +156,7 @@ $this->pageTitle = Yii::app()->name;
     <?php echo $form->textField($model, 'entry_num', array('hidden' => 'true', 'value' => $this->tranSuffix(""))); ?>
     <?php echo $form->textField($model, 'entry_date', array('hidden' => 'true', 'value' => time())); ?>
     <?php echo $form->textField($model, 'entry_editor', array('hidden' => 'true', 'value' => 1)); ?>
+    <input type="hidden" id="number" value="<?=$i?>" />
     <input type="hidden" value="<? echo Yii::app()->createAbsoluteUrl("transition/Appendix") ?>" id="entry_appendix"/>
     <?php $this->endWidget(); ?>
 </div>
