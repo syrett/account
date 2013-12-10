@@ -27,10 +27,8 @@ $this->pageTitle = Yii::app()->name;
         <div class="row">
             <div class="col-md-4">
                 <h5>
-                    凭证号:<input type="label" id='tranNumber' value="<? $this->tranNumber() ?>">
+                    凭证号:<input type="text" id='tranNumber' disabled value="<? echo $this->tranNumber() ?>">
                 </h5>
-                <?php echo $form->textField($model, 'entry_num_prefix', array('hidden' => 'true', 'value' => date('Ym', time()))); ?>
-                <?php echo $form->textField($model, 'entry_num', array('hidden' => 'true', 'value' => $this->tranSuffix(""))); ?>
             </div>
             <div class="col-md-4" id="entry_date"><h5>日期:
                     <input type="text" class="span2" value="<?php echo date("Ym"); ?>" id="dp1" readonly/>
@@ -46,14 +44,18 @@ $this->pageTitle = Yii::app()->name;
         <tr>
             <td>
                 <div class="row">
-                    <div class="col-md-3">摘要</div>
+                    <div class="col-md-3">
+                        <?php echo $form->labelEx($model, 'entry_memo'); ?></div>
                     <div class="col-md-1">借/贷</div>
                     <div class="col-md-3">科目</div>
                     <div class="col-md-1">金额</div>
                     <div class="col-md-4">附加</div>
                 </div>
                 <div class="row v-detail">
-                    <div class="col-md-3">.col-md-4</div>
+                    <div class="col-md-3">
+                        <?php echo $form->textField($model, 'entry_memo', array('size' => 60, 'maxlength' => 100)); ?>
+                        <?php echo $form->error($model, 'entry_memo'); ?>
+                    </div>
                     <div class="col-md-1">
                         <?php
                         $this->widget('Select2', array(
@@ -98,17 +100,6 @@ $this->pageTitle = Yii::app()->name;
                     <?php echo $form->errorSummary($model); ?>
 
 
-                    <div class="row">
-                        <?php echo $form->labelEx($model, 'entry_date'); ?>
-                        <?php echo $form->textField($model, 'entry_date'); ?>
-                        <?php echo $form->error($model, 'entry_date'); ?>
-                    </div>
-
-                    <div class="row">
-                        <?php echo $form->labelEx($model, 'entry_memo'); ?>
-                        <?php echo $form->textField($model, 'entry_memo', array('size' => 60, 'maxlength' => 100)); ?>
-                        <?php echo $form->error($model, 'entry_memo'); ?>
-                    </div>
 
                     <div class="row">
                         <?php echo $form->labelEx($model, 'entry_transaction'); ?>
@@ -183,4 +174,7 @@ $this->pageTitle = Yii::app()->name;
 
     <?php $this->endWidget(); ?>
 </div>
+<?php echo $form->textField($model, 'entry_num_prefix', array('hidden' => 'true', 'value' => date('Ym', time()))); ?>
+<?php echo $form->textField($model, 'entry_num', array('hidden' => 'true', 'value' => $this->tranSuffix(""))); ?>
+<?php echo $form->textField($model, 'entry_date', array('hidden' => 'true', 'value' => time())); ?>
 <div></div>
