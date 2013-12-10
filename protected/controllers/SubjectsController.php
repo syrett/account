@@ -134,16 +134,19 @@ class SubjectsController extends Controller
     public function actionListFirst()
     {
       //todo
-      $sql = "select * from Subjects where sbj_number < 10000"; // 一级科目的为1001～9999
+      $sql = "select * from subjects where sbj_number < 10000"; // 一级科目的为1001～9999
       $First = Subjects::model()->findAllBySql($sql);
       $arr = array();
       foreach($First as $row) {
-        $arr[$row['sbj_number']] = array($row['sbj_name'], $row['has_sub']);
-        //        array_push($arr, $row['sbj_number'], $row['sbj_name']);
+//        $arr[$row['sbj_number']] = array($row['sbj_name'], $row['has_sub']);
+//                $arr += array( $row['sbj_number'], $row['sbj_name']);
+                  array_push($arr, $row['sbj_number'], $row['sbj_name']);
       };
-      $this->render('list', array(
-                                  'list'=>$arr,
-                                  ));
+      return $arr;
+
+//        $this->render('list', array(
+//            'list'=>$arr,
+//        ));
      
     }
 

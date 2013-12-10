@@ -41,6 +41,7 @@ body {
 }
 
 .v-detail {
+    padding-top: 2px;
     border-top: 1px solid transparent;
     border-color: #dddddd;
 }
@@ -55,7 +56,6 @@ body {
     padding-top: 7px;
 }
 
-
 div.form div.error input,
 div.form div.error textarea,
 div.form div.error select,
@@ -69,4 +69,17 @@ div.form select.error
 
 .errorMessage {
     color: #b94a48;
+}
+
+.col-md-1 {
+    padding: 0;
+}
+.v-detail input{
+    height: 28px;
+    float: left;
+}
+
+.table-buttom {
+    text-align: right;
+    padding: 30px;
 }

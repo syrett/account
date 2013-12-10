@@ -4,15 +4,21 @@
 
 $(document).ready(function () {
 
-    $("#subject").change(function(){
+    $("select[id^='Transition_entry_subject']").change(function(){
+        var number = $(this).next().val();
         url = $("#entry_appendix").val();
             $.ajax({
                 url:url,
                 type: "POST",
                 datatype: "json",
-                data : {"Name": $("#subject").val()},
+                data : {"Name": $(this).val()},
                 success:function(html){
-                    jQuery("#appendix").html(html)
+                    jQuery("#appendix_"+number).css('display', 'inherit')
+                    jQuery("#appendix_"+number).html(html)
+                },
+                error: function(xhr,err){
+                    alert("readyState: "+xhr.readyState+"\nstatus: "+xhr.status);
+                    alert("responseText: "+xhr.responseText);
                 }
             });
         });
@@ -23,8 +29,8 @@ $(document).ready(function () {
         autoclose: true
     })
     .on('changeDate', function(ev){
-            var date =  $('#entry_date input').val();
-            url = $("#entry_appendix").val();
+        var date =  $('#entry_date input').val();
+        url = $("#entry_appendix").val();
         $.ajax({
             type: "POST",
             url: $("#entry_num_pre").val(),
@@ -38,3 +44,10 @@ $(document).ready(function () {
         });
     });
 });
+var addRow = function (){
+    alert(222)
+}
+var rmRow = function (ob){
+    var number = ob.name
+    $("#row_"+number).remove();
+}
