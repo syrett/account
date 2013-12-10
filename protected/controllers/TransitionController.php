@@ -32,7 +32,7 @@ class TransitionController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update','getTranSuffix',),
+                  'actions'=>array('create','update','getTranSuffix', 'reorganise',),
 				'users'=>array('@'),
 			),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -135,12 +135,10 @@ class TransitionController extends Controller
 	 */
 	public function actionIndex()
 	{
-
-
-        		$dataProvider=new CActiveDataProvider('Transition');
-		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
-            ));
+      $dataProvider=new CActiveDataProvider('Transition');
+      $this->render('index',array(
+                                  'dataProvider'=>$dataProvider,
+                                  ));
 	}
 
 	/**
@@ -158,7 +156,26 @@ class TransitionController extends Controller
 		));
 	}
 
+    public function actionReorganise()
+    {
+      if(!isset($_POST['entry_num_prefix'])){
+        $prefix=date('Y').date('m');
+      };
+      $del_condition='entry_num_prefix=:prefix and entry_deleted=:bool';
+      Transition::model()->deleteAll($del_condition,array(':prefix'=>$prefix,':bool'=>1));
 
+      $sql="select id from transition where entry_num_prefix=:prefix";
+      $data=Transition::model()->findAllBySql($sql,array(':prefix'=>$prefix));
+      
+      $arr=array();
+      $i=1;
+      foreach($data as $row){
+        $pk=$row['id'];
+        Transition::model()->updateByPk($pk,array('entry_num'=>$i));
+        $i++;
+      }
+      $this->redirect("index.php?r=transition/index");
+    }
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
