@@ -10,9 +10,13 @@
     <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/ie.css"
           media="screen, projection"/>
     <![endif]-->
-
+    <?php
+        $cs = Yii::app()->clientScript;
+        $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/select2/select2.js', CClientScript::POS_HEAD);
+    ?>
     <link href="<?php echo Yii::app()->theme->baseUrl; ?>/assets/css/bootstrap.css" rel="stylesheet">
     <link href="<?php echo Yii::app()->theme->baseUrl; ?>/assets/css/main.css" rel="stylesheet">
+    <link href="<?php echo Yii::app()->theme->baseUrl; ?>/assets/js/select2/select2.css" rel="stylesheet">
 
     <title><?php echo CHtml::encode($this->pageTitle); ?></title>
 </head>
