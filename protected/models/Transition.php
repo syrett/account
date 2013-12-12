@@ -13,6 +13,7 @@
  * @property integer $entry_subject
  * @property integer $entry_amount
  * @property string $entry_appendix
+ * @property integer $entry_appendix_id
  * @property integer $entry_editor
  * @property integer $entry_reviewer
  * @property integer $entry_deleted
@@ -42,9 +43,10 @@ class Transition extends MyActiveRecord
 			array('entry_num, entry_transaction, entry_subject, entry_amount, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing', 'numerical', 'integerOnly'=>true),
 			array('entry_num_prefix', 'length', 'max'=>10),
 			array('entry_memo, entry_appendix', 'length', 'max'=>100),
+            array('entry_appendix_id', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, entry_num_prefix, entry_num, entry_date, entry_memo, entry_transaction, entry_subject, entry_amount, entry_appendix, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing', 'safe', 'on'=>'search'),
+			array('id, entry_num_prefix, entry_num, entry_date, entry_memo, entry_transaction, entry_subject, entry_amount, entry_appendix, entry_appendix_id, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -73,7 +75,8 @@ class Transition extends MyActiveRecord
 			'entry_transaction' => '借贷类别',
 			'entry_subject' => '借贷科目',
 			'entry_amount' => '交易金额',
-			'entry_appendix' => '附加信息',
+            'entry_appendix' => '附加信息',
+            'entry_appendix_id' => '客户、供应商、员工、项目',
 			'entry_editor' => '录入人员',
 			'entry_reviewer' => '审核人员',
 			'entry_deleted' => '凭证删除',
@@ -103,11 +106,11 @@ class Transition extends MyActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('entry_num_prefix',$this->entry_num_prefix,true);
-		$criteria->compare('entry_num',$this->entry_num);
+		$criteria->compare('entry_num',$this->entry_num,true);
 		$criteria->compare('entry_date',$this->entry_date,true);
 		$criteria->compare('entry_memo',$this->entry_memo,true);
-		$criteria->compare('entry_transaction',$this->entry_transaction);
-		$criteria->compare('entry_subject',$this->entry_subject);
+		$criteria->compare('entry_transaction',$this->entry_transaction,true);
+		$criteria->compare('entry_subject',$this->entry_subject,true);
 		$criteria->compare('entry_amount',$this->entry_amount);
 		$criteria->compare('entry_appendix',$this->entry_appendix,true);
 		$criteria->compare('entry_editor',$this->entry_editor);

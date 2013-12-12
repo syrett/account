@@ -11,7 +11,7 @@ $(document).ready(function () {
             url: url,
             type: "POST",
             datatype: "json",
-            data: {"Name": $(this).val()},
+            data: {"Name": $(this).val(), "number": number},
             success: function (html) {
                 jQuery("#appendix_" + number).css('display', 'inherit')
                 jQuery("#appendix_" + number).html(html)

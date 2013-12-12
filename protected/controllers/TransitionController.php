@@ -60,13 +60,29 @@ class TransitionController extends Controller
      * get every row in the form
      * http://www.yiiframework.com/doc/guide/1.1/en/form.table
      */
-    public function getItemsToUpdate()
+    public function getItemsToUpdate($id="")
     {
         // Create an empty list of records
         $items = array();
 
+        if($id)
+        {$data = Yii::app()->db->createCommand()
+            ->select('entry_num_prefix, entry_num')
+            ->from('transition as a')
+            ->where('id="' . $id . '"')
+            ->queryRow();
+        // load models which is the same entry_num_prefix+entry_num
+        $data = Yii::app()->db->createCommand()
+            ->select('id')
+            ->from('transition as a')
+            ->where('entry_num_prefix="'. $data['entry_num_prefix']. '" and entry_num="'. $data['entry_num']. '"')
+            ->queryAll();
+            foreach($data as $item){
+                $items[] =  $this->loadModel($id);
+            }
+        }
         // Iterate over each item from the submitted form
-        if (isset($_POST['Transition']) && is_array($_POST['Transition'])) {
+        elseif (isset($_POST['Transition']) && is_array($_POST['Transition'])) {
             foreach ($_POST['Transition'] as $item) {
                 // If item id is available, read the record from database
 //                if ( array_key_exists('id', $item) ){
@@ -88,7 +104,6 @@ class TransitionController extends Controller
     public function actionCreate()
     {
 
-        $model = new Transition;
         $items = $this->getItemsToUpdate();
 
         if (isset($_POST['Transition'])) {
@@ -99,9 +114,11 @@ class TransitionController extends Controller
                     $_POST['Transition'][$i]['entry_num'] = intval($_POST['entry_num']);
                     $_POST['Transition'][$i]['entry_editor'] = intval($_POST['entry_editor']);
                     $_POST['Transition'][$i]['entry_num_prefix'] = $_POST['entry_num_prefix'];
-//                    $_POST['Transition'][$i]['entry_date'] = intval($_POST['Transition'][$i]['entry_date']);
+                    $_POST['Transition'][$i]['entry_date'] = intval($_POST['entry_date']);
                     $_POST['Transition'][$i]['entry_transaction'] = intval($_POST['Transition'][$i]['entry_transaction']);
                     $_POST['Transition'][$i]['entry_subject'] = intval($_POST['Transition'][$i]['entry_subject']);
+                    $entry_appendix_id = isset($_POST['Transition'][$i]['entry_appendix_id'])?$_POST['Transition'][$i]['entry_appendix_id']:0;
+                    $_POST['Transition'][$i]['entry_appendix_id'] = intval($entry_appendix_id);
                     $_POST['Transition'][$i]['entry_amount'] = intval($_POST['Transition'][$i]['entry_amount']);
                     $item->attributes = $_POST['Transition'][$i];
                     $valid = $valid && $item->validate();
@@ -110,42 +127,31 @@ class TransitionController extends Controller
                     if (isset($_POST['Transition'][$i]) && trim($_POST['Transition'][$i]['entry_memo']) != "")
                         $item->save();
             }
-            if ($valid)
-                $this->render('success', array(
+            if ($valid){
+//                $this->redirect("index.php?r=transition/admin&entry_num=9");
+                $model = new Transition('search');
+                $model->unsetAttributes(); // clear any default values
+                $_GET['Transition'] = array('entry_num'=>$_POST['entry_num']);
+                $model->attributes = $_GET['Transition'];
+
+                $this->render('admin', array(
                     'model' => $model,
                 ));
+            }
             else
                 $this->render('failed', array(
-                    'model' => $model,
+                    'model' => $items,
                 ));
         } // 显示视图收集表格输入
 //              $this->redirect(array('view','id'=>$model->id));
         else
-            $model = new Transition;
-//
-//		// Uncomment the following line if AJAX validation is needed
-//		// $this->performAjaxValidation($model);
-//
-//		if(isset($_POST['Transition']))
-//		{
-//
-//          $post_arr = $_POST['Transition'];
-//
-//          if($post_arr['entry_editor'] == $post_arr['entry_reviewer'])
-//            {
-//              $model->addError('editor_reviewer', "审核者不能是自己");
-//
-//            }else
-//            {
-//			$model->attributes=$_POST['Transition'];
-//			if($model->save())
-//              $this->redirect(array('view','id'=>$model->id));
-//            }
-//		}
-//
-        $this->render('create', array(
-            'model' => $model,
+        {
+            $model = array();
+            $model[] = new Transition;
+            $this->render('create', array(
+                'model' => $model,
         ));
+        }
     }
 
     /**
@@ -155,7 +161,8 @@ class TransitionController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->loadModel($id);
+//        $model = $this->loadModel($id);
+        $model = $this->getItemsToUpdate($id);
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
@@ -355,6 +362,7 @@ class TransitionController extends Controller
     public function actionAppendix()
     {
         $subject = $_POST["Name"];
+        $number = $_POST["number"];
         $html = "";
         if (Yii::app()->request->isPostRequest) {
             switch ($subject) {
@@ -390,7 +398,7 @@ class TransitionController extends Controller
 
             }
             if ($html != "")
-                echo '<select id="Transition_entry_num_prefix" name="entry_num_prefix">' . $html . '</select>';
+                echo '<select id="Transition_'. $number. '_entry_appendix_id" name="Transition['. $number. '][entry_appendix_id]">' . $html . '</select>';
             else
                 echo '';
         } else

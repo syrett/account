@@ -2,6 +2,7 @@
 /* @var $this TransitionController */
 /* @var $model Transition */
 /* @var $form CActiveForm */
+/* @var $action string */
 
 Yii::app()->clientScript->registerCoreScript('jquery');
 //Yii::import('ext.select2.Select2');
@@ -28,7 +29,9 @@ $this->pageTitle = Yii::app()->name;
         <div class="row">
             <div class="col-md-4">
                 <h5>
-                    凭证号:<input type="text" id='tranNumber' disabled value="<? echo $this->tranNumber() ?>">
+                    凭证号:<input type="text" id='tranNumber' disabled value="<?
+                    echo isset($action)&&$action=='update'?$model[0]->entry_num_prefix. substr(strval($model[0]->entry_num + 10000), 1, 4):$this->tranNumber()
+                    ?>">
                 </h5>
             </div>
             <div class="col-md-4" id="entry_date"><h5>日期:
@@ -53,13 +56,18 @@ $this->pageTitle = Yii::app()->name;
                 </div>
                 <div id="transitionRows">
                     <?
-                    $i = 1;
-                    for($i; $i<=5; $i++){
+                    $count = count($model)>5?count($model):5;   //此凭证多于5条记录
+                    $number = 0;
+                    if(count($model)==1)
+                        for($i=0; $i<4; $i++)
+                            array_push($model, new Transition());
+                    foreach($model as $i => $item){
+                        $number++;
                     ?>
                         <div id="row_<?= $i ?>" class="row v-detail">
                             <div class="col-md-3">
-                                <?php echo CHtml::activeTextField($model, "[$i]entry_memo", array('class' => 'form-control input-size')); ?>
-                                <?php echo $form->error($model, '[$i]_entry_memo'); ?>
+                                <?php echo CHtml::activeTextField($item, "[$i]entry_memo", array('class' => 'form-control input-size')); ?>
+                                <?php echo $form->error($item, '[$i]_entry_memo'); ?>
                             </div>
                             <div class="col-md-1">
                                 <select id="Transition_<?=$i?>_entry_transaction" name="Transition[<?=$i?>][entry_transaction]">
@@ -72,7 +80,7 @@ $this->pageTitle = Yii::app()->name;
                                 <?php
                                 $data = $this->actionListFirst();
                                 $options = '';
-                                foreach($data as $item => $key){
+                                foreach($data as $one => $key){
                                     $options .= "<option value=$key[0] >$key[1]</option>";
                                 }
                                 echo $options;
@@ -81,14 +89,14 @@ $this->pageTitle = Yii::app()->name;
                                 <input type="hidden" value="<?= $i ?>"/>
                             </div>
                             <div class="col-md-1">
-                                <?php echo CHtml::activeTextField($model, "[$i]entry_amount", array('class' => 'form-control input-size')); ?>
+                                <?php echo CHtml::activeTextField($item, "[$i]entry_amount", array('class' => 'form-control input-size')); ?>
                             </div>
                             <div class="col-md-4">
                         <span id="appendix_<?= $i; ?>" style="display: none; float: left">
-
+                            <select id="Transition_<?=$i?>_entry_appendix_id" name="Transition[<?=$i?>][entry_appendix_id]"><option></option></select>"
                         </span>
 
-                                <?php echo CHtml::activeTextField($model, "[$i]entry_appendix", array('style' => 'width: 60%', 'class' => 'form-control input-size', 'maxlength' => 100)); ?>
+                                <?php echo CHtml::activeTextField($item, "[$i]entry_appendix", array('style' => 'width: 60%', 'class' => 'form-control input-size', 'maxlength' => 100)); ?>
 
                                 <button type="button" class="close" aria-hidden="true" name="<?=$i?>" onclick="rmRow(this)">&times;</button>
                             </div>
@@ -124,18 +132,18 @@ $this->pageTitle = Yii::app()->name;
                         ?>
                         <select id="Transition_entry_reviewer" name="entry_reviewer" >
                             <?
-                            foreach($data as $item){
-                                echo "<option value=". $item[0]. ">". $item[1]. "</option>";
+                            foreach($data as $one){
+                                echo "<option value=". $one[0]. ">". $one[1]. "</option>";
                             }
                             ?>
                         </select>
-                        <?php echo $form->error($model, 'entry_reviewer'); ?>
+                        <?php echo $form->error($item, 'entry_reviewer'); ?>
                     </div>
                     <div class="form-group buttons text-center">
 
-                        <?php echo $form->errorSummary($model); ?>
+                        <?php echo $form->errorSummary($item); ?>
 
-                        <?php echo CHtml::submitButton($model->isNewRecord ? '添加' : '保存', array('class'=>'btn btn-primary',)); ?>
+                        <?php echo CHtml::submitButton($item->isNewRecord ? '添加' : '保存', array('class'=>'btn btn-primary',)); ?>
                         <?php
                         echo CHtml::button('返回', array(
                                 'name' => 'btnBack',
@@ -151,15 +159,11 @@ $this->pageTitle = Yii::app()->name;
         </tr>
     </table>
 
-    <?php echo CHtml::activeTextField($model, 'entry_num_prefix', array('hidden' => 'true', 'value' => date('Ym', time()))); ?>
-    <?php echo CHtml::activeTextField($model, 'Transition_entry_num', array('hidden' => 'true', 'value' => $this->tranSuffix(""))); ?>
-    <?php echo CHtml::activeTextField($model, 'entry_date', array('hidden' => 'true', 'value' => time())); ?>
-
     <input type="hidden" name="entry_num_prefix"  id='entry_num_prefix' value="<?=date('Ym', time())?>" />
     <input type="hidden" name="entry_num" id='entry_num' value="<?=$this->tranSuffix("")?>" />
     <input type="hidden" name="entry_date" id='entry_date' value="<?=time()?>" />
     <input type="hidden" name="entry_editor" id='entry_editor' value="1" />
-    <input type="hidden" id="number" value="<?=$i?>" />
+    <input type="hidden" id="number" value="<?=$number?>" />
     <input type="hidden" value="<? echo Yii::app()->createAbsoluteUrl("transition/Appendix") ?>" id="entry_appendix"/>
     <input type="hidden" value="<? echo Yii::app()->createAbsoluteUrl("transition/ajaxlistfirst") ?>" id="ajax_listfirst"/>
     <?php $this->endWidget(); ?>
