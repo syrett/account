@@ -32,7 +32,7 @@ class TransitionController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'getTranSuffix', 'Appendix', 'ListFirst', 'reorganise', 'ajaxListFirst'),
+                'actions' => array('create', 'update', 'getTranSuffix', 'Appendix', 'ListFirst', 'reorganise', 'ajaxListFirst', 'addZero'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -292,7 +292,7 @@ class TransitionController extends Controller
         if ($data['b'] == '')
             $data['b'] = 0;
         $num = $data['b'] + 1;
-        $num = substr(strval($num + 10000), 1, 4); //数字补0
+        $num = $this->actionAddZero($num); //数字补0
         return $num;
     }
 
@@ -428,5 +428,12 @@ class TransitionController extends Controller
     public function actionAjaxListFirst()
     {
         echo json_encode($this->actionListFirst());
+    }
+
+    /*
+     * 补全4位
+     */
+    public function actionAddZero($num){
+        return substr(strval($num + 10000), 1, 4);
     }
 }

@@ -70,7 +70,7 @@ class Transition extends MyActiveRecord
 			'id' => 'ID',
 			'entry_num_prefix' => '凭证前缀',
 			'entry_num' => '凭证号',
-			'entry_date' => '凭证日期',
+			'entry_date' => '录入日期',
 			'entry_memo' => '凭证摘要',
 			'entry_transaction' => '借贷类别',
 			'entry_subject' => '借贷科目',
@@ -140,4 +140,11 @@ class Transition extends MyActiveRecord
 	{
 		return parent::model($className);
 	}
+
+    /*
+     * 补全4位
+     */
+    public function addZero($num){
+        return substr(strval($num + 10000), 1, 4);
+    }
 }

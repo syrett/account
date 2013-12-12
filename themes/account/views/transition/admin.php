@@ -2,14 +2,10 @@
 /* @var $this TransitionController */
 /* @var $model Transition */
 
-$this->breadcrumbs=array(
-	'Transitions'=>array('index'),
-	'Manage',
-);
 
-$this->menu=array(
-	array('label'=>'List Transition', 'url'=>array('index')),
-	array('label'=>'Create Transition', 'url'=>array('create')),
+$this->menu = array(
+    array('label' => 'List Transition', 'url' => array('index')),
+    array('label' => 'Create Transition', 'url' => array('create')),
 );
 
 Yii::app()->clientScript->registerScript('search', "
@@ -25,44 +21,52 @@ $('.search-form form').submit(function(){
 });
 ");
 ?>
+<div class="panel panel-default voucher form">
 
-<h1>Manage Transitions</h1>
+    <!-- Default panel contents -->
+    <div class="panel-heading">凭证管理</div>
+    <div class="panel-body v-title">
+        <?php echo CHtml::link('Advanced Search', '#', array('class' => 'search-button'));?>
+        <div class="search-form" style="display:none">
+            <?php $this->renderPartial('_search', array(
+                'model' => $model,
+            )); ?>
+        </div>
+        <!-- search-form -->
 
-<p>
-You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
-or <b>=</b>) at the beginning of each of your search values to specify how the comparison should be done.
-</p>
+        <?php $this->widget('zii.widgets.grid.CGridView', array(
+            'id' => 'transition-grid',
+            'dataProvider' => $model->search(),
+            'filter' => $model,
+            'columns' => array(
+                array(
+                    'header'=>'凭证号',
+                    'type'=>'raw',
+                    'value'=>'$data->entry_num_prefix. $data->addZero($data->entry_num)'),
+                'entry_memo',
+                'entry_transaction',
+                'entry_subject',
+                'entry_amount',
+                'entry_appendix',
+                'entry_date',
+                /*
+                'entry_subject',
+                'entry_amount',
+                'entry_appendix',
+                'entry_editor',
+                'entry_reviewer',
+                'entry_deleted',
+                'entry_reviewed',
+                'entry_posting',
+                'entry_closing',
+                */
+                array(
+                    'class' => 'CButtonColumn',
+                ),
+            ),
+        )); ?>
 
-<?php echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
-<div class="search-form" style="display:none">
-<?php $this->renderPartial('_search',array(
-	'model'=>$model,
-)); ?>
-</div><!-- search-form -->
 
-<?php $this->widget('zii.widgets.grid.CGridView', array(
-	'id'=>'transition-grid',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
-	'columns'=>array(
-        'entry_memo',
-		'entry_transaction',
-        'entry_subject',
-        'entry_amount',
-        'entry_appendix',
-		/*
-		'entry_subject',
-		'entry_amount',
-		'entry_appendix',
-		'entry_editor',
-		'entry_reviewer',
-		'entry_deleted',
-		'entry_reviewed',
-		'entry_posting',
-		'entry_closing',
-		*/
-		array(
-			'class'=>'CButtonColumn',
-		),
-	),
-)); ?>
+    </div>
+
+</div>
