@@ -83,3 +83,11 @@ div.form select.error
     text-align: right;
     padding: 30px;
 }
+
+.panel-heading {
+    padding: 10px 30px;
+}
+.actions {
+    text-align: right;
+    float: right;
+}

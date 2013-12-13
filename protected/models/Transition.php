@@ -31,6 +31,8 @@ class Transition extends MyActiveRecord
 		return 'transition';
 	}
 
+    public $entry_number;   //  entry_num_prefix. entry_num     完整凭证编号，供凭证管理、排序搜索使用
+
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -46,7 +48,7 @@ class Transition extends MyActiveRecord
             array('entry_appendix_id', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, entry_num_prefix, entry_num, entry_date, entry_memo, entry_transaction, entry_subject, entry_amount, entry_appendix, entry_appendix_id, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing', 'safe', 'on'=>'search'),
+			array('id, entry_number, entry_num_prefix, entry_num, entry_date, entry_memo, entry_transaction, entry_subject, entry_amount, entry_appendix, entry_appendix_id, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -83,6 +85,7 @@ class Transition extends MyActiveRecord
 			'entry_reviewed' => '凭证审核',
 			'entry_posting' => '凭证过账',
 			'entry_closing' => '结转凭证',
+            'entry_number' => '凭证编号'
 		);
 	}
 
@@ -118,10 +121,26 @@ class Transition extends MyActiveRecord
 		$criteria->compare('entry_deleted',$this->entry_deleted);
 		$criteria->compare('entry_reviewed',$this->entry_reviewed);
 		$criteria->compare('entry_posting',$this->entry_posting);
-		$criteria->compare('entry_closing',$this->entry_closing);
+        $criteria->compare('entry_closing',$this->entry_closing);
+//        $criteria->compare('entry_number',$this->entry_num_prefix, true);
 
-		return new CActiveDataProvider($this, array(
+        $sort = new CSort();
+        $sort->attributes = array(
+            'entry_number'=>array(
+                'asc'=>'entry_num_prefix,entry_num ASC',
+                'desc'=>'entry_num_prefix, entry_num desc'
+            ),
+            '*', // this adds all of the other columns as sortable
+        );
+
+        /* Default Sort Order*/
+        $sort->defaultOrder= array(
+            'entry_number'=>CSort::SORT_DESC,
+        );
+
+        return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+            'sort'=>$sort,
 		));
 	}
 
@@ -146,5 +165,12 @@ class Transition extends MyActiveRecord
      */
     public function addZero($num){
         return substr(strval($num + 10000), 1, 4);
+    }
+
+    /*
+     * transaction 借贷
+     */
+    public function transaction($action){
+        return $action==1?"借":"贷";
     }
 }

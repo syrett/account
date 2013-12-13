@@ -1,15 +1,30 @@
 <?php
 /* @var $this TransitionController */
 /* @var $model Transition */
-
-
-$this->menu=array(
-	array('label'=>'List Transition', 'url'=>array('index')),
-	array('label'=>'Create Transition', 'url'=>array('create')),
-	array('label'=>'View Transition', 'url'=>array('view', 'id'=>$_REQUEST['id'])),
-	array('label'=>'Manage Transition', 'url'=>array('admin')),
-);
 ?>
+<div class="panel panel-default voucher form">
 
+    <!-- Default panel contents -->
+    <div class="panel-heading">凭证修改
+        <div class="actions">
+            <?
+            $this->beginWidget('zii.widgets.CPortlet', array(
+                'title' => '',
+            ));
+            $this->widget('zii.widgets.CMenu', array(
+                'items' => array(
+                    array('label' => '凭证管理', 'url' => array('admin'),),
+                ),
+                'htmlOptions' => array('class' => 'operations', 'style' => 'list-style: none',),
+            ));
+            $this->endWidget();
+            ?>
+        </div>
+    </div>
+    <div class="panel-body v-title">
 
-<?php $this->renderPartial('_form', array('model'=>$model, 'action' => 'update')); ?>
+        <?php $this->renderPartial('_form', array('model' => $model, 'action' => 'update')); ?>
+
+    </div>
+
+</div>

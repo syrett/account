@@ -32,7 +32,7 @@ class TransitionController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'getTranSuffix', 'Appendix', 'ListFirst', 'reorganise', 'ajaxListFirst', 'addZero'),
+                'actions' => array('create', 'update', 'getTranSuffix', 'Appendix', 'ListFirst', 'reorganise', 'ajaxListFirst'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -131,7 +131,7 @@ class TransitionController extends Controller
 //                $this->redirect("index.php?r=transition/admin&entry_num=9");
                 $model = new Transition('search');
                 $model->unsetAttributes(); // clear any default values
-                $_GET['Transition'] = array('entry_num'=>$_POST['entry_num']);
+                $_GET['Transition'] = array('entry_num_prefix'=>$_POST['entry_num_prefix'],'entry_num'=>intval($_POST['entry_num']));
                 $model->attributes = $_GET['Transition'];
 
                 $this->render('admin', array(
@@ -292,7 +292,7 @@ class TransitionController extends Controller
         if ($data['b'] == '')
             $data['b'] = 0;
         $num = $data['b'] + 1;
-        $num = $this->actionAddZero($num); //数字补0
+        $num = $this->AddZero($num); //数字补0
         return $num;
     }
 
@@ -430,10 +430,4 @@ class TransitionController extends Controller
         echo json_encode($this->actionListFirst());
     }
 
-    /*
-     * 补全4位
-     */
-    public function actionAddZero($num){
-        return substr(strval($num + 10000), 1, 4);
-    }
 }

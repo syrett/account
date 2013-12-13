@@ -1,12 +1,10 @@
 <div class="panel panel-default voucher">
     <!-- Default panel contents -->
-    <div class="panel-heading">科目表管理</div>
-    <div class="panel-body v-title">
-        <div class="row">
+    <div class="panel-heading">科目表管理
+        <div class="actions">
             <?php
             /* @var $this SubjectsController */
             /* @var $model Subjects */
-
 
             $this->beginWidget('zii.widgets.CPortlet', array(
                 'title'=>'',
@@ -19,6 +17,9 @@
             ));
             $this->endWidget();
             ?>
+        </div></div>
+    <div class="panel-body v-title">
+        <div class="row">
 
             <h4>&nbsp;</h4>
 

@@ -32,6 +32,7 @@ return array(
 
     // application components
     'components'=>array(
+        'format'=>array('class'=>'YFormatter'),
         'user'=>array(
             // enable cookie-based authentication
             'allowAutoLogin'=>true,

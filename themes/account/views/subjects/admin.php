@@ -1,26 +1,11 @@
-<div class="panel panel-default voucher">
-    <!-- Default panel contents -->
-    <div class="panel-heading">科目表管理</div>
-    <div class="panel-body v-title">
-        <div class="row">
-            <?php
-            Yii::import('ext.select2.Select2');
-            $cs = Yii::app()->clientScript;
-            $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/checkinput.js', CClientScript::POS_HEAD);
-            $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/subjects.js', CClientScript::POS_HEAD);
-            /* @var $this SubjectsController */
-            /* @var $model Subjects */
-            $this->beginWidget('zii.widgets.CPortlet', array(
-                'title'=>'',
-            ));
-            $this->widget('zii.widgets.CMenu', array(
-                'items'=>array(
-                    array('label' => '添加科目', 'url' => array('create'),),
-                ),
-                'htmlOptions'=>array('class'=>'operations', 'style'=>'list-style: none',),
-            ));
-            $this->endWidget();
-            Yii::app()->clientScript->registerScript('search', "
+<?php
+Yii::import('ext.select2.Select2');
+$cs = Yii::app()->clientScript;
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/checkinput.js', CClientScript::POS_HEAD);
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/subjects.js', CClientScript::POS_HEAD);
+/* @var $this SubjectsController */
+/* @var $model Subjects */
+Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
 	$('.search-form').toggle();
 	return false;
@@ -32,7 +17,26 @@ $('.search-form form').submit(function(){
 	return false;
 });
 ");
-            ?>
+?>
+<div class="panel panel-default voucher">
+    <!-- Default panel contents -->
+    <div class="panel-heading">科目表管理
+        <div class="actions"><?
+
+            $this->beginWidget('zii.widgets.CPortlet', array(
+                'title'=>'',
+            ));
+            $this->widget('zii.widgets.CMenu', array(
+                'items'=>array(
+                    array('label' => '添加科目', 'url' => array('create'),),
+                ),
+                'htmlOptions'=>array('class'=>'operations', 'style'=>'list-style: none',),
+            ));
+            $this->endWidget();
+
+            ?></div></div>
+    <div class="panel-body v-title">
+        <div class="row">
             <p>
                 你可以通过比较符号 (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
                 或者 <b>=</b>) 来进行搜索

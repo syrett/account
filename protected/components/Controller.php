@@ -20,4 +20,11 @@ class Controller extends CController
 	 * for more details on how to specify this property.
 	 */
 	public $breadcrumbs=array();
+
+    /*
+     * 补全4位
+     */
+    public function AddZero($num){
+        return substr(strval($num + 10000), 1, 4);
+    }
 }

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 12, 2013 at 10:43 PM
+-- Generation Time: Dec 13, 2013 at 07:24 PM
 -- Server version: 5.1.66
 -- PHP Version: 5.3.2-1ubuntu4.18
 
@@ -182,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `subjects` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `No` (`sbj_number`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=343 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=344 ;
 
 --
 -- Dumping data for table `subjects`
@@ -221,7 +221,7 @@ INSERT INTO `subjects` (`id`, `sbj_number`, `sbj_name`, `sbj_cat`, `sbj_table`, 
 (53, 1406, '发出商品', '1', NULL, 0),
 (54, 1407, '商品进销差价', '1', NULL, 0),
 (55, 1408, '委托加工物资', '1', NULL, 0),
-(56, 1411, '周转材料1412包装物及低值易耗品', '1', NULL, 0),
+(56, 1411, '周转材料', '1', NULL, 0),
 (57, 1421, '消耗性生物资产', '1', NULL, 0),
 (58, 1431, '贵金属', '1', NULL, 0),
 (59, 1441, '抵债资产', '1', NULL, 0),
@@ -331,7 +331,8 @@ INSERT INTO `subjects` (`id`, `sbj_number`, `sbj_name`, `sbj_cat`, `sbj_table`, 
 (339, 6701, '资产减值损失', '5', NULL, 0),
 (340, 6711, '营业外支出', '5', NULL, 0),
 (341, 6801, '所得税费用', '5', NULL, 0),
-(342, 6901, '以前年度损益调整', '5', NULL, 0);
+(342, 6901, '以前年度损益调整', '5', NULL, 0),
+(343, 1412, '包装物及低值易耗品', '1', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -344,11 +345,11 @@ CREATE TABLE IF NOT EXISTS `transition` (
   `entry_num_prefix` varchar(10) DEFAULT NULL,
   `entry_num` int(11) NOT NULL,
   `entry_date` int(11) NOT NULL DEFAULT '0',
-  `entry_memo` varchar(100) DEFAULT NULL,
-  `entry_transaction` tinyint(1) NOT NULL,
+  `entry_memo` text,
+  `entry_transaction` tinyint(1) NOT NULL COMMENT '1:借;2:贷',
   `entry_subject` int(11) NOT NULL,
   `entry_amount` int(11) NOT NULL,
-  `entry_appendix` varchar(100) DEFAULT NULL,
+  `entry_appendix` text,
   `entry_appendix_id` int(8) NOT NULL COMMENT 'client vendor employee project ID',
   `entry_editor` int(11) NOT NULL,
   `entry_reviewer` int(11) NOT NULL,
@@ -361,20 +362,17 @@ CREATE TABLE IF NOT EXISTS `transition` (
   KEY `subject_id_idx` (`entry_subject`),
   KEY `re_employee_id_idx` (`entry_reviewer`),
   KEY `ed_employee_id_idx` (`entry_editor`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=142 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=210 ;
 
 --
 -- Dumping data for table `transition`
 --
 
 INSERT INTO `transition` (`id`, `entry_num_prefix`, `entry_num`, `entry_date`, `entry_memo`, `entry_transaction`, `entry_subject`, `entry_amount`, `entry_appendix`, `entry_appendix_id`, `entry_editor`, `entry_reviewer`, `entry_deleted`, `entry_reviewed`, `entry_posting`, `entry_closing`) VALUES
-(135, '201312', 1, 1386850364, '111', 1, 2202, 11, '11', 0, 1, 1, 0, 0, 0, 0),
-(136, '201312', 2, 1386850519, '11', 1, 1001, 11, '11', 0, 1, 1, 0, 0, 0, 0),
-(137, '201312', 2, 1386850519, '22', 1, 2202, 22, '22', 0, 1, 1, 0, 0, 0, 0),
-(138, '201312', 2, 1386850519, '33', 1, 6602, 33, '33', 0, 1, 1, 0, 0, 0, 0),
-(139, '201312', 2, 1386850519, '11', 1, 1001, 11, '11', 0, 1, 1, 0, 0, 0, 0),
-(140, '201312', 2, 1386850519, '22', 1, 2202, 22, '22', 1, 1, 1, 0, 0, 0, 0),
-(141, '201312', 2, 1386850519, '33', 1, 6602, 33, '33', 2, 1, 1, 0, 0, 0, 0);
+(206, '201312', 1, 1386932808, '1', 1, 2202, 11, '1111', 1, 1, 1, 0, 0, 0, 0),
+(207, '201312', 1, 1386932808, '2', 1, 1001, 22, '222', 0, 1, 1, 0, 0, 0, 0),
+(208, '201312', 2, 1386932846, '3', 1, 1122, 33, '333', 3, 1, 1, 0, 0, 0, 0),
+(209, '201312', 3, 1386933748, 'æˆ‘å°±æ˜¯', 1, 1001, 11, 'å¾ˆé•¿é™„åŠ å¾ˆé•¿é™„åŠ å¾ˆé•¿é™„åŠ å¾ˆé•¿é™„åŠ å¾ˆé•¿é™„åŠ å¾ˆé•¿é™„åŠ å¾ˆé•¿é™„åŠ å¾ˆé•¿é™„åŠ å¾ˆé•¿é™„åŠ å¾ˆé•¿é™„åŠ å¾ˆé•¿é™„åŠ å¾ˆé•¿é™„åŠ å¾ˆé•¿é™„åŠ å¾ˆé•¿é™„åŠ å¾ˆé•¿é™„åŠ å¾ˆé•¿é™„åŠ å¾ˆé•¿é™„åŠ å¾ˆé•¿é™„åŠ å¾ˆé•¿é™„åŠ å¾ˆé•¿é™„åŠ å¾ˆé•¿é™„åŠ å¾ˆé•¿é™„åŠ å¾ˆé•¿é™„åŠ å¾ˆé•¿é™„åŠ å¾ˆé•¿é™„åŠ ', 0, 1, 1, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -437,11 +435,11 @@ INSERT INTO `vendor` (`id`, `company`, `vat`, `phone`, `add`, `memo`) VALUES
 -- Constraints for table `employee`
 --
 ALTER TABLE `employee`
-  ADD CONSTRAINT `department_id` FOREIGN KEY (`id`) REFERENCES `department` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ADD CONSTRAINT `department_id` FOREIGN KEY (`id`) REFERENCES `department` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `transition`
 --
 ALTER TABLE `transition`
-  ADD CONSTRAINT `re_employee_id` FOREIGN KEY (`entry_reviewer`) REFERENCES `employee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `transition_ibfk_1` FOREIGN KEY (`entry_subject`) REFERENCES `subjects` (`sbj_number`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ADD CONSTRAINT `re_employee_id` FOREIGN KEY (`entry_reviewer`) REFERENCES `employee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+ADD CONSTRAINT `transition_ibfk_1` FOREIGN KEY (`entry_subject`) REFERENCES `subjects` (`sbj_number`) ON DELETE NO ACTION ON UPDATE NO ACTION;
