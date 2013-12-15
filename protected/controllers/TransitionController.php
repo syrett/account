@@ -32,7 +32,7 @@ class TransitionController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'getTranSuffix', 'Appendix', 'ListFirst', 'reorganise', 'ajaxListFirst'),
+                'actions' => array('create', 'update', 'getTranSuffix', 'Appendix', 'ListFirst', 'reorganise', 'ajaxListFirst',),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -60,28 +60,27 @@ class TransitionController extends Controller
      * get every row in the form
      * http://www.yiiframework.com/doc/guide/1.1/en/form.table
      */
-    public function getItemsToUpdate($id="")
+    public function getItemsToUpdate($id = "")
     {
         // Create an empty list of records
         $items = array();
 
-        if($id)
-        {$data = Yii::app()->db->createCommand()
-            ->select('entry_num_prefix, entry_num')
-            ->from('transition as a')
-            ->where('id="' . $id . '"')
-            ->queryRow();
-        // load models which is the same entry_num_prefix+entry_num
-        $data = Yii::app()->db->createCommand()
-            ->select('id')
-            ->from('transition as a')
-            ->where('entry_num_prefix="'. $data['entry_num_prefix']. '" and entry_num="'. $data['entry_num']. '"')
-            ->queryAll();
-            foreach($data as $item){
-                $items[] =  $this->loadModel($id);
+        if ($id) {
+            $data = Yii::app()->db->createCommand()
+                ->select('entry_num_prefix, entry_num')
+                ->from('transition as a')
+                ->where('id="' . $id . '"')
+                ->queryRow();
+            // load models which is the same entry_num_prefix+entry_num
+            $data = Yii::app()->db->createCommand()
+                ->select('id')
+                ->from('transition as a')
+                ->where('entry_num_prefix="' . $data['entry_num_prefix'] . '" and entry_num="' . $data['entry_num'] . '"')
+                ->queryAll();
+            foreach ($data as $item) {
+                $items[] = $this->loadModel($item['id']);
             }
-        }
-        // Iterate over each item from the submitted form
+        } // Iterate over each item from the submitted form
         elseif (isset($_POST['Transition']) && is_array($_POST['Transition'])) {
             foreach ($_POST['Transition'] as $item) {
                 // If item id is available, read the record from database
@@ -107,50 +106,29 @@ class TransitionController extends Controller
         $items = $this->getItemsToUpdate();
 
         if (isset($_POST['Transition'])) {
-            $valid = true;
-            foreach ($items as $i => $item) {
-                if (isset($_POST['Transition'][$i])) {
-                    $_POST['Transition'][$i]['entry_reviewer'] = intval($_POST['entry_reviewer']);
-                    $_POST['Transition'][$i]['entry_num'] = intval($_POST['entry_num']);
-                    $_POST['Transition'][$i]['entry_editor'] = intval($_POST['entry_editor']);
-                    $_POST['Transition'][$i]['entry_num_prefix'] = $_POST['entry_num_prefix'];
-                    $_POST['Transition'][$i]['entry_date'] = intval($_POST['entry_date']);
-                    $_POST['Transition'][$i]['entry_transaction'] = intval($_POST['Transition'][$i]['entry_transaction']);
-                    $_POST['Transition'][$i]['entry_subject'] = intval($_POST['Transition'][$i]['entry_subject']);
-                    $entry_appendix_id = isset($_POST['Transition'][$i]['entry_appendix_id'])?$_POST['Transition'][$i]['entry_appendix_id']:0;
-                    $_POST['Transition'][$i]['entry_appendix_id'] = intval($entry_appendix_id);
-                    $_POST['Transition'][$i]['entry_amount'] = intval($_POST['Transition'][$i]['entry_amount']);
-                    $item->attributes = $_POST['Transition'][$i];
-                    $valid = $valid && $item->validate();
-                }
-                if ($valid) // all items are valid
-                    if (isset($_POST['Transition'][$i]) && trim($_POST['Transition'][$i]['entry_memo']) != "")
-                        $item->save();
-            }
-            if ($valid){
-//                $this->redirect("index.php?r=transition/admin&entry_num=9");
+            $valid = $this->saveTransitions($items);
+            if ($valid) {
                 $model = new Transition('search');
                 $model->unsetAttributes(); // clear any default values
-                $_GET['Transition'] = array('entry_num_prefix'=>$_POST['entry_num_prefix'],'entry_num'=>intval($_POST['entry_num']));
+                $_GET['Transition'] = array('entry_num_prefix' => $_POST['entry_num_prefix'], 'entry_num' => intval($_POST['entry_num']));
                 $model->attributes = $_GET['Transition'];
 
                 $this->render('admin', array(
                     'model' => $model,
                 ));
-            }
-            else
+            } else
                 $this->render('failed', array(
                     'model' => $items,
                 ));
         } // 显示视图收集表格输入
 //              $this->redirect(array('view','id'=>$model->id));
-        else
-        {
+        else {
             $model = array();
-            $model[] = new Transition;
+            for ($i = 0; $i < 5; $i++)
+                $model[] = new Transition;
             $this->render('create', array(
                 'model' => $model,
-        ));
+            ));
         }
     }
 
@@ -162,19 +140,16 @@ class TransitionController extends Controller
     public function actionUpdate($id)
     {
 //        $model = $this->loadModel($id);
-        $model = $this->getItemsToUpdate($id);
+        $items = $this->getItemsToUpdate($id);
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Transition'])) {
-            $model->attributes = $_POST['Transition'];
-            if ($model->save())
-                $this->redirect(array('view', 'id' => $model->id));
+            $this->saveTransitions($items);
         }
-
         $this->render('update', array(
-            'model' => $model,
+            'model' => $items,
         ));
     }
 
@@ -226,22 +201,16 @@ class TransitionController extends Controller
         $del_condition = 'entry_num_prefix=:prefix and entry_deleted=:bool';
         Transition::model()->deleteAll($del_condition, array(':prefix' => $prefix, ':bool' => 1));
 
-        $sql = "select id from transition where entry_num_prefix=:prefix order by entry_num ASC"; //从小到大排序
+        $sql = "select id from transition where entry_num_prefix=:prefix";
         $data = Transition::model()->findAllBySql($sql, array(':prefix' => $prefix));
 
+        $arr = array();
         $i = 1;
-        $last = 0;
         foreach ($data as $row) {
-          if ($i == 1)
-            $last = $row['entry_num'];
-          
             $pk = $row['id'];
             Transition::model()->updateByPk($pk, array('entry_num' => $i));
-          
-          if ($last == $row['entry_num'])
             $i++;
         }
-
         $this->redirect("index.php?r=transition/index");
     }
 
@@ -327,15 +296,6 @@ class TransitionController extends Controller
     }
 
     /*
-     *  getVendorlist
-     */
-    public function getVendorlist()
-    {
-        $data = Vendor::model()->findAll();
-        return $data;
-    }
-
-    /*
      *  getClientlist
      */
     public function getClientlist()
@@ -363,23 +323,23 @@ class TransitionController extends Controller
     }
 
     /*
-     *  return corresponding appendix
-    */
-    public function actionAppendix()
+     * return json {"type":1;"html":"<select....."}
+     */
+    public function appendix($subject, $number)
     {
-        $subject = $_POST["Name"];
-        $number = $_POST["number"];
         $html = "";
-        if (Yii::app()->request->isPostRequest) {
+        $arr = array('type' => 0);
             switch ($subject) {
                 case 1122 : // 应付账款，列出供应商
-                    $data = $this->getVendorlist();
+                    $arr['type'] = 1;
+                    $data = Vendor::model()->findAll();
                     foreach ($data as $item) {
                         $html .= "<option value=" . $item['id'] . ">" . $item['company'] . "</options>";
                     }
                     break;
                 case 2202 : // 应收账款，列出客户列表
-                    $data = $this->getClientlist();
+                    $arr['type'] = 2;
+                    $data = Client::model()->findAll();
                     foreach ($data as $item) {
                         $html .= "<option value=" . $item['id'] . ">" . $item['company'] . "</options>";
                     }
@@ -387,6 +347,7 @@ class TransitionController extends Controller
                 default :
                     $list = $this->getSubjectID(4);
                     if (in_array($subject, $list)) { //全部 4:收入 类科目  列出项目project
+                        $arr['type'] = 3;
                         $data = Project::model()->findAll();
                         foreach ($data as $item) {
                             $html .= "<option value=" . $item['id'] . ">" . $item['name'] . "</options>";
@@ -395,6 +356,7 @@ class TransitionController extends Controller
                     }
                     $list = $this->getSubjectID(5);
                     if (in_array($subject, $list)) { //全部 5:费用 类科目   列出员工employee
+                        $arr['type'] = 4;
                         $data = Employee::model()->findAll();
                         foreach ($data as $item) {
                             $html .= "<option value=" . $item['id'] . ">" . $item['name'] . "</options>";
@@ -403,12 +365,20 @@ class TransitionController extends Controller
                     }
 
             }
+
             if ($html != "")
-                echo '<select id="Transition_'. $number. '_entry_appendix_id" name="Transition['. $number. '][entry_appendix_id]">' . $html . '</select>';
+                $arr += array('html' => '<select id="Transition_' . $number . '_entry_appendix_id" name="Transition[' . $number . '][entry_appendix_id]">' . $html . '</select>');
             else
-                echo '';
-        } else
-            throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
+                $arr += array('html' => '');
+            return json_encode($arr);
+    }
+
+    /*
+     *  return corresponding appendix
+    */
+    public function actionAppendix()
+    {
+        echo $this->appendix($_POST["subject"],$_POST["number"]);
     }
 
 
@@ -423,7 +393,7 @@ class TransitionController extends Controller
         $First = Subjects::model()->findAllBySql($sql);
         $arr = array();
         foreach ($First as $row) {
-            array_push($arr, array($row['sbj_number'], $row['sbj_number'] . $row['sbj_name']));
+            $arr += array($row['sbj_number'] => $row['sbj_number'] . $row['sbj_name']);
         };
         return $arr;
     }
@@ -433,7 +403,117 @@ class TransitionController extends Controller
      */
     public function actionAjaxListFirst()
     {
-        echo json_encode($this->actionListFirst());
+        $arr = $this->actionListFirst();
+        $result = array();
+        foreach($arr as $number=>$item){
+            array_push($result, array($number,$item));
+        }
+        echo json_encode($result);
     }
 
+    /*
+     * save transition
+     */
+    public function saveTransitions($items)
+    {
+        $valid = true;
+        foreach ($items as $i => $item) {
+            if (isset($_POST['Transition'][$i])) {
+                $_POST['Transition'][$i]['entry_reviewer'] = intval($_POST['Transition']['entry_reviewer']);
+                $_POST['Transition'][$i]['entry_num'] = intval($_POST['entry_num']);
+                $_POST['Transition'][$i]['entry_editor'] = intval($_POST['entry_editor']);
+                $_POST['Transition'][$i]['entry_num_prefix'] = $_POST['entry_num_prefix'];
+                $_POST['Transition'][$i]['entry_date'] = intval($_POST['entry_date']);
+                $_POST['Transition'][$i]['entry_transaction'] = intval($_POST['Transition'][$i]['entry_transaction']);
+                $_POST['Transition'][$i]['entry_subject'] = intval($_POST['Transition'][$i]['entry_subject']);
+                $entry_appendix_id = isset($_POST['Transition'][$i]['entry_appendix_id']) ? $_POST['Transition'][$i]['entry_appendix_id'] : 0;
+                $_POST['Transition'][$i]['entry_appendix_id'] = intval($entry_appendix_id);
+                $_POST['Transition'][$i]['entry_amount'] = intval($_POST['Transition'][$i]['entry_amount']);
+                $item->attributes = $_POST['Transition'][$i];
+                $valid = $valid && $item->validate();
+            }
+            if ($valid) // all items are valid
+                if (isset($_POST['Transition'][$i]) && trim($_POST['Transition'][$i]['entry_memo']) != "")
+                    $item->save();
+        }
+        return $valid;
+
+    }
+
+    /*
+     * 判断凭证属于的那个科目，并根据ID返回公司名字或员工名字
+     * 当应收账款被选择时，显示客户列表，必须选择一个客户；     1:  1122 => client
+     * 当应付账款被选择时，显示供应商列表，必须选择一个供应商；  2:   2202 => vendor
+     * 当费用类科目被选择时，显示员工列表，必须选择一个员工；    3:    第5类 => employee
+     * 当收入类科目被选择时，显示项目列表必须选择一个项目。      4:    第4类 => project
+     * $param   sbj_number  科目表编号
+     * $param   id          ID
+     * return @table name
+     */
+    public function subGetName($entry_appendix_type, $id)
+    {
+        $result = "";
+        if ($entry_appendix_type && $id) {
+            switch ($entry_appendix_type) {
+                case 1 : // 应付账款，列出供应商
+                    $ob = Client::model()->findByPk($id);
+                    $result = $ob['company'];
+                    break;
+                case 2 : // 应收账款，列出客户列表
+                    $ob = Transition::model()->findByPk($id);
+                    $result = $ob['company'];
+                    break;
+                case 3 :
+                    $ob = Project::model()->findByPk($id);
+                    $result = $ob['name'];
+                    break;
+                case 4 :
+                    $list = $this->getSubjectID(5);
+                    $ob = Employee::model()->findByPk($id);
+                    $result = $ob['name'];
+                    break;
+                default :
+                    break;
+            }
+        }
+        return $result;
+    }
+
+    /*
+     * 选择科目里，附加信息中对应表的数组
+     * @param enty_appendix_type
+     * @param entry_appendix_id
+     */
+    public function appendixList ($type){
+        $arr = array();
+        switch($type){
+            case 1 :
+                $data = Vendor::model()->findAll();
+                foreach($data as $item){
+                    $arr += array($item['id']=>$item['company']);
+                }
+                break;
+            case 2 :
+                $data = Client::model()->findAll();
+                foreach($data as $item){
+                    $arr += array($item['id']=>$item['company']);
+                }
+                break;
+            case 3 :
+                $data = Project::model()->findAll();
+                foreach($data as $item){
+                    $arr += array($item['id']=>$item['name']);
+                }
+                break;
+            case 4 :
+                $data = Employee::model()->findAll();
+                foreach($data as $item){
+                    $arr += array($item['id']=>$item['name']);
+                }
+                break;
+            default :
+                break;
+        }
+        return $arr;
+    }
 }

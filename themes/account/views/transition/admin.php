@@ -42,7 +42,9 @@ $('.search-form form').submit(function(){
         </div>
         <!-- search-form -->
 
-        <?php $this->widget('zii.widgets.grid.CGridView', array(
+        <?php
+
+        $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'transition-grid',
             'dataProvider' => $model->search(),
             'filter' => $model,
@@ -56,8 +58,10 @@ $('.search-form form').submit(function(){
                     'name'=>'entry_transaction',
                     'type'=>'shortText',
                     'value'=>'$data->transaction($data->entry_transaction)',
+                    'htmlOptions'=>array('style'=>'width:30px','width'=>'30px'),
+                    'headerHtmlOptions'=>array('width'=>'30px'),
                 ),
-                'entry_subject',
+                array('name'=>'entry_subject','value'=>'$data->getSbjName($data->entry_subject)'),
                 'entry_amount',
                 array('name'=>'entry_appendix','type'=>'shortText'),
                 array('name'=>'entry_date',

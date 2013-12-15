@@ -91,3 +91,7 @@ div.form select.error
     text-align: right;
     float: right;
 }
+input[name="Transition[entry_transaction]"]
+{
+    max-width: 55px;
+}

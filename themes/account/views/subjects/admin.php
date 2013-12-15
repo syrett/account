@@ -55,11 +55,11 @@ $('.search-form form').submit(function(){
                 'columns' => array(
                     'sbj_number',
                     'sbj_name',
-//                    array(
-//                        'name'=>'sbj_cat',
-//                            'filter'=>Select2::dropDownList('Subjects[sbj_cat]',$model->sbj_cat,CHtml::listData(Subjects::model()->findall(), 'sbj_cat', 'sbj_cat')),
-//                    ),
-                    'sbj_cat',
+                    array(
+                        'name'=>'sbj_cat',
+                            'filter'=>Select2::dropDownList('Subjects[sbj_cat]',$model->sbj_cat,CHtml::listData(Subjects::model()->findall(), 'sbj_cat', 'sbj_cat')),
+                    ),
+//                    array('name'=>'sbj_cat','header'=>'Active','filter'=>array('1'=>'a','2'=>'b'),'value'=>'$data->sbj_cat'),
                     'sbj_table',
                     array(
                         'class' => 'CButtonColumn',

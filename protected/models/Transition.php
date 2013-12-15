@@ -13,6 +13,7 @@
  * @property integer $entry_subject
  * @property integer $entry_amount
  * @property string $entry_appendix
+ * @property integer $entry_appendix_type
  * @property integer $entry_appendix_id
  * @property integer $entry_editor
  * @property integer $entry_reviewer
@@ -45,10 +46,10 @@ class Transition extends MyActiveRecord
 			array('entry_num, entry_transaction, entry_subject, entry_amount, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing', 'numerical', 'integerOnly'=>true),
 			array('entry_num_prefix', 'length', 'max'=>10),
 			array('entry_memo, entry_appendix', 'length', 'max'=>100),
-            array('entry_appendix_id', 'safe'),
+            array('entry_appendix_id, entry_appendix_type',  'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, entry_number, entry_num_prefix, entry_num, entry_date, entry_memo, entry_transaction, entry_subject, entry_amount, entry_appendix, entry_appendix_id, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing', 'safe', 'on'=>'search'),
+			array('id, entry_number, entry_num_prefix, entry_num, entry_date, entry_memo, entry_transaction, entry_subject, entry_amount, entry_appendix, entry_appendix_id, entry_appendix_type, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -74,7 +75,7 @@ class Transition extends MyActiveRecord
 			'entry_num' => '凭证号',
 			'entry_date' => '录入日期',
 			'entry_memo' => '凭证摘要',
-			'entry_transaction' => '借贷类别',
+			'entry_transaction' => '借贷',
 			'entry_subject' => '借贷科目',
 			'entry_amount' => '交易金额',
             'entry_appendix' => '附加信息',
@@ -172,5 +173,13 @@ class Transition extends MyActiveRecord
      */
     public function transaction($action){
         return $action==1?"借":"贷";
+    }
+
+    /*
+     * 科目表名称
+     */
+    public function getSbjName($id){
+        $model = Subjects::model()->findByAttributes(array('sbj_number'=>$id));
+        return $model->sbj_name;
     }
 }

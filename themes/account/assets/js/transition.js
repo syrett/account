@@ -11,10 +11,12 @@ $(document).ready(function () {
             url: url,
             type: "POST",
             datatype: "json",
-            data: {"Name": $(this).val(), "number": number},
-            success: function (html) {
+            data: {"subject": $(this).val(), "number": number},
+            success: function (json) {
+                obj = JSON.parse(json)
                 jQuery("#appendix_" + number).css('display', 'inherit')
-                jQuery("#appendix_" + number).html(html)
+                $("#Transition_"+number+"_entry_appendix_type").val(obj.type)
+                jQuery("#appendix_" + number).html(obj.html)
                 $("select[id^='Transition']").select2();
             },
             error: function (xhr, err) {
@@ -68,6 +70,9 @@ var addRow = function () {
             for (i = 0; i < msg.length; i++) {
                 html += "<option value='" + msg[i][0] + "'>" + msg[i][1] + "</option>";
             }
+        },
+        error: function(msg){
+          alert('服务器错误')
         }
     });
     html += '</select><input type="hidden" value="' + number + '"/></div>' +
