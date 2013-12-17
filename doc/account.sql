@@ -131,18 +131,21 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `post`;
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `post` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `subject_id` int(11) NOT NULL,
-  `month` timestamp(4) NOT NULL ,
+  `year` int(11) NOT NULL,
+  `month` int(11) NOT NULL,
   `balance` double NOT NULL,
+  `posted` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `fk_subject_id_idx` (`subject_id`),
   CONSTRAINT `fk_subject_id` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`sbj_number`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `post`
@@ -150,6 +153,7 @@ CREATE TABLE `post` (
 
 LOCK TABLES `post` WRITE;
 /*!40000 ALTER TABLE `post` DISABLE KEYS */;
+INSERT INTO `post` VALUES (1,1001,2013,12,100,0),(2,1002,2013,12,100,1);
 /*!40000 ALTER TABLE `post` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -279,7 +283,7 @@ CREATE TABLE `transition` (
 
 LOCK TABLES `transition` WRITE;
 /*!40000 ALTER TABLE `transition` DISABLE KEYS */;
-INSERT INTO `transition` VALUES (14,'201312',5,1387039637,'1',2,1122,1,'1',0,1,1,1,0,0,0,0),(15,'201312',8,1387040409,'1',1,1122,1,'1',0,2,1,1,0,0,0,0),(16,'201312',21,1387089036,'111',1,1122,11,'t3',1,1,1,1,0,0,0,0);
+INSERT INTO `transition` VALUES (14,'201312',1,1387039637,'1',2,1122,1,'1',0,1,1,1,0,0,0,0),(15,'201312',2,1387040409,'1',1,1122,1,'1',0,2,1,1,0,0,0,0),(16,'201312',3,1387089036,'111',1,1122,11,'t3',1,1,1,1,0,0,0,0);
 /*!40000 ALTER TABLE `transition` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -352,4 +356,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-12-15 17:59:32
+-- Dump completed on 2013-12-17 21:39:42
