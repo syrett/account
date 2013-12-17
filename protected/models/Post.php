@@ -11,6 +11,36 @@
  */
 class Post extends CActiveRecord
 {
+  
+      public function listunposted()
+    {
+      $year=$this->year;
+      $month=$this->month;
+
+      $subjects= new CDbCriteria;
+      $subjects->select="subjects.sbj_number, subjects.sbj_name";
+      $subjects->condition="post.id is null or post.posted=0 and post.year=".$year." and post.month=".$month;
+      $data=Subjects::model()->with('post')->findAll($subjects);
+      return new CArrayDataProvider($data);
+
+      //      $sql="select * from subjects left join(post) on (subjects.sbj_number=post.subject_id) where  post.id is null or post.posted=0 and post.year=2013 and post.month=12";
+    }
+    
+
+    public function listposted()
+    {
+      $year=$this->year;
+      $month=$this->month;
+
+      $subjects= new CDbCriteria();
+      $subjects->select="subjects.sbj_number, subjects.sbj_name";
+      $subjects->condition="post.posted=1 and post.year=".$year." and post.month=".$month;
+      $data=Subjects::model()->with('post')->findAll($subjects);
+      return new CArrayDataProvider($data);
+
+      //      $sql = "select subjects.sbj_number, subjects.sbj_name from subjects,post where post.subject_id=subjects.sbj_number and post.posted=1;";
+    }
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -44,8 +74,10 @@ class Post extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+                     'subjects'=>array(self::BELONGS_TO, 'Subjects', 'subject_id')
 		);
 	}
+
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -83,7 +115,7 @@ class Post extends CActiveRecord
 		$criteria->compare('month',$this->month,true);
 		$criteria->compare('balance',$this->balance);
 
-		return new CActiveDataProvider($this, array(
+ 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}

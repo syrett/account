@@ -32,7 +32,7 @@ class PostController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+                  'actions'=>array('create','update','unposted','posted'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -117,15 +117,68 @@ class PostController extends Controller
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 	}
 
+
+	public function actionPosted()
+	{
+      $model=new Post();
+      if (isset($_POST['year']))
+        $model->year=$_POST['year'];
+      else
+        $model->year=date('Y');
+
+      if (isset($_POST['month']))
+        $model->month=$_POST['month'];
+      else
+        $model->month=date('m');
+      $dataProvider=$model->listposted();
+      $this->render('list',array(
+                                  'dataProvider'=>$dataProvider,
+                                  'header'=>"已过账",
+                                  'nextLabel'=>"未过账",
+                                  'nextUrl'=>array('unposted'),
+                                  ));
+	}
+
+
+	public function actionUnposted()
+	{
+      $model=new Post();
+      if (isset($_POST['year']))
+        $model->year=$_POST['year'];
+      else
+        $model->year=date('Y');
+
+      if (isset($_POST['month']))
+        $model->month=$_POST['month'];
+      else
+        $model->month=date('m');
+      $dataProvider=$model->listunposted();
+      $this->render('list',array(
+                                  'dataProvider'=>$dataProvider,
+                                  'header'=>"未过账",
+                                  'nextLabel'=>"已过账",
+                                  'nextUrl'=>array('posted'),
+                                  ));
+	}
+
 	/**
 	 * Lists all models.
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Post');
-		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
-		));
+      $model=new Post();
+      if (isset($_POST['year']))
+        $model->year=$_POST['year'];
+      else
+        $model->year=date('Y');
+
+      if (isset($_POST['month']))
+        $model->month=$_POST['month'];
+      else
+        $model->month=date('m');
+      $this->render('index',array(
+                                  'model'=>$model,
+                                  ));
 	}
 
 	/**

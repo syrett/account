@@ -13,6 +13,24 @@
  */
 class Subjects extends CActiveRecord
 {
+
+      public function listunposted($year, $month)
+    {
+      $subjects= new CDbCriteria;
+      $subjects->select="subjects.sbj_number, subjects.sbj_name";
+      //      $subjects->join="JOIN post on subjects.sbj_number=post.subject_id";
+      $subjects->condition="post.id is null or post.posted=0 and post.year=".$year." and post.month=".$month;
+      $subjects->with=array('post');
+      
+      //      return $subjects;
+      //      $d=Subjects::model()->with('post')->findAll($subjects);
+      //      return $d;
+      return new CActiveDataProvider($this, array(
+                                                  'criteria'=>$subjects,
+                                                  ));
+      //      $sql="select * from subjects left join(post) on (subjects.sbj_number=post.subject_id) where  post.id is null or post.posted=0 and post.year=2013 and post.month=12";
+    }
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -48,6 +66,7 @@ class Subjects extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+                     'post'=>array(self::HAS_MANY, 'Post', 'subject_id'),
 		);
 	}
 

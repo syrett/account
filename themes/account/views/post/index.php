@@ -14,7 +14,13 @@ $this->menu=array(
 
 <h1>Posts</h1>
 
-<?php $this->widget('zii.widgets.CListView', array(
-	'dataProvider'=>$dataProvider,
-	'itemView'=>'_view',
-)); ?>
+
+<?php $this->widget('zii.widgets.grid.CGridView', array(
+                                                        'dataProvider'=>$dataProvider,
+                                                        //                                                        'dataProvider'=>$model->listunposted(),
+                                                  'columns'=>array(
+                                                                   'sbj_number',
+                                                                   'sbj_name')
+                                                   ));?>
+
+
