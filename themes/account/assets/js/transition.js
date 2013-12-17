@@ -41,8 +41,8 @@ $(document).ready(function () {
                 success: function (msg) {
                     if (msg != 0)
                         $("#tranNumber").attr('value', date + msg);
-                    $("#Transition_entry_num_prefix").attr('value', date);
-                    $("#Transition_entry_num").attr('value', msg);
+                    $("#entry_num_prefix").attr('value', date);
+                    $("#entry_num").attr('value', msg);
                 }
             });
         });

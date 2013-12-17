@@ -28,7 +28,7 @@ class TransitionController extends Controller
     {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'view'),
+                'actions' => array('index', 'view', 'delete'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -36,7 +36,7 @@ class TransitionController extends Controller
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete'),
+                'actions' => array('admin',),
                 'users' => array('admin'),
             ),
             array('deny', // deny all users
@@ -54,46 +54,6 @@ class TransitionController extends Controller
         $this->render('view', array(
             'model' => $this->loadModel($id),
         ));
-    }
-
-    /*
-     * get every row in the form
-     * http://www.yiiframework.com/doc/guide/1.1/en/form.table
-     */
-    public function getItemsToUpdate($id = "")
-    {
-        // Create an empty list of records
-        $items = array();
-
-        if ($id) {
-            $data = Yii::app()->db->createCommand()
-                ->select('entry_num_prefix, entry_num')
-                ->from('transition as a')
-                ->where('id="' . $id . '"')
-                ->queryRow();
-            // load models which is the same entry_num_prefix+entry_num
-            $data = Yii::app()->db->createCommand()
-                ->select('id')
-                ->from('transition as a')
-                ->where('entry_num_prefix="' . $data['entry_num_prefix'] . '" and entry_num="' . $data['entry_num'] . '"')
-                ->queryAll();
-            foreach ($data as $item) {
-                $items[] = $this->loadModel($item['id']);
-            }
-        } // Iterate over each item from the submitted form
-        elseif (isset($_POST['Transition']) && is_array($_POST['Transition'])) {
-            foreach ($_POST['Transition'] as $item) {
-                // If item id is available, read the record from database
-//                if ( array_key_exists('id', $item) ){
-//                    $items[] = Transition::model()->findByPk($item['id']);
-//                }
-                // Otherwise create a new record
-//                else {
-                $items[] = new Transition();
-//                }
-            }
-        }
-        return $items;
     }
 
     /**
@@ -117,7 +77,7 @@ class TransitionController extends Controller
                     'model' => $model,
                 ));
             } else
-                $this->render('failed', array(
+                $this->render('create', array(
                     'model' => $items,
                 ));
         } // 显示视图收集表格输入
@@ -139,14 +99,14 @@ class TransitionController extends Controller
      */
     public function actionUpdate($id)
     {
-//        $model = $this->loadModel($id);
         $items = $this->getItemsToUpdate($id);
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Transition'])) {
-            $this->saveTransitions($items);
+            $id = $this->saveTransitions($items);
+            $this->redirect(Yii::app()->createAbsoluteUrl('transition/update&id='. $id));
         }
         $this->render('update', array(
             'model' => $items,
@@ -160,11 +120,16 @@ class TransitionController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->loadModel($id)->delete();
+        if(Yii::app()->request->isPostRequest)
+        {
+        $items = $this->getItemsToUpdate($id);
+        foreach($items as $item)
+            $this->loadModel($item['id'])->delete();
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax']))
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     /**
@@ -412,29 +377,80 @@ class TransitionController extends Controller
     }
 
     /*
+     * get every row in the form
+     * http://www.yiiframework.com/doc/guide/1.1/en/form.table
+     */
+    public function getItemsToUpdate($id = "")
+    {
+        $count = 0;
+        $sum = 0;
+        // Create an empty list of records
+        $items = array();
+        if (isset($_POST['Transition']) && is_array($_POST['Transition'])) {
+            foreach ($_POST['Transition'] as $item) {
+                if(isset($item['entry_memo']) && trim($item['entry_memo'])!="")
+                {
+                    $items[] = new Transition('create');
+                    $sum++;
+                }
+            }
+        }
+        if ($id) {
+            $data = Yii::app()->db->createCommand()
+                ->select('entry_num_prefix, entry_num')
+                ->from('transition as a')
+                ->where('id="' . $id . '"')
+                ->queryRow();
+            // load models which is the same entry_num_prefix+entry_num
+            $data = Yii::app()->db->createCommand()
+                ->select('id')
+                ->from('transition as a')
+                ->where('entry_num_prefix="' . $data['entry_num_prefix'] . '" and entry_num="' . $data['entry_num'] . '"')
+                ->queryAll();
+            foreach ($data as $key=>$item) {
+                $items[$key] = $this->loadModel($item['id']);
+                $count++;
+            }
+
+        }
+        return $items;
+    }
+
+    /*
      * save transition
      */
     public function saveTransitions($items)
     {
         $valid = true;
+        $old = array(0=>"");
         foreach ($items as $i => $item) {
             if (isset($_POST['Transition'][$i])) {
-                $_POST['Transition'][$i]['entry_reviewer'] = intval($_POST['Transition']['entry_reviewer']);
+                $_POST['Transition'][$i]['entry_reviewer'] = intval($_POST['entry_reviewer']);
                 $_POST['Transition'][$i]['entry_num'] = intval($_POST['entry_num']);
                 $_POST['Transition'][$i]['entry_editor'] = intval($_POST['entry_editor']);
                 $_POST['Transition'][$i]['entry_num_prefix'] = $_POST['entry_num_prefix'];
                 $_POST['Transition'][$i]['entry_date'] = intval($_POST['entry_date']);
-                $_POST['Transition'][$i]['entry_transaction'] = intval($_POST['Transition'][$i]['entry_transaction']);
+//                $_POST['Transition'][$i]['entry_transaction'] = intval($_POST['Transition'][$i]['entry_transaction']);
                 $_POST['Transition'][$i]['entry_subject'] = intval($_POST['Transition'][$i]['entry_subject']);
                 $entry_appendix_id = isset($_POST['Transition'][$i]['entry_appendix_id']) ? $_POST['Transition'][$i]['entry_appendix_id'] : 0;
                 $_POST['Transition'][$i]['entry_appendix_id'] = intval($entry_appendix_id);
                 $_POST['Transition'][$i]['entry_amount'] = intval($_POST['Transition'][$i]['entry_amount']);
                 $item->attributes = $_POST['Transition'][$i];
+                if(isset($_POST['Transition'][$i]['id']))
+                    array_push($old , $_POST['Transition'][$i]['id']);
                 $valid = $valid && $item->validate();
             }
-            if ($valid) // all items are valid
-                if (isset($_POST['Transition'][$i]) && trim($_POST['Transition'][$i]['entry_memo']) != "")
-                    $item->save();
+        }
+        foreach($items as $i => $item){ //在页面提交的ID列表中没有数据库中的ID， 则删除此凭证下的ID
+            if(in_array($item->id, $old))
+            {
+                if ($valid) // all items are valid
+                    if (isset($_POST['Transition'][$i]) && trim($_POST['Transition'][$i]['entry_memo']) != "")
+                        $item->save();
+                $valid = $item->id;
+            }
+            else
+                $item->delete();
         }
         return $valid;
 

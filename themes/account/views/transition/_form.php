@@ -10,6 +10,7 @@ $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/bootstrap-datepicker.js', CClientScript::POS_HEAD);
 $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/datepicker.css');
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/transition.js', CClientScript::POS_HEAD);
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/checkinput.js', CClientScript::POS_HEAD);
 $this->pageTitle = Yii::app()->name;
 ?>
 
@@ -27,7 +28,9 @@ $this->pageTitle = Yii::app()->name;
         <div class="col-md-4">
             <h5>
                 凭证号:<input type="text" id='tranNumber' disabled value="<?
-                echo isset($action) && $action == 'update' ? $model[0]->entry_num_prefix . substr(strval($model[0]->entry_num + 10000), 1, 4) : $this->tranNumber()
+                echo isset($_REQUEST['id']) && $_REQUEST['id'] != ""
+                    ? $model[0]->entry_num_prefix . substr(strval($model[0]->entry_num + 10000), 1, 4)
+                    : $this->tranNumber()
                 ?>">
             </h5>
         </div>
@@ -68,7 +71,7 @@ $this->pageTitle = Yii::app()->name;
                                 <input type="hidden" value="<?= $i ?>"/>
                             </div>
                             <div class="col-md-1">
-                                <?php echo CHtml::activeTextField($item, "[$i]entry_amount", array('class' => 'form-control input-size')); ?>
+                                <?php echo CHtml::activeTextField($item, "[$i]entry_amount", array('class' => 'form-control input-size', 'onkeyup'=>'checkInputAmount(this)',)); ?>
                             </div>
                             <div class="col-md-4">
                                 <?php echo CHtml::activeTextField($item, "[$i]entry_appendix", array('style' => 'width: 60%', 'class' => 'form-control input-size', 'maxlength' => 100)); ?>
@@ -94,9 +97,19 @@ $this->pageTitle = Yii::app()->name;
                 <div>
                     <div class="row">
                         <?php
+                        if(isset($_REQUEST['id']))
+                        echo CHtml::button('删除凭证', array(
+                            'submit' => array('transition/delete', 'id'=>$_REQUEST['id']),
+                                'style' => 'float: left',
+                                'name' => 'btnDelete',
+                                'class' => 'btn btn-danger',
+                                'confirm' => '确定要删除该凭证下所有条目？'
+                            )
+                        );
+
                         echo CHtml::button('继续添加', array(
                                 'style' => 'float: right',
-                                'name' => 'btnBack',
+                                'name' => 'btnAdd',
                                 'class' => 'btn btn-info',
                                 'onclick' => "addRow()",
                             )
@@ -111,7 +124,12 @@ $this->pageTitle = Yii::app()->name;
                         foreach ($data as $row) {
                             $arr += array($row['id']=> $row['fullname']);
                         };
-                        echo CHtml::activeDropDownList($model[0], 'entry_reviewer',$arr);
+//                        echo CHtml::activeDropDownList($model[0], 'entry_reviewer',$arr);
+                        $this->widget('Select2', array(
+                            'name' => 'entry_reviewer',
+                            'value' => $model[0]['entry_reviewer'],
+                            'data' => $arr,
+                        ));
                         echo $form->error($item, 'entry_reviewer');
                         ?>
                     </div>
@@ -135,8 +153,8 @@ $this->pageTitle = Yii::app()->name;
         </tr>
     </table>
 
-    <input type="hidden" name="entry_num_prefix" id='entry_num_prefix' value="<?= date('Ym', time()) ?>"/>
-    <input type="hidden" name="entry_num" id='entry_num' value="<?= $this->tranSuffix("") ?>"/>
+    <input type="hidden" name="entry_num_prefix" id='entry_num_prefix' value="<? echo isset($_REQUEST['id'])==true?$model[0]['entry_num_prefix']:date('Ym', time()) ?>"/>
+    <input type="hidden" name="entry_num" id='entry_num' value="<? echo isset($_REQUEST['id'])==true?$model[0]['entry_num']:$this->tranSuffix("") ?>"/>
     <input type="hidden" name="entry_date" id='entry_date' value="<?= time() ?>"/>
     <input type="hidden" name="entry_editor" id='entry_editor' value="1"/>
     <input type="hidden" id="number" value="<?= $number ?>"/>
