@@ -172,14 +172,14 @@ class TransitionController extends Controller
         $i = 1;
         $last = 0;
         foreach ($data as $row) {
-            if ($i == 1)
-                $last = $row['entry_num'];
-
+          if ($i == 1)
+            $last = $row['entry_num'];
+          
             $pk = $row['id'];
             Transition::model()->updateByPk($pk, array('entry_num' => $i));
-
-            if ($last == $row['entry_num'])
-                $i++;
+          
+          if ($last == $row['entry_num'])
+            $i++;
         }
 
         $this->redirect("index.php?r=transition/index");
