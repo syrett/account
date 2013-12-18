@@ -3,16 +3,21 @@
 /* @var $dataProvider CActiveDataProvider */
 
 $this->breadcrumbs=array(
-	'Posts',
+	'过账',
 );
 
 $this->menu=array(
+	array('label'=>$nextLabel, 'url'=>$nextUrl),
 	array('label'=>'Create Post', 'url'=>array('create')),
 	array('label'=>'Manage Post', 'url'=>array('admin')),
 );
 ?>
 
-<h1>Posts</h1>
+<?php
+echo "<h1>";
+echo $header;
+echo "</h1>"
+?>
 
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
@@ -20,7 +25,7 @@ $this->menu=array(
                                                         //                                                        'dataProvider'=>$model->listunposted(),
                                                   'columns'=>array(
                                                                    'sbj_number',
-                                                                   'sbj_name')
+                                                                   'sbj_name:html')
                                                    ));?>
 
 
