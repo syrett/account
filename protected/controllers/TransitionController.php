@@ -166,20 +166,25 @@ class TransitionController extends Controller
         $del_condition = 'entry_num_prefix=:prefix and entry_deleted=:bool';
         Transition::model()->deleteAll($del_condition, array(':prefix' => $prefix, ':bool' => 1));
 
-        $sql = "select id from transition where entry_num_prefix=:prefix order by entry_num ASC"; //从小到大排序
+        $sql = "select id,entry_num from transition where entry_num_prefix=:prefix order by entry_num ASC"; //从小到大排序
         $data = Transition::model()->findAllBySql($sql, array(':prefix' => $prefix));
 
+        $num = 1;
         $i = 1;
         $last = 0;
         foreach ($data as $row) {
-          if ($i == 1)
+          if ($num == 1)
             $last = $row['entry_num'];
           
-            $pk = $row['id'];
-            Transition::model()->updateByPk($pk, array('entry_num' => $i));
           
-          if ($last == $row['entry_num'])
+          if ($last != $row['entry_num']) {
             $i++;
+          }
+          $pk = $row['id'];
+          Transition::model()->updateByPk($pk, array('entry_num' => $i));
+          $last = $row['entry_num'];
+          $num++;
+          
         }
 
         $this->redirect("index.php?r=transition/index");
