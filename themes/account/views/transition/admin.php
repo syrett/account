@@ -47,7 +47,9 @@ $('.search-form form').submit(function(){
         $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'transition-grid',
             'dataProvider' => $model->search(),
+            'rowCssClass'=>array('row-odd','row-even'),
             'filter' => $model,
+            'rowCssClassExpression' =>'$data->getClass($row,$data->entry_reviewed,$data->entry_deleted)',
             'columns' => array(
                 array(
                     'name'=>'entry_number',
@@ -64,24 +66,13 @@ $('.search-form form').submit(function(){
                 array('name'=>'entry_subject','value'=>'$data->getSbjName($data->entry_subject)'),
                 'entry_amount',
                 array('name'=>'entry_appendix','type'=>'shortText'),
-                array('name'=>'entry_date',
-                    'value'=>'date("y年m月d日",$data->entry_date)'),
-                /*
-                'entry_subject',
-                'entry_amount',
-                'entry_appendix',
-                'entry_editor',
-                'entry_reviewer',
-                'entry_deleted',
-                'entry_reviewed',
-                'entry_posting',
-                'entry_closing',
-                */
+                'entry_date',
                 array(
                     'class' => 'CButtonColumn',
                     'template' => '{update}',
                 ),
             ),
+            'htmlOptions' => array('class'=> 'table-striped')
         )); ?>
 
     </div>

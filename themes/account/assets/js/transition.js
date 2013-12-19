@@ -2,9 +2,11 @@
  * Created by jason.wang on 13-12-9.
  */
 
+//$(document).ajaxStop($("select[id^='Transition']").select2());
 $(document).ready(function () {
     $("select[id^='Transition']").select2();
-    $("select[id$='entry_subject']").change(function () {
+    $("div").on("load","select[id^='Transition']", function(){$(this).select2()})
+    $("div").delegate("select[id$='entry_subject']", "change",function () {
         var number = $(this).next().val();
         url = $("#entry_appendix").val();
         $.ajax({
@@ -25,19 +27,19 @@ $(document).ready(function () {
             }
         });
     });
-    $('#entry_date input').datepicker({
+    $('#transition_date input').datepicker({
         format: "yyyymm",
         minViewMode: 1,
         language: "zh-CN",
         autoclose: true
     })
         .on('changeDate', function (ev) {
-            var date = $('#entry_date input').val();
+            var date = $('#transition_date input').val();
             url = $("#entry_appendix").val();
             $.ajax({
                 type: "POST",
                 url: $("#entry_num_pre").val(),
-                data: {"entry_prefix": $('#entry_date input').val()},
+                data: {"entry_prefix": $('#transition_date input').val()},
                 success: function (msg) {
                     if (msg != 0)
                         $("#tranNumber").attr('value', date + msg);
@@ -78,14 +80,14 @@ var addRow = function () {
     html += '</select><input type="hidden" value="' + number + '"/></div>' +
         '<div class="col-md-1"><input class="form-control input-size" name="Transition[' + number + '][entry_amount]" id="Transition_' + number + '_entry_amount' +
         '" type="text" /></div>' +
-        "<div class='col-md-4'><span id='appendix_" + number + "' style='display: none; float: left'></span>" +
-        '<input style="width: 60%" class="form-control input-size" maxlength="100" name="Transition[' + number + '][entry_appendix]" id="Transition_' + number + '_entry_appendix" type="text">' +
+        "<div class='col-md-4'><input style='width: 60%' class='form-control input-size' maxlength='100' name='Transition[" + number + "][entry_appendix]' id='Transition_" + number + "_entry_appendix' type='text'>" +
+        "<span id='appendix_" + number + "' style='display: none; float: left'></span>" +
         "<button type='button' class='close' aria-hidden='true' name='" + number + "' onclick='rmRow(this)'>&times;</button></div></div>"
 
     $("#transitionRows").append(html)
     number = (parseInt($("#number").val()) + 1).toString();
     $("#number").val(number)
-    $('select[id^="Transition"]').select2();
+    $("select[id^='Transition']").select2();
 }
 
 var rmRow = function (ob) {

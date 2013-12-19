@@ -22,8 +22,8 @@ $this->pageTitle = Yii::app()->name;
     // There is a call to performAjaxValidation() commented in generated controller code.
     // See class documentation of CActiveForm for details on this.
     'enableAjaxValidation' => false,
+    'enableClientValidation' => true,
 )); ?>
-
     <div class="row">
         <div class="col-md-4">
             <h5>
@@ -34,7 +34,7 @@ $this->pageTitle = Yii::app()->name;
                 ?>">
             </h5>
         </div>
-        <div class="col-md-4" id="entry_date"><h5>日期:
+        <div class="col-md-4" id="transition_date"><h5>日期:
                 <input type="text" class="span2" value="<?php echo date("Ym"); ?>" id="dp1" readonly/>
             </h5>
             <input type="hidden" id="entry_num_pre"
@@ -127,7 +127,7 @@ $this->pageTitle = Yii::app()->name;
 //                        echo CHtml::activeDropDownList($model[0], 'entry_reviewer',$arr);
                         $this->widget('Select2', array(
                             'name' => 'entry_reviewer',
-                            'value' => $model[0]['entry_reviewer'],
+                            'value' => $model[0]->entry_reviewer,
                             'data' => $arr,
                         ));
                         echo $form->error($item, 'entry_reviewer');
@@ -135,8 +135,7 @@ $this->pageTitle = Yii::app()->name;
                     </div>
                     <div class="form-group buttons text-center">
 
-                        <?php echo $form->errorSummary($item); ?>
-
+                        <?php echo $form->error($item,'entry_amount',array('id'=>'entry_amount_msg')); ?>
                         <?php echo CHtml::submitButton($item->isNewRecord ? '添加' : '保存', array('class' => 'btn btn-primary',)); ?>
                         <?php
                         echo CHtml::button('返回', array(
@@ -146,6 +145,7 @@ $this->pageTitle = Yii::app()->name;
                             )
                         );
                         ?>
+
                     </div>
                 </div>
                 <!-- form -->
@@ -155,7 +155,6 @@ $this->pageTitle = Yii::app()->name;
 
     <input type="hidden" name="entry_num_prefix" id='entry_num_prefix' value="<? echo isset($_REQUEST['id'])==true?$model[0]['entry_num_prefix']:date('Ym', time()) ?>"/>
     <input type="hidden" name="entry_num" id='entry_num' value="<? echo isset($_REQUEST['id'])==true?$model[0]['entry_num']:$this->tranSuffix("") ?>"/>
-    <input type="hidden" name="entry_date" id='entry_date' value="<?= time() ?>"/>
     <input type="hidden" name="entry_editor" id='entry_editor' value="1"/>
     <input type="hidden" id="number" value="<?= $number ?>"/>
     <input type="hidden" value="<? echo Yii::app()->createAbsoluteUrl("transition/Appendix") ?>" id="entry_appendix"/>

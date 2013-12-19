@@ -95,3 +95,12 @@ input[name="Transition[entry_transaction]"]
 {
     max-width: 55px;
 }
+.row-even {
+    background-color: #f9f9f9;
+}
+.row-deleted {
+    background-color: #f2dede;
+}
+.row-reviewed {
+    background-color: rgb(204, 255, 204);
+}
