@@ -134,7 +134,18 @@ $this->pageTitle = Yii::app()->name;
                         ?>
                     </div>
                     <div class="form-group buttons text-center">
+                        <?
 
+                        if(isset($_REQUEST['id']))
+                        echo CHtml::button(($model[0]->entry_reviewed==1)?'取消审核':'审核通过', array(
+                                'submit' => array('transition/review', array('id'=>$_REQUEST['id'], 'action'=>$model[0]->entry_reviewed)),
+                                'name' => 'btnDelete',
+                                'class' => 'btn btn-danger',
+                                'confirm' => ($model[0]->entry_reviewed==1)?'确认取消审核？':'确认通过审核？',
+                            )
+                        );
+
+                        ?>
                         <?php echo $form->error($item,'entry_amount',array('id'=>'entry_amount_msg')); ?>
                         <?php echo CHtml::submitButton($item->isNewRecord ? '添加' : '保存', array('class' => 'btn btn-primary',)); ?>
                         <?php

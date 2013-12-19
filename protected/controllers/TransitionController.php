@@ -32,7 +32,7 @@ class TransitionController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'getTranSuffix', 'Appendix', 'ListFirst', 'reorganise', 'ajaxListFirst',),
+                'actions' => array('create', 'update', 'getTranSuffix', 'Appendix', 'ListFirst', 'reorganise', 'ajaxListFirst', 'review'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -66,7 +66,7 @@ class TransitionController extends Controller
         if (isset($_POST['Transition'])) {
 //            $items = $this->getItemsToUpdate();
             $model = $this->saveTransitions();
-            if ($model&&$model[0]->validate()) {
+            if ($model && $model[0]->validate()) {
                 $model = new Transition('search');
                 $model->unsetAttributes(); // clear any default values
                 $_GET['Transition'] = array('entry_num_prefix' => $_POST['entry_num_prefix'], 'entry_num' => intval($_POST['entry_num']));
@@ -103,8 +103,7 @@ class TransitionController extends Controller
 
         if (isset($_POST['Transition'])) {
             $items = $this->saveTransitions();
-        }
-        else{
+        } else {
             $items = $this->getItemsToUpdate($id);
         }
         $this->render('update', array(
@@ -119,18 +118,17 @@ class TransitionController extends Controller
      */
     public function actionDelete($id)
     {
-        if(Yii::app()->request->isPostRequest)
-        {
-        $items = $this->getItemsToUpdate($id);
+        if (Yii::app()->request->isPostRequest) {
+            $items = $this->getItemsToUpdate($id);
             foreach ($items as $item) {
                 $item->entry_deleted = 1;
                 $item->save();
             }
 //            $this->loadModel($item['id'])->delete();  //删除记录
 
-        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
-            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+            // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+            if (!isset($_GET['ajax']))
+                $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
         }
     }
 
@@ -177,7 +175,7 @@ class TransitionController extends Controller
         $last = 0;
         foreach ($data as $row) {
             if ($num == 1)
-            $last = $row['entry_num'];
+                $last = $row['entry_num'];
 
 
             if ($last != $row['entry_num']) {
@@ -308,48 +306,48 @@ class TransitionController extends Controller
     {
         $html = "";
         $arr = array('type' => 0);
-            switch ($subject) {
-                case 1122 : // 应付账款，列出供应商
-                    $arr['type'] = 1;
-                    $data = Vendor::model()->findAll();
+        switch ($subject) {
+            case 1122 : // 应付账款，列出供应商
+                $arr['type'] = 1;
+                $data = Vendor::model()->findAll();
+                foreach ($data as $item) {
+                    $html .= "<option value=" . $item['id'] . ">" . $item['company'] . "</options>";
+                }
+                break;
+            case 2202 : // 应收账款，列出客户列表
+                $arr['type'] = 2;
+                $data = Client::model()->findAll();
+                foreach ($data as $item) {
+                    $html .= "<option value=" . $item['id'] . ">" . $item['company'] . "</options>";
+                }
+                break;
+            default :
+                $list = $this->getSubjectID(4);
+                if (in_array($subject, $list)) { //全部 4:收入 类科目  列出项目project
+                    $arr['type'] = 3;
+                    $data = Project::model()->findAll();
                     foreach ($data as $item) {
-                        $html .= "<option value=" . $item['id'] . ">" . $item['company'] . "</options>";
+                        $html .= "<option value=" . $item['id'] . ">" . $item['name'] . "</options>";
                     }
                     break;
-                case 2202 : // 应收账款，列出客户列表
-                    $arr['type'] = 2;
-                    $data = Client::model()->findAll();
+                }
+                $list = $this->getSubjectID(5);
+                if (in_array($subject, $list)) { //全部 5:费用 类科目   列出员工employee
+                    $arr['type'] = 4;
+                    $data = Employee::model()->findAll();
                     foreach ($data as $item) {
-                        $html .= "<option value=" . $item['id'] . ">" . $item['company'] . "</options>";
+                        $html .= "<option value=" . $item['id'] . ">" . $item['name'] . "</options>";
                     }
                     break;
-                default :
-                    $list = $this->getSubjectID(4);
-                    if (in_array($subject, $list)) { //全部 4:收入 类科目  列出项目project
-                        $arr['type'] = 3;
-                        $data = Project::model()->findAll();
-                        foreach ($data as $item) {
-                            $html .= "<option value=" . $item['id'] . ">" . $item['name'] . "</options>";
-                        }
-                        break;
-                    }
-                    $list = $this->getSubjectID(5);
-                    if (in_array($subject, $list)) { //全部 5:费用 类科目   列出员工employee
-                        $arr['type'] = 4;
-                        $data = Employee::model()->findAll();
-                        foreach ($data as $item) {
-                            $html .= "<option value=" . $item['id'] . ">" . $item['name'] . "</options>";
-                        }
-                        break;
-                    }
+                }
 
-            }
+        }
 
-            if ($html != "")
-                $arr += array('html' => '<select id="Transition_' . $number . '_entry_appendix_id" name="Transition[' . $number . '][entry_appendix_id]">' . $html . '</select>');
-            else
-                $arr += array('html' => '');
-            return json_encode($arr);
+        if ($html != "")
+            $arr += array('html' => '<select id="Transition_' . $number . '_entry_appendix_id" name="Transition[' . $number . '][entry_appendix_id]">' . $html . '</select>');
+        else
+            $arr += array('html' => '');
+        return json_encode($arr);
     }
 
     /*
@@ -357,7 +355,7 @@ class TransitionController extends Controller
     */
     public function actionAppendix()
     {
-        echo $this->appendix($_POST["subject"],$_POST["number"]);
+        echo $this->appendix($_POST["subject"], $_POST["number"]);
     }
 
 
@@ -384,8 +382,8 @@ class TransitionController extends Controller
     {
         $arr = $this->actionListFirst();
         $result = array();
-        foreach($arr as $number=>$item){
-            array_push($result, array($number,$item));
+        foreach ($arr as $number => $item) {
+            array_push($result, array($number, $item));
         }
         echo json_encode($result);
     }
@@ -402,8 +400,7 @@ class TransitionController extends Controller
         $items = array();
         if (isset($_POST['Transition']) && is_array($_POST['Transition'])) {
             foreach ($_POST['Transition'] as $item) {
-                if(isset($item['entry_memo']) && trim($item['entry_memo'])!="")
-                {
+                if (isset($item['entry_memo']) && trim($item['entry_memo']) != "") {
                     $items[] = new Transition('create');
                     $sum++;
                 }
@@ -421,7 +418,7 @@ class TransitionController extends Controller
                 ->from('transition as a')
                 ->where('entry_num_prefix="' . $data['entry_num_prefix'] . '" and entry_num="' . $data['entry_num'] . '"')
                 ->queryAll();
-            foreach ($data as $key=>$item) {
+            foreach ($data as $key => $item) {
                 $items[$key] = $this->loadModel($item['id']);
                 $count++;
             }
@@ -432,26 +429,16 @@ class TransitionController extends Controller
     /*
      * save transition
      */
-    public function saveTransitions(){
+    public function saveTransitions()
+    {
         $valid = true;
         $old = array();
         $new = array();
         $items = array();
-        if(isset($_REQUEST['id'])){
-            $id = $_REQUEST['id'];
-            $data = Yii::app()->db->createCommand()
-                ->select('entry_num_prefix, entry_num')
-                ->from('transition as a')
-                ->where('id="' . $id . '"')
-                ->queryRow();
-            // load models which is the same entry_num_prefix+entry_num
-            $data = Yii::app()->db->createCommand()
-                ->select('id')
-                ->from('transition as a')
-                ->where('entry_num_prefix="' . $data['entry_num_prefix'] . '" and entry_num="' . $data['entry_num'] . '"')
-                ->queryAll();
-            foreach($data as $i){
-                array_push($old , $i['id']);
+        if (isset($_REQUEST['id'])) {
+            $data = $this->getItems($_REQUEST['id']);
+            foreach ($data as $i) {
+                array_push($old, $i['id']);
             }
         }
         foreach ($_POST['Transition'] as $Tran) {
@@ -460,33 +447,30 @@ class TransitionController extends Controller
                 $Tran['entry_num'] = intval($_POST['entry_num']);
                 $Tran['entry_editor'] = intval($_POST['entry_editor']);
                 $Tran['entry_num_prefix'] = $_POST['entry_num_prefix'];
-                $Tran['entry_date'] = date('Y-m-d H:i:s',time());
+                $Tran['entry_date'] = date('Y-m-d H:i:s', time());
                 $Tran['entry_subject'] = intval($Tran['entry_subject']);
                 $entry_appendix_id = isset($Tran['entry_appendix_id']) ? $Tran['entry_appendix_id'] : 0;
                 $Tran['entry_appendix_id'] = intval($entry_appendix_id);
                 $Tran['entry_amount'] = intval($Tran['entry_amount']);
-                if(isset($Tran['id'])&&$Tran['id']!="")
-                {
+                if (isset($Tran['id']) && $Tran['id'] != "") {
                     $item = $this->loadModel($Tran['id']);
                     $item->attributes = $Tran;
-                    if($item->validate())
-                    $item->save();
-                    $items[] = $item;
-                    array_push($new , $Tran['id']);
-                } elseif($Tran['entry_memo']!="")
-                    {
-                        $item = new Transition('create');
-                        $item->attributes = $Tran;
-                        if($item->validate())
+                    if ($item->validate())
                         $item->save();
-                        $items[] = $item;
-                        $valid = $item->id;
+                    $items[] = $item;
+                    array_push($new, $Tran['id']);
+                } elseif ($Tran['entry_memo'] != "") {
+                    $item = new Transition('create');
+                    $item->attributes = $Tran;
+                    if ($item->validate())
+                        $item->save();
+                    $items[] = $item;
+                    $valid = $item->id;
                 }
             }
         }
-        foreach($old as $i){
-            if(!in_array($i, $new))
-            {
+        foreach ($old as $i) {
+            if (!in_array($i, $new)) {
                 $item = $this->loadModel($i);
                 $item->delete();
             }
@@ -538,36 +522,94 @@ class TransitionController extends Controller
      * @param enty_appendix_type
      * @param entry_appendix_id
      */
-    public function appendixList ($type){
+    public function appendixList($type)
+    {
         $arr = array();
-        switch($type){
+        switch ($type) {
             case 1 :
                 $data = Vendor::model()->findAll();
-                foreach($data as $item){
-                    $arr += array($item['id']=>$item['company']);
+                foreach ($data as $item) {
+                    $arr += array($item['id'] => $item['company']);
                 }
                 break;
             case 2 :
                 $data = Client::model()->findAll();
-                foreach($data as $item){
-                    $arr += array($item['id']=>$item['company']);
+                foreach ($data as $item) {
+                    $arr += array($item['id'] => $item['company']);
                 }
                 break;
             case 3 :
                 $data = Project::model()->findAll();
-                foreach($data as $item){
-                    $arr += array($item['id']=>$item['name']);
+                foreach ($data as $item) {
+                    $arr += array($item['id'] => $item['name']);
                 }
                 break;
             case 4 :
                 $data = Employee::model()->findAll();
-                foreach($data as $item){
-                    $arr += array($item['id']=>$item['name']);
+                foreach ($data as $item) {
+                    $arr += array($item['id'] => $item['name']);
                 }
                 break;
             default :
                 break;
         }
         return $arr;
+    }
+
+    /*
+     * 审核
+     * @param entry_id
+     */
+    public function actionReview()
+    {
+        if (Yii::app()->request->isPostRequest) {
+            $id = $_REQUEST[0]['id'];
+            $list = $this->getItems($id);
+            $valid = true;
+            $itmes = array();
+            foreach($list as $item){
+                $item = $this->loadModel($item['id']);
+                if($_REQUEST[0]['action']==1)
+                    $item->entry_reviewed = 0;
+                else
+                    $item->entry_reviewed = 1;
+                if($valid = $item->validate() && $valid)
+                    $item->save();
+                else
+                $this->loadModel($item['id'])->entry_reviewer = 3; //当前登陆用户id
+                $items[] = $item;
+            }
+            if($valid)
+                $this->redirect($this->createUrl('transition/admin'));
+            else{
+                $this->render('update', array(
+                    'model' => $items,
+                ));
+            }
+//                $this->redirect(array('update','id'=>$id));
+//                $this->redirect($this->createUrl('transition/update'), array('admin'));
+        }
+
+    }
+
+    /*
+     * 获取ID下 该凭证所有条目ID
+     * $var $id
+     * @return array()
+     */
+    public function getItems($id)
+    {
+        $data = Yii::app()->db->createCommand()
+            ->select('entry_num_prefix, entry_num')
+            ->from('transition as a')
+            ->where('id="' . $id . '"')
+            ->queryRow();
+        // load models which is the same entry_num_prefix+entry_num
+        $data = Yii::app()->db->createCommand()
+            ->select('id')
+            ->from('transition as a')
+            ->where('entry_num_prefix="' . $data['entry_num_prefix'] . '" and entry_num="' . $data['entry_num'] . '"')
+            ->queryAll();
+        return $data;
     }
 }
