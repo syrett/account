@@ -10,7 +10,7 @@
  * @property string $add
  * @property string $memo
  */
-class Client extends CActiveRecord
+class Client extends MyActiveRecord
 {
 	/**
 	 * @return string the associated database table name

@@ -8,8 +8,8 @@ $this->breadcrumbs=array(
 
 $this->menu=array(
 	array('label'=>$nextLabel, 'url'=>$nextUrl),
-	array('label'=>'Create Post', 'url'=>array('create')),
-	array('label'=>'Manage Post', 'url'=>array('admin')),
+	array('label'=>'Create Post', 'url'=>array('post')),
+
 );
 ?>
 
@@ -21,11 +21,15 @@ echo "</h1>"
 
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
+                                                        'id'=>'post-grid',
                                                         'dataProvider'=>$dataProvider,
-                                                        //                                                        'dataProvider'=>$model->listunposted(),
-                                                  'columns'=>array(
-                                                                   'sbj_number',
-                                                                   'sbj_name:html')
+                                                        'columns'=>array(
+                                                                         array(
+                                                                               'class'=>'CCheckBoxColumn',
+                                                                               
+                                                                               ),
+                                                                         'sbj_number',
+                                                                         'sbj_name:html')
                                                    ));?>
 
 

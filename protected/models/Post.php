@@ -11,7 +11,7 @@
  */
 class Post extends CActiveRecord
 {
-  
+
       public function listunposted()
     {
       $year=$this->year;
