@@ -47,11 +47,11 @@ class Transition extends MyActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('entry_num, entry_date, entry_transaction, entry_subject, entry_amount, entry_editor, entry_reviewer', 'required'),
+            array('entry_num, entry_transaction, entry_subject, entry_amount, entry_editor, entry_reviewer', 'required'),
             array('entry_num, entry_transaction, entry_subject, entry_amount, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing', 'numerical', 'integerOnly' => true),
             array('entry_num_prefix', 'length', 'max' => 10),
             array('entry_memo, entry_appendix', 'length', 'max' => 100),
-            array('entry_appendix_id, entry_appendix_type', 'safe'),
+            array('entry_appendix_id, entry_appendix_type, entry_date', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, entry_number, entry_num_prefix, entry_num, entry_date, entry_memo, entry_transaction, entry_subject, entry_amount, entry_appendix, entry_appendix_id, entry_appendix_type, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing', 'safe', 'on' => 'search'),
@@ -213,12 +213,29 @@ class Transition extends MyActiveRecord
     }
 
     /*
+     * admin页面不同状态不同颜色
+     * $var row
+     * $var reviewed
+     * $var deleted
+     * @return css class name
+     */
+    public function getClass($row, $reviewed, $deleted){
+        $class = $row%2==1 ? "row-odd" : 'row-even';
+        if($deleted==1)
+            $class = "row-deleted";
+        if($reviewed==1)
+            $class = "row-reviewed";
+        return $class;
+    }
+
+    /*
      * 验证凭证借贷相等
      */
     public function check_entry_amount($attribute, $params)
     {
 //        $this->
         $sum = 0;
+//        Yii::app()->user->setFlash('sucess', 'asdf;ljasdl');
         foreach ($_POST['Transition'] as $item) {
             if (isset($item['entry_memo']) && trim($item['entry_memo']) != "")
                 if ($item['entry_transaction'] == "1")

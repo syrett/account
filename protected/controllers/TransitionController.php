@@ -63,33 +63,30 @@ class TransitionController extends Controller
     public function actionCreate()
     {
 
-        $items = $this->getItemsToUpdate();
-
         if (isset($_POST['Transition'])) {
-            $valid = $this->saveTransitions($items);
-            if ($valid) {
+//            $items = $this->getItemsToUpdate();
+            $model = $this->saveTransitions();
+            if ($model&&$model[0]->validate()) {
                 $model = new Transition('search');
                 $model->unsetAttributes(); // clear any default values
                 $_GET['Transition'] = array('entry_num_prefix' => $_POST['entry_num_prefix'], 'entry_num' => intval($_POST['entry_num']));
                 $model->attributes = $_GET['Transition'];
 
+//                $this->redirect($this->createUrl('transition/admin'));
                 $this->render('admin', array(
                     'model' => $model,
                 ));
-            } else
-                $this->render('create', array(
-                    'model' => $items,
-                ));
+            }
         } // 显示视图收集表格输入
 //              $this->redirect(array('view','id'=>$model->id));
         else {
             $model = array();
             for ($i = 0; $i < 5; $i++)
                 $model[] = new Transition;
-            $this->render('create', array(
-                'model' => $model,
-            ));
         }
+        $this->render('create', array(
+            'model' => $model,
+        ));
     }
 
     /**
@@ -99,14 +96,16 @@ class TransitionController extends Controller
      */
     public function actionUpdate($id)
     {
-        $items = $this->getItemsToUpdate($id);
+//        $items = $this->getItemsToUpdate($id);
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Transition'])) {
-            $id = $this->saveTransitions($items);
-            $this->redirect(Yii::app()->createAbsoluteUrl('transition/update&id='. $id));
+            $items = $this->saveTransitions();
+        }
+        else{
+            $items = $this->getItemsToUpdate($id);
         }
         $this->render('update', array(
             'model' => $items,
@@ -123,8 +122,11 @@ class TransitionController extends Controller
         if(Yii::app()->request->isPostRequest)
         {
         $items = $this->getItemsToUpdate($id);
-        foreach($items as $item)
-            $this->loadModel($item['id'])->delete();
+            foreach ($items as $item) {
+                $item->entry_deleted = 1;
+                $item->save();
+            }
+//            $this->loadModel($item['id'])->delete();  //删除记录
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax']))
@@ -137,10 +139,11 @@ class TransitionController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new CActiveDataProvider('Transition');
-        $this->render('index', array(
-            'dataProvider' => $dataProvider,
-        ));
+        $this->redirect($this->createUrl('transition/admin'));
+//        $dataProvider = new CActiveDataProvider('Transition');
+//        $this->render('index', array(
+//            'dataProvider' => $dataProvider,
+//        ));
     }
 
     /**
@@ -173,18 +176,18 @@ class TransitionController extends Controller
         $i = 1;
         $last = 0;
         foreach ($data as $row) {
-          if ($num == 1)
+            if ($num == 1)
             $last = $row['entry_num'];
-          
-          
-          if ($last != $row['entry_num']) {
-            $i++;
-          }
-          $pk = $row['id'];
-          Transition::model()->updateByPk($pk, array('entry_num' => $i));
-          $last = $row['entry_num'];
-          $num++;
-          
+
+
+            if ($last != $row['entry_num']) {
+                $i++;
+            }
+            $pk = $row['id'];
+            Transition::model()->updateByPk($pk, array('entry_num' => $i));
+            $last = $row['entry_num'];
+            $num++;
+
         }
 
         $this->redirect("index.php?r=transition/index");
@@ -422,7 +425,6 @@ class TransitionController extends Controller
                 $items[$key] = $this->loadModel($item['id']);
                 $count++;
             }
-
         }
         return $items;
     }
@@ -430,41 +432,66 @@ class TransitionController extends Controller
     /*
      * save transition
      */
-    public function saveTransitions($items)
-    {
+    public function saveTransitions(){
         $valid = true;
-        $old = array(0=>"");
-        foreach ($items as $i => $item) {
-            if (isset($_POST['Transition'][$i])) {
-                $_POST['Transition'][$i]['entry_reviewer'] = intval($_POST['entry_reviewer']);
-                $_POST['Transition'][$i]['entry_num'] = intval($_POST['entry_num']);
-                $_POST['Transition'][$i]['entry_editor'] = intval($_POST['entry_editor']);
-                $_POST['Transition'][$i]['entry_num_prefix'] = $_POST['entry_num_prefix'];
-                $_POST['Transition'][$i]['entry_date'] = intval($_POST['entry_date']);
-//                $_POST['Transition'][$i]['entry_transaction'] = intval($_POST['Transition'][$i]['entry_transaction']);
-                $_POST['Transition'][$i]['entry_subject'] = intval($_POST['Transition'][$i]['entry_subject']);
-                $entry_appendix_id = isset($_POST['Transition'][$i]['entry_appendix_id']) ? $_POST['Transition'][$i]['entry_appendix_id'] : 0;
-                $_POST['Transition'][$i]['entry_appendix_id'] = intval($entry_appendix_id);
-                $_POST['Transition'][$i]['entry_amount'] = intval($_POST['Transition'][$i]['entry_amount']);
-                $item->attributes = $_POST['Transition'][$i];
-                if(isset($_POST['Transition'][$i]['id']))
-                    array_push($old , $_POST['Transition'][$i]['id']);
-                $valid = $valid && $item->validate();
+        $old = array();
+        $new = array();
+        $items = array();
+        if(isset($_REQUEST['id'])){
+            $id = $_REQUEST['id'];
+            $data = Yii::app()->db->createCommand()
+                ->select('entry_num_prefix, entry_num')
+                ->from('transition as a')
+                ->where('id="' . $id . '"')
+                ->queryRow();
+            // load models which is the same entry_num_prefix+entry_num
+            $data = Yii::app()->db->createCommand()
+                ->select('id')
+                ->from('transition as a')
+                ->where('entry_num_prefix="' . $data['entry_num_prefix'] . '" and entry_num="' . $data['entry_num'] . '"')
+                ->queryAll();
+            foreach($data as $i){
+                array_push($old , $i['id']);
             }
         }
-        foreach($items as $i => $item){ //在页面提交的ID列表中没有数据库中的ID， 则删除此凭证下的ID
-            if(in_array($item->id, $old))
-            {
-                if ($valid) // all items are valid
-                    if (isset($_POST['Transition'][$i]) && trim($_POST['Transition'][$i]['entry_memo']) != "")
+        foreach ($_POST['Transition'] as $Tran) {
+            if (isset($Tran)) {
+                $Tran['entry_reviewer'] = intval($_POST['entry_reviewer']);
+                $Tran['entry_num'] = intval($_POST['entry_num']);
+                $Tran['entry_editor'] = intval($_POST['entry_editor']);
+                $Tran['entry_num_prefix'] = $_POST['entry_num_prefix'];
+                $Tran['entry_date'] = date('Y-m-d H:i:s',time());
+                $Tran['entry_subject'] = intval($Tran['entry_subject']);
+                $entry_appendix_id = isset($Tran['entry_appendix_id']) ? $Tran['entry_appendix_id'] : 0;
+                $Tran['entry_appendix_id'] = intval($entry_appendix_id);
+                $Tran['entry_amount'] = intval($Tran['entry_amount']);
+                if(isset($Tran['id'])&&$Tran['id']!="")
+                {
+                    $item = $this->loadModel($Tran['id']);
+                    $item->attributes = $Tran;
+                    if($item->validate())
+                    $item->save();
+                    $items[] = $item;
+                    array_push($new , $Tran['id']);
+                } elseif($Tran['entry_memo']!="")
+                    {
+                        $item = new Transition('create');
+                        $item->attributes = $Tran;
+                        if($item->validate())
                         $item->save();
-                $valid = $item->id;
+                        $items[] = $item;
+                        $valid = $item->id;
+                }
             }
-            else
-                $item->delete();
         }
-        return $valid;
-
+        foreach($old as $i){
+            if(!in_array($i, $new))
+            {
+                $item = $this->loadModel($i);
+                $item->delete();
+            }
+        }
+        return $items;
     }
 
     /*
