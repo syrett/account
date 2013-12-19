@@ -32,7 +32,7 @@ class PostController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                  'actions'=>array('create','update','unposted','posted'),
+                  'actions'=>array('create','update','unposted','posted','post'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -118,6 +118,66 @@ class PostController extends Controller
 	}
 
 
+    public function actionPost($subject,$date)
+    {
+      if (!isset($_POST['Post'])) {
+        $subject=$_GET['subject'];
+        $date=$_GET['date'];
+        $model = new Transition('search');
+        $model->unsetAttributes();  // clear any default values
+        $model->entry_num_prefix=$date;
+        $model->entry_subject=$subject;
+
+        $this->render('post', array(
+                                    'model' => $model,
+                                    ));
+      }
+      else
+        {
+        }
+    }
+
+//    public function actionPost()
+//    {
+//      $subject_id=1001;
+//      //todo
+//      echo "here";
+//      if (!isset($_POST['Post'])) {
+//        $model = new Transition('search');
+//        
+//        if (isset($_POST['year']))
+//          $year=$_POST['year'];
+//        else
+//          $year=date('Y');
+//
+//        if (isset($_POST['month']))
+//          $month=$_POST['month'];
+//        else
+//          $month=date('m');
+//      
+//        $sql = "select entry_num,entry_amount from transition";
+//        $data = Transition::model()->findAllBySql($sql);
+//        $dataProvider = new CArrayDataProvider($data);
+//        /*        $model->entry_num_prefix=$year.$month;
+//        $model->entry_subject=$subject_id;
+//        $dataProvider = $model->search();*/
+////        echo "<pre>";
+////        var_dump($dataProvider);
+////        echo "</pre>";
+//        //        exit(1);
+//        
+//        
+//        $this->render('post', array(
+//                                    'dataProvider' => $dataProvider));
+//      }
+//      else {
+//        echo "here1";
+//      
+//        //todo
+//      }
+//      
+//    }
+
 	public function actionPosted()
 	{
       $model=new Post();
@@ -191,6 +251,10 @@ class PostController extends Controller
 		if(isset($_GET['Post']))
 			$model->attributes=$_GET['Post'];
 
+        echo "<pre>";
+        var_dump($model->search());
+        echo "</pre>";
+        exit(1);
 		$this->render('admin',array(
 			'model'=>$model,
 		));
