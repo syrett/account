@@ -223,7 +223,7 @@ class Transition extends MyActiveRecord
         $class = $row%2==1 ? "row-odd" : 'row-even';
         if($deleted==1)
             $class = "row-deleted";
-        if($reviewed==1)
+        elseif($reviewed==1)
             $class = "row-reviewed";
         return $class;
     }
