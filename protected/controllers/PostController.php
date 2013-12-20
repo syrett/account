@@ -118,9 +118,9 @@ class PostController extends Controller
 	}
 
 
-    public function actionPost($subject,$date)
+    public function actionPost()
     {
-      if (!isset($_POST['Post'])) {
+      if (!$_POST) {
         $subject=$_GET['subject'];
         $date=$_GET['date'];
         $model = new Transition('search');
@@ -134,6 +134,9 @@ class PostController extends Controller
       }
       else
         {
+          $subject=$_POST['subject'];
+          $date=$_POST['date'];
+          
         }
     }
 
@@ -191,7 +194,7 @@ class PostController extends Controller
       else
         $model->month=date('m');
       $dataProvider=$model->listposted();
-      $this->render('list',array(
+      $this->render('posted',array(
                                   'dataProvider'=>$dataProvider,
                                   'header'=>"已过账",
                                   'nextLabel'=>"未过账",
@@ -203,17 +206,15 @@ class PostController extends Controller
 	public function actionUnposted()
 	{
       $model=new Post();
-      if (isset($_POST['year']))
-        $model->year=$_POST['year'];
-      else
-        $model->year=date('Y');
+      $year=(isset($_POST['year'])) ? $_POST['year'] : date('Y');
+      $month=(isset($_POST['month'])) ? $_POST['month'] : date('m');
+ 
+      $model->year=$year;
+      $model->month=$month;
 
-      if (isset($_POST['month']))
-        $model->month=$_POST['month'];
-      else
-        $model->month=date('m');
       $dataProvider=$model->listunposted();
-      $this->render('list',array(
+      $this->render('unposted',array(
+                                 'date'=>$year.$month,
                                   'dataProvider'=>$dataProvider,
                                   'header'=>"未过账",
                                   'nextLabel'=>"已过账",
