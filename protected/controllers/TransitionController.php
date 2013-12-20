@@ -116,15 +116,19 @@ class TransitionController extends Controller
      * If deletion is successful, the browser will be redirected to the 'admin' page.
      * @param integer $id the ID of the model to be deleted
      */
-    public function actionDelete($id)
+    public function actionDelete()
     {
         if (Yii::app()->request->isPostRequest) {
+            $id = $_REQUEST[0]['id'];
+            $action = $_REQUEST[0]['action'];
             $items = $this->getItemsToUpdate($id);
             foreach ($items as $item) {
+                if($action==0)
                 $item->entry_deleted = 1;
+                else
+                    $item->entry_deleted = 0;
                 $item->save();
             }
-//            $this->loadModel($item['id'])->delete();  //删除记录
 
             // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
             if (!isset($_GET['ajax']))
@@ -611,5 +615,21 @@ class TransitionController extends Controller
             ->where('entry_num_prefix="' . $data['entry_num_prefix'] . '" and entry_num="' . $data['entry_num'] . '"')
             ->queryAll();
         return $data;
+    }
+
+    /*
+     * Settlement凭证结账
+     * 本模块是在当月的全部凭证已经被审核完结的基础上，计算并保存本期发生额和期末余额。
+            程序流程：
+            1)	检查当月是否有结转凭证，如果有结转凭证，当月帐套关闭，无法再录入当月凭证；如果没有结转凭证，继续结转操作步骤2。
+            2)	结账时系统自动创建一张新的结转凭证，编号自动生成，第一条记录摘要为“结转凭证”，科目为“xx收入”，设置为“借”，金额为本期收入类科目贷方发生额合计；
+                第二记录摘要为“结转凭证”，科目为“xx费用”，设置为“贷”，金额为本期费用类科目借方发生额合计。
+                第三记录摘要为“结转凭证”，科目为“本年利润”，设置为“贷”，金额为第第一条记录与第二条记录的差额。此时“借”与“贷”记录中的金额值也应相等。
+            3)	另一会计人员登录，对“结转凭证”审核、过账，设置凭证数据表中结转记录对应的“已过账”字段为True。结转凭证的Entry_Closing字段值为True。
+            4)	完成
+
+     */
+    public function actionSettlement(){
+
     }
 }

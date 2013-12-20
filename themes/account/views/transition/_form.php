@@ -98,12 +98,12 @@ $this->pageTitle = Yii::app()->name;
                     <div class="row">
                         <?php
                         if(isset($_REQUEST['id']))
-                        echo CHtml::button('删除凭证', array(
-                            'submit' => array('transition/delete', 'id'=>$_REQUEST['id']),
+                        echo CHtml::button(($model[0]->entry_deleted==0)?'删除凭证':'恢复凭证', array(
+                            'submit' => array('transition/delete', array('id'=>$_REQUEST['id'],'action'=>$model[0]->entry_deleted)),
                                 'style' => 'float: left',
                                 'name' => 'btnDelete',
                                 'class' => 'btn btn-danger',
-                                'confirm' => '确定要删除该凭证下所有条目？'
+                                'confirm' => ($model[0]->entry_deleted==1)?'确定要删除该凭证下所有条目？':'确定要恢复该凭证？',
                             )
                         );
 
@@ -139,7 +139,7 @@ $this->pageTitle = Yii::app()->name;
                         if(isset($_REQUEST['id']))
                         echo CHtml::button(($model[0]->entry_reviewed==1)?'取消审核':'审核通过', array(
                                 'submit' => array('transition/review', array('id'=>$_REQUEST['id'], 'action'=>$model[0]->entry_reviewed)),
-                                'name' => 'btnDelete',
+                                'name' => 'btnReview',
                                 'class' => 'btn btn-danger',
                                 'confirm' => ($model[0]->entry_reviewed==1)?'确认取消审核？':'确认通过审核？',
                             )

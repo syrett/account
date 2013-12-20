@@ -75,6 +75,12 @@ $('.search-form form').submit(function(){
             'htmlOptions' => array('class'=> 'table-striped')
         )); ?>
 
+        <div class="div-group">
+            <div class="div-reviewed"></div>审核通过
+        </div>
+        <div class="div-group">
+            <div class="div-deleted"></div>删除凭证
+        </div>
     </div>
 
 </div>

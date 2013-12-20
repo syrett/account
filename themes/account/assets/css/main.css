@@ -104,3 +104,17 @@ input[name="Transition[entry_transaction]"]
 .row-reviewed {
     background-color: rgb(204, 255, 204);
 }
+.div-group{
+    float: left;
+    padding: 10px 40px;
+}
+.div-group div{
+    width: 50px;
+    height: 20px;
+}
+.div-reviewed{
+    background-color: rgb(204, 255, 204);
+}
+.div-deleted{
+    background-color: #f2dede;
+}
