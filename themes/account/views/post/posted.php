@@ -26,15 +26,6 @@ $this->widget('zii.widgets.grid.CGridView',
                     'id'=>'post-grid',
                     'dataProvider'=>$dataProvider,
                     'columns'=>array(
-                                     array(
-                                           'class'=>'CButtonColumn',
-                                           'template' => '{post}',
-                                           'buttons'=>array(
-                                                            'post'=>array(
-                                                                          'label'=>"过账",
-                                                                          'url'=>'"index.php?r=post/post&subject=$data->sbj_number&date='.$date.'"',),),
-
-                                           ),
                                      'sbj_number',
                                      'sbj_name'),
                     ));?>
