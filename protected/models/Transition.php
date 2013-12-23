@@ -152,30 +152,6 @@ class Transition extends MyActiveRecord
     }
 
 
-    public function postSearch()
-    {
-      $criteria = new CDbCriteria;
-      
-
-      $criteria->compare('entry_num_prefix', $this->entry_num_prefix, true);
-      $criteria->compare('entry_num', $this->entry_num, true);
-      $criteria->compare('entry_date', $this->entry_date, true);
-
-      $criteria->compare('entry_subject', $this->entry_subject, true);
-
-      $criteria->compare('entry_deleted', $this->entry_deleted);
-      $criteria->compare('entry_reviewed', $this->entry_reviewed);
-      $criteria->compare('entry_posting', $this->entry_posting);
-      $criteria->compare('entry_closing', $this->entry_closing);
-
-      return new CActiveDataProvider($this, array(
-                                                  'criteria'=>$criteria,
-                                                  ));
-    }
-    /*    public function save()
-    {
-      
-    }*/
     /**
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
@@ -245,5 +221,16 @@ class Transition extends MyActiveRecord
         }
         if ($sum != 0)
             $this->addError($attribute, '借贷必须相等');
+    }
+
+    /*
+     * 返回凭证是否都已经被审核, attributes由实例传入 
+     */
+    public function isAllReviewed()
+    {
+      $this->entry_reviewed=1;
+      $dataProvider = self::search();
+      $transtion = $dataProvider->getData();
+      return empty($transtion);
     }
 }
