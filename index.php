@@ -10,5 +10,6 @@ if (false !== strpos('www.jason.com', $_SERVER['SERVER_NAME'])) {
     $config=dirname(__FILE__).'/protected/config/development.php';
 }
 
+require_once(dirname(__FILE__).'/protected/extensions/utils.php');
 require_once($yii);
 Yii::createWebApplication($config)->run();
