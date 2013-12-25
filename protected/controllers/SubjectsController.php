@@ -181,8 +181,13 @@ class SubjectsController extends Controller
 		if(isset($_GET['Subjects']))
 			$model->attributes=$_GET['Subjects'];
 
+        $dataProvider= $model->search();
+        $dataProvider->pagination=array(
+                                        'pageSize' => 30
+                                        );
 		$this->render('admin',array(
-			'model'=>$model,
+                                    'dataProvider'=>$dataProvider,        
+                                    'model'=>$model,
 		));
 	}
 

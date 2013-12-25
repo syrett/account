@@ -14,8 +14,9 @@
 class Subjects extends CActiveRecord
 {
 
-      public function listunposted($year, $month)
-    {
+  public $select; // search的时候，定义返回字段
+  public function listunposted($year, $month)
+  {
       $subjects= new CDbCriteria;
       $subjects->select="subjects.sbj_number, subjects.sbj_name";
       //      $subjects->join="JOIN post on subjects.sbj_number=post.subject_id";
@@ -108,6 +109,9 @@ class Subjects extends CActiveRecord
 		$criteria->compare('sbj_cat',$this->sbj_cat,true);
 		$criteria->compare('sbj_table',$this->sbj_table,true);
 		$criteria->compare('has_sub',$this->has_sub,true);
+
+        if ($this->select != null)
+          $criteria->select=$this->select;
 //        $criteria->order = 'convert(sbj_name using gbk)';
 
 		return new CActiveDataProvider($this, array(
@@ -118,9 +122,7 @@ class Subjects extends CActiveRecord
                 'sbj_cat'=>array('asc'=>'convert(t.sbj_cat using gbk)','desc'=>'convert(t.sbj_cat using gbk) desc'),
                 'sbj_table'=>array('asc'=>'convert(t.sbj_table using gbk)','desc'=>'convert(t.sbj_table using gbk) desc'),
             )),
-            'pagination' => array(
-                'pageSize' => 30,
-            ),
+
 		));
 	}
 

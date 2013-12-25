@@ -52,7 +52,7 @@
                         array('label' => '雇员', 'url' => array('/employee')),
                         array('label' => '部门', 'url' => array('/department')),
                         array('label' => '凭证整理', 'url' => array('/transition/reorganise')),
-                        array('label' => '过账', 'url' => array('/post/unposted')),
+                        array('label' => '过账', 'url' => array('/post/post&date='.date('Y').date('m'))),
                     ),
                     'htmlOptions' => array('class' => 'nav navbar-nav'),
                 )); ?>

@@ -29,7 +29,7 @@ class Transition extends MyActiveRecord
      */
     public $check_entry_amount = 0; //是否验证过借贷相等 优化处理 待改进
     public $entry_number; //  entry_num_prefix. entry_num     完整凭证编号，供凭证管理、排序搜索使用
-
+    public $select; // search的时候，定义返回字段
     /**
      * @return string the associated database table name
      */
@@ -129,6 +129,9 @@ class Transition extends MyActiveRecord
         $criteria->compare('entry_reviewed', $this->entry_reviewed);
         $criteria->compare('entry_posting', $this->entry_posting);
         $criteria->compare('entry_closing', $this->entry_closing);
+
+        if ($this->select != null)
+          $criteria->select=$this->select;
 //        $criteria->compare('entry_number',$this->entry_num_prefix, true);
 
         $sort = new CSort();
@@ -226,11 +229,21 @@ class Transition extends MyActiveRecord
     /*
      * 返回凭证是否都已经被审核, attributes由实例传入 
      */
-    public function isAllReviewed()
+    public function isAllReviewed($date)
     {
-      $this->entry_reviewed=1;
-      $dataProvider = self::search();
+      $this->unsetAttributes();
+      $this->entry_reviewed=0;
+      $this->entry_num_prefix=$date;
+      $this->select="entry_num_prefix,entry_num,entry_reviewer";
+      $dataProvider = $this->search();
       $transtion = $dataProvider->getData();
       return empty($transtion);
+    }
+    
+    public function setPosted($bool=1)
+    {
+      Transition::model()->updateAll(array('entry_posting'=>$bool),
+                                     'entry_num_prefix=:prefix',
+                                     array(':prefix'=>$this->entry_num_prefix));
     }
 }

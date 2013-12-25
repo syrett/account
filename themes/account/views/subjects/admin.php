@@ -48,7 +48,7 @@ $('.search-form form').submit(function(){
 
             $this->widget('zii.widgets.grid.CGridView', array(
                 'id' => 'subjects-grid',
-                'dataProvider' => $model->search(),
+                'dataProvider' => $dataProvider,
                 'filter' => $model,
                 'filterCssClass'=>'filter',
 //                'filterSelector'=>'{filter}, #sbj_cat',

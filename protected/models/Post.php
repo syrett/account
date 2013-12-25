@@ -8,12 +8,14 @@
  * @property integer $subject_id
  * @property string $month
  * @property double $balance
+ * @property string $subject
  */
 class Post extends CActiveRecord
 {
 
-      public function listunposted()
-    {
+  public $select;
+  public function listunposted()
+  {
       $year=$this->year;
       $month=$this->month;
 
@@ -41,6 +43,122 @@ class Post extends CActiveRecord
       //      $sql = "select subjects.sbj_number, subjects.sbj_name from subjects,post where post.subject_id=subjects.sbj_number and post.posted=1;";
     }
 
+    public function getLastBalance($year, $month)
+    {
+      $lastPost = new Post;
+      $lastDate=date("Ym",strtotime("last month",mktime(0,0,0,$month,01,$year)));
+      $lastPost->year = substr($lastDate,0,4);
+      $lastPost->month = substr($lastDate,4,2);
+      return $lastPost->getBalance();
+    }
+
+    public function getBalance()
+    {
+      $this->select="subject_id,balance";
+      $dataArray=$this->search()->getData();
+      $arr=array();
+
+      foreach ($dataArray as $data) {
+        $arr[string($data['subject_id'])]=$data['balance'];
+      }
+      return $arr;
+    }
+
+    public function postAll()
+    {
+      $lastBalanceArr = $this->getLastBalance($this->year,$this->month);
+
+      $transition = new Transition();
+      $transition->unsetAttributes();
+      $transition->select="entry_subject,entry_transaction,entry_amount";
+      $transition->entry_num_prefix=beTranPrefix($this->year,$this->month);
+      $tranDataArray = $transition->search()->getData();
+
+      $balance=$lastBalanceArr;
+      
+      foreach($tranDataArray as $t){
+        if(in_array($t['entry_subject'], $balance)) {
+          $tmp_balance=$balance[$t['entry_subject']];
+        }
+        else
+          $tmp_balance=0;
+        if ($t['entry_transaction']=="1") {
+          $tmp_balance=$tmp_balance + floatval($t['entry_amount']);
+        }
+        elseif($t['entry_transaction']=="2") {
+          $tmp_balance=$tmp_balance - floatval($t['entry_amount']);
+        }
+        $balance[$t['entry_subject']]=$tmp_balance;
+      }
+      
+      return self::savePost($balance, $this->year,$this->month);
+    }
+
+    private function savePost($balance,$year,$month)
+    {
+      foreach($balance as $sub=>$bal){      
+        $post=Post::model()->find('subject_id=:subject and year=:year and month=:month', array(':subject'=>$sub,':year'=>$year,':month'=>$month));
+        if($post==null)
+          {
+            $post = new Post;
+          }
+
+        $post->subject_id=$sub;
+        $post->balance=$bal;
+        $post->posted=1;
+        $post->year=$this->year;
+        $post->month=$this->month;
+        if(!$post->save())
+          {
+            return false;
+          }
+        $post=null;
+
+      }
+      return true;
+
+    }
+    /*    public function posting($subject_id)
+    {
+
+      echo "subjects:".$subject_id;
+      //todo 得到上个月的余额
+      $lastPost = new Post;
+      $lastDate=date("Ym",strtotime("last month",mktime(0,0,0,$this->month,01,$this->year)));
+      $lastPost->year = substr($lastDate,0,4);
+      $lastPost->month = substr($lastDate,4,2);
+      $lastPost->subject_id = $subject_id;
+      $lastBalance=$lastPost->getBalance();
+
+      $transition = new Transition();
+      $transition->unsetAttributes();
+      $transition->select="entry_transaction,entry_amount,entry_reviewed";
+      $transition->entry_num_prefix=beTranPrefix($this->year,$this->month);
+      $transition->entry_subject=$subject_id;
+      
+      $dataArray = $transition->search()->getData();
+      
+      $balance=$lastBalance;
+      foreach($dataArray as $data){
+        echo "balance:".gettype($balance);
+      echo $balance;
+        if ($data['entry_transaction']=="1")
+          {
+            $balance=$balance + floatval($data['entry_amount']);
+          }
+        elseif($data['entry_transaction']=="2")
+          {echo "2";
+            $balance=$balance - floatval($data['entry_amount']);
+          }
+
+      }
+
+      $this->subject_id=$subject_id;
+      $this->balance=$balance;
+      $this->save();
+
+    }
+    */
 	/**
 	 * @return string the associated database table name
 	 */
@@ -112,9 +230,11 @@ class Post extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('subject_id',$this->subject_id);
+		$criteria->compare('year',$this->year,true);
 		$criteria->compare('month',$this->month,true);
 		$criteria->compare('balance',$this->balance);
-
+        if (isset($this->select))
+          $criteria->select=$this->select;
  		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
