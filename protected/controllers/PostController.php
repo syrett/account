@@ -133,7 +133,7 @@ class PostController extends Controller
 
       }
       else
-        echo "还有凭证未审核";
+        throw new CHttpException(400,"还有凭证未审核");
     }
 
 
