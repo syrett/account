@@ -22,7 +22,7 @@ class Subjects extends CActiveRecord
       //      $subjects->join="JOIN post on subjects.sbj_number=post.subject_id";
       $subjects->condition="post.id is null or post.posted=0 and post.year=".$year." and post.month=".$month;
       $subjects->with=array('post');
-      
+
       //      return $subjects;
       //      $d=Subjects::model()->with('post')->findAll($subjects);
       //      return $d;
@@ -136,4 +136,22 @@ class Subjects extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+    /*
+     * 科目表，与Controller中的函数重复，后期可优化
+     * 返回结账所需科目
+     */
+    public static function actionListFirst($type=1)
+    {
+        $where = "1=1";
+        if($type=1)
+            $where .= " and (sbj_cat=4 or sbj_cat=5)";
+        $where .= " and sbj_number < 10000";
+        $sql = "select * from subjects where ". $where; // 一级科目的为1001～9999
+        $First = Subjects::model()->findAllBySql($sql);
+        $arr = array();
+        foreach ($First as $row) {
+            array_push($arr, array('id'=>$row['sbj_number'],'name' => $row['sbj_name']));
+        };
+        return $arr;
+    }
 }

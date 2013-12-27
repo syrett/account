@@ -147,7 +147,7 @@ class SubjectsController extends Controller
 //        $this->render('list', array(
 //            'list'=>$arr,
 //        ));
-     
+
     }
 
     /*

@@ -56,6 +56,8 @@ return array(
             'username' => 'jason',
             'password' => 'lrc207107',
             'charset' => 'utf8',
+            'enableProfiling' => true,
+            'enableParamLogging' => true,
         ),
 
         'errorHandler'=>array(
@@ -66,8 +68,14 @@ return array(
             'class'=>'CLogRouter',
             'routes'=>array(
                 array(
-                    'class'=>'CFileLogRoute',
+                    'class'=>'ext.yii-debug-toolbar.YiiDebugToolbarRoute',
+                    'ipFilters'=>array('127.0.0.1','*'),
                     'levels'=>'error, warning',
+                ),
+                array(
+                    'class' => 'CProfileLogRoute',
+                    'levels' => 'profile',
+                    'enabled' => true,
                 ),
                 // uncomment the following to show log messages on web pages
                 /*

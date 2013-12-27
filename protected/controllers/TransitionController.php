@@ -32,7 +32,7 @@ class TransitionController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'getTranSuffix', 'Appendix', 'ListFirst', 'reorganise', 'ajaxListFirst', 'review'),
+                'actions' => array('create', 'update', 'getTranSuffix', 'Appendix', 'ListFirst', 'reorganise', 'ajaxListFirst', 'review', 'settlement'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -62,13 +62,14 @@ class TransitionController extends Controller
      */
     public function actionCreate()
     {
+//        Yii::app()->db->createCommand('set names "utf8";')->query();
 
         if (isset($_POST['Transition'])) {
 //            $items = $this->getItemsToUpdate();
             $model = $this->saveTransitions();
             if ($model && $model[0]->validate()) {
                 $model = new Transition('search');
-                $model->unsetAttributes(); // clear any default values
+//                $model->unsetAttributes(); // clear any default values
                 $_GET['Transition'] = array('entry_num_prefix' => $_POST['entry_num_prefix'], 'entry_num' => intval($_POST['entry_num']));
                 $model->attributes = $_GET['Transition'];
 
@@ -227,10 +228,18 @@ class TransitionController extends Controller
      */
     public function tranNumber($result = "")
     {
-        if ($result == "")
-            $result = date("Ym", time());
-        $result .= $this->tranSuffix($result);
+        $result = $this->tranPrefix(). $this->tranSuffix($result);
         return $result;
+    }
+    /*
+     * return transition number entry_prefix
+     */
+    public function tranPrefix($result = "")
+    {
+        if ($result == "")
+            return date("Ym", time());
+        else
+            return "";
     }
 
     /*
@@ -369,7 +378,6 @@ class TransitionController extends Controller
      */
     public function actionListFirst()
     {
-        //todo
         $sql = "select * from subjects where sbj_number < 10000"; // 一级科目的为1001～9999
         $First = Subjects::model()->findAllBySql($sql);
         $arr = array();
@@ -445,6 +453,7 @@ class TransitionController extends Controller
                 array_push($old, $i['id']);
             }
         }
+//        Yii::app()->db->createCommand('set names "utf8"')->execute();
         foreach ($_POST['Transition'] as $Tran) {
             if (isset($Tran)) {
                 $Tran['entry_reviewer'] = intval($_POST['entry_reviewer']);
@@ -464,6 +473,7 @@ class TransitionController extends Controller
                     $items[] = $item;
                     array_push($new, $Tran['id']);
                 } elseif ($Tran['entry_memo'] != "") {
+//                    $Tran['entry_memo'] = utf8_encode($Tran['entry_memo']);
                     $item = new Transition('create');
                     $item->attributes = $Tran;
                     if ($item->validate())
@@ -630,6 +640,85 @@ class TransitionController extends Controller
 
      */
     public function actionSettlement(){
+//      $trans = array();
+        $entry_prefix = $this->checkSettlement();
+        if($entry_prefix==date('Ym', time()))
+        {
+            echo '已经全部结账';
+            return 1;
+        }
+        $entry_num = $this->tranSuffix($entry_prefix);
+        $entry_memo = '结转凭证';
+        $entry_editor = 1;   //userid
+        $entry_reviewer = 1;
+        $arr = Subjects::model()->actionListFirst();
+        $id = "";
+        foreach($arr as $sub){
+            $tran = new Transition();
+            $tran->entry_num_prefix = $entry_prefix;
+            $tran->entry_num = $entry_num;
+            $tran->entry_memo = $entry_memo;
+            $tran->entry_editor = $entry_editor;
+            $tran->entry_reviewer = $entry_reviewer;
+            $tran->entry_subject = $sub['id'];
+            $tran->entry_amount = $this->getEntry_amount($entry_prefix, $sub['id']);
+//          $trans[] = $tran;
+            $id = $tran->save();
+            if($id==false)
+                Yii::log("errors saving SomeModel: " . var_export($tran->getErrors(), true), CLogger::LEVEL_WARNING, __METHOD__);
+
+        }
+        return $id;
+    }
+
+    /*
+     * 检查是否已经有结账凭证
+     * return 1:有 0:无
+     */
+    public function checkSettlement($date=""){
+//        $jzpz = convert("结转凭证", )
+        if($date=="201212")
+            return "100001";    //只能是2012年12月以后的日期
+        if($date=="")
+            $date = date('Ym', time());
+//        $data = Yii::app()->db->createCommand()
+//            ->select('id')
+//            ->from('transition')
+//            ->where('entry_num_prefix="' . $date . '" and entry_memo="结转凭证"');
+        $data = Transition::model()->findByAttributes(array('entry_memo'=>"结转凭证"));
+        try
+        {
+            Yii::app()->db->createCommand("SET NAMES utf8")->execute();
+            $data = $data->queryRow();
+        }
+        catch(Exception $e) // 如果有一条查询失败，则会抛出异常
+        {
+            $data = $e;
+        }
+        if($data){
+            if($date!=date('Ym', time()))
+                $date = date('Ym', strtotime('+1 months', $date));  //当前月如果已经有结转凭证，那么当月无需结账，所以+1
+            return $date;
+        }
+        else{
+            $date = date('Ym', strtotime('-1 months', $date));  //当前月如果没有结转凭证，那么需要检查上一个月，所以-1
+            return $this->checkSettlement($date);
+        }
+    }
+
+    /*
+     * 返回未结账的年月
+     */
+    public function getEntry_prefix(){
+        $entry_prefix = $this->tranPrefix();
+        return $entry_prefix;
+    }
+
+    /*
+     * 本期科目发生额合计
+     */
+    public function getEntry_amount($prefix, $sub_id){
+        return 12;
 
     }
 }

@@ -33,7 +33,8 @@ $('.search-form form').submit(function(){
             $this->endWidget();
 
             ?>
-</div>        </div>
+</div>
+    </div>
     <div class="panel-body v-title">
         <div class="search-form" style="display:none">
             <?php $this->renderPartial('_search', array(

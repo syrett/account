@@ -9,7 +9,7 @@
 
 class YFormatter extends CFormatter{
 
-    public $shortTextLimit= 10;
+    public $shortTextLimit= 12;
     /**
      *
      * Text formatter shortening long texts and displaying the full text

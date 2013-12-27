@@ -118,3 +118,20 @@ input[name="Transition[entry_transaction]"]
 .div-deleted{
     background-color: #f2dede;
 }
+.unit-group{
+    padding: 50px
+}
+.unit-item{
+    margin: 0 50px;
+    display: inline-block;
+}
+.unit-icon{
+    border-radius: 6px;
+    width: 150px;
+    height: 150px;
+    background-color: #9CBFD3;
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+    color: black;
+}
