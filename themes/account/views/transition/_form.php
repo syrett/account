@@ -28,7 +28,7 @@ $this->pageTitle = Yii::app()->name;
         <div class="col-md-4">
             <h5>
                 凭证号:<input type="text" id='tranNumber' disabled value="<?
-                echo isset($_REQUEST['id']) && $_REQUEST['id'] != ""
+                echo (isset($_REQUEST[0]['id']) && $_REQUEST[0]['id'] != "")
                     ? $model[0]->entry_num_prefix . substr(strval($model[0]->entry_num + 10000), 1, 4)
                     : $this->tranNumber()
                 ?>">
@@ -74,7 +74,6 @@ $this->pageTitle = Yii::app()->name;
                                 <?php echo CHtml::activeTextField($item, "[$i]entry_amount", array('class' => 'form-control input-size', 'onkeyup'=>'checkInputAmount(this)',)); ?>
                             </div>
                             <div class="col-md-4">
-                                <?php echo CHtml::activeTextField($item, "[$i]entry_appendix", array('style' => 'width: 60%', 'class' => 'form-control input-size', 'maxlength' => 100)); ?>
                                 <span id="appendix_<?= $i; ?>" style="<? if($item['entry_appendix_type']==""||$item['entry_appendix_type']==0){ ?>display: none; <?}?>float: left">
                                     <?
                                     $data = $this->appendixList($item['entry_appendix_type']);
@@ -97,13 +96,13 @@ $this->pageTitle = Yii::app()->name;
                 <div>
                     <div class="row">
                         <?php
-                        if(isset($_REQUEST['id']))
+                        if(isset($_REQUEST['id']) && $model[0]->entry_memo!='结转凭证' && $model[0]->entry_reviewed!=1 && $model[0]->entry_posting!=1 && $model[0]->entry_closing!=1)
                         echo CHtml::button(($model[0]->entry_deleted==0)?'删除凭证':'恢复凭证', array(
                             'submit' => array('transition/delete', array('id'=>$_REQUEST['id'],'action'=>$model[0]->entry_deleted)),
                                 'style' => 'float: left',
                                 'name' => 'btnDelete',
                                 'class' => 'btn btn-danger',
-                                'confirm' => ($model[0]->entry_deleted==1)?'确定要删除该凭证下所有条目？':'确定要恢复该凭证？',
+                                'confirm' => ($model[0]->entry_deleted==1)?'确定要恢复该凭证？':'确定要删除该凭证下所有条目？',
                             )
                         );
 
@@ -134,29 +133,39 @@ $this->pageTitle = Yii::app()->name;
                         ?>
                     </div>
                     <div class="form-group buttons text-center">
-                        <?
-
-                        if(isset($_REQUEST['id']))
-                        echo CHtml::button(($model[0]->entry_reviewed==1)?'取消审核':'审核通过', array(
-                                'submit' => array('transition/review', array('id'=>$_REQUEST['id'], 'action'=>$model[0]->entry_reviewed)),
-                                'name' => 'btnReview',
-                                'class' => 'btn btn-danger',
-                                'confirm' => ($model[0]->entry_reviewed==1)?'确认取消审核？':'确认通过审核？',
-                            )
-                        );
-
-                        ?>
-                        <?php echo $form->error($item,'entry_amount',array('id'=>'entry_amount_msg')); ?>
-                        <?php echo CHtml::submitButton($item->isNewRecord ? '添加' : '保存', array('class' => 'btn btn-primary',)); ?>
                         <?php
-                        echo CHtml::button('返回', array(
-                                'name' => 'btnBack',
-                                'class' => 'btn btn-warning',
-                                'onclick' => "history.go(-1)",
-                            )
-                        );
-                        ?>
+                            echo $form->error($item,'entry_amount',array('id'=>'entry_amount_msg'));
+                        if($model[0]->hasErrors()){
+                            echo CHtml::errorSummary($model[0]);
+                        }
 
+                            if(isset($_REQUEST['id']))
+                            echo CHtml::button(($model[0]->entry_reviewed==1)?'取消审核':'审核通过', array(
+                                    'submit' => array('transition/review', array('id'=>$_REQUEST['id'], 'action'=>$model[0]->entry_reviewed)),
+                                    'name' => 'btnReview',
+                                    'class' => 'btn btn-danger',
+                                    'confirm' => ($model[0]->entry_reviewed==1)?'确认取消审核？':'确认通过审核？',
+                                )
+                            );
+
+                            if(isset($_REQUEST[0]['id']))
+                            echo CHtml::button(($model[0]->entry_reviewed==1)?'取消审核':'审核通过', array(
+                                    'submit' => array('transition/review', array('id'=>$_REQUEST[0]['id'], 'action'=>$model[0]->entry_reviewed)),
+                                    'name' => 'btnReview',
+                                    'class' => 'btn btn-danger',
+                                    'confirm' => ($model[0]->entry_reviewed==1)?'确认取消审核？':'确认通过审核？',
+                                )
+                            );
+
+                            echo CHtml::submitButton($item->isNewRecord ? '添加' : '保存', array('class' => 'btn btn-primary',));
+
+                            echo CHtml::button('返回', array(
+                                    'name' => 'btnBack',
+                                    'class' => 'btn btn-warning',
+                                    'onclick' => "history.go(-1)",
+                                )
+                            );
+                        ?>
                     </div>
                 </div>
                 <!-- form -->

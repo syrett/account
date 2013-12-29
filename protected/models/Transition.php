@@ -150,6 +150,10 @@ class Transition extends MyActiveRecord
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'pagination'=>array(
+                'pageVar'=>'p',
+                'pageSize'=>'20',
+            ),
             'sort' => $sort,
         ));
     }
@@ -245,5 +249,19 @@ class Transition extends MyActiveRecord
       Transition::model()->updateAll(array('entry_posting'=>$bool),
                                      'entry_num_prefix=:prefix',
                                      array(':prefix'=>$this->entry_num_prefix));
+    }
+
+    /*
+     * 返回凭证是否都已经过账, attributes由实例传入
+     */
+    public function isAllPosted($date)
+    {
+        $this->unsetAttributes();
+        $this->entry_posting=0;
+        $this->entry_num_prefix=$date;
+        $this->select="entry_num_prefix,entry_num,entry_posting";
+        $dataProvider = $this->search();
+        $transtion = $dataProvider->getData();
+        return empty($transtion);
     }
 }

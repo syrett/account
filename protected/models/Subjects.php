@@ -150,7 +150,7 @@ class Subjects extends CActiveRecord
         $First = Subjects::model()->findAllBySql($sql);
         $arr = array();
         foreach ($First as $row) {
-            array_push($arr, array('id'=>$row['sbj_number'],'name' => $row['sbj_name']));
+            array_push($arr, array('id'=>$row['sbj_number'],'name' => $row['sbj_name'],'sbj_cat'=>$row['sbj_cat']));
         };
         return $arr;
     }

@@ -101,5 +101,6 @@ return array(
         // this is used in contact page
         'adminEmail'=>'webmaster@example.com',
         'sbj_cat'=>array(1 =>  '资产类 ' ,2 =>  '负债类 ' ,3 =>  '权益类 ' ,4 =>  '收入类 ' ,5 =>  '费用类'),
+        'startYear'=>'201310',
     ),
 );

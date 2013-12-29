@@ -84,10 +84,10 @@ class TransitionController extends Controller
             $model = array();
             for ($i = 0; $i < 5; $i++)
                 $model[] = new Transition;
+            $this->render('create', array(
+                'model' => $model,
+            ));
         }
-        $this->render('create', array(
-            'model' => $model,
-        ));
     }
 
     /**
@@ -583,6 +583,8 @@ class TransitionController extends Controller
             $itmes = array();
             foreach($list as $item){
                 $item = $this->loadModel($item['id']);
+                if($item->entry_memo=="结转凭证")
+                    $item->entry_closing = 1;   //已结账
                 if($_REQUEST[0]['action']==1)
                     $item->entry_reviewed = 0;
                 else
@@ -642,32 +644,50 @@ class TransitionController extends Controller
     public function actionSettlement(){
 //      $trans = array();
         $entry_prefix = $this->checkSettlement();
-        if($entry_prefix==date('Ym', time()))
+        if($entry_prefix>date('Ym', time()))
         {
             echo '已经全部结账';
             return 1;
         }
         $entry_num = $this->tranSuffix($entry_prefix);
+//        if($entry_num='0001')                     //有可能需要
+//            echo '本月无账目信息，无需结账';
         $entry_memo = '结转凭证';
         $entry_editor = 1;   //userid
         $entry_reviewer = 1;
         $arr = Subjects::model()->actionListFirst();
         $id = "";
+        $sum = 0;
         foreach($arr as $sub){
             $tran = new Transition();
             $tran->entry_num_prefix = $entry_prefix;
             $tran->entry_num = $entry_num;
             $tran->entry_memo = $entry_memo;
+            $tran->entry_transaction = $sub['sbj_cat']=='4'?1:2;    //4：收入类 借 5费用类 贷
             $tran->entry_editor = $entry_editor;
             $tran->entry_reviewer = $entry_reviewer;
             $tran->entry_subject = $sub['id'];
+            $amount = $this->getEntry_amount($entry_prefix, $sub['id']);
             $tran->entry_amount = $this->getEntry_amount($entry_prefix, $sub['id']);
+            $sum = $sub['sbj_cat']=='4'?$sum + $amount: $sum - $amount;     //该科目合计多少
 //          $trans[] = $tran;
-            $id = $tran->save();
-            if($id==false)
-                Yii::log("errors saving SomeModel: " . var_export($tran->getErrors(), true), CLogger::LEVEL_WARNING, __METHOD__);
-
+            $tran->save();
         }
+
+        $tran = new Transition();
+        $tran->entry_num_prefix = $entry_prefix;
+        $tran->entry_num = $entry_num;
+        $tran->entry_memo = $entry_memo;
+        $tran->entry_transaction = 2;    //本年利润 为贷
+        $tran->entry_editor = $entry_editor;
+        $tran->entry_reviewer = $entry_reviewer;
+        $tran->entry_subject = '4103';              //本年利润
+        $tran->entry_amount = $sum;
+        $id = $tran->save();
+        if($id)
+            $id = $tran->id;
+        else
+            Yii::log("errors saving SomeModel: " . var_export($tran->getErrors(), true), CLogger::LEVEL_WARNING, __METHOD__);
         return $id;
     }
 
@@ -675,36 +695,30 @@ class TransitionController extends Controller
      * 检查是否已经有结账凭证
      * return 1:有 0:无
      */
-    public function checkSettlement($date=""){
+    public function checkSettlement($date = "")
+    {
 //        $jzpz = convert("结转凭证", )
-        if($date=="201212")
-            return "100001";    //只能是2012年12月以后的日期
-        if($date=="")
+        $Tran = new Transition();
+        if ($date == Yii::app()->params['startYear'])
+            return date('Ym', strtotime('+1 months', strtotime(Yii::app()->params['startYear'] . '01'))); //只能是2012年12月以后的日期
+        if ($date == "")
             $date = date('Ym', time());
-//        $data = Yii::app()->db->createCommand()
-//            ->select('id')
-//            ->from('transition')
-//            ->where('entry_num_prefix="' . $date . '" and entry_memo="结转凭证"');
-        $data = Transition::model()->findByAttributes(array('entry_memo'=>"结转凭证"));
-        try
-        {
-            Yii::app()->db->createCommand("SET NAMES utf8")->execute();
-            $data = $data->queryRow();
+        if ($Tran->isAllPosted($date)) {
+            Transition::model()->unsetAttributes();
+            $data = Transition::model()->findByAttributes(array('entry_memo' => "结转凭证", 'entry_num_prefix' => $date));
+            if ($data) {
+//            if($date!=date('Ym', time()))   // strtotime format 07/28/2010
+                $date = date('Ym', strtotime('+1 months', strtotime($date . '01'))); //当前月如果已经有结转凭证，那么当月无需结账，所以+1
+                return $date;
+            } else {
+                $date = date('Ym', strtotime('-1 months', strtotime($date . '01'))); //当前月如果没有结转凭证，那么需要检查上一个月，所以-1
+                return $this->checkSettlement($date);
+            }
         }
-        catch(Exception $e) // 如果有一条查询失败，则会抛出异常
-        {
-            $data = $e;
-        }
-        if($data){
-            if($date!=date('Ym', time()))
-                $date = date('Ym', strtotime('+1 months', $date));  //当前月如果已经有结转凭证，那么当月无需结账，所以+1
-            return $date;
-        }
-        else{
-            $date = date('Ym', strtotime('-1 months', $date));  //当前月如果没有结转凭证，那么需要检查上一个月，所以-1
-            return $this->checkSettlement($date);
-        }
+        else
+            throw new CHttpException(400,"还有凭证未过账");
     }
+
 
     /*
      * 返回未结账的年月
@@ -718,7 +732,19 @@ class TransitionController extends Controller
      * 本期科目发生额合计
      */
     public function getEntry_amount($prefix, $sub_id){
-        return 12;
+        $sql ="SELECT sum(entry_amount) amount FROM `transition` WHERE entry_num_prefix='$prefix' and entry_subject='$sub_id'";
+        $data = Yii::app()->db->createCommand($sql)->queryAll();
+        if(isset($data[0]['amount']))
+            return $data[0]['amount'];
+        else
+            return 0;
+    }
+
+    /*
+     * 反结账
+     */
+    public function antiSettlement($date=""){
+
 
     }
 }
