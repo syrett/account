@@ -59,7 +59,7 @@ class Post extends CActiveRecord
       $arr=array();
 
       foreach ($dataArray as $data) {
-        $arr[string($data['subject_id'])]=$data['balance'];
+        $arr[$data['subject_id']]=$data['balance'];
       }
       return $arr;
     }

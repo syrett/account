@@ -643,10 +643,10 @@ class TransitionController extends Controller
      */
     public function actionSettlement(){
 //      $trans = array();
-        $entry_prefix = $this->checkSettlement();
-        if($entry_prefix>date('Ym', time()))
+        $entry_prefix = Transition::model()->checkSettlement();
+        if($entry_prefix>date('Ym', time())||!Transition::model()->confirmSettlement($entry_prefix))
         {
-            echo '已经全部结账';
+            echo $entry_prefix. '已经全部结账';
             return 1;
         }
         $entry_num = $this->tranSuffix($entry_prefix);
@@ -690,35 +690,6 @@ class TransitionController extends Controller
             Yii::log("errors saving SomeModel: " . var_export($tran->getErrors(), true), CLogger::LEVEL_WARNING, __METHOD__);
         return $id;
     }
-
-    /*
-     * 检查是否已经有结账凭证
-     * return 1:有 0:无
-     */
-    public function checkSettlement($date = "")
-    {
-//        $jzpz = convert("结转凭证", )
-        $Tran = new Transition();
-        if ($date == Yii::app()->params['startYear'])
-            return date('Ym', strtotime('+1 months', strtotime(Yii::app()->params['startYear'] . '01'))); //只能是2012年12月以后的日期
-        if ($date == "")
-            $date = date('Ym', time());
-        if ($Tran->isAllPosted($date)) {
-            Transition::model()->unsetAttributes();
-            $data = Transition::model()->findByAttributes(array('entry_memo' => "结转凭证", 'entry_num_prefix' => $date));
-            if ($data) {
-//            if($date!=date('Ym', time()))   // strtotime format 07/28/2010
-                $date = date('Ym', strtotime('+1 months', strtotime($date . '01'))); //当前月如果已经有结转凭证，那么当月无需结账，所以+1
-                return $date;
-            } else {
-                $date = date('Ym', strtotime('-1 months', strtotime($date . '01'))); //当前月如果没有结转凭证，那么需要检查上一个月，所以-1
-                return $this->checkSettlement($date);
-            }
-        }
-        else
-            throw new CHttpException(400,"还有凭证未过账");
-    }
-
 
     /*
      * 返回未结账的年月

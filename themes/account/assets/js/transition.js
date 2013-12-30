@@ -19,7 +19,7 @@ $(document).ready(function () {
                 jQuery("#appendix_" + number).css('display', 'inherit')
                 $("#Transition_"+number+"_entry_appendix_type").val(obj.type)
                 jQuery("#appendix_" + number).html(obj.html)
-                $("select[id^='Transition']").select2();
+                $("select[id='Transition_"+number+"_entry_appendix_id']").select2();
             },
             error: function (xhr, err) {
                 alert("readyState: " + xhr.readyState + "\nstatus: " + xhr.status);
@@ -80,14 +80,14 @@ var addRow = function () {
     html += '</select><input type="hidden" value="' + number + '"/></div>' +
         '<div class="col-md-1"><input class="form-control input-size" name="Transition[' + number + '][entry_amount]" id="Transition_' + number + '_entry_amount' +
         '" type="text" /></div>' +
-        "<div class='col-md-4'><input style='width: 60%' class='form-control input-size' maxlength='100' name='Transition[" + number + "][entry_appendix]' id='Transition_" + number + "_entry_appendix' type='text'>" +
+        "<div class='col-md-4'>" +
         "<span id='appendix_" + number + "' style='display: none; float: left'></span>" +
         "<button type='button' class='close' aria-hidden='true' name='" + number + "' onclick='rmRow(this)'>&times;</button></div></div>"
 
     $("#transitionRows").append(html)
+    $("select[id^='Transition_"+number+"']").select2();
     number = (parseInt($("#number").val()) + 1).toString();
     $("#number").val(number)
-    $("select[id^='Transition']").select2();
 }
 
 var rmRow = function (ob) {

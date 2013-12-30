@@ -120,6 +120,7 @@ class PostController extends Controller
 
     public function actionPost($date)
     {
+      $date = Transition::model()->checkSettlement();
       $transition = new Transition;
       $transition->entry_num_prefix=$date;
       if($transition->isAllReviewed($date)) {
