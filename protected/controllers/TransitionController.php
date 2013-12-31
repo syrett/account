@@ -32,7 +32,7 @@ class TransitionController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'getTranSuffix', 'Appendix', 'ListFirst', 'reorganise', 'ajaxListFirst', 'review', 'settlement'),
+                'actions' => array('create', 'update', 'getTranSuffix', 'Appendix', 'ListFirst', 'reorganise', 'ajaxListFirst', 'review', 'settlement', 'antiSettlement'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -655,6 +655,7 @@ class TransitionController extends Controller
         $entry_memo = '结转凭证';
         $entry_editor = 1;   //userid
         $entry_reviewer = 1;
+        $entry_settlement = 1;
         $arr = Subjects::model()->actionListFirst();
         $id = "";
         $sum = 0;
@@ -662,6 +663,7 @@ class TransitionController extends Controller
             $tran = new Transition();
             $tran->entry_num_prefix = $entry_prefix;
             $tran->entry_num = $entry_num;
+            $tran->entry_settlement = $entry_settlement;
             $tran->entry_memo = $entry_memo;
             $tran->entry_transaction = $sub['sbj_cat']=='4'?1:2;    //4：收入类 借 5费用类 贷
             $tran->entry_editor = $entry_editor;
@@ -680,6 +682,7 @@ class TransitionController extends Controller
         $tran->entry_memo = $entry_memo;
         $tran->entry_transaction = 2;    //本年利润 为贷
         $tran->entry_editor = $entry_editor;
+        $tran->entry_settlement = $entry_settlement;
         $tran->entry_reviewer = $entry_reviewer;
         $tran->entry_subject = '4103';              //本年利润
         $tran->entry_amount = $sum;
@@ -714,8 +717,32 @@ class TransitionController extends Controller
     /*
      * 反结账
      */
-    public function antiSettlement($date=""){
+    public function actionAntiSettlement(){
+        $date = Transition::model()->checkSettlement();
+        $model = 0;
+        if(Transition::model()->confirmSettlement($date))
+        {
+            $date = date('Ym', strtotime('-1 months', strtotime($date . '01')));
+        }
+        $model = Transition::model()->deleteAllByAttributes(array('entry_num_prefix' => $date, 'entry_settlement' => 1));
+        if($model>1)
+            echo $date. '反结账成功';
+        Yii::app()->user->setFlash('success', "Data1 saved!");
+        Yii::app()->user->setFlash('error', "Data2 failed!");
+        Yii::app()->user->setFlash('notice', "Data3 ignored.");
+        $this->render('success');
+        $this->renderPartial('//site/success');
+    }
 
+    public function actionSuccess()
+    {
 
+        if($message= Yii::app()->user->getFlash('success'))
+        {
+        }
+        else
+        {
+            $this->redirect(array('quote'));
+        }
     }
 }

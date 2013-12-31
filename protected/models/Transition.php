@@ -20,6 +20,7 @@
  * @property integer $entry_deleted
  * @property integer $entry_reviewed
  * @property integer $entry_posting
+ * @property integer $entry_settlement
  * @property integer $entry_closing
  */
 class Transition extends MyActiveRecord
@@ -54,7 +55,7 @@ class Transition extends MyActiveRecord
             array('entry_appendix_id, entry_appendix_type, entry_date', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, entry_number, entry_num_prefix, entry_num, entry_date, entry_memo, entry_transaction, entry_subject, entry_amount, entry_appendix, entry_appendix_id, entry_appendix_type, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing', 'safe', 'on' => 'search'),
+            array('id, entry_number, entry_num_prefix, entry_num, entry_date, entry_memo, entry_transaction, entry_subject, entry_amount, entry_appendix, entry_appendix_id, entry_appendix_type, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing, entry_settlement', 'safe', 'on' => 'search'),
             //自定义验证规则
             array('entry_amount', 'check_entry_amount', 'on' => 'create,update'), //借贷相等
         );
@@ -91,7 +92,8 @@ class Transition extends MyActiveRecord
             'entry_deleted' => '凭证删除',
             'entry_reviewed' => '凭证审核',
             'entry_posting' => '凭证过账',
-            'entry_closing' => '结转凭证',
+            'entry_closing' => '结转',
+            'entry_settlement' => '结转凭证',
             'entry_number' => '凭证编号'
         );
     }
@@ -128,6 +130,7 @@ class Transition extends MyActiveRecord
         $criteria->compare('entry_deleted', $this->entry_deleted);
         $criteria->compare('entry_reviewed', $this->entry_reviewed);
         $criteria->compare('entry_posting', $this->entry_posting);
+        $criteria->compare('entry_settlement', $this->entry_settlement);
         $criteria->compare('entry_closing', $this->entry_closing);
 
         if ($this->select != null)
@@ -228,6 +231,21 @@ class Transition extends MyActiveRecord
         }
         if ($sum != 0)
             $this->addError($attribute, '借贷必须相等');
+    }
+
+    /*
+     * 验证凭证借贷相等
+     */
+    public function check_entry_memo($attribute, $params)
+    {
+        foreach ($_POST['Transition'] as $item) {
+            if (isset($item['entry_memo']))
+                if (trim($item['entry_memo']) == "结转凭证")
+                {
+                    $this->addError($attribute, '摘要不能为 “结转凭证”');
+                    break;
+                }
+        }
     }
 
     /*

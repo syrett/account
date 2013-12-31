@@ -43,7 +43,7 @@ $this->pageTitle = Yii::app()->name;
     </div>
     <div class="unit-group">
         <div class="unit-item">
-            <a href="<?= $this->createUrl('Transition/index') ?>">
+            <a href="<?= $this->createUrl('Transition/antiSettlement') ?>">
                 <div class="unit-icon">
                     反结账
                 </div>
