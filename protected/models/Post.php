@@ -224,7 +224,6 @@ class Post extends CActiveRecord
 	 */
 	public function search()
 	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
 
@@ -250,4 +249,13 @@ class Post extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+    /*
+     *
+     */
+    public static function tranPost($sbj_id){
+        $par_id = substr($sbj_id, 0, -2);
+        $sql = "update post set subject_id = '$sbj_id' where subject_id = '$par_id'";
+        Yii::app()->db->createCommand($sql)->execute();
+    }
 }

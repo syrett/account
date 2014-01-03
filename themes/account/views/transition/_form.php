@@ -23,19 +23,32 @@ $this->pageTitle = Yii::app()->name;
     // See class documentation of CActiveForm for details on this.
     'enableAjaxValidation' => false,
     'enableClientValidation' => true,
-)); ?>
+));
+
+    if(isset($_REQUEST['id'])){
+        $_REQUEST[0]['id'] = $_REQUEST['id'];
+    }
+    if(isset($_REQUEST[0]['id'])){
+        $_REQUEST['id'] = $_REQUEST[0]['id'];
+    }
+
+?>
     <div class="row">
         <div class="col-md-4">
             <h5>
-                凭证号:<input type="text" id='tranNumber' disabled value="<?
+                凭证号:<input type="text" id='tranNumber' readonly value="<?
                 echo (isset($_REQUEST[0]['id']) && $_REQUEST[0]['id'] != "")
                     ? $model[0]->entry_num_prefix . substr(strval($model[0]->entry_num + 10000), 1, 4)
                     : $this->tranNumber()
                 ?>">
+                <input type="hidden" id="entry_day" name="entry_day" value="<?=$model[0]->entry_day?>" />
             </h5>
         </div>
         <div class="col-md-4" id="transition_date"><h5>日期:
-                <input type="text" class="span2" value="<?php echo date("Ym"); ?>" id="dp1" readonly/>
+                <input type="text" class="span2" value="<?
+                echo isset($model[0]->entry_num_prefix)
+                    ?$model[0]->entry_num_prefix. substr(strval($model[0]->entry_day + 100), 1, 2)
+                    : date('Ymd');?>" id="dp1" readonly/>
             </h5>
             <input type="hidden" id="entry_num_pre"
                    value="<? echo Yii::app()->createAbsoluteUrl("transition/GetTranSuffix") ?>"/></div>
@@ -47,8 +60,8 @@ $this->pageTitle = Yii::app()->name;
             <td>
                 <div class="row">
                     <div class="col-md-3">凭证摘要</div>
-                    <div class="col-md-1">借/贷</div>
                     <div class="col-md-3">科目</div>
+                    <div class="col-md-1">借/贷</div>
                     <div class="col-md-1">金额</div>
                     <div class="col-md-4">附加</div>
                 </div>
@@ -63,12 +76,12 @@ $this->pageTitle = Yii::app()->name;
                                 <?php echo CHtml::activeTextField($item, "[$i]entry_memo", array('class' => 'form-control input-size')); ?>
                                 <?php echo $form->error($item, '[$i]_entry_memo'); ?>
                             </div>
+                            <div class="col-md-3">
+                                <? echo CHtml::activeDropDownList($item, "[$i]entry_subject",Transition::model()->listSubjects(), array('class'=>'v-subject')); ?>
+                                <input type="hidden" value="<?= $i ?>"/>
+                            </div>
                             <div class="col-md-1">
                                 <? echo CHtml::activeDropDownList($item, "[$i]entry_transaction",array(1=>'借',2=>'贷')); ?>
-                            </div>
-                            <div class="col-md-3">
-                                <? echo CHtml::activeDropDownList($item, "[$i]entry_subject",$this->actionListFirst(), array('class'=>'v-subject')); ?>
-                                <input type="hidden" value="<?= $i ?>"/>
                             </div>
                             <div class="col-md-1">
                                 <?php echo CHtml::activeTextField($item, "[$i]entry_amount", array('class' => 'form-control input-size', 'onkeyup'=>'checkInputAmount(this)',)); ?>
@@ -96,7 +109,7 @@ $this->pageTitle = Yii::app()->name;
                 <div>
                     <div class="row">
                         <?php
-                        if(isset($_REQUEST['id']) && $model[0]->entry_memo!='结转凭证' && $model[0]->entry_reviewed!=1 && $model[0]->entry_posting!=1 && $model[0]->entry_closing!=1)
+                        if(isset($_REQUEST['id']) && $model[0]->entry_memo!='结转凭证' && $model[0]->entry_reviewed!=1 && $model[0]->entry_closing!=1)
                         echo CHtml::button(($model[0]->entry_deleted==0)?'删除凭证':'恢复凭证', array(
                             'submit' => array('transition/delete', array('id'=>$_REQUEST['id'],'action'=>$model[0]->entry_deleted)),
                                 'style' => 'float: left',
@@ -142,15 +155,6 @@ $this->pageTitle = Yii::app()->name;
                             if(isset($_REQUEST['id']))
                             echo CHtml::button(($model[0]->entry_reviewed==1)?'取消审核':'审核通过', array(
                                     'submit' => array('transition/review', array('id'=>$_REQUEST['id'], 'action'=>$model[0]->entry_reviewed)),
-                                    'name' => 'btnReview',
-                                    'class' => 'btn btn-danger',
-                                    'confirm' => ($model[0]->entry_reviewed==1)?'确认取消审核？':'确认通过审核？',
-                                )
-                            );
-
-                            if(isset($_REQUEST[0]['id']))
-                            echo CHtml::button(($model[0]->entry_reviewed==1)?'取消审核':'审核通过', array(
-                                    'submit' => array('transition/review', array('id'=>$_REQUEST[0]['id'], 'action'=>$model[0]->entry_reviewed)),
                                     'name' => 'btnReview',
                                     'class' => 'btn btn-danger',
                                     'confirm' => ($model[0]->entry_reviewed==1)?'确认取消审核？':'确认通过审核？',

@@ -67,7 +67,7 @@ $('.search-form form').submit(function(){
                 array('name'=>'entry_subject','value'=>'$data->getSbjName($data->entry_subject)'),
                 'entry_amount',
                 array('name'=>'entry_appendix','type'=>'shortText'),
-                'entry_date',
+                array('name'=>'entry_date','value'=>'$data->getTrandate($data->entry_num_prefix,$data->entry_num)'),
                 array(
                     'class' => 'CButtonColumn',
                     'template' => '{update}',

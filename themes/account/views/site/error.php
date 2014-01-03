@@ -9,13 +9,10 @@
 
         <div class="form">
 
-            <h2>Success </h2>
+            <h2>Error <?php echo $code; ?></h2>
 
             <div class="error">
-                <?
-                    foreach(Yii::app()->user->getFlashes() as $key => $message) {
-                    echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
-                }?>
+                <?php echo CHtml::encode($message); ?>
             </div>
         </div>
         <!-- form -->

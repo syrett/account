@@ -71,7 +71,16 @@ class SubjectsController extends Controller
 		{
 			$model->attributes=$_POST['Subjects'];
 			if($model->save())
+            {
+                //如果是新的子科目，将post中科目表id修改为新id
+                $sbj_id = trim($_POST['Subjects']['sbj_number']);
+                if(strlen($sbj_id)>4)
+                {
+                    Post::model()->tranPost($sbj_id);
+                    Subjects::model()->hasSub($sbj_id);
+                }
 				$this->redirect(array('view','id'=>$model->id));
+            }
 		}
 
 		$this->render('create',array(
@@ -127,49 +136,41 @@ class SubjectsController extends Controller
 			'dataProvider'=>$dataProvider,
 		));
 	}
-
-    /**
-     * 列出一级科目
-     */
-    public function actionListFirst()
-    {
-      //todo
-      $sql = "select * from subjects where sbj_number < 10000"; // 一级科目的为1001～9999
-      $First = Subjects::model()->findAllBySql($sql);
-      $arr = array();
-      foreach($First as $row) {
+//
+//    /**
+//     * 列出一级科目
+//     */
+//    public function actionListFirst()
+//    {
+//      $sql = "select * from subjects where sbj_number < 10000"; // 一级科目的为1001～9999
+//      $First = Subjects::model()->findAllBySql($sql);
+//      $arr = array();
+//      foreach($First as $row) {
+//                  array_push($arr, $row['sbj_number'], $row['sbj_name']);
+//      };
+//      return $arr;
+//    }
+//
+//    /*
+//     * 列出二级,三级科目
+//     */
+//    public function actionListSub($sbj_number=1001)
+//    {
+//      //todo
+//      //      $sbj_number = $_POST['sbj_number'];
+//      $sql = "select * from Subjects where sbj_number > :min and sbj_number < :max";
+//      $min = (int)(((string)$sbj_number)."00");
+//      $max = (int)(((string)$sbj_number)."99");
+//      $data = Subjects::model()->findAllBySql($sql, array(':min'=>$min,
+//                                                          ':max'=>$max));
+//      foreach($data as $row) {
 //        $arr[$row['sbj_number']] = array($row['sbj_name'], $row['has_sub']);
-//                $arr += array( $row['sbj_number'], $row['sbj_name']);
-                  array_push($arr, $row['sbj_number'], $row['sbj_name']);
-      };
-      return $arr;
-
-//        $this->render('list', array(
-//            'list'=>$arr,
-//        ));
-
-    }
-
-    /*
-     * 列出二级,三级科目
-     */
-    public function actionListSub($sbj_number=1001)
-    {
-      //todo
-      //      $sbj_number = $_POST['sbj_number'];
-      $sql = "select * from Subjects where sbj_number > :min and sbj_number < :max";
-      $min = (int)(((string)$sbj_number)."00");
-      $max = (int)(((string)$sbj_number)."99");
-      $data = Subjects::model()->findAllBySql($sql, array(':min'=>$min,
-                                                          ':max'=>$max));
-      foreach($data as $row) {
-        $arr[$row['sbj_number']] = array($row['sbj_name'], $row['has_sub']);
-        //        array_push($arr, $row['sbj_number'], $row['sbj_name']);
-      };
-      $this->render('list', array(
-                                  'list'=>$arr,
-                                  ));
-    }
+//        //        array_push($arr, $row['sbj_number'], $row['sbj_name']);
+//      };
+//      $this->render('list', array(
+//                                  'list'=>$arr,
+//                                  ));
+//    }
 
 	/**
 	 * Manages all models.

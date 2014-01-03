@@ -33,7 +33,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <?php echo CHtml::link(
-                    Yii::app()->name,
+                    '首页',
                     $this->createUrl('site/index'),
                     array(
                         'class' => 'navbar-brand',

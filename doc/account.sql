@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 31, 2013 at 05:39 PM
+-- Generation Time: Jan 03, 2014 at 06:10 PM
 -- Server version: 5.5.34
 -- PHP Version: 5.3.2-1ubuntu4.18
 
@@ -125,14 +125,13 @@ CREATE TABLE IF NOT EXISTS `post` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `fk_subject_id_idx` (`subject_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=64 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=75 ;
 
 --
 -- Dumping data for table `post`
 --
 
 INSERT INTO `post` (`id`, `subject_id`, `year`, `month`, `balance`, `posted`) VALUES
-(1, 1001, 2013, 12, 0, 1),
 (2, 1002, 2013, 12, 100, 1),
 (3, 4103, 2013, 12, 0, 1),
 (4, 6411, 2013, 12, 0, 1),
@@ -154,7 +153,6 @@ INSERT INTO `post` (`id`, `subject_id`, `year`, `month`, `balance`, `posted`) VA
 (20, 6901, 2013, 12, 0, 1),
 (21, 6403, 2013, 12, 0, 1),
 (22, 6402, 2013, 12, 0, 1),
-(23, 1001, 2013, 11, 0, 1),
 (24, 4103, 2013, 11, 0, 1),
 (25, 6403, 2013, 11, 0, 1),
 (26, 6402, 2013, 11, 0, 1),
@@ -194,7 +192,16 @@ INSERT INTO `post` (`id`, `subject_id`, `year`, `month`, `balance`, `posted`) VA
 (60, 6701, 2013, 11, 0, 1),
 (61, 6711, 2013, 11, 0, 1),
 (62, 6801, 2013, 11, 0, 1),
-(63, 6001, 2013, 11, 0, 1);
+(63, 6001, 2013, 11, 0, 1),
+(66, 4103, 2014, 1, 0, 1),
+(67, 6411, 2014, 1, 0, 1),
+(68, 6421, 2014, 1, 0, 1),
+(69, 6501, 2014, 1, 0, 1),
+(70, 6502, 2014, 1, 0, 1),
+(71, 6511, 2014, 1, 0, 1),
+(72, 6521, 2014, 1, 0, 1),
+(73, 6531, 2014, 1, 0, 1),
+(74, 10010101, 2013, 11, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -269,14 +276,14 @@ CREATE TABLE IF NOT EXISTS `subjects` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `No` (`sbj_number`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=344 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=356 ;
 
 --
 -- Dumping data for table `subjects`
 --
 
 INSERT INTO `subjects` (`id`, `sbj_number`, `sbj_name`, `sbj_cat`, `sbj_table`, `has_sub`) VALUES
-(24, 1001, '库存现金', '1', NULL, 0),
+(24, 1001, '库存现金', '1', NULL, 1),
 (25, 1002, '银行存款', '1', NULL, 0),
 (26, 1003, '存放中央银行款项', '1', NULL, 0),
 (27, 1102, '短期投资跌价准备', '1', NULL, 0),
@@ -419,7 +426,9 @@ INSERT INTO `subjects` (`id`, `sbj_number`, `sbj_name`, `sbj_cat`, `sbj_table`, 
 (340, 6711, '营业外支出', '5', NULL, 0),
 (341, 6801, '所得税费用', '5', NULL, 0),
 (342, 6901, '以前年度损益调整', '5', NULL, 0),
-(343, 1412, '包装物及低值易耗品', '1', NULL, 0);
+(343, 1412, '包装物及低值易耗品', '1', NULL, 0),
+(354, 100101, '二级科目', '1', NULL, 1),
+(355, 10010101, '三级科目', '1', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -431,6 +440,7 @@ CREATE TABLE IF NOT EXISTS `transition` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `entry_num_prefix` varchar(10) DEFAULT NULL,
   `entry_num` int(11) NOT NULL,
+  `entry_day` int(2) NOT NULL DEFAULT '1',
   `entry_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `entry_memo` varchar(512) CHARACTER SET utf8 COLLATE utf8_swedish_ci DEFAULT NULL,
   `entry_transaction` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1:借;2:贷',
@@ -451,15 +461,18 @@ CREATE TABLE IF NOT EXISTS `transition` (
   KEY `subject_id_idx` (`entry_subject`),
   KEY `re_employee_id_idx` (`entry_reviewer`),
   KEY `ed_employee_id_idx` (`entry_editor`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=866 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1731 ;
 
 --
 -- Dumping data for table `transition`
 --
 
-INSERT INTO `transition` (`id`, `entry_num_prefix`, `entry_num`, `entry_date`, `entry_memo`, `entry_transaction`, `entry_subject`, `entry_amount`, `entry_appendix`, `entry_appendix_type`, `entry_appendix_id`, `entry_editor`, `entry_reviewer`, `entry_deleted`, `entry_reviewed`, `entry_posting`, `entry_settlement`, `entry_closing`) VALUES
-(81, '201311', 1, '2013-12-30 17:03:56', 'asdf', 1, 1001, 0, NULL, 0, 0, 1, 1, 0, 1, 1, 0, 0),
-(82, '201312', 1, '2013-12-30 17:04:00', 'asdf', 1, 1001, 0, NULL, 0, 0, 1, 1, 0, 1, 1, 0, 0);
+INSERT INTO `transition` (`id`, `entry_num_prefix`, `entry_num`, `entry_day`, `entry_date`, `entry_memo`, `entry_transaction`, `entry_subject`, `entry_amount`, `entry_appendix`, `entry_appendix_type`, `entry_appendix_id`, `entry_editor`, `entry_reviewer`, `entry_deleted`, `entry_reviewed`, `entry_posting`, `entry_settlement`, `entry_closing`) VALUES
+(1114, '201311', 1, 27, '2014-01-03 17:37:03', 'abcd', 1, 10010101, 0, NULL, 0, 0, 1, 1, 0, 1, 1, 0, 0),
+(1115, '201311', 1, 27, '2014-01-03 17:37:03', 'ddd', 1, 10010101, 0, NULL, 0, 0, 1, 1, 0, 1, 1, 0, 0),
+(1116, '201312', 1, 12, '2014-01-03 17:37:44', '1212', 1, 10010101, 12, NULL, 0, 0, 1, 1, 0, 1, 0, 0, 0),
+(1117, '201312', 1, 12, '2014-01-03 17:37:44', '1212', 2, 10010101, 12, NULL, 0, 0, 1, 1, 0, 1, 0, 0, 0),
+(1118, '201401', 1, 1, '2014-01-03 17:38:13', 'fdsf', 1, 10010101, 0, NULL, 0, 0, 1, 1, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 

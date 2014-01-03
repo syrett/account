@@ -378,7 +378,7 @@ class TransitionController extends Controller
      */
     public function actionListFirst()
     {
-        $sql = "select * from subjects where sbj_number < 10000"; // 一级科目的为1001～9999
+        $sql = "select * from subjects where has_sub=0 order by concat(sbj_number) asc"; // 一级科目的为1001～9999
         $First = Subjects::model()->findAllBySql($sql);
         $arr = array();
         foreach ($First as $row) {
@@ -393,6 +393,7 @@ class TransitionController extends Controller
     public function actionAjaxListFirst()
     {
         $arr = $this->actionListFirst();
+//        $arr = Subjects::model()->actionListFirst();
         $result = array();
         foreach ($arr as $number => $item) {
             array_push($result, array($number, $item));
@@ -457,7 +458,8 @@ class TransitionController extends Controller
         foreach ($_POST['Transition'] as $Tran) {
             if (isset($Tran)) {
                 $Tran['entry_reviewer'] = intval($_POST['entry_reviewer']);
-                $Tran['entry_num'] = intval($_POST['entry_num']);
+                $Tran['entry_num'] = intval($_POST['entry_num']);;
+                $Tran['entry_day'] = intval($_POST['entry_day']);
                 $Tran['entry_editor'] = intval($_POST['entry_editor']);
                 $Tran['entry_num_prefix'] = $_POST['entry_num_prefix'];
                 $Tran['entry_date'] = date('Y-m-d H:i:s', time());
@@ -583,16 +585,19 @@ class TransitionController extends Controller
             $itmes = array();
             foreach($list as $item){
                 $item = $this->loadModel($item['id']);
-                if($item->entry_memo=="结转凭证")
-                    $item->entry_closing = 1;   //已结账
-                if($_REQUEST[0]['action']==1)
-                    $item->entry_reviewed = 0;
-                else
-                    $item->entry_reviewed = 1;
                 if($valid = $item->validate() && $valid)
+                {
+                    if($item->entry_memo=="结转凭证")
+                        $item->entry_closing = 1;   //已结账
+                    if($_REQUEST[0]['action']==1)
+                        $item->entry_reviewed = 0;
+                    else
+                        $item->entry_reviewed = 1;
                     $item->save();
+                }
                 else
-                $this->loadModel($item['id'])->entry_reviewer = 3; //当前登陆用户id
+                {
+                } //当前登陆用户id
                 $items[] = $item;
             }
             if($valid)
@@ -649,6 +654,7 @@ class TransitionController extends Controller
             echo $entry_prefix. '已经全部结账';
             return 1;
         }
+        if(Transition::model()->confirmPosted($entry_prefix))
         $entry_num = $this->tranSuffix($entry_prefix);
 //        if($entry_num='0001')                     //有可能需要
 //            echo '本月无账目信息，无需结账';
@@ -687,11 +693,17 @@ class TransitionController extends Controller
         $tran->entry_subject = '4103';              //本年利润
         $tran->entry_amount = $sum;
         $id = $tran->save();
-        if($id)
-            $id = $tran->id;
+//        if($id)
+//            $id = $tran->id;
+//        else
+//            Yii::log("errors saving SomeModel: " . var_export($tran->getErrors(), true), CLogger::LEVEL_WARNING, __METHOD__);
+        if($id){
+            Yii::app()->user->setFlash('success', "结账成功!");
+            $this->render('success');
+//            $this->renderPartial('//site/success');
+        }
         else
-            Yii::log("errors saving SomeModel: " . var_export($tran->getErrors(), true), CLogger::LEVEL_WARNING, __METHOD__);
-        return $id;
+            throw new CHttpException(400, $entry_prefix. "结账失败");
     }
 
     /*
@@ -724,14 +736,13 @@ class TransitionController extends Controller
         {
             $date = date('Ym', strtotime('-1 months', strtotime($date . '01')));
         }
-        $model = Transition::model()->deleteAllByAttributes(array('entry_num_prefix' => $date, 'entry_settlement' => 1));
+        $model = Transition::model()->deleteAllByAttributes(array('entry_num_prefix'=>$date, 'entry_settlement'=>1,));
         if($model>1)
-            echo $date. '反结账成功';
-        Yii::app()->user->setFlash('success', "Data1 saved!");
-        Yii::app()->user->setFlash('error', "Data2 failed!");
-        Yii::app()->user->setFlash('notice', "Data3 ignored.");
-        $this->render('success');
-        $this->renderPartial('//site/success');
+        {
+            Yii::app()->user->setFlash('success', "反结账成功!");
+            $this->render('success');
+        }else
+            throw new CHttpException(400, $date. "反结账失败");
     }
 
     public function actionSuccess()

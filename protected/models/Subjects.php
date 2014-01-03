@@ -112,16 +112,17 @@ class Subjects extends CActiveRecord
 
         if ($this->select != null)
           $criteria->select=$this->select;
-//        $criteria->order = 'convert(sbj_name using gbk)';
-
+        $criteria->order = 'concat(sbj_number) ASC';
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
-            'sort'=>array('attributes'=>array(  //设置中文拼音排序
-                'sbj_number'=>array('asc'=>'convert(t.sbj_number using gbk)','desc'=>'convert(t.sbj_number using gbk) desc'),
+            'sort'=>array(
+                'attributes'=>array(  //设置中文拼音排序
+                'sbj_number'=>array('asc'=>'convert(concat(t.sbj_number) using gbk)','desc'=>'convert(t.sbj_number using gbk) desc'),
                 'sbj_name'=>array('asc'=>'convert(t.sbj_name using gbk)','desc'=>'convert(t.sbj_name using gbk) desc'),
                 'sbj_cat'=>array('asc'=>'convert(t.sbj_cat using gbk)','desc'=>'convert(t.sbj_cat using gbk) desc'),
                 'sbj_table'=>array('asc'=>'convert(t.sbj_table using gbk)','desc'=>'convert(t.sbj_table using gbk) desc'),
-            )),
+                )
+            ),
 
 		));
 	}
@@ -145,13 +146,21 @@ class Subjects extends CActiveRecord
         $where = "1=1";
         if($type=1)
             $where .= " and (sbj_cat=4 or sbj_cat=5)";
-        $where .= " and sbj_number < 10000";
-        $sql = "select * from subjects where ". $where; // 一级科目的为1001～9999
+//        $where .= " and sbj_number < 10000";
+        $where .= " and has_sub=0";
+        $sql = "select * from subjects where ". $where;
         $First = Subjects::model()->findAllBySql($sql);
         $arr = array();
         foreach ($First as $row) {
             array_push($arr, array('id'=>$row['sbj_number'],'name' => $row['sbj_name'],'sbj_cat'=>$row['sbj_cat']));
         };
         return $arr;
+    }
+
+    public static function hasSub($sbj_id)
+    {
+        $par_id = substr($sbj_id, 0, -2);
+        $sql = "update subjects set has_sub = 1 where sbj_number = '$par_id'";
+        Yii::app()->db->createCommand($sql)->execute();
     }
 }

@@ -7,6 +7,7 @@
  * @property integer $id
  * @property string $entry_num_prefix
  * @property integer $entry_num
+ * @property string $entry_day
  * @property string $entry_date
  * @property string $entry_memo
  * @property integer $entry_transaction
@@ -52,10 +53,10 @@ class Transition extends MyActiveRecord
             array('entry_num, entry_transaction, entry_subject, entry_amount, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing', 'numerical', 'integerOnly' => true),
             array('entry_num_prefix', 'length', 'max' => 10),
             array('entry_memo, entry_appendix', 'length', 'max' => 100),
-            array('entry_appendix_id, entry_appendix_type, entry_date', 'safe'),
+            array('entry_appendix_id, entry_appendix_type, entry_date, entry_day', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, entry_number, entry_num_prefix, entry_num, entry_date, entry_memo, entry_transaction, entry_subject, entry_amount, entry_appendix, entry_appendix_id, entry_appendix_type, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing, entry_settlement', 'safe', 'on' => 'search'),
+            array('id, entry_number, entry_num_prefix, entry_num, entry_date, entry_day, entry_memo, entry_transaction, entry_subject, entry_amount, entry_appendix, entry_appendix_id, entry_appendix_type, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing, entry_settlement', 'safe', 'on' => 'search'),
             //自定义验证规则
             array('entry_amount', 'check_entry_amount', 'on' => 'create,update'), //借贷相等
         );
@@ -80,6 +81,7 @@ class Transition extends MyActiveRecord
             'id' => 'ID',
             'entry_num_prefix' => '凭证前缀',
             'entry_num' => '凭证号',
+            'entry_day' => '日',
             'entry_date' => '录入日期',
             'entry_memo' => '凭证摘要',
             'entry_transaction' => '借贷',
@@ -120,6 +122,7 @@ class Transition extends MyActiveRecord
         $criteria->compare('entry_num_prefix', $this->entry_num_prefix, true);
         $criteria->compare('entry_num', $this->entry_num, true);
         $criteria->compare('entry_date', $this->entry_date, true);
+        $criteria->compare('entry_day', $this->entry_day, true);
         $criteria->compare('entry_memo', $this->entry_memo, true);
         $criteria->compare('entry_transaction', $this->entry_transaction, true);
         $criteria->compare('entry_subject', $this->entry_subject, true);
@@ -197,6 +200,15 @@ class Transition extends MyActiveRecord
         $model = Subjects::model()->findByAttributes(array('sbj_number' => $id));
         return $model->sbj_name;
     }
+
+    /*
+     * 科目表名称
+     */
+    public function getTrandate($prefix, $day)
+    {
+        return substr($prefix,0,4). '年'. substr($prefix,4,6). '月'. $day. '日';
+    }
+
 
     /*
      * admin页面不同状态不同颜色
@@ -284,6 +296,19 @@ class Transition extends MyActiveRecord
     }
 
     /*
+     *
+     */
+    public static function confirmPosted($date){
+        $a = Transition::model()->isAllReviewed($date);
+        $b = Transition::model()->isAllPosted($date);
+        if($a && $b)
+            return true;
+        else
+            throw new CHttpException(400, $date. "还有凭证未过账或未审核");
+
+    }
+
+    /*
      * 结账日期
      * return $date
      */
@@ -292,10 +317,10 @@ class Transition extends MyActiveRecord
 //        $jzpz = convert("结转凭证", )
         $Tran = new Transition();
         if ($date == Yii::app()->params['startDate'])
-            return date('Ym', strtotime('+1 months', strtotime(Yii::app()->params['startDate'] . '01'))); //只能是2012年12月以后的日期
+            return date('Ym', strtotime('+1 months', strtotime(Yii::app()->params['startDate'] . '01')));
         if ($date == "")
             $date = date('Ym', time());
-        if ($Tran->isAllPosted($date)) {
+        if (!$Tran->isAllPosted($date)) {
             Transition::model()->unsetAttributes();
             $data = Transition::model()->findByAttributes(array('entry_memo' => "结转凭证", 'entry_num_prefix' => $date));
             if ($data) {
@@ -312,7 +337,7 @@ class Transition extends MyActiveRecord
     }
 
     /*
-     * 检查是否已经有结账凭证
+     * 检查是否已经有结转凭证
      * return 1:有 0:无
      */
     public static function confirmSettlement($date)
@@ -327,4 +352,17 @@ class Transition extends MyActiveRecord
         return empty($transtion);
     }
 
+    /**
+     * 列出科目
+     */
+    public function listSubjects()
+    {
+        $sql = "select * from subjects where has_sub=0 order by concat(`sbj_number`) asc"; //
+        $First = Subjects::model()->findAllBySql($sql);
+        $arr = array();
+        foreach ($First as $row) {
+            $arr += array($row['sbj_number'] => $row['sbj_number'] . $row['sbj_name']);
+        };
+        return $arr;
+    }
 }
