@@ -301,6 +301,10 @@ class Transition extends MyActiveRecord
     public static function confirmPosted($date){
         $a = Transition::model()->isAllReviewed($date);
         $b = Transition::model()->isAllPosted($date);
+        $last = date('Ym', strtotime('-1 months', strtotime($date . '01'))); //当前月如果没有结转凭证，那么需要检查上一个月，所以-1
+        if(!Transition::model()->isAllPosted($last))
+            throw new CHttpException(400, $last. "还有凭证未过账或未审核");
+
         if($a && $b)
             return true;
         else

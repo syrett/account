@@ -654,7 +654,8 @@ class TransitionController extends Controller
             echo $entry_prefix. '已经全部结账';
             return 1;
         }
-        if(Transition::model()->confirmPosted($entry_prefix))
+        if(!Transition::model()->confirmPosted($entry_prefix))
+            throw new CHttpException(400, $entry_prefix. "结账失败");
         $entry_num = $this->tranSuffix($entry_prefix);
 //        if($entry_num='0001')                     //有可能需要
 //            echo '本月无账目信息，无需结账';
