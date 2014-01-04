@@ -54,8 +54,8 @@ class Department extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'name' => 'Name',
-			'memo' => 'Memo',
+			'name' => '部门名字',
+			'memo' => '部门描述',
 		);
 	}
 
