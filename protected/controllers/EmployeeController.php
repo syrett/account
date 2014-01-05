@@ -74,8 +74,10 @@ class EmployeeController extends Controller
 				$this->redirect(array('admin'));
 		}
 
+        $department_array=$model->listDepartment();
 		$this->render('create',array(
 			'model'=>$model,
+            'department_array' => $department_array,
 		));
 	}
 
@@ -99,9 +101,11 @@ class EmployeeController extends Controller
 		}
 
         $dataProvider=$model->search();
+        $department_array=$model->listDepartment();
 		$this->render('update',array(
 			'model'=>$model,
             'dataProvider' => $dataProvider,
+            'department_array' => $department_array,
 		));
 	}
 

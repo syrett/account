@@ -102,4 +102,16 @@ class Employee extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+    public function listDepartment()            
+    {
+      $sql = "select id,name from department order by id asc"; //
+        $First = Department::model()->findAllBySql($sql);
+        $arr = array();
+        foreach ($First as $row) {
+            $arr += array($row['id'] => $row['name']);
+        };
+        return $arr;
+    }
+
 }

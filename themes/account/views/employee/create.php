@@ -26,7 +26,8 @@
 
             <h4>&nbsp;</h4>
 
-            <?php $this->renderPartial('_form', array('model' => $model)); ?>
+        <?php $this->renderPartial('_form', array('model' => $model,
+                                                  'department_array' => $department_array)); ?>
         </div>
     </div>
 </div>

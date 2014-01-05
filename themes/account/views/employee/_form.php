@@ -60,7 +60,7 @@
 		<?php echo $form->labelEx($model,'department_id'); ?>
       </div>
       <div id="middleDiv">
-		<?php echo $form->textField($model,'department_id'); ?>
+        <?php echo $form->dropDownList($model,'department_id', $department_array); ?>
       </div>
       <div id="rightDiv" >
 		<?php echo $form->error($model,'department_id'); ?>
