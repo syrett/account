@@ -1,21 +1,31 @@
-<?php
-/* @var $this EmployeeController */
-/* @var $model Employee */
+<div class="panel panel-default voucher">
+    <!-- Default panel contents -->
+    <div class="panel-heading">
+        <div class="actions-left">
+        <?php
+   echo CHtml::link('添加员工', array('create'))
+        ?>
 
-$this->breadcrumbs=array(
-	'Employees'=>array('index'),
-	$model->name=>array('view','id'=>$model->id),
-	'Update',
-);
+        </div>
 
-$this->menu=array(
-	array('label'=>'List Employee', 'url'=>array('index')),
-	array('label'=>'Create Employee', 'url'=>array('create')),
-	array('label'=>'View Employee', 'url'=>array('view', 'id'=>$model->id)),
-	array('label'=>'Manage Employee', 'url'=>array('admin')),
-);
-?>
+        <div class="actions">
+        <?php
+   echo CHtml::link('员工管理', array('admin'))
+        ?>
+        </div>
+    </div>
+    <div class="panel-body v-title">
+        <div class="row">
+            <?php
+            /* @var $this SubjectsController */
+            /* @var $model Subjects */
 
-<h1>Update Employee <?php echo $model->id; ?></h1>
+            ?>
 
-<?php $this->renderPartial('_form', array('model'=>$model)); ?>
+            <h4>&nbsp;</h4>
+
+            <?php $this->renderPartial('_form', array('model' => $model)); ?>
+        </div>
+    </div>
+</div>
+

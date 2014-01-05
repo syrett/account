@@ -27,7 +27,8 @@ class Employee extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id', 'required'),
+			array('name', 'required'),
+			array('department_id', 'required'),
 			array('id, department_id', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>100),
 			array('memo', 'length', 'max'=>200),
@@ -45,6 +46,7 @@ class Employee extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+                     'department' => array(self::BELONGS_TO, 'Department', 'department_id')
 		);
 	}
 
@@ -55,11 +57,12 @@ class Employee extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'name' => 'Name',
-			'memo' => 'Memo',
-			'department_id' => 'Department',
+			'name' => '员工姓名',
+			'memo' => '备注',
+			'department_id' => '部门',
 		);
 	}
+    
 
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.

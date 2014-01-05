@@ -71,7 +71,7 @@ class EmployeeController extends Controller
 		{
 			$model->attributes=$_POST['Employee'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('admin'));
 		}
 
 		$this->render('create',array(
@@ -95,11 +95,13 @@ class EmployeeController extends Controller
 		{
 			$model->attributes=$_POST['Employee'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('admin'));
 		}
 
+        $dataProvider=$model->search();
 		$this->render('update',array(
 			'model'=>$model,
+            'dataProvider' => $dataProvider,
 		));
 	}
 
@@ -138,8 +140,10 @@ class EmployeeController extends Controller
 		if(isset($_GET['Employee']))
 			$model->attributes=$_GET['Employee'];
 
+        $dataProvider = $model->search();
 		$this->render('admin',array(
 			'model'=>$model,
+            'dataProvider' => $dataProvider,
 		));
 	}
 

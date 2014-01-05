@@ -26,13 +26,13 @@ class Department extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id', 'required'),
 			array('id', 'numerical', 'integerOnly'=>true),
+			array('name', 'required'),
 			array('name', 'length', 'max'=>100),
 			array('memo', 'length', 'max'=>200),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, name, memo', 'safe', 'on'=>'search'),
+			array('name, memo', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -44,6 +44,7 @@ class Department extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+                     'employee' => array(self::HAS_MANY, 'Employee', 'id')
 		);
 	}
 
@@ -54,7 +55,7 @@ class Department extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'name' => '部门名字',
+			'name' => '部门',
 			'memo' => '部门描述',
 		);
 	}
