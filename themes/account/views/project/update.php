@@ -1,21 +1,30 @@
-<?php
-/* @var $this ProjectController */
-/* @var $model Project */
+<div class="panel panel-default voucher">
+    <!-- Default panel contents -->
+    <div class="panel-heading">
+        <div class="actions-left">
+        <?php
+   echo CHtml::link('添加项目', array('create'))
+        ?>
 
-$this->breadcrumbs=array(
-	'Projects'=>array('index'),
-	$model->name=>array('view','id'=>$model->id),
-	'Update',
-);
+        </div>
 
-$this->menu=array(
-	array('label'=>'List Project', 'url'=>array('index')),
-	array('label'=>'Create Project', 'url'=>array('create')),
-	array('label'=>'View Project', 'url'=>array('view', 'id'=>$model->id)),
-	array('label'=>'Manage Project', 'url'=>array('admin')),
-);
-?>
+        <div class="actions">
+        <?php
+   echo CHtml::link('项目管理', array('admin'))
+        ?>
+        </div>
+    </div>
+    <div class="panel-body v-title">
+        <div class="row">
+            <?php
+            /* @var $this SubjectsController */
+            /* @var $model Subjects */
 
-<h1>Update Project <?php echo $model->id; ?></h1>
+            ?>
 
-<?php $this->renderPartial('_form', array('model'=>$model)); ?>
+            <h4>&nbsp;</h4>
+
+            <?php $this->renderPartial('_form', array('model' => $model)); ?>
+        </div>
+    </div>
+</div>

@@ -71,11 +71,13 @@ class ClientController extends Controller
 		{
 			$model->attributes=$_POST['Client'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('admin'));
 		}
 
-		$this->render('create',array(
+        $dataProvider=$model->search();
+		$this->render('update',array(
 			'model'=>$model,
+            'dataProvider' => $dataProvider,
 		));
 	}
 
@@ -98,9 +100,12 @@ class ClientController extends Controller
 				$this->redirect(array('view','id'=>$model->id));
 		}
 
+        $dataProvider=$model->search();
 		$this->render('update',array(
 			'model'=>$model,
+            'dataProvider' => $dataProvider,
 		));
+
 	}
 
 	/**

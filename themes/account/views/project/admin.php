@@ -1,55 +1,37 @@
-<?php
-/* @var $this ProjectController */
-/* @var $model Project */
 
-$this->breadcrumbs=array(
-	'Projects'=>array('index'),
-	'Manage',
-);
+<div class="panel panel-default voucher">
+    <!-- Default panel contents -->
+    <div class="panel-heading">
+   项目管理
+        <div class="actions">
+           <?php
+            $this->beginWidget('zii.widgets.CPortlet', array(
+                'title'=>'',
+            ));
+            $this->widget('zii.widgets.CMenu', array(
+                'items'=>array(
+                    array('label' => '添加项目', 'url' => array('create'),),
+                ),
+                'htmlOptions'=>array('class'=>'operations', 'style'=>'list-style: none',),
+            ));
+            $this->endWidget();
 
-$this->menu=array(
-	array('label'=>'List Project', 'url'=>array('index')),
-	array('label'=>'Create Project', 'url'=>array('create')),
-);
+            ?>
+        </div>
+    </div>
+              <?php $this->widget('zii.widgets.grid.CGridView', array(
+                                                                      'id'=>'project-grid',
+                                                                      'dataProvider'=>$dataProvider,
+                                                                      'itemsCssClass' => 'table',
+                                                                      'filter' => $model,
+                                                                      'columns'=>array(
+                                                                                       'name',
+                                                                                       'memo',
+                                                                                       array(
+                                                                                             'class'=>'CButtonColumn',
+                                                                                             'template' => '{update} {delete}', 
+                                                                                             ),
+                                                                                       ),
+                                                                      )); ?>
+</div>
 
-Yii::app()->clientScript->registerScript('search', "
-$('.search-button').click(function(){
-	$('.search-form').toggle();
-	return false;
-});
-$('.search-form form').submit(function(){
-	$('#project-grid').yiiGridView('update', {
-		data: $(this).serialize()
-	});
-	return false;
-});
-");
-?>
-
-<h1>Manage Projects</h1>
-
-<p>
-You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
-or <b>=</b>) at the beginning of each of your search values to specify how the comparison should be done.
-</p>
-
-<?php echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
-<div class="search-form" style="display:none">
-<?php $this->renderPartial('_search',array(
-	'model'=>$model,
-)); ?>
-</div><!-- search-form -->
-
-<?php $this->widget('zii.widgets.grid.CGridView', array(
-	'id'=>'project-grid',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
-	'columns'=>array(
-		'id',
-		'name',
-		'memo',
-		array(
-			'class'=>'CButtonColumn',
-		),
-	),
-)); ?>

@@ -1,13 +1,27 @@
-<?php
-/* @var $this ProjectController */
-/* @var $model Project */
-/* @var $form CActiveForm */
-?>
+
+<style>
+#leftDiv
+{
+  float:left;
+  width:7%;
+}
+#middleDiv
+{
+  float:left;
+  width:30%;
+}
+#rightDiv
+{
+  float:right;
+  width:50%;
+}
+</style>
+
 
 <div class="form">
 
 <?php $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'project-form',
+	'id'=>'employee-form',
 	// Please note: When you enable ajax validation, make sure the corresponding
 	// controller action is handling ajax validation correctly.
 	// There is a call to performAjaxValidation() commented in generated controller code.
@@ -15,32 +29,40 @@
 	'enableAjaxValidation'=>false,
 )); ?>
 
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
+	<p class="note"><small>带 <span class="required">*</span> 的必填.</small></p>
 
-	<?php echo $form->errorSummary($model); ?>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'id'); ?>
-		<?php echo $form->textField($model,'id'); ?>
-		<?php echo $form->error($model,'id'); ?>
-	</div>
-
-	<div class="row">
+	<div class="form-group modal-open">
+      <div id="leftDiv">
 		<?php echo $form->labelEx($model,'name'); ?>
+      </div>
+      <div id="middleDiv">
 		<?php echo $form->textField($model,'name',array('size'=>60,'maxlength'=>60)); ?>
+      </div>
+      <div id="rightDiv" >
 		<?php echo $form->error($model,'name'); ?>
-	</div>
+      </div>
+    </div>
 
-	<div class="row">
+	<div class="form-group modal-open">
+      <div id="leftDiv">
 		<?php echo $form->labelEx($model,'memo'); ?>
-		<?php echo $form->textField($model,'memo',array('size'=>60,'maxlength'=>200)); ?>
+      </div>
+      <div id="middleDiv">
+		<?php echo $form->textArea($model,'memo',array('rows'=> 5, 'cols'=>60)); ?>
+      </div>
+      <div id="rightDiv" >
 		<?php echo $form->error($model,'memo'); ?>
+      </div>
+    </div>
+
+
+
+	<div id="middleDiv" class="form-group buttons text-center">
+   <?php echo CHtml::submitButton($model->isNewRecord ? '添加' : '保存', array('class'=>'btn btn-primary',)); ?>
 	</div>
 
-	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
-	</div>
 
 <?php $this->endWidget(); ?>
 
 </div><!-- form -->
+

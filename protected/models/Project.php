@@ -26,7 +26,7 @@ class Project extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id', 'required'),
+			array('name', 'required'),
 			array('id', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>60),
 			array('memo', 'length', 'max'=>200),
@@ -54,8 +54,8 @@ class Project extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'name' => 'Name',
-			'memo' => 'Memo',
+			'name' => '项目名',
+			'memo' => '备注',
 		);
 	}
 

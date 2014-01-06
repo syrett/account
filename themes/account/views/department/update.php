@@ -1,21 +1,30 @@
-<?php
-/* @var $this DepartmentController */
-/* @var $model Department */
+<div class="panel panel-default voucher">
+    <!-- Default panel contents -->
+    <div class="panel-heading">
+        <div class="actions-left">
+        <?php
+   echo CHtml::link('添加部门', array('create'))
+        ?>
 
-$this->breadcrumbs=array(
-	'Departments'=>array('index'),
-	$model->name=>array('view','id'=>$model->id),
-	'Update',
-);
+        </div>
 
-$this->menu=array(
-	array('label'=>'List Department', 'url'=>array('index')),
-	array('label'=>'Create Department', 'url'=>array('create')),
-	array('label'=>'View Department', 'url'=>array('view', 'id'=>$model->id)),
-	array('label'=>'Manage Department', 'url'=>array('admin')),
-);
-?>
+        <div class="actions">
+        <?php
+   echo CHtml::link('部门管理', array('admin'))
+        ?>
+        </div>
+    </div>
+    <div class="panel-body v-title">
+        <div class="row">
+            <?php
+            /* @var $this SubjectsController */
+            /* @var $model Subjects */
 
-<h1>Update Department <?php echo $model->id; ?></h1>
+            ?>
 
-<?php $this->renderPartial('_form', array('model'=>$model)); ?>
+            <h4>&nbsp;</h4>
+
+            <?php $this->renderPartial('_form', array('model' => $model)); ?>
+        </div>
+    </div>
+</div>

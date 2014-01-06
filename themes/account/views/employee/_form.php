@@ -1,8 +1,22 @@
-<?php
-/* @var $this EmployeeController */
-/* @var $model Employee */
-/* @var $form CActiveForm */
-?>
+
+<style>
+#leftDiv
+{
+  float:left;
+  width:7%;
+}
+#middleDiv
+{
+  float:left;
+  width:30%;
+}
+#rightDiv
+{
+  float:right;
+  width:50%;
+}
+</style>
+
 
 <div class="form">
 
@@ -15,37 +29,61 @@
 	'enableAjaxValidation'=>false,
 )); ?>
 
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
+	<p class="note"><small>带 <span class="required">*</span> 的必填.</small></p>
 
-	<?php echo $form->errorSummary($model); ?>
+	<div class="form-group modal-open">
+      <div id="leftDiv">
+      </div>
+      <div id="middleDiv">
+      </div>
+      <div id="rightDiv" >
+      </div>
+    </div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'id'); ?>
-		<?php echo $form->textField($model,'id'); ?>
-		<?php echo $form->error($model,'id'); ?>
-	</div>
-
-	<div class="row">
+	<div class="form-group modal-open">
+      <div id="leftDiv">
 		<?php echo $form->labelEx($model,'name'); ?>
-		<?php echo $form->textField($model,'name',array('size'=>60,'maxlength'=>100)); ?>
+      </div>
+      <div id="middleDiv">
+		<?php echo $form->textField($model,'name',array('size'=>50,'maxlength'=>100)); ?>
+      </div>
+      <div id="rightDiv" >
 		<?php echo $form->error($model,'name'); ?>
-	</div>
+      </div>
+    </div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'memo'); ?>
-		<?php echo $form->textField($model,'memo',array('size'=>60,'maxlength'=>200)); ?>
-		<?php echo $form->error($model,'memo'); ?>
-	</div>
 
-	<div class="row">
+
+
+	<div class="form-group modal-open">
+      <div id="leftDiv">
 		<?php echo $form->labelEx($model,'department_id'); ?>
-		<?php echo $form->textField($model,'department_id'); ?>
+      </div>
+      <div id="middleDiv">
+        <?php echo $form->dropDownList($model,'department_id', $department_array); ?>
+      </div>
+      <div id="rightDiv" >
 		<?php echo $form->error($model,'department_id'); ?>
+      </div>
+    </div>
+
+
+	<div class="form-group modal-open">
+      <div id="leftDiv">
+		<?php echo $form->labelEx($model,'memo'); ?>
+      </div>
+      <div id="middleDiv">
+  <?php echo $form->textArea($model,'memo',array('rows'=> 5, 'cols'=>60)); ?>
+      </div>
+      <div id="rightDiv" >
+		<?php echo $form->error($model,'memo'); ?>
+      </div>
+    </div>
+
+	<div id="middleDiv" class="form-group buttons text-center">
+   <?php echo CHtml::submitButton($model->isNewRecord ? '添加' : '保存', array('class'=>'btn btn-primary',)); ?>
 	</div>
 
-	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
-	</div>
 
 <?php $this->endWidget(); ?>
 

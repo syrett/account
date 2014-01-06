@@ -1,18 +1,33 @@
-<?php
-/* @var $this EmployeeController */
-/* @var $model Employee */
+<div class="panel panel-default voucher">
+    <!-- Default panel contents -->
+    <div class="panel-heading">添加员工
+        <div class="actions">
+        <?
+        $this->beginWidget('zii.widgets.CPortlet', array(
+        'title'=>'',
+        ));
+        $this->widget('zii.widgets.CMenu', array(
+        'items'=>array(
+        array('label' => '员工管理', 'url' => array('admin'),),
+        ),
+        'htmlOptions'=>array('class'=>'operations', 'style'=>'list-style: none',),
+        ));
+        $this->endWidget();
+        ?>
+        </div>
+    </div>
+    <div class="panel-body v-title">
+        <div class="row">
+            <?php
+            /* @var $this SubjectsController */
+            /* @var $model Subjects */
 
-$this->breadcrumbs=array(
-	'Employees'=>array('index'),
-	'Create',
-);
+            ?>
 
-$this->menu=array(
-	array('label'=>'List Employee', 'url'=>array('index')),
-	array('label'=>'Manage Employee', 'url'=>array('admin')),
-);
-?>
+            <h4>&nbsp;</h4>
 
-<h1>Create Employee</h1>
-
-<?php $this->renderPartial('_form', array('model'=>$model)); ?>
+        <?php $this->renderPartial('_form', array('model' => $model,
+                                                  'department_array' => $department_array)); ?>
+        </div>
+    </div>
+</div>
