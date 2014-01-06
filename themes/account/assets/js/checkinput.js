@@ -13,9 +13,11 @@ function checkInputNum(ob) {
 金额数据格式
  */
 function checkInputAmount(ob) {
+    if(isNaN(ob.value)){
     var invalidChars = /^-?[1-9]+\.?\d?\d?$|^-?0\.\d?\d?$/;
     if(!invalidChars.test(ob.value)) {
         var b = /-?[1-9]+\.?\d?\d?|-?0\.\d?\d?/;
         ob.value = b.exec(ob.value);
+    }
     }
 }
