@@ -60,7 +60,7 @@ class Vendor extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'company' => '供应商',
-			'vat' => 'Vat',
+			'vat' => '税号',
 			'phone' => '联系电话',
 			'add' => '联系地址',
 			'memo' => '备注',

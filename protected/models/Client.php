@@ -61,7 +61,7 @@ class Client extends MyActiveRecord
 		return array(
 			'id' => 'ID',
 			'company' => '公司名',
-			'vat' => 'Vat',
+			'vat' => '税号',
 			'phone' => '联系电话',
 			'add' => '公司地址',
 			'memo' => '备注',
