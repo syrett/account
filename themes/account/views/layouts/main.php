@@ -65,6 +65,7 @@
                                                array('label' => '项目', 'url' => array('/project/admin')),
                                                array('label' => '部门', 'url' => array('/department/admin')),
                                                array('label' => '员工', 'url' => array('/employee/admin')),
+                                               array('label' => '供应商', 'url' => array('/vendor/admin')),
                                                array('label' => '客户', 'url' => array('/client/admin')))),
                     ),
 

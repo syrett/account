@@ -28,7 +28,8 @@ class Vendor extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id', 'required'),
+			array('company', 'required'),
+			array('phone', 'required'),
 			array('id', 'numerical', 'integerOnly'=>true),
 			array('vat', 'length', 'max'=>45),
 			array('phone', 'length', 'max'=>20),
@@ -58,10 +59,11 @@ class Vendor extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
+			'company' => '供应商',
 			'vat' => 'Vat',
-			'phone' => 'Phone',
-			'add' => 'Add',
-			'memo' => 'Memo',
+			'phone' => '联系电话',
+			'add' => '联系地址',
+			'memo' => '备注',
 		);
 	}
 
