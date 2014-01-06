@@ -1,18 +1,32 @@
-<?php
-/* @var $this ClientController */
-/* @var $model Client */
+<div class="panel panel-default voucher">
+    <!-- Default panel contents -->
+    <div class="panel-heading">添加客户
+        <div class="actions">
+        <?
+        $this->beginWidget('zii.widgets.CPortlet', array(
+        'title'=>'',
+        ));
+        $this->widget('zii.widgets.CMenu', array(
+        'items'=>array(
+        array('label' => '客户管理', 'url' => array('admin'),),
+        ),
+        'htmlOptions'=>array('class'=>'operations', 'style'=>'list-style: none',),
+        ));
+        $this->endWidget();
+        ?>
+        </div>
+    </div>
+    <div class="panel-body v-title">
+        <div class="row">
+            <?php
+            /* @var $this SubjectsController */
+            /* @var $model Subjects */
 
-$this->breadcrumbs=array(
-	'Clients'=>array('index'),
-	'Create',
-);
+            ?>
 
-$this->menu=array(
-	array('label'=>'List Client', 'url'=>array('index')),
-	array('label'=>'Manage Client', 'url'=>array('admin')),
-);
-?>
+            <h4>&nbsp;</h4>
 
-<h1>Create Client</h1>
-
-<?php $this->renderPartial('_form', array('model'=>$model)); ?>
+            <?php $this->renderPartial('_form', array('model' => $model)); ?>
+        </div>
+    </div>
+</div>
