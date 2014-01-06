@@ -12,7 +12,7 @@
  * @property string $entry_memo
  * @property integer $entry_transaction
  * @property integer $entry_subject
- * @property integer $entry_amount
+ * @property float $entry_amount
  * @property string $entry_appendix
  * @property integer $entry_appendix_type
  * @property integer $entry_appendix_id
@@ -50,7 +50,8 @@ class Transition extends MyActiveRecord
         // will receive user inputs.
         return array(
             array('entry_num, entry_transaction, entry_subject, entry_amount, entry_editor, entry_reviewer', 'required'),
-            array('entry_num, entry_transaction, entry_subject, entry_amount, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing', 'numerical', 'integerOnly' => true),
+            array('entry_num, entry_transaction, entry_subject, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing', 'numerical', 'integerOnly' => true),
+            array('entry_amount', 'type', 'type' => 'float'),
             array('entry_num_prefix', 'length', 'max' => 10),
             array('entry_memo, entry_appendix', 'length', 'max' => 100),
             array('entry_appendix_id, entry_appendix_type, entry_date, entry_day', 'safe'),

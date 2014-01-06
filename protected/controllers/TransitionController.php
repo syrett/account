@@ -466,7 +466,7 @@ class TransitionController extends Controller
                 $Tran['entry_subject'] = intval($Tran['entry_subject']);
                 $entry_appendix_id = isset($Tran['entry_appendix_id']) ? $Tran['entry_appendix_id'] : 0;
                 $Tran['entry_appendix_id'] = intval($entry_appendix_id);
-                $Tran['entry_amount'] = intval($Tran['entry_amount']);
+                $Tran['entry_amount'] = floatval($Tran['entry_amount']);
                 if (isset($Tran['id']) && $Tran['id'] != "") {
                     $item = $this->loadModel($Tran['id']);
                     $item->attributes = $Tran;
