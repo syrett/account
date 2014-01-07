@@ -66,7 +66,8 @@ $('.search-form form').submit(function(){
                 ),
                 array('name'=>'entry_subject','value'=>'$data->getSbjName($data->entry_subject)'),
                 'entry_amount',
-                array('name'=>'entry_appendix','type'=>'shortText'),
+                array('name'=>'entry_appendix','value'=>'$data->getAppendix($data->entry_appendix_type,$data->entry_appendix_id)'),
+                array('name'=>'entry_posting','value'=>'$data->getPosting($data->entry_posting)'),
                 array('name'=>'entry_date','value'=>'$data->getTrandate($data->entry_num_prefix,$data->entry_num)'),
                 array(
                     'class' => 'CButtonColumn',

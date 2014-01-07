@@ -357,7 +357,7 @@ class TransitionController extends Controller
         }
 
         if ($html != "")
-            $arr += array('html' => '<select id="Transition_' . $number . '_entry_appendix_id" name="Transition[' . $number . '][entry_appendix_id]">' . $html . '</select>');
+            $arr += array('html' => '<select class="v-appendix" id="Transition_' . $number . '_entry_appendix_id" name="Transition[' . $number . '][entry_appendix_id]">' . $html . '</select>');
         else
             $arr += array('html' => '');
         return json_encode($arr);

@@ -67,6 +67,10 @@ div.form select.error
     border-color: #b94a48;
 }
 
+.grid-view table.items tr.filters td
+{
+    width: 50px;
+}
 .errorMessage {
     color: #b94a48;
 }
@@ -99,6 +103,15 @@ div.form select.error
 input[name="Transition[entry_transaction]"]
 {
     max-width: 55px;
+}
+
+input[name="Transition[entry_posting]"]   /* cgridview filter input*/
+{
+    max-width: 55px;
+}
+.v-appendix
+{
+    width: 300px;
 }
 .row-even {
     background-color: #f9f9f9;

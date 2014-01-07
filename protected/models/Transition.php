@@ -94,7 +94,7 @@ class Transition extends MyActiveRecord
             'entry_reviewer' => '审核人员',
             'entry_deleted' => '凭证删除',
             'entry_reviewed' => '凭证审核',
-            'entry_posting' => '凭证过账',
+            'entry_posting' => '过账',
             'entry_closing' => '结转',
             'entry_settlement' => '结转凭证',
             'entry_number' => '凭证编号'
@@ -203,13 +203,48 @@ class Transition extends MyActiveRecord
     }
 
     /*
-     * 科目表名称
+     * 年月日
      */
     public function getTrandate($prefix, $day)
     {
         return substr($prefix,0,4). '年'. substr($prefix,4,6). '月'. $day. '日';
     }
 
+    /*
+     * 过账
+     */
+    public function getPosting($posting)
+    {
+        return $posting==1?'已过账':'未过账';
+    }
+    /*
+     * 附加信息名称
+     */
+    public function getAppendix($type, $id)
+    {
+        $str = "";
+        switch($type){
+            case 1 :    //client
+                $model = Client::model()->findByPk($id);
+                $str = $model?$model->company:"";
+                break;
+            case 2 :    //vender
+                $model = Vender::model()->findByPk($id);
+                $str = $model?$model->company:"";
+                break;
+            case 3 :    //employee
+                $model = Employee::model()->findByPk($id);
+                $str = $model?$model->name:"";
+                break;
+            case 4 :    //project
+                $model = Project::model()->findByPk($id);
+                $str = $model?$model->name:"";
+                break;
+            default:
+                break;
+        }
+        return $str;
+    }
 
     /*
      * admin页面不同状态不同颜色

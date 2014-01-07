@@ -91,7 +91,7 @@ $this->pageTitle = Yii::app()->name;
                                     <?
                                     $data = $this->appendixList($item['entry_appendix_type']);
                                     $item->entry_appendix_id = $item['entry_appendix_id'];
-                                    echo CHtml::activeDropDownList($item, "[$i]entry_appendix_id",$data); ?>
+                                    echo CHtml::activeDropDownList($item, "[$i]entry_appendix_id",$data, array('class'=>'v-appendix')); ?>
                                 </span>
                                 <button type="button" class="close" aria-hidden="true" name="<?= $i ?>"
                                         onclick="rmRow(this)">&times;</button>

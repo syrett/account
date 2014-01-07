@@ -15,7 +15,7 @@ function checkInputNum(ob) {
 function checkInputAmount(ob) {
     var invalidChars = /^-?[1-9]+\.?\d?\d?$|^-?0\.\d?\d?$/;
     if(!invalidChars.test(ob.value)) {
-        var b = /-?[1-9]\d*\.?\d?\d?|-?0\.\d?\d?/;
+        var b = /-?[1-9]?\d*\.?\d?\d?|-?0\.\d?\d?/;
         ob.value = b.exec(ob.value);
     }
 }
