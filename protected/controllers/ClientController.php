@@ -74,10 +74,8 @@ class ClientController extends Controller
 				$this->redirect(array('admin'));
 		}
 
-        $dataProvider=$model->search();
 		$this->render('update',array(
 			'model'=>$model,
-            'dataProvider' => $dataProvider,
 		));
 	}
 

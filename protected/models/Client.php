@@ -28,8 +28,10 @@ class Client extends MyActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id', 'required'),
+			array('company', 'required'),
+			array('phone', 'required'),
 			array('id', 'numerical', 'integerOnly'=>true),
+			array('company', 'length', 'max'=>100),
 			array('vat', 'length', 'max'=>45),
 			array('phone', 'length', 'max'=>20),
 			array('add', 'length', 'max'=>100),
@@ -58,10 +60,11 @@ class Client extends MyActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'vat' => 'Vat',
-			'phone' => 'Phone',
-			'add' => 'Add',
-			'memo' => 'Memo',
+			'company' => '公司名',
+			'vat' => '税号',
+			'phone' => '联系电话',
+			'add' => '公司地址',
+			'memo' => '备注',
 		);
 	}
 
@@ -84,6 +87,7 @@ class Client extends MyActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
+		$criteria->compare('company',$this->company);
 		$criteria->compare('vat',$this->vat,true);
 		$criteria->compare('phone',$this->phone,true);
 		$criteria->compare('add',$this->add,true);
