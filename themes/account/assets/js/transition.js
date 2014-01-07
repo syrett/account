@@ -5,8 +5,10 @@
 //$(document).ajaxStop($("select[id^='Transition']").select2());
 $(document).ready(function () {
     $("input[id$='_entry_amount']").blur(function(){    //自动添加小数点23.00
-        var a=parseFloat($(this).val());
+        if(!isNaN($(this).val())&&$(this).val()!="")
+        {var a=parseFloat($(this).val());
         $(this).val(decimals(a))
+        }
     })
     $("select[id^='Transition']").select2();
     $("div").on("load","select[id^='Transition']", function(){$(this).select2()})
@@ -65,6 +67,16 @@ $(document).ready(function () {
         var number = $(this).next().val();
         subjects(this,$("select[id='Transition_"+number+"_entry_transaction']"));
     })
+
+//默认选择日期 无效
+//    var dateString  = $('#transition_date input').val();
+//    var year        = dateString.substring(0,4);
+//    var month       = dateString.substring(4,6);
+//    var day         = dateString.substring(6,8);
+//    var date        = new Date(year, month-1, day);
+//
+//    $('#transition_date input').datepicker('setDate', date)
+//    $('#transition_date input').datepicker('update')
 });
 
 var subjects = function(se,ob){ //todo:subjects
@@ -141,13 +153,3 @@ var rmRow = function (ob) {
     var number = ob.name
     $("#row_" + number).remove();
 }
-
-//默认选择日期
-var dateString  = $('#transition_date input').val();
-var year        = dateString.substring(0,4);
-var month       = dateString.substring(4,6);
-var day         = dateString.substring(6,8);
-var date        = new Date(year, month-1, day);
-
-$('#transition_date input').datepicker('setDate', dateString)
-$('#transition_date input').datepicker('update')
