@@ -78,6 +78,11 @@ class TransitionController extends Controller
                     'model' => $model,
                 ));
             }
+            else{
+                $this->render('create', array(
+                    'model' => $model,
+                ));
+            }
         } // 显示视图收集表格输入
 //              $this->redirect(array('view','id'=>$model->id));
         else {
