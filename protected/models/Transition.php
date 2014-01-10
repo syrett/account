@@ -362,7 +362,7 @@ class Transition extends MyActiveRecord
             $date = date('Ym', time());
         if (!$Tran->isAllPosted($date)) {
             Transition::model()->unsetAttributes();
-            $data = Transition::model()->findByAttributes(array('entry_memo' => "结转凭证", 'entry_num_prefix' => $date));
+            $data = Transition::model()->findByAttributes(array('entry_num_prefix' => $date, 'entry_settlement'=>1));
             if ($data) {
 //            if($date!=date('Ym', time()))   // strtotime format 07/28/2010
                 $date = date('Ym', strtotime('+1 months', strtotime($date . '01'))); //当前月如果已经有结转凭证，那么当月无需结账，所以+1
@@ -404,5 +404,8 @@ class Transition extends MyActiveRecord
             $arr += array($row['sbj_number'] => $row['sbj_number'] . $row['sbj_name']);
         };
         return $arr;
+    }
+    public function test(){
+        return 1;
     }
 }

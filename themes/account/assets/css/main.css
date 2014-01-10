@@ -137,19 +137,41 @@ input[name="Transition[entry_posting]"]   /* cgridview filter input*/
     background-color: #f2dede;
 }
 .unit-group{
-    padding: 50px
+    padding: 0 50px 30px 50px;
+    display: table;
+    width: 100%;
 }
 .unit-item{
-    margin: 0 50px;
-    display: inline-block;
+    margin: 0 30px;
+    /*display: table-cell;*/
+    text-align: center;
+    max-width: 150px;
 }
-.unit-icon{
+
+.unit-operate{
     border-radius: 6px;
-    width: 150px;
-    height: 150px;
+    width: 60px;
+    height: 20px;
     background-color: #9CBFD3;
     text-align: center;
-    display: table-cell;
+    /*display: table-cell;*/
     vertical-align: middle;
     color: black;
+    max-width: 150px;
+    float: left;
+    margin: 20px 30px;
+}
+.unit-icon{
+    width: 100px;
+    display: block;
+}
+.unit-title{
+    color: #777777;
+}
+.unit-arrow{
+    display: table-cell;
+    vertical-align: middle;
+}
+.long{
+    float: left;
 }

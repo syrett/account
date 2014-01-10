@@ -55,7 +55,6 @@
                         array('label' => '凭证', 'url' => array('/transition/index'), 'active'=>$this->id=='transition'?true:false),
                         array('label' => '科目表', 'url' => array('/subjects/admin'), 'active'=>$this->id=='subjects'?true:false),     //Subjects下所有操作高亮
                         array('label' => '审核', 'url' => array('/site/page', 'view' => 'about')),
-                        array('label' => '过账', 'url' => array('/site/contact')),
                         array('label' => '凭证整理', 'url' => array('/transition/reorganise')),
                         array('label' => '过账', 'url' => array('/post/post&date='.date('Y').date('m'))),
                         array('label' => '管理', 

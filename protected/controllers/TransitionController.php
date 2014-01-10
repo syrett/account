@@ -656,7 +656,8 @@ class TransitionController extends Controller
         $entry_prefix = Transition::model()->checkSettlement();
         if($entry_prefix>date('Ym', time())||!Transition::model()->confirmSettlement($entry_prefix))
         {
-            echo $entry_prefix. '已经全部结账';
+            Yii::app()->user->setFlash('success', $entry_prefix. "已经全部结账!");
+            $this->render('success');
             return 1;
         }
         if(!Transition::model()->confirmPosted($entry_prefix))
@@ -685,7 +686,9 @@ class TransitionController extends Controller
             $tran->entry_amount = $this->getEntry_amount($entry_prefix, $sub['id']);
             $sum = $sub['sbj_cat']=='4'?$sum + $amount: $sum - $amount;     //该科目合计多少
 //          $trans[] = $tran;
-            $tran->save();
+            if($amount>0){
+                $tran->save();
+            }
         }
 
         $tran = new Transition();
