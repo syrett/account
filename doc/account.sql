@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 03, 2014 at 06:10 PM
+-- Generation Time: Jan 12, 2014 at 02:54 PM
 -- Server version: 5.5.34
 -- PHP Version: 5.3.2-1ubuntu4.18
 
@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS `post` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `fk_subject_id_idx` (`subject_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=75 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=81 ;
 
 --
 -- Dumping data for table `post`
@@ -201,7 +201,13 @@ INSERT INTO `post` (`id`, `subject_id`, `year`, `month`, `balance`, `posted`) VA
 (71, 6511, 2014, 1, 0, 1),
 (72, 6521, 2014, 1, 0, 1),
 (73, 6531, 2014, 1, 0, 1),
-(74, 10010101, 2013, 11, 0, 1);
+(74, 10010101, 2013, 11, 0, 1),
+(75, 6111, 2013, 12, 0, 1),
+(76, 10010101, 2013, 12, -12, 1),
+(77, 1002, 2014, 1, 100, 1),
+(78, 6541, 2014, 1, 0, 1),
+(79, 10010101, 2014, 1, 0, 1),
+(80, 6001, 2014, 1, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -223,7 +229,7 @@ CREATE TABLE IF NOT EXISTS `project` (
 
 INSERT INTO `project` (`id`, `name`, `memo`) VALUES
 (1, 'project1', 'project1'),
-(2, 'project2', 'project2');
+(2, 'project299999999999', 'project299999999999');
 
 -- --------------------------------------------------------
 
@@ -445,8 +451,8 @@ CREATE TABLE IF NOT EXISTS `transition` (
   `entry_memo` varchar(512) CHARACTER SET utf8 COLLATE utf8_swedish_ci DEFAULT NULL,
   `entry_transaction` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1:借;2:贷',
   `entry_subject` int(11) NOT NULL,
-  `entry_amount` float NOT NULL,
-  `entry_appendix` text,
+  `entry_amount` decimal(12,2) NOT NULL,
+  `entry_appendix` text COMMENT '已废弃不用',
   `entry_appendix_type` tinyint(1) NOT NULL COMMENT '1:client;2:vendor;3:employee;4:project',
   `entry_appendix_id` int(8) NOT NULL COMMENT 'client vendor employee project ID',
   `entry_editor` int(11) NOT NULL,
@@ -461,18 +467,20 @@ CREATE TABLE IF NOT EXISTS `transition` (
   KEY `subject_id_idx` (`entry_subject`),
   KEY `re_employee_id_idx` (`entry_reviewer`),
   KEY `ed_employee_id_idx` (`entry_editor`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1731 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1954 ;
 
 --
 -- Dumping data for table `transition`
 --
 
 INSERT INTO `transition` (`id`, `entry_num_prefix`, `entry_num`, `entry_day`, `entry_date`, `entry_memo`, `entry_transaction`, `entry_subject`, `entry_amount`, `entry_appendix`, `entry_appendix_type`, `entry_appendix_id`, `entry_editor`, `entry_reviewer`, `entry_deleted`, `entry_reviewed`, `entry_posting`, `entry_settlement`, `entry_closing`) VALUES
-(1114, '201311', 1, 27, '2014-01-03 17:37:03', 'abcd', 1, 10010101, 0, NULL, 0, 0, 1, 1, 0, 1, 1, 0, 0),
-(1115, '201311', 1, 27, '2014-01-03 17:37:03', 'ddd', 1, 10010101, 0, NULL, 0, 0, 1, 1, 0, 1, 1, 0, 0),
-(1116, '201312', 1, 12, '2014-01-03 17:37:44', '1212', 1, 10010101, 12, NULL, 0, 0, 1, 1, 0, 1, 0, 0, 0),
-(1117, '201312', 1, 12, '2014-01-03 17:37:44', '1212', 2, 10010101, 12, NULL, 0, 0, 1, 1, 0, 1, 0, 0, 0),
-(1118, '201401', 1, 1, '2014-01-03 17:38:13', 'fdsf', 1, 10010101, 0, NULL, 0, 0, 1, 1, 0, 0, 0, 0, 0);
+(1771, '201401', 1, 1, '2014-01-08 23:18:24', 'abcd', 1, 10010101, '0.00', NULL, 0, 0, 1, 1, 0, 0, 1, 0, 0),
+(1772, '201401', 1, 1, '2014-01-08 23:18:24', '', 1, 6001, '0.00', NULL, 3, 1, 1, 1, 0, 0, 1, 0, 0),
+(1841, '201401', 2, 1, '2014-01-12 14:26:26', 'ww', 2, 10010101, '9.00', NULL, 0, 0, 1, 1, 0, 1, 0, 0, 0),
+(1842, '201401', 2, 1, '2014-01-12 14:26:26', 'ww', 1, 6001, '9.00', NULL, 3, 1, 1, 1, 0, 1, 0, 0, 0),
+(1951, '201312', 1, 30, '2014-01-12 14:27:25', 'test', 1, 10010101, '10.00', NULL, 0, 0, 1, 1, 1, 0, 0, 0, 0),
+(1952, '201311', 1, 20, '2014-01-12 14:16:52', 'sdf', 1, 10010101, '0.00', NULL, 0, 0, 1, 1, 0, 1, 0, 0, 0),
+(1953, '201312', 1, 30, '2014-01-12 14:27:25', 'ggg', 2, 10010101, '10.00', NULL, 0, 0, 1, 1, 1, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 

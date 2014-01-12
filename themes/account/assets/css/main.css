@@ -2,7 +2,9 @@ html,
 body {
     height: 100%;
 }
-
+.panel-default{
+    padding-bottom: 30px;
+}
 .page-container {
     margin: 0 auto -60px;
     padding: 60px 0;
@@ -70,6 +72,9 @@ div.form select.error
 .grid-view table.items tr.filters td
 {
     width: 50px;
+}
+.items tbody td{
+    padding: 0 5px;
 }
 .errorMessage {
     color: #b94a48;
@@ -174,4 +179,7 @@ input[name="Transition[entry_posting]"]   /* cgridview filter input*/
 }
 .long{
     float: left;
+}
+.amount{
+    text-align: right;
 }

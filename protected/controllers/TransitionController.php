@@ -32,7 +32,9 @@ class TransitionController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'getTranSuffix', 'Appendix', 'ListFirst', 'reorganise', 'ajaxListFirst', 'review', 'settlement', 'antiSettlement'),
+                'actions' => array('create', 'update', 'getTranSuffix', 'Appendix', 'ListFirst', 'reorganise', 'ajaxListFirst',
+                    'review', 'settlement', 'antiSettlement','listReview',
+                    'ListTransition', 'listPost', 'listReorganise', 'listSettlement'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -169,11 +171,18 @@ class TransitionController extends Controller
         ));
     }
 
-    public function actionReorganise()
+    public function actionReorganise($date)
     {
-        if (!isset($_POST['entry_num_prefix'])) {
-            $prefix = date('Y') . date('m');
-        };
+//        if (!isset($_POST['entry_num_prefix'])) {
+//            $prefix = date('Y') . date('m');
+//        };
+        //整理按月为结点
+        $this->reorganise($date);
+        $this->redirect("index.php?r=transition/index");
+    }
+
+    public function reorganise($date){
+        $prefix = $date;
         $del_condition = 'entry_num_prefix=:prefix and entry_deleted=:bool';
         Transition::model()->deleteAll($del_condition, array(':prefix' => $prefix, ':bool' => 1));
 
@@ -187,7 +196,6 @@ class TransitionController extends Controller
             if ($num == 1)
                 $last = $row['entry_num'];
 
-
             if ($last != $row['entry_num']) {
                 $i++;
             }
@@ -195,10 +203,7 @@ class TransitionController extends Controller
             Transition::model()->updateByPk($pk, array('entry_num' => $i));
             $last = $row['entry_num'];
             $num++;
-
         }
-
-        $this->redirect("index.php?r=transition/index");
     }
 
     /**
@@ -651,9 +656,10 @@ class TransitionController extends Controller
             4)	完成
 
      */
-    public function actionSettlement(){
+    public function actionSettlement($date){
 //      $trans = array();
-        $entry_prefix = Transition::model()->checkSettlement();
+        $need = Transition::model()->checkSettlement();
+        $entry_prefix = $need;
         if($entry_prefix>date('Ym', time())||!Transition::model()->confirmSettlement($entry_prefix))
         {
             Yii::app()->user->setFlash('success', $entry_prefix. "已经全部结账!");
@@ -662,6 +668,7 @@ class TransitionController extends Controller
         }
         if(!Transition::model()->confirmPosted($entry_prefix))
             throw new CHttpException(400, $entry_prefix. "结账失败");
+        $this->reorganise($entry_prefix); //结账前先整理
         $entry_num = $this->tranSuffix($entry_prefix);
 //        if($entry_num='0001')                     //有可能需要
 //            echo '本月无账目信息，无需结账';
@@ -741,12 +748,13 @@ class TransitionController extends Controller
     public function actionAntiSettlement(){
         $date = Transition::model()->checkSettlement();
         $model = 0;
-        if(Transition::model()->confirmSettlement($date))
-        {
-            $date = date('Ym', strtotime('-1 months', strtotime($date . '01')));
-        }
+        $date = date('Ym', strtotime('-1 months', strtotime($date . '01')));
+
+        //checksettlement函数不正确
+//        $date = date('Ym', strtotime('-1 months', time()));
+
         $model = Transition::model()->deleteAllByAttributes(array('entry_num_prefix'=>$date, 'entry_settlement'=>1,));
-        if($model>1)
+        if($model>=1)
         {
             Yii::app()->user->setFlash('success', "反结账成功!");
             $this->render('success');
@@ -763,6 +771,53 @@ class TransitionController extends Controller
         else
         {
             $this->redirect(array('quote'));
+        }
+    }
+    /*
+     * 按月为时间段
+     */
+    public function actionListReview(){
+        if(isset($_REQUEST['date'])){
+            $model = new Transition('search');
+            $model->unsetAttributes(); // clear any default values
+            $criteria = array('entry_reviewed' => 0, 'entry_num_prefix' => $_REQUEST['date']);
+            $model->attributes = $criteria;
+            $this->render('admin', array(
+                'model' => $model,
+            ));
+
+        }
+        else
+            throw new CHttpException(400, "参数错误，请选择时间");
+    }
+
+    public function actionListTransition(){
+        if(isset($_REQUEST['date'])){
+            $model = new Transition('search');
+            $model->unsetAttributes(); // clear any default values
+            $criteria = array('entry_num_prefix' => $_REQUEST['date']);
+            $model->attributes = $criteria;
+            $this->render('admin', array(
+                'model' => $model,
+            ));
+        }
+        else
+            throw new CHttpException(400, "参数错误，请选择时间");
+    }
+
+    public function actionListPost(){       //run post
+        if(isset($_REQUEST['date'])){
+            Yii::app()->runController('Post/post');
+        }
+    }
+    public function actionListReorganise(){     //run Reorganise
+        if(isset($_REQUEST['date'])){
+            $this->actionReorganise($_REQUEST['date']);
+        }
+    }
+    public function actionListSettlement(){     //run settlement
+        if(isset($_REQUEST['date'])){
+            $this->actionSettlement($_REQUEST['date']);
         }
     }
 }

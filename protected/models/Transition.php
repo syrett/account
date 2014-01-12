@@ -327,8 +327,8 @@ class Transition extends MyActiveRecord
         $this->entry_num_prefix=$date;
         $this->select="entry_num_prefix,entry_num,entry_posting";
         $dataProvider = $this->search();
-        $transtion = $dataProvider->getData();
-        return empty($transtion);
+        $transition = $dataProvider->getData();
+        return empty($transition);
     }
 
     /*
@@ -349,7 +349,7 @@ class Transition extends MyActiveRecord
     }
 
     /*
-     * 结账日期
+     * 结账日期     //这个函数逻辑很混乱
      * return $date
      */
     public static function checkSettlement($date = "")
@@ -372,8 +372,25 @@ class Transition extends MyActiveRecord
                 return $Tran->checkSettlement($date);
             }
         }
-        else
-            return $date;
+        else{
+            if($Tran->tranSettlement($date))
+            {
+                $date = date('Ym', strtotime('-1 months', strtotime($date . '01')));
+                return $Tran->checkSettlement($date);
+            } //当前月如果没有结转凭证，那么需要检查上一个月，所以-1
+            else
+            {
+                $date = date('Ym', strtotime('+1 months', strtotime($date . '01')));
+                return $date;
+            } //当前月如果已经有结转凭证，那么当月无需结账，所以+1
+
+        }
+         //当前月如果已经有结转凭证，那么当月无需结账，所以+1
+    }
+    //当前日期是否已经结账
+    public function tranSettlement($date){
+        $model = Transition::model()->findByAttributes(array('entry_num_prefix'=>$date, 'entry_settlement'=>1));
+        return empty($model);
     }
 
     /*
@@ -405,7 +422,47 @@ class Transition extends MyActiveRecord
         };
         return $arr;
     }
-    public function test(){
-        return 1;
+    /*
+     * 所有操作按年月为时间段
+     */
+    public function listReview(){
+        $tran = new Transition();
+        return $tran->listDate(array('entry_reviewed'=> 0));
+    }
+    public function listTransition(){
+        $tran = new Transition();
+        return $tran->listDate(array());
+    }
+    public function listPost(){
+        $tran = new Transition();
+        return $tran->listDate(array('entry_posting'=> 0));
+    }
+    public function listReorganise(){
+        $tran = new Transition();
+        return $tran->listDate(array());
+    }
+    public function listSettlement(){
+        $tran = new Transition();
+        return $tran->listDate(array('entry_closing'=> 0));
+    }
+    public function listDate($arr){
+        $criteria = new CDbCriteria(array('group'=>'entry_num_prefix'));
+        $list = Transition::model()->findAllByAttributes(
+            $arr,
+            $criteria
+        );
+        $arr = array();
+        if($list){
+            foreach($list as $model){
+                $year = substr($model->entry_num_prefix, 0, 4);
+                $month = substr($model->entry_num_prefix, 4, 6);
+                if(empty($arr[$year])){
+                    $arr += array($year=>array($month));
+                }
+                else
+                    array_push($arr[$year], $month);
+            }
+        }
+        return $arr;
     }
 }

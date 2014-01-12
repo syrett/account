@@ -26,7 +26,7 @@ $this->pageTitle = Yii::app()->name;
             ?>
         </div>
         <div class="unit-item">
-            <a href="<?= $this->createUrl('Transition/index') ?>">
+            <a href="<?= $this->createUrl('Site/operation', array('operation'=>'listReview')) ?>">
                 <?
                 echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/review.ico','审核',array('class'=>'unit-icon'));
                 ?>
@@ -39,7 +39,7 @@ $this->pageTitle = Yii::app()->name;
             ?>
         </div>
         <div class="unit-item">
-            <a href="<?= $this->createUrl('Transition/index') ?>">
+            <a href="<?= $this->createUrl('Site/operation', array('operation'=>'listTransition')) ?>">
                 <?
                 echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/trans.ico','凭证管理',array('class'=>'unit-icon'));
                 ?>
@@ -52,7 +52,7 @@ $this->pageTitle = Yii::app()->name;
             ?>
         </div>
         <div class="unit-item">
-            <a href="<?= $this->createUrl('/post/post&date='.date('Y').date('m')) ?>">
+            <a href="<?= $this->createUrl('Site/operation', array('operation'=>'listPost')) ?>">
                 <?
                 echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/posting.ico','过账',array('class'=>'unit-icon'));
                 ?>
@@ -65,7 +65,7 @@ $this->pageTitle = Yii::app()->name;
             ?>
         </div>
         <div class="unit-item">
-            <a href="<?= $this->createUrl('Transition/settlement') ?>">
+            <a href="<?= $this->createUrl('Site/operation', array('operation'=>'listSettlement')) ?>">
                 <?
                 echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/settle.ico','结账',array('class'=>'unit-icon'));
                 ?>
@@ -73,6 +73,7 @@ $this->pageTitle = Yii::app()->name;
             </a>
         </div>
     </div>
+
 <!--    <div class="unit-group"><div class='long'>--><?//
 //        echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/long.png','',array('class'=>''));
 //        ?>

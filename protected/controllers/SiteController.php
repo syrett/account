@@ -113,7 +113,6 @@ class SiteController extends Controller
      */
     public function actionOperation()
     {
-        $_REQUEST['operation'] = $this->createUrl('Transition/create');
         if(isset($_REQUEST['operation']))
         {
             $operation = $_REQUEST['operation'];
@@ -129,14 +128,7 @@ class SiteController extends Controller
      * @return array(2013=>array(1,2,4),2014=>array(1,2,3))
      */
     public function listMonth($operation){
-        //call_usr_func参数不会引用
-
-        switch($operation){
-            case 'review':
-                call_user_func('test');
-                break;
-        }
-
-        return ;
+        $arr = call_user_func(array('Transition', $operation));
+        return $arr;
     }
 }

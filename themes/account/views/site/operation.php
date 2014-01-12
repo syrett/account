@@ -13,21 +13,32 @@ $this->pageTitle = Yii::app()->name;
     <div class="panel-body v-title">
     </div>
     <!-- search-form -->
+        <?
+            $list = $this->listMonth($operation);
+        if(empty($list))
+        {
+            ?>
+
+    <div class="unit-group">
+        没有数据需要处理
+        </div>
+        <?}
+        foreach($list as $year => $months){
+            ?>
     <div class="unit-group">
         <div>
-            <span class="unit-title">
+            <span class="unit-title"><?=$year?>
             </span>
         </div>
         <?
-            $month = $this->listMonth($operation);
-//        foreach($month as $item){
-//            echo $item;
-//        }
+
+            foreach($months as $month){
         ?>
         <div class="unit-operate">
-            <a href="<?= $this->createUrl('/post/post&date='.date('Y').date('m')) ?>">
-                3月
+            <a href="<?= $this->createUrl('/Transition/'.$operation.'&date='.$year.$month) ?>">
+                <?=$month?>月
             </a>
         </div>
-    </div>
+        <?}?>
+            </div><?}?>
 </div>
