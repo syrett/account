@@ -2,10 +2,10 @@
 -- version 3.3.2deb1ubuntu1
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: Jan 12, 2014 at 02:54 PM
--- Server version: 5.5.34
--- PHP Version: 5.3.2-1ubuntu4.18
+-- 主机: localhost
+-- 生成日期: 2014 年 01 月 15 日 17:51
+-- 服务器版本: 5.5.34
+-- PHP 版本: 5.3.2-1ubuntu4.18
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
@@ -16,13 +16,13 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `account`
+-- 数据库: `account`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `client`
+-- 表的结构 `client`
 --
 
 CREATE TABLE IF NOT EXISTS `client` (
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `client` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
--- Dumping data for table `client`
+-- 转存表中的数据 `client`
 --
 
 INSERT INTO `client` (`id`, `company`, `vat`, `phone`, `add`, `memo`) VALUES
@@ -47,7 +47,7 @@ INSERT INTO `client` (`id`, `company`, `vat`, `phone`, `add`, `memo`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `department`
+-- 表的结构 `department`
 --
 
 CREATE TABLE IF NOT EXISTS `department` (
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `department` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
--- Dumping data for table `department`
+-- 转存表中的数据 `department`
 --
 
 INSERT INTO `department` (`id`, `name`, `memo`) VALUES
@@ -68,7 +68,7 @@ INSERT INTO `department` (`id`, `name`, `memo`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `employee`
+-- 表的结构 `employee`
 --
 
 CREATE TABLE IF NOT EXISTS `employee` (
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS `employee` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
--- Dumping data for table `employee`
+-- 转存表中的数据 `employee`
 --
 
 INSERT INTO `employee` (`id`, `name`, `memo`, `department_id`) VALUES
@@ -91,7 +91,7 @@ INSERT INTO `employee` (`id`, `name`, `memo`, `department_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `options`
+-- 表的结构 `options`
 --
 
 CREATE TABLE IF NOT EXISTS `options` (
@@ -105,14 +105,14 @@ CREATE TABLE IF NOT EXISTS `options` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `options`
+-- 转存表中的数据 `options`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `post`
+-- 表的结构 `post`
 --
 
 CREATE TABLE IF NOT EXISTS `post` (
@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS `post` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=81 ;
 
 --
--- Dumping data for table `post`
+-- 转存表中的数据 `post`
 --
 
 INSERT INTO `post` (`id`, `subject_id`, `year`, `month`, `balance`, `posted`) VALUES
@@ -193,7 +193,7 @@ INSERT INTO `post` (`id`, `subject_id`, `year`, `month`, `balance`, `posted`) VA
 (61, 6711, 2013, 11, 0, 1),
 (62, 6801, 2013, 11, 0, 1),
 (63, 6001, 2013, 11, 0, 1),
-(66, 4103, 2014, 1, 0, 1),
+(66, 4103, 2014, 1, -9, 1),
 (67, 6411, 2014, 1, 0, 1),
 (68, 6421, 2014, 1, 0, 1),
 (69, 6501, 2014, 1, 0, 1),
@@ -203,7 +203,7 @@ INSERT INTO `post` (`id`, `subject_id`, `year`, `month`, `balance`, `posted`) VA
 (73, 6531, 2014, 1, 0, 1),
 (74, 10010101, 2013, 11, 0, 1),
 (75, 6111, 2013, 12, 0, 1),
-(76, 10010101, 2013, 12, -12, 1),
+(76, 10010101, 2013, 12, 0, 1),
 (77, 1002, 2014, 1, 100, 1),
 (78, 6541, 2014, 1, 0, 1),
 (79, 10010101, 2014, 1, 0, 1),
@@ -212,7 +212,7 @@ INSERT INTO `post` (`id`, `subject_id`, `year`, `month`, `balance`, `posted`) VA
 -- --------------------------------------------------------
 
 --
--- Table structure for table `project`
+-- 表的结构 `project`
 --
 
 CREATE TABLE IF NOT EXISTS `project` (
@@ -224,7 +224,7 @@ CREATE TABLE IF NOT EXISTS `project` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
--- Dumping data for table `project`
+-- 转存表中的数据 `project`
 --
 
 INSERT INTO `project` (`id`, `name`, `memo`) VALUES
@@ -234,7 +234,7 @@ INSERT INTO `project` (`id`, `name`, `memo`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `subject`
+-- 表的结构 `subject`
 --
 
 CREATE TABLE IF NOT EXISTS `subject` (
@@ -249,7 +249,7 @@ CREATE TABLE IF NOT EXISTS `subject` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
 
 --
--- Dumping data for table `subject`
+-- 转存表中的数据 `subject`
 --
 
 INSERT INTO `subject` (`id`, `no`, `name`, `category`) VALUES
@@ -269,7 +269,7 @@ INSERT INTO `subject` (`id`, `no`, `name`, `category`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `subjects`
+-- 表的结构 `subjects`
 --
 
 CREATE TABLE IF NOT EXISTS `subjects` (
@@ -285,7 +285,7 @@ CREATE TABLE IF NOT EXISTS `subjects` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=356 ;
 
 --
--- Dumping data for table `subjects`
+-- 转存表中的数据 `subjects`
 --
 
 INSERT INTO `subjects` (`id`, `sbj_number`, `sbj_name`, `sbj_cat`, `sbj_table`, `has_sub`) VALUES
@@ -439,15 +439,15 @@ INSERT INTO `subjects` (`id`, `sbj_number`, `sbj_name`, `sbj_cat`, `sbj_table`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `transition`
+-- 表的结构 `transition`
 --
 
 CREATE TABLE IF NOT EXISTS `transition` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `entry_num_prefix` varchar(10) DEFAULT NULL,
   `entry_num` int(11) NOT NULL,
-  `entry_day` int(2) NOT NULL DEFAULT '1',
-  `entry_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `entry_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '录入时间',
+  `entry_date` timestamp NULL DEFAULT NULL COMMENT '凭证日期，非录入时间',
   `entry_memo` varchar(512) CHARACTER SET utf8 COLLATE utf8_swedish_ci DEFAULT NULL,
   `entry_transaction` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1:借;2:贷',
   `entry_subject` int(11) NOT NULL,
@@ -467,25 +467,27 @@ CREATE TABLE IF NOT EXISTS `transition` (
   KEY `subject_id_idx` (`entry_subject`),
   KEY `re_employee_id_idx` (`entry_reviewer`),
   KEY `ed_employee_id_idx` (`entry_editor`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1954 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2012 ;
 
 --
--- Dumping data for table `transition`
+-- 转存表中的数据 `transition`
 --
 
-INSERT INTO `transition` (`id`, `entry_num_prefix`, `entry_num`, `entry_day`, `entry_date`, `entry_memo`, `entry_transaction`, `entry_subject`, `entry_amount`, `entry_appendix`, `entry_appendix_type`, `entry_appendix_id`, `entry_editor`, `entry_reviewer`, `entry_deleted`, `entry_reviewed`, `entry_posting`, `entry_settlement`, `entry_closing`) VALUES
-(1771, '201401', 1, 1, '2014-01-08 23:18:24', 'abcd', 1, 10010101, '0.00', NULL, 0, 0, 1, 1, 0, 0, 1, 0, 0),
-(1772, '201401', 1, 1, '2014-01-08 23:18:24', '', 1, 6001, '0.00', NULL, 3, 1, 1, 1, 0, 0, 1, 0, 0),
-(1841, '201401', 2, 1, '2014-01-12 14:26:26', 'ww', 2, 10010101, '9.00', NULL, 0, 0, 1, 1, 0, 1, 0, 0, 0),
-(1842, '201401', 2, 1, '2014-01-12 14:26:26', 'ww', 1, 6001, '9.00', NULL, 3, 1, 1, 1, 0, 1, 0, 0, 0),
-(1951, '201312', 1, 30, '2014-01-12 14:27:25', 'test', 1, 10010101, '10.00', NULL, 0, 0, 1, 1, 1, 0, 0, 0, 0),
-(1952, '201311', 1, 20, '2014-01-12 14:16:52', 'sdf', 1, 10010101, '0.00', NULL, 0, 0, 1, 1, 0, 1, 0, 0, 0),
-(1953, '201312', 1, 30, '2014-01-12 14:27:25', 'ggg', 2, 10010101, '10.00', NULL, 0, 0, 1, 1, 1, 0, 0, 0, 0);
+INSERT INTO `transition` (`id`, `entry_num_prefix`, `entry_num`, `entry_time`, `entry_date`, `entry_memo`, `entry_transaction`, `entry_subject`, `entry_amount`, `entry_appendix`, `entry_appendix_type`, `entry_appendix_id`, `entry_editor`, `entry_reviewer`, `entry_deleted`, `entry_reviewed`, `entry_posting`, `entry_settlement`, `entry_closing`) VALUES
+(1771, '201401', 1, '2014-01-08 23:18:24', '2014-01-15 16:02:48', 'abcd', 1, 10010101, '0.00', NULL, 0, 0, 1, 1, 0, 1, 1, 0, 0),
+(1772, '201401', 1, '2014-01-08 23:18:24', '2014-01-15 11:29:16', '', 1, 6001, '0.00', NULL, 3, 1, 1, 1, 0, 1, 1, 0, 0),
+(1841, '201401', 2, '2014-01-08 23:18:24', '2014-01-12 14:26:26', 'ww', 2, 10010101, '9.00', NULL, 0, 0, 1, 1, 0, 1, 1, 0, 0),
+(1842, '201401', 2, '2014-01-08 23:18:24', '2014-01-12 14:26:26', 'ww', 1, 6001, '9.00', NULL, 3, 1, 1, 1, 0, 1, 1, 0, 0),
+(1954, '201401', 3, '2014-01-08 23:18:24', '2014-01-12 15:03:41', 'asdfasd', 1, 10010101, '0.00', NULL, 0, 0, 1, 1, 0, 1, 1, 0, 0),
+(1955, '201401', 5, '2014-01-08 23:18:24', '2014-01-13 18:49:10', 'teste', 1, 10010101, '0.00', NULL, 0, 0, 1, 1, 0, 1, 1, 0, 0),
+(2009, '201401', 4, '2014-01-08 23:18:24', '2014-01-14 18:48:46', 'æŸ˜åŸŽs', 1, 10010101, '0.00', NULL, 0, 0, 1, 1, 0, 0, 0, 0, 0),
+(2010, '201401', 6, '2014-01-08 23:18:24', '2014-01-14 18:50:32', 'dddd', 1, 10010101, '0.00', NULL, 0, 0, 1, 1, 0, 0, 0, 0, 0),
+(2011, '201401', 7, '2014-01-08 23:18:24', '2014-01-14 18:51:44', 'ffff', 1, 10010101, '0.00', NULL, 0, 0, 1, 1, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user`
+-- 表的结构 `user`
 --
 
 CREATE TABLE IF NOT EXISTS `user` (
@@ -502,7 +504,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
--- Dumping data for table `user`
+-- 转存表中的数据 `user`
 --
 
 INSERT INTO `user` (`id`, `userid`, `password`, `fullname`, `mobile`, `email`, `title`, `sys_role`) VALUES
@@ -512,7 +514,7 @@ INSERT INTO `user` (`id`, `userid`, `password`, `fullname`, `mobile`, `email`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `vendor`
+-- 表的结构 `vendor`
 --
 
 CREATE TABLE IF NOT EXISTS `vendor` (
@@ -527,7 +529,7 @@ CREATE TABLE IF NOT EXISTS `vendor` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
--- Dumping data for table `vendor`
+-- 转存表中的数据 `vendor`
 --
 
 INSERT INTO `vendor` (`id`, `company`, `vat`, `phone`, `add`, `memo`) VALUES
@@ -536,23 +538,23 @@ INSERT INTO `vendor` (`id`, `company`, `vat`, `phone`, `add`, `memo`) VALUES
 (3, 'company3', 'vendor3', '111111', '11111', '11111');
 
 --
--- Constraints for dumped tables
+-- 限制导出的表
 --
 
 --
--- Constraints for table `employee`
+-- 限制表 `employee`
 --
 ALTER TABLE `employee`
 ADD CONSTRAINT `department_id` FOREIGN KEY (`id`) REFERENCES `department` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Constraints for table `post`
+-- 限制表 `post`
 --
 ALTER TABLE `post`
 ADD CONSTRAINT `fk_subject_id` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`sbj_number`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Constraints for table `transition`
+-- 限制表 `transition`
 --
 ALTER TABLE `transition`
 ADD CONSTRAINT `re_employee_id` FOREIGN KEY (`entry_reviewer`) REFERENCES `employee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
