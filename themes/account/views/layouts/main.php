@@ -45,10 +45,8 @@
             </div>
             <div class="collapse navbar-collapse" id="mainmenu">
                 <!-- header -->
-
-          
                 <?php $this->widget('zii.widgets.CMenu', array(
-                    'htmlOptions' => array('class' => 'nav navbar-nav dropdown dropdown-horizontal'),
+                    'htmlOptions' => array('class' => 'hasmenu nav navbar-nav dropdown dropdown-horizontal'),
                     'activeCssClass' => 'active',
                     'activateParents' => true,
                     'items' => array(
@@ -58,7 +56,7 @@
                         array('label' => '反结账', 'url' => array('/transition/antisettlement')),
                         array('label' => '管理',
                               'url' => array('/department/admin'),
-                              'htmlOptions' => array('class' => 'dir'),
+                              'htmlOptions' => array('class' => 'dir dropdown'),
                               'items' => array(
                                                array('label' => '项目', 'url' => array('/project/admin')),
                                                array('label' => '部门', 'url' => array('/department/admin')),

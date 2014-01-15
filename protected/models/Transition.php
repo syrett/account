@@ -7,7 +7,7 @@
  * @property integer $id
  * @property string $entry_num_prefix
  * @property integer $entry_num
- * @property string $entry_day
+ * @property string $entry_time
  * @property string $entry_date
  * @property string $entry_memo
  * @property integer $entry_transaction
@@ -31,6 +31,7 @@ class Transition extends MyActiveRecord
      */
     public $check_entry_amount = 0; //是否验证过借贷相等 优化处理 待改进
     public $entry_number; //  entry_num_prefix. entry_num     完整凭证编号，供凭证管理、排序搜索使用
+    public $entry_time;
     public $select; // search的时候，定义返回字段
     /**
      * @return string the associated database table name
@@ -54,10 +55,12 @@ class Transition extends MyActiveRecord
             array('entry_amount', 'type', 'type' => 'float'),
             array('entry_num_prefix', 'length', 'max' => 10),
             array('entry_memo, entry_appendix', 'length', 'max' => 100),
-            array('entry_appendix_id, entry_appendix_type, entry_date, entry_day', 'safe'),
+            array('entry_appendix_id, entry_appendix_type, entry_date, entry_time', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, entry_number, entry_num_prefix, entry_num, entry_date, entry_day, entry_memo, entry_transaction, entry_subject, entry_amount, entry_appendix, entry_appendix_id, entry_appendix_type, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing, entry_settlement', 'safe', 'on' => 'search'),
+            array('id, entry_number, entry_num_prefix, entry_num, entry_date, entry_time, entry_memo, entry_transaction,
+            entry_subject, entry_amount, entry_appendix, entry_appendix_id, entry_appendix_type, entry_editor, entry_reviewer,
+            entry_deleted, entry_reviewed, entry_posting, entry_closing, entry_settlement', 'safe', 'on' => 'search'),
             //自定义验证规则
             array('entry_amount', 'check_entry_amount', 'on' => 'create,update'), //借贷相等
         );
@@ -82,8 +85,8 @@ class Transition extends MyActiveRecord
             'id' => 'ID',
             'entry_num_prefix' => '凭证前缀',
             'entry_num' => '凭证号',
-            'entry_day' => '日',
-            'entry_date' => '录入日期',
+            'entry_time' => '日',
+            'entry_date' => '凭证日期',
             'entry_memo' => '凭证摘要',
             'entry_transaction' => '借贷',
             'entry_subject' => '借贷科目',
@@ -97,7 +100,8 @@ class Transition extends MyActiveRecord
             'entry_posting' => '过账',
             'entry_closing' => '结转',
             'entry_settlement' => '结转凭证',
-            'entry_number' => '凭证编号'
+            'entry_number' => '凭证编号',
+            'entry_time' => '录入时间',
         );
     }
 
@@ -118,12 +122,22 @@ class Transition extends MyActiveRecord
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
-
+        if(isset($_REQUEST['s_day']) && $_REQUEST['s_day']!="")
+        {
+            $a = date('Y-m-d H:i:s', strtotime($_REQUEST['s_day']));
+            $criteria->addCondition('t.entry_date>="'.$a. '"' , 'AND');
+        }
+        if(isset($_REQUEST['e_day']) && $_REQUEST['e_day']!="")
+        {
+            $a = date('Y-m-d 23:59:59', strtotime($_REQUEST['e_day']));
+            $criteria->addCondition('t.entry_date<="'.$a. '"' , 'AND');
+        }
         $criteria->compare('id', $this->id);
         $criteria->compare('entry_num_prefix', $this->entry_num_prefix, true);
         $criteria->compare('entry_num', $this->entry_num, true);
+        $criteria->compare('entry_num_prefix', $this->entry_number, true);
         $criteria->compare('entry_date', $this->entry_date, true);
-        $criteria->compare('entry_day', $this->entry_day, true);
+        $criteria->compare('entry_time', $this->entry_time, true);
         $criteria->compare('entry_memo', $this->entry_memo, true);
         $criteria->compare('entry_transaction', $this->entry_transaction, true);
         $criteria->compare('entry_subject', $this->entry_subject, true);

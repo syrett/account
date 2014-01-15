@@ -183,3 +183,46 @@ input[name="Transition[entry_posting]"]   /* cgridview filter input*/
 .amount{
     text-align: right;
 }
+.hasmenu ul{
+    background-color: #fff;
+    margin-top: 0;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    list-style: none;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    background-clip: padding-box;
+}
+ul.dropdown ul{
+    padding: 5px 0;
+}
+ul.dropdown ul li{
+    height: 26px;
+}
+
+ul.dropdown ul li a{
+    text-decoration: none;
+}
+ul.dropdown ul li:hover{
+    background-color: #428bca;
+}
+.hasmenu ul a{
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.428571429;
+    color: #333;
+    white-space: nowrap;
+}

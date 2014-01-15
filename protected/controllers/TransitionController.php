@@ -71,7 +71,7 @@ class TransitionController extends Controller
             $model = $this->saveTransitions();
             if ($model && $model[0]->validate()) {
                 $model = new Transition('search');
-//                $model->unsetAttributes(); // clear any default values
+                $model->unsetAttributes(); // clear any default values
                 $_GET['Transition'] = array('entry_num_prefix' => $_POST['entry_num_prefix'], 'entry_num' => intval($_POST['entry_num']));
                 $model->attributes = $_GET['Transition'];
 
@@ -469,7 +469,6 @@ class TransitionController extends Controller
             if (isset($Tran)) {
                 $Tran['entry_reviewer'] = intval($_POST['entry_reviewer']);
                 $Tran['entry_num'] = intval($_POST['entry_num']);;
-                $Tran['entry_day'] = intval($_POST['entry_day']);
                 $Tran['entry_editor'] = intval($_POST['entry_editor']);
                 $Tran['entry_num_prefix'] = $_POST['entry_num_prefix'];
                 $Tran['entry_date'] = date('Y-m-d H:i:s', time());
@@ -756,10 +755,10 @@ class TransitionController extends Controller
         $model = Transition::model()->deleteAllByAttributes(array('entry_num_prefix'=>$date, 'entry_settlement'=>1,));
         if($model>=1)
         {
-            Yii::app()->user->setFlash('success', "反结账成功!");
+            Yii::app()->user->setFlash('success', $date. " 反结账成功!");
             $this->render('success');
         }else
-            throw new CHttpException(400, $date. "反结账失败");
+            throw new CHttpException(400, $date. " 反结账失败");
     }
 
     public function actionSuccess()
