@@ -107,4 +107,28 @@ class SiteController extends Controller
 		Yii::app()->user->logout();
 		$this->redirect(Yii::app()->homeUrl);
 	}
+
+    /**
+     * Displays Operation
+     */
+    public function actionOperation()
+    {
+        if(isset($_REQUEST['operation']))
+        {
+            $operation = $_REQUEST['operation'];
+            $date = isset($_REQUEST['date'])?$_REQUEST['date']:date('Ym', time());
+            $this->render('operation',array('operation'=>$operation));
+        }
+        else
+            $this->redirect('/');
+    }
+
+    /*
+     * @operation string
+     * @return array(2013=>array(1,2,4),2014=>array(1,2,3))
+     */
+    public function listMonth($operation){
+        $arr = call_user_func(array('Transition', $operation));
+        return $arr;
+    }
 }

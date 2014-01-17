@@ -1,6 +1,6 @@
 <div class="panel panel-default voucher">
     <!-- Default panel contents -->
-    <div class="panel-heading">错误</div>
+    <div class="panel-heading">&nbsp;</div>
     <div class="panel-body v-title">
         <?php
         /* @var $this SiteController */

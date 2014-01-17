@@ -14,6 +14,11 @@ $('.search-form form').submit(function(){
 	return false;
 });
 ");
+
+$cs = Yii::app()->clientScript;
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/bootstrap-datepicker.js', CClientScript::POS_HEAD);
+$cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/datepicker.css');
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/_search.js', CClientScript::POS_HEAD);
 ?>
 <div class="panel panel-default voucher form">
 
@@ -35,13 +40,27 @@ $('.search-form form').submit(function(){
             ?>
 </div>
     </div>
-    <div class="panel-body v-title">
-        <div class="search-form" style="display:none">
-            <?php $this->renderPartial('_search', array(
-                'model' => $model,
-            )); ?>
+    <div class="row">
+            <?php echo CHtml::beginForm(); ?>
+        <div class="search-form" id="tran_search">
+            <div class="col-md-4">
+                <h5>
+                    开始日期:<? echo CHtml::textField('s_day', isset($_REQUEST['s_day'])?$_REQUEST['s_day']:""); ?>
+                </h5>
+            </div>
+            <div class="col-md-4">
+                <h5>
+                    结束日期:<? echo CHtml::textField('e_day', isset($_REQUEST['e_day'])?$_REQUEST['e_day']:""); ?>
+                </h5>
+            </div>
         </div>
+        <?
+            echo CHtml::submitButton('查找',array('class' => 'btn btn-primary',));
+            echo CHtml::endForm();
+        ?>
         <!-- search-form -->
+    </div>
+    <div class="panel-body v-title">
 
         <?php
 
@@ -54,7 +73,6 @@ $('.search-form form').submit(function(){
             'columns' => array(
                 array(
                     'name'=>'entry_number',
-                    'type'=>'raw',
                     'value'=>'$data->entry_num_prefix. $data->addZero($data->entry_num)'),
                 array('name'=>'entry_memo','type'=>'shortText'),
                 array(
@@ -65,10 +83,10 @@ $('.search-form form').submit(function(){
                     'headerHtmlOptions'=>array('width'=>'30px'),
                 ),
                 array('name'=>'entry_subject','value'=>'$data->getSbjName($data->entry_subject)'),
-                'entry_amount',
+                array('name'=>'entry_amount','htmlOptions'=>array('class'=>'amount')),
                 array('name'=>'entry_appendix','value'=>'$data->getAppendix($data->entry_appendix_type,$data->entry_appendix_id)'),
                 array('name'=>'entry_posting','value'=>'$data->getPosting($data->entry_posting)'),
-                array('name'=>'entry_date','value'=>'$data->getTrandate($data->entry_num_prefix,$data->entry_num)'),
+                array('name'=>'entry_date','value'=>'date("Y年m月d日",strtotime($data->entry_date))'),
                 array(
                     'class' => 'CButtonColumn',
                     'template' => '{update}',
@@ -76,7 +94,10 @@ $('.search-form form').submit(function(){
             ),
             'htmlOptions' => array('class'=> 'table-striped')
         )); ?>
-
+        <div class="clear">&nbsp;</div>
+        <div class="clear">&nbsp;</div>
+        <div class="clear">&nbsp;</div>
+        <div class="clear">&nbsp;</div>
         <div class="div-group">
             <div class="div-reviewed"></div>审核通过
         </div>

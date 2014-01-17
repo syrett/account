@@ -2,7 +2,9 @@ html,
 body {
     height: 100%;
 }
-
+.panel-default{
+    padding-bottom: 30px;
+}
 .page-container {
     margin: 0 auto -60px;
     padding: 60px 0;
@@ -71,6 +73,9 @@ div.form select.error
 {
     width: 50px;
 }
+.items tbody td{
+    padding: 0 5px;
+}
 .errorMessage {
     color: #b94a48;
 }
@@ -137,19 +142,87 @@ input[name="Transition[entry_posting]"]   /* cgridview filter input*/
     background-color: #f2dede;
 }
 .unit-group{
-    padding: 50px
+    padding: 0 50px 30px 50px;
+    display: table;
+    width: 100%;
 }
 .unit-item{
-    margin: 0 50px;
-    display: inline-block;
+    margin: 0 30px;
+    /*display: table-cell;*/
+    text-align: center;
+    max-width: 150px;
 }
-.unit-icon{
+
+.unit-operate{
     border-radius: 6px;
-    width: 150px;
-    height: 150px;
+    width: 60px;
+    height: 20px;
     background-color: #9CBFD3;
     text-align: center;
-    display: table-cell;
+    /*display: table-cell;*/
     vertical-align: middle;
     color: black;
+    max-width: 150px;
+    float: left;
+    margin: 20px 30px;
+}
+.unit-icon{
+    width: 100px;
+    display: block;
+}
+.unit-title{
+    color: #777777;
+}
+.unit-arrow{
+    display: table-cell;
+    vertical-align: middle;
+}
+.long{
+    float: left;
+}
+.amount{
+    text-align: right;
+}
+.hasmenu ul{
+    background-color: #fff;
+    margin-top: 0;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    list-style: none;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    background-clip: padding-box;
+}
+ul.dropdown ul{
+    padding: 5px 0;
+}
+ul.dropdown ul li{
+    height: 26px;
+}
+
+ul.dropdown ul li a{
+    text-decoration: none;
+}
+ul.dropdown ul li:hover{
+    background-color: #428bca;
+}
+.hasmenu ul a{
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.428571429;
+    color: #333;
+    white-space: nowrap;
 }
