@@ -12,6 +12,11 @@ $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/datepicker.css');
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/transition.js', CClientScript::POS_HEAD);
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/checkinput.js', CClientScript::POS_HEAD);
 $this->pageTitle = Yii::app()->name;
+
+/*if(!isset($model)){
+  $model = array();
+  $model[0]=new Transition();
+  }*/
 ?>
 
 <?php echo CHtml::beginForm(); ?>
@@ -41,14 +46,11 @@ $this->pageTitle = Yii::app()->name;
                     ? $model[0]->entry_num_prefix . substr(strval($model[0]->entry_num + 10000), 1, 4)
                     : $this->tranNumber()
                 ?>">
-                <input type="hidden" id="entry_day" name="entry_day" value="<?=$model[0]->entry_day?>" />
+
             </h5>
         </div>
         <div class="col-md-4" id="transition_date"><h5>日期:
-                <input type="text" class="span2" value="<?
-                echo isset($model[0]->entry_num_prefix)
-                    ?$model[0]->entry_num_prefix. substr(strval($model[0]->entry_day + 100), 1, 2)
-                    : date('Ymd');?>" id="dp1" readonly/>
+                <input type="text" class="span2" value="" id="dp1" readonly/>
             </h5>
             <input type="hidden" id="entry_num_pre"
                    value="<? echo Yii::app()->createAbsoluteUrl("transition/GetTranSuffix") ?>"/></div>

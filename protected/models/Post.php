@@ -94,6 +94,7 @@ class Post extends CActiveRecord
       return self::savePost($balance, $this->year,$this->month);
     }
 
+
     private function savePost($balance,$year,$month)
     {
       foreach($balance as $sub=>$bal){      
@@ -118,6 +119,32 @@ class Post extends CActiveRecord
       return true;
 
     }
+
+    private function unsavePost($date)
+    {
+      foreach($balance as $sub=>$bal){      
+        $post=Post::model()->find('subject_id=:subject and year=:year and month=:month', array(':subject'=>$sub,':year'=>$year,':month'=>$month));
+        if($post==null)
+          {
+            $post = new Post;
+          }
+
+        $post->subject_id=$sub;
+        $post->balance=$bal;
+        $post->posted=1;
+        $post->year=$this->year;
+        $post->month=$this->month;
+        if(!$post->save())
+          {
+            return false;
+          }
+        $post=null;
+
+      }
+      return true;
+
+    }
+
     /*    public function posting($subject_id)
     {
 

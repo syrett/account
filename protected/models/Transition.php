@@ -362,6 +362,8 @@ class Transition extends MyActiveRecord
 
     }
 
+
+
     /*
      * 结账日期     //这个函数逻辑很混乱
      * return $date
@@ -439,27 +441,27 @@ class Transition extends MyActiveRecord
     /*
      * 所有操作按年月为时间段
      */
-    public function listReview(){
+    public static  function listReview(){
         $tran = new Transition();
         return $tran->listDate(array('entry_reviewed'=> 0));
     }
-    public function listTransition(){
+    public static  function listTransition(){
         $tran = new Transition();
         return $tran->listDate(array());
     }
-    public function listPost(){
+    public static  function listPost(){
         $tran = new Transition();
         return $tran->listDate(array('entry_posting'=> 0));
     }
-    public function listReorganise(){
+    public static  function listReorganise(){
         $tran = new Transition();
         return $tran->listDate(array());
     }
-    public function listSettlement(){
+    public static  function listSettlement(){
         $tran = new Transition();
         return $tran->listDate(array('entry_closing'=> 0));
     }
-    public function listDate($arr){
+    public static  function listDate($arr){
         $criteria = new CDbCriteria(array('group'=>'entry_num_prefix'));
         $list = Transition::model()->findAllByAttributes(
             $arr,
@@ -479,4 +481,6 @@ class Transition extends MyActiveRecord
         }
         return $arr;
     }
+
+
 }
