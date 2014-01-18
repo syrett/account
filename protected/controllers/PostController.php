@@ -120,26 +120,29 @@ class PostController extends Controller
 
     public function actionPost($date)
     {
-        $needPost = Transition::model()->checkSettlement(); //查询当前日期是否可过账
-        $transition = new Transition;
+      $needPost = Transition::model()->checkSettlement(); //查询当前日期是否可过账
+      $transition = new Transition;
 
-        $lastDate = date('Ym', strtotime('-1 months', strtotime($needPost . '01'))); //当前月如果没有结转凭证，那么需要检查上一个月，所以-1
-        if(!$transition->isAllPosted($lastDate))
-            $needPost = $lastDate;
-        if ($needPost != $date)
-            throw new CHttpException(400, $needPost . "还未过账或结账");
-        $transition->entry_num_prefix = $date;
-        if ($transition->isAllReviewed($date)) {
-            $model = new Post;
-            $model->year = substr($date, 0, 4);
-            $model->month = substr($date, 4, 2);
-            if ($model->postAll()) {
-                $transition->setPosted(1);
-            }
-            Yii::app()->user->setFlash('success', $date."过账成功!");
-          $this->render('/site/success');
+      $lastDate = date('Ym', strtotime('-1 months', strtotime($needPost . '01'))); //当前月如果没有结转凭证，那么需要检查上一个月，所以-1
+      if(!$transition->isAllPosted($lastDate))
+        $needPost = $lastDate;
+      if ($needPost != $date)
+        throw new CHttpException(400, $needPost . "还未过账或结账");
+      $transition->entry_num_prefix = $date;
+      
+      if (!Transition::model()->isReorganised($date))
+          throw new CHttpException(400, $date."还有凭证未整理");
+      if ($transition->isAllReviewed($date)) {
+        $model = new Post;
+        $model->year = substr($date, 0, 4);
+        $model->month = substr($date, 4, 2);
+        if ($model->postAll()) {
+          $transition->setPosted(1);
+        }
+        Yii::app()->user->setFlash('success', $date."过账成功!");
+        $this->render('/site/success');
       } else
-            throw new CHttpException(400,$date. "还有凭证未审核");
+        throw new CHttpException(400,$date. "还有凭证未审核");
     }
 
 

@@ -331,6 +331,21 @@ class Transition extends MyActiveRecord
                                      array(':prefix'=>$this->entry_num_prefix));
     }
 
+    /**
+     * 检测是否需要整理凭证
+     * 1: 已经整理, 0:有凭证未整理
+     **/
+    public function isReorganised($date)
+    {
+      $this->unsetAttributes();
+      $this->entry_deleted=1;
+      $this->entry_num_prefix=$date;
+      $this->select="entry_num_prefix,entry_num";
+      $dataProvider = $this->search();
+      $transtion = $dataProvider->getData();
+      return empty($transtion);
+    }
+
     /*
      * 返回凭证是否都已经过账, attributes由实例传入
      */
@@ -424,6 +439,7 @@ class Transition extends MyActiveRecord
         $transtion = $dataProvider->getData();
         return empty($transtion);
     }
+
 
     /**
      * 列出科目

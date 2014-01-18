@@ -753,6 +753,11 @@ class TransitionController extends Controller
 //        $date = date('Ym', strtotime('-1 months', time()));
 
         $model = Transition::model()->deleteAllByAttributes(array('entry_num_prefix'=>$date, 'entry_settlement'=>1,));
+        
+        $newModel =new  Transition();
+        $newModel->entry_num_prefix = $date;
+        $newModel -> setPosted(0);
+
         if($model>=1)
         {
             Yii::app()->user->setFlash('success', $date. " 反结账成功!");
