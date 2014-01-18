@@ -4,10 +4,12 @@
 
 //$(document).ajaxStop($("select[id^='Transition']").select2());
 $(document).ready(function () {
-    $("input[id$='_entry_amount']").blur(function(){    //自动添加小数点23.00
+
+    //js 监听添加的元素
+    $("div").on("blur","input[id$='_entry_amount']",function(){    //自动添加小数点23.00
         if(!isNaN($(this).val())&&$(this).val()!="")
         {var a=parseFloat($(this).val());
-        $(this).val(decimals(a))
+            $(this).val(decimals(a))
         }
     })
     $("select[id^='Transition']").select2();
@@ -79,7 +81,7 @@ $(document).ready(function () {
 //    $('#transition_date input').datepicker('update')
 });
 
-var subjects = function(se,ob){ //todo:subjects
+var subjects = function(se,ob){
     if($(se).val()>=6000 && $(se).val()<=6399)
     {
         ob.attr('readonly', true);
@@ -135,7 +137,7 @@ var addRow = function () {
         "<div class='col-md-1'><select id='Transition_" + number + "_entry_transaction'name=Transition[" + number + "][entry_transaction] >" +
         "<option value=1 >借</option><option value=2>贷</option>" +
         "</select></div>" +
-        '<div class="col-md-1"><input class="form-control input-size" name="Transition[' + number + '][entry_amount]" id="Transition_' + number + '_entry_amount' +
+        '<div class="col-md-1"><input onkeyup="checkInputAmount(this)" class="form-control input-size" name="Transition[' + number + '][entry_amount]" id="Transition_' + number + '_entry_amount' +
         '" type="text" /></div>' +
 
 

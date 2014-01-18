@@ -81,6 +81,8 @@ class TransitionController extends Controller
                 ));
             }
             else{
+                for ($i = 0; $i < 5; $i++)
+                    $model[] = new Transition;
                 $this->render('create', array(
                     'model' => $model,
                 ));
@@ -329,6 +331,7 @@ class TransitionController extends Controller
     {
         $html = "";
         $arr = array('type' => 0);
+        $subject = substr($subject, 0, 4);
         switch ($subject) {
             case 1122 : // 应付账款，列出供应商
                 $arr['type'] = 1;
@@ -344,26 +347,30 @@ class TransitionController extends Controller
                     $html .= "<option value=" . $item['id'] . ">" . $item['company'] . "</options>";
                 }
                 break;
-            default :
-                $list = $this->getSubjectID(4);
-                if (in_array($subject, $list)) { //全部 4:收入 类科目  列出项目project
-                    $arr['type'] = 3;
-                    $data = Project::model()->findAll();
-                    foreach ($data as $item) {
-                        $html .= "<option value=" . $item['id'] . ">" . $item['name'] . "</options>";
-                    }
-                    break;
+            case 6401 :     //主营业务成本
+                $arr['type'] = 4;
+                $data = Project::model()->findAll();
+                foreach ($data as $item) {
+                    $html .= "<option value=" . $item['id'] . ">" . $item['name'] . "</options>";
                 }
+                break;
+            case 6001 :     //主营业务收入
+                $arr['type'] = 4;
+                $data = Project::model()->findAll();
+                foreach ($data as $item) {
+                    $html .= "<option value=" . $item['id'] . ">" . $item['name'] . "</options>";
+                }
+                break;
+            default :
                 $list = $this->getSubjectID(5);
-                if (in_array($subject, $list)) { //全部 5:费用 类科目   列出员工employee
-                    $arr['type'] = 4;
+                if (in_array($subject, $list)&&$subject!=6401) { //全部 5:费用 类科目   列出员工employee
+                    $arr['type'] = 3;
                     $data = Employee::model()->findAll();
                     foreach ($data as $item) {
                         $html .= "<option value=" . $item['id'] . ">" . $item['name'] . "</options>";
                     }
                     break;
                 }
-
         }
 
         if ($html != "")
@@ -527,12 +534,12 @@ class TransitionController extends Controller
                     $result = $ob['company'];
                     break;
                 case 3 :
-                    $ob = Project::model()->findByPk($id);
+                    $list = $this->getSubjectID(5);
+                    $ob = Employee::model()->findByPk($id);
                     $result = $ob['name'];
                     break;
                 case 4 :
-                    $list = $this->getSubjectID(5);
-                    $ob = Employee::model()->findByPk($id);
+                    $ob = Project::model()->findByPk($id);
                     $result = $ob['name'];
                     break;
                 default :
@@ -564,13 +571,13 @@ class TransitionController extends Controller
                 }
                 break;
             case 3 :
-                $data = Project::model()->findAll();
+                $data = Employee::model()->findAll();
                 foreach ($data as $item) {
                     $arr += array($item['id'] => $item['name']);
                 }
                 break;
             case 4 :
-                $data = Employee::model()->findAll();
+                $data = Project::model()->findAll();
                 foreach ($data as $item) {
                     $arr += array($item['id'] => $item['name']);
                 }
