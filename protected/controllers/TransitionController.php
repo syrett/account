@@ -113,6 +113,7 @@ class TransitionController extends Controller
 
         if (isset($_POST['Transition'])) {
             $items = $this->saveTransitions();
+            $this->redirect('index.php?r=transition/admin');
         } else {
             $items = $this->getItemsToUpdate($id);
         }
