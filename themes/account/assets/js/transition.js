@@ -38,7 +38,7 @@ $(document).ready(function () {
         subjects(this,$("select[id='Transition_"+number+"_entry_transaction']"));
 
     });
-
+    var date = new Date($("#dp1").val().substring(0, 4),$("#dp1").val().substring(4, 6),$("#dp1").val().substring(6, 8))
     $('#transition_date input').datepicker({
         format: "yyyymmdd",
         language: "zh-CN",
@@ -64,7 +64,8 @@ $(document).ready(function () {
                     $("#entry_day").attr('value',day);
                 }
             });
-        });
+        })
+        .datepicker("setDate", date);
     $("select[id$='_entry_subject']").each(function(){
         var number = $(this).next().val();
         subjects(this,$("select[id='Transition_"+number+"_entry_transaction']"));
