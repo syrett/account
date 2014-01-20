@@ -38,7 +38,7 @@ $(document).ready(function () {
         subjects(this,$("select[id='Transition_"+number+"_entry_transaction']"));
 
     });
-
+    var date = new Date($("#dp1").val().substring(0, 4),$("#dp1").val().substring(4, 6),$("#dp1").val().substring(6, 8))
     $('#transition_date input').datepicker({
         format: "yyyymmdd",
         language: "zh-CN",
@@ -64,7 +64,8 @@ $(document).ready(function () {
                     $("#entry_day").attr('value',day);
                 }
             });
-        });
+        })
+        .datepicker("setDate", date);
     $("select[id$='_entry_subject']").each(function(){
         var number = $(this).next().val();
         subjects(this,$("select[id='Transition_"+number+"_entry_transaction']"));
@@ -82,20 +83,20 @@ $(document).ready(function () {
 });
 
 var subjects = function(se,ob){
-    if($(se).val()>=6000 && $(se).val()<=6399)
-    {
-        ob.attr('readonly', true);
-        ob.select2('val',2);
-    }
-    else
-    if($(se).val()>=6400 && $(se).val()<=6999)
-    {
-        ob.attr('readonly', true);
-        ob.select2('val',1);
-    }
-    else{
-        ob.attr('readonly', false);
-    }
+//    if($(se).val()>=6000 && $(se).val()<=6399)
+//    {
+//        ob.attr('readonly', true);
+//        ob.select2('val',2);
+//    }
+//    else
+//    if($(se).val()>=6400 && $(se).val()<=6999)
+//    {
+//        ob.attr('readonly', true);
+//        ob.select2('val',1);
+//    }
+//    else{
+//        ob.attr('readonly', false);
+//    }
 }
 
 var decimals = function(varNumber){

@@ -479,7 +479,7 @@ class TransitionController extends Controller
                 $Tran['entry_num'] = intval($_POST['entry_num']);;
                 $Tran['entry_editor'] = intval($_POST['entry_editor']);
                 $Tran['entry_num_prefix'] = $_POST['entry_num_prefix'];
-                $Tran['entry_date'] = date('Y-m-d H:i:s', time());
+                $Tran['entry_date'] = date('Y-m-d H:i:s', strtotime($_POST['entry_date']));
                 $Tran['entry_subject'] = intval($Tran['entry_subject']);
                 $entry_appendix_id = isset($Tran['entry_appendix_id']) ? $Tran['entry_appendix_id'] : 0;
                 $Tran['entry_appendix_id'] = intval($entry_appendix_id);
@@ -686,10 +686,14 @@ class TransitionController extends Controller
         $arr = Subjects::model()->actionListFirst();
         $id = "";
         $sum = 0;
+        $transition = new Transition();
+        $date = getYear($entry_prefix).'-'.getMon($entry_prefix).'-01'.' 00:00:00';
+        $date = date('Y-m-d H:i:s', strtotime($date));
         foreach($arr as $sub){
             $tran = new Transition();
             $tran->entry_num_prefix = $entry_prefix;
             $tran->entry_num = $entry_num;
+            $tran->entry_date = $date;
             $tran->entry_settlement = $entry_settlement;
             $tran->entry_memo = $entry_memo;
             $tran->entry_transaction = $sub['sbj_cat']=='4'?1:2;    //4：收入类 借 5费用类 贷
@@ -704,11 +708,11 @@ class TransitionController extends Controller
                 $tran->save();
             }
         }
-
         $tran = new Transition();
         $tran->entry_num_prefix = $entry_prefix;
         $tran->entry_num = $entry_num;
         $tran->entry_memo = $entry_memo;
+        $tran->entry_date = $date;
         $tran->entry_transaction = 2;    //本年利润 为贷
         $tran->entry_editor = $entry_editor;
         $tran->entry_settlement = $entry_settlement;
@@ -716,10 +720,6 @@ class TransitionController extends Controller
         $tran->entry_subject = '4103';              //本年利润
         $tran->entry_amount = $sum;
         $id = $tran->save();
-//        if($id)
-//            $id = $tran->id;
-//        else
-//            Yii::log("errors saving SomeModel: " . var_export($tran->getErrors(), true), CLogger::LEVEL_WARNING, __METHOD__);
         if($id){
             Yii::app()->user->setFlash('success', "结账成功!");
             $this->render('success');
