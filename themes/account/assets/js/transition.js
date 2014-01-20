@@ -82,20 +82,20 @@ $(document).ready(function () {
 });
 
 var subjects = function(se,ob){
-    if($(se).val()>=6000 && $(se).val()<=6399)
-    {
-        ob.attr('readonly', true);
-        ob.select2('val',2);
-    }
-    else
-    if($(se).val()>=6400 && $(se).val()<=6999)
-    {
-        ob.attr('readonly', true);
-        ob.select2('val',1);
-    }
-    else{
-        ob.attr('readonly', false);
-    }
+//    if($(se).val()>=6000 && $(se).val()<=6399)
+//    {
+//        ob.attr('readonly', true);
+//        ob.select2('val',2);
+//    }
+//    else
+//    if($(se).val()>=6400 && $(se).val()<=6999)
+//    {
+//        ob.attr('readonly', true);
+//        ob.select2('val',1);
+//    }
+//    else{
+//        ob.attr('readonly', false);
+//    }
 }
 
 var decimals = function(varNumber){

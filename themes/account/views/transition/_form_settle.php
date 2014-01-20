@@ -8,7 +8,7 @@ Yii::app()->clientScript->registerCoreScript('jquery');
 Yii::import('ext.select2.Select2');
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/bootstrap-datepicker.js', CClientScript::POS_HEAD);
-$cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/datepicker.css');
+//$cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/datepicker.css');
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/transition.js', CClientScript::POS_HEAD);
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/checkinput.js', CClientScript::POS_HEAD);
 $this->pageTitle = Yii::app()->name;
@@ -50,7 +50,7 @@ $this->pageTitle = Yii::app()->name;
             </h5>
         </div>
         <div class="col-md-4" id="transition_date"><h5>日期:
-                <input type="text" name="entry_date" class="span2" value="<?
+                <input type="text" class="span2" value="<?
                 echo isset($model[0]->entry_num_prefix)
                     ?date('Ymd', strtotime($model[0]->entry_date))
                     : date('Ymd');?>" id="dp1" readonly/>
@@ -124,13 +124,13 @@ $this->pageTitle = Yii::app()->name;
                             )
                         );
 
-                        echo CHtml::button('继续添加', array(
-                                'style' => 'float: right',
-                                'name' => 'btnAdd',
-                                'class' => 'btn btn-info',
-                                'onclick' => "addRow()",
-                            )
-                        );
+//                        echo CHtml::button('继续添加', array(
+//                                'style' => 'float: right',
+//                                'name' => 'btnAdd',
+//                                'class' => 'btn btn-info',
+//                                'onclick' => "addRow()",
+//                            )
+//                        );
                         ?>
                     </div>
                     <div class="row table-buttom">
@@ -166,7 +166,7 @@ $this->pageTitle = Yii::app()->name;
                                 )
                             );
 
-                            echo CHtml::submitButton($item->isNewRecord ? '添加' : '保存', array('class' => 'btn btn-primary',));
+//                            echo CHtml::submitButton($item->isNewRecord ? '添加' : '保存', array('class' => 'btn btn-primary',));
 
                             echo CHtml::button('返回', array(
                                     'name' => 'btnBack',

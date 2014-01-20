@@ -53,7 +53,6 @@ class Transition extends MyActiveRecord
             array('entry_num, entry_transaction, entry_subject, entry_amount, entry_editor, entry_reviewer', 'required'),
             array('entry_num, entry_transaction, entry_subject, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing', 'numerical', 'integerOnly' => true),
             array('entry_amount', 'type', 'type' => 'float'),
-            array('entry_amount', 'numerical', 'min' => 0.01, 'tooSmall' => '金额不能为0.00'),
             array('entry_num_prefix', 'length', 'max' => 10),
             array('entry_memo, entry_appendix', 'length', 'max' => 100),
             array('entry_appendix_id, entry_appendix_type, entry_date, entry_time', 'safe'),
@@ -278,13 +277,14 @@ class Transition extends MyActiveRecord
     }
 
     /*
-     * 验证凭证借贷相等
+     * 验证凭证借贷相等  金额不能为0
      */
     public function check_entry_amount($attribute, $params)
     {
 //        $this->
         $sum = 0;
 //        Yii::app()->user->setFlash('sucess', 'asdf;ljasdl');
+        if(isset($_POST['Transition']))
         foreach ($_POST['Transition'] as $item) {
             if (isset($item['entry_memo']) && trim($item['entry_memo']) != "")
                 if ($item['entry_transaction'] == "1")
@@ -294,6 +294,9 @@ class Transition extends MyActiveRecord
         }
         if ($sum != 0)
             $this->addError($attribute, '借贷必须相等');
+        if(isset($_POST['Transition']))
+            if($this->$attribute==0)
+                $this->addError($attribute, '金额不能为0.00');
     }
 
     /*
