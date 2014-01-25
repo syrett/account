@@ -82,10 +82,10 @@ class Post extends CActiveRecord
         }
         else
           $tmp_balance=0;
-        if ($t['entry_transaction']=="1") {
+        if ($t['entry_transaction']=="1") { //1为借,借加
           $tmp_balance=$tmp_balance + floatval($t['entry_amount']);
         }
-        elseif($t['entry_transaction']=="2") {
+        elseif($t['entry_transaction']=="2") { //2为贷,贷减
           $tmp_balance=$tmp_balance - floatval($t['entry_amount']);
         }
         $balance[$t['entry_subject']]=$tmp_balance;
@@ -93,7 +93,6 @@ class Post extends CActiveRecord
       
       return self::savePost($balance, $this->year,$this->month);
     }
-
 
     private function savePost($balance,$year,$month)
     {
@@ -119,32 +118,6 @@ class Post extends CActiveRecord
       return true;
 
     }
-
-    private function unsavePost($date)
-    {
-      foreach($balance as $sub=>$bal){      
-        $post=Post::model()->find('subject_id=:subject and year=:year and month=:month', array(':subject'=>$sub,':year'=>$year,':month'=>$month));
-        if($post==null)
-          {
-            $post = new Post;
-          }
-
-        $post->subject_id=$sub;
-        $post->balance=$bal;
-        $post->posted=1;
-        $post->year=$this->year;
-        $post->month=$this->month;
-        if(!$post->save())
-          {
-            return false;
-          }
-        $post=null;
-
-      }
-      return true;
-
-    }
-
     /*    public function posting($subject_id)
     {
 
@@ -284,5 +257,24 @@ class Post extends CActiveRecord
         $par_id = substr($sbj_id, 0, -2);
         $sql = "update post set subject_id = '$sbj_id' where subject_id = '$par_id'";
         Yii::app()->db->createCommand($sql)->execute();
+    }
+
+    public function getBalanceNum()
+    {
+		$criteria=new CDbCriteria;
+
+		$criteria->compare('id',$this->id);
+		$criteria->compare('subject_id',$this->subject_id);
+		$criteria->compare('year',$this->year,true);
+		$criteria->compare('month',$this->month,true);
+		$criteria->compare('balance',$this->balance);
+        $criteria->select="subject_id,balance";
+        
+        $first = Post::model()->findAll($criteria);
+        $balance=0;
+        foreach ($first as $row) {
+          $balance += $row['balance'];
+        };
+        return $balance;
     }
 }

@@ -131,7 +131,11 @@ class PostController extends Controller
       $transition->entry_num_prefix = $date;
       
       if (!Transition::model()->isReorganised($date))
+        {
+          //          Yii::app()->user->setFlash('错误提示', $date."还有凭证未整理");
+          //          $this->render('/site/error');
           throw new CHttpException(400, $date."还有凭证未整理");
+        }
       if ($transition->isAllReviewed($date)) {
         $model = new Post;
         $model->year = substr($date, 0, 4);

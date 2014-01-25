@@ -65,7 +65,7 @@ $(document).ready(function () {
                 }
             });
         })
-        .datepicker("setDate", date);
+//        .datepicker("setDate", date);
     $("select[id$='_entry_subject']").each(function(){
         var number = $(this).next().val();
         subjects(this,$("select[id='Transition_"+number+"_entry_transaction']"));

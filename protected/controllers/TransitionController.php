@@ -355,6 +355,7 @@ class TransitionController extends Controller
                     $html .= "<option value=" . $item['id'] . ">" . $item['name'] . "</options>";
                 }
                 break;
+
             case 6001 :     //主营业务收入
                 $arr['type'] = 4;
                 $data = Project::model()->findAll();
@@ -363,9 +364,12 @@ class TransitionController extends Controller
                 }
                 break;
             default :
-                $list = $this->getSubjectID(5);
+              //                $list = $this->getSubjectID(5);
+                $list=array(6601,6602);
                 if (in_array($subject, $list)&&$subject!=6401) { //全部 5:费用 类科目   列出员工employee
+
                     $arr['type'] = 3;
+                    
                     $data = Employee::model()->findAll();
                     foreach ($data as $item) {
                         $html .= "<option value=" . $item['id'] . ">" . $item['name'] . "</options>";

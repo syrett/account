@@ -165,8 +165,10 @@ $this->pageTitle = Yii::app()->name;
                                     'confirm' => ($model[0]->entry_reviewed==1)?'确认取消审核？':'确认通过审核？',
                                 )
                             );
+if($model[0]->entry_reviewed == 0){
+                            echo CHtml::submitButton($item->isNewRecord ? '添加' : '保存', array('class' => 'btn btn-primary',));  
+}
 
-                            echo CHtml::submitButton($item->isNewRecord ? '添加' : '保存', array('class' => 'btn btn-primary',));
 
                             echo CHtml::button('返回', array(
                                     'name' => 'btnBack',

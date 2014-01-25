@@ -63,8 +63,14 @@
                                                array('label' => '员工', 'url' => array('/employee/admin')),
                                                array('label' => '供应商', 'url' => array('/vendor/admin')),
                                                array('label' => '客户', 'url' => array('/client/admin')))),
+                        array('label' => '报表',
+                              'url' => array('/report/balance'),
+                              'htmlOptions' => array('class' => 'dir dropdown'),
+                              'items' => array(
+                                               array('label' => '资产负债表', 'url' => array('/report/balance')),
+                                               array('label' => '供应商', 'url' => array('/vendor/admin')),
+                                               array('label' => '客户', 'url' => array('/client/admin')))),
                     ),
-
                 )); ?>
 
                 <?php $this->widget('zii.widgets.CMenu', array(
