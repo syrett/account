@@ -68,7 +68,7 @@
                               'htmlOptions' => array('class' => 'dir dropdown'),
                               'items' => array(
                                                array('label' => '资产负债表', 'url' => array('/report/balance')),
-                                               array('label' => '供应商', 'url' => array('/vendor/admin')),
+                                               array('label' => '利润及利润分配表', 'url' => array('/report/profit')),
                                                array('label' => '客户', 'url' => array('/client/admin')))),
                     ),
                 )); ?>
