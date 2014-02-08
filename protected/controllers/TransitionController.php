@@ -39,7 +39,7 @@ class TransitionController extends Controller
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
                 'actions' => array('admin',),
-                'users' => array('admin'),
+                'roles'=>array('admin'),
             ),
             array('deny', // deny all users
                 'users' => array('*'),
@@ -290,11 +290,11 @@ class TransitionController extends Controller
     }
 
     /*
-     *  getVendorlist
+     *  getUserlist
      */
-    public function getUserlist()
+    public function getUserlist($condition='',$params=array())
     {
-        $data = User::model()->findAll();
+        $data = User::model()->findAll($condition, $params);
         return $data;
     }
 
@@ -479,13 +479,13 @@ class TransitionController extends Controller
 //        Yii::app()->db->createCommand('set names "utf8"')->execute();
         foreach ($_POST['Transition'] as $Tran) {
             if (isset($Tran)) {
-                $Tran['entry_reviewer'] = intval($_POST['entry_reviewer']);
                 $Tran['entry_num'] = intval($_POST['entry_num']);;
                 $Tran['entry_editor'] = intval($_POST['entry_editor']);
                 $Tran['entry_num_prefix'] = $_POST['entry_num_prefix'];
                 $Tran['entry_date'] = date('Y-m-d H:i:s', strtotime($_POST['entry_date']));
                 $Tran['entry_subject'] = intval($Tran['entry_subject']);
                 $entry_appendix_id = isset($Tran['entry_appendix_id']) ? $Tran['entry_appendix_id'] : 0;
+                $Tran['entry_reviewer'] = isset($Tran['entry_reviewer']) ? $Tran['entry_reviewer'] : 1;
                 $Tran['entry_appendix_id'] = intval($entry_appendix_id);
                 $Tran['entry_amount'] = floatval($Tran['entry_amount']);
                 if (isset($Tran['id']) && $Tran['id'] != "") {
@@ -611,9 +611,14 @@ class TransitionController extends Controller
                     if($item->entry_memo=="结转凭证")
                         $item->entry_closing = 1;   //已结账
                     if($_REQUEST[0]['action']==1)
+                    {
                         $item->entry_reviewed = 0;
-                    else
+                        $item->entry_reviewer = 1;
+                    }
+                    else{
                         $item->entry_reviewed = 1;
+                        $item->entry_reviewer = Yii::app()->user->id;
+                    }
                     $item->save();
                 }
                 else
@@ -673,7 +678,7 @@ class TransitionController extends Controller
         $entry_prefix = $need;
         if($entry_prefix>date('Ym', time())||!Transition::model()->confirmSettlement($entry_prefix))
         {
-            Yii::app()->user->setFlash('success', $entry_prefix. "已经全部结账!");
+            Yii::app()->user->setFlash('success', $date. "不需要结账!");
             $this->render('success');
             return 1;
         }
@@ -685,12 +690,12 @@ class TransitionController extends Controller
 //            echo '本月无账目信息，无需结账';
         $entry_memo = '结转凭证';
         $entry_editor = 1;   //userid
-        $entry_reviewer = 1;
+        $entry_reviewer = 0;
         $entry_settlement = 1;
         $arr = Subjects::model()->actionListFirst();
         $id = "";
         $sum = 0;
-        $transition = new Transition();
+        $hasDate = false;
         $date = getYear($entry_prefix).'-'.getMon($entry_prefix).'-01'.' 00:00:00';
         $date = date('Y-m-d H:i:s', strtotime($date));
         foreach($arr as $sub){
@@ -710,6 +715,7 @@ class TransitionController extends Controller
 //          $trans[] = $tran;
             if($amount>0){
                 $tran->save();
+                $hasDate = true;
             }
         }
         $tran = new Transition();
@@ -723,7 +729,8 @@ class TransitionController extends Controller
         $tran->entry_reviewer = $entry_reviewer;
         $tran->entry_subject = '4103';              //本年利润
         $tran->entry_amount = $sum;
-        $id = $tran->save();
+        if($hasDate>0)
+            $id = $tran->save();
         if($id){
             Yii::app()->user->setFlash('success', "结账成功!");
             $this->render('success');

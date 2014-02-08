@@ -19,3 +19,11 @@ function getYearMon($date){
 function getDay($date){
     return substr($date, 6, 8);
 }
+function accessReview($tranID){
+    $user = Yii::app()->user->id;
+    $access = Transition::model()->findByAttributes(array('id'=>$tranID,'entry_editor'=>$user));
+    if(empty($access))
+        return true;
+    else
+        return false;
+}

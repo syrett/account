@@ -1,13 +1,18 @@
 <?php
 
 /**
- * This is the model class for table "tbl_user".
+ * This is the model class for table "user".
  *
- * The followings are the available columns in table 'tbl_user':
+ * The followings are the available columns in table 'user':
  * @property integer $id
- * @property string $username
+ * @property string $userid
  * @property string $password
+ * @property string $fullname
+ * @property string $mobile
  * @property string $email
+ * @property string $title
+ * @property integer $sys_role
+ * @property string $roles
  */
 class User extends CActiveRecord
 {
@@ -27,11 +32,15 @@ class User extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('username, password, email', 'required'),
-			array('username, password, email', 'length', 'max'=>128),
+			array('roles', 'required'),
+			array('sys_role', 'numerical', 'integerOnly'=>true),
+			array('userid, password, fullname', 'length', 'max'=>100),
+			array('mobile, email', 'length', 'max'=>20),
+			array('title', 'length', 'max'=>50),
+			array('roles', 'length', 'max'=>16),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, username, password, email', 'safe', 'on'=>'search'),
+			array('id, userid, password, fullname, mobile, email, title, sys_role, roles', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -53,9 +62,14 @@ class User extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'username' => 'Username',
+			'userid' => 'Userid',
 			'password' => 'Password',
+			'fullname' => 'Fullname',
+			'mobile' => 'Mobile',
 			'email' => 'Email',
+			'title' => 'Title',
+			'sys_role' => 'Sys Role',
+			'roles' => 'Roles',
 		);
 	}
 
@@ -78,9 +92,14 @@ class User extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('username',$this->username,true);
+		$criteria->compare('userid',$this->userid,true);
 		$criteria->compare('password',$this->password,true);
+		$criteria->compare('fullname',$this->fullname,true);
+		$criteria->compare('mobile',$this->mobile,true);
 		$criteria->compare('email',$this->email,true);
+		$criteria->compare('title',$this->title,true);
+		$criteria->compare('sys_role',$this->sys_role);
+		$criteria->compare('roles',$this->roles,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

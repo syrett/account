@@ -26,7 +26,7 @@ return array(
             'class'=>'system.gii.GiiModule',
             'password'=>'development',
             // If removed, Gii defaults to localhost only. Edit carefully to taste.
-            'ipFilters'=>array('127.0.0.1','::1','*'),
+            'ipFilters'=>array('127.0.0.1','::1','192.168.1.100','*'),
         ),
 
     ),
@@ -36,6 +36,7 @@ return array(
         'format'=>array('class'=>'YFormatter'),
         'user'=>array(
             // enable cookie-based authentication
+            'class'=>'WebUser',
             'allowAutoLogin'=>true,
         ),
         // uncomment the following to enable URLs in path-format
@@ -54,8 +55,8 @@ return array(
         'db'=>array(
             'connectionString' => 'mysql:host=localhost;dbname=account',
             'emulatePrepare' => true,
-            'username' => 'root',
-            'password' => '',
+            'username' => 'jason',
+            'password' => 'lrc207107',
             'charset' => 'utf8',
             'enableProfiling' => true,
             'enableParamLogging' => true,

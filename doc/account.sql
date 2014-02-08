@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 3.3.2deb1ubuntu1
+-- version 3.4.10.1deb1
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2014 年 01 月 15 日 17:51
--- 服务器版本: 5.5.34
--- PHP 版本: 5.3.2-1ubuntu4.18
+-- 生成日期: 2014 年 02 月 08 日 18:46
+-- 服务器版本: 5.5.35
+-- PHP 版本: 5.3.10-1ubuntu3.9
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -91,6 +92,26 @@ INSERT INTO `employee` (`id`, `name`, `memo`, `department_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `meta`
+--
+
+CREATE TABLE IF NOT EXISTS `meta` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `option` varchar(32) CHARACTER SET utf8 NOT NULL COMMENT '属性名称',
+  `value` varchar(256) CHARACTER SET utf8 NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- 转存表中的数据 `meta`
+--
+
+INSERT INTO `meta` (`id`, `option`, `value`) VALUES
+(1, 'transitionDate', '201401');
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `options`
 --
 
@@ -103,11 +124,6 @@ CREATE TABLE IF NOT EXISTS `options` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `options`
---
-
 
 -- --------------------------------------------------------
 
@@ -125,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `post` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `fk_subject_id_idx` (`subject_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=81 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=82 ;
 
 --
 -- 转存表中的数据 `post`
@@ -193,7 +209,7 @@ INSERT INTO `post` (`id`, `subject_id`, `year`, `month`, `balance`, `posted`) VA
 (61, 6711, 2013, 11, 0, 1),
 (62, 6801, 2013, 11, 0, 1),
 (63, 6001, 2013, 11, 0, 1),
-(66, 4103, 2014, 1, -9, 1),
+(66, 4103, 2014, 1, 0, 1),
 (67, 6411, 2014, 1, 0, 1),
 (68, 6421, 2014, 1, 0, 1),
 (69, 6501, 2014, 1, 0, 1),
@@ -206,8 +222,9 @@ INSERT INTO `post` (`id`, `subject_id`, `year`, `month`, `balance`, `posted`) VA
 (76, 10010101, 2013, 12, 0, 1),
 (77, 1002, 2014, 1, 100, 1),
 (78, 6541, 2014, 1, 0, 1),
-(79, 10010101, 2014, 1, 0, 1),
-(80, 6001, 2014, 1, 0, 1);
+(79, 10010101, 2014, 1, 1, 1),
+(80, 6001, 2014, 1, 8, 1),
+(81, 6401, 2014, 1, 10, 1);
 
 -- --------------------------------------------------------
 
@@ -446,7 +463,7 @@ CREATE TABLE IF NOT EXISTS `transition` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `entry_num_prefix` varchar(10) DEFAULT NULL,
   `entry_num` int(11) NOT NULL,
-  `entry_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '录入时间',
+  `entry_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '录入时间',
   `entry_date` timestamp NULL DEFAULT NULL COMMENT '凭证日期，非录入时间',
   `entry_memo` varchar(512) CHARACTER SET utf8 COLLATE utf8_swedish_ci DEFAULT NULL,
   `entry_transaction` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1:借;2:贷',
@@ -467,23 +484,33 @@ CREATE TABLE IF NOT EXISTS `transition` (
   KEY `subject_id_idx` (`entry_subject`),
   KEY `re_employee_id_idx` (`entry_reviewer`),
   KEY `ed_employee_id_idx` (`entry_editor`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2012 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2088 ;
 
 --
 -- 转存表中的数据 `transition`
 --
 
 INSERT INTO `transition` (`id`, `entry_num_prefix`, `entry_num`, `entry_time`, `entry_date`, `entry_memo`, `entry_transaction`, `entry_subject`, `entry_amount`, `entry_appendix`, `entry_appendix_type`, `entry_appendix_id`, `entry_editor`, `entry_reviewer`, `entry_deleted`, `entry_reviewed`, `entry_posting`, `entry_settlement`, `entry_closing`) VALUES
-(1771, '201401', 1, '2014-01-08 23:18:24', '2014-01-15 16:02:48', 'abcd', 1, 10010101, '0.00', NULL, 0, 0, 1, 1, 0, 1, 1, 0, 0),
-(1772, '201401', 1, '2014-01-08 23:18:24', '2014-01-15 11:29:16', '', 1, 6001, '0.00', NULL, 3, 1, 1, 1, 0, 1, 1, 0, 0),
-(1841, '201401', 2, '2014-01-08 23:18:24', '2014-01-12 14:26:26', 'ww', 2, 10010101, '9.00', NULL, 0, 0, 1, 1, 0, 1, 1, 0, 0),
-(1842, '201401', 2, '2014-01-08 23:18:24', '2014-01-12 14:26:26', 'ww', 1, 6001, '9.00', NULL, 3, 1, 1, 1, 0, 1, 1, 0, 0),
-(1954, '201401', 3, '2014-01-08 23:18:24', '2014-01-12 15:03:41', 'asdfasd', 1, 10010101, '0.00', NULL, 0, 0, 1, 1, 0, 1, 1, 0, 0),
-(1955, '201401', 5, '2014-01-08 23:18:24', '2014-01-13 18:49:10', 'teste', 1, 10010101, '0.00', NULL, 0, 0, 1, 1, 0, 1, 1, 0, 0),
-(2009, '201401', 4, '2014-01-08 23:18:24', '2014-01-14 18:48:46', 'æŸ˜åŸŽs', 1, 10010101, '0.00', NULL, 0, 0, 1, 1, 0, 0, 0, 0, 0),
-(2010, '201401', 6, '2014-01-08 23:18:24', '2014-01-14 18:50:32', 'dddd', 1, 10010101, '0.00', NULL, 0, 0, 1, 1, 0, 0, 0, 0, 0),
-(2011, '201401', 7, '2014-01-08 23:18:24', '2014-01-14 18:51:44', 'ffff', 1, 10010101, '0.00', NULL, 0, 0, 1, 1, 0, 0, 0, 0, 0);
+(1771, '201401', 1, '2014-01-08 15:18:24', '2014-01-17 16:00:00', 'abcd', 2, 10010101, 11.00, NULL, 0, 0, 1, 2, 0, 1, 1, 0, 0),
+(1772, '201401', 1, '2014-01-08 15:18:24', '2014-01-17 16:00:00', '1', 1, 6401, 10.00, NULL, 4, 2, 1, 2, 0, 1, 1, 0, 0),
+(1841, '201401', 2, '2014-01-08 15:18:24', '2014-01-29 16:00:00', 'ww', 2, 10010101, 9.00, NULL, 0, 0, 1, 1, 0, 1, 1, 0, 0),
+(1842, '201401', 2, '2014-01-08 15:18:24', '2014-01-29 16:00:00', 'ww', 1, 6001, 8.00, NULL, 3, 1, 1, 1, 0, 1, 1, 0, 0),
+(2075, '201401', 1, '2014-01-30 12:00:53', '2014-01-17 16:00:00', '234', 1, 10010101, 1.00, NULL, 0, 0, 1, 2, 0, 1, 1, 0, 0),
+(2076, '201401', 2, '2014-01-31 04:45:20', '2014-01-29 16:00:00', '33', 1, 10010101, 1.00, NULL, 0, 0, 1, 1, 0, 1, 1, 0, 0),
+(2080, '201402', 1, '2014-02-08 10:22:12', '2014-02-07 16:00:00', 'ad', 1, 10010101, 11.00, NULL, 0, 0, 2, 1, 0, 0, 0, 0, 0),
+(2081, '201402', 1, '2014-02-08 10:22:12', '2014-02-07 16:00:00', 'ddd', 2, 10010101, 11.00, NULL, 0, 0, 2, 1, 0, 0, 0, 0, 0),
+(2085, '201401', 3, '2014-02-08 10:43:50', '2013-12-31 16:00:00', 'ç»“è½¬å‡­è¯', 1, 6001, 8.00, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0),
+(2086, '201401', 3, '2014-02-08 10:43:50', '2013-12-31 16:00:00', 'ç»“è½¬å‡­è¯', 2, 6401, 10.00, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0),
+(2087, '201401', 3, '2014-02-08 10:43:50', '2013-12-31 16:00:00', 'ç»“è½¬å‡­è¯', 2, 4103, -2.00, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0);
 
+-- --------------------------------------------------------
+
+--
+-- 替换视图以便查看 `transitionDate`
+--
+CREATE TABLE IF NOT EXISTS `transitionDate` (
+`date` varchar(10)
+);
 -- --------------------------------------------------------
 
 --
@@ -499,6 +526,8 @@ CREATE TABLE IF NOT EXISTS `user` (
   `email` varchar(20) DEFAULT NULL,
   `title` varchar(50) DEFAULT NULL,
   `sys_role` int(11) DEFAULT NULL,
+  `roles` varchar(16) NOT NULL,
+  `username` varchar(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
@@ -507,9 +536,9 @@ CREATE TABLE IF NOT EXISTS `user` (
 -- 转存表中的数据 `user`
 --
 
-INSERT INTO `user` (`id`, `userid`, `password`, `fullname`, `mobile`, `email`, `title`, `sys_role`) VALUES
-(1, 'short name', 'abcd', 'fullname', 'm', 'e', 't', 1),
-(2, 'short name 2', 'abcd', 'fullname2', 'm', 'e', 't', 2);
+INSERT INTO `user` (`id`, `userid`, `password`, `fullname`, `mobile`, `email`, `title`, `sys_role`, `roles`, `username`) VALUES
+(1, 'short name', 'admin', 'fullname', 'm', 'admin', 't', 1, 'admin', ''),
+(2, 'short name 2', 'admin', 'fullname2', 'm', 'admin1', 't', 2, 'admin', '');
 
 -- --------------------------------------------------------
 
@@ -537,6 +566,15 @@ INSERT INTO `vendor` (`id`, `company`, `vat`, `phone`, `add`, `memo`) VALUES
 (2, 'company2', 'vendor2', '111111', '11111', '11111'),
 (3, 'company3', 'vendor3', '111111', '11111', '11111');
 
+-- --------------------------------------------------------
+
+--
+-- 视图结构 `transitionDate`
+--
+DROP TABLE IF EXISTS `transitionDate`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`jason`@`localhost` SQL SECURITY DEFINER VIEW `transitionDate` AS select max(`transition`.`entry_num_prefix`) AS `date` from `transition` where ((`transition`.`entry_settlement` = 1) and (`transition`.`entry_closing` = 1));
+
 --
 -- 限制导出的表
 --
@@ -545,17 +583,20 @@ INSERT INTO `vendor` (`id`, `company`, `vat`, `phone`, `add`, `memo`) VALUES
 -- 限制表 `employee`
 --
 ALTER TABLE `employee`
-ADD CONSTRAINT `department_id` FOREIGN KEY (`id`) REFERENCES `department` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `department_id` FOREIGN KEY (`id`) REFERENCES `department` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- 限制表 `post`
 --
 ALTER TABLE `post`
-ADD CONSTRAINT `fk_subject_id` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`sbj_number`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_subject_id` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`sbj_number`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- 限制表 `transition`
 --
 ALTER TABLE `transition`
-ADD CONSTRAINT `re_employee_id` FOREIGN KEY (`entry_reviewer`) REFERENCES `employee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-ADD CONSTRAINT `transition_ibfk_1` FOREIGN KEY (`entry_subject`) REFERENCES `subjects` (`sbj_number`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `transition_ibfk_1` FOREIGN KEY (`entry_subject`) REFERENCES `subjects` (`sbj_number`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

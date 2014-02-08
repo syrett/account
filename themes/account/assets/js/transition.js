@@ -39,18 +39,25 @@ $(document).ready(function () {
 
     });
     var date = new Date($("#dp1").val().substring(0, 4),$("#dp1").val().substring(4, 6),$("#dp1").val().substring(6, 8))
-    $('#transition_date input').datepicker({
-        format: "yyyymmdd",
-        language: "zh-CN",
-        autoclose: true
-    })
-        .on('changeDate', function (ev) {
+//    $('#transition_date input').datepicker({
+//        format: "yyyymmdd",
+//        language: "zh-CN",
+//        autoclose: true
+//    })
+
+    var dateString  = $('#transitionDate').val();
+    var year        = dateString.substring(0,4);
+    var month       = dateString.substring(4,6);
+    var date        = new Date(year, month-1, 1);
+    date.setMonth(date.getMonth() + 1);
+    $('#transition_date input').datepicker( {
+        onSelect: function(date) {
             var date = $('#transition_date input').val();
 
             var a = /\d{6}/;    //去除日期
             var prefix = a.exec(date);
-            var b = /\d{2}$/;   //最后日期 day
-            var day = b.exec(date)
+//            var b = /\d{2}$/;   //最后日期 day
+//            var day = b.exec(date)
 
             $.ajax({
                 type: "POST",
@@ -61,25 +68,17 @@ $(document).ready(function () {
                         $("#tranNumber").attr('value', prefix[0] + msg);
                     $("#entry_num_prefix").attr('value', prefix[0]);
                     $("#entry_num").attr('value', msg);
-                    $("#entry_day").attr('value',day);
+//                    $("#entry_day").attr('value',day);
                 }
             });
-        })
-//        .datepicker("setDate", date);
+        },
+        dateFormat: "yymmdd" ,
+        minDate: date
+    })
     $("select[id$='_entry_subject']").each(function(){
         var number = $(this).next().val();
         subjects(this,$("select[id='Transition_"+number+"_entry_transaction']"));
     })
-
-//默认选择日期 无效
-//    var dateString  = $('#transition_date input').val();
-//    var year        = dateString.substring(0,4);
-//    var month       = dateString.substring(4,6);
-//    var day         = dateString.substring(6,8);
-//    var date        = new Date(year, month-1, day);
-//
-//    $('#transition_date input').datepicker('setDate', date)
-//    $('#transition_date input').datepicker('update')
 });
 
 var subjects = function(se,ob){

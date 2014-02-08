@@ -7,12 +7,15 @@
 Yii::app()->clientScript->registerCoreScript('jquery');
 Yii::import('ext.select2.Select2');
 $cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/bootstrap-datepicker.js', CClientScript::POS_HEAD);
-$cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/datepicker.css');
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/jquery-ui-1.10.4.custom.js', CClientScript::POS_HEAD);
+$cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/jquery-ui-1.10.4.custom.css');
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/transition.js', CClientScript::POS_HEAD);
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/checkinput.js', CClientScript::POS_HEAD);
 $this->pageTitle = Yii::app()->name;
-
+$sql = 'select date from transitionDate'; // 一级科目的为1001～9999$SQL="SQL Statemet"
+$connection = Yii::app()->db;
+$command = $connection->createCommand($sql);
+$tranDate = $command->queryRow(); // execute a query SQL
 /*if(!isset($model)){
   $model = array();
   $model[0]=new Transition();
@@ -134,12 +137,20 @@ $this->pageTitle = Yii::app()->name;
                         ?>
                     </div>
                     <div class="row table-buttom">
-                        <strong>审核人员</strong>
+                        <?
+                            if($model[0]->entry_reviewed==1)
+                            {
+                                $user = User::model()->findByPk(array('id'=>$model[0]->entry_reviewer));
+                                echo '审核人员:'. $user->email;
+                            }
+                        ?>
+                        <!--无需选择审核人员<strong>审核人员</strong>
                         <?
                         $data = $this->getUserlist();
+//                        $data = $this->getUserlist('id!=:userid',array(":userid"=>Yii::app()->user->id));
                         $arr = array();
                         foreach ($data as $row) {
-                            $arr += array($row['id']=> $row['fullname']);
+                            $arr += array($row['id']=> $row['email']);
                         };
 //                        echo CHtml::activeDropDownList($model[0], 'entry_reviewer',$arr);
                         $this->widget('Select2', array(
@@ -148,7 +159,7 @@ $this->pageTitle = Yii::app()->name;
                             'data' => $arr,
                         ));
                         echo $form->error($item, 'entry_reviewer');
-                        ?>
+                        ?>-->
                     </div>
                     <div class="form-group buttons text-center">
                         <?php
@@ -156,8 +167,7 @@ $this->pageTitle = Yii::app()->name;
                         if($model[0]->hasErrors()){
                             echo CHtml::errorSummary($model[0]);
                         }
-
-                            if(isset($_REQUEST['id']))
+                            if(isset($_REQUEST['id'])&&accessReview($_REQUEST['id']))
                             echo CHtml::button(($model[0]->entry_reviewed==1)?'取消审核':'审核通过', array(
                                     'submit' => array('transition/review', array('id'=>$_REQUEST['id'], 'action'=>$model[0]->entry_reviewed)),
                                     'name' => 'btnReview',
@@ -186,8 +196,9 @@ if($model[0]->entry_reviewed == 0){
 
     <input type="hidden" name="entry_num_prefix" id='entry_num_prefix' value="<? echo isset($_REQUEST['id'])==true?$model[0]['entry_num_prefix']:date('Ym', time()) ?>"/>
     <input type="hidden" name="entry_num" id='entry_num' value="<? echo isset($_REQUEST['id'])==true?$model[0]['entry_num']:$this->tranSuffix("") ?>"/>
-    <input type="hidden" name="entry_editor" id='entry_editor' value="1"/>
+    <input type="hidden" name="entry_editor" id='entry_editor' value="<?=Yii::app()->user->id?>"/>
     <input type="hidden" id="number" value="<?= $number ?>"/>
+    <input type="hidden" id="transitionDate" value="<?= isset($tranDate['date'])?$tranDate['date']:Yii::app()->params['startDate']; ?>"/>
     <input type="hidden" value="<? echo Yii::app()->createAbsoluteUrl("transition/Appendix") ?>" id="entry_appendix"/>
     <input type="hidden" value="<? echo Yii::app()->createAbsoluteUrl("transition/ajaxlistfirst") ?>"
            id="ajax_listfirst"/>
