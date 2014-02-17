@@ -174,6 +174,7 @@ class TransitionController extends Controller
         ));
     }
 
+
     public function actionReorganise($date)
     {
 //        if (!isset($_POST['entry_num_prefix'])) {
@@ -800,18 +801,19 @@ class TransitionController extends Controller
      * 按月为时间段
      */
     public function actionListReview(){
-        if(isset($_REQUEST['date'])){
+
             $model = new Transition('search');
             $model->unsetAttributes(); // clear any default values
+        if(isset($_REQUEST['date'])){
             $criteria = array('entry_reviewed' => 0, 'entry_num_prefix' => $_REQUEST['date']);
+        }
+        else{
+            $criteria = array('entry_reviewed' => 0);
+        }
             $model->attributes = $criteria;
             $this->render('admin', array(
                 'model' => $model,
             ));
-
-        }
-        else
-            throw new CHttpException(400, "参数错误，请选择时间");
     }
 
     public function actionListTransition(){

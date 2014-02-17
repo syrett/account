@@ -1,3 +1,4 @@
+<!-- 资产负债表 -->
 <style>
 .table-c table{border-right:1px solid #F00;border-top:1px solid #F00; cellpadding:0; cellspacing:0 }
 .table-c table th{border-left:1px solid #F00;border-bottom:1px solid #F00; cellpadding:0; cellspacing:0}
@@ -53,6 +54,12 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
 
 <div class="table-c";>
 <table cellpadding="0";cellspacing="0";style="padding:0px;margin:0px;">
+                                         <tr>
+                                         <td>编制单位:</td>
+                                         <td colspan=2> <?php echo $company ?> </td>
+                                         <td colspan=2> <?php echo $date ?> </td>
+                                         <td> 金额单位:元 </td>
+                                         </tr>
                                          <tr>
                                          <th >资产</th>
                                          <th >年初数</th>

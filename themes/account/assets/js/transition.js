@@ -50,6 +50,7 @@ $(document).ready(function () {
     var month       = dateString.substring(4,6);
     var date        = new Date(year, month-1, 1);
     date.setMonth(date.getMonth() + 1);
+/*
     $('#transition_date input').datepicker( {
         onSelect: function(date) {
             var date = $('#transition_date input').val();
@@ -74,7 +75,7 @@ $(document).ready(function () {
         },
         dateFormat: "yymmdd" ,
         minDate: date
-    })
+    })*/
     $("select[id$='_entry_subject']").each(function(){
         var number = $(this).next().val();
         subjects(this,$("select[id='Transition_"+number+"_entry_transaction']"));

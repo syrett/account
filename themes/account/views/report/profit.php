@@ -52,6 +52,16 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
 <div class="table-c";>
 <table cellpadding="0";cellspacing="0";style="padding:0px;margin:0px;">
                                          <tr>
+                                         <td colspan=3 align=center> <?php echo $date ?> </td>
+                                         </tr>
+
+                                         <tr>
+                                         <td>编制单位:</td>
+                                         <td> <?php echo $company ?> </td>
+                                         <td align=right> 金额单位:元 </td>
+                                         </tr>
+
+                                         <tr>
                                          <th >项目</th>
                                          <th >本期数</th>
                                          <th>本年累计同期数</th>
