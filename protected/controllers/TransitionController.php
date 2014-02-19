@@ -68,6 +68,28 @@ class TransitionController extends Controller
 
         if (isset($_POST['Transition'])) {
 //            $items = $this->getItemsToUpdate();
+            $session = Yii::app()->session;
+
+            $user_id = Yii::app()->user->id;
+            $sessionKey = $user_id.'_is_sending';
+
+
+            if(isset($session[$sessionKey])){
+                $first_submit_time = $session[$sessionKey];
+                $current_time      = time();
+                if($current_time - $first_submit_time < 90){
+                    $session[$sessionKey] = $current_time;
+                    throw new CHttpException(400, "90秒内不能重复提交");
+                }else{
+                    unset($session[$sessionKey]);//超过限制时间，释放session";
+                }
+            }
+
+
+            //第一次点击确认按钮时执行
+            if(!isset($session[$sessionKey])){
+                $session[$sessionKey] = time();
+            }
             $model = $this->saveTransitions();
             if ($model && $model[0]->validate()) {
                 $model = new Transition('search');
@@ -477,10 +499,11 @@ class TransitionController extends Controller
                 array_push($old, $i['id']);
             }
         }
+        $_POST['entry_num'] = $this->tranSuffix();
 //        Yii::app()->db->createCommand('set names "utf8"')->execute();
         foreach ($_POST['Transition'] as $Tran) {
             if (isset($Tran)) {
-                $Tran['entry_num'] = intval($_POST['entry_num']);;
+                $Tran['entry_num'] = intval($_POST['entry_num']);
                 $Tran['entry_editor'] = intval($_POST['entry_editor']);
                 $Tran['entry_num_prefix'] = $_POST['entry_num_prefix'];
                 $Tran['entry_date'] = date('Y-m-d H:i:s', strtotime($_POST['entry_date']));
