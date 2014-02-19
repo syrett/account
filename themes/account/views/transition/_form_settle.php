@@ -167,7 +167,7 @@ $tranDate = $command->queryRow(); // execute a query SQL
                             echo CHtml::errorSummary($model[0]);
                         }
 
-                            if(isset($_REQUEST['id'])&&accessReview($_REQUEST['id']))
+                        if(isset($_REQUEST['id'])&&accessReview($_REQUEST['id'])&&accessSettle($_REQUEST['id']))
                             echo CHtml::button(($model[0]->entry_reviewed==1)?'取消审核':'审核通过', array(
                                     'submit' => array('transition/review', array('id'=>$_REQUEST['id'], 'action'=>$model[0]->entry_reviewed)),
                                     'name' => 'btnReview',

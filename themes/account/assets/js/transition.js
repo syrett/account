@@ -45,11 +45,16 @@ $(document).ready(function () {
 //        autoclose: true
 //    })
 
+    var startDate   = $('#startDate').val();
     var dateString  = $('#transitionDate').val();
-    var year        = dateString.substring(0,4);
-    var month       = dateString.substring(4,6);
+    if(dateString!='')
+        startDate = dateString;
+    var year        = startDate.substring(0,4);
+    var month       = startDate.substring(4,6);
     var date        = new Date(year, month-1, 1);
-    date.setMonth(date.getMonth() + 1);
+    if(dateString!='')
+        date.setMonth(date.getMonth() + 1);
+
     $('#transition_date input').datepicker( {
         onSelect: function(date) {
             var date = $('#transition_date input').val();

@@ -330,9 +330,16 @@ class Transition extends MyActiveRecord
     
     public function setPosted($bool=1)
     {
-      Transition::model()->updateAll(array('entry_posting'=>$bool),
+      return Transition::model()->updateAll(array('entry_posting'=>$bool),
                                      'entry_num_prefix=:prefix',
                                      array(':prefix'=>$this->entry_num_prefix));
+    }
+
+    public function setClosing($bool=1)
+    {
+        return Transition::model()->updateAll(array('entry_closing'=>$bool),
+            'entry_num_prefix=:prefix',
+            array(':prefix'=>$this->entry_num_prefix));
     }
 
     /**
@@ -365,85 +372,44 @@ class Transition extends MyActiveRecord
     }
 
     /*
-     *
+     * 返回凭证是否都已经过账, attributes由实例传入
      */
-    public static function confirmPosted($date){
-        $a = Transition::model()->isAllReviewed($date);
-        $b = Transition::model()->isAllPosted($date);
-        $last = date('Ym', strtotime('-1 months', strtotime($date . '01'))); //当前月如果没有结转凭证，那么需要检查上一个月，所以-1
-        if(!Transition::model()->isAllPosted($last))
-            throw new CHttpException(400, $last. "还有凭证未过账或未审核");
-
-        if($a && $b)
-            return true;
-        else
-            throw new CHttpException(400, $date. "还有凭证未过账或未审核");
-
+    public function isPosted($date)
+    {
+        $this->unsetAttributes();
+        $this->entry_posting=1;
+        $this->entry_num_prefix=$date;
+        $this->select="entry_num_prefix,entry_num,entry_posting";
+        $dataProvider = $this->search();
+        $transition = $dataProvider->getData();
+        return empty($transition);
     }
 
-
-
     /*
-     * 结账日期     //这个函数逻辑很混乱
-     * return $date
+     * 是否可以结账
+     * return bool
      */
-    public static function checkSettlement($date = "")
+    public static function checkSettlement($date)
     {
-//        $jzpz = convert("结转凭证", )
         $Tran = new Transition();
-        if ($date == Yii::app()->params['startDate'])
-            return date('Ym', strtotime('+1 months', strtotime(Yii::app()->params['startDate'] . '01')));
         if ($date == "")
             $date = date('Ym', time());
-        if (!$Tran->isAllPosted($date)) {
-            Transition::model()->unsetAttributes();
-            $data = Transition::model()->findByAttributes(array('entry_num_prefix' => $date, 'entry_settlement'=>1));
-            if ($data) {
-//            if($date!=date('Ym', time()))   // strtotime format 07/28/2010
-                $date = date('Ym', strtotime('+1 months', strtotime($date . '01'))); //当前月如果已经有结转凭证，那么当月无需结账，所以+1
-                return $date;
-            } else {
-                $date = date('Ym', strtotime('-1 months', strtotime($date . '01'))); //当前月如果没有结转凭证，那么需要检查上一个月，所以-1
-                return $Tran->checkSettlement($date);
-            }
-        }
-        else{
-            if($Tran->tranSettlement($date))
-            {
-                $date = date('Ym', strtotime('-1 months', strtotime($date . '01')));
-                return $Tran->checkSettlement($date);
-            } //当前月如果没有结转凭证，那么需要检查上一个月，所以-1
-            else
-            {
-                $date = date('Ym', strtotime('+1 months', strtotime($date . '01')));
-                return $date;
-            } //当前月如果已经有结转凭证，那么当月无需结账，所以+1
-
-        }
-         //当前月如果已经有结转凭证，那么当月无需结账，所以+1
+        if(isset($_REQUEST['date']))
+            $date = $_REQUEST['date'];
+        if ($Tran->isAllPosted($date))
+            return true;
+        else
+            throw new CHttpException(400, $date. " 还有凭证未审核或未过账");
     }
+
     //当前日期是否已经结账
     public function tranSettlement($date){
-        $model = Transition::model()->findByAttributes(array('entry_num_prefix'=>$date, 'entry_settlement'=>1));
-        return empty($model);
+        $list1 = Transition::model()->findByAttributes(array('entry_num_prefix'=>$date, 'entry_closing'=>1));
+        if(!empty($list1))
+            return true;
+        else
+            return false;
     }
-
-    /*
-     * 检查是否已经有结转凭证
-     * return 1:有 0:无
-     */
-    public static function confirmSettlement($date)
-    {        
-        $Tran = new Transition();
-        $Tran->unsetAttributes();
-        $Tran->entry_memo='结转凭证';
-        $Tran->entry_num_prefix=$date;
-        $Tran->select="entry_num_prefix,entry_memo";
-        $dataProvider = $Tran->search();
-        $transtion = $dataProvider->getData();
-        return empty($transtion);
-    }
-
 
     /**
      * 列出科目
@@ -500,6 +466,16 @@ class Transition extends MyActiveRecord
             }
         }
         return $arr;
+    }
+
+    //是否有过结账操作
+    public function hasSettlement($date){
+        $list1 = Transition::model()->findByAttributes(array('entry_num_prefix' => $date, 'entry_closing'=>1));
+        $list2 = Transition::model()->findByAttributes(array('entry_num_prefix' => $date, 'entry_settlement'=>1));
+        if($list1||$list2)
+            return true;
+        else
+            return false;
     }
 
 

@@ -573,7 +573,7 @@ INSERT INTO `vendor` (`id`, `company`, `vat`, `phone`, `add`, `memo`) VALUES
 --
 DROP TABLE IF EXISTS `transitionDate`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`jason`@`localhost` SQL SECURITY DEFINER VIEW `transitionDate` AS select max(`transition`.`entry_num_prefix`) AS `date` from `transition` where ((`transition`.`entry_settlement` = 1) and (`transition`.`entry_closing` = 1));
+CREATE VIEW `transitionDate` AS select max(`transition`.`entry_num_prefix`) AS `date` from `transition` where (`transition`.`entry_closing` = 1 or entry_settlement = 1);
 
 --
 -- 限制导出的表

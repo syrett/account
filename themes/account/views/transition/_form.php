@@ -167,7 +167,7 @@ $tranDate = $command->queryRow(); // execute a query SQL
                         if($model[0]->hasErrors()){
                             echo CHtml::errorSummary($model[0]);
                         }
-                            if(isset($_REQUEST['id'])&&accessReview($_REQUEST['id']))
+                            if(isset($_REQUEST['id'])&&accessReview($_REQUEST['id'])&&accessSettle($_REQUEST['id']))
                             echo CHtml::button(($model[0]->entry_reviewed==1)?'取消审核':'审核通过', array(
                                     'submit' => array('transition/review', array('id'=>$_REQUEST['id'], 'action'=>$model[0]->entry_reviewed)),
                                     'name' => 'btnReview',
@@ -175,7 +175,7 @@ $tranDate = $command->queryRow(); // execute a query SQL
                                     'confirm' => ($model[0]->entry_reviewed==1)?'确认取消审核？':'确认通过审核？',
                                 )
                             );
-if($model[0]->entry_reviewed == 0){
+                            if($model[0]->entry_reviewed == 0){
                             echo CHtml::submitButton($item->isNewRecord ? '添加' : '保存', array('class' => 'btn btn-primary',));  
 }
 
@@ -198,7 +198,8 @@ if($model[0]->entry_reviewed == 0){
     <input type="hidden" name="entry_num" id='entry_num' value="<? echo isset($_REQUEST['id'])==true?$model[0]['entry_num']:$this->tranSuffix("") ?>"/>
     <input type="hidden" name="entry_editor" id='entry_editor' value="<?=Yii::app()->user->id?>"/>
     <input type="hidden" id="number" value="<?= $number ?>"/>
-    <input type="hidden" id="transitionDate" value="<?= isset($tranDate['date'])?$tranDate['date']:Yii::app()->params['startDate']; ?>"/>
+    <input type="hidden" id="startDate" value="<?= Yii::app()->params['startDate'] ?>"/>
+    <input type="hidden" id="transitionDate" value="<?= $tranDate['date'] ?>"/>
     <input type="hidden" value="<? echo Yii::app()->createAbsoluteUrl("transition/Appendix") ?>" id="entry_appendix"/>
     <input type="hidden" value="<? echo Yii::app()->createAbsoluteUrl("transition/ajaxlistfirst") ?>"
            id="ajax_listfirst"/>

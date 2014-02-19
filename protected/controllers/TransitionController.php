@@ -608,12 +608,10 @@ class TransitionController extends Controller
                 $item = $this->loadModel($item['id']);
                 if($valid = $item->validate() && $valid)
                 {
-                    if($item->entry_memo=="结转凭证")
-                        $item->entry_closing = 1;   //已结账
                     if($_REQUEST[0]['action']==1)
                     {
                         $item->entry_reviewed = 0;
-                        $item->entry_reviewer = 1;
+                        $item->entry_reviewer = 0;
                     }
                     else{
                         $item->entry_reviewed = 1;
@@ -672,28 +670,23 @@ class TransitionController extends Controller
             4)	完成
 
      */
-    public function actionSettlement($date){
-//      $trans = array();
-        $need = Transition::model()->checkSettlement();
-        $entry_prefix = $need;
-        if($entry_prefix>date('Ym', time())||!Transition::model()->confirmSettlement($entry_prefix))
+    public function actionSettlement($entry_prefix){
+        if($entry_prefix>Yii::app()->params['startDate'])
         {
-            Yii::app()->user->setFlash('success', $date. "不需要结账!");
-            $this->render('success');
-            return 1;
+            $lastdate = date('Ym', strtotime('-1 months', strtotime($entry_prefix . '01')));
+            if(!Transition::model()->tranSettlement($lastdate))
+                throw new CHttpException(400, $lastdate. "需要先结账");
         }
-        if(!Transition::model()->confirmPosted($entry_prefix))
+
+        if(!Transition::model()->checkSettlement($entry_prefix))
             throw new CHttpException(400, $entry_prefix. "结账失败");
         $this->reorganise($entry_prefix); //结账前先整理
         $entry_num = $this->tranSuffix($entry_prefix);
-//        if($entry_num='0001')                     //有可能需要
-//            echo '本月无账目信息，无需结账';
         $entry_memo = '结转凭证';
-        $entry_editor = 1;   //userid
+        $entry_editor = Yii::app()->user->id;
         $entry_reviewer = 0;
         $entry_settlement = 1;
         $arr = Subjects::model()->actionListFirst();
-        $id = "";
         $sum = 0;
         $hasDate = false;
         $date = getYear($entry_prefix).'-'.getMon($entry_prefix).'-01'.' 00:00:00';
@@ -718,26 +711,24 @@ class TransitionController extends Controller
                 $hasDate = true;
             }
         }
-        $tran = new Transition();
-        $tran->entry_num_prefix = $entry_prefix;
-        $tran->entry_num = $entry_num;
-        $tran->entry_memo = $entry_memo;
-        $tran->entry_date = $date;
-        $tran->entry_transaction = 2;    //本年利润 为贷
-        $tran->entry_editor = $entry_editor;
-        $tran->entry_settlement = $entry_settlement;
-        $tran->entry_reviewer = $entry_reviewer;
-        $tran->entry_subject = '4103';              //本年利润
-        $tran->entry_amount = $sum;
-        if($hasDate>0)
-            $id = $tran->save();
-        if($id){
-            Yii::app()->user->setFlash('success', "结账成功!");
-            $this->render('success');
-//            $this->renderPartial('//site/success');
+        if($hasDate>0){
+            $tran = new Transition();
+            $tran->entry_num_prefix = $entry_prefix;
+            $tran->entry_num = $entry_num;
+            $tran->entry_memo = $entry_memo;
+            $tran->entry_date = $date;
+            $tran->entry_transaction = 2;    //本年利润 为贷
+            $tran->entry_editor = $entry_editor;
+            $tran->entry_settlement = $entry_settlement;
+            $tran->entry_reviewer = $entry_reviewer;
+            $tran->entry_subject = '4103';              //本年利润
+            $tran->entry_amount = $sum;
+            $tran->save();
         }
-        else
-            throw new CHttpException(400, $entry_prefix. "结账失败");
+        if($sum==0)
+            $tran->setClosing(1);
+        Yii::app()->user->setFlash('success', $entry_prefix."结账成功!");
+        $this->render('success');
     }
 
     /*
@@ -764,20 +755,22 @@ class TransitionController extends Controller
      * 反结账
      */
     public function actionAntiSettlement(){
-        $date = Transition::model()->checkSettlement();
-        $model = 0;
-        $date = date('Ym', strtotime('-1 months', strtotime($date . '01')));
 
-        //checksettlement函数不正确
-//        $date = date('Ym', strtotime('-1 months', time()));
+        $date = date('Ym', time());
+        while($date>Yii::app()->params['startDate']){
+            if(!Transition::model()->isPosted($date))
+                break;
+            $date = date('Ym', strtotime('-1 months', strtotime($date . '01')));
+        }
 
         $model = Transition::model()->deleteAllByAttributes(array('entry_num_prefix'=>$date, 'entry_settlement'=>1,));
         
         $newModel =new  Transition();
         $newModel->entry_num_prefix = $date;
-        $newModel -> setPosted(0);
+        $updated = $newModel -> setPosted(0);
+        $updated = $newModel->setClosing(0) || $updated;
 
-        if($model>=1)
+        if($model>=1 or $updated)
         {
             Yii::app()->user->setFlash('success', $date. " 反结账成功!");
             $this->render('success');
