@@ -1,7 +1,9 @@
 <?php
-
+//资产负债表
 class Balance extends CModel
 {
+
+  public $date; //报表月份 201403
   public function attributeNames()
   {
     array();
@@ -14,7 +16,9 @@ class Balance extends CModel
     $data=array();
     foreach($array as $i=>$value){
       if (isset($value["subjects"])) {
-        $arr = self::getItem(2014,3,$value["subjects"]);
+        $year = getYear($this->date);
+        $month = getMon($this->date);
+        $arr = self::getItem($year,$month,$value["subjects"]);
         $arr["name"] = $value["name"];
         
         $data[$value["id"]]=$arr;

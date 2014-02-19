@@ -7,9 +7,13 @@ class ReportController extends CController
    */
   public function actionBalance()
   {
+    $date = "201303";
     $model = new Balance();
+    $model->date = $date;
     $data = $model->genData();
-    $this->render("balance",array("data"=>$data));
+    $this->render("balance",array("data"=>$data,
+                                  "date"=>$date,
+                                  "company"=>"公司名字"));
   }
 
 
@@ -18,8 +22,12 @@ class ReportController extends CController
    */
   public function actionProfit()
   {
+    $date = "201303";
     $model = new Balance();
+    $model->date = $date;
     $data = $model->genData();
-    $this->render("profit",array("data"=>$data));
+    $this->render("profit",array("data"=>$data,
+                                 "date"=>$date,
+                                 "company"=>"公司名字"));
   }
 }
