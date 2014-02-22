@@ -25,8 +25,8 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
     {
       echo "<div class=".$css.">";
       echo "<th>".$name."</th>";
-      echo "<td>  </td>";
-      echo "<td>  </td>";
+      echo "<td>0</td>";
+      echo "<td>0</td>";
       echo "</div>";
     }
   else
@@ -94,7 +94,7 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
                                          <?php echoData(58, $data) ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data, "todo, 二、营业利润") ?>
+                                         <?php echoData("trading_profit", $data, "二、营业利润") ?>
                                          </tr>
                                          <tr>
                                          <?php echoData(60, $data) ?>
@@ -103,52 +103,52 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
                                          <?php echoData(67, $data) ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data, "todo, 三、利润总额") ?>
+                                         <?php echoData("profit_sum", $data, "三、利润总额") ?>
                                          </tr>
                                          <tr>
                                          <?php echoData(68, $data) ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data, "todo, 四、净利润") ?>
+                                         <?php echoData("net_profit", $data, "四、净利润") ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data, "todo, 其中：归属于母公司所有者的净利润") ?>
+                                         <?php echoData(0, $data, "其中：归属于母公司所有者的净利润") ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data, "todo,加：年初未分配利润") ?>
+                                         <?php echoData(0, $data, "加：年初未分配利润") ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data, "todo,其他转入") ?>
+                                         <?php echoData(0, $data, "其他转入") ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data, "todo, 减：提取法定盈余公积") ?>
+                                         <?php echoData(0, $data, "减：提取法定盈余公积") ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data, "todo,提取储备基金") ?>
+                                         <?php echoData(0, $data, "提取储备基金") ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data, "todo,提取企业发展基金") ?>
+                                         <?php echoData(0, $data, "提取企业发展基金") ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data, "todo, 提取职工奖励及福利基金") ?>
+                                         <?php echoData(0, $data, "提取职工奖励及福利基金") ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data, "todo,    提取任意盈余公积") ?>
+                                         <?php echoData(0, $data, "提取任意盈余公积") ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data, "todo,    应付现金股利(利润)") ?>
+                                         <?php echoData(0, $data, "应付现金股利(利润)") ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data, "todo,   其中：分配控股母公司现金股利") ?>
+                                         <?php echoData(0, $data, "其中：分配控股母公司现金股利") ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data, "todo,    转作股本的普通股股利") ?>
+                                         <?php echoData(0, $data, "转作股本的普通股股利") ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data, "todo,    盈余公积补亏") ?>
+                                         <?php echoData(0, $data, "盈余公积补亏") ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data, "todo,五、未分配利润") ?>
+                                         <?php echoData("undistributed_profit", $data, "五、未分配利润") ?>
                                          </tr>
                                          </td>
                                          </table>

@@ -7,10 +7,20 @@ class ReportController extends CController
    */
   public function actionBalance()
   {
-    $date = "201303";
+    if(isset($_GET['date'])){
+      $date=$_GET['date'];
+    }else{
+      $date=date("Ymd");
+    }
     $model = new Balance();
     $model->date = $date;
-    $data = $model->genData();
+    if(isset($_GET['is_closed'])){
+      $model->is_closed=$_GET['is_closed'];
+    }else{
+      $model->is_closed=0;
+    }
+
+    $data = $model->genBalanceData();
     $this->render("balance",array("data"=>$data,
                                   "date"=>$date,
                                   "company"=>"公司名字"));
@@ -22,10 +32,14 @@ class ReportController extends CController
    */
   public function actionProfit()
   {
-    $date = "201303";
+    if(isset($_GET['date'])){
+      $date=$_GET['date'];
+    }else{
+      $date=date("Ym");
+    }
     $model = new Balance();
     $model->date = $date;
-    $data = $model->genData();
+    $data = $model->genProfitData();
     $this->render("profit",array("data"=>$data,
                                  "date"=>$date,
                                  "company"=>"公司名字"));

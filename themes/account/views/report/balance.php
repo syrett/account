@@ -22,12 +22,17 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
     {
     $css = $options["css"];
     }   
-  if (empty($data[$key]))
-    {
-      echo "<div class=".$css.">";
+  if($key==="empty"){
+   echo "<div class=".$css.">";
       echo "<th>".$name."</th>";
       echo "<td>  </td>";
       echo "<td>  </td>";
+      echo "</div>";
+  }elseif(empty($data[$key])){
+      echo "<div class=".$css.">";
+      echo "<th>".$name."</th>";
+      echo "<td>0</td>";
+      echo "<td>0</td>";
       echo "</div>";
     }
   else
@@ -89,7 +94,7 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
                                          <?php echoData(34, $data) ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(9, $data,  "todo(两个),减:坏账准备") ?>
+                                         <?php echoData(9, $data,  "减:坏账准备") ?>
                                          <?php echoData(35, $data) ?>
                                          </tr>
                                          <tr>
@@ -98,18 +103,18 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
                                          </tr>
                                          <tr>
                                          <?php echoData(7, $data,  "应收利息") ?>
-                                         <?php echoData(0, $data,  "todo,其中职工福利费") ?>
+                                         <?php echoData(0, $data,  "其中职工福利费") ?>
                                          </tr>
                                          <tr>
                                          <?php echoData(6, $data,  "应收股利") ?>
-                                         <?php echoData(0, $data,  "todo,职工教育经费") ?>
+                                         <?php echoData(0, $data,  "职工教育经费") ?>
                                          </tr>
                                          <tr>
                                          <?php echoData(8, $data,  "其他应收款") ?>
                                          <?php echoData(37, $data) ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(9, $data,  "todo(两个)减:坏账准备") ?>
+                                         <?php echoData("empty", $data, "") ?>
                                          <?php echoData(38, $data) ?>
                                          </tr>
                                          <tr>
@@ -121,8 +126,8 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
                                          <?php echoData(40, $data) ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data,  "todo,一年内到期的非流动资产") ?>
-                                         <?php echoData(0, $data,  "todo,一年内到期的非流动负债 ") ?>
+                                         <?php echoData(0, $data,  "一年内到期的非流动资产") ?>
+                                         <?php echoData(0, $data,  "一年内到期的非流动负债 ") ?>
                                          </tr>
                                          <tr>
                                          <?php echoData(10, $data,  "其他流动资产") ?>
@@ -133,15 +138,15 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
                                          <?php echoData("flow_debt", $data,  "流动负债合计") ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data,  "非流动资产:") ?>
-                                         <?php echoData(0, $data,  "") ?>
+                                         <?php echoData("empty", $data,  "非流动资产:") ?>
+                                         <?php echoData("empty", $data,  "") ?>
                                          </tr>
                                          <tr>
                                          <?php echoData(15, $data,  "可供出售金融资产") ?>
                                          <?php echoData(0, $data,  "非流动负债:") ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data,  "todo, 减:可供出售金融资产减值准备") ?>
+                                         <?php echoData(0, $data,  "减:可供出售金融资产减值准备") ?>
                                          <?php echoData(42, $data) ?>
                                          </tr>
                                          <tr>
@@ -173,8 +178,8 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
                                          <?php echoData("unflow_debt",$data, "非流动负债合计") ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data, "todo,减:投资性房地产减值准备") ?>
-                                         <?php echoData(0, $data, "") ?>
+                                         <?php echoData(0, $data, "减:投资性房地产减值准备") ?>
+                                         <?php echoData("empty", $data, "") ?>
                                          </tr>
                                          <tr>
                                          <?php echoData(21, $data, "固定资产") ?>
@@ -182,7 +187,7 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
                                          </tr>
                                          <tr>
                                          <?php echoData(22, $data, "减:累计折旧") ?>
-                                         <?php echoData(0, $data, "todo, 上级拨入") ?>
+                                         <?php echoData(0, $data, "上级拨入") ?>
                                          </tr>
                                          <tr>
                                          <?php echoData(23, $data,  "减:固定资产减值准备") ?>
@@ -193,7 +198,7 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
                                          <?php echoData(50, $data) ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data,  "todo,减:在建工程减值准备") ?>
+                                         <?php echoData(0, $data,  "减:在建工程减值准备") ?>
                                          <?php echoData(51, $data) ?>
                                          </tr>
                                          <tr>
@@ -201,19 +206,19 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
                                          <?php echoData(54,  $data) ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data,  "todo,减:工程物资减值准备") ?>
+                                         <?php echoData(0, $data,  "减:工程物资减值准备") ?>
                                          <?php echoData(52, $data) ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data,  "todo,固定资产清理") ?>
-                                         <?php echoData(0, $data,  "todo,其中:法定盈余公积") ?>
+                                         <?php echoData(0, $data,  "固定资产清理") ?>
+                                         <?php echoData(0, $data,  "其中:法定盈余公积") ?>
                                          </tr>
                                          <tr>
                                          <?php echoData(26,  $data, "无形资产") ?>
-                                         <?php echoData(0,  $data, "todo,任意盈余公积") ?>
+                                         <?php echoData(0,  $data, "任意盈余公积") ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0,  $data, "todo,其中:土地使用权") ?>
+                                         <?php echoData(0,  $data, "其中:土地使用权") ?>
                                          <?php echoData(0,  $data, "储备基金") ?>
                                          </tr>
                                          <tr>
@@ -225,8 +230,8 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
                                          <?php echoData(53, $data) ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data,  "todo,减:商誉减值准备") ?>
-                                         <?php echoData(0, $data,  "todo,外币报表折算差额") ?>
+                                         <?php echoData(0, $data,  "减:商誉减值准备") ?>
+                                         <?php echoData(0, $data,  "外币报表折算差额") ?>
                                          </tr>
                                          <tr>
                                          <?php echoData(29, $data,  "长期待摊费用") ?>
@@ -234,19 +239,19 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
                                          </tr>
                                          <tr>
                                          <?php echoData(30, $data,  "递延所得税资产") ?>
-                                         <?php echoData(0, $data,  "todo,少数股东权益") ?>
+                                         <?php echoData(0, $data,  "少数股东权益") ?>
                                          </tr>
                                          <tr>
                                          <?php echoData(20, $data,  "其他非流动资产") ?>
-                                         <?php echoData(0, $data,  "") ?>
+                                         <?php echoData("empty", $data,  "") ?>
                                          </tr>
                                          <tr>
                                          <?php echoData("unflow_property", $data,  "非流动资产合计") ?>
                                          <?php echoData("owner", $data,  "股东权益(所有者权益)合计") ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data,  "todo,拨付所属资金") ?>
-                                         <?php echoData(0, $data,  "") ?>
+                                         <?php echoData(0, $data,  "拨付所属资金") ?>
+                                         <?php echoData("empty", $data,  "") ?>
                                          </tr>
                                          <tr>
                                          <?php echoData("property", $data,  "资产合计") ?>
