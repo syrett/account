@@ -105,6 +105,33 @@ return array(
         'sbj_cat'=>array(1 =>  '资产类 ' ,2 =>  '负债类 ' ,3 =>  '权益类 ' ,4 =>  '收入类 ' ,5 =>  '费用类'),
         'startDate'=>'201312',
         'profitReport' => array(55,56,57,58,59,60,61,62,63,64,65,66,67,68,69),
+        'profitReport_sum' => array(
+                                    array("id"=>"trading_profit", "name"=>"二、营业利润", "to"=>"profit_sum", "function"=>"sum"),
+                                    array("id"=>"profit_sum", "name"=>"三‘利润总额", "to"=>"net_profit", "function"=>"sum"),
+                                    array("id"=>"net_profit", "name"=>"四’净利润"),
+                                    array("id"=>"undistributed_profit", "name"=>"五‘未分配利润"),
+                                    ),
+        'profitReport' => array(
+
+                               //收入类
+                               array("id"=>55 ,"name"=>"一、营业收入","subjects"=>array(6001,6011,6021,6031,6041,6051), "to"=>"trading_profit", "function"=>"sum"),
+                               array("id"=>56 ,"name"=>"财务费用","subjects"=>array(6061)),
+                               array("id"=>57 ,"name"=>"加:公允价值变动收益","subjects"=>array(6101), "to"=>"trading_profit", "function"=>"sum"),
+                               array("id"=>58 ,"name"=>"投资收益","subjects"=>array(6111), "to"=>"trading_profit", "function"=>"sum"),
+                               array("id"=>59 ,"name"=>"财务费用","subjects"=>array(6201,6202,6203)),
+                               array("id"=>60 ,"name"=>"加:营业外收入","subjects"=>array(6301), "to"=>"profit_sum", "function"=>"sum"),
+
+                               //费用类
+                               array("id"=>61 ,"name"=>"减:营业成本","subjects"=>array(6401,6402), "to"=>"trading_profit", "function"=>"minus"),
+                               array("id"=>62 ,"name"=>"营业税金及附加","subjects"=>array(6403), "to"=>"trading_profit", "function"=>"minus"),
+                               array("id"=>63 ,"name"=>"财务费用","subjects"=>array(6411,6421,6501,6502,6511,6521,6531,6541,6542,6603), "to"=>"trading_profit", "function"=>"minus"),
+                               array("id"=>64 ,"name"=>"销售费用","subjects"=>array(6601), "to"=>"trading_profit", "function"=>"minus"),
+                               array("id"=>65 ,"name"=>"管理费用","subjects"=>array(6602,6604), "to"=>"trading_profit", "function"=>"minus"),
+                               array("id"=>66 ,"name"=>"资产减值损失","subjects"=>array(6701), "to"=>"trading_profit", "function"=>"minus"),
+                               array("id"=>67 ,"name"=>"减:营业外支出","subjects"=>array(6711), "to"=>"profit_sum", "function"=>"minus"),
+                               array("id"=>68 ,"name"=>"减:所得税费用","subjects"=>array(6801), "to"=>"net_profit", "function"=>"minus"),
+                               array("id"=>69 ,"name"=>"未分配利润","subjects"=>array(6901)),
+                    ),
 
         'balanceReport_sum'=>array(
                                    array("id"=>"flow_property", "name"=>"流动资产合计", "to"=>"property", "function"=>"sum"),
@@ -175,24 +202,6 @@ return array(
                                array("id"=>53 ,"name"=>"未分配利润","subjects"=>array(4103,4104), "to"=>"parent_owner", "function"=>"sum"),
                                array("id"=>54 ,"name"=>"减:库存股","subjects"=>array(4201), "to"=>"parent_owner", "function"=>"sum"),
 
-                               //收入类
-                               array("id"=>55 ,"name"=>"一、营业收入","subjects"=>array(6001,6011,6021,6031,6041,6051)),
-                               array("id"=>56 ,"name"=>"财务费用","subjects"=>array(6061)),
-                               array("id"=>57 ,"name"=>"加:公允价值变动收益","subjects"=>array(6101)),
-                               array("id"=>58 ,"name"=>"投资收益","subjects"=>array(6111)),
-                               array("id"=>59 ,"name"=>"财务费用","subjects"=>array(6201,6202,6203)),
-                               array("id"=>60 ,"name"=>"加:营业外收入","subjects"=>array(6301)),
-
-                               //费用类
-                               array("id"=>61 ,"name"=>"减:营业成本","subjects"=>array(6401,6402)),
-                               array("id"=>62 ,"name"=>"营业税金及附加","subjects"=>array(6403)),
-                               array("id"=>63 ,"name"=>"财务费用","subjects"=>array(6411,6421,6501,6502,6511,6521,6531,6541,6542,6603)),
-                               array("id"=>64 ,"name"=>"销售费用","subjects"=>array(6601)),
-                               array("id"=>65 ,"name"=>"管理费用","subjects"=>array(6602,6604)),
-                               array("id"=>66 ,"name"=>"资产减值损失","subjects"=>array(6701)),
-                               array("id"=>67 ,"name"=>"减:营业外支出","subjects"=>array(6711)),
-                               array("id"=>68 ,"name"=>"减:所得税费用","subjects"=>array(6801)),
-                               array("id"=>69 ,"name"=>"未分配利润","subjects"=>array(6901)),
                                ),
     ),
 );
