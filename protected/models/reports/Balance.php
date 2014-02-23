@@ -108,9 +108,9 @@ class Balance extends CModel
       $day=31;
     }
     if ($this->is_closed == 1){
-      $sql = "SELECT entry_transaction, entry_amount FROM TRANSITION WHERE entry_closing=1 AND year(entry_date)=:year AND month(entry_date)=:month AND day(entry_date)<:day";
+      $sql = "SELECT entry_transaction, entry_amount FROM transition WHERE entry_closing=1 AND year(entry_date)=:year AND month(entry_date)=:month AND day(entry_date)<:day";
     }else{
-      $sql = "SELECT entry_transaction, entry_amount FROM TRANSITION WHERE year(entry_date)=:year AND month(entry_date)=:month AND day(entry_date)<:day";
+      $sql = "SELECT entry_transaction, entry_amount FROM transition WHERE year(entry_date)=:year AND month(entry_date)=:month AND day(entry_date)<:day";
     }
 
     $data = Transition::model()->findAllBySql($sql, array(':year'=>$year,
