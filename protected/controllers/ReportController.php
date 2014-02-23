@@ -7,7 +7,7 @@ class ReportController extends CController
    */
   public function actionBalance()
   {
-    if(isset($_REQUEST['date'])){
+    if(isset($_REQUEST['date'])&&$_REQUEST['date']!=''){
       $date=$_REQUEST['date'];
     }else{
       $date=date("Ymd");
@@ -32,7 +32,7 @@ class ReportController extends CController
    */
   public function actionProfit()
   {
-    if(isset($_REQUEST['date'])){
+    if(isset($_REQUEST['date'])&&$_REQUEST['date']!=''){
       $date=$_REQUEST['date'];
     }else{
       $date=date("Ym");
