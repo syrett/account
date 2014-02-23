@@ -55,8 +55,8 @@ return array(
         'db'=>array(
             'connectionString' => 'mysql:host=localhost;dbname=account',
             'emulatePrepare' => true,
-            'username' => 'root',
-            'password' => '',
+            'username' => 'jason',
+            'password' => 'lrc207107',
             'charset' => 'utf8',
             'enableProfiling' => true,
             'enableParamLogging' => true,
