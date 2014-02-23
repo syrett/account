@@ -243,7 +243,7 @@ class Transition extends MyActiveRecord
                 $str = $model?$model->company:"";
                 break;
             case 2 :    //vender
-                $model = Vender::model()->findByPk($id);
+                $model = Vendor::model()->findByPk($id);
                 $str = $model?$model->company:"";
                 break;
             case 3 :    //employee
