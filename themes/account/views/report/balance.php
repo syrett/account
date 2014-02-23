@@ -1,4 +1,14 @@
 <!-- 资产负债表 -->
+<?php
+
+Yii::app()->clientScript->registerCoreScript('jquery');
+Yii::import('ext.select2.Select2');
+$cs = Yii::app()->clientScript;
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/jquery-ui-1.10.4.custom.js', CClientScript::POS_HEAD);
+$cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/jquery-ui-1.10.4.custom.css');
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/balance.js', CClientScript::POS_HEAD);
+
+?>
 <style>
 .table-c table{border-right:1px solid #F00;border-top:1px solid #F00; cellpadding:0; cellspacing:0 }
 .table-c table th{border-left:1px solid #F00;border-bottom:1px solid #F00; cellpadding:0; cellspacing:0}
@@ -56,8 +66,22 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
 
                                          ?>
 
-
+<?php echo CHtml::beginForm(); ?>
 <div class="table-c";>
+<h5>
+    日期:
+    <input type="text" name="date" id="date" class="span2" value="" readonly/>
+    已经过账：
+    <?
+    $this->widget('Select2', array(
+        'name' => 'is_closed',
+        'data' => array(1=>'是',0=>'否'),
+    ));
+    ?>
+</h5>
+<input type="submit" value="查看报表" />
+<?php echo CHtml::endForm(); ?>
+
 <table cellpadding="0";cellspacing="0";style="padding:0px;margin:0px;">
                                          <tr>
                                          <td>编制单位:</td>

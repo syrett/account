@@ -1,7 +1,20 @@
+<!-- 损益表 -->
+<?php
+
+Yii::app()->clientScript->registerCoreScript('jquery');
+$cs = Yii::app()->clientScript;
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/jquery-ui-1.10.4.custom.js', CClientScript::POS_HEAD);
+$cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/jquery-ui-1.10.4.custom.css');
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/profit.js', CClientScript::POS_HEAD);
+
+?>
 <style>
 .table-c table{border-right:1px solid #F00;border-top:1px solid #F00; cellpadding:0; cellspacing:0 }
 .table-c table th{border-left:1px solid #F00;border-bottom:1px solid #F00; cellpadding:0; cellspacing:0}
 .table-c table td{border-left:1px solid #F00;border-bottom:1px solid #F00; cellpadding:0; cellspacing:0}
+.ui-datepicker table{
+    display: none;
+}
 </style>
 
 <style>
@@ -50,6 +63,16 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
 ?>
 
 <div class="table-c";>
+
+<?php echo CHtml::beginForm(); ?>
+<div>
+<h5>日期:
+    <input type="text" name="date" id="date" class="span2" value="" readonly/>
+</h5>
+
+<input type="submit" value="查看报表" />
+<?php echo CHtml::endForm(); ?>
+    </div>
 <table cellpadding="0";cellspacing="0";style="padding:0px;margin:0px;">
                                          <tr>
                                          <td colspan=3 align=center> <?php echo $date ?> </td>

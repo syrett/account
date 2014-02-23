@@ -7,15 +7,15 @@ class ReportController extends CController
    */
   public function actionBalance()
   {
-    if(isset($_GET['date'])){
-      $date=$_GET['date'];
+    if(isset($_REQUEST['date'])){
+      $date=$_REQUEST['date'];
     }else{
       $date=date("Ymd");
     }
     $model = new Balance();
     $model->date = $date;
-    if(isset($_GET['is_closed'])){
-      $model->is_closed=$_GET['is_closed'];
+    if(isset($_REQUEST['is_closed'])&&$_REQUEST['is_closed']==1){
+      $model->is_closed=$_REQUEST['is_closed'];
     }else{
       $model->is_closed=0;
     }
@@ -32,8 +32,8 @@ class ReportController extends CController
    */
   public function actionProfit()
   {
-    if(isset($_GET['date'])){
-      $date=$_GET['date'];
+    if(isset($_REQUEST['date'])){
+      $date=$_REQUEST['date'];
     }else{
       $date=date("Ym");
     }
