@@ -557,11 +557,11 @@ class TransitionController extends Controller
         if ($entry_appendix_type && $id) {
             switch ($entry_appendix_type) {
                 case 1 : // 应付账款，列出供应商
-                    $ob = Client::model()->findByPk($id);
+                    $ob = Vendor::model()->findByPk($id);
                     $result = $ob['company'];
                     break;
                 case 2 : // 应收账款，列出客户列表
-                    $ob = Transition::model()->findByPk($id);
+                    $ob = Client::model()->findByPk($id);
                     $result = $ob['company'];
                     break;
                 case 3 :
