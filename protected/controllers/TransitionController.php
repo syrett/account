@@ -77,9 +77,9 @@ class TransitionController extends Controller
             if(isset($session[$sessionKey])){
                 $first_submit_time = $session[$sessionKey];
                 $current_time      = time();
-                if($current_time - $first_submit_time < 90){
+                if($current_time - $first_submit_time < 10){
                     $session[$sessionKey] = $current_time;
-                    throw new CHttpException(400, "90秒内不能重复提交");
+                    throw new CHttpException(400, "10秒内不能重复提交");
                 }else{
                     unset($session[$sessionKey]);//超过限制时间，释放session";
                 }
@@ -98,9 +98,11 @@ class TransitionController extends Controller
                 $model->attributes = $_GET['Transition'];
 
 //                $this->redirect($this->createUrl('transition/admin'));
-                $this->render('admin', array(
-                    'model' => $model,
-                ));
+//                $this->redirect($this->createUrl('site/sucess'));
+
+                header('refresh:2;url=index.php');
+                Yii::app()->user->setFlash('success', "添加成功!");
+                $this->render('success');
             }
             else{
                 for ($i = 0; $i < 5; $i++)
@@ -788,16 +790,19 @@ class TransitionController extends Controller
         }
 
         $model = Transition::model()->deleteAllByAttributes(array('entry_num_prefix'=>$date, 'entry_settlement'=>1,));
-        
+        //删除post表中的数据
+        $year = substr($date, 0, 4);
+        $month = substr($date, 4, 6);
+        Post::model()->deleteAllByAttributes(array('year'=>$year,'month'=>$month));
         $newModel =new  Transition();
         $newModel->entry_num_prefix = $date;
         $updated = $newModel -> setPosted(0);
         $updated = $newModel->setClosing(0) || $updated;
-
         if($model>=1 or $updated)
         {
             Yii::app()->user->setFlash('success', $date. " 反结账成功!");
             $this->render('success');
+            header('refresh:2;url=index.php');
         }else
             throw new CHttpException(400, $date. " 反结账失败");
     }
