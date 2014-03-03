@@ -238,12 +238,12 @@ class Transition extends MyActiveRecord
     {
         $str = "";
         switch($type){
-            case 1 :    //client
-                $model = Client::model()->findByPk($id);
+            case 1 :    //vendor
+                $model = Vendor::model()->findByPk($id);
                 $str = $model?$model->company:"";
                 break;
-            case 2 :    //vender
-                $model = Vendor::model()->findByPk($id);
+            case 2 :    //client
+                $model = Client::model()->findByPk($id);
                 $str = $model?$model->company:"";
                 break;
             case 3 :    //employee

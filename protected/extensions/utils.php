@@ -11,13 +11,13 @@ function getYear($date){
     return substr($date, 0, 4);
 }
 function getMon($date){
-    return substr($date, 4, 6);
+    return substr($date, 4, 2);
 }
 function getYearMon($date){
     return substr($date, 0, 6);
 }
 function getDay($date){
-    return substr($date, 6, 8);
+    return substr($date, 6, 2);
 }
 function accessReview($tranID){
     $user = Yii::app()->user->id;
@@ -34,6 +34,31 @@ function accessSettle($tranID){
         return false;
     else
         return true;
+}
+
+function balance($last_balance, $debit, $credit, $sbj_cat)
+{
+  switch($sbj_cat)
+    {
+    case 1: //资产类
+      return $last_balance + $debit - $credit;
+      break;
+    case 2: //负债类
+      return $last_balance + $credit - $debit;
+      break;
+    case 3: //权益类
+      return $last_balance + $credit - $debit;
+      break;
+    case 4: //收入类
+      return $credit - $debit;
+      break;
+    case 5: //费用类
+      return $debit - $credit;
+      break;
+    default:
+      return 0;
+      break;
+    }
 }
 function menuIsActive($arrs, $str, $id){
     if($str == 'options4' && in_array($_REQUEST['operation'], $arrs)){

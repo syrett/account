@@ -44,4 +44,24 @@ class ReportController extends CController
                                  "date"=>$date,
                                  "company"=>"公司名字"));
   }
+
+  /**
+   * 客户表
+   */
+  public function actionClient()
+  {
+    if(isset($_GET['date'])){
+      $date=$_GET['date'];
+    }else{
+      $date=date("Ym");
+    }
+    $model = new Set();
+    $data = $model->
+    $this->render("profit",array("data"=>$data,
+                                 "date"=>$date,
+                                 "company"=>"公司名字"));
+  }
+
+
+
 }

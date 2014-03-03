@@ -163,4 +163,18 @@ class Subjects extends CActiveRecord
         $sql = "update subjects set has_sub = 1 where sbj_number = '$par_id'";
         Yii::app()->db->createCommand($sql)->execute();
     }
+
+
+    /*
+     * 得到科目的所属类别:
+     * 1:资产类; 2:负债类; 3:权益类; 4:收入类; 5:费用类
+     */
+    public function getCat($sbj_id)
+    {
+      $sql = "SELECT sbj_cat FROM SUBJECTS WHERE sbj_number=:sbj_id";
+      $data = Subjects::model()->findBySql($sql, array(':sbj_id'=>$sbj_id));
+      foreach($data as $s){
+        return $s;
+      }
+    }
 }

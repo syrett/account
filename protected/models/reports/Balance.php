@@ -86,14 +86,13 @@ class Balance extends CModel
     $month = getMon($this->date);
     $post = new Post();
     $post->subject_id=$subjects;
-    $post->year=$year-1;
-    $post->month=12;
+    $post->year=$year;
+    $post->month=$month-1;
     $start=$post->getBalanceNum();
 
     $balance = self::getEndNum($subjects);
 
     $end=$start+$balance;
-    
     return array("start"=>$start,
           "end"=>$end);
 
