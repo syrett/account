@@ -120,11 +120,12 @@ class PostController extends Controller
 
     public function actionPost($date)
     {
+
       $transition = new Transition;
 
       if($transition->isAllPosted($date))
       {
-          throw new CHttpException(400, $date . "还有凭证未审核");
+          throw new CHttpException(400, $date . "已经过账");
       }
       $transition->entry_num_prefix = $date;
       

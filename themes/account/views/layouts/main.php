@@ -95,9 +95,9 @@
                               'items' => array(
                                                array('label' => '资产负债表', 'url' => array('report/balance')),
                                                array('label' => '损益表', 'url' => array('report/profit')),
-                                               array('label' => '现金流转表'),
+                                               array('label' => '现金流量表'),
                                                array('label' => '供应商表'),
-                                               array('label' => '客户表'),
+                                               array('label' => '客户表', 'url' => array('report/client')),
                                                array('label' => '项目表'),
                                                array('label' => '部门表'),
                                                array('label' => '项目与部门核算表'),
