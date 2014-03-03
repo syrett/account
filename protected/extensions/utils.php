@@ -61,7 +61,8 @@ function balance($last_balance, $debit, $credit, $sbj_cat)
     }
 }
 function menuIsActive($arrs, $str, $id){
-    if($str == 'options4' && in_array($_REQUEST['operation'], $arrs)){
+    if($str == 'options4' ){
+        if(isset($_REQUEST['operation'])&&in_array($_REQUEST['operation'], $arrs)){
         return true;
     }
     else
