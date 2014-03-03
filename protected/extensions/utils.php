@@ -35,3 +35,15 @@ function accessSettle($tranID){
     else
         return true;
 }
+function menuIsActive($arrs, $str, $id){
+    if($str == 'options4' && in_array($_REQUEST['operation'], $arrs)){
+        return true;
+    }
+    else
+    {
+        return $id=='subjects'?true:false;
+    }
+        return false;
+
+
+}

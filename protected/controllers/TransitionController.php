@@ -800,9 +800,9 @@ class TransitionController extends Controller
         $updated = $newModel->setClosing(0) || $updated;
         if($model>=1 or $updated)
         {
+//            header('refresh:2;url=index.php');
             Yii::app()->user->setFlash('success', $date. " 反结账成功!");
             $this->render('success');
-            header('refresh:2;url=index.php');
         }else
             throw new CHttpException(400, $date. " 反结账失败");
     }

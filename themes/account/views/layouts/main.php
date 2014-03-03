@@ -72,9 +72,10 @@
                              )),
                         array('label' => '总账', 'url' => array(''),
                               'htmOptions' => array('class' => 'dir dropdown'),
+                              'active' => menuIsActive(array('listSettlement', 'listPost'),'options4', $this->id),
                               'items' => array(
                                                array('label' => '查询'),
-                                               array('label' => '科目表', 'url' => array('/subjects/admin'), 'active'=>$this->id=='subjects'?true:false), //Subjects下所有操作高亮 
+                                               array('label' => '科目表', 'url' => array('/subjects/admin'),), //Subjects下所有操作高亮
                                                array('label' => '期初余额'),
                                                array('label' => '结账', 'url' => array('/Site/operation&operation='. 'listSettlement')),
                                                array('label' => '反结账', 'url' => array('/transition/antisettlement')),
