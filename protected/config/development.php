@@ -55,8 +55,8 @@ return array(
         'db'=>array(
             'connectionString' => 'mysql:host=localhost;dbname=account',
             'emulatePrepare' => true,
-            'username' => 'jason',
-            'password' => 'lrc207107',
+            'username' => 'root',
+            'password' => '',
             'charset' => 'utf8',
             'enableProfiling' => true,
             'enableParamLogging' => true,
@@ -103,8 +103,7 @@ return array(
         // this is used in contact page
         'adminEmail'=>'webmaster@example.com',
         'sbj_cat'=>array(1 =>  '资产类 ' ,2 =>  '负债类 ' ,3 =>  '权益类 ' ,4 =>  '收入类 ' ,5 =>  '费用类'),
-        'startDate'=>'201312',
-        'profitReport' => array(55,56,57,58,59,60,61,62,63,64,65,66,67,68,69),
+        'startDate'=>'201401',
         'profitReport_sum' => array(
                                     array("id"=>"trading_profit", "name"=>"二、营业利润", "to"=>"profit_sum", "function"=>"sum"),
                                     array("id"=>"profit_sum", "name"=>"三‘利润总额", "to"=>"net_profit", "function"=>"sum"),
@@ -176,7 +175,7 @@ return array(
                                array("id"=>29 ,"name"=>"长期待摊费用","subjects"=>array(1801), "to"=>"flow_property", "function"=>"minus"),
                                array("id"=>30 ,"name"=>"递延所得税资产","subjects"=>array(1811), "to"=>"flow_property", "function"=>"sum"),
                                //负债类
-                               array("id"=>31 ,"name"=>"短期借款","subjects"=>array(2001,2002,2003,2204,2011,2012,2021), "to"=>"flow_debt", "function"=>"sum"),
+                               array("id"=>31 ,"name"=>"短期借款","subjects"=>array(2001,2002,2003,2004,2011,2012,2021), "to"=>"flow_debt", "function"=>"sum"),
                                array("id"=>32 ,"name"=>"交易性金融负债","subjects"=>array(2101,2111), "to"=>"flow_debt", "function"=>"sum"),
                                array("id"=>33 ,"name"=>"应付票据","subjects"=>array(2201), "to"=>"flow_debt", "function"=>"sum"),
                                array("id"=>34 ,"name"=>"应付账款","subjects"=>array(2202), "to"=>"flow_debt", "function"=>"sum"),
