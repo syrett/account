@@ -743,7 +743,7 @@ class TransitionController extends Controller
             $tran->entry_num = $entry_num;
             $tran->entry_memo = $entry_memo;
             $tran->entry_date = $date;
-            $tran->entry_transaction = 2;    //本年利润 为贷
+            $tran->entry_transaction = 3;    //本年利润 为贷
             $tran->entry_editor = $entry_editor;
             $tran->entry_settlement = $entry_settlement;
             $tran->entry_reviewer = $entry_reviewer;
