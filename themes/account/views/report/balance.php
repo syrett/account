@@ -83,7 +83,7 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
 </h5>
 <input type="submit" value="查看报表" />
 <?php echo CHtml::endForm(); ?>
-<div id="test" style="display:<?php if($data=='') echo none;?>">
+<div id="test" style="display:<?php if($data=='') echo 'none';?>">
 <table cellpadding="0";cellspacing="0";style="padding:0px;margin:0px;">
                                          <tr>
                                          <td>编制单位:</td>

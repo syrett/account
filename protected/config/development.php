@@ -107,7 +107,7 @@ return array(
         'profitReport_sum' => array(
                                     array("id"=>"trading_profit", "name"=>"二、营业利润", "to"=>"profit_sum", "function"=>"sum"),
                                     array("id"=>"profit_sum", "name"=>"三‘利润总额", "to"=>"net_profit", "function"=>"sum"),
-                                    array("id"=>"net_profit", "name"=>"四’净利润"),
+                                    array("id"=>"net_profit", "name"=>"四’净利润", "to"=>"undistributed_profit", "function"=>"sum"),
                                     array("id"=>"undistributed_profit", "name"=>"五‘未分配利润"),
                                     ),
         'profitReport' => array(
