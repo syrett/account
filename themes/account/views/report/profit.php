@@ -54,8 +54,8 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
         {
           echo "<th>".$name."</th>";
         }
-      echo "<td>".$arr["start"]." </td>";
-      echo "<td>" .$arr["end"]."</td>";
+      echo "<td>".$arr["sum_month"]." </td>";
+      echo "<td>" .$arr["sum_year"]."</td>";
       echo "</div>";
     }
 }
@@ -73,7 +73,7 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
 <input type="submit" value="查看报表" />
 <?php echo CHtml::endForm(); ?>
     </div>
-<div style="display:<?php if($data=='') echo none;?>">
+<div style="display:<?php if($data=='') echo 'none';?>">
 <table cellpadding="0";cellspacing="0";style="padding:0px;margin:0px;">
                                          <tr>
                                          <td colspan=3 align=center> <?php echo $date ?> </td>
@@ -136,7 +136,7 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
                                          <?php echoData("net_profit", $data, "四、净利润") ?>
                                          </tr>
                                          <tr>
-                                         <?php echoData(0, $data, "其中：归属于母公司所有者的净利润") ?>
+                                         <?php echoData("net_profit", $data, "其中：归属于母公司所有者的净利润") ?>
                                          </tr>
                                          <tr>
                                          <?php echoData(0, $data, "加：年初未分配利润") ?>
