@@ -9,11 +9,13 @@ class ReportController extends CController
   {
     if(isset($_REQUEST['date'])&&$_REQUEST['date']!=''){
       $date=$_REQUEST['date'];
+        $model = new Balance();
+        $model->date = $date;
+        $data = $model->genBalanceData();
     }else{
-      $date=date("Ymd");
+        $data = '';
+        $date = '';
     }
-    $model = new Balance();
-    $model->date = $date;
     $model->is_closed=1;
     /*
     if(isset($_REQUEST['is_closed'])&&$_REQUEST['is_closed']==1){
@@ -22,7 +24,6 @@ class ReportController extends CController
       $model->is_closed=0;
       }*/
 
-    $data = $model->genBalanceData();
     $this->render("balance",array("data"=>$data,
                                   "date"=>$date,
                                   "company"=>"公司名字"));
@@ -36,12 +37,18 @@ class ReportController extends CController
   {
     if(isset($_REQUEST['date'])&&$_REQUEST['date']!=''){
       $date=$_REQUEST['date'];
+        $model = new Balance();
+        $model->date = $date;
+        $data = $model->genProfitData();
     }else{
-      $date=date("Ym");
+        $data = '';
+        $date = '';
     }
+
     $model = new Profit();
     $model->date = $date;
     $data = $model->genProfitData();
+
     $this->render("profit",array("data"=>$data,
                                  "date"=>$date,
                                  "company"=>"公司名字"));
