@@ -72,4 +72,4 @@ function menuIsActive($arrs, $str, $id){
         return false;
 
 
-}
+    }}

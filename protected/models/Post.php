@@ -255,21 +255,23 @@ class Post extends CActiveRecord
         Yii::app()->db->createCommand($sql)->execute();
     }
 
-    public function getBalanceNum()
+    // 得到某个一级科目的及其子科目的余额和
+    public function getBalanceNum($subject_id, $date)
     {
-		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('subject_id',$this->subject_id);
-		$criteria->compare('year',$this->year,true);
-		$criteria->compare('month',$this->month,true);
-        $criteria->select="subject_id, debit, credit, balance";
-        
-        $first = Post::model()->findAll($criteria);
-        $balance=0;
-        foreach ($first as $row) {
-          $balance += $row['balance'];
-        };
-        return $balance;
+      $year = getYear($date);
+      $month = getMon($date);
+      $sql = "SELECT balance FROM POST WHERE year=:year AND month=:month AND subject_id REGEXP :sbj_id";
+      $dataArray = Post::model()->findAllBySql($sql, array(':year'=>$year,
+                                          ':month'=>$month,
+                                          ':sbj_id'=>$subject_id));
+      $balance = 0;
+      foreach($dataArray as $post){
+        $balance += $post['balance'];
+      }
+      return $balance;
+
     }
+
+
 }

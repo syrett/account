@@ -84,48 +84,53 @@ class Balance extends CModel
   function getItem($subjects){
     $year = getYear($this->date);
     $month = getMon($this->date);
-    $post = new Post();
-    $post->subject_id=$subjects;
-    $post->year=$year;
-    $post->month=$month-1;
-    $start=$post->getBalanceNum();
+    $day = getDay($this->date);
+    if($day==''){
+      $day=31;
+    }
+    $lastDate=date("Ym",strtotime("last month",mktime(0,0,0,$month,01,$year))); //上个月
+    $start_year = 0;//年初数
+    $start = 0;//上月余额
+    $end = 0;//到某日的余额
+    foreach($subjects as $k=>$sbj_id){
+      $start_year += Post::model()->getBalanceNum($sbj_id, ($year-1)."12");
+      $balance = Post::model()->getBalanceNum($sbj_id, $lastDate);
+      $sbj_cat = Subjects::model()->getCat($sbj_id);
+      $arr = self::getEndNum($sbj_id, $year, $month, $day);
+      $end += balance($balance, $arr['debit'], $arr['credit'], $sbj_cat);
+    }
 
-    $balance = self::getEndNum($subjects);
-
-    $end=$start+$balance;
-    return array("start"=>$start,
+    return array("start"=>$start_year,
           "end"=>$end);
 
   }
 
   //因为要算到日，所以直接从transition表里读取。
-  function getEndNum($subjects){
-    $year = getYear($this->date);
-    $month = getMon($this->date);
-    $day = getDay($this->date);
-    if($day==''){
-      $day=31;
-    }
+  function getEndNum($sbj_id,$year, $month, $day){
+
+    $sql = "SELECT entry_transaction, entry_amount FROM transition WHERE year(entry_date)=:year AND month(entry_date)=:month AND day(entry_date)<:day AND entry_subject REGEXP :sbj_id ";
     if ($this->is_closed == 1){
-      $sql = "SELECT entry_transaction, entry_amount FROM transition WHERE entry_closing=1 AND year(entry_date)=:year AND month(entry_date)=:month AND day(entry_date)<:day";
-    }else{
-      $sql = "SELECT entry_transaction, entry_amount FROM transition WHERE year(entry_date)=:year AND month(entry_date)=:month AND day(entry_date)<:day";
+      //      $sql = "SELECT entry_transaction, entry_amount FROM transition WHERE entry_closing=1 AND year(entry_date)=:year AND month(entry_date)=:month AND day(entry_date)<:day";
+      $sql = $sql . " AND entry_closing=1";
     }
 
     $data = Transition::model()->findAllBySql($sql, array(':year'=>$year,
-                                                  ':month'=>$month,
-                                                          ':day'=>$day+1));
+                                                          ':month'=>$month,
+                                                          ':day'=>$day+1,
+                                                          ':sbj_id'=>$sbj_id));
 
-    $tmp_balance=0;
+    
+    $debit=0;
+    $credit=0;
     foreach($data as $k=>$v){
-      if ($v['entry_transaction']=="1") { //1为借,借加
-        $tmp_balance=$tmp_balance + floatval($v['entry_amount']);
+      if ($v['entry_transaction']=="1") { //1为借
+        $debit += floatval($v['entry_amount']);
       }
-      elseif($v['entry_transaction']=="2") { //2为贷,贷减
-        $tmp_balance=$tmp_balance - floatval($v['entry_amount']);
+      elseif($v['entry_transaction']=="2") { //2为贷
+        $credit += floatval($v['entry_amount']);
       }
     }
-    return $tmp_balance; //本月初到某日的发生额
+    return array('debit'=>$debit,'credit'=>$credit);
   }
 
 }

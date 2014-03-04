@@ -9,6 +9,14 @@ $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/jquery-ui-1.10.4.
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/balance.js', CClientScript::POS_HEAD);
 
 ?>
+
+<script type="text/javascript">
+    function showme(){
+        var div = document.getElementByIdx_x("test");
+            div.style.display = "block"
+    } 
+</script>
+
 <style>
 .table-c table{border-right:1px solid #F00;border-top:1px solid #F00; cellpadding:0; cellspacing:0 }
 .table-c table th{border-left:1px solid #F00;border-bottom:1px solid #F00; cellpadding:0; cellspacing:0}
@@ -71,17 +79,12 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
 <h5>
     日期:
     <input type="text" name="date" id="date" class="span2" value="" readonly/>
-    已经过账：
-    <?
-    $this->widget('Select2', array(
-        'name' => 'is_closed',
-        'data' => array(1=>'是',0=>'否'),
-    ));
-    ?>
+
 </h5>
-<input type="submit" value="查看报表" />
+<input type="button" value="查看报表" onclick="showme()"/>
 <?php echo CHtml::endForm(); ?>
 
+<div id="test" style="display:none">
 <table cellpadding="0";cellspacing="0";style="padding:0px;margin:0px;">
                                          <tr>
                                          <td>编制单位:</td>
@@ -285,5 +288,5 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
                                          </table>
                                          </div>
 
-
+</div>
 
