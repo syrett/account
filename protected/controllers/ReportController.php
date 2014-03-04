@@ -39,7 +39,7 @@ class ReportController extends CController
     }else{
       $date=date("Ym");
     }
-    $model = new Balance();
+    $model = new Profit();
     $model->date = $date;
     $data = $model->genProfitData();
     $this->render("profit",array("data"=>$data,
