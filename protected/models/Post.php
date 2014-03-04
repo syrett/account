@@ -95,9 +95,6 @@ class Post extends CActiveRecord
           $tmp_credit = $tmp_credit + floatval($t['entry_amount']);
         }
         
-        $sbj_cat = Subjects::model()->getCat($t['entry_subject']);
-
-        $balance[$t['entry_subject']]['balance']= balance($tmp_balance, $tmp_debit, $tmp_credit, $sbj_cat);
         $balance[$t['entry_subject']]['debit']= $tmp_debit;
         $balance[$t['entry_subject']]['credit']= $tmp_credit;
       }
@@ -109,7 +106,7 @@ class Post extends CActiveRecord
         }else{
           $tmp_balance = 0;
         }
-
+        $sbj_cat = Subjects::model()->getCat($subject_id);
         $balance[$subject_id]['balance']= balance($tmp_balance, $arr['debit'], $arr['credit'], $sbj_cat);
       }
 
