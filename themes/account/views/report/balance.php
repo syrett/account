@@ -12,8 +12,8 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/balance.js', CC
 
 <script type="text/javascript">
     function showme(){
-        var div = document.getElementByIdx_x("test");
-            div.style.display = "block"
+//        var div = document.getElementByIdx_x("test");
+//            div.style.display = "block"
     } 
 </script>
 
@@ -78,13 +78,12 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
 <div class="table-c";>
 <h5>
     日期:
-    <input type="text" name="date" id="date" class="span2" value="" readonly/>
+    <input type="text" name="date" id="date" class="span2" value="<?php echo isset($date)?$date:'' ?>" readonly/>
 
 </h5>
-<input type="button" value="查看报表" onclick="showme()"/>
+<input type="submit" value="查看报表" />
 <?php echo CHtml::endForm(); ?>
-
-<div id="test" style="display:none">
+<div id="test" style="display:<?php if($data=='') echo none;?>">
 <table cellpadding="0";cellspacing="0";style="padding:0px;margin:0px;">
                                          <tr>
                                          <td>编制单位:</td>

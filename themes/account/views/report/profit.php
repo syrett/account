@@ -67,12 +67,13 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
 <?php echo CHtml::beginForm(); ?>
 <div>
 <h5>日期:
-    <input type="text" name="date" id="date" class="span2" value="" readonly/>
+    <input type="text" name="date" id="date" class="span2" value="<?php echo isset($date)?$date:'' ?>" readonly/>
 </h5>
 
 <input type="submit" value="查看报表" />
 <?php echo CHtml::endForm(); ?>
     </div>
+<div style="display:<?php if($data=='') echo none;?>">
 <table cellpadding="0";cellspacing="0";style="padding:0px;margin:0px;">
                                          <tr>
                                          <td colspan=3 align=center> <?php echo $date ?> </td>
@@ -175,4 +176,5 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
                                          </tr>
                                          </td>
                                          </table>
+    </div>
   </div>
