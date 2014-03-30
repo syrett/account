@@ -274,12 +274,12 @@ class Post extends CActiveRecord
     /*
      * 得到收入类/费用类的科目及其子科目的贷和(收入类)/借和(费用类)
      */
-    public function getDebitCredit($subject_id, $date, $month=1)
+    public function getDebitCredit($subject_id, $date, $num=1)
     {
       $year = getYear($date);
       $month = getMon($date);
       $sbj_cat = Subjects::model()->getCat($subject_id);
-      if ($month==1){ //得到某个月的发生额
+      if ($num==1){ //得到某个月的发生额
         $sql = "SELECT debit,credit FROM POST WHERE year=:year AND month=:month AND subject_id REGEXP :sbj_id";
       }else{ //得到这年到某个月的发生额
         $sql = "SELECT debit, credit FROM POST WHERE year=:year AND month<=:month AND subject_id REGEXP :sbj_id";
@@ -304,4 +304,5 @@ class Post extends CActiveRecord
       };
       return $balance;
     }
+
 }

@@ -51,6 +51,21 @@ class ReportController extends CController
                                  "company"=>"公司名字"));
   }
 
+
+
+  /**
+   * 科目余额表
+   */
+  public function actionSubjects($year, $fm, $tm) //fm:fromMonth; tm: toMonth
+  {
+    $model = new SubjectBalance();
+    $data = $model->genData("201401", "201403");
+    $this->render("subjects",array("dataProvider"=>$data,
+                                   "fromMonth"=>$year.$fm,
+                                   "toMonth"=>$year.$tm,
+                                 "company"=>"公司名字"));
+  }
+
   /**
    * 客户表
    */

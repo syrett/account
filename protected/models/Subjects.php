@@ -177,4 +177,17 @@ class Subjects extends CActiveRecord
         return $s;
       }
     }
+
+    /*
+     * 得到科目的名称:
+     */
+    static public function getName($sbj_id)
+    {
+      $sql = "SELECT sbj_name FROM SUBJECTS WHERE sbj_number=:sbj_id";
+      $data = Subjects::model()->findBySql($sql, array(':sbj_id'=>$sbj_id));
+      foreach($data as $s){
+        return $s;
+      }
+    }
+
 }
