@@ -97,7 +97,7 @@
                                                array('label' => '资产负债表', 'url' => array('report/balance')),
                                                array('label' => '损益表', 'url' => array('report/profit')),
                                                array('label' => '科目余额表', 'url' => array('report/subjects')),
-                                               array('label' => '明细表', 'url' => array('report/detail')),
+                                               array('label' => '明细表', 'url' => array('report/detail&year=2014&fm=01&tm=03&subject_id=10010001')),
                                                array('label' => '现金流量表'),
                                                array('label' => '供应商表'),
                                                array('label' => '客户表', 'url' => array('report/client')),

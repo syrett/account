@@ -103,7 +103,11 @@ class ReportController extends CController
     echo $fm;
     echo $tm;
     echo $subject_id;
-    $this->render("detail",array());
+    $model = new Detail();
+    $data = $model->genData($subject_id, $year, $fm, $tm);
+    $this->render("detail",array("dataProvider"=>$data,
+                                   "fromMonth"=>$year.'年'.$fm.'月',
+                                   "toMonth"=>$year.'年'.$tm.'月'));
     
   }
 
