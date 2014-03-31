@@ -74,7 +74,7 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
 <?php echo CHtml::endForm(); ?>
     </div>
 <div style="display:<?php if($data=='') echo 'none';?>">
-<table cellpadding="0";cellspacing="0";style="padding:0px;margin:0px;">
+<table cellpadding="0" cellspacing="0" style="padding:0px;margin:0px;">
                                          <tr>
                                          <td colspan=3 align=center> <?php echo $date ?> </td>
                                          </tr>

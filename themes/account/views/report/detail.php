@@ -69,3 +69,7 @@ Yii::import('ext.select2.Select2');
     <input type="submit" value="查看报表" />
     <?php echo CHtml::endForm(); ?>
 </div>
+
+<div class="table-c" style="display:<?php if(empty($detail)) echo 'none';?>">
+
+</div>

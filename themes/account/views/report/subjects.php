@@ -96,8 +96,8 @@
   }
 ?>
 
-<div class="table-c";>
-     <table cellpadding="0";cellspacing="0";style="padding:0px;margin:0px;">
+<div class="table-c" style="display:<?php if(empty($dataProvider)) echo 'none';?>">
+     <table cellpadding="0" cellspacing="0" style="padding:0px;margin:0px;">
                                          <tr>
                                          <td colspan=8 align=center> <?php echo $fromMonth."-".$toMonth ?> </td>
                                          </tr>
