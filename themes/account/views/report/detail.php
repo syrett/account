@@ -89,8 +89,10 @@ Yii::import('ext.select2.Select2');
     <?php echo CHtml::endForm(); ?>
 </div>
 
+ <?php if(!empty($dataProvider)) {
 
-<div class="table-c" style="display:<?php if(empty($dataProvider)) echo 'none';?>">
+ ?>
+<div class="table-c">
      <table cellpadding="0";cellspacing="0";style="padding:0px;margin:0px;">
                                          <tr>
                                          <td colspan=6 align=center> <?php echo $fromMonth."-".$toMonth ?> </td>
@@ -158,3 +160,4 @@ foreach($info as $ti){
 
 
 </div>
+ <? }
