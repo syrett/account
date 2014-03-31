@@ -171,7 +171,7 @@ class Subjects extends CActiveRecord
      */
     public function getCat($sbj_id)
     {
-      $sql = "SELECT sbj_cat FROM SUBJECTS WHERE sbj_number=:sbj_id";
+      $sql = "SELECT sbj_cat FROM subjects WHERE sbj_number=:sbj_id";
       $data = Subjects::model()->findBySql($sql, array(':sbj_id'=>$sbj_id));
       foreach($data as $s){
         return $s;
@@ -183,7 +183,7 @@ class Subjects extends CActiveRecord
      */
     static public function getName($sbj_id)
     {
-      $sql = "SELECT sbj_name FROM SUBJECTS WHERE sbj_number=:sbj_id";
+      $sql = "SELECT sbj_name FROM subjects WHERE sbj_number=:sbj_id";
       $data = Subjects::model()->findBySql($sql, array(':sbj_id'=>$sbj_id));
       foreach($data as $s){
         return $s;

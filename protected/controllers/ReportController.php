@@ -56,13 +56,27 @@ class ReportController extends CController
   /**
    * 科目余额表
    */
-  public function actionSubjects($year, $fm, $tm) //fm:fromMonth; tm: toMonth
+  public function actionSubjects() //fm:fromMonth; tm: toMonth
   {
+      if(isset($_REQUEST['year'])&&$_REQUEST['year']!='')
+      {
+          $year = $_REQUEST['year'];
+          $fm = $_REQUEST['fm'];
+          $tm = $_REQUEST['tm'];
+          if($fm > $tm)
+          {
+              $temp = $fm;
+              $fm = $tm;
+              $tm = $temp;
+          }
+      }
+
+
     $model = new SubjectBalance();
     $data = $model->genData($year.$fm, $year.$tm);
     $this->render("subjects",array("dataProvider"=>$data,
-                                   "fromMonth"=>$year.$fm,
-                                   "toMonth"=>$year.$tm,
+                                   "fromMonth"=>$year.'年'.$fm.'月',
+                                   "toMonth"=>$year.'年'.$tm.'月',
                                  "company"=>"公司名字"));
   }
 
@@ -70,8 +84,21 @@ class ReportController extends CController
   /**
    * 科目明细表
    */
-  public function actionDetail($year, $fm, $tm, $subject_id) //fm:fromMonth; tm: toMonth
+  public function actionDetail() //fm:fromMonth; tm: toMonth
   {
+      if(isset($_REQUEST['year'])&&$_REQUEST['year']!='')
+      {
+          $year = $_REQUEST['year'];
+          $fm = $_REQUEST['fm'];
+          $tm = $_REQUEST['tm'];
+          if($fm > $tm)
+          {
+              $temp = $fm;
+              $fm = $tm;
+              $tm = $temp;
+          }
+          $subject_id = $_REQUEST['subject_id'];
+      }
     echo $year;
     echo $fm;
     echo $tm;

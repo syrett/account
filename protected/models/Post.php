@@ -258,7 +258,7 @@ class Post extends CActiveRecord
 
       $year = getYear($date);
       $month = getMon($date);
-      $sql = "SELECT balance FROM POST WHERE year=:year AND month=:month AND subject_id REGEXP :sbj_id";
+      $sql = "SELECT balance FROM post WHERE year=:year AND month=:month AND subject_id REGEXP :sbj_id";
       $dataArray = Post::model()->findAllBySql($sql, array(':year'=>$year,
                                           ':month'=>$month,
                                           ':sbj_id'=>$subject_id));
@@ -280,9 +280,9 @@ class Post extends CActiveRecord
       $month = getMon($date);
       $sbj_cat = Subjects::model()->getCat($subject_id);
       if ($num==1){ //得到某个月的发生额
-        $sql = "SELECT debit,credit FROM POST WHERE year=:year AND month=:month AND subject_id REGEXP :sbj_id";
+        $sql = "SELECT debit,credit FROM post WHERE year=:year AND month=:month AND subject_id REGEXP :sbj_id";
       }else{ //得到这年到某个月的发生额
-        $sql = "SELECT debit, credit FROM POST WHERE year=:year AND month<=:month AND subject_id REGEXP :sbj_id";
+        $sql = "SELECT debit, credit FROM post WHERE year=:year AND month<=:month AND subject_id REGEXP :sbj_id";
       }
       $dataArray = Post::model()->findAllBySql($sql, array(':year'=>$year,
                                           ':month'=>$month,

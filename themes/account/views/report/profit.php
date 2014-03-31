@@ -18,7 +18,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/profit.js', CCl
 </style>
 
 <style>
-.table-d table{ background:#000 border-right:1px solid #000}
+.table-d table{ background:#000; border-right:1px solid #000}
 .table-d table td{ background:#FFF}
 </style>
 
@@ -64,8 +64,8 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
 
 <div class="table-c";>
 
+ <div>
 <?php echo CHtml::beginForm(); ?>
-<div>
 <h5>日期:
     <input type="text" name="date" id="date" class="span2" value="<?php echo isset($date)?$date:'' ?>" readonly/>
 </h5>

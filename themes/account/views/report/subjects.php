@@ -1,5 +1,8 @@
  <!-- 科目余额表 -->
-选择年，根据年份选择从某月到某月
+ <?php
+
+ Yii::import('ext.select2.Select2');
+ ?>
 <style>
 .table-c table{border-right:1px solid #F00;border-top:1px solid #F00; cellpadding:0; cellspacing:0 }
 .table-c table th{border-left:1px solid #F00;border-bottom:1px solid #F00; cellpadding:0; cellspacing:0}
@@ -10,9 +13,58 @@
 </style>
 
 <style>
-.table-d table{ background:#000 border-right:1px solid #000}
+.table-d table{ background:#000; border-right:1px solid #000}
 .table-d table td{ background:#FFF}
 </style>
+
+ <div>
+     <?php echo CHtml::beginForm(); ?>
+     <h5>日期:
+         <?php
+         if(isset($_REQUEST['year'])&&$_REQUEST['year']!='')
+         {
+             $year = $_REQUEST['year'];
+             $fm = $_REQUEST['fm'];
+             $tm = $_REQUEST['tm'];
+             if($fm > $tm)
+             {
+                 $temp = $fm;
+                 $fm = $tm;
+                 $tm = $temp;
+             }
+         }
+
+         $years = array(2013=>'2013',2014=>'2014');
+         $this->widget('Select2', array(
+             'name' => 'year',
+             'value' => $year,
+             'data' => $years,
+         ));
+         ?>
+         年</h5>
+     <h5>
+         <?php
+         $months = array(1=>'1',2=>'2',3=>'3',4=>'4',5=>'5',6=>'6',7=>'7',8=>'8',9=>'9',10=>'10',11=>'11',12=>'12');
+         $this->widget('Select2', array(
+         'name' => 'fm',
+         'value' => $fm,
+         'data' => $months,
+         ));
+         ?>
+         月 至
+         <?php
+
+         $this->widget('Select2', array(
+             'name' => 'tm',
+             'value' => $tm,
+             'data' => $months,
+         ));
+         ?>月
+     </h5>
+
+     <input type="submit" value="查看报表" />
+     <?php echo CHtml::endForm(); ?>
+ </div>
 
 <?php
  function echoItmes($items, $options=array("css"=>"table-c")){
@@ -132,6 +184,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
 ));
 */
 ?>
-
+</tr>
 </table>
 </div>

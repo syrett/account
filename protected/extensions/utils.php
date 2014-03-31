@@ -60,6 +60,7 @@ function balance($last_balance, $debit, $credit, $sbj_cat)
       break;
     }
 }
+
 function menuIsActive($arrs, $str, $id){
     if($str == 'options4' ){
         if(isset($_REQUEST['operation'])&&in_array($_REQUEST['operation'], $arrs)){
