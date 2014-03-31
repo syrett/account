@@ -59,17 +59,31 @@ class ReportController extends CController
   public function actionSubjects($year, $fm, $tm) //fm:fromMonth; tm: toMonth
   {
     $model = new SubjectBalance();
-    $data = $model->genData("201401", "201403");
+    $data = $model->genData($year.$fm, $year.$tm);
     $this->render("subjects",array("dataProvider"=>$data,
                                    "fromMonth"=>$year.$fm,
                                    "toMonth"=>$year.$tm,
                                  "company"=>"公司名字"));
   }
 
+
+  /**
+   * 科目明细表
+   */
+  public function actionDetail($year, $fm, $tm, $subject_id) //fm:fromMonth; tm: toMonth
+  {
+    echo $year;
+    echo $fm;
+    echo $tm;
+    echo $subject_id;
+    $this->render("detail",array());
+    
+  }
+
   /**
    * 客户表
    */
-  public function actionClient()
+  public function actionClient($date) //date:201403
   {
     if(isset($_GET['date'])){
       $date=$_GET['date'];
@@ -79,7 +93,7 @@ class ReportController extends CController
     $date="201402";
     $model = new Set();
     $data = $model->client($date);
-    $this->render("profit",array("data"=>$data,
+    $this->render("client",array("data"=>$data,
                                  "date"=>$date,
                                  "company"=>"公司名字"));
   }

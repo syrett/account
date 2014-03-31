@@ -1,4 +1,5 @@
  <!-- 科目余额表 -->
+选择年，根据年份选择从某月到某月
 <style>
 .table-c table{border-right:1px solid #F00;border-top:1px solid #F00; cellpadding:0; cellspacing:0 }
 .table-c table th{border-left:1px solid #F00;border-bottom:1px solid #F00; cellpadding:0; cellspacing:0}
