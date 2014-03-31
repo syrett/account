@@ -25,7 +25,7 @@ Yii::import('ext.select2.Select2');
     <?php echo CHtml::beginForm(); ?>
     <h5>日期:
         <?php
-        if(isset($_REQUEST['year'])&&$_REQUEST['year']!='')
+        if(isset($_REQUEST['year']))
         {
             $year = $_REQUEST['year'];
             $fm = $_REQUEST['fm'];
@@ -37,6 +37,13 @@ Yii::import('ext.select2.Select2');
                 $tm = $temp;
             }
             $subject_id = $_REQUEST['subject_id'];
+        }
+        else
+        {
+            $year = '';
+            $fm = '';
+            $tm = '';
+            $subject_id = '';
         }
 
         $years = array(2013=>'2013',2014=>'2014');

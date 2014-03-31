@@ -21,7 +21,7 @@
      <?php echo CHtml::beginForm(); ?>
      <h5>日期:
          <?php
-         if(isset($_REQUEST['year'])&&$_REQUEST['year']!='')
+         if(isset($_REQUEST['year']))
          {
              $year = $_REQUEST['year'];
              $fm = $_REQUEST['fm'];
@@ -32,6 +32,12 @@
                  $fm = $tm;
                  $tm = $temp;
              }
+         }
+         else
+         {
+             $year = '';
+             $fm = '';
+             $tm = '';
          }
 
          $years = array(2013=>'2013',2014=>'2014');
