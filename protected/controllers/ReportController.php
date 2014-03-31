@@ -70,6 +70,12 @@ class ReportController extends CController
               $tm = $temp;
           }
       }
+      else
+      {
+          $year = '';
+          $fm = '';
+          $tm = '';
+      }
 
 
     $model = new SubjectBalance();
@@ -98,6 +104,12 @@ class ReportController extends CController
               $tm = $temp;
           }
           $subject_id = $_REQUEST['subject_id'];
+      }
+      else
+      {
+          $year = '';
+          $fm = '';
+          $tm = '';
       }
     echo $year;
     echo $fm;
