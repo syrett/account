@@ -72,9 +72,9 @@ class ReportController extends CController
       }
       else
       {
-          $year = date('Y');
-          $fm = date('m');
-          $tm = date('m');
+          $year = '';
+          $fm = '';
+          $tm = '';
       }
 
 
@@ -107,9 +107,9 @@ class ReportController extends CController
       }
       else
       {
-          $year = date('Y');
-          $fm = date('m');
-          $tm = date('m');
+          $year = '';
+          $fm = '';
+          $tm = '';
       }
     echo $year;
     echo $fm;
