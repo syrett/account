@@ -96,7 +96,7 @@
   }
 ?>
 
- <?php if(!empty($dataProvider)) {
+ <?php if(!empty($_REQUEST['year'])) {
 
  ?>
 <div class="table-c">
