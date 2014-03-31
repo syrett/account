@@ -33,6 +33,12 @@
                  $tm = $temp;
              }
          }
+         else
+         {
+             $year = '';
+             $fm = '';
+             $tm = '';
+         }
 
          $years = array(2013=>'2013',2014=>'2014');
          $this->widget('Select2', array(
