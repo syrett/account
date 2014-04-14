@@ -16,9 +16,9 @@ $('.search-form form').submit(function(){
 ");
 
 $cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/bootstrap-datepicker.js', CClientScript::POS_HEAD);
-$cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/datepicker.css');
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/_search.js', CClientScript::POS_HEAD);
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker.js', CClientScript::POS_HEAD);
+$cs->registerCssFile(Yii::app()->theme->baseUrl . '/css/datepicker.css');
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/js/_search.js', CClientScript::POS_HEAD);
 ?>
 <div class="panel panel-default voucher form">
 
