@@ -71,6 +71,5 @@ function menuIsActive($arrs, $str, $id){
         return $id=='subjects'?true:false;
     }
         return false;
-
-
-    }}
+    }
+}
