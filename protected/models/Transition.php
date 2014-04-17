@@ -158,8 +158,8 @@ class Transition extends MyActiveRecord
         $sort = new CSort();
         $sort->attributes = array(
             'entry_number' => array(
-                'asc' => 'entry_num_prefix,entry_num ASC',
-                'desc' => 'entry_num_prefix, entry_num desc'
+                'asc' => 'entry_num , entry_num_prefix ASC',
+                'desc' => 'entry_num ,entry_num_prefix DESC'
             ),
             '*', // this adds all of the other columns as sortable
         );
@@ -476,6 +476,16 @@ class Transition extends MyActiveRecord
             return true;
         else
             return false;
+    }
+
+    public function hasData(){
+        $sql = 'select distinct  extract(YEAR from `entry_date`) as `entry_date` from transition';
+        $years = Transition::model()->findAllBySql($sql);
+        $arr = array();
+        foreach ($years as $year){
+            $arr[] = $year['entry_date'];
+        }
+        return $arr;
     }
 
 

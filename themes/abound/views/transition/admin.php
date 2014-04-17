@@ -16,9 +16,9 @@ $('.search-form form').submit(function(){
 ");
 
 $cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/js/bootstrap-datepicker.js', CClientScript::POS_HEAD);
-$cs->registerCssFile(Yii::app()->theme->baseUrl . '/css/datepicker.css');
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/js/_search.js', CClientScript::POS_HEAD);
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/bootstrap-datepicker.js', CClientScript::POS_HEAD);
+$cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/datepicker.css');
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/_search.js', CClientScript::POS_HEAD);
 ?>
 <div class="panel panel-default voucher form">
 
@@ -87,9 +87,19 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/js/_search.js', CClientSc
                 array('name'=>'entry_appendix','value'=>'$data->getAppendix($data->entry_appendix_type,$data->entry_appendix_id)'),
                 array('name'=>'entry_posting','value'=>'$data->getPosting($data->entry_posting)'),
                 array('name'=>'entry_date','value'=>'date("Y年m月d日",strtotime($data->entry_date))'),
+
                 array(
-                    'class' => 'CButtonColumn',
-                    'template' => '{update}',
+                    'class'=>'CButtonColumn',
+                    'buttons'=>array(
+                        'update'=>array(
+                            'options'=>array('class'=>'btn btn-default tip btn-xs','title'=>'编辑'),
+                            'label'=>'<span class="glyphicon glyphicon-pencil"></span>',
+                            'imageUrl'=>false,
+                        )
+                    ),
+                    'header' => '操作',
+                    'htmlOptions' => array('style'=>'min-width: 68px;'),
+                    'template' => '<div class="btn-group">{update}</div>',
                 ),
             ),
             'htmlOptions' => array('class'=> 'table-striped')
@@ -99,10 +109,10 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/js/_search.js', CClientSc
         <div class="clear">&nbsp;</div>
         <div class="clear">&nbsp;</div>
         <div class="div-group">
-            <div class="div-reviewed"></div>审核通过
+            <div class="div-reviewed">&nbsp;</div>审核通过
         </div>
         <div class="div-group">
-            <div class="div-deleted"></div>删除凭证
+            <div class="div-deleted">&nbsp;</div>删除凭证
         </div>
     </div>
 

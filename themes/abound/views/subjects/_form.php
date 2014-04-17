@@ -7,7 +7,7 @@ require_once(dirname(__FILE__).'/../viewfunctions.php');
 Yii::app()->clientScript->registerCoreScript('jquery');
 Yii::import('ext.select2.Select2');
 $cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/js/checkinput.js', CClientScript::POS_HEAD);
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/checkinput.js', CClientScript::POS_HEAD);
 CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
 ?>
 

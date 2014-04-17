@@ -42,32 +42,42 @@
              $tm = '';
          }
 
-         $years = array(2013=>'2013',2014=>'2014');
-         $this->widget('Select2', array(
-             'name' => 'year',
-             'value' => $year,
-             'data' => $years,
-         ));
+//         $years = array(2013=>'2013',2014=>'2014');
+//         $this->widget('Select2', array(
+//             'name' => 'year',
+//             'value' => $year,
+//             'data' => $years,
+//         ));
+
+        $years = Transition::model()->hasData();
          ?>
+            <select name="year" >
+                <?
+                foreach ($years as  $year){
+                    echo "<option value=$year >$year</option>";
+                }
+                ?>
+            </select>
          <span class="input-group-addon">年</span>
          <?php
          $months = array(1=>'1',2=>'2',3=>'3',4=>'4',5=>'5',6=>'6',7=>'7',8=>'8',9=>'9',10=>'10',11=>'11',12=>'12');
-         $this->widget('Select2', array(
-         'name' => 'fm',
-         'value' => $fm,
-         'data' => $months,
-         ));
-         ?>
+        ?>
+         <select name="fm" >
+                <?
+                foreach ($months as $month){
+                    echo "<option value=$month >$month</option>";
+                }
+                ?>
+            </select>
          <span class="input-group-addon">月 至</span>
-         <?php
 
-         $this->widget('Select2', array(
-             'name' => 'tm',
-             'value' => $tm,
-             'data' => $months,
-//             'formatResultCssClass'=> 'form-control',
-         ));
-         ?>
+            <select name="tm" >
+                <?
+                foreach ($months as $value => $month){
+                    echo "<option value=$value >$month</option>";
+                }
+                ?>
+            </select>
         <span class="input-group-addon">月</span>
 		<span class="input-group-btn">
 			<input class="btn btn-default" type="submit" value="查看报表" />
@@ -85,7 +95,7 @@
     }else
     {
       $css = $options["css"];
-    }   
+    }
    foreach($items as $info) {
       echo "<div class=".$css.">";
       echo "<td>".$info["subject_id"]."</td>";
@@ -145,7 +155,7 @@
     };
     $items = $sbjCat_info["items"];
     $css = "table-c";
-    
+
 
 
    foreach($items as $info) {
@@ -177,7 +187,7 @@
     echo "<td>".$sbjCat_info["end_credit"]."</td>";
     echo "</div>";
     echo "</tr>";
-    
+
 }
 
 /*

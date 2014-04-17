@@ -528,3 +528,27 @@ footer {
 }
 
 .breadcrumb {margin:0;}
+.div-reviewed{
+    background-color: rgb(204, 255, 204);
+}
+.div-deleted{
+    background-color: #f2dede;
+}
+
+.row-even {
+    background-color: #f9f9f9;
+}
+.row-deleted {
+    background-color: #f2dede;
+}
+.row-reviewed {
+    background-color: rgb(204, 255, 204);
+}
+.div-group{
+    float: left;
+    padding: 10px 40px;
+}
+.div-group div{
+    width: 50px;
+    height: 20px;
+}
