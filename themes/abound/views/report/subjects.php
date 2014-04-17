@@ -1,8 +1,4 @@
  <!-- 科目余额表 -->
- <?php
-
- Yii::import('ext.select2.Select2');
- ?>
 <style>
 .table-c table{border-right:1px solid #F00;border-top:1px solid #F00; cellpadding:0; cellspacing:0 }
 .table-c table th{border-left:1px solid #F00;border-bottom:1px solid #F00; cellpadding:0; cellspacing:0}

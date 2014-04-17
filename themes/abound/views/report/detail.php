@@ -1,11 +1,5 @@
  <!-- 明细表 -->
 
-<?php
-
-
-Yii::import('ext.select2.Select2');
-?>
-
 <style>
 .table-c table{border-right:1px solid #F00;border-top:1px solid #F00; cellpadding:0; cellspacing:0 }
 .table-c table th{border-left:1px solid #F00;border-bottom:1px solid #F00; cellpadding:0; cellspacing:0}
@@ -47,42 +41,48 @@ Yii::import('ext.select2.Select2');
         }
 
         $years = array(2013=>'2013',2014=>'2014');
+        $years = Transition::model()->hasData();
         $months = array(1=>'1',2=>'2',3=>'3',4=>'4',5=>'5',6=>'6',7=>'7',8=>'8',9=>'9',10=>'10',11=>'11',12=>'12');
 //        $subjects =
 
-        $this->widget('Select2', array(
-            'name' => 'year',
-            'value' => $year,
-            'data' => $years,
-        ));
         ?>
+        <select name="year" >
+            <?
+            foreach ($years as  $year){
+                echo "<option value=$year >$year</option>";
+            }
+            ?>
+        </select>
         年</h5>
     <h5>
-        <?php
-        $this->widget('Select2', array(
-            'name' => 'fm',
-            'value' => $fm,
-            'data' => $months,
-        ));
-        ?>
+        <select name="fm" >
+            <?
+            foreach ($months as $month){
+                echo "<option value=$month >$month</option>";
+            }
+            ?>
+        </select>
         月 至
-        <?php
-        $this->widget('Select2', array(
-            'name' => 'tm',
-            'value' => $tm,
-            'data' => $months,
-        ));
-        ?>月
+
+        <select name="tm" >
+            <?
+            foreach ($months as $value => $month){
+                echo "<option value=$value >$month</option>";
+            }
+            ?>
+        </select>月
     </h5>
     <h5>
         选择科目
-        <?php
-        $this->widget('Select2', array(
-            'name' => 'subject_id',
-            'value' => $subject_id,
-            'data' => Transition::model()->listSubjects(),
-        ));
-        ?>
+
+        <select name="subject_id" >
+            <?
+            $subjects = Transition::model()->listSubjects();
+            foreach ($subjects as $value => $subject){
+                echo "<option value=$value >$subject</option>";
+            }
+            ?>
+        </select>
     </h5>
 
     <input type="submit" value="查看报表" />
