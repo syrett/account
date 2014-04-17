@@ -1,7 +1,7 @@
 <?php
 $cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/js/checkinput.js', CClientScript::POS_HEAD);
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/js/subjects.js', CClientScript::POS_HEAD);
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/checkinput.js', CClientScript::POS_HEAD);
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/subjects.js', CClientScript::POS_HEAD);
 
 /* @var $this SubjectsController */
 /* @var $model Subjects */
@@ -24,16 +24,16 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'<i class="icon-plus-sign icon-white"></i> 添加科目',
+	array('label'=>'<span class="glyphicon glyphicon-plus-sign"></span> 添加科目',
 		  'url'=>array('create'),
-		  'linkOptions'=>array('class'=>'btn btn-success')
+		  'linkOptions'=>array('class'=>'btn btn-primary')
 		  ),
 );
 
 ?>
-<div class="row-fluid">
+<div class="row">
 	<h2>科目表管理</h2>
-	<p class="alert alert-success">提示：可以通过比较符号 (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>或者 <b>=</b>) 来进行搜索</p>
+	<div class="alert alert-success">提示：可以通过比较符号 (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>或者 <b>=</b>) 来进行搜索</div>
 	<?php $this->widget('zii.widgets.CMenu', array(
 		/*'type'=>'list',*/
 		'encodeLabel'=>false,
@@ -42,7 +42,7 @@ $this->menu=array(
 		));
 	?>
 </div>
-<div class="row-fluid">
+<div class="row">
     <!-- search-form -->
 
 <?php
@@ -51,6 +51,7 @@ $this->menu=array(
                 'dataProvider' => $dataProvider,
                 'filter' => $model,
                 'filterCssClass'=>'filter',
+                'itemsCssClass' => 'table table-striped table-hover',
 //                'filterSelector'=>'{filter}, #sbj_cat',
                 'columns' => array(
                     array(
@@ -66,11 +67,18 @@ $this->menu=array(
 //                    'sbj_table',
                     array(
                         'class' => 'CButtonColumn',
-                        'template' => '{update}',
+                            'buttons'=>array(
+                            		'update'=>array(
+                            			'options'=>array('class'=>'btn btn-default tip btn-xs','title'=>'编辑'),
+                            			'label'=>'<span class="glyphicon glyphicon-pencil"></span>',
+                            			'imageUrl'=>false,
+                            			),
+                            		),
+                            'template' => '<div class="btn-group">{update}</div>', 
+                            'deleteConfirmation' => '确定要删除该条记录？',
                     ),
                 ),
-                'itemsCssClass' => 'table table-striped table-hover',
-                'pager' => array('class'=>'CLinkPager', 'header' => ''),
+                'pager' => array('class'=>'CLinkPager', 'header' => '','firstPageLabel'=>'首页','lastPageLabel'=>'末页','nextPageLabel'=>'下一页','prevPageLabel'=>'上一页'),
             ));
 //            echo Select2::dropDownList('Subjects[sbj_cat]',$model->sbj_cat,array('1'=>'资产类','2'=>'负债类','3'=>'权益类','4'=>'收入类','5'=>'费用类',));
 //            echo Select2::dropDownList('sbj_cat',$model->attribute,CHtml::listData(Subjects::model()->findall(), 'sbj_cat', 'sbj_cat'),'');

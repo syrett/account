@@ -17,10 +17,12 @@
 .table-d table td{ background:#FFF}
 </style>
 
- <div>
-     <?php echo CHtml::beginForm(); ?>
-     <h5>日期:
-         <?php
+<div class="row">
+<?php echo CHtml::beginForm(); ?>
+	<div class="col-lg-6">
+		<div class="input-group">
+			<span class="input-group-addon">日期：</span>
+		<?php
          if(isset($_REQUEST['year']))
          {
              $year = $_REQUEST['year'];
@@ -47,8 +49,7 @@
              'data' => $years,
          ));
          ?>
-         年</h5>
-     <h5>
+         <span class="input-group-addon">年</span>
          <?php
          $months = array(1=>'1',2=>'2',3=>'3',4=>'4',5=>'5',6=>'6',7=>'7',8=>'8',9=>'9',10=>'10',11=>'11',12=>'12');
          $this->widget('Select2', array(
@@ -57,20 +58,24 @@
          'data' => $months,
          ));
          ?>
-         月 至
+         <span class="input-group-addon">月 至</span>
          <?php
 
          $this->widget('Select2', array(
              'name' => 'tm',
              'value' => $tm,
              'data' => $months,
+//             'formatResultCssClass'=> 'form-control',
          ));
-         ?>月
-     </h5>
-
-     <input type="submit" value="查看报表" />
-     <?php echo CHtml::endForm(); ?>
- </div>
+         ?>
+        <span class="input-group-addon">月</span>
+		<span class="input-group-btn">
+			<input class="btn btn-default" type="submit" value="查看报表" />
+		</span>
+		</div>
+	</div><!-- .col-lg-3 -->
+<?php echo CHtml::endForm(); ?>
+</div>
 
 <?php
  function echoItmes($items, $options=array("css"=>"table-c")){

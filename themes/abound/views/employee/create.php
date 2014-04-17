@@ -1,5 +1,5 @@
 <?php
-/* @var $this DepartmentController */
+/* @var $this EmployeeController */
 /* @var $dataProvider CActiveDataProvider */
 $this->pageTitle=Yii::app()->name . ' - 员工管理';
 $this->breadcrumbs=array(
@@ -8,14 +8,14 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'<i class="icon-list-alt"></i> 员工列表',
+	array('label'=>'<span class="glyphicon glyphicon-th-list"></span> 员工列表',
 		  'url'=>array('admin'),
-		  'linkOptions'=>array('class'=>'btn')
+		  'linkOptions'=>array('class'=>'btn btn-primary')
 		  ),	
 );
 ?>
-<div class="row-fluid">
-	<h2>添加新员工</h2>
+<div class="row">
+	<h2>添加员工</h2>
 		  <?php $this->widget('zii.widgets.CMenu', array(
 			/*'type'=>'list',*/
 			'encodeLabel'=>false,
@@ -24,12 +24,6 @@ $this->menu=array(
 			));
 			?>
 </div>
-<div class="row-fluid">
-            <?php
-            /* @var $this SubjectsController */
-            /* @var $model Subjects */
-
-            ?>
-
-            <?php $this->renderPartial('_form', array('model' => $model, 'department_array'=>$department_array)); ?>
+<div class="row">
+    <?php $this->renderPartial('_form', array('model' => $model, 'department_array'=>$department_array)); ?>
 </div>

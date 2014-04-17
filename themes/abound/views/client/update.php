@@ -1,4 +1,3 @@
-
 <?php
 /* @var $this SubjectController */
 /* @var $dataProvider CActiveDataProvider */
@@ -8,34 +7,28 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-		array('label'=>'<i class="icon-plus-sign icon-white"></i> 添加客户',
+		array('label'=>'<span class="glyphicon glyphicon-plus-sign"></span> 添加客户',
 		  'url'=>array('create'),
-		  'linkOptions'=>array('class'=>'btn btn-success')
-		  ),
-	array('label'=>'<i class="icon-list-alt icon-white"></i> 客户列表',
-		  'url'=>array('admin'),
 		  'linkOptions'=>array('class'=>'btn btn-primary')
+		  ),
+	array('label'=>'<span class="glyphicon glyphicon-th-list"></span> 客户列表',
+		  'url'=>array('admin'),
+		  'linkOptions'=>array('class'=>'btn btn-success')
 		  ),	
 );
 ?>
-<div class="row-fluid">
+<div class="row">
 	<h2>客户管理</h2>
-		  <?php $this->widget('zii.widgets.CMenu', array(
-			/*'type'=>'list',*/
-			'encodeLabel'=>false,
-			'items'=>$this->menu,
-			'htmlOptions'=>array('class'=>'nav nav-tabs'),
-			));
-			?>
+	<?php $this->widget('zii.widgets.CMenu', array(
+		/*'type'=>'list',*/
+		'encodeLabel'=>false,
+		'items'=>$this->menu,
+		'htmlOptions'=>array('class'=>'nav nav-tabs'),
+		));
+		?>
 </div>
 
-<div class="row-fluid">
-            <?php
-            /* @var $this SubjectsController */
-            /* @var $model Subjects */
-
-            ?>
-
-            <?php $this->renderPartial('_form', array('model' => $model)); ?>
+<div class="row">
+    <?php $this->renderPartial('_form', array('model' => $model)); ?>
 </div>
 

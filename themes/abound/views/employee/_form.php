@@ -7,25 +7,39 @@ $form=$this->beginWidget('CActiveForm', array(
 	// There is a call to performAjaxValidation() commented in generated controller code.
 	// See class documentation of CActiveForm for details on this.
 	'enableAjaxValidation'=>false,
+	'htmlOptions'=>array('class'=>'form-horizontal',),
 ));
 ?>
-<div class="row-fluid">
-	<div class="span12 well">
-		<p class="note"><small>带 <span class="required">*</span> 的必填.</small></p>
-		
-		<?php echo $form->labelEx($model,'name'); ?>
-		<?php echo $form->textField($model,'name',array('size'=>50,'maxlength'=>100)); ?>
+	<div class="alert alert-info">带 <span class="required">*</span> 的必填。</div>
+		<div class="form-group">		
+			<?php echo $form->labelEx($model,'name',array('class'=>'col-sm-2 control-label')); ?>
+			<div class="col-sm-10">
+				<?php echo $form->textField($model,'name',array('class'=>'form-control')); ?>
+			</div>
 		<?php echo $form->error($model,'name'); ?>
-
-		<?php echo $form->labelEx($model,'department_id'); ?>
-        <?php echo $form->dropDownList($model,'department_id', $department_array); ?>
-		<?php echo $form->error($model,'department_id'); ?>
-
-		<?php echo $form->labelEx($model,'memo'); ?>
-		<?php echo $form->textArea($model,'memo',array('rows'=> 5, 'cols'=>60)); ?>
-		<?php echo $form->error($model,'memo'); ?>
+		</div>
+		
+		<div class="form-group">		
+			<?php echo $form->labelEx($model,'department_id',array('class'=>'col-sm-2 control-label')); ?>
+			<div class="col-sm-10">
+        		<?php echo $form->dropDownList($model,'department_id', $department_array,array('class'=>'form-control')); ?>
+			</div>
+			<?php echo $form->error($model,'department_id'); ?>
+		</div>
+		
+		<div class="form-group">		
+			<?php echo $form->labelEx($model,'memo',array('class'=>'col-sm-2 control-label')); ?>
+			<div class="col-sm-10">
+				<?php echo $form->textArea($model,'memo',array('class'=>'form-control')); ?>
+			</div>
+			<?php echo $form->error($model,'memo'); ?>
+		</div>
 	</div>
-	<?php echo CHtml::submitButton($model->isNewRecord ? '添加' : '保存', array('class'=>'btn btn-primary',)); ?>
-	<?php echo BtnBack(); ?>
-</div>
+		<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+			<?php echo CHtml::submitButton($model->isNewRecord ? '添加' : '保存', array('class'=>'btn btn-primary',)); ?>
+			<?php echo BtnBack(); ?>
+		</div>
+		</div>
+
 <?php $this->endWidget(); ?>

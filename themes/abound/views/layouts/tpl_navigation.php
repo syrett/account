@@ -1,18 +1,19 @@
-<div class="navbar navbar-inverse navbar-fixed-top">
-	<div class="navbar-inner">
-    <div class="container">
-        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+<div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+      <!-- Brand and toggle get grouped for better mobile display -->
+ 	  <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#account-navbar-collapse">
+        	<span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
-          </a>
-     
-          <!-- Be sure to leave the brand out there if you want it shown -->
-          <a class="brand" href="<?php echo Yii::app()->homeUrl ?>">我嘉 <small>财务管理系统</small></a>
-          
-          <div class="nav-collapse">
+        </button>
+        <a class="navbar-brand" href="<?php echo Yii::app()->homeUrl ?>">我嘉 <small>财务管理系统</small></a>
+       </div>
+		<!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="navbar-collapse collapse" id="account-navbar-collapse">
 			<?php $this->widget('zii.widgets.CMenu',array(
-                    'htmlOptions'=>array('class'=>'pull-right nav'),
+                    'htmlOptions'=>array('class'=>'nav navbar-nav navbar-right'),
                     'submenuHtmlOptions'=>array('class'=>'dropdown-menu'),
                     'encodeLabel'=>false,
                     'items'=>array(
@@ -91,29 +92,25 @@
                 )); ?>
     	</div>
     </div>
-	</div>
 </div>
-
-<div class="subnav navbar navbar-fixed-top">
-    <div class="navbar-inner">
+</div><!-- nav -->
+<div class="navbar navbar-default subnav navbar-fixed-top">
     	<div class="container">
-
-			<div class="pull-left">
+			<div class="navbar-left">
 			<?php
 			if (isset($this->breadcrumbs)): 
 			$this->widget('zii.widgets.CBreadcrumbs', array(
 				'links'=>$this->breadcrumbs,
 				'tagName'=>'ol',
 				'activeLinkTemplate'=>'<li class="active"><a href="{url}">{label}</a></li>',
-				'inactiveLinkTemplate'=>'<li>{label}</li>',
 				'homeLink'=>'<li><a href="'.Yii::app()->homeUrl.'">首页</a></li>',
-				'htmlOptions'=>array('class'=>'breadcrumb')
+				'htmlOptions'=>array('class'=>'breadcrumb'),
 				)
 			); 
 			endif
 			?>
 			</div><!-- breadcrumbs Modified by Michael ZHANG-->
-        	<div class="style-switcher pull-right">
+        	<div class="style-switcher navbar-right">
                 <a href="javascript:chooseStyle('none', 60)" checked="checked"><span class="style" style="background-color:#0088CC;"></span></a>
                 <a href="javascript:chooseStyle('style2', 60)"><span class="style" style="background-color:#7c5706;"></span></a>
                 <a href="javascript:chooseStyle('style3', 60)"><span class="style" style="background-color:#468847;"></span></a>
@@ -129,5 +126,4 @@
            
            </form> -->
     	</div><!-- container -->
-    </div><!-- navbar-inner -->
-</div><!-- subnav -->
+</div>

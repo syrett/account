@@ -8,13 +8,13 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'<i class="icon-list-alt"></i> 项目列表',
+	array('label'=>'<span class="glyphicon glyphicon-th-list"></span> 项目列表',
 		  'url'=>array('admin'),
-		  'linkOptions'=>array('class'=>'btn')
+		  'linkOptions'=>array('class'=>'btn btn-primary')
 		  ),	
 );
 ?>
-<div class="row-fluid">
+<div class="row">
 	<h2>项目管理</h2>
 		  <?php $this->widget('zii.widgets.CMenu', array(
 			/*'type'=>'list',*/
@@ -24,12 +24,6 @@ $this->menu=array(
 			));
 			?>
 </div>
-<div class="row-fluid">
-            <?php
-            /* @var $this SubjectsController */
-            /* @var $model Subjects */
-
-            ?>
-
-            <?php $this->renderPartial('_form', array('model' => $model)); ?>
+<div class="row">
+    <?php $this->renderPartial('_form', array('model' => $model)); ?>
 </div>

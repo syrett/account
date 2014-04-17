@@ -8,37 +8,55 @@ $form=$this->beginWidget('CActiveForm', array(
 	// There is a call to performAjaxValidation() commented in generated controller code.
 	// See class documentation of CActiveForm for details on this.
 	'enableAjaxValidation'=>false,
+	'htmlOptions'=>array('class'=>'form-horizontal',),
 ));
 
 ?>
-<div class="row-fluid">
-	<div class="span12 well">
-	<div class="span6">
-		<p class="note"><small>带 <span class="required">*</span> 的必填.</small></p>
-		<?php echo $form->labelEx($model,'company'); ?>
-		<?php echo $form->textField($model,'company',array('size'=>60,'maxlength'=>200)); ?>
-		<?php echo $form->error($model,'company'); ?>
+	<div class="alert alert-info">带 <span class="required">*</span> 的必填。</div>
+		<div class="form-group">
+			<?php echo $form->labelEx($model,'company',array('class'=>'col-sm-2 control-label')); ?>
+			<div class="col-sm-10">
+				<?php echo $form->textField($model,'company',array('class'=>'form-control')); ?>
+			</div>
+			<?php echo $form->error($model,'company'); ?>
+		</div>
 
-		<?php echo $form->labelEx($model,'vat'); ?>
-		<?php echo $form->textField($model,'vat',array('size'=>45,'maxlength'=>45)); ?>
-		<?php echo $form->error($model,'vat'); ?>
+		<div class="form-group">
+			<?php echo $form->labelEx($model,'vat',array('class'=>'col-sm-2 control-label')); ?>
+			<div class="col-sm-10">
+				<?php echo $form->textField($model,'vat',array('class'=>'form-control')); ?>
+			</div>
+			<?php echo $form->error($model,'vat'); ?>
+		</div>
 
-		<?php echo $form->labelEx($model,'phone'); ?>
-		<?php echo $form->textField($model,'phone',array('size'=>20,'maxlength'=>20)); ?>
-		<?php echo $form->error($model,'phone'); ?>
-	</div>
-	<div class="span6">
-		<?php echo $form->labelEx($model,'add'); ?>
-		<?php echo $form->textField($model,'add',array('size'=>60,'maxlength'=>100)); ?>
-		<?php echo $form->error($model,'add'); ?>
+		<div class="form-group">
+			<?php echo $form->labelEx($model,'phone',array('class'=>'col-sm-2 control-label')); ?>
+			<div class="col-sm-10">
+				<?php echo $form->textField($model,'phone',array('class'=>'form-control')); ?>
+			</div>
+			<?php echo $form->error($model,'phone'); ?>
+		</div>
 
-		<?php echo $form->labelEx($model,'memo'); ?>
-		<?php echo $form->textArea($model,'memo',array('rows'=>5,'cols'=>60)); ?>
-		<?php echo $form->error($model,'memo'); ?>
-	</div>
-	</div>
-	<?php echo CHtml::submitButton($model->isNewRecord ? '添加' : '保存', array('class'=>'btn btn-primary',)); ?>
-	<?php echo BtnBack(); ?>
-</div>
+		<div class="form-group">
+			<?php echo $form->labelEx($model,'add',array('class'=>'col-sm-2 control-label')); ?>
+			<div class="col-sm-10">
+				<?php echo $form->textField($model,'add',array('class'=>'form-control')); ?>
+			</div>
+			<?php echo $form->error($model,'add'); ?>
+		</div>
+
+		<div class="form-group">
+			<?php echo $form->labelEx($model,'memo',array('class'=>'col-sm-2 control-label')); ?>
+			<div class="col-sm-10">
+				<?php echo $form->textArea($model,'memo',array('class'=>'form-control')); ?>
+			</div>
+			<?php echo $form->error($model,'memo'); ?>
+		</div>
+		<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+			<?php echo CHtml::submitButton($model->isNewRecord ? '添加' : '保存', array('class'=>'btn btn-primary',)); ?>
+			<?php echo BtnBack(); ?>
+		</div>
+		</div>
 
 <?php $this->endWidget(); ?>

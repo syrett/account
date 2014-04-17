@@ -1,29 +1,27 @@
-<div class="panel panel-default voucher form">
+<?php
+$this->pageTitle=Yii::app()->name . ' - 会计凭证管理';
+$this->breadcrumbs=array(
+	'凭证管理',
+	'添加'
+);
 
-    <!-- Default panel contents -->
-    <div class="panel-heading">凭证录入
-        <div class="actions">
-
-            <?
-            /* @var $this TransitionController */
-            /* @var $model Transition */
-            $this->beginWidget('zii.widgets.CPortlet', array(
-                'title'=>'',
-            ));
-            $this->widget('zii.widgets.CMenu', array(
-                'items'=>array(
-                    array('label' => '凭证管理', 'url' => array('admin'),),
-                ),
-                'htmlOptions'=>array('class'=>'operations', 'style'=>'list-style: none',),
-            ));
-            $this->endWidget();
-            ?>
+$this->menu=array(
+	array('label'=>'<span class="glyphicon glyphicon-th-list"></span> 全部凭证列表',
+		  'url'=>array('admin'),
+		  'linkOptions'=>array('class'=>'btn btn-primary')
+		  ),	
+);
+?>
+<div class="row-fluid">
+	<h2>凭证管理</h2>
+		  <?php $this->widget('zii.widgets.CMenu', array(
+			/*'type'=>'list',*/
+			'encodeLabel'=>false,
+			'items'=>$this->menu,
+			'htmlOptions'=>array('class'=>'nav nav-tabs'),
+			));
+			?>
 </div>
-        </div>
-    <div class="panel-body v-title">
-
+<div class="row-fluid">
         <?php $this->renderPartial('_form', array('model' => $model)); ?>
-
-    </div>
-
 </div>

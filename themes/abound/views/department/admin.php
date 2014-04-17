@@ -7,13 +7,13 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'<i class="icon-plus-sign"></i> 添加部门',
+	array('label'=>'<span class="glyphicon glyphicon-plus-sign"></span> 添加部门',
 		  'url'=>array('create'),
-		  'linkOptions'=>array('class'=>'btn')
+		  'linkOptions'=>array('class'=>'btn btn-primary')
 		  ),
 );
 ?>
-<div class="row-fluid">
+<div class="row">
 	<h2>部门管理</h2>
 		  <?php $this->widget('zii.widgets.CMenu', array(
 			/*'type'=>'list',*/
@@ -24,19 +24,32 @@ $this->menu=array(
 			?>
 </div>
 
-<div class="panel panel-default voucher">
+<div class="row">
 
 <?php
 $this->widget('zii.widgets.grid.CGridView', array(
         'id'=>'department-grid',
         'dataProvider'=>$model->search(),
-        'itemsCssClass' => 'table table-striped table-bordered table-hover',
+        'itemsCssClass' => 'table table-striped table-hover',
         'columns'=>array(
             'name',
             'memo',
              array(
                 'class'=>'CButtonColumn',
-                'template' => '{update} {delete}', 
+                            'buttons'=>array(
+                            		'update'=>array(
+                            			'options'=>array('class'=>'btn btn-default btn-xs tip','title'=>'编辑'),
+                            			'label'=>'<span class="glyphicon glyphicon-pencil"></span>',
+                            			'imageUrl'=>false,
+                            			),
+                            		'delete'=>array(
+                            			'options'=>array('class'=>'btn btn-default tip btn-xs delete','title'=>'删除'),
+                            			'label'=>'<span class="glyphicon glyphicon-trash"></span>',
+                            			'imageUrl'=>false,
+                            			),
+                            		),
+                            'template' => '<div class="btn-group">{update} {delete}</div>', 
+                            'deleteConfirmation' => '确定要删除该条记录？',
              ),
         ),
    )); ?>

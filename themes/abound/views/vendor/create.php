@@ -1,5 +1,5 @@
 <?php
-/* @var $this DepartmentController */
+/* @var $this VendorController */
 /* @var $dataProvider CActiveDataProvider */
 $this->pageTitle=Yii::app()->name . ' - 供应商管理';
 $this->breadcrumbs=array(
@@ -8,13 +8,13 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'<i class="icon-list-alt icon-white"></i> 供应商列表',
+	array('label'=>'<span class="glyphicon glyphicon-th-list"></span> 供应商列表',
 		  'url'=>array('admin'),
 		  'linkOptions'=>array('class'=>'btn btn-primary')
 		  ),	
 );
 ?>
-<div class="row-fluid">
+<div class="row">
 	<h2>供应商管理</h2>
 		  <?php $this->widget('zii.widgets.CMenu', array(
 			/*'type'=>'list',*/
@@ -24,7 +24,7 @@ $this->menu=array(
 			));
 			?>
 </div>
-<div class="row-fluid">
+<div class="row">
             <?php
             /* @var $this SubjectsController */
             /* @var $model Subjects */

@@ -7,17 +7,17 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-		array('label'=>'<i class="icon-plus-sign"></i> 添加员工',
+		array('label'=>'<span class="glyphicon glyphicon-plus-sign"></span> 添加员工',
 		  'url'=>array('create'),
-		  'linkOptions'=>array('class'=>'btn')
+		  'linkOptions'=>array('class'=>'btn btn-primary')
 		  ),
-	array('label'=>'<i class="icon-list-alt"></i> 员工列表',
+	array('label'=>'<span class="glyphicon glyphicon-th-list"></span> 员工列表',
 		  'url'=>array('admin'),
-		  'linkOptions'=>array('class'=>'btn')
+		  'linkOptions'=>array('class'=>'btn btn-success')
 		  ),	
 );
 ?>
-<div class="row-fluid">
+<div class="row">
 	<h2>员工管理</h2>
 		  <?php $this->widget('zii.widgets.CMenu', array(
 			/*'type'=>'list',*/
@@ -28,12 +28,6 @@ $this->menu=array(
 			?>
 </div>
 
-<div class="row-fluid">
-            <?php
-            /* @var $this SubjectsController */
-            /* @var $model Subjects */
-
-            ?>
-
+<div class="row">
             <?php $this->renderPartial('_form', array('model' => $model,'department_array'=>$department_array)); ?>
 </div>

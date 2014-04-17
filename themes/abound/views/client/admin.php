@@ -8,15 +8,15 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'<i class="icon-plus-sign icon-white"></i> 添加客户',
+	array('label'=>'<span class="glyphicon glyphicon-plus-sign"></span> 添加客户',
 		  'url'=>array('create'),
-		  'linkOptions'=>array('class'=>'btn btn-success')
+		  'linkOptions'=>array('class'=>'btn btn-primary')
 		  ),
 );
 
 ?>
 <div class="row-fluid">
-	<h2>科目表管理</h2>
+	<h2>客户管理</h2>
 	<?php $this->widget('zii.widgets.CMenu', array(
 		/*'type'=>'list',*/
 		'encodeLabel'=>false,
@@ -38,9 +38,24 @@ $this->menu=array(
                       'memo',
                       array(
                             'class'=>'CButtonColumn',
-                            'template' => '{update} {delete}', 
+                            'buttons'=>array(
+                            		'update'=>array(
+                            			'options'=>array('class'=>'btn btn-default tip btn-xs','title'=>'编辑'),
+                            			'label'=>'<span class="glyphicon glyphicon-pencil"></span>',
+                            			'imageUrl'=>false,
+                            			),
+                            		'delete'=>array(
+                            			'options'=>array('class'=>'btn btn-default tip btn-xs delete','title'=>'删除'),
+                            			'label'=>'<span class="glyphicon glyphicon-trash"></span>',
+                            			'imageUrl'=>false,
+                            			),
+                            		),
+                            'template' => '<div class="btn-group">{update} {delete}</div>', 
+                            'deleteConfirmation' => '确定要删除该条记录？',
                             ),
-                ),
+    ),
+    'pager' => array('class'=>'CLinkPager', 'header' => '','firstPageLabel'=>'首页','lastPageLabel'=>'末页','nextPageLabel'=>'下一页','prevPageLabel'=>'上一页'),
+
 ));
 ?>
 </div>
