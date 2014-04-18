@@ -14,62 +14,68 @@ $('.search-form form').submit(function(){
 	return false;
 });
 ");
+$this->menu=array(
+	array('label'=>'<span class="glyphicon glyphicon-plus-sign"></span> 凭证录入',
+		  'url'=>array('create'),
+		  'linkOptions'=>array('class'=>'btn btn-primary')
+		  ),
+);
 
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/bootstrap-datepicker.js', CClientScript::POS_HEAD);
 $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/datepicker.css');
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/_search.js', CClientScript::POS_HEAD);
 ?>
-<div class="panel panel-default voucher form">
-
-    <!-- Default panel contents -->
-    <div class="panel-heading">凭证管理
-        <div class="actions"><?
-
-            $this->beginWidget('zii.widgets.CPortlet', array(
-                'title'=>'',
-            ));
-            $this->widget('zii.widgets.CMenu', array(
-                'items'=>array(
-                    array('label' => '凭证录入', 'url' => array('create')),
-                ),
-                'htmlOptions'=>array('class'=>'operations', 'style'=>'list-style: none',),
-            ));
-            $this->endWidget();
-
-            ?>
+<div class="row">
+	<h2>凭证管理</h2>
+	<?php $this->widget('zii.widgets.CMenu', array(
+		/*'type'=>'list',*/
+		'encodeLabel'=>false,
+		'items'=>$this->menu,
+		'htmlOptions'=>array('class'=>'nav nav-pills'),
+		));
+	?>
 </div>
+<p>&nbsp;</p>
+<div class="panel panel-default voucher form">
+    <!-- Default panel contents -->
+    <div class="panel-heading">
+	<?php echo CHtml::beginForm(); ?>
+		<div class="col-md-4">
+			<div class="input-group">
+			<span class="input-group-addon">开始日期：</span>
+			<?php echo CHtml::textField('s_day', isset($_REQUEST['s_day'])?$_REQUEST['s_day']:"",array('class' => 'form-control',)); ?>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="input-group">
+			<span class="input-group-addon">结束日期：</span>
+			<?php echo CHtml::textField('e_day', isset($_REQUEST['e_day'])?$_REQUEST['e_day']:"",array('class' => 'form-control',)); ?>
+			</div>
+		</div>
+		<?php
+			echo CHtml::submitButton('查找',array('class' => 'btn btn-primary',));
+			echo CHtml::endForm();
+		?>
+	<!-- search-form -->
     </div>
-    <div class="row">
-            <?php echo CHtml::beginForm(); ?>
-        <div class="search-form" id="tran_search">
-            <div class="col-md-4">
-                <h5>
-                    开始日期:<? echo CHtml::textField('s_day', isset($_REQUEST['s_day'])?$_REQUEST['s_day']:""); ?>
-                </h5>
-            </div>
-            <div class="col-md-4">
-                <h5>
-                    结束日期:<? echo CHtml::textField('e_day', isset($_REQUEST['e_day'])?$_REQUEST['e_day']:""); ?>
-                </h5>
-            </div>
+    <div class="panel-body">
+        <div class="div-group">
+            <div class="div-reviewed">&nbsp;</div>审核通过
         </div>
-        <?
-            echo CHtml::submitButton('查找',array('class' => 'btn btn-primary',));
-            echo CHtml::endForm();
-        ?>
-        <!-- search-form -->
+        <div class="div-group">
+            <div class="div-deleted">&nbsp;</div>删除凭证
+        </div>
     </div>
-    <div class="panel-body v-title">
-
         <?php
 
         $this->widget('zii.widgets.grid.CGridView', array(
-            'id' => 'transition-grid',
+//            'id' => 'transition-grid',
             'dataProvider' => $model->search(),
             'rowCssClass'=>array('row-odd','row-even'),
             'filter' => $model,
             'rowCssClassExpression' =>'$data->getClass($row,$data->entry_reviewed,$data->entry_deleted)',
+            'pager' => array('class'=>'CLinkPager', 'header' => '','firstPageLabel'=>'首页','lastPageLabel'=>'末页','nextPageLabel'=>'下一页','prevPageLabel'=>'上一页'),
             'columns' => array(
                 array(
                     'name'=>'entry_number',
@@ -102,18 +108,6 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/_search.js', CC
                     'template' => '<div class="btn-group">{update}</div>',
                 ),
             ),
-            'htmlOptions' => array('class'=> 'table-striped')
+            'itemsCssClass' => 'table table-bordered',
         )); ?>
-        <div class="clear">&nbsp;</div>
-        <div class="clear">&nbsp;</div>
-        <div class="clear">&nbsp;</div>
-        <div class="clear">&nbsp;</div>
-        <div class="div-group">
-            <div class="div-reviewed">&nbsp;</div>审核通过
-        </div>
-        <div class="div-group">
-            <div class="div-deleted">&nbsp;</div>删除凭证
-        </div>
-    </div>
-
 </div>

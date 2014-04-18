@@ -20,7 +20,7 @@ $this->menu=array(
 			/*'type'=>'list',*/
 			'encodeLabel'=>false,
 			'items'=>$this->menu,
-			'htmlOptions'=>array('class'=>'nav nav-tabs'),
+			'htmlOptions'=>array('class'=>'nav nav-pills navbar-right'),
 			));
 			?>
 </div>

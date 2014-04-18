@@ -10,8 +10,8 @@ $this->breadcrumbs=array(
   <h1>Graphs &amp; Charts - <small>Flot and Sparkline</small></h1>
 </div>
 
-<div class="row-fluid">
-  <div class="span9">
+<div class="row">
+  <div class="col-sm-9">
   	<?php
 		$this->beginWidget('zii.widgets.CPortlet', array(
 			'title'=>"<i class='icon-user'></i> Live Visitors",
@@ -53,8 +53,8 @@ $this->breadcrumbs=array(
   </div>
 </div>
 
-<div class="row-fluid">
-  <div class="span12">
+<div class="row">
+  <div class="col-sm-12">
   	<?php
 		$this->beginWidget('zii.widgets.CPortlet', array(
 			'title'=>"<i class='icon-user'></i> Total Visitors",
@@ -67,8 +67,8 @@ $this->breadcrumbs=array(
   </div>
 </div>
 
-<div class="row-fluid">
-  <div class="span6">
+<div class="row">
+  <div class="col-sm-6">
   	<?php
 		$this->beginWidget('zii.widgets.CPortlet', array(
 			'title'=>"<i class='icon-repeat'></i> Bar chart",
@@ -78,7 +78,7 @@ $this->breadcrumbs=array(
   		<div class="horizontal-bars-chart" style="height: 250px;width:100%;margin-top:15px; margin-bottom:15px;"></div>
 	<?php $this->endWidget();?>
   </div>
-  <div class="span6">
+  <div class="col-sm-6">
   	<?php
 		$this->beginWidget('zii.widgets.CPortlet', array(
 			'title'=>"<i class='icon-share'></i> Returning Visitors",
@@ -91,8 +91,8 @@ $this->breadcrumbs=array(
   </div>
 </div>
 
-<div class="row-fluid">
-  <div class="span6">
+<div class="row">
+  <div class="col-sm-6">
   	<?php
 		$this->beginWidget('zii.widgets.CPortlet', array(
 			'title'=>"<i class='icon-pencil'></i> Data Usage",
@@ -102,7 +102,7 @@ $this->breadcrumbs=array(
   		<div class="stacked-bars-chart" style="height: 250px;width:100%;margin-top:15px; margin-bottom:15px;"></div>
 	<?php $this->endWidget();?>
   </div>
-  <div class="span6">
+  <div class="col-sm-6">
   	<?php
 		$this->beginWidget('zii.widgets.CPortlet', array(
 			'title'=>"<i class='icon-arrow-down'></i> Data Usage Monthly",
@@ -115,8 +115,8 @@ $this->breadcrumbs=array(
   </div>
 </div>
 
-<div class="row-fluid">
-  <div class="span6">
+<div class="row">
+  <div class="col-sm-6">
   	<?php
 		$this->beginWidget('zii.widgets.CPortlet', array(
 			'title'=>"<i class='icon-tint'></i> Pie Charts",
@@ -126,7 +126,7 @@ $this->breadcrumbs=array(
   		<div class="simple-pie" style="height: 250px;width:100%;margin-top:15px; margin-bottom:15px;"></div>
 	<?php $this->endWidget();?>
   </div>
-  <div class="span6">
+  <div class="col-sm-6">
   	<?php
 		$this->beginWidget('zii.widgets.CPortlet', array(
 			'title'=>"<i class='icon-adjust'></i> Location Chart",
@@ -139,8 +139,8 @@ $this->breadcrumbs=array(
   </div>
 </div>
 
-<div class="row-fluid">
-  <div class="span6">
+<div class="row">
+  <div class="col-sm-6">
   	<?php
 		$this->beginWidget('zii.widgets.CPortlet', array(
 			'title'=>"<i class='icon-check'></i> Other chart",
@@ -150,7 +150,7 @@ $this->breadcrumbs=array(
   		<div class="simple-chart" style="height: 250px;width:100%;margin-top:15px; margin-bottom:15px;"></div>
 	<?php $this->endWidget();?>
   </div>
-  <div class="span6">
+  <div class="col-sm-6">
   	<?php
 		$this->beginWidget('zii.widgets.CPortlet', array(
 			'title'=>"<i class='icon-info-sign'></i> Pie chart",

@@ -3,6 +3,7 @@
 /* @var $model Transition */
 /* @var $form CActiveForm */
 /* @var $action string */
+require_once(dirname(__FILE__).'/../viewfunctions.php');
 
 Yii::app()->clientScript->registerCoreScript('jquery');
 Yii::import('ext.select2.Select2');
@@ -41,27 +42,29 @@ $tranDate = $command->queryRow(); // execute a query SQL
     }
 
 ?>
-    <div class="row">
+	<div class="panel-body">
         <div class="col-md-4">
-            <h5>
-                凭证号:<input type="text" id='tranNumber' readonly value="<?
+            <div class="input-group">
+            	<span class="input-group-addon">凭证号：</span>
+                <input type="text" name="transition_id" class="form-control" value="<?php
                 echo (isset($_REQUEST[0]['id']) && $_REQUEST[0]['id'] != "")
                     ? $model[0]->entry_num_prefix . substr(strval($model[0]->entry_num + 10000), 1, 4)
-                    : $this->tranNumber()
-                ?>">
-
-            </h5>
+                    : $this->tranNumber();
+                ?>" readonly />
+            </div>
         </div>
-        <div class="col-md-4" id="transition_date"><h5>日期:
-                <input type="text" name="entry_date" class="span2" value="<?
+        <div class="col-md-4" id="transition_date">
+        	<div class="input-group">
+        		<span class="input-group-addon">日期：</span>
+                <input type="text" name="entry_date" class="form-control" value="<?
                 echo isset($model[0]->entry_num_prefix)
                     ?date('Ymd', strtotime($model[0]->entry_date))
-                    : date('Ymd');?>" id="dp1" readonly/>
-            </h5>
-            <input type="hidden" id="entry_num_pre"
-                   value="<? echo Yii::app()->createAbsoluteUrl("transition/GetTranSuffix") ?>"/></div>
-        <div class="col-md-4"><h5></h5></div>
-    </div>
+                    : date('Ymd');?>" id="dp1" readonly />
+            </div>
+ 	       <input type="hidden" id="entry_num_pre"
+                   value="<? echo Yii::app()->createAbsoluteUrl("transition/GetTranSuffix") ?>" />
+        </div>
+   </div>
     <!-- Table -->
     <table class="table">
         <tr>
@@ -114,82 +117,73 @@ $tranDate = $command->queryRow(); // execute a query SQL
 
         <tr>
             <td>
-                <div>
-                    <div class="row">
-                        <?php
-                        if(isset($_REQUEST['id']) && $model[0]->entry_memo!='结转凭证' && $model[0]->entry_reviewed!=1 && $model[0]->entry_closing!=1)
-                        echo CHtml::button(($model[0]->entry_deleted==0)?'删除凭证':'恢复凭证', array(
-                            'submit' => array('transition/delete', array('id'=>$_REQUEST['id'],'action'=>$model[0]->entry_deleted)),
-                                'style' => 'float: left',
-                                'name' => 'btnDelete',
-                                'class' => 'btn btn-danger',
-                                'confirm' => ($model[0]->entry_deleted==1)?'确定要恢复该凭证？':'确定要删除该凭证下所有条目？',
-                            )
-                        );
+			<div class="row">
+				<?php
+				if(isset($_REQUEST['id']) && $model[0]->entry_memo!='结转凭证' && $model[0]->entry_reviewed!=1 && $model[0]->entry_closing!=1)
+				echo CHtml::button(($model[0]->entry_deleted==0)?'删除凭证':'恢复凭证', array(
+					'submit' => array('transition/delete', array('id'=>$_REQUEST['id'],'action'=>$model[0]->entry_deleted)),
+						'style' => 'float: left',
+						'name' => 'btnDelete',
+						'class' => 'btn btn-danger',
+						'confirm' => ($model[0]->entry_deleted==1)?'确定要恢复该凭证？':'确定要删除该凭证下所有条目？',
+					)
+				);
 
-                        echo CHtml::button('继续添加', array(
-                                'style' => 'float: right',
-                                'name' => 'btnAdd',
-                                'class' => 'btn btn-info',
-                                'onclick' => "addRow()",
-                            )
-                        );
-                        ?>
-                    </div>
-                    <div class="row table-buttom">
-                        <?
-                            if($model[0]->entry_reviewed==1)
-                            {
-                                $user = User::model()->findByPk(array('id'=>$model[0]->entry_reviewer));
-                                echo '审核人员:'. $user->email;
-                            }
-                        ?>
-                        <!--无需选择审核人员<strong>审核人员</strong>
-                        <?
-                        $data = $this->getUserlist();
+				echo CHtml::button('继续添加单项', array(
+//                              'style' => 'float: right',
+						'name' => 'btnAdd',
+						'class' => 'btn btn-info',
+						'onclick' => "addRow()",
+					)
+				);
+				?>
+			</div>
+			<div class="row table-buttom">
+				<?
+					if($model[0]->entry_reviewed==1)
+					{
+						$user = User::model()->findByPk(array('id'=>$model[0]->entry_reviewer));
+						echo '审核人员:'. $user->email;
+					}
+				?>
+				<!--无需选择审核人员<strong>审核人员</strong>
+				<?
+				$data = $this->getUserlist();
 //                        $data = $this->getUserlist('id!=:userid',array(":userid"=>Yii::app()->user->id));
-                        $arr = array();
-                        foreach ($data as $row) {
-                            $arr += array($row['id']=> $row['email']);
-                        };
+				$arr = array();
+				foreach ($data as $row) {
+					$arr += array($row['id']=> $row['email']);
+				};
 //                        echo CHtml::activeDropDownList($model[0], 'entry_reviewer',$arr);
-                        $this->widget('Select2', array(
-                            'name' => 'entry_reviewer',
-                            'value' => $model[0]->entry_reviewer,
-                            'data' => $arr,
-                        ));
-                        echo $form->error($item, 'entry_reviewer');
-                        ?>-->
-                    </div>
-                    <div class="form-group buttons text-center">
-                        <?php
-                            echo $form->error($item,'entry_amount',array('id'=>'entry_amount_msg'));
-                        if($model[0]->hasErrors()){
-                            echo CHtml::errorSummary($model[0]);
-                        }
-                            if(isset($_REQUEST['id'])&&accessReview($_REQUEST['id'])&&accessSettle($_REQUEST['id']))
-                            echo CHtml::button(($model[0]->entry_reviewed==1)?'取消审核':'审核通过', array(
-                                    'submit' => array('transition/review', array('id'=>$_REQUEST['id'], 'action'=>$model[0]->entry_reviewed)),
-                                    'name' => 'btnReview',
-                                    'class' => 'btn btn-danger',
-                                    'confirm' => ($model[0]->entry_reviewed==1)?'确认取消审核？':'确认通过审核？',
-                                )
-                            );
-                            if($model[0]->entry_reviewed == 0){
-                            echo CHtml::submitButton($item->isNewRecord ? '添加' : '保存', array('class' => 'btn btn-primary',));  
-}
-
-
-                            echo CHtml::button('返回', array(
-                                    'name' => 'btnBack',
-                                    'class' => 'btn btn-warning',
-                                    'onclick' => "history.go(-1)",
-                                )
-                            );
-                        ?>
-                    </div>
-                </div>
-                <!-- form -->
+				$this->widget('Select2', array(
+					'name' => 'entry_reviewer',
+					'value' => $model[0]->entry_reviewer,
+					'data' => $arr,
+				));
+				echo $form->error($item, 'entry_reviewer');
+				?>-->
+			</div>
+			<div class="form-group buttons text-center">
+				<?php
+					echo $form->error($item,'entry_amount',array('id'=>'entry_amount_msg'));
+				if($model[0]->hasErrors()){
+					echo CHtml::errorSummary($model[0]);
+				}
+				if(isset($_REQUEST['id'])&&accessReview($_REQUEST['id'])&&accessSettle($_REQUEST['id']))
+				echo CHtml::button(($model[0]->entry_reviewed==1)?'取消审核':'审核通过', array(
+						'submit' => array('transition/review', array('id'=>$_REQUEST['id'], 'action'=>$model[0]->entry_reviewed)),
+						'name' => 'btnReview',
+						'class' => 'btn btn-danger',
+						'confirm' => ($model[0]->entry_reviewed==1)?'确认取消审核？':'确认通过审核？',
+					)
+				);
+				if($model[0]->entry_reviewed == 0){
+					echo CHtml::submitButton($item->isNewRecord ? '添加新凭证' : '保存', array('class' => 'btn btn-primary',));  
+				}
+				echo BtnBack();
+				?>
+			</div>
+		<!-- form -->
             </td>
         </tr>
     </table>

@@ -12,40 +12,48 @@ $this->breadcrumbs=array(
 	<h1>登录</h1>
 </div>
 <div class="row-fluid">
-    <p class="note">请填写您的用户名和密码信息。带有 <span class="required">*</span> 标记的字段为必填项目</p>
+	<div class="alert alert-info">
+	请填写您的用户名和密码信息。带有 <span class="required">*</span> 标记的字段为必填项目
+	</div>
     
     <div class="form">
     <?php $form=$this->beginWidget('CActiveForm', array(
         'id'=>'login-form',
         'enableClientValidation'=>true,
+		'htmlOptions'=>array('class'=>'form-horizontal',),
         'clientOptions'=>array(
             'validateOnSubmit'=>true,
         ),
     )); ?>
     <?php echo $form->errorSummary($model); ?>
-
-        <div class="row">
-            <?php echo $form->labelEx($model,'username', array('label'=>'用户名')); ?>
-            <?php echo $form->textField($model,'username'); ?>
-            <?php echo $form->error($model,'username'); ?>
-        </div>
+		<div class="form-group">		
+			<?php echo $form->labelEx($model,'username',array('label'=>'用户名','class'=>'col-sm-2 control-label')); ?>
+			<div class="col-sm-10">
+				<?php echo $form->textField($model,'username',array('class'=>'form-control','placeholder'=>'请在此输入用户名')); ?>
+			</div>
+		<?php echo $form->error($model,'username'); ?>
+		</div>
     
-        <div class="row">
-            <?php echo $form->labelEx($model,'password', array('label'=>'密码')); ?>
-            <?php echo $form->passwordField($model,'password'); ?>
+        <div class="form-group">
+ 			<?php echo $form->labelEx($model,'password',array('label'=>'密码','class'=>'col-sm-2 control-label')); ?>
+			<div class="col-sm-10">
+            	<?php echo $form->passwordField($model,'password',array('class'=>'form-control','placeholder'=>'请在此输入用户名')); ?>
+            	<span class="help-block">Hint: You may login with <kbd>demo</kbd>/<kbd>demo</kbd> or <kbd>admin</kbd>/<kbd>admin</kbd>.</span>
+			</div>
             <?php echo $form->error($model,'password'); ?>
-            <p class="hint">
-                Hint: You may login with <kbd>demo</kbd>/<kbd>demo</kbd> or <kbd>admin</kbd>/<kbd>admin</kbd>.
-            </p>
         </div>
     
-        <div class="row rememberMe">
-            <?php echo $form->checkBox($model,'rememberMe').$form->label($model,'rememberMe',array('label'=>'记住密码')); ?>
+        <div class="form-group rememberMe">
+        	<div class="col-sm-offset-2 col-sm-10">
+            <?php echo '<label>'.$form->checkBox($model,'rememberMe').'记住密码</label>'; ?>
             <?php echo $form->error($model,'rememberMe'); ?>
+            </div>
         </div>
     
-        <div class="row buttons">
-            <?php echo CHtml::submitButton('登录',array('class'=>'btn btn btn-primary')); ?>
+        <div class="form-group">
+        	<div class="col-sm-offset-2 col-sm-10">
+           	 <?php echo CHtml::submitButton('登录',array('class'=>'btn btn btn-primary')); ?>
+            </div>
         </div>
     
     <?php $this->endWidget(); ?>

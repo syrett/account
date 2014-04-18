@@ -15,17 +15,17 @@ $this->menu=array(
 );
 
 ?>
-<div class="row-fluid">
+<div class="row">
 	<h2>客户管理</h2>
 	<?php $this->widget('zii.widgets.CMenu', array(
 		/*'type'=>'list',*/
 		'encodeLabel'=>false,
 		'items'=>$this->menu,
-		'htmlOptions'=>array('class'=>'nav nav-tabs'),
+		'htmlOptions'=>array('class'=>'nav nav-pills navbar-right'),
 		));
 	?>
 </div>
-<div class="row-fluid">
+<div class="row">
 <?php $this->widget('zii.widgets.grid.CGridView', array(
      'id'=>'client-grid',
      'dataProvider'=>$model->search(),

@@ -8,9 +8,9 @@ $this->breadcrumbs=array(
 ?>
 <?php
 $gridDataProvider = new CArrayDataProvider(array(
-    array('id'=>1, 'firstName'=>'Mark', 'lastName'=>'Otto', 'language'=>'<span class="badge badge-warning">HTML</span>','usage'=>'<span class="inlinebar">1,4,4,7,5,9,10</span>'),
-    array('id'=>2, 'firstName'=>'Jacob', 'lastName'=>'Thornton', 'language'=>'<span class="badge badge-important">CSS</span>','usage'=>'<span class="inlinebar">1,4,4,7,5,9,10</span>'),
-    array('id'=>3, 'firstName'=>'Stu', 'lastName'=>'Dent', 'language'=>'<span class="badge badge-info">Javascript</span>','usage'=>'<span class="inlinebar">1,4,4,7,5,9,10</span>'),
+    array('id'=>1, 'firstName'=>'Mark', 'lastName'=>'Otto', 'language'=>'<span class="badge alert-success">HTML</span>','usage'=>'<span class="inlinebar">1,4,4,7,5,9,10</span>'),
+    array('id'=>2, 'firstName'=>'Jacob', 'lastName'=>'Thornton', 'language'=>'<span class="badge alert-danger">CSS</span>','usage'=>'<span class="inlinebar">1,4,4,7,5,9,10</span>'),
+    array('id'=>3, 'firstName'=>'Stu', 'lastName'=>'Dent', 'language'=>'<span class="badge alert-info">Javascript</span>','usage'=>'<span class="inlinebar">1,4,4,7,5,9,10</span>'),
 ));
 ?>
 
@@ -18,8 +18,8 @@ $gridDataProvider = new CArrayDataProvider(array(
   <h1>Tables <small>CGridview and HTML</small></h1>
 </div>
 
-<div class="row-fluid">
-  <div class="span6">
+<div class="row">
+  <div class="col-md-6">
   	<?php
 		$this->beginWidget('zii.widgets.CPortlet', array(
 			'title'=>"CGridview - Row hovering",
@@ -42,7 +42,7 @@ $gridDataProvider = new CArrayDataProvider(array(
 		)); ?>
 <?php $this->endWidget();?>
   </div>
-  <div class="span6">
+  <div class="col-md-6">
   	<?php
 		$this->beginWidget('zii.widgets.CPortlet', array(
 			'title'=>"CGridview - Striped rows",
@@ -69,8 +69,8 @@ $gridDataProvider = new CArrayDataProvider(array(
   </div>
 </div>
 
-<div class="row-fluid">
-  <div class="span6">
+<div class="row">
+  <div class="col-md-6">
   	<?php
 		$this->beginWidget('zii.widgets.CPortlet', array(
 			'title'=>"CGridview - Bordered",
@@ -94,7 +94,7 @@ $gridDataProvider = new CArrayDataProvider(array(
 		)); ?>
     <?php $this->endWidget();?>
   </div>
-  <div class="span6">
+  <div class="col-md-6">
   	
     <?php
 		$this->beginWidget('zii.widgets.CPortlet', array(
@@ -147,8 +147,8 @@ $this->endWidget();
 ?>
 
 
-<div class="row-fluid">
-  <div class="span6">
+<div class="row">
+  <div class="col-md-6">
   <?php
 		$this->beginWidget('zii.widgets.CPortlet', array(
 			'title'=>"HTML Table - Row hovering",
@@ -188,7 +188,7 @@ $this->endWidget();
     </table>
     <?php $this->endWidget();?>
   </div>
-  <div class="span6">
+  <div class="col-md-6">
   
   <?php
 		$this->beginWidget('zii.widgets.CPortlet', array(
@@ -233,8 +233,8 @@ $this->endWidget();
 </div>
 
 
-<div class="row-fluid">
-  <div class="span6">
+<div class="row">
+  <div class="col-md-6">
   <?php
 		$this->beginWidget('zii.widgets.CPortlet', array(
 			'title'=>"HTML Table - Bordered",
@@ -275,7 +275,7 @@ $this->endWidget();
     </table>
     <?php $this->endWidget();?>
   </div>
-  <div class="span6">
+  <div class="col-md-6">
   <?php
 		$this->beginWidget('zii.widgets.CPortlet', array(
 			'title'=>"HTML Table - Striped, bordered and with row hovering",

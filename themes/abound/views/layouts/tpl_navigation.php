@@ -68,7 +68,7 @@
                              array('label' => '项目与部门核算表', 'url'=>'#'),
                              )),                        
                         /*array('label'=>'Gii generated', 'url'=>array('customer/index')),*/
-                        array('label'=>'Templates <span class="caret"></span>', 'url'=>'#','itemOptions'=>array('class'=>'dropdown','tabindex'=>"-7"),'linkOptions'=>array('class'=>'dropdown-toggle','data-toggle'=>"dropdown"), 
+                        /* array('label'=>'Templates <span class="caret"></span>', 'url'=>'#','itemOptions'=>array('class'=>'dropdown','tabindex'=>"-7"),'linkOptions'=>array('class'=>'dropdown-toggle','data-toggle'=>"dropdown"), 
                         'items'=>array(
                             array('label'=>'Graphs & Charts', 'url'=>array('/site/page', 'view'=>'graphs')),
                             array('label'=>'Forms', 'url'=>array('/site/page', 'view'=>'forms')),
@@ -78,7 +78,7 @@
                             array('label'=>'Grid', 'url'=>array('/site/page', 'view'=>'about')),
                             array('label'=>'Contact', 'url'=>array('/site/contact', 'view'=>'contact')),
 
-                        )),
+                        )), */
                         array('label'=>'登录', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
                         array('label'=>'<i class="icon-user icon-white"></i> '.Yii::app()->user->name.' <span class="caret"></span>', 'url'=>'#', 'visible'=>!Yii::app()->user->isGuest,'itemOptions'=>array('class'=>'dropdown','tabindex'=>"-8"),'linkOptions'=>array('class'=>'dropdown-toggle','data-toggle'=>"dropdown"), 
                         'items'=>array(

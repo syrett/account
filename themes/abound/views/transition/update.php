@@ -8,28 +8,30 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-		array('label'=>'<i class="icon-plus-sign icon-white"></i> 添加凭证',
+		array('label'=>'<span class="glyphicon glyphicon-plus-sign"></span> 添加凭证',
 		  'url'=>array('create'),
-		  'linkOptions'=>array('class'=>'btn btn-success')
-		  ),
-	array('label'=>'<i class="icon-list-alt icon-white"></i> 凭证列表',
-		  'url'=>array('admin'),
 		  'linkOptions'=>array('class'=>'btn btn-primary')
+		  ),
+	array('label'=>'<span class="glyphicon glyphicon-th-list"></span> 凭证列表',
+		  'url'=>array('admin'),
+		  'linkOptions'=>array('class'=>'btn btn-success')
 		  ),	
 );
 ?>
-<div class="row-fluid">
-	<h2>凭证管理</h2>
+<div class="row">
 		  <?php $this->widget('zii.widgets.CMenu', array(
 			/*'type'=>'list',*/
 			'encodeLabel'=>false,
 			'items'=>$this->menu,
-			'htmlOptions'=>array('class'=>'nav nav-tabs'),
+			'htmlOptions'=>array('class'=>'nav nav-pills'),
 			));
 			?>
 </div>
-
-<div class="row-fluid">
+<p>&nbsp;</p>
+<div class="panel panel-default">
+	<div class="panel-heading">
+	<h2>会 计 凭 证</h2>	
+	</div>
         <?php
         if($model[0]->entry_settlement==1)
             $this->renderPartial('_form_settle', array('model' => $model, 'action' => 'update'));
