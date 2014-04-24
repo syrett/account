@@ -106,4 +106,15 @@ class Vendor extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+    public function list_vendors()
+    {
+      $sql = "SELECT id,company FROM vendor where 1";
+      $data = self::model()->findAllBySql($sql);
+      foreach($data as $row){
+        $arr[] = array("id"=>$row["id"],
+                       "company"=>$row["company"]);
+      }
+      return $arr;
+    }
 }

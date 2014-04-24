@@ -12,6 +12,8 @@
  */
 class Client extends MyActiveRecord
 {
+  public $select; // search的时候，定义返回字段
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -92,6 +94,8 @@ class Client extends MyActiveRecord
 		$criteria->compare('phone',$this->phone,true);
 		$criteria->compare('add',$this->add,true);
 		$criteria->compare('memo',$this->memo,true);
+        if ($this->select != null)
+          $criteria->select=$this->select;
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -108,4 +112,16 @@ class Client extends MyActiveRecord
 	{
 		return parent::model($className);
 	}
+
+    public function list_clients()
+    {
+      $sql = "SELECT id,company FROM client where 1";
+      $data = self::model()->findAllBySql($sql);
+      foreach($data as $row){
+        $arr[] = array("id"=>$row["id"],
+                       "company"=>$row["company"]);
+      }
+      return $arr;
+    }
+    
 }

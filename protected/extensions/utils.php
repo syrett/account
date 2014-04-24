@@ -38,27 +38,29 @@ function accessSettle($tranID){
 
 function balance($last_balance, $debit, $credit, $sbj_cat)
 {
+  $balance = 0;
   switch($sbj_cat)
     {
     case 1: //资产类
-      return $last_balance + $debit - $credit;
+      $balance = $last_balance + $debit - $credit;
       break;
     case 2: //负债类
-      return $last_balance + $credit - $debit;
+      $balance = $last_balance + $credit - $debit;
       break;
     case 3: //权益类
-      return $last_balance + $credit - $debit;
+      $balance = $last_balance + $credit - $debit;
       break;
     case 4: //收入类
-      return $credit - $debit;
+      $balance = $credit - $debit;
       break;
     case 5: //费用类
-      return $debit - $credit;
+      $balance = $debit - $credit;
       break;
     default:
-      return 0;
+      $balance = 0;
       break;
     }
+  return number_format($balance, 2);
 }
 
 function menuIsActive($arrs, $str, $id){

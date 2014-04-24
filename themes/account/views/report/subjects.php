@@ -148,12 +148,12 @@
       echo "<div class=".$css.">";
       echo "<td>".$info["subject_id"]."</td>";
       echo "<td>".$info["subject_name"]."</td>";
-      echo "<td>".$info["start_debit"]."</td>";
-      echo "<td>".$info["start_credit"]."</td>";
-      echo "<td>".$info["sum_debit"]."</td>";
-      echo "<td>".$info["sum_credit"]."</td>";
-      echo "<td>".$info["end_debit"]."</td>";
-      echo "<td>".$info["end_credit"]."</td>";
+      echo "<td>".number_format($info["start_debit"],2)."</td>";
+      echo "<td>".number_format($info["start_credit"],2)."</td>";
+      echo "<td>".number_format($info["sum_debit"],2)."</td>";
+      echo "<td>".number_format($info["sum_credit"],2)."</td>";
+      echo "<td>".number_format($info["end_debit"],2)."</td>";
+      echo "<td>".number_format($info["end_credit"],2)."</td>";
       echo "</div>";
       echo "</tr>";
 
@@ -164,12 +164,12 @@
     echo "<div class=".$css.">";
     echo "<td> </td>";
     echo "<td>" .$sbjCat_name."</td>";
-    echo "<td>".$sbjCat_info["start_debit"]."</td>";
-    echo "<td>".$sbjCat_info["start_credit"]."</td>";
-    echo "<td>".$sbjCat_info["sum_debit"]."</td>";
-    echo "<td>".$sbjCat_info["sum_credit"]."</td>";
-    echo "<td>".$sbjCat_info["end_debit"]."</td>";
-    echo "<td>".$sbjCat_info["end_credit"]."</td>";
+    echo "<td>".number_format($sbjCat_info["start_debit"],2)."</td>";
+    echo "<td>".number_format($sbjCat_info["start_credit"],2)."</td>";
+    echo "<td>".number_format($sbjCat_info["sum_debit"],2)."</td>";
+    echo "<td>".number_format($sbjCat_info["sum_credit"],2)."</td>";
+    echo "<td>".number_format($sbjCat_info["end_debit"],2)."</td>";
+    echo "<td>".number_format($sbjCat_info["end_credit"],2)."</td>";
     echo "</div>";
     echo "</tr>";
     

@@ -34,16 +34,30 @@ class SubjectBalance extends CModel
     $data = array();
     foreach ($sum as $sbj_id=>$arr){
       $sbj_name = Subjects::getName($sbj_id);
-      $start_debit = isset($start[$sbj_id]) ? $start[$sbj_id]["debit"] : 0;
-      $start_credit = isset($start[$sbj_id]) ? $start[$sbj_id]["credit"] : 0;
-      array_push($data, array("subject_id"=>$sbj_id,
+      $sbj_cat = Subjects::model()->getCat($sbj_id);
+      $start_balance = isset($start[$sbj_id]) ? $start[$sbj_id]["balance"] : 0;
+      $sep_balance = self::sep_balance($sbj_cat, $start_balance);
+      $start_debit = $sep_balance["debit"];
+      $start_credit = $sep_balance["credit"];
+
+      $end_balance = balance($start_balance, $arr["debit"], $arr["credit"], $sbj_cat);
+      $sep_balance = self::sep_balance($sbj_cat, $end_balance);
+      $end_debit = $sep_balance["debit"];
+      $end_credit = $sep_balance["credit"];
+      //      $end_debit=$start_debit + $arr["debit"];
+      //      $end_credit=$start_credit + $arr["credit"];
+      if($start_debit!=0 || $start_credit!=0 || $arr["debit"]!=0 || $arr["credit"]!=0 || $end_debit!=0 || $end_credit!=0){
+        
+        array_push($data, array("subject_id"=>$sbj_id,
+                                "subject_cat"=>$sbj_cat,
                               "subject_name"=>$sbj_name,
                               "start_debit"=>$start_debit,
                               "start_credit"=>$start_credit,
                               "sum_debit"=>$arr["debit"],
                               "sum_credit"=>$arr["credit"],
-                              "end_debit"=>$start_debit + $arr["debit"],
-                              "end_credit"=>$start_credit + $arr["credit"]));
+                                "end_debit"=>$end_debit,
+                              "end_credit"=>$end_credit));
+      }
     };
 
     $catData = self::cat_subjects($data);
@@ -55,11 +69,45 @@ class SubjectBalance extends CModel
   }
 
 
+  /*
+   * 根据类别和余额，来重新计算借方与贷方
+   */
+  private function sep_balance($sbj_cat, $balance){
+      switch($sbj_cat)
+    {
+    case 1: //资产类
+    case 5: //费用类
+      if ($balance>0) {
+          $arr = array("debit"=>$balance,
+                       "credit"=>0);
+        }else{
+        $arr=  array("debit"=>0,
+                     "credit"=>abs($balance));
+      }
+      return $arr;
+      break;
+    case 2: //负债类
+    case 3: //权益类
+    case 4: //收入类
+      if ($balance>0) {
+        $arr = array("debit"=>0,
+                     "credit"=>$balance);
+        }else{
+        $arr=  array("debit"=>abs($balance),
+                     "credit"=>0);
+      }
+      return $arr;
+      break;
+    default:
+      return 0;
+      break;
+    }
+  }
     
   private function cat_subjects($data) {
     $catData = array();
     foreach($data as $item){
-      $sbj_cat = Subjects::model()->getCat($item["subject_id"]);
+      $sbj_cat = $item["subject_cat"];
       if(!isset($catData[$sbj_cat])){
         $catData[$sbj_cat]["items"] = array();
         $catData[$sbj_cat]["start_debit"] =0;
@@ -72,8 +120,7 @@ class SubjectBalance extends CModel
       }
 
       $catData[$sbj_cat]["items"][] =  $item;
-      //      $catData[$sbj_cat]["items"] = array_push($catData[$sbj_cat]["items"], $item);
-            //      $catData[$sbj_cat]["items"] = array_push(array(), $item);
+
       $catData[$sbj_cat]["start_debit"] += $item["start_debit"];
       $catData[$sbj_cat]["start_credit"] += $item["start_credit"];
       $catData[$sbj_cat]["sum_debit"] += $item["sum_debit"];
@@ -86,39 +133,6 @@ class SubjectBalance extends CModel
     return $catData;
 
   }
-
-  /*
-  private function liyouyou($data){
-    $catData = array();
-    foreach($data as $item){
-      $sbj_cat = Subjects::model()->getCat($item["subject_id"]);
-      if(!isset($catData[$sbj_cat])){
-        $catData[$sbj_cat]["items"] = array();
-        $catData[$sbj_cat]["start_debit"] =0;
-        $catData[$sbj_cat]["start_credit"] = 0;
-        $catData[$sbj_cat]["sum_debit"] = 0;
-        $catData[$sbj_cat]["sum_credit"] = 0;
-        $catData[$sbj_cat]["end_debit"] = 0;
-        $catData[$sbj_cat]["end_credit"] = 0;
-
-      }
-      echo "1";
-      var_dump($catData[$sbj_cat]["items"]);
-      //      $catData[$sbj_cat]["items"] = array_push($catData[$sbj_cat]["items"], $item);
-      $catData[$sbj_cat]["items"] = array_push(array(), $item);
-      $catData[$sbj_cat]["start_debit"] += $item["start_debit"];
-      $catData[$sbj_cat]["start_credit"] += $item["start_credit"];
-      $catData[$sbj_cat]["sum_debit"] += $item["sum_debit"];
-      $catData[$sbj_cat]["sum_credit"] += $item["sum_credit"];
-      $catData[$sbj_cat]["end_debit"] += $item["end_debit"];
-      $catData[$sbj_cat]["end_credit"] += $item["end_credit"];
-
-    }
-
-    return $catData;
-  }
-  
-  */
 
   /*
    * 得到某年从某月到某月的post发生额,不跨年
@@ -164,6 +178,7 @@ class SubjectBalance extends CModel
     $data = array();
     foreach( $active_data as $row){
       $sbj_id = $row["subject_id"];
+      $data[$sbj_id]["balance"] = $row["balance"];
       $data[$sbj_id]["debit"] = $row["debit"];
       $data[$sbj_id]["credit"] = $row["credit"];
     }

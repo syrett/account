@@ -123,22 +123,22 @@ Yii::import('ext.select2.Select2');
 foreach($info as $ti){
         echo "<tr>";
       echo "<div class=".$css.">";
-      echo "<td>".$ti["entry_date"]."</td>";
+      echo "<td>".substr($ti["entry_date"],0,10)."</td>";
       echo "<td>".$ti["entry_num"]."</td>";
       echo "<td>".$ti["entry_memo"]."</td>";
 
       if(isset($ti["debit"])){
-        echo "<td>".$ti["debit"]."</td>";
+        echo "<td>".number_format($ti["debit"],2)."</td>";
       }else{
         echo "<td> </td>";
       }
       
       if(isset($ti["credit"])){
-      echo "<td>".$ti["credit"]."</td>";
+        echo "<td>".number_format($ti["credit"],2)."</td>";
       }else{
         echo "<td> </td>";
       }
-      echo "<td>".$ti["balance"]."</td>";
+      echo "<td>".number_format($ti["balance"],2)."</td>";
       echo "</div>";
       echo "</tr>";
 }
@@ -149,9 +149,9 @@ foreach($info as $ti){
                                          <th ></th>
                                          <th ></th>
                                           <th>总计</th>
-                                         <th ><?php echo $dataProvider["sum_debit"] ?></th>
-                                         <th ><?php echo $dataProvider["sum_credit"] ?></th>
-                                         <th ><?php echo $dataProvider["end_balance"] ?></th>
+ <th ><?php echo number_format($dataProvider["sum_debit"],2) ?></th>
+ <th ><?php echo number_format($dataProvider["sum_credit"],2) ?></th>
+ <th ><?php echo number_format($dataProvider["end_balance"],2) ?></th>
                                          </tr>
 
 

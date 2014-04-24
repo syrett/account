@@ -99,7 +99,7 @@
                                                array('label' => '科目余额表', 'url' => array('report/subjects')),
                                                array('label' => '明细表', 'url' => array('report/detail')),
                                                array('label' => '现金流量表'),
-                                               array('label' => '供应商表'),
+                                               array('label' => '供应商表', 'url' => array('report/vendor')),
                                                array('label' => '客户表', 'url' => array('report/client')),
                                                array('label' => '项目表'),
                                                array('label' => '部门表'),

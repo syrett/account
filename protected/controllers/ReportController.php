@@ -130,19 +130,45 @@ class ReportController extends CController
   /**
    * 客户表
    */
-  public function actionClient($date) //date:201403
+  public function actionClient() //date:201403
   {
-    if(isset($_GET['date'])){
-      $date=$_GET['date'];
-    }else{
-      $date=date("Ym");
-    }
-    $date="201402";
+    if(isset($_REQUEST['date'])&&$_REQUEST['date']!=''){
+      $date=$_REQUEST['date'];
     $model = new Set();
     $data = $model->client($date);
     $this->render("client",array("data"=>$data,
-                                 "date"=>$date,
-                                 "company"=>"公司名字"));
+                                 "date"=>$date));
+    }else{
+      $data = array();
+        $date = '';
+    }
+
+    $this->render("client",array("data"=>$data,
+                                 "date"=>$date));
+
+  }
+
+  /**
+   * 客户表
+   */
+  public function actionVendor() //date:201403
+  {
+    if(isset($_REQUEST['date'])&&$_REQUEST['date']!=''){
+      $date=$_REQUEST['date'];
+    $model = new Set();
+    $data = $model->vendor($date);
+    $this->render("vendor",array("data"=>$data,
+                                 "date"=>$date));
+    }else{
+      $data = array();
+        $date = '';
+    }
+
+    $this->render("vendor",array("data"=>$data,
+                                 "date"=>$date));
+
+
+
   }
 
 
