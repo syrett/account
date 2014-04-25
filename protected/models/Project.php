@@ -96,4 +96,15 @@ class Project extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+    public function list_projects()
+    {
+      $sql = "SELECT id,name FROM project where 1";
+      $data = self::model()->findAllBySql($sql);
+      foreach($data as $row){
+        $arr[] = array("id"=>$row["id"],
+                       "name"=>$row["name"]);
+      }
+      return $arr;
+    }
 }

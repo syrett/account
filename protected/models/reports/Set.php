@@ -53,11 +53,33 @@ class Set extends CModel
   }
 
 
-  private function getMonth($entry_appendix_type, $year, $month) //得到本期
-{
+  public function project($date){
+    $year=getYear($date);
+    $month=getMon($date);
+    $month_arr = self::getMonth(4, $year, $month);
+    $year_arr = self::getYear(4, $year);
+    $balance_arr = self::getBalance(4, $year, $month);
+    $projects = Project::model()->list_projects();
+    $arr = array();
+    foreach($projects as $k=>$proj){
+      $id = $proj["id"];
+      $data = array("id"=>$id,
+                    "company"=>$proj["name"]);
+      $data["month_debit"] = isset($month_arr[$id])?$month_arr[$id]["debit"]:0;
+      $data["month_credit"] = isset($month_arr[$id])?$month_arr[$id]["credit"]:0;
+      $data["year_debit"] = isset($year_arr[$id])?$year_arr[$id]["debit"]:0;
+      $data["year_credit"] = isset($year_arr[$id])?$year_arr[$id]["credit"]:0;
+      $data["balance"] = isset($balance_arr[$id])?$balance_arr[$id]["balance"]:0;
+      $arr[] = $data;
+    }
+    return $arr;
+  }
+
+  private function getMonth($entry_appendix_type, $year, $month, $subject="") //得到本期
+  {
     $transition = new Transition;
     $transition->entry_appendix_type=$entry_appendix_type;
-    $sql = "SELECT entry_transaction, entry_amount FROM TRANSITION WHERE entry_appendix_type=:eat AND year(entry_date)=:year AND month(entry_date)=:month";
+    $sql = "SELECT entry_transaction, entry_amount,entry_appendix_id,entry_subject FROM TRANSITION WHERE entry_appendix_type=:eat AND year(entry_date)=:year AND month(entry_date)=:month";
     $data = Transition::model()->findAllBySql($sql, array(':eat'=>$entry_appendix_type,
                                                           ':year'=>$year,
                                                           ':month'=>$month));
@@ -65,6 +87,7 @@ class Set extends CModel
     $income=0; //借
     $expense=0; //贷
     foreach($data as $k=>$v) {
+      
       $id=$v['entry_appendix_id'];
       if(!isset($arr[$id])){
         $item=array('debit'=>0,
@@ -87,7 +110,7 @@ class Set extends CModel
   {
     $transition = new Transition;
     $transition->entry_appendix_type=$entry_appendix_type;
-    $sql = "SELECT entry_transaction, entry_amount FROM TRANSITION WHERE entry_appendix_type=:eat AND year(entry_date)=:year";
+    $sql = "SELECT entry_transaction, entry_amount, entry_appendix_id FROM TRANSITION WHERE entry_appendix_type=:eat AND year(entry_date)=:year";
     $data = Transition::model()->findAllBySql($sql, array(':eat'=>$entry_appendix_type,
                                                           ':year'=>$year));
     $arr=array();
@@ -116,7 +139,7 @@ class Set extends CModel
   {
     $transition = new Transition;
     $transition->entry_appendix_type=$entry_appendix_type;
-    $sql = "SELECT entry_transaction, entry_amount FROM TRANSITION WHERE entry_appendix_type=:eat AND year(entry_date)<=:year AND month(entry_date)<=:month";
+    $sql = "SELECT entry_transaction, entry_amount,entry_appendix_id FROM TRANSITION WHERE entry_appendix_type=:eat AND year(entry_date)<=:year AND month(entry_date)<=:month";
     $data = Transition::model()->findAllBySql($sql, array(':eat'=>$entry_appendix_type,
                                                           ':year'=>$year,
                                                           ':month'=>$month));

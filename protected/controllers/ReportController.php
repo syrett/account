@@ -112,10 +112,6 @@ class ReportController extends CController
           $tm = '';
           $subject_id = '';
       }
-    echo $year;
-    echo $fm;
-    echo $tm;
-    echo $subject_id;
     $model = new Detail();
     if($subject_id!='')
         $data = $model->genData($subject_id, $year, $fm, $tm);
@@ -136,20 +132,19 @@ class ReportController extends CController
       $date=$_REQUEST['date'];
     $model = new Set();
     $data = $model->client($date);
-    $this->render("client",array("data"=>$data,
-                                 "date"=>$date));
+
     }else{
       $data = array();
         $date = '';
     }
 
-    $this->render("client",array("data"=>$data,
+    $this->render("set",array("data"=>$data,
                                  "date"=>$date));
 
   }
 
   /**
-   * 客户表
+   * 供应商表
    */
   public function actionVendor() //date:201403
   {
@@ -157,20 +152,45 @@ class ReportController extends CController
       $date=$_REQUEST['date'];
     $model = new Set();
     $data = $model->vendor($date);
-    $this->render("vendor",array("data"=>$data,
-                                 "date"=>$date));
+
     }else{
       $data = array();
         $date = '';
     }
 
-    $this->render("vendor",array("data"=>$data,
+    $this->render("set",array("data"=>$data,
                                  "date"=>$date));
 
 
 
   }
 
+
+  /**
+   * 项目表
+   */
+  public function actionProject() //date:201403
+  {
+    if(isset($_REQUEST['date'])&&$_REQUEST['date']!='' && isset($_REQUEST['type'])&&$_REQUEST['type']!='' ){
+      $date=$_REQUEST['date'];
+      if ($_REQUEST['type'] == 1) {
+        $subject_id = 6001; //主营业收入
+      }else{
+        $subject_id = 6401; //主营业收入
+      }
+      $model = new ProjectRe();
+      $data = $model->project($date, $subject_id);
+    }else{
+      $data = array();
+      $date = '';
+    }
+
+    $this->render("project",array("data"=>$data,
+                                 "date"=>$date));
+
+
+
+  }
 
 
 }
