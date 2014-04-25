@@ -192,5 +192,29 @@ class ReportController extends CController
 
   }
 
+ /**
+   * 项目表
+   */
+  public function actionDepartment() //date:201403
+  {
+    if(isset($_REQUEST['date'])&&$_REQUEST['date']!=''){
+      $date=$_REQUEST['date'];
+      $model = new DepartRe();
+      $subject_id = 6401;
+      $data = $model->genData($date, $subject_id);
+    }else{
+      $data = array("data"=>array(),
+                    "subjects"=>array());
+      $date = '';
+    }
+
+    $this->render("depart",array("data"=>$data["data"],
+                                  "subjects"=>$data["subjects"],
+                                 "date"=>$date));
+
+
+
+  }
+
 
 }

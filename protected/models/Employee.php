@@ -114,4 +114,13 @@ class Employee extends CActiveRecord
         return $arr;
     }
 
+    public function getDepart($employee_id)
+    {
+      $sql = "SELECT department_id FROM employee WHERE id=:em_id";
+      $data = Subjects::model()->findBySql($sql, array(':em_id'=>$employee_id));
+      foreach($data as $s){
+        return $s;
+      }
+    }
+
 }

@@ -102,7 +102,7 @@
                                                array('label' => '供应商表', 'url' => array('report/vendor')),
                                                array('label' => '客户表', 'url' => array('report/client')),
                                                array('label' => '项目表','url' => array('report/project')),
-                                               array('label' => '部门表'),
+                                               array('label' => '部门表','url' => array('report/department')),
                                                array('label' => '项目与部门核算表'),
                              )),
                     ),

@@ -1,5 +1,5 @@
 <?php
-//客户报表，供应商报表，项目与部门核算表
+//项目表
 class ProjectRe extends CModel
 {
 
