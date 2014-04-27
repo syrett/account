@@ -5,11 +5,10 @@
 }
 </style>
 
-<div class="row">
+<div class="alert alert-info">
 <?php echo CHtml::beginForm('','post',array('class'=>'form-inline','role'=>'form')); ?>
-	<div class="alert alert-info">
 	<h3>科目余额表</h3>
-	请选择报表日期：
+	请选择日期：
 	<div class="form-group">
 		<?php
          if(isset($_REQUEST['year']))
@@ -68,9 +67,8 @@
             月
 			<input class="btn btn-primary" type="submit" value="查看报表" />
 	</div><!-- .form-group -->
-	</div>
 <?php echo CHtml::endForm(); ?>
-</div>
+</div><!-- .alert -->
 
 <?php
  function echoItmes($items){
@@ -160,24 +158,10 @@ echo "</tr>";
 
 }
 
-/*
-$this->widget('zii.widgets.grid.CGridView', array(
-                                                  'dataProvider' => $dataProvider,
-                                                  'columns' => array(
-                                                                     'subject_id',
-                                                                     'sbj_name',
-                                                                     'sbj_cat',
-                                                                     'start_debit',
-                                                                     'start_credit',
-                                                                     'sum_debit',
-                                                                     'sum_credit',
-                                                                     'end_debit',
-                                                                     'end_credit',
-
-                                                                     )
-));
-*/
 ?>
 </tr>
 </table>
-<? }
+</div><!-- .panel -->
+<?php
+ }
+?>

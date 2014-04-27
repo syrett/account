@@ -56,8 +56,8 @@ function echoData($key, $data, $name="default")
 		<input type="submit" class="btn btn-primary" value="查看报表" />
 	</div>
 	<p>&nbsp;</p>
-	<?php echo CHtml::endForm(); ?>
 </div>
+<?php echo CHtml::endForm(); ?>
 
 <div style="display:<?php if($data=='') echo 'none';?>" class="panel panel-default">
 	<div class="panel-heading">
