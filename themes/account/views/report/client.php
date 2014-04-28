@@ -1,4 +1,4 @@
- <!-- 损益表 -->
+ <!-- 客户报表 -->
 <?php
 
 Yii::app()->clientScript->registerCoreScript('jquery');
@@ -23,7 +23,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/profit.js', CCl
 </style>
 
 <?php
-function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
+function echoData($data, $options=array("css"=>"table-c"))
 {
 
   if (empty($options["css"]))
@@ -34,7 +34,21 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
     {
     $css = $options["css"];
     }   
-  if (empty($data[$key]))
+
+    foreach($data as $ti)
+      {
+        echo "<tr>";
+        echo "<div class=".$css.">";
+        echo "<td>".$ti["company"]."</td>";
+        echo "<td>".number_format($ti["month_debit"], 2)."</td>";
+        echo "<td>".number_format($ti["month_credit"], 2)."</td>";
+        echo "<td>".number_format($ti["year_debit"], 2)."</td>";
+        echo "<td>".number_format($ti["year_credit"], 2)."</td>";
+        echo "<td>".number_format($ti["balance"], 2)."</td>";
+        echo "<tr>";                                                   
+      }
+}
+/* if (empty($data[$key]))
     {
       echo "<div class=".$css.">";
       echo "<th>".$name."</th>";
@@ -54,12 +68,16 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
         {
           echo "<th>".$name."</th>";
         }
-      echo "<td>".$arr["sum_month"]." </td>";
-      echo "<td>" .$arr["sum_year"]."</td>";
+      echo "<td>".$ti["company"]."</td>";
+      echo "<td>".$ti["month_debit"]."</td>";
+      echo "<td>".$ti["month_credit"]."</td>";
+      echo "<td>".$ti["year_debit"]."</td>";
+      echo "<td>".$ti["year_credit"]."</td>";
+      echo "<td>".$ti["balance"]."</td>";
       echo "</div>";
     }
 }
-
+*/
 ?>
 
 <div class="table-c";>
@@ -76,8 +94,7 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
 <div style="display:<?php if($data=='') echo 'none';?>">
 <table cellpadding="0" cellspacing="0" style="padding:0px;margin:0px;">
                                          <tr>
-                                         <td colspan=3 align=center> <?php echo $date ?> </td>
-                                         <td align=right> 金额单位:元 </td>
+                                         <td colspan=6 align=right> 金额单位:元 </td>
                                          </tr>
 
                                          <tr>
@@ -90,23 +107,15 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
                                          </tr>
 
 
-<?php
-    $css = "table-c";
-    foreach($data as $ti)
-                                         {
-                                                   echo "<tr>";
-      echo "<div class=".$css.">";
-      echo "<td>".$ti["id"]."</td>";
-      echo "<td>".$ti["month_debit"]."</td>";
-      echo "<td>".$ti["month_credit"]."</td>";
-      echo "<td>".$ti["year_debit"]."</td>";
-      echo "<td>".$ti["year_credit"]."</td>";
-      echo "<td>".$ti["balance"]."</td>";
-                                                   echo "<tr>";                                                   
-                                         }
-?>
+    <?php echoData($data) ?>
 
                                          </td>
                                          </table>
     </div>
   </div>
+
+
+
+
+
+
