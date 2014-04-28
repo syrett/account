@@ -80,7 +80,7 @@ function echoData($data, $subjects, $options=array("css"=>"table-c"))
         $this->widget('Select2', array(
             'name' => 'sbj_id',
             'value' => $subject_id,
-            'data' => Subjects::model()->listSubjects(5),
+            'data' => $list,
         ));
         ?>
     </h5>

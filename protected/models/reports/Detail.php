@@ -29,7 +29,7 @@ class Detail extends CModel
   }
 
   private function getTransition($sbj_id, $year, $fm, $tm){
-    $sql = "SELECT entry_num_prefix, entry_num, entry_transaction, entry_amount,entry_memo, entry_date FROM transition WHERE entry_subject=:subject_id AND year(entry_date) =:year AND month(entry_date) >= :fm AND Month(entry_date)<=:tm ORDER BY entry_num_prefix";
+    $sql = "SELECT entry_num_prefix, entry_num, entry_transaction, entry_amount,entry_memo, entry_date FROM transition WHERE entry_subject=:subject_id AND year(entry_date) =:year AND month(entry_date) >= :fm AND Month(entry_date)<=:tm ORDER BY entry_num_prefix asc";
     $transition = Transition::model()->findAllBySql($sql, array(':subject_id'=>$sbj_id,
                                                                 'year'=>$year,
                                                                 ':fm'=>$fm,

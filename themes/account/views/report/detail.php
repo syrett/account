@@ -118,31 +118,84 @@ Yii::import('ext.select2.Select2');
                                               <tr>
 
 <?php
-    $css = "table-c";
-                                              $info = $dataProvider["info"];
-foreach($info as $ti){
-        echo "<tr>";
-      echo "<div class=".$css.">";
-      echo "<td>".substr($ti["entry_date"],0,10)."</td>";
-      echo "<td>".$ti["entry_num"]."</td>";
-      echo "<td>".$ti["entry_memo"]."</td>";
-
-      if(isset($ti["debit"])){
-        echo "<td>".number_format($ti["debit"],2)."</td>";
-      }else{
-        echo "<td> </td>";
-      }
+ $css = "table-c";
+ $info = $dataProvider["info"];
+ $month_debit=0;
+ $month_credit=0;
+ $month_balance=$dataProvider["start_balance"];
+ $month=0;
+ $sbj_cat = Subjects::model()->getCat($subject_id);
+ foreach($info as $ti){
+   if(isset($ti["debit"])){
+     $debit = $ti["debit"];
+   }else{
+     $debit = 0;
+   }
       
-      if(isset($ti["credit"])){
-        echo "<td>".number_format($ti["credit"],2)."</td>";
-      }else{
-        echo "<td> </td>";
-      }
-      echo "<td>".number_format($ti["balance"],2)."</td>";
-      echo "</div>";
-      echo "</tr>";
-}
+   if(isset($ti["credit"])){
+     $credit = $ti["credit"];
+   }else{
+     $credit = 0;
+   }
+   $row_month = substr($ti["entry_date"], 5, 2);
+   if ($row_month == $month || $month == 0) {
+     $month_debit += $debit;
+     $month_credit += $credit;
+     $month=$row_month;
+   }else{
 
+     $month_balance = balance($month_balance, $month_debit, $month_credit, $sbj_cat);
+     echo "<tr>";
+     echo "<div class=".$css.">";
+     echo "<td colspan=3>".$month."月总计 </td>";
+     echo "<td>".number_format($month_debit, 2)."</td>";
+     echo "<td>".number_format($month_credit, 2)."</td>";
+     echo "<td>".$month_balance."</td>";
+     echo "</div>";
+     echo "</tr>";
+     $month_debit = $debit;
+     $month_credit = $credit;
+     $month=$row_month;
+   };
+
+   echo "<tr>";
+   echo "<div class=".$css.">";
+   echo "<td>".substr($ti["entry_date"],0,10)."</td>";
+   echo "<td>".$ti["entry_num"]."</td>";
+   echo "<td>".$ti["entry_memo"]."</td>";
+
+   if(isset($ti["debit"])){
+     echo "<td>".number_format($ti["debit"],2)."</td>";
+     $debit = $ti["debit"];
+   }else{
+     echo "<td> </td>";
+     $debit = 0;
+   }
+      
+   if(isset($ti["credit"])){
+     echo "<td>".number_format($ti["credit"],2)."</td>";
+     $credit = $ti["credit"];
+   }else{
+     echo "<td> </td>";
+     $credit = 0;
+   }
+   echo "<td>".number_format($ti["balance"],2)."</td>";
+   echo "</div>";
+   echo "</tr>";
+
+
+ }
+
+ if($month != 0){
+     echo "<tr>";
+     echo "<div class=".$css.">";
+     echo "<td colspan=3>".$month."月总计 </td>";
+     echo "<td>".number_format($month_debit, 2)."</td>";
+     echo "<td>".number_format($month_credit, 2)."</td>";
+     echo "<td>".balance($month_balance, $month_debit, $month_credit, $sbj_cat)."</td>";
+     echo "</div>";
+     echo "</tr>";
+ }
 ?>
 
                                          <tr>

@@ -117,11 +117,15 @@ class ProjectRe extends CModel
         }else{
           $item=$arr[$id];
         }
+
+
         if ($v['entry_transaction']=="1") { //1为借
-          $item["balance"] += $v['entry_amount'];
+          //          $item["balance"] += $v['entry_amount'];
+        $item['balance'] = balance2($item['balance'], $v['entry_amount'], 0, 4);
         }
         elseif($v['entry_transaction']=="2") { //2为贷
-          $item["balance"] -= $v['entry_amount'];
+          //          $item["balance"] -= $v['entry_amount'];
+          $item['balance'] = balance2($item['balance'], 0, $v['entry_amount'], 4);
         }
         $arr[$id]=$item;
       }

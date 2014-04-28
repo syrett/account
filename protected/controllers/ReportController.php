@@ -211,10 +211,12 @@ class ReportController extends CController
       $date = '';
       $subject_id = "";
     }
-
+    
+    $list = array(6601=>"销售费用", 6602=>"管理费用", 6603=>"财务费用");
     $this->render("depart",array("data"=>$data["data"],
                                   "subjects"=>$data["subjects"],
                                  "subject_id" => $subject_id,
+                                 "list"=>$list,
                                  "date"=>$date));
 
 
