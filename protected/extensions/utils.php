@@ -63,6 +63,29 @@ function balance($last_balance, $debit, $credit, $sbj_cat)
   return number_format($balance, 2);
 }
 
+function balance2($last_balance, $debit, $credit, $sbj_cat)
+{
+  $balance = 0;
+  switch($sbj_cat)
+    {
+    case 5: //费用类
+    case 1: //资产类
+      $balance = $last_balance + $debit - $credit;
+      break;
+    case 4: //收入类
+    case 2: //负债类
+      $balance = $last_balance + $credit - $debit;
+      break;
+    case 3: //权益类
+      $balance = $last_balance + $credit - $debit;
+      break;
+    default:
+      $balance = 0;
+      break;
+    }
+  return number_format($balance, 2);
+}
+
 function menuIsActive($arrs, $str, $id){
     if($str == 'options4' ){
         if(isset($_REQUEST['operation'])&&in_array($_REQUEST['operation'], $arrs)){

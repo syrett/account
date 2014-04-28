@@ -28,9 +28,12 @@ class SubjectBalance extends CModel
   
   public function genData($fromDate, $toDate)
   {
-    $sum = self::getSum(2014,1,2); //发生额
-    $start = self::getStart(2014,1); //期初
-    $end = self::getEnd(2014,2); //期末
+    $year = getYear($fromDate);
+    $fromMonth = getMon($fromDate);
+    $toMonth = getMon($toDate);
+    $sum = self::getSum($year,$fromMonth,$toMonth); //发生额
+    $start = self::getStart($year, $fromMonth); //期初
+    $end = self::getEnd($year, $toMonth); //期末
     $data = array();
     foreach ($sum as $sbj_id=>$arr){
       $sbj_name = Subjects::getName($sbj_id);

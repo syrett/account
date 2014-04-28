@@ -1,5 +1,5 @@
 <?php
-//项目表
+//项目算表
 class ProjectRe extends CModel
 {
 

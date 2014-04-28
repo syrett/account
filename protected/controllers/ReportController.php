@@ -173,6 +173,7 @@ class ReportController extends CController
   {
     if(isset($_REQUEST['date'])&&$_REQUEST['date']!='' && isset($_REQUEST['type'])&&$_REQUEST['type']!='' ){
       $date=$_REQUEST['date'];
+      $type = $_REQUEST['type'];
       if ($_REQUEST['type'] == 1) {
         $subject_id = 6001; //主营业收入
       }else{
@@ -183,9 +184,11 @@ class ReportController extends CController
     }else{
       $data = array();
       $date = '';
+      $type = 1;
     }
 
     $this->render("project",array("data"=>$data,
+                                  "type"=>$type,
                                  "date"=>$date));
 
 
@@ -193,23 +196,25 @@ class ReportController extends CController
   }
 
  /**
-   * 项目表
+   * 部门表
    */
   public function actionDepartment() //date:201403
   {
-    if(isset($_REQUEST['date'])&&$_REQUEST['date']!=''){
+    if(isset($_REQUEST['date'])&&$_REQUEST['date']!=''&&isset($_REQUEST['sbj_id'])&&$_REQUEST['sbj_id']!=''){
       $date=$_REQUEST['date'];
       $model = new DepartRe();
-      $subject_id = 6401;
+      $subject_id = $_REQUEST['sbj_id'];
       $data = $model->genData($date, $subject_id);
     }else{
       $data = array("data"=>array(),
                     "subjects"=>array());
       $date = '';
+      $subject_id = "";
     }
 
     $this->render("depart",array("data"=>$data["data"],
                                   "subjects"=>$data["subjects"],
+                                 "subject_id" => $subject_id,
                                  "date"=>$date));
 
 

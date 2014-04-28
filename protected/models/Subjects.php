@@ -157,6 +157,21 @@ class Subjects extends CActiveRecord
         return $arr;
     }
 
+
+    /**
+     * 列出科目
+     */
+    public function listSubjects($sbj_cat)
+    {
+        $sql = "select * from subjects where sbj_cat=:sbj_cat order by concat(`sbj_number`) asc"; //
+        $First = Subjects::model()->findAllBySql($sql, array(':sbj_cat'=>$sbj_cat));
+        $arr = array();
+        foreach ($First as $row) {
+            $arr += array($row['sbj_number'] => $row['sbj_number'] . $row['sbj_name']);
+        };
+        return $arr;
+    }
+
     public static function hasSub($sbj_id)
     {
         $par_id = substr($sbj_id, 0, -2);

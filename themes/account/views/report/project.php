@@ -62,6 +62,7 @@ function echoData($data, $options=array("css"=>"table-c"))
   <?php
   $this->widget('Select2', array(
                                  'name' => 'type',
+                                 'value' => $type,
                                  'data' => array(1=>"收入",2=>"成本"),
                                  ));
 ?>

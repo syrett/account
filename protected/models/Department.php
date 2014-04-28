@@ -97,4 +97,17 @@ class Department extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+    /*
+     * 得到名字
+     */
+    public function getName($depart_id)
+    {
+      $sql = "SELECT name FROM department WHERE id=:depart_id";
+      $data = Department::model()->findBySql($sql, array(':depart_id'=>$depart_id));
+      foreach($data as $s){
+        return $s;
+      }
+    }
+
 }
