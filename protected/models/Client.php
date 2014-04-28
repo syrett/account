@@ -10,7 +10,7 @@
  * @property string $add
  * @property string $memo
  */
-class Client extends MyActiveRecord
+class Client extends CActiveRecord
 {
   public $select; // search的时候，定义返回字段
 

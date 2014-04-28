@@ -16,7 +16,7 @@ class DepartRe extends CModel
 
   private function getData($year, $month, $subject_id) {
     $transition = new Transition;
-    $sql = "SELECT entry_transaction, entry_amount,entry_appendix_id,entry_subject FROM TRANSITION WHERE entry_appendix_type=3 AND year(entry_date)=:year AND month(entry_date)=:month";
+    $sql = "SELECT entry_transaction, entry_amount,entry_appendix_id,entry_subject FROM transition WHERE entry_appendix_type=3 AND year(entry_date)=:year AND month(entry_date)=:month";
     $data = Transition::model()->findAllBySql($sql, array(':year'=>$year,
                                                           ':month'=>$month));
 

@@ -24,7 +24,7 @@
  * @property integer $entry_settlement
  * @property integer $entry_closing
  */
-class Transition extends MyActiveRecord
+class Transition extends CActiveRecord
 {
     /*
      * custom params

@@ -79,7 +79,7 @@ class Set extends CModel
   {
     $transition = new Transition;
     $transition->entry_appendix_type=$entry_appendix_type;
-    $sql = "SELECT entry_transaction, entry_amount,entry_appendix_id,entry_subject FROM TRANSITION WHERE entry_appendix_type=:eat AND year(entry_date)=:year AND month(entry_date)=:month";
+    $sql = "SELECT entry_transaction, entry_amount,entry_appendix_id,entry_subject FROM transition WHERE entry_appendix_type=:eat AND year(entry_date)=:year AND month(entry_date)=:month";
     $data = Transition::model()->findAllBySql($sql, array(':eat'=>$entry_appendix_type,
                                                           ':year'=>$year,
                                                           ':month'=>$month));
@@ -110,7 +110,7 @@ class Set extends CModel
   {
     $transition = new Transition;
     $transition->entry_appendix_type=$entry_appendix_type;
-    $sql = "SELECT entry_transaction, entry_amount, entry_appendix_id FROM TRANSITION WHERE entry_appendix_type=:eat AND year(entry_date)=:year";
+    $sql = "SELECT entry_transaction, entry_amount, entry_appendix_id FROM transition WHERE entry_appendix_type=:eat AND year(entry_date)=:year";
     $data = Transition::model()->findAllBySql($sql, array(':eat'=>$entry_appendix_type,
                                                           ':year'=>$year));
     $arr=array();
@@ -139,7 +139,7 @@ class Set extends CModel
   {
     $transition = new Transition;
     $transition->entry_appendix_type=$entry_appendix_type;
-    $sql = "SELECT entry_transaction, entry_amount,entry_appendix_id FROM TRANSITION WHERE entry_appendix_type=:eat AND year(entry_date)<=:year AND month(entry_date)<=:month";
+    $sql = "SELECT entry_transaction, entry_amount,entry_appendix_id FROM transition WHERE entry_appendix_type=:eat AND year(entry_date)<=:year AND month(entry_date)<=:month";
     $data = Transition::model()->findAllBySql($sql, array(':eat'=>$entry_appendix_type,
                                                           ':year'=>$year,
                                                           ':month'=>$month));
