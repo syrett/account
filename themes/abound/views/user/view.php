@@ -4,7 +4,7 @@
 
 $this->breadcrumbs=array(
 	'Users'=>array('index'),
-	$model->id,
+	$model->title,
 );
 
 $this->menu=array(
@@ -22,8 +22,13 @@ $this->menu=array(
 	'data'=>$model,
 	'attributes'=>array(
 		'id',
-		'username',
+		'userid',
 		'password',
+		'fullname',
+		'mobile',
 		'email',
+		'title',
+		'sys_role',
+		'roles',
 	),
 )); ?>

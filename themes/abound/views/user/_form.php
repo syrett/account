@@ -20,21 +20,51 @@
 	<?php echo $form->errorSummary($model); ?>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'username'); ?>
-		<?php echo $form->textField($model,'username',array('size'=>60,'maxlength'=>128)); ?>
-		<?php echo $form->error($model,'username'); ?>
+		<?php echo $form->labelEx($model,'userid'); ?>
+		<?php echo $form->textField($model,'userid',array('size'=>60,'maxlength'=>100)); ?>
+		<?php echo $form->error($model,'userid'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'password'); ?>
-		<?php echo $form->passwordField($model,'password',array('size'=>60,'maxlength'=>128)); ?>
+		<?php echo $form->passwordField($model,'password',array('size'=>60,'maxlength'=>100)); ?>
 		<?php echo $form->error($model,'password'); ?>
 	</div>
 
 	<div class="row">
+		<?php echo $form->labelEx($model,'fullname'); ?>
+		<?php echo $form->textField($model,'fullname',array('size'=>60,'maxlength'=>100)); ?>
+		<?php echo $form->error($model,'fullname'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'mobile'); ?>
+		<?php echo $form->textField($model,'mobile',array('size'=>20,'maxlength'=>20)); ?>
+		<?php echo $form->error($model,'mobile'); ?>
+	</div>
+
+	<div class="row">
 		<?php echo $form->labelEx($model,'email'); ?>
-		<?php echo $form->textField($model,'email',array('size'=>60,'maxlength'=>128)); ?>
+		<?php echo $form->textField($model,'email',array('size'=>20,'maxlength'=>20)); ?>
 		<?php echo $form->error($model,'email'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'title'); ?>
+		<?php echo $form->textField($model,'title',array('size'=>50,'maxlength'=>50)); ?>
+		<?php echo $form->error($model,'title'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'sys_role'); ?>
+		<?php echo $form->textField($model,'sys_role'); ?>
+		<?php echo $form->error($model,'sys_role'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'roles'); ?>
+		<?php echo $form->textField($model,'roles',array('size'=>16,'maxlength'=>16)); ?>
+		<?php echo $form->error($model,'roles'); ?>
 	</div>
 
 	<div class="row buttons">
