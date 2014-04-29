@@ -138,7 +138,7 @@ class ReportController extends CController
         $date = '';
     }
 
-    $this->render("set",array("data"=>$data,
+    $this->render("client",array("data"=>$data,
                                  "date"=>$date));
 
   }
@@ -158,7 +158,7 @@ class ReportController extends CController
         $date = '';
     }
 
-    $this->render("set",array("data"=>$data,
+    $this->render("vendor",array("data"=>$data,
                                  "date"=>$date));
 
 
