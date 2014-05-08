@@ -1,6 +1,5 @@
- <!-- 项目报表 -->
 <?php
-Yii::import('ext.select2.Select2');
+//Yii::import('ext.select2.Select2');
 Yii::app()->clientScript->registerCoreScript('jquery');
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/jquery-ui-1.10.4.custom.js', CClientScript::POS_HEAD);
@@ -46,30 +45,32 @@ function echoData($data, $subjects)
 }
 ?>
 
-
-<?php echo CHtml::beginForm(); ?>
-<h5>日期:
-    <input type="text" name="date" id="date" class="span2" value="<?php echo isset($date)?$date:'' ?>" readonly/>
-</h5>
-
-<input type="submit" value="查看报表" />
+<div class="alert alert-info">
+<?php echo CHtml::beginForm('','post',array('class'=>'form-inline','role'=>'form')); ?>
+	<h3>部 门 表</h3>
+	<div class="form-group">
+		<label for="date">请选择日期：</label>
+		<input type="text" name="date" id="date" class="form-control" value="<?php echo isset($date)?$date:'' ?>" readonly/>
+	</div>
+	<input class="btn btn-primary" type="submit" value="查看报表" />
 <?php echo CHtml::endForm(); ?>
-<div style="display:<?php if($data=='') echo 'none';?>">
-<table cellpadding="0" cellspacing="0" style="padding:0px;margin:0px;">
-                                         <tr>
-                                         <td colspan=6 align=right> 金额单位:元 </td>
-                                         </tr>
-
-    <?php echoData($data, $subjects) ?>
-
-                                         </td>
-                                         </table>
 </div>
 
+<?php
+	if ($data) {
+?>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h2>部 门 表</h2>
+	</div>
 
-
-
-
-
-
-
+	<table cellpadding="0" cellspacing="0" style="padding:0px;margin:0px;">
+       <tr>
+          <td colspan="6" align="right"> 金额单位:元 </td>
+       </tr>
+<?php echoData($data, $subjects) ?>
+    </table>
+</div>
+<?php
+}
+?>

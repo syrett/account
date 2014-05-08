@@ -1,5 +1,5 @@
- <!-- 损益表 -->
 <?php
+// 客户表
 
 Yii::app()->clientScript->registerCoreScript('jquery');
 $cs = Yii::app()->clientScript;
@@ -14,49 +14,9 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/profit.js', CCl
 }
 </style>
 
-<?php
-function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
-{
-
-  if (empty($options["css"]))
-    {
-      $css= "table-c";
-    }
-  else
-    {
-    $css = $options["css"];
-    }   
-  if (empty($data[$key]))
-    {
-      echo "<div class=".$css.">";
-      echo "<th>".$name."</th>";
-      echo "<td>0</td>";
-      echo "<td>0</td>";
-      echo "</div>";
-    }
-  else
-    {
-      $arr=$data[$key];
-      echo "<div class=".$css.">";
-      if($name ==="default")
-        {
-          echo "<th>".$arr["name"]."</th>";
-        }
-      else
-        {
-          echo "<th>".$name."</th>";
-        }
-      echo "<td>".$arr["sum_month"]." </td>";
-      echo "<td>" .$arr["sum_year"]."</td>";
-      echo "</div>";
-    }
-}
-
-?>
-
 <?php echo CHtml::beginForm('','post',array('class'=>'form-inline')); ?>
 <div class="alert alert-info">
-	<h3>客户表</h3>
+	<h3>客 户 表</h3>
 	<div class="form-group">
 		<label class="control-label" for="date">请选择报表日期：</label>
 		<input class="form-control" type="text" name="date" id="date" value="<?php echo isset($date)?$date:'' ?>" readonly />
@@ -66,39 +26,40 @@ function echoData($key, $data, $name="default",$options=array("css"=>"table-c"))
 </div>
 <?php echo CHtml::endForm(); ?>
 
-<div style="display:<?php if($data=='') echo 'none';?>">
-<table cellpadding="0" cellspacing="0" style="padding:0px;margin:0px;">
-                                         <tr>
-                                         <td colspan=3 align=center> <?php echo $date ?> </td>
-                                         <td align=right> 金额单位:元 </td>
-                                         </tr>
-
-                                         <tr>
-                                         <th > </th>
-                                         <th >本期借方</th>
-                                         <th>本期贷方</th>
-                                         <th >本年借方</th>
-                                         <th>本年贷方</th>
-                                         <th >余额</th>
-                                         </tr>
-
-
 <?php
-    $css = "table-c";
+ if ($data) {
+?>
+<div class="panel panel-default">
+  <div class="panel-heading">
+  	<h2>客 户 表</h2>
+  </div>
+  
+  <table class="table table-bordered">
+	<thead>
+		 <tr>
+		 <td>&nbsp;</td>
+		 <td>本期借方</td>
+		 <td>本期贷方</td>
+		 <td>本年借方</td>
+		 <td>本年贷方</td>
+		 <td>余额</td>
+		 </tr>
+	 </thead>
+<?php
     foreach($data as $ti)
-                                         {
-                                                   echo "<tr>";
-      echo "<div class=".$css.">";
+    {
+      echo "<tr>";
       echo "<td>".$ti["id"]."</td>";
       echo "<td>".$ti["month_debit"]."</td>";
       echo "<td>".$ti["month_credit"]."</td>";
       echo "<td>".$ti["year_debit"]."</td>";
       echo "<td>".$ti["year_credit"]."</td>";
       echo "<td>".$ti["balance"]."</td>";
-                                                   echo "<tr>";                                                   
-                                         }
+      echo "<tr>";                                                   
+    }
 ?>
-
-                                         </td>
-                                         </table>
-    </div>
+   </table>
+</div>
+<?php
+}
+?>
