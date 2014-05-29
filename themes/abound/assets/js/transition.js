@@ -163,11 +163,11 @@ var decimals = function(varNumber){
 var addRow = function () {
 //    var number = (parseInt($("#number").val()) + 1).toString();
     var number = $("#number").val();
-    var html = "<div id='row_" + number + "' class='row v-detail'> " +
-        "<div class=col-md-3 > " +
+    var html = "<tr id='row_" + number + "'>" +
+        "<td class=col-md-3 > " +
         "<input class='form-control input-size' name='Transition[" + number + "][entry_memo]' id='Transition_" + number + "_entry_memo' type='text'>" +
-        "</div>" +
-        '<div class="col-md-3"><select class="v-subject" id="Transition_' + number + '_entry_subject" name="Transition[' + number + '][entry_subject]" >'
+        "</td>" +
+        '<td class="col-md-3"><select class="v-subject" id="Transition_' + number + '_entry_subject" name="Transition[' + number + '][entry_subject]" >'
     $.ajax({
         type: "POST",
         url: $("#ajax_listfirst").val(),
@@ -183,16 +183,14 @@ var addRow = function () {
         }
     });
     html += '</select><input type="hidden" value="' + number + '"/></div>' +
-        "<div class='col-md-1'><select id='Transition_" + number + "_entry_transaction'name=Transition[" + number + "][entry_transaction] >" +
+        "<td class='col-md-1'><select id='Transition_" + number + "_entry_transaction'name=Transition[" + number + "][entry_transaction] >" +
         "<option value=1 >借</option><option value=2>贷</option>" +
-        "</select></div>" +
-        '<div class="col-md-1"><input onkeyup="checkInputAmount(this)" class="form-control input-size" name="Transition[' + number + '][entry_amount]" id="Transition_' + number + '_entry_amount' +
-        '" type="text" /></div>' +
-
-
-        "<div class='col-md-4'>" +
+        "</select></td>" +
+        '<td class="col-md-2"><input onkeyup="checkInputAmount(this)" class="form-control input-size" name="Transition[' + number + '][entry_amount]" id="Transition_' + number + '_entry_amount' +
+        '" type="text" /></td>' +
+        "<td class='col-md-3'>" +
         "<span id='appendix_" + number + "' style='display: none; float: left'></span>" +
-        "<button type='button' class='close' aria-hidden='true' name='" + number + "' onclick='rmRow(this)'>&times;</button></div></div>"
+        "<button type='button' class='close' aria-hidden='true' name='" + number + "' onclick='rmRow(this)'>&times;</button></td></tr>"
 
     $("#transitionRows").append(html)
     $("select[id^='Transition_"+number+"']").select2();

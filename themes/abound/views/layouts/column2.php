@@ -6,17 +6,19 @@
 	<div class="col-md-3">
 		<div class="sidebar-nav">
         
-		  <?php $this->widget('zii.widgets.CMenu', array(
-			/*'type'=>'list',*/
-			'encodeLabel'=>false,
-			'items'=>array(
-				array('label'=>'<span class="glyphicon glyphicon-home"></span>  Dashboard <span class="label label-info pull-right">BETA</span>', 'url'=>array('/site/index'),'itemOptions'=>array('class'=>'')),
-				array('label'=>'<span class="glyphicon glyphicon-search"></span> About this theme <span class="label label-danger pull-right">HOT</span>', 'url'=>'http://www.webapplicationthemes.com/abound-yii-framework-theme/'),
-				array('label'=>'<span class="glyphicon glyphicon-th-list"></span> Messages <span class="badge pull-right">12</span>', 'url'=>'#'),
-				// Include the operations menu
-				//array('label'=>'OPERATIONS','items'=>$this->menu),
-			),
-			));?>
+		  <?php
+// 		   $this->widget('zii.widgets.CMenu', array(
+// 			/*'type'=>'list',*/
+// 			'encodeLabel'=>false,
+// 			'items'=>array(
+// 				array('label'=>'<span class="glyphicon glyphicon-home"></span>  Dashboard <span class="label label-info pull-right">BETA</span>', 'url'=>array('/site/index'),'itemOptions'=>array('class'=>'')),
+// 				array('label'=>'<span class="glyphicon glyphicon-search"></span> About this theme <span class="label label-danger pull-right">HOT</span>', 'url'=>'http://www.webapplicationthemes.com/abound-yii-framework-theme/'),
+// 				array('label'=>'<span class="glyphicon glyphicon-th-list"></span> Messages <span class="badge pull-right">12</span>', 'url'=>'#'),
+// 				// Include the operations menu
+// 				//array('label'=>'OPERATIONS','items'=>$this->menu),
+// 			),
+// 			));
+			?>
 		</div>
         <!--
         <table class="table table-striped table-bordered">

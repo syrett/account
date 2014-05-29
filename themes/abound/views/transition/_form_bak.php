@@ -64,53 +64,59 @@ $tranDate = $command->queryRow(); // execute a query SQL
  	       <input type="hidden" id="entry_num_pre"
                    value="<? echo Yii::app()->createAbsoluteUrl("transition/GetTranSuffix") ?>" />
         </div>
-	</div>
+   </div>
     <!-- Table -->
-    <table class="table" id="transitionRows">
-    	<thead>
+    <table class="table">
         <tr>
-            <th class="col-md-3">凭证摘要</th>
-            <th class="col-md-3">科目</th>
-            <th class="col-md-1">借/贷</th>
-            <th class="col-md-2">金额</th>
-            <th class="col-md-3">附加</th>
-        </tr>
-        </thead>
-<?php
-$count = count($model) > 5 ? count($model) : 5; //此凭证多于5条记录
-$number = 0;
-foreach ($model as $i => $item) {
-?>
-        <tr id="row_<?php echo $i; ?>">
-            <td class="col-md-3">
-               <?php echo CHtml::activeTextField($item, "[$i]entry_memo", array('class' => 'form-control input-size')); ?>
-               <?php echo $form->error($item, '[$i]_entry_memo'); ?>
-            </td>
-            <td class="col-md-3">
-               <? echo CHtml::activeDropDownList($item, "[$i]entry_subject",Transition::model()->listSubjects(), array('class'=>'v-subject')); ?>
-               <input type="hidden" value="<?= $i ?>"/>
-            </td>
-            <td class="col-md-1">
-                <? echo CHtml::activeDropDownList($item, "[$i]entry_transaction",array(1=>'借',2=>'贷')); ?>
-            </td>
-            <td class="col-md-2">
-                <?php echo CHtml::activeTextField($item, "[$i]entry_amount", array('class' => 'form-control input-size', 'onkeyup'=>'checkInputAmount(this)',)); ?>
-            </td>
-            <td class="col-md-3">
-                <span id="appendix_<?= $i; ?>" style="<? if($item['entry_appendix_type']==""||$item['entry_appendix_type']==0){ ?>display: none; <?}?>float: left">
-                                    <?php
+            <td>
+                <div class="row">
+                    <div class="col-md-3">凭证摘要</div>
+                    <div class="col-md-3">科目</div>
+                    <div class="col-md-1">借/贷</div>
+                    <div class="col-md-2">金额</div>
+                    <div class="col-md-3">附加</div>
+                </div>
+                <div id="transitionRows">
+                    <?
+                    $count = count($model) > 5 ? count($model) : 5; //此凭证多于5条记录
+                    $number = 0;
+                    foreach ($model as $i => $item) {
+                        ?>
+                        <div id="row_<?= $i ?>" class="row v-detail">
+                            <div class="col-md-3">
+                                <?php echo CHtml::activeTextField($item, "[$i]entry_memo", array('class' => 'form-control input-size')); ?>
+                                <?php echo $form->error($item, '[$i]_entry_memo'); ?>
+                            </div>
+                            <div class="col-md-3">
+                                <? echo CHtml::activeDropDownList($item, "[$i]entry_subject",Transition::model()->listSubjects(), array('class'=>'v-subject')); ?>
+                                <input type="hidden" value="<?= $i ?>"/>
+                            </div>
+                            <div class="col-md-1">
+                                <? echo CHtml::activeDropDownList($item, "[$i]entry_transaction",array(1=>'借',2=>'贷')); ?>
+                            </div>
+                            <div class="col-md-2">
+                                <?php echo CHtml::activeTextField($item, "[$i]entry_amount", array('class' => 'form-control input-size', 'onkeyup'=>'checkInputAmount(this)',)); ?>
+                            </div>
+                            <div class="col-md-3">
+                                <span id="appendix_<?= $i; ?>" style="<? if($item['entry_appendix_type']==""||$item['entry_appendix_type']==0){ ?>display: none; <?}?>float: left">
+                                    <?
                                     $data = $this->appendixList($item['entry_appendix_type']);
                                     $item->entry_appendix_id = $item['entry_appendix_id'];
                                     echo CHtml::activeDropDownList($item, "[$i]entry_appendix_id",$data, array('class'=>'v-appendix')); ?>
-                </span>
-                <button type="button" class="close" aria-hidden="true" name="<?php echo $i; ?>" onclick="rmRow(this)">&times;</button>
-                <?php echo CHtml::activeHiddenField($item, "[$i]id"); ?>
-                <?php echo CHtml::activeHiddenField($item, "[$i]entry_appendix_type"); ?>
+                                </span>
+                                <button type="button" class="close" aria-hidden="true" name="<?= $i ?>"
+                                        onclick="rmRow(this)">&times;</button>
+                            </div>
+                            <?php echo CHtml::activeHiddenField($item, "[$i]id"); ?>
+                            <?php echo CHtml::activeHiddenField($item, "[$i]entry_appendix_type"); ?>
+                        </div>
+                    <?$number++;} ?>
+                </div>
             </td>
         </tr>
-        <?php $number++;} ?>
-    </table>
-	<div class="panel-footer">
+
+        <tr>
+            <td>
 				<?php
 				if(isset($_REQUEST['id']) && $model[0]->entry_memo!='结转凭证' && $model[0]->entry_reviewed!=1 && $model[0]->entry_closing!=1)
 				echo CHtml::htmlbutton(($model[0]->entry_deleted==0)?'<span class="glyphicon glyphicon-remove"></span> 删除凭证':'<span class="glyphicon glyphicon-share-alt"></span> 恢复凭证', array(
@@ -131,19 +137,21 @@ foreach ($model as $i => $item) {
 				);
 //				echo '</p>';
 				?>
-
+			</td>
+		</tr>
 <?php
 	if($model[0]->entry_reviewed==1)
 	{
-//		echo "		<tr>";
-//		echo "			<td>";
+		echo "		<tr>";
+		echo "			<td>";
 		$user = User::model()->findByPk(array('id'=>$model[0]->entry_reviewer));
 		echo '<span class="glyphicon glyphicon-user"></span> 审核人员：'. $user->email;
 	}
-//	echo "			</td>";
-//	echo "		</tr>";
+	echo "			</td>";
+	echo "		</tr>";
 ?>
-
+		<tr>
+			<td>
 			<div class="form-group buttons text-center">
 				<?php
 					echo $form->error($item,'entry_amount',array('id'=>'entry_amount_msg'));
@@ -167,7 +175,9 @@ foreach ($model as $i => $item) {
 				?>
 			</div>
 		<!-- form -->
-
+            </td>
+        </tr>
+    </table>
 
     <input type="hidden" name="entry_num_prefix" id='entry_num_prefix' value="<? echo isset($_REQUEST['id'])==true?$model[0]['entry_num_prefix']:date('Ym', time()) ?>"/>
     <input type="hidden" name="entry_num" id='entry_num' value="<? echo isset($_REQUEST['id'])==true?$model[0]['entry_num']:$this->tranSuffix("") ?>"/>
@@ -178,6 +188,5 @@ foreach ($model as $i => $item) {
     <input type="hidden" value="<? echo Yii::app()->createAbsoluteUrl("transition/Appendix") ?>" id="entry_appendix"/>
     <input type="hidden" value="<? echo Yii::app()->createAbsoluteUrl("transition/ajaxlistfirst") ?>"
            id="ajax_listfirst"/>
-    </div>
 <?php $this->endWidget(); ?>
 <?php echo CHtml::endForm(); ?>

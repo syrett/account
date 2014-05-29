@@ -13,7 +13,6 @@
   background-image: linear-gradient(to bottom, #1d2e7b, #3a4a8c);
   background-repeat: repeat-x;
   border-color: #1d2e7b;
-  filter: progid:dximagetransform.microsoft.gradient(startColorstr='#ff1d2e7b', endColorstr='#ff3a4a8c', GradientType=0);
 }
 
 .navbar .nav > li > a {

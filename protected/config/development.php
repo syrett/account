@@ -8,7 +8,8 @@
 return array(
     'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
     'name'=>'Wojia',
-    'theme'=>'account',
+//    'theme'=>'account',
+    'theme'=>'abound',
     // preloading 'log' component
     'preload'=>array('log'),
 
@@ -53,10 +54,10 @@ return array(
         // uncomment the following to use a MySQL database
 
         'db'=>array(
-            'connectionString' => 'mysql:host=localhost;dbname=account',
+            'connectionString' => 'mysql:host=127.0.0.1;dbname=account',
             'emulatePrepare' => true,
-            'username' => 'root',
-            'password' => '',
+            'username' => 'dev',
+            'password' => 'P@ssw0rd',
             'charset' => 'utf8',
             'enableProfiling' => true,
             'enableParamLogging' => true,

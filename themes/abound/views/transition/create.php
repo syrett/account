@@ -24,7 +24,7 @@ $this->menu=array(
 <p>&nbsp;</p>
 <div class="panel panel-success">
 	<div class="panel-heading">
-	<h2>会 计 凭 证</h2>	
+	<h2>记 账 凭 证</h2>	
 	</div>
-        <?php $this->renderPartial('_form', array('model' => $model)); ?>
+    <?php $this->renderPartial('_form', array('model' => $model)); ?>
 </div>

@@ -50,10 +50,10 @@ return array(
         // uncomment the following to use a MySQL database
 
         'db'=>array(
-            'connectionString' => 'mysql:host=localhost;dbname=testdrive',
+            'connectionString' => 'mysql:host=localhost;dbname=account',
             'emulatePrepare' => true,
-            'username' => 'jason',
-            'password' => 'lrc207107',
+            'username' => 'dev',
+            'password' => 'P@ssw0rd',
             'charset' => 'utf8',
         ),
 

@@ -17,10 +17,10 @@ return array(
 		// uncomment the following to use a MySQL database
 		/*
 		'db'=>array(
-			'connectionString' => 'mysql:host=localhost;dbname=testdrive',
+			'connectionString' => 'mysql:host=127.0.0.1;dbname=testdrive',
 			'emulatePrepare' => true,
-			'username' => 'root',
-			'password' => '',
+			'username' => 'dev',
+			'password' => 'P@ssw0rd',
 			'charset' => 'utf8',
 		),
 		*/

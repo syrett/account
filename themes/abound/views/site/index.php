@@ -7,7 +7,7 @@ $this->pageTitle = Yii::app()->name;
 <div class="panel panel-default">
 
     <!-- Default panel contents -->
-    <div class="panel-heading"><h2>系统总流程</h2></div>
+    <div class="panel-heading"><h3>系统总流程</h3></div>
     <div class="panel-body v-title">
     <!-- search-form -->
     <div class="row">
@@ -15,7 +15,7 @@ $this->pageTitle = Yii::app()->name;
         	<div class="thumbnail">
         	<a href="<?= $this->createUrl('Transition/create') ?>">
                 <?php
-                 echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/transition.ico','填制凭证');
+                 echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/pzlr.png','填制凭证',array('style'=>'filter:alpha(opacity=0)'));
                 ?>
         	</a>
         	<div class="caption">
@@ -27,7 +27,7 @@ $this->pageTitle = Yii::app()->name;
         	<div class="thumbnail">
         	<a href="<?= $this->createUrl('Site/operation', array('operation'=>'listReview')) ?>">
                 <?php
-                 echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/review.ico','审核');
+                 echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/pzsh.png','审核',array('style'=>'filter:alpha(opacity=0)'));
                 ?>
         	</a>
         	<div class="caption">
@@ -39,7 +39,7 @@ $this->pageTitle = Yii::app()->name;
         	<div class="thumbnail">
         	<a href="<?= $this->createUrl('Site/operation', array('operation'=>'listTransition')) ?>">
                 <?php
-                echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/trans.ico','凭证管理',array('data-src'=>'holder.js/100%x80'));
+                echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/pzcz.png','凭证管理',array('style'=>'filter:alpha(opacity=0)'));
                 ?>
         	</a>
         	<div class="caption">
@@ -51,7 +51,7 @@ $this->pageTitle = Yii::app()->name;
         	<div class="thumbnail">
         		<a href="<?= $this->createUrl('Site/operation', array('operation'=>'listPost')) ?>">
                 <?php
-                echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/posting.ico','过账',array('data-src'=>'holder.js/100%x80'));
+                echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/pzdz.png','过账',array('style'=>'filter:alpha(opacity=0)'));
                 ?>
         		</a>
         		<div class="caption">
@@ -63,11 +63,11 @@ $this->pageTitle = Yii::app()->name;
         	<div class="thumbnail">
         		<a href="<?= $this->createUrl('Site/operation', array('operation'=>'listSettlement')) ?>">
                 <?php
-                echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/settle.ico','结账',array('data-src'=>'holder.js/100%x80'));
+                echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/qmjz.png','月末结账',array('style'=>'filter:alpha(opacity=0)'));
                 ?>
                 </a>
                 <div class="caption">
-                	<h4>5. 结账</h4>
+                	<h4>5. 期末结账</h4>
                 </div>
         	</div>
         </div>
@@ -76,7 +76,9 @@ $this->pageTitle = Yii::app()->name;
 //        echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/long.png','',array('class'=>''));
 //        ?>
 <!--    </div>-->
+    </div><!-- .row -->
+    </div><!-- .panel-body -->
+    <div class="panel-footer">
+    <p>系统消息：当前为测试版本，如有任何意见及建议，请发送邮件至geek.michael@live.com</p>
     </div>
-    </div>
-    </div>
-</div>
+</div><!-- .panel -->

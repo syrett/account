@@ -8,7 +8,8 @@
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 	'name'=>'My Web Application',
-    'theme'=>'account',
+	'theme'=>'account',
+//    'theme'=>'blackboot',
 	// preloading 'log' component
 	'preload'=>array('log'),
 
@@ -55,10 +56,10 @@ return array(
 		// uncomment the following to use a MySQL database
 
 		'db'=>array(
-			'connectionString' => 'mysql:host=localhost;dbname=account',
+			'connectionString' => 'mysql:host=127.0.0.1;dbname=account',
 			'emulatePrepare' => true,
-			'username' => 'jason',
-			'password' => 'lrc207107',
+			'username' => 'dev',
+			'password' => 'P@ssw0rd',
 			'charset' => 'utf8',
 		),
 
@@ -74,11 +75,9 @@ return array(
 					'levels'=>'error, warning',
 				),
 				// uncomment the following to show log messages on web pages
-				/*
 				array(
 					'class'=>'CWebLogRoute',
 				),
-				*/
 			),
 		),
 	),
