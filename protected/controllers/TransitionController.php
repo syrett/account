@@ -359,14 +359,14 @@ class TransitionController extends Controller
         $arr = array('type' => 0);
         $subject = substr($subject, 0, 4);
         switch ($subject) {
-            case 1122 : // 应付账款，列出供应商
+            case 2202 : // 应收账款，列出客户列表
                 $arr['type'] = 1;
                 $data = Vendor::model()->findAll();
                 foreach ($data as $item) {
                     $html .= "<option value=" . $item['id'] . ">" . $item['company'] . "</options>";
                 }
                 break;
-            case 2202 : // 应收账款，列出客户列表
+            case 1122 :  // 应付账款，列出供应商
                 $arr['type'] = 2;
                 $data = Client::model()->findAll();
                 foreach ($data as $item) {
