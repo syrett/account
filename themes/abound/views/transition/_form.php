@@ -41,36 +41,33 @@ $tranDate = $command->queryRow(); // execute a query SQL
         $_REQUEST['id'] = $_REQUEST[0]['id'];
     }
 
-?>
-	<div class="panel-body">
-        <div class="col-md-4">
-            <div class="input-group">
-            	<span class="input-group-addon">凭证号：</span>
-                <input type="text" name="transition_id" class="form-control" value="<?php
-                echo (isset($_REQUEST[0]['id']) && $_REQUEST[0]['id'] != "")
+        $transition_number=(isset($_REQUEST[0]['id']) && $_REQUEST[0]['id'] != "")
                     ? $model[0]->entry_num_prefix . substr(strval($model[0]->entry_num + 10000), 1, 4)
                     : $this->tranNumber();
+        $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime($model[0]->entry_date)) : date('Y-m-d');
+?>
+	<div class="panel-body">
+	<div class="transition_title">
+		<h2>记 账 凭 证</h2>
+	</div>
+        <div class="col-md-4">
+		凭证号：<span class="dotted"><?php echo $transition_number; ?></span> 字
+		<input type="hidden" name="transition_id" class="form-control" value="<?php
+                echo $transition_number;
                 ?>" readonly />
-            </div>
         </div>
         <div class="col-md-4" id="transition_date">
-        	<div class="input-group">
-        		<span class="input-group-addon">日期：</span>
-                <input type="text" name="entry_date" class="form-control" value="<?
-                echo isset($model[0]->entry_num_prefix)
-                    ?date('Ymd', strtotime($model[0]->entry_date))
-                    : date('Ymd');?>" id="dp1" readonly />
-            </div>
- 	       <input type="hidden" id="entry_num_pre"
-                   value="<? echo Yii::app()->createAbsoluteUrl("transition/GetTranSuffix") ?>" />
+        	制单日期：<?php echo  $transition_date; ?>
+                <input type="hidden" name="entry_date" class="form-control" value="<?php echo $transition_date; ?>" id="dp1" readonly />
+ 	       <input type="hidden" id="entry_num_pre" value="<? echo Yii::app()->createAbsoluteUrl("transition/GetTranSuffix") ?>" />
         </div>
-	</div>
+	</div><!-- .panel-body -->
     <!-- Table -->
-    <table class="table" id="transitionRows">
+    <table class="table table-bordered transition" id="transitionRows">
     	<thead>
         <tr>
-            <th class="col-md-3">凭证摘要</th>
-            <th class="col-md-3">科目</th>
+            <th class="col-md-3">摘要</th>
+            <th class="col-md-3">科目名称</th>
             <th class="col-md-1">借/贷</th>
             <th class="col-md-2">金额</th>
             <th class="col-md-3">附加</th>
@@ -160,7 +157,8 @@ foreach ($model as $i => $item) {
 				);
 				echo "&nbsp;&nbsp;";
 				if($model[0]->entry_reviewed == 0){
-					echo CHtml::submitButton($item->isNewRecord ? '添加新凭证' : "保存", array('encode'=>false,'class' => 'btn btn-primary',));  
+					echo CHtml::htmlbutton('<span class="glyphicon glyphicon-floppy-disk"></span> 保存', array('encode'=>false,'class' => 'btn btn-primary',));  
+					//echo CHtml::submitButton($item->isNewRecord ? '添加新凭证' : "保存", array('encode'=>false,'class' => 'btn btn-primary',));  
 				}
 				echo "&nbsp;&nbsp;";
 				echo BtnBack();
