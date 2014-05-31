@@ -48,7 +48,7 @@ h1,h2,h3,h4, .portlet > .portlet-decoration, .sidebar-nav > ul > li > a, .navbar
 	font-family: 'Carrois Gothic', sans-serif;
 }
 
-.portlet > .portlet-decoration, .sidebar-nav > ul > li > a, .navbar li > a, th{
+.portlet > .portlet-decoration, .sidebar-nav > ul > li > a {
 	font-size:14px!important;
 }
 /* Start Portlets*/
@@ -527,7 +527,10 @@ footer {
   filter: progid:dximagetransform.microsoft.gradient(enabled=false);
 }
 
-.breadcrumb {margin:0;}
+.breadcrumb {
+ margin: 10px 0;
+ padding-bottom: 0;
+}
 .div-reviewed{
     background-color: rgb(204, 255, 204);
 }
@@ -551,4 +554,36 @@ footer {
 .div-group div{
     width: 50px;
     height: 20px;
+}
+
+.transition_title {
+    text-align:center;
+    padding-bottom:20px;
+}
+.transition_title h2{
+ border-bottom-style:double;
+ font-weight:bold;
+ display:inline;
+ color:#066;
+}
+
+table.transition {
+ border:2px solid #000;
+ margin:0 3% 20px 3%;
+ width:93%
+}
+span.dotted{
+ border-bottom:1px dotted #066;
+}
+table.transition>thead>tr>th {
+ text-align:center;
+ color:#066;
+}
+table.transition>thead>tr>th, table.transition>tbody>tr>td {
+ border:1px solid #000;
+}
+table.transition>tbody>tr>td>input {
+ font-size:12px;
+ height:24px;
+ padding: 2px 6px;
 }
