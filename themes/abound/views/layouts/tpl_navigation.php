@@ -50,7 +50,7 @@
                         array('label'=>'凭证 <span class="caret"></span>', 'url'=>'#','itemOptions'=>array('class'=>'dropdown','tabindex'=>"-5"),'linkOptions'=>array('class'=>'dropdown-toggle','data-toggle'=>"dropdown"), 
                         'items'=>array(
                              array('label' => '查询凭证', 'url' => array('/transition/index'), 'active'=>$this->id=='transition'?true:false),
-                             array('label' => '填制凭证', 'url' => array('/transition/create')),
+                             array('label' => '凭证录入', 'url' => array('/transition/create')),
                              array('label' => '审核凭证', 'url' => array('/transition/listreview')),
                              array('label' => '整理凭证', 'url' => array('/Site/operation&operation='. 'listReorganise')),
                              //array('label' => '打印凭证', 'url'=>'#'),

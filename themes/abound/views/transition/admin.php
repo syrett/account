@@ -1,7 +1,10 @@
 <?php
 /* @var $this TransitionController */
 /* @var $model Transition */
-
+$this->pageTitle=Yii::app()->name . ' - 会计凭证管理';
+$this->breadcrumbs=array(
+	'凭证管理'
+);
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
 	$('.search-form').toggle();
@@ -27,12 +30,11 @@ $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/datepicker.css');
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/_search.js', CClientScript::POS_HEAD);
 ?>
 <div class="row">
-	<h2>凭证管理</h2>
 	<?php $this->widget('zii.widgets.CMenu', array(
 		/*'type'=>'list',*/
 		'encodeLabel'=>false,
 		'items'=>$this->menu,
-		'htmlOptions'=>array('class'=>'nav nav-pills'),
+		'htmlOptions'=>array('class'=>'nav nav-pills navbar-right'),
 		));
 	?>
 </div>
@@ -40,32 +42,29 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/_search.js', CC
 <div class="panel panel-default voucher form">
     <!-- Default panel contents -->
     <div class="panel-heading">
+	<h2>凭证管理</h2>
+    </div>
+    <div class="panel-body">
 	<?php echo CHtml::beginForm(); ?>
-		<div class="col-md-4">
-			<div class="input-group">
+		<div class="col-md-7">
+		  <div class="input-group">
 			<span class="input-group-addon">开始日期：</span>
 			<?php echo CHtml::textField('s_day', isset($_REQUEST['s_day'])?$_REQUEST['s_day']:"",array('class' => 'form-control',)); ?>
-			</div>
-		</div>
-		<div class="col-md-4">
-			<div class="input-group">
 			<span class="input-group-addon">结束日期：</span>
 			<?php echo CHtml::textField('e_day', isset($_REQUEST['e_day'])?$_REQUEST['e_day']:"",array('class' => 'form-control',)); ?>
-			</div>
+			<span class="input-group-btn">
+			<?php  echo CHtml::submitButton('查找',array('class' => 'btn btn-primary',)); ?>
+			</span>
+		  </div><!-- /input-group -->
+		</div>
+		<div class="col-md-3">背景颜色说明：
+			<span class="reviewed">已审核</span>&nbsp;&nbsp;
+			<span class="deleted">已删除</span>
 		</div>
 		<?php
-			echo CHtml::submitButton('查找',array('class' => 'btn btn-primary',));
 			echo CHtml::endForm();
 		?>
 	<!-- search-form -->
-    </div>
-    <div class="panel-body">
-        <div class="div-group">
-            <div class="div-reviewed">&nbsp;</div>审核通过
-        </div>
-        <div class="div-group">
-            <div class="div-deleted">&nbsp;</div>删除凭证
-        </div>
     </div>
         <?php
 

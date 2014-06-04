@@ -531,10 +531,15 @@ footer {
  margin: 10px 0;
  padding-bottom: 0;
 }
-.div-reviewed{
+
+.reviewed, .deleted {
+  width:50px; padding:6px;
+  margin-right:5px;
+}
+.reviewed{
     background-color: rgb(204, 255, 204);
 }
-.div-deleted{
+.deleted{
     background-color: #f2dede;
 }
 
@@ -546,14 +551,6 @@ footer {
 }
 .row-reviewed {
     background-color: rgb(204, 255, 204);
-}
-.div-group{
-    float: left;
-    padding: 10px 40px;
-}
-.div-group div{
-    width: 50px;
-    height: 20px;
 }
 
 .transition_title {
