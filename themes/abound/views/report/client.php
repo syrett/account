@@ -1,11 +1,11 @@
- <!-- 客户报表 -->
+<!-- 客户报表 -->
 <?php
 
-//Yii::app()->clientScript->registerCoreScript('jquery');
-//$cs = Yii::app()->clientScript;
-//$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/jquery-ui-1.10.4.custom.js', CClientScript::POS_HEAD);
-//$cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/jquery-ui-1.10.4.custom.css');
-////$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/profit.js', CClientScript::POS_HEAD);
+Yii::app()->clientScript->registerCoreScript('jquery');
+$cs = Yii::app()->clientScript;
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/jquery-ui-1.10.4.custom.js', CClientScript::POS_HEAD);
+$cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/jquery-ui-1.10.4.custom.css');
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/profit.js', CClientScript::POS_HEAD);
 
 ?>
 <style>
@@ -39,7 +39,7 @@ function echoData($data, $options=array("css"=>"table-c"))
       {
         echo "<tr>";
         echo "<div class=".$css.">";
-        echo "<td>".$ti["id"]."</td>";
+        echo "<td>".$ti["company"]."</td>";
         echo "<td>".number_format($ti["month_debit"], 2)."</td>";
         echo "<td>".number_format($ti["month_credit"], 2)."</td>";
         echo "<td>".number_format($ti["year_debit"], 2)."</td>";
@@ -83,9 +83,3 @@ function echoData($data, $options=array("css"=>"table-c"))
                                          </table>
     </div>
   </div>
-
-
-
-
-
-
