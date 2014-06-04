@@ -359,14 +359,14 @@ class TransitionController extends Controller
         $arr = array('type' => 0);
         $subject = substr($subject, 0, 4);
         switch ($subject) {
-            case 2202 : // 应收账款，列出客户列表
+            case 2202 : // 应付账款，列出供应商
                 $arr['type'] = 1;
                 $data = Vendor::model()->findAll();
                 foreach ($data as $item) {
                     $html .= "<option value=" . $item['id'] . ">" . $item['company'] . "</options>";
                 }
                 break;
-            case 1122 :  // 应付账款，列出供应商
+            case 1122 :  // 应收账款，列出客户列表
                 $arr['type'] = 2;
                 $data = Client::model()->findAll();
                 foreach ($data as $item) {
@@ -492,6 +492,7 @@ class TransitionController extends Controller
     public function saveTransitions()
     {
         $valid = true;
+        $prefix = '';
         $old = array();
         $new = array();
         $items = array();
@@ -501,7 +502,10 @@ class TransitionController extends Controller
                 array_push($old, $i['id']);
             }
         }
-        $_POST['entry_num'] = $this->tranSuffix();
+
+        if (isset($_REQUEST['entry_num_prefix']))
+            $prefix = $_REQUEST['entry_num_prefix'];
+        $_POST['entry_num'] = $this->tranSuffix($prefix);
 //        Yii::app()->db->createCommand('set names "utf8"')->execute();
         foreach ($_POST['Transition'] as $Tran) {
             if (isset($Tran)) {

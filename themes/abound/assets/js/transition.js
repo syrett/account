@@ -114,7 +114,10 @@ $(document).ready(function () {
                 data: {"entry_prefix": prefix[0]},
                 success: function (msg) {
                     if (msg != 0)
+                    {
                         $("#tranNumber").attr('value', prefix[0] + msg);
+                        $("#tranNumber_lable").html(prefix[0] + msg);
+                    }
                     $("#entry_num_prefix").attr('value', prefix[0]);
                     $("#entry_num").attr('value', msg);
 //                    $("#entry_day").attr('value',day);

@@ -53,14 +53,16 @@ $tranDate = $command->queryRow(); // execute a query SQL
 		<h2>记 账 凭 证</h2>
 	</div>
         <div class="col-md-4">
-		凭证号：<span class="dotted"><?php echo $transition_number; ?></span> 字
-		<input type="hidden" name="transition_id" class="form-control" value="<?php
+		凭证号：<span class="dotted" id="tranNumber_lable"><?php echo $transition_number; ?></span> 字
+		<input type="hidden" name="transition_id" id="tranNumber" class="form-control" value="<?php
                 echo $transition_number;
                 ?>" readonly />
         </div>
         <div class="col-md-4" id="transition_date">
-        	制单日期：<?php echo  $transition_date; ?>
-                <input type="hidden" name="entry_date" class="form-control" value="<?php echo $transition_date; ?>" id="dp1" readonly />
+        	制单日期：<input type="text" name="entry_date" class="form-control" value="<?
+            echo isset($model[0]->entry_num_prefix)
+                ?date('Ymd', strtotime($model[0]->entry_date))
+                : date('Ymd');?>" id="dp1" readonly />
  	       <input type="hidden" id="entry_num_pre" value="<? echo Yii::app()->createAbsoluteUrl("transition/GetTranSuffix") ?>" />
         </div>
 	</div><!-- .panel-body -->
@@ -159,8 +161,8 @@ foreach ($model as $i => $item) {
 				);
 				echo "&nbsp;&nbsp;";
 				if($model[0]->entry_reviewed == 0){
-					echo CHtml::htmlbutton('<span class="glyphicon glyphicon-floppy-disk"></span> 保存', array('encode'=>false,'class' => 'btn btn-primary',));  
-					//echo CHtml::submitButton($item->isNewRecord ? '添加新凭证' : "保存", array('encode'=>false,'class' => 'btn btn-primary',));  
+					//echo CHtml::htmlbutton('<span class="glyphicon glyphicon-floppy-disk"></span> 保存', array('encode'=>false,'class' => 'btn btn-primary',));
+					echo CHtml::submitButton('保存', array('encode'=>false,'class' => 'btn btn-primary',));
 				}
 				echo "&nbsp;&nbsp;";
 				echo BtnBack();
