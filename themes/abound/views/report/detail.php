@@ -1,20 +1,29 @@
  <!-- 明细表 -->
 
 <?php
+
+
 Yii::import('ext.select2.Select2');
 ?>
 
 <style>
+.table-c table{border-right:1px solid #F00;border-top:1px solid #F00; cellpadding:0; cellspacing:0 }
+.table-c table th{border-left:1px solid #F00;border-bottom:1px solid #F00; cellpadding:0; cellspacing:0}
+.table-c table td{border-left:1px solid #F00;border-bottom:1px solid #F00; cellpadding:0; cellspacing:0}
 .ui-datepicker table{
     display: none;
 }
 </style>
 
-<div class="alert alert-info">
-	<h3>资产负债表</h3>
+<style>
+.table-d table{ background:#000; border-right:1px solid #000}
+.table-d table td{ background:#FFF}
+</style>
+
+
+<div>
     <?php echo CHtml::beginForm(); ?>
-    <div class="form-group">
-    请选择日期：
+    <h5>日期:
         <?php
         if(isset($_REQUEST['year']))
         {
@@ -47,7 +56,8 @@ Yii::import('ext.select2.Select2');
             'data' => $years,
         ));
         ?>
-        年
+        年</h5>
+    <h5>
         <?php
         $this->widget('Select2', array(
             'name' => 'fm',
@@ -63,8 +73,8 @@ Yii::import('ext.select2.Select2');
             'data' => $months,
         ));
         ?>月
-        </div>
-        <div class="form-group">
+    </h5>
+    <h5>
         选择科目
         <?php
         $this->widget('Select2', array(
@@ -73,73 +83,134 @@ Yii::import('ext.select2.Select2');
             'data' => Transition::model()->listSubjects(),
         ));
         ?>
-		<input type="submit" value="查看报表" class="btn btn-primary" />
-		</div>
+    </h5>
+
+    <input type="submit" value="查看报表" />
     <?php echo CHtml::endForm(); ?>
 </div>
 
  <?php if(!empty($dataProvider)) {
 
  ?>
-<div class="panel panel-default">
-  <div class="panel-heading">
-  	<h2>资产负债表</h2>
-  	<?php echo $fromMonth."-".$toMonth ?>
-  </div>
-  
-<table class="table table-bordered">
-	<tdead>
-	 <tr>
-	 <td>日期</td>
-	 <td>凭证号码</td>
-	 <td>描述</td>
-	 <td>借方</td>
-	 <td>贷方</td>
-	 <td>余额</td>
-	 </tr>
-	</thead>
-	 <tr>
-	 <td>&nbsp;</td>
-	 <td>&nbsp;</td>
-	 <td>期初余额</td>
-	 <td>&nbsp;</td>
-	 <td>&nbsp;</td>
-	 <td><?php echo $dataProvider["start_balance"] ?></td>
-	 </tr>
-	<tr>
+<div class="table-c">
+     <table cellpadding="0";cellspacing="0";style="padding:0px;margin:0px;">
+                                         <tr>
+                                         <td colspan=6 align=center> <?php echo $fromMonth."-".$toMonth ?> </td>
+                                         </tr>
+
+                                         <tr>
+                                         <th >日期</th>
+                                         <th >凭证号码</th>
+                                          <th>描述</th>
+                                         <th >借方</th>
+                                         <th >贷方</th>
+                                         <th >余额</th>
+                                         </tr>
+
+                                         <tr>
+                                         <th ></th>
+                                         <th ></th>
+                                          <th>期初余额</th>
+                                         <th ></th>
+                                         <th ></th>
+                                         <th ><?php echo $dataProvider["start_balance"] ?></th>
+                                         </tr>
+                                              <tr>
 
 <?php
-$info = $dataProvider["info"];
-foreach($info as $ti){
-        echo "<tr>";
-      echo "<td>".$ti["entry_date"]."</td>";
-      echo "<td>".$ti["entry_num"]."</td>";
-      echo "<td>".$ti["entry_memo"]."</td>";
-
-      if(isset($ti["debit"])){
-        echo "<td>".$ti["debit"]."</td>";
-      }else{
-        echo "<td> </td>";
-      }
+ $css = "table-c";
+ $info = $dataProvider["info"];
+ $month_debit=0;
+ $month_credit=0;
+ $month_balance=$dataProvider["start_balance"];
+ $month=0;
+ $sbj_cat = Subjects::model()->getCat($subject_id);
+ foreach($info as $ti){
+   if(isset($ti["debit"])){
+     $debit = $ti["debit"];
+   }else{
+     $debit = 0;
+   }
       
-      if(isset($ti["credit"])){
-      echo "<td>".$ti["credit"]."</td>";
-      }else{
-        echo "<td> </td>";
-      }
-      echo "<td>".$ti["balance"]."</td>";
-      echo "</tr>";
-}
+   if(isset($ti["credit"])){
+     $credit = $ti["credit"];
+   }else{
+     $credit = 0;
+   }
+   $row_month = substr($ti["entry_date"], 5, 2);
+   if ($row_month == $month || $month == 0) {
+     $month_debit += $debit;
+     $month_credit += $credit;
+     $month=$row_month;
+   }else{
 
+     $month_balance = balance($month_balance, $month_debit, $month_credit, $sbj_cat);
+     echo "<tr>";
+     echo "<div class=".$css.">";
+     echo "<td colspan=3>".$month."月总计 </td>";
+     echo "<td>".number_format($month_debit, 2)."</td>";
+     echo "<td>".number_format($month_credit, 2)."</td>";
+     echo "<td>".$month_balance."</td>";
+     echo "</div>";
+     echo "</tr>";
+     $month_debit = $debit;
+     $month_credit = $credit;
+     $month=$row_month;
+   };
+
+   echo "<tr>";
+   echo "<div class=".$css.">";
+   echo "<td>".substr($ti["entry_date"],0,10)."</td>";
+   echo "<td>".$ti["entry_num"]."</td>";
+   echo "<td>".$ti["entry_memo"]."</td>";
+
+   if(isset($ti["debit"])){
+     echo "<td>".number_format($ti["debit"],2)."</td>";
+     $debit = $ti["debit"];
+   }else{
+     echo "<td> </td>";
+     $debit = 0;
+   }
+      
+   if(isset($ti["credit"])){
+     echo "<td>".number_format($ti["credit"],2)."</td>";
+     $credit = $ti["credit"];
+   }else{
+     echo "<td> </td>";
+     $credit = 0;
+   }
+   echo "<td>".number_format($ti["balance"],2)."</td>";
+   echo "</div>";
+   echo "</tr>";
+
+
+ }
+
+ if($month != 0){
+     echo "<tr>";
+     echo "<div class=".$css.">";
+     echo "<td colspan=3>".$month."月总计 </td>";
+     echo "<td>".number_format($month_debit, 2)."</td>";
+     echo "<td>".number_format($month_credit, 2)."</td>";
+     echo "<td>".balance($month_balance, $month_debit, $month_credit, $sbj_cat)."</td>";
+     echo "</div>";
+     echo "</tr>";
+ }
 ?>
 
-	 <tr>
-	 <td>&nbsp;</td>
-	 <td>&nbsp;</td>
-	 <td>总计</td>
-	 <td><?php echo $dataProvider["sum_debit"] ?></td>
-	 <td><?php echo $dataProvider["sum_credit"] ?></td>
-	 <td><?php echo $dataProvider["end_balance"] ?></td>
-	 </tr>
+                                         <tr>
+                                         <th ></th>
+                                         <th ></th>
+                                          <th>总计</th>
+ <th ><?php echo number_format($dataProvider["sum_debit"],2) ?></th>
+ <th ><?php echo number_format($dataProvider["sum_credit"],2) ?></th>
+ <th ><?php echo number_format($dataProvider["end_balance"],2) ?></th>
+                                         </tr>
+
+
 </table>
+
+
+
+</div>
  <? }

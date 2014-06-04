@@ -82,16 +82,17 @@ function echoData($data, $options=array("css"=>"table-c"))
 */
 ?>
 
-<div class="alert alert-info">
-<?php echo CHtml::beginForm('','post',array('class'=>'form-inline','role'=>'form')); ?>
-	<div class="form-group">
-		<label for="date">请选择日期：</label>
-		<input type="text" name="date" id="date" class="form-control" value="<?php echo isset($date)?$date:'' ?>" readonly/>
-	</div>
-	<input class="btn btn-primary" type="submit" value="查看报表" />
-<?php echo CHtml::endForm(); ?>
-</div>
+<div class="table-c";>
 
+ <div>
+<?php echo CHtml::beginForm(); ?>
+<h5>日期:
+    <input type="text" name="date" id="date" class="span2" value="<?php echo isset($date)?$date:'' ?>" readonly/>
+</h5>
+
+<input type="submit" value="查看报表" />
+<?php echo CHtml::endForm(); ?>
+    </div>
 <div style="display:<?php if($data=='') echo 'none';?>">
 <table cellpadding="0" cellspacing="0" style="padding:0px;margin:0px;">
                                          <tr>

@@ -1,65 +1,91 @@
+ <!-- 客户报表 -->
 <?php
-// 客户表
 
-Yii::app()->clientScript->registerCoreScript('jquery');
-$cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/jquery-ui-1.10.4.custom.js', CClientScript::POS_HEAD);
-$cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/jquery-ui-1.10.4.custom.css');
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/profit.js', CClientScript::POS_HEAD);
+//Yii::app()->clientScript->registerCoreScript('jquery');
+//$cs = Yii::app()->clientScript;
+//$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/jquery-ui-1.10.4.custom.js', CClientScript::POS_HEAD);
+//$cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/jquery-ui-1.10.4.custom.css');
+////$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/profit.js', CClientScript::POS_HEAD);
 
 ?>
 <style>
+.table-c table{border-right:1px solid #F00;border-top:1px solid #F00; cellpadding:0; cellspacing:0 }
+.table-c table th{border-left:1px solid #F00;border-bottom:1px solid #F00; cellpadding:0; cellspacing:0}
+.table-c table td{border-left:1px solid #F00;border-bottom:1px solid #F00; cellpadding:0; cellspacing:0}
 .ui-datepicker table{
     display: none;
 }
 </style>
 
-<?php echo CHtml::beginForm('','post',array('class'=>'form-inline')); ?>
-<div class="alert alert-info">
-	<h3>客 户 表</h3>
-	<div class="form-group">
-		<label class="control-label" for="date">请选择报表日期：</label>
-		<input class="form-control" type="text" name="date" id="date" value="<?php echo isset($date)?$date:'' ?>" readonly />
-		<input type="submit" class="btn btn-primary" value="查看报表" />
-	</div>
-	<p>&nbsp;</p>
-</div>
-<?php echo CHtml::endForm(); ?>
+<style>
+.table-d table{ background:#000; border-right:1px solid #000}
+.table-d table td{ background:#FFF}
+</style>
 
 <?php
- if ($data) {
-?>
-<div class="panel panel-default">
-  <div class="panel-heading">
-  	<h2>客 户 表</h2>
-  </div>
-  
-  <table class="table table-bordered">
-	<thead>
-		 <tr>
-		 <td>&nbsp;</td>
-		 <td>本期借方</td>
-		 <td>本期贷方</td>
-		 <td>本年借方</td>
-		 <td>本年贷方</td>
-		 <td>余额</td>
-		 </tr>
-	 </thead>
-<?php
-    foreach($data as $ti)
+function echoData($data, $options=array("css"=>"table-c"))
+{
+
+  if (empty($options["css"]))
     {
-      echo "<tr>";
-      echo "<td>".$ti["id"]."</td>";
-      echo "<td>".$ti["month_debit"]."</td>";
-      echo "<td>".$ti["month_credit"]."</td>";
-      echo "<td>".$ti["year_debit"]."</td>";
-      echo "<td>".$ti["year_credit"]."</td>";
-      echo "<td>".$ti["balance"]."</td>";
-      echo "<tr>";                                                   
+      $css= "table-c";
     }
-?>
-   </table>
-</div>
-<?php
+  else
+    {
+    $css = $options["css"];
+    }   
+
+    foreach($data as $ti)
+      {
+        echo "<tr>";
+        echo "<div class=".$css.">";
+        echo "<td>".$ti["id"]."</td>";
+        echo "<td>".number_format($ti["month_debit"], 2)."</td>";
+        echo "<td>".number_format($ti["month_credit"], 2)."</td>";
+        echo "<td>".number_format($ti["year_debit"], 2)."</td>";
+        echo "<td>".number_format($ti["year_credit"], 2)."</td>";
+        echo "<td>".number_format($ti["balance"], 2)."</td>";
+        echo "<tr>";                                                   
+      }
 }
 ?>
+
+<div class="table-c";>
+
+ <div>
+<?php echo CHtml::beginForm(); ?>
+<h5>日期:
+    <input type="text" name="date" id="date" class="span2" value="<?php echo isset($date)?$date:'' ?>" readonly/>
+</h5>
+
+<input type="submit" value="查看报表" />
+<?php echo CHtml::endForm(); ?>
+    </div>
+<div style="display:<?php if($data=='') echo 'none';?>">
+<table cellpadding="0" cellspacing="0" style="padding:0px;margin:0px;">
+                                         <tr>
+                                         <td colspan=6 align=right> 金额单位:元 </td>
+                                         </tr>
+
+                                         <tr>
+                                         <th > </th>
+                                         <th >本期借方</th>
+                                         <th>本期贷方</th>
+                                         <th >本年借方</th>
+                                         <th>本年贷方</th>
+                                         <th >余额</th>
+                                         </tr>
+
+
+    <?php echoData($data) ?>
+
+                                         </td>
+                                         </table>
+    </div>
+  </div>
+
+
+
+
+
+
