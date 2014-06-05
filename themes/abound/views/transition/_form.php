@@ -162,7 +162,8 @@ foreach ($model as $i => $item) {
 				echo "&nbsp;&nbsp;";
 				if($model[0]->entry_reviewed == 0){
 					//echo CHtml::htmlbutton('<span class="glyphicon glyphicon-floppy-disk"></span> 保存', array('encode'=>false,'class' => 'btn btn-primary',));
-					echo CHtml::submitButton('保存', array('encode'=>false,'class' => 'btn btn-primary',));
+					//echo CHtml::submitButton('保存', array('encode'=>false,'class' => 'btn btn-primary',));
+                    echo CHtml::tag('button',array('encode'=>false,'class' => 'btn btn-primary',),'<span class="glyphicon glyphicon-floppy-disk"></span> 保存');
 				}
 				echo "&nbsp;&nbsp;";
 				echo BtnBack();

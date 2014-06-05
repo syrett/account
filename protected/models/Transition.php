@@ -488,5 +488,14 @@ class Transition extends CActiveRecord
         return $arr;
     }
 
+    public static function hasTransition($date){
+        $sql = 'select `entry_num_prefix` from transition where `entry_num_prefix` = '. $date;
+        $result = Transition::model()->findBySql($sql);
+        if($result)
+            return true;
+        else
+            return false;
+
+    }
 
 }

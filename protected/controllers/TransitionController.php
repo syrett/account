@@ -704,8 +704,17 @@ class TransitionController extends Controller
         if($entry_prefix>Yii::app()->params['startDate'])
         {
             $lastdate = date('Ym', strtotime('-1 months', strtotime($entry_prefix . '01')));
-            if(!Transition::model()->tranSettlement($lastdate))
-                throw new CHttpException(400, $lastdate. "需要先结账");
+            while($lastdate>Yii::app()->params['startDate']){
+                if(Transition::model()->hasTransition($lastdate))
+                {
+                    if(!Transition::model()->tranSettlement($lastdate))
+                        throw new CHttpException(400, $lastdate. "需要先结账");
+                    else
+                        $lastdate = date('Ym', strtotime('-1 months', strtotime($lastdate . '01')));
+                }
+                else
+                    $lastdate = date('Ym', strtotime('-1 months', strtotime($lastdate . '01')));
+            }
         }
 
         if(!Transition::model()->checkSettlement($entry_prefix))
