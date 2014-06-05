@@ -34,7 +34,7 @@ class TransitionController extends Controller
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('create', 'update', 'getTranSuffix', 'Appendix', 'ListFirst', 'reorganise', 'ajaxListFirst',
                     'review', 'settlement', 'antiSettlement','listReview',
-                    'ListTransition', 'listPost', 'listReorganise', 'listSettlement'),
+                    'ListTransition', 'listPost', 'listReorganise', 'listSettlement', 'Print'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -878,5 +878,13 @@ class TransitionController extends Controller
         if(isset($_REQUEST['date'])){
             $this->actionSettlement($_REQUEST['date']);
         }
+    }
+
+    public function actionPrint(){
+
+        $html2pdf = Yii::app()->ePdf->HTML2PDF();
+
+        $html2pdf->WriteHTML($this->renderPartial('print', array(), true));
+        $html2pdf->Output( 'etc.pdf' , EYiiPdf::OUTPUT_TO_DOWNLOAD );
     }
 }
