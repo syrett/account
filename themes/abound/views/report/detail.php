@@ -1,29 +1,18 @@
- <!-- 明细表 -->
-
+<!-- 明细表 -->
 <?php
-
-
 Yii::import('ext.select2.Select2');
 ?>
 
 <style>
-.table-c table{border-right:1px solid #F00;border-top:1px solid #F00; cellpadding:0; cellspacing:0 }
-.table-c table th{border-left:1px solid #F00;border-bottom:1px solid #F00; cellpadding:0; cellspacing:0}
-.table-c table td{border-left:1px solid #F00;border-bottom:1px solid #F00; cellpadding:0; cellspacing:0}
 .ui-datepicker table{
     display: none;
 }
 </style>
-
-<style>
-.table-d table{ background:#000; border-right:1px solid #000}
-.table-d table td{ background:#FFF}
-</style>
-
-
-<div>
-    <?php echo CHtml::beginForm(); ?>
-    <h5>日期:
+<div class="alert alert-info">
+	<?php echo CHtml::beginForm('','post',array('class'=>'form-inline')); ?>
+	<h3>明 细 表</h3>
+	<div class="form-group">
+		<label class="control-label" for="date">请选择报表日期：</label>
         <?php
         if(isset($_REQUEST['year']))
         {
@@ -48,7 +37,6 @@ Yii::import('ext.select2.Select2');
 
         $years = array(2013=>'2013',2014=>'2014');
         $months = array(1=>'1',2=>'2',3=>'3',4=>'4',5=>'5',6=>'6',7=>'7',8=>'8',9=>'9',10=>'10',11=>'11',12=>'12');
-//        $subjects =
 
         $this->widget('Select2', array(
             'name' => 'year',
@@ -56,8 +44,7 @@ Yii::import('ext.select2.Select2');
             'data' => $years,
         ));
         ?>
-        年</h5>
-    <h5>
+        年
         <?php
         $this->widget('Select2', array(
             'name' => 'fm',
@@ -72,10 +59,9 @@ Yii::import('ext.select2.Select2');
             'value' => $tm,
             'data' => $months,
         ));
-        ?>月
-    </h5>
-    <h5>
-        选择科目
+        ?>
+		月
+        <label class="control-label" for="date">选择科目</label>
         <?php
         $this->widget('Select2', array(
             'name' => 'subject_id',
@@ -83,42 +69,47 @@ Yii::import('ext.select2.Select2');
             'data' => Transition::model()->listSubjects(),
         ));
         ?>
-    </h5>
-
-    <input type="submit" value="查看报表" />
-    <?php echo CHtml::endForm(); ?>
+		<input type="submit" class="btn btn-primary" value="查看报表" />
+	</div>
+	<p>&nbsp;</p>
+	<?php echo CHtml::endForm(); ?>
 </div>
 
- <?php if(!empty($dataProvider)) {
-
- ?>
-<div class="table-c">
-     <table cellpadding="0";cellspacing="0";style="padding:0px;margin:0px;">
-                                         <tr>
-                                         <td colspan=6 align=center> <?php echo $fromMonth."-".$toMonth ?> </td>
-                                         </tr>
-
-                                         <tr>
-                                         <th >日期</th>
-                                         <th >凭证号码</th>
-                                          <th>描述</th>
-                                         <th >借方</th>
-                                         <th >贷方</th>
-                                         <th >余额</th>
-                                         </tr>
-
-                                         <tr>
-                                         <th ></th>
-                                         <th ></th>
-                                          <th>期初余额</th>
-                                         <th ></th>
-                                         <th ></th>
-                                         <th ><?php echo $dataProvider["start_balance"] ?></th>
-                                         </tr>
-                                              <tr>
 
 <?php
- $css = "table-c";
+ if(!empty($dataProvider)) {
+?>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h2>明 细 表</h2>
+	</div>
+	<div class="panel-body">
+		<p><span class="pull-left">日期：<?php echo $fromMonth."-".$toMonth ?></span> <span class="pull-right">金额单位：元</span></p>
+	</div>
+     <table class="table table-bordered table-hover">
+		 <tr>
+		 <td colspan=6 align=center> <?php echo $fromMonth."-".$toMonth ?> </td>
+		 </tr>
+
+		 <tr>
+		 <th>日期</th>
+		 <th>凭证号码</th>
+		 <th>描述</th>
+		 <th>借方</th>
+		 <th>贷方</th>
+		 <th>余额</th>
+		 </tr>
+
+		 <tr>
+		 <th>&nbsp;</th>
+		 <th>&nbsp;</th>
+		 <th>期初余额</th>
+		 <th>&nbsp;</th>
+		 <th>&nbsp;</th>
+		 <th><?php echo $dataProvider["start_balance"] ?></th>
+		 </tr>
+		 <tr>
+<?php
  $info = $dataProvider["info"];
  $month_debit=0;
  $month_credit=0;
@@ -146,12 +137,10 @@ Yii::import('ext.select2.Select2');
 
      $month_balance = balance($month_balance, $month_debit, $month_credit, $sbj_cat);
      echo "<tr>";
-     echo "<div class=".$css.">";
      echo "<td colspan=3>".$month."月总计 </td>";
      echo "<td>".number_format($month_debit, 2)."</td>";
      echo "<td>".number_format($month_credit, 2)."</td>";
      echo "<td>".$month_balance."</td>";
-     echo "</div>";
      echo "</tr>";
      $month_debit = $debit;
      $month_credit = $credit;
@@ -159,7 +148,6 @@ Yii::import('ext.select2.Select2');
    };
 
    echo "<tr>";
-   echo "<div class=".$css.">";
    echo "<td>".substr($ti["entry_date"],0,10)."</td>";
    echo "<td>".$ti["entry_num"]."</td>";
    echo "<td>".$ti["entry_memo"]."</td>";
@@ -185,32 +173,26 @@ Yii::import('ext.select2.Select2');
 
 
  }
-
+ 
  if($month != 0){
      echo "<tr>";
-     echo "<div class=".$css.">";
      echo "<td colspan=3>".$month."月总计 </td>";
      echo "<td>".number_format($month_debit, 2)."</td>";
      echo "<td>".number_format($month_credit, 2)."</td>";
      echo "<td>".balance($month_balance, $month_debit, $month_credit, $sbj_cat)."</td>";
-     echo "</div>";
      echo "</tr>";
  }
 ?>
-
-                                         <tr>
-                                         <th ></th>
-                                         <th ></th>
-                                          <th>总计</th>
+				 <tr>
+				 <th>&nbsp;</th>
+				 <th>&nbsp;</th>
+				 <th>总计</th>
  <th ><?php echo number_format($dataProvider["sum_debit"],2) ?></th>
  <th ><?php echo number_format($dataProvider["sum_credit"],2) ?></th>
  <th ><?php echo number_format($dataProvider["end_balance"],2) ?></th>
-                                         </tr>
-
-
-</table>
-
-
-
+				 </tr>
+		</table>
 </div>
- <? }
+
+<?php }
+ ?>
