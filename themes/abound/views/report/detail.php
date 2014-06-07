@@ -195,4 +195,4 @@ Yii::import('ext.select2.Select2');
 </div>
 
 <?php }
- ?>
+?>

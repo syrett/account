@@ -1,55 +1,58 @@
- <!-- 科目余额表 -->
- <?php
+<!-- 科目余额表 -->
+<?php
+Yii::import('ext.select2.Select2');
 
- Yii::import('ext.select2.Select2');
- ?>
+function echoItmes($items){
+   foreach($items as $info) {
+      echo "<td>".$info["subject_id"]."</td>";
+      echo "<td>".$info["sbj_name"]."</td>";
+      echo "<td>".$info["start_debit"]."</td>";
+      echo "<td>".$info["start_credit"]."</td>";
+      echo "<td>".$info["sum_debit"]."</td>";
+      echo "<td>".$info["sum_credit"]."</td>";
+      echo "<td>".$info["end_start"]."</td>";
+      echo "<td>".$info["end_credit"]."</td>";
+
+   };
+}
+
+if(isset($_REQUEST['year']))
+{
+ $year = $_REQUEST['year'];
+ $fm = $_REQUEST['fm'];
+ $tm = $_REQUEST['tm'];
+ if($fm > $tm)
+ {
+	 $temp = $fm;
+	 $fm = $tm;
+	 $tm = $temp;
+ }
+} else {
+ $year = '';
+ $fm = '';
+ $tm = '';
+}
+$years = array(2013=>'2013',2014=>'2014');
+?>
 <style>
-.table-c table{border-right:1px solid #F00;border-top:1px solid #F00; cellpadding:0; cellspacing:0 }
-.table-c table th{border-left:1px solid #F00;border-bottom:1px solid #F00; cellpadding:0; cellspacing:0}
-.table-c table td{border-left:1px solid #F00;border-bottom:1px solid #F00; cellpadding:0; cellspacing:0}
 .ui-datepicker table{
     display: none;
 }
 </style>
-
-<style>
-.table-d table{ background:#000; border-right:1px solid #000}
-.table-d table td{ background:#FFF}
-</style>
-
- <div>
-     <?php echo CHtml::beginForm(); ?>
-     <h5>日期:
-         <?php
-         if(isset($_REQUEST['year']))
-         {
-             $year = $_REQUEST['year'];
-             $fm = $_REQUEST['fm'];
-             $tm = $_REQUEST['tm'];
-             if($fm > $tm)
-             {
-                 $temp = $fm;
-                 $fm = $tm;
-                 $tm = $temp;
-             }
-         }
-         else
-         {
-             $year = '';
-             $fm = '';
-             $tm = '';
-         }
-
-         $years = array(2013=>'2013',2014=>'2014');
+<div class="alert alert-info">
+<?php echo CHtml::beginForm('','post',array('class'=>'form-inline','role'=>'form')); ?>
+	<h3>科目余额表</h3>
+	请选择日期：
+	<div class="form-group">
+    <?php
          $this->widget('Select2', array(
              'name' => 'year',
              'value' => $year,
              'data' => $years,
          ));
-         ?>
-         年</h5>
-     <h5>
-         <?php
+    ?>
+	年
+    <?php
          $months = array(1=>'1',2=>'2',3=>'3',4=>'4',5=>'5',6=>'6',7=>'7',8=>'8',9=>'9',10=>'10',11=>'11',12=>'12');
          $this->widget('Select2', array(
          'name' => 'fm',
@@ -66,59 +69,31 @@
              'data' => $months,
          ));
          ?>月
-     </h5>
-
      <input type="submit" value="查看报表" />
+     </div>
      <?php echo CHtml::endForm(); ?>
- </div>
+</div>
 
+<?php if(!empty($_REQUEST['year'])) { ?>
+<div class="panel panel-default">
+  <div class="panel-heading">
+  	<h2>科目余额表</h2>
+  	<?php echo $fromMonth."-".$toMonth ?>
+  </div>
+  
+<table class="table table-bordered">
+	<thead>
+		<tr>
+		 <th>科目编码</th>
+		 <th>科目名称</th>
+		 <th>期初借方</th>
+		 <th>期初贷方</th>
+		 <th>本期发生借方</th>
+		 <th>本期发生贷方</th>
+		 <th>期末借方</th>
+		 <th>期末贷方</th>
+		</tr>
 <?php
- function echoItmes($items, $options=array("css"=>"table-c")){
-  if (empty($options["css"]))
-    {
-      $css= "table-c";
-    }else
-    {
-      $css = $options["css"];
-    }   
-   foreach($items as $info) {
-      echo "<div class=".$css.">";
-      echo "<td>".$info["subject_id"]."</td>";
-      echo "<td>".$info["sbj_name"]."</td>";
-      echo "<td>".$info["start_debit"]."</td>";
-      echo "<td>".$info["start_credit"]."</td>";
-      echo "<td>".$info["sum_debit"]."</td>";
-      echo "<td>".$info["sum_credit"]."</td>";
-      echo "<td>".$info["end_start"]."</td>";
-      echo "<td>".$info["end_credit"]."</td>";
-
-   };
-  }
-?>
-
- <?php if(!empty($_REQUEST['year'])) {
-
- ?>
-<div class="table-c">
-     <table cellpadding="0" cellspacing="0" style="padding:0px;margin:0px;">
-                                         <tr>
-                                         <td colspan=8 align=center> <?php echo $fromMonth."-".$toMonth ?> </td>
-                                         </tr>
-
-                                         <tr>
-                                         <th >科目编码</th>
-                                         <th >科目名称</th>
-                                          <th>期初借方</th>
-                                         <th >期初贷方</th>
-                                         <th >本期发生借方</th>
-                                         <th>本期发生贷方</th>
-                                          <th>期末借方</th>
-                                         <th >期末贷方</th>
-                                         </tr>
-                                         <tr>
-
-    <?php
-
   foreach($dataProvider as $sbjCat=>$sbjCat_info) {
     switch ($sbjCat) {
       case "1":
@@ -139,13 +114,9 @@
 
     };
     $items = $sbjCat_info["items"];
-    $css = "table-c";
     
-
-
    foreach($items as $info) {
       echo "<tr>";
-      echo "<div class=".$css.">";
       echo "<td>".$info["subject_id"]."</td>";
       echo "<td>".$info["subject_name"]."</td>";
       echo "<td>".number_format($info["start_debit"],2)."</td>";
@@ -154,15 +125,12 @@
       echo "<td>".number_format($info["sum_credit"],2)."</td>";
       echo "<td>".number_format($info["end_debit"],2)."</td>";
       echo "<td>".number_format($info["end_credit"],2)."</td>";
-      echo "</div>";
       echo "</tr>";
 
    };
 
-
     echo "<tr>";
-    echo "<div class=".$css.">";
-    echo "<td> </td>";
+    echo "<td>&nbsp;</td>";
     echo "<td>" .$sbjCat_name."</td>";
     echo "<td>".number_format($sbjCat_info["start_debit"],2)."</td>";
     echo "<td>".number_format($sbjCat_info["start_credit"],2)."</td>";
@@ -170,30 +138,9 @@
     echo "<td>".number_format($sbjCat_info["sum_credit"],2)."</td>";
     echo "<td>".number_format($sbjCat_info["end_debit"],2)."</td>";
     echo "<td>".number_format($sbjCat_info["end_credit"],2)."</td>";
-    echo "</div>";
-    echo "</tr>";
-    
+    echo "</tr>";    
 }
-
-/*
-$this->widget('zii.widgets.grid.CGridView', array(
-                                                  'dataProvider' => $dataProvider,
-                                                  'columns' => array(
-                                                                     'subject_id',
-                                                                     'sbj_name',
-                                                                     'sbj_cat',
-                                                                     'start_debit',
-                                                                     'start_credit',
-                                                                     'sum_debit',
-                                                                     'sum_credit',
-                                                                     'end_debit',
-                                                                     'end_credit',
-
-                                                                     )
-));
-*/
 ?>
-</tr>
 </table>
 </div>
- <? }
+<?php } ?>
