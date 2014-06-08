@@ -590,3 +590,4 @@ table.transition>tbody>tr>td>input {
     height: 25px;
     display: inline-block;
 }
+.thumbnail { text-align:center; }
