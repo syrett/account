@@ -535,6 +535,7 @@ footer {
 .reviewed, .deleted {
   width:50px; padding:6px;
   margin-right:5px;
+  display:inline-block;
 }
 .reviewed{
     background-color: rgb(204, 255, 204);

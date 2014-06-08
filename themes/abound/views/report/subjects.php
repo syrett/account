@@ -69,7 +69,7 @@ $years = array(2013=>'2013',2014=>'2014');
              'data' => $months,
          ));
          ?>月
-     <input type="submit" value="查看报表" />
+     <input type="submit" class="btn btn-primary" value="查看报表" />
      </div>
      <?php echo CHtml::endForm(); ?>
 </div>

@@ -64,7 +64,7 @@ function echoData($data, $subjects)
 	<?php echo CHtml::endForm(); ?>
 </div>
 
-<div <?php if($data=='') echo 'style="display:none"'; ?>" class="panel panel-default">
+<div <?php if(!$data) echo 'style="display:none"'; ?>" class="panel panel-default">
 	<div class="panel-heading">
 		<h2>部 门 表</h2>
 	</div>
