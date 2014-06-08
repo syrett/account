@@ -57,7 +57,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/_search.js', CC
 			</span>
 		  </div><!-- /input-group -->
 		</div>
-		<div class="col-md-3">背景颜色说明：
+		<div class="col-md-4">背景颜色说明：
 			<span class="reviewed">已审核</span>&nbsp;&nbsp;
 			<span class="deleted">已删除</span>
 		</div>

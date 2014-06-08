@@ -37,13 +37,13 @@ $this->pageTitle = Yii::app()->name;
         </div>
         <div class="col-sm-4 col-md-2">
         	<div class="thumbnail">
-        	<a href="<?= $this->createUrl('Site/operation', array('operation'=>'listTransition')) ?>">
+        	<a href="<?= $this->createUrl('transition', array('operation'=>'index')) ?>">
                 <?php
                 echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/pzcz.png','凭证管理',array('style'=>'filter:alpha(opacity=0)'));
                 ?>
         	</a>
         	<div class="caption">
-        		<h4>3. 凭证管理</h4>
+        		<h4>3. 凭证查询</h4>
         	</div>
         	</div>
         </div>
