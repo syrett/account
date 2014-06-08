@@ -56,7 +56,7 @@ function echoData($key, $data, $name="default")
 		<h2>损 益 表</h2>
 	</div>
 	<div class="panel-body">
-		<p class="text-center"><span class="pull-left">日期：<?php echo date('Y-m-d',$date); ?></span> 编制单位：<?php echo $company ?> <span class="pull-right">金额单位：元</span></p>
+		<p class="text-center"><span class="pull-left">日期：<?php echo date('Y-m-d',strtotime($date)); ?></span> 编制单位：<?php echo $company ?> <span class="pull-right">金额单位：元</span></p>
 	</div>
 
 	<table class="table table-bordered table-hover">
