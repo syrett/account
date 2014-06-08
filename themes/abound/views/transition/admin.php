@@ -3,7 +3,7 @@
 /* @var $model Transition */
 $this->pageTitle=Yii::app()->name . ' - 会计凭证管理';
 $this->breadcrumbs=array(
-	'凭证管理'
+	'查询凭证'
 );
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
@@ -42,7 +42,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/_search.js', CC
 <div class="panel panel-default voucher form">
     <!-- Default panel contents -->
     <div class="panel-heading">
-	<h2>凭证管理</h2>
+	<h2>查询凭证</h2>
     </div>
     <div class="panel-body">
 	<?php echo CHtml::beginForm(); ?>
