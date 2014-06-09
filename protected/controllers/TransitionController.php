@@ -882,16 +882,17 @@ class TransitionController extends Controller
 
     public function actionPrint(){
 
+        $id = 2225;
         $mPDF1 = Yii::app()->ePdf->mpdf();
 
         $mPDF1->setAutoFont(AUTOFONT_ALL);
 
         # Load a stylesheet
-        $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot'). Yii::app()->theme->baseUrl . '/assets/css/abound.css');
+        $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot'). Yii::app()->theme->baseUrl . '/assets/css/print.css');
         $mPDF1->WriteHTML($stylesheet, 1);
 
-        # renderPartial (only 'view' of current controller)
-        $mPDF1->WriteHTML($this->render('print', array()));
+        $items = $this->getItemsToUpdate($id);
+        $mPDF1->WriteHTML($this->renderPartial('print', array('model' => $items,),false,true));
 
 
         # Outputs ready PDF

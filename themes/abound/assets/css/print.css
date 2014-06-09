@@ -1,7 +1,19 @@
-.print h1{
+.print {
+    text-align: center;
+}
+.print > h1{
     font-size: 30px;
     border-bottom-style:double;
     font-weight:bold;
     display:inline;
     text-align: center;
+}
+.print > h2{
+    font-size: 14px;
+    line-height: 0px;
+}
+.print > h3{
+    font-size: 14px;
+    line-height: 0px;
+
 }
