@@ -15,8 +15,8 @@ $this->pageTitle = Yii::app()->name;
                 switch($operation){
                     case 'listReview' : $title = '凭证审核';break;
                     case 'listTransition' : $title = '凭证查询';break;
-                    case 'listReview' : $title = '凭证过账';break;
-                    case 'listReview' : $title = '凭证结账';break;
+                    case 'listPost' : $title = '凭证过账';break;
+                    case 'listSettlement' : $title = '凭证结账';break;
                 }
             echo $title;
             ?>
