@@ -1,6 +1,7 @@
 <?php
 /* @var $this TransitionController */
 /* @var $model Transition */
+/* @var $operation Transition action */
 $this->pageTitle=Yii::app()->name . ' - 会计凭证管理';
 $this->breadcrumbs=array(
 	'查询凭证'
@@ -42,7 +43,16 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/_search.js', CC
 <div class="panel panel-default voucher form">
     <!-- Default panel contents -->
     <div class="panel-heading">
-	<h2>查询凭证</h2>
+	<h2><?php
+        $title = '';
+        switch($operation){
+            case 'listReview' : $title = '凭证审核';break;
+            case 'listTransition' : $title = '凭证查询';break;
+            case 'listReview' : $title = '凭证过账';break;
+            case 'listReview' : $title = '凭证结账';break;
+        }
+        echo $title;
+        ?></h2>
     </div>
     <div class="panel-body">
 	<?php echo CHtml::beginForm(); ?>

@@ -846,7 +846,7 @@ class TransitionController extends Controller
         }
             $model->attributes = $criteria;
             $this->render('admin', array(
-                'model' => $model,
+                'model' => $model,'operation' => 'listReview'
             ));
     }
 
