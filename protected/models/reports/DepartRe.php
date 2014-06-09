@@ -20,6 +20,7 @@ class DepartRe extends CModel
     $data = Transition::model()->findAllBySql($sql, array(':year'=>$year,
                                                           ':month'=>$month));
 
+    $depart_arr = Department::model()->list_departments();
     $arr = array();
     $subjects = array(); //哪些子科目
     foreach($data as $k=>$v) {
@@ -46,6 +47,26 @@ class DepartRe extends CModel
         }
       }
     }
+
+    if (sizeof($subjects) == 0) {
+      $sbj_name = Subjects::model()->getName($subject_id);
+      $subjects[$subject_id] = $sbj_name;
+    } 
+
+    foreach($depart_arr as $k=>$d) {
+      $d_id = $d["id"];
+      $d_name = $d["name"];
+
+      if (!isset($arr[$d_id])) {
+          foreach($subjects as $sbj_id=>$sbj_name) {
+            $depart = isset($arr[$d_id])?$arr[$d_id]:array();
+            $depart[$sbj_id] = 0;
+            $depart["name"] = $d_name;
+            $arr[$d_id] = $depart;
+          }
+      }
+    }
+
     return array("subjects"=>$subjects,
                  "data"=>$arr);
     

@@ -110,4 +110,18 @@ class Department extends CActiveRecord
       }
     }
 
+    /**
+     * 列出部门
+     */
+    public function list_departments()
+    {
+      $sql = "SELECT id,name FROM department where 1";
+      $data = self::model()->findAllBySql($sql);
+      foreach($data as $row){
+        $arr[] = array("id"=>$row["id"],
+                       "name"=>$row["name"]);
+      }
+      return $arr;
+    }
+
 }
