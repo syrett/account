@@ -590,3 +590,9 @@ table.transition>tbody>tr>td>input {
     height: 25px;
     display: inline-block;
 }
+.thumbnail { text-align:center; }
+.col-md-index {
+    width: 20%;
+    float: left;
+    padding: 15px;
+}

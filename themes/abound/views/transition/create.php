@@ -1,7 +1,7 @@
 <?php
 $this->pageTitle=Yii::app()->name . ' - 会计凭证管理';
 $this->breadcrumbs=array(
-	'凭证管理',
+	'凭证录入',
 	'添加'
 );
 
