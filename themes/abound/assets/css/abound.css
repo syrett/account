@@ -591,3 +591,8 @@ table.transition>tbody>tr>td>input {
     display: inline-block;
 }
 .thumbnail { text-align:center; }
+.col-md-index {
+    width: 20%;
+    float: left;
+    padding: 15px;
+}

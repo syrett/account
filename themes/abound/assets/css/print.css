@@ -1,0 +1,7 @@
+.print h1{
+    font-size: 30px;
+    border-bottom-style:double;
+    font-weight:bold;
+    display:inline;
+    text-align: center;
+}

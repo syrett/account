@@ -882,9 +882,19 @@ class TransitionController extends Controller
 
     public function actionPrint(){
 
-        $html2pdf = Yii::app()->ePdf->HTML2PDF();
+        $mPDF1 = Yii::app()->ePdf->mpdf();
 
-        $html2pdf->WriteHTML($this->renderPartial('print', array(), true));
-        $html2pdf->Output( 'etc.pdf' , EYiiPdf::OUTPUT_TO_DOWNLOAD );
+        $mPDF1->setAutoFont(AUTOFONT_ALL);
+
+        # Load a stylesheet
+        $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot'). Yii::app()->theme->baseUrl . '/assets/css/abound.css');
+        $mPDF1->WriteHTML($stylesheet, 1);
+
+        # renderPartial (only 'view' of current controller)
+        $mPDF1->WriteHTML($this->render('print', array()));
+
+
+        # Outputs ready PDF
+//        $mPDF1->Output( 'etc.pdf' , EYiiPdf::OUTPUT_TO_BROWSER );
     }
 }

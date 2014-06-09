@@ -10,8 +10,8 @@ $this->pageTitle = Yii::app()->name;
     <div class="panel-heading"><h3>系统总流程</h3></div>
     <div class="panel-body v-title">
     <!-- search-form -->
-    <div class="row">
-        <div class="col-sm-4 col-md-2">
+    <div class="row row-fluid">
+        <div class="col-md-index">
         	<div class="thumbnail">
         	<a href="<?= $this->createUrl('Transition/create') ?>">
                 <?php
@@ -23,7 +23,7 @@ $this->pageTitle = Yii::app()->name;
         	</div>
         	</div>
         </div>
-        <div class="col-sm-4 col-md-2">
+        <div class="col-md-index">
         	<div class="thumbnail">
         	<a href="<?= $this->createUrl('Site/operation', array('operation'=>'listReview')) ?>">
                 <?php
@@ -35,9 +35,9 @@ $this->pageTitle = Yii::app()->name;
         	</div>
         	</div>
         </div>
-        <div class="col-sm-4 col-md-2">
+        <div class="col-md-index">
         	<div class="thumbnail">
-        	<a href="<?= $this->createUrl('transition', array('operation'=>'index')) ?>">
+        	<a href="<?= $this->createUrl('Site/operation', array('operation'=>'listTransition')) ?>">
                 <?php
                 echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/pzcz.png','凭证管理',array('style'=>'filter:alpha(opacity=0)'));
                 ?>
@@ -47,7 +47,7 @@ $this->pageTitle = Yii::app()->name;
         	</div>
         	</div>
         </div>
-        <div class="col-sm-4 col-md-2">
+        <div class="col-md-index">
         	<div class="thumbnail">
         		<a href="<?= $this->createUrl('Site/operation', array('operation'=>'listPost')) ?>">
                 <?php
@@ -59,7 +59,7 @@ $this->pageTitle = Yii::app()->name;
         		</div>
         	</div>
         </div>
-        <div class="col-sm-4 col-md-2">
+        <div class="col-md-index">
         	<div class="thumbnail">
         		<a href="<?= $this->createUrl('Site/operation', array('operation'=>'listSettlement')) ?>">
                 <?php
