@@ -884,6 +884,9 @@ class TransitionController extends Controller
 
         $id = 2225;
         $mPDF1 = Yii::app()->ePdf->mpdf();
+//        $mPDF1 = Yii::app()->ePdf->HTML2PDF('P', 'A4', 'en');
+//        $mPDF1->AddFont('STSongStd-Light-Acro', 'stsongstdlight.php');
+//        $mPDF1->setDefaultFont('STSongStdlight');
 
         $mPDF1->setAutoFont(AUTOFONT_ALL);
 
@@ -892,10 +895,16 @@ class TransitionController extends Controller
         $mPDF1->WriteHTML($stylesheet, 1);
 
         $items = $this->getItemsToUpdate($id);
-        $mPDF1->WriteHTML($this->renderPartial('print', array('model' => $items,),false,true));
+        $i = 0;
+        while($i<=2){
+            $mPDF1->WriteHTML($this->renderPartial('print', array('model' => $items,),true));
+            $i++;
+        }
 
-
+//        $mPDF1->WriteHTML($this->renderPartial('print', array('model' => $items,),true));
         # Outputs ready PDF
-//        $mPDF1->Output( 'etc.pdf' , EYiiPdf::OUTPUT_TO_BROWSER );
+        $mPDF1->Output( 'etc.pdf' , EYiiPdf::OUTPUT_TO_BROWSER );
+
+
     }
 }

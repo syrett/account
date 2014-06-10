@@ -1,19 +1,66 @@
 .print {
     text-align: center;
+    margin: auto;
+    width: 180mm; /*A4宽度 210mm*/
+    height: 98mm; /*297mm*/
 }
-.print > h1{
+.print > div span {
+    margin: auto;
+}
+.h1{
     font-size: 30px;
-    border-bottom-style:double;
     font-weight:bold;
     display:inline;
     text-align: center;
+    margin: 0px;
 }
-.print > h2{
+.h2{
     font-size: 14px;
     line-height: 0px;
+    font-weight: normal;
 }
-.print > h3{
+.right {
+    float: right;
+    text-align: right;
+}
+.left {
+    float: left;
+    width: 35mm;  /*210mm/6 = 35*/
+    text-align: left;
+}
+.clear {
+    clear: both;
+    height: 0;
+}
+.table{
+    width: 180mm;
+    border: 2px solid #000;
+    border-collapse:collapse
+}
+.hr {
+    border: 1 dashed #CCCCCC;
+    margin: 1px auto;
+    width: 20%;
+}
+.header {
+    width: 180mm;;
     font-size: 14px;
-    line-height: 0px;
-
+    height: 4.5mm;
+}
+.text-right{
+    text-align: right;
+    float: right;
+}
+.text-left{
+    text-align: left;
+    float: left;
+}
+.rowTop td{
+    border-top: 1px solid #000011;
+}
+.rowBottom td{
+    border-bottom: 1px solid #CCCCCC;
+}
+.headerTH th{
+    border-bottom: 1px solid #000011;
 }
