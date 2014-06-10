@@ -1,21 +1,25 @@
+body, html{
+    line-height: 0px;
+    margin:0;
+    padding:0;
+}
 .print {
     text-align: center;
     margin: auto;
     width: 180mm; /*A4宽度 210mm*/
-    height: 98mm; /*297mm*/
 }
 .print > div span {
     margin: auto;
 }
 .h1{
-    font-size: 30px;
+    font-size: 26px;
     font-weight:bold;
     display:inline;
     text-align: center;
     margin: 0px;
 }
 .h2{
-    font-size: 14px;
+    font-size: 12px;
     line-height: 0px;
     font-weight: normal;
 }
@@ -44,16 +48,9 @@
 }
 .header {
     width: 180mm;;
-    font-size: 14px;
-    height: 4.5mm;
-}
-.text-right{
-    text-align: right;
-    float: right;
-}
-.text-left{
-    text-align: left;
-    float: left;
+    font-size: 13px;
+    height: 4mm;
+    border-collapse:collapse
 }
 .rowTop td{
     border-top: 1px solid #000011;

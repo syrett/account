@@ -889,7 +889,7 @@ class TransitionController extends Controller
 //        $mPDF1->setDefaultFont('STSongStdlight');
 
         $mPDF1->setAutoFont(AUTOFONT_ALL);
-
+        $mPDF1->SetDisplayMode('fullpage');
         # Load a stylesheet
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot'). Yii::app()->theme->baseUrl . '/assets/css/print.css');
         $mPDF1->WriteHTML($stylesheet, 1);
@@ -897,7 +897,7 @@ class TransitionController extends Controller
         $items = $this->getItemsToUpdate($id);
         $i = 0;
         while($i<=2){
-            $mPDF1->WriteHTML($this->renderPartial('print', array('model' => $items,),true));
+            $mPDF1->WriteHTML($this->renderPartial('print', array('model' => $items,),true,true));
             $i++;
         }
 
