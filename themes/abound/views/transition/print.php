@@ -9,8 +9,6 @@ $cs = Yii::app()->clientScript;
 $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/print.css');
 
 ?>
-<style>
-</style>
 <div class="print">
     <div>
         <h1 class="h1" style="line-height: 0px;">记账凭证</h1>
@@ -51,7 +49,7 @@ $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/print.css');
             }
             ?>
             <tr class="rowTop">
-                <td>附单据数&nbsp;&nbsp;&nbsp;&nbsp;张</td><td>合计：柒柒</td><td style='text-align: right;'><?php echo number_format(1111,2); ?></td><td style='text-align: right;'><?php echo number_format(1111,2); ?></td>
+                <td>附单据数&nbsp;&nbsp;&nbsp;&nbsp;张</td><td>合计：<?php echo UpAmount(1123322211.12); ?></td><td style='text-align: right;'><?php echo number_format(1111,2); ?></td><td style='text-align: right;'><?php echo number_format(1111,2); ?></td>
             </tr>
         </table>
 

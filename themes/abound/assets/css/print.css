@@ -3,6 +3,10 @@ body, html{
     margin:0;
     padding:0;
 }
+@page {
+    margin-top: 5mm;
+    margin-bottom: 1mm;
+      }
 .print {
     text-align: center;
     margin: auto;
@@ -39,7 +43,8 @@ body, html{
 .table{
     width: 180mm;
     border: 2px solid #000;
-    border-collapse:collapse
+    border-collapse:collapse;
+    margin-bottom: 20px;
 }
 .hr {
     border: 1 dashed #CCCCCC;
