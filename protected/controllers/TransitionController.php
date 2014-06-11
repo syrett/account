@@ -882,19 +882,29 @@ class TransitionController extends Controller
 
     public function actionPrint(){
 
+        $id = 2225;
         $mPDF1 = Yii::app()->ePdf->mpdf();
+//        $mPDF1 = Yii::app()->ePdf->HTML2PDF('P', 'A4', 'en');
+//        $mPDF1->AddFont('STSongStd-Light-Acro', 'stsongstdlight.php');
+//        $mPDF1->setDefaultFont('STSongStdlight');
 
         $mPDF1->setAutoFont(AUTOFONT_ALL);
-
+        $mPDF1->SetDisplayMode('fullpage');
         # Load a stylesheet
-        $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot'). Yii::app()->theme->baseUrl . '/assets/css/abound.css');
+        $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot'). Yii::app()->theme->baseUrl . '/assets/css/print.css');
         $mPDF1->WriteHTML($stylesheet, 1);
 
-        # renderPartial (only 'view' of current controller)
-        $mPDF1->WriteHTML($this->render('print', array()));
+        $items = $this->getItemsToUpdate($id);
+        $i = 0;
+        while($i<=2){
+            $mPDF1->WriteHTML($this->renderPartial('print', array('model' => $items,),true,true));
+            $i++;
+        }
 
-
+//        $mPDF1->WriteHTML($this->renderPartial('print', array('model' => $items,),true));
         # Outputs ready PDF
-//        $mPDF1->Output( 'etc.pdf' , EYiiPdf::OUTPUT_TO_BROWSER );
+        $mPDF1->Output( 'etc.pdf' , EYiiPdf::OUTPUT_TO_BROWSER );
+
+
     }
 }

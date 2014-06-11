@@ -1,7 +1,63 @@
-.print h1{
-    font-size: 30px;
-    border-bottom-style:double;
+body, html{
+    line-height: 0px;
+    margin:0;
+    padding:0;
+}
+.print {
+    text-align: center;
+    margin: auto;
+    width: 180mm; /*A4宽度 210mm*/
+}
+.print > div span {
+    margin: auto;
+}
+.h1{
+    font-size: 26px;
     font-weight:bold;
     display:inline;
     text-align: center;
+    margin: 0px;
+}
+.h2{
+    font-size: 12px;
+    line-height: 0px;
+    font-weight: normal;
+}
+.right {
+    float: right;
+    text-align: right;
+}
+.left {
+    float: left;
+    width: 35mm;  /*210mm/6 = 35*/
+    text-align: left;
+}
+.clear {
+    clear: both;
+    height: 0;
+}
+.table{
+    width: 180mm;
+    border: 2px solid #000;
+    border-collapse:collapse
+}
+.hr {
+    border: 1 dashed #CCCCCC;
+    margin: 1px auto;
+    width: 20%;
+}
+.header {
+    width: 180mm;;
+    font-size: 13px;
+    height: 4mm;
+    border-collapse:collapse
+}
+.rowTop td{
+    border-top: 1px solid #000011;
+}
+.rowBottom td{
+    border-bottom: 1px solid #CCCCCC;
+}
+.headerTH th{
+    border-bottom: 1px solid #000011;
 }
