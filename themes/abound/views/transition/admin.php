@@ -45,6 +45,8 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/_search.js', CC
     <div class="panel-heading">
 	<h2><?php
         $title = '';
+        if(!isset($operation))
+            $operation = 'listTransition';
         switch($operation){
             case 'listReview' : $title = '凭证审核';break;
             case 'listTransition' : $title = '凭证查询';break;
