@@ -274,7 +274,7 @@ class Post extends CActiveRecord
     public function getLastBalanceNum($subject_id, $date) {
       $year = getYear($date);
       $month = getMon($date);
-      $sql = "SELECT year, month FROM post WHERE year <=:year AND month <= :month AND subject_id REGEXP :sbj_id order by year desc, month desc";
+      $sql = "SELECT year, month FROM (select year,month FROM post  WHERE year <=:year AND subject_id REGEXP :sbj_id) AS p WHERE month <=:month order by year desc, month desc";
       $data = Post::model()->findBySql($sql, array(':year'=>$year,
                                           ':month'=>$month,
                                           ':sbj_id'=>$subject_id));      
