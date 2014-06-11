@@ -93,8 +93,8 @@ class Balance extends CModel
     $start = 0;//上月余额
     $end = 0;//到某日的余额
     foreach($subjects as $k=>$sbj_id){
-      $start_year += Post::model()->getBalanceNum($sbj_id, ($year-1)."12");
-      $balance = Post::model()->getBalanceNum($sbj_id, $lastDate);
+      $start_year += Post::model()->getLastBalanceNum($sbj_id, ($year-1)."12");
+      $balance = Post::model()->getLastBalanceNum($sbj_id, $lastDate);
       $sbj_cat = Subjects::model()->getCat($sbj_id);
       $arr = self::getEndNum($sbj_id, $year, $month, $day);
       $end += balance($balance, $arr['debit'], $arr['credit'], $sbj_cat);

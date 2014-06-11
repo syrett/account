@@ -270,7 +270,21 @@ class Post extends CActiveRecord
 
     }
 
-
+    // 得到离$date最近的某个一级科目的及其子科目的余额和,若$date没有会寻找上个月的数据,若一条数据都没有则为0
+    public function getLastBalanceNum($subject_id, $date) {
+      $year = getYear($date);
+      $month = getMon($date);
+      $sql = "SELECT year, month FROM (select year,month FROM post  WHERE year <=:year AND subject_id REGEXP :sbj_id) AS p WHERE month <=:month order by year desc, month desc";
+      $data = Post::model()->findBySql($sql, array(':year'=>$year,
+                                          ':month'=>$month,
+                                          ':sbj_id'=>$subject_id));      
+      if ($data == null){
+        return 0;
+      }else{
+        $lastdate=$data["year"].$data["month"];
+        return self::getBalanceNum($subject_id, $lastdate);
+      }
+    }
     /*
      * 得到收入类/费用类的科目及其子科目的贷和(收入类)/借和(费用类)
      */
