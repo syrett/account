@@ -107,7 +107,7 @@ $(document).ready(function () {
             var prefix = a.exec(date);
 //            var b = /\d{2}$/;   //最后日期 day
 //            var day = b.exec(date)
-
+            if($("#entry_num_prefix_this").val()!=prefix[0])
             $.ajax({
                 type: "POST",
                 url: $("#entry_num_pre").val(),

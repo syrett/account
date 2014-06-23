@@ -394,7 +394,7 @@ class TransitionController extends Controller
                 if (in_array($subject, $list)&&$subject!=6401) { //全部 5:费用 类科目   列出员工employee
 
                     $arr['type'] = 3;
-                    
+
                     $data = Employee::model()->findAll();
                     foreach ($data as $item) {
                         $html .= "<option value=" . $item['id'] . ">" . $item['name'] . "</options>";
@@ -503,9 +503,11 @@ class TransitionController extends Controller
             }
         }
 
-        if (isset($_REQUEST['entry_num_prefix']))
+        if (isset($_REQUEST['entry_num_prefix'])&&$_REQUEST['entry_num_prefix_this']!=$_REQUEST['entry_num_prefix'])
+        {
             $prefix = $_REQUEST['entry_num_prefix'];
-        $_POST['entry_num'] = $this->tranSuffix($prefix);
+            $_POST['entry_num'] = $this->tranSuffix($prefix);
+        }
 //        Yii::app()->db->createCommand('set names "utf8"')->execute();
         foreach ($_POST['Transition'] as $Tran) {
             if (isset($Tran)) {
@@ -882,6 +884,7 @@ class TransitionController extends Controller
 
     public function actionPrint(){
 
+        Post::model()->deleteAll();
         $id = 2225;
         $mPDF1 = Yii::app()->ePdf->mpdf();
 //        $mPDF1 = Yii::app()->ePdf->HTML2PDF('P', 'A4', 'en');

@@ -53,7 +53,7 @@
                              array('label' => '录入凭证', 'url' => array('/transition/create')),
                              array('label' => '审核凭证', 'url' => array('/transition/listreview')),
                              array('label' => '整理凭证', 'url' => array('/Site/operation&operation='. 'listReorganise')),
-                             array('label' => '打印凭证', 'url' => array('/transition/print')),
+                             array('label' => '打印凭证', 'url' => array('/transition/printp')),
                              )),
                         array('label'=>'报表 <span class="caret"></span>', 'url'=>'#','itemOptions'=>array('class'=>'dropdown','tabindex'=>"-6"),'linkOptions'=>array('class'=>'dropdown-toggle','data-toggle'=>"dropdown"), 
                         'items'=>array(
