@@ -60,7 +60,7 @@ function balance($last_balance, $debit, $credit, $sbj_cat)
       $balance = 0;
       break;
     }
-  return number_format($balance, 2);
+  return number_format($balance, 2,'.','');
 }
 
 function balance2($last_balance, $debit, $credit, $sbj_cat)
@@ -83,7 +83,7 @@ function balance2($last_balance, $debit, $credit, $sbj_cat)
       $balance = 0;
       break;
     }
-  return number_format($balance, 2);
+  return number_format($balance, 2,'.','');
 }
 
 function menuIsActive($arrs, $str, $id){
