@@ -54,10 +54,10 @@ return array(
         // uncomment the following to use a MySQL database
 
         'db'=>array(
-            'connectionString' => 'mysql:host=localhost;dbname=account',
+            'connectionString' => 'mysql:host=localhost;dbname=account1',
             'emulatePrepare' => true,
-            'username' => 'dev',
-            'password' => 'P@ssw0rd',
+            'username' => 'root',
+            'password' => '',
             'charset' => 'utf8',
             'enableProfiling' => true,
             'enableParamLogging' => true,
@@ -165,6 +165,7 @@ return array(
                                array("id"=>67 ,"name"=>"减:营业外支出","subjects"=>array(6711), "to"=>"profit_sum", "function"=>"minus"),
                                array("id"=>68 ,"name"=>"减:所得税费用","subjects"=>array(6801), "to"=>"net_profit", "function"=>"minus"),
                                array("id"=>69 ,"name"=>"未分配利润","subjects"=>array(6901)),
+                               array("id"=>70 ,"name"=>"加:年(期)初未分配利润","subjects"=>array(4103,4104), "to"=>"undistributed_profit", "function"=>"sum"),
                     ),
 
         'balanceReport_sum'=>array(
@@ -235,6 +236,7 @@ return array(
                                array("id"=>52 ,"name"=>"盈余公积","subjects"=>array(4101,4102), "to"=>"parent_owner", "function"=>"sum"),
                                array("id"=>53 ,"name"=>"未分配利润","subjects"=>array(4103,4104), "to"=>"parent_owner", "function"=>"sum"),
                                array("id"=>54 ,"name"=>"减:库存股","subjects"=>array(4201), "to"=>"parent_owner", "function"=>"sum"),
+
 
                                ),
     ),

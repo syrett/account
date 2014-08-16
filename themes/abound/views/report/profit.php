@@ -116,7 +116,7 @@ function echoData($key, $data, $name="default")
 		 <?php echoData("net_profit", $data, "其中：归属于母公司所有者的净利润") ?>
 		 </tr>
 		 <tr>
-		 <?php echoData(0, $data, "加：年初未分配利润") ?>
+		 <?php echoData(70, $data, "加：年(期)初未分配利润") ?>
 		 </tr>
 		 <tr>
 		 <?php echoData(0, $data, "其他转入") ?>

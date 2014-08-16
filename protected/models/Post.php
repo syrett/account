@@ -136,8 +136,9 @@ class Post extends CActiveRecord
         $post->credit=$arr['credit'];
         $post->balance=$arr['balance'];
         $post->posted=1;
-        $post->year=$this->year;
-        $post->month=$this->month;
+        $post->year=$year;
+        $post->month=$month;
+        $post->post_date = date('Y-m-d H:i:s',mktime(0,0,0,$month,1,$year ));
         if(!$post->save())
           {
             return false;
@@ -258,7 +259,7 @@ class Post extends CActiveRecord
 
       $year = getYear($date);
       $month = getMon($date);
-      $sql = "SELECT balance FROM post WHERE year=:year AND month=:month AND subject_id REGEXP :sbj_id";
+      $sql = "SELECT balance FROM post WHERE year(post_date)=:year AND month(post_date)=:month AND subject_id REGEXP :sbj_id";
       $dataArray = Post::model()->findAllBySql($sql, array(':year'=>$year,
                                           ':month'=>$month,
                                           ':sbj_id'=>$subject_id));
@@ -296,15 +297,18 @@ class Post extends CActiveRecord
       if ($num==1){ //得到某个月的发生额
         $sql = "SELECT debit,credit FROM post WHERE year=:year AND month=:month AND subject_id REGEXP :sbj_id";
       }else{ //得到这年到某个月的发生额
-        $sql = "SELECT debit, credit FROM post WHERE year=:year AND month<=:month AND subject_id REGEXP :sbj_id";
+        $sql = "SELECT debit, credit FROM post WHERE year(post_date)=:year AND month(post_date)<=:month AND subject_id REGEXP :sbj_id";
       }
       $dataArray = Post::model()->findAllBySql($sql, array(':year'=>$year,
                                           ':month'=>$month,
                                           ':sbj_id'=>$subject_id));
+
       $balance = 0;
+
       switch($sbj_cat){
       case 4://收入类
         foreach($dataArray as $post){
+          $balance = balance2($balance, $post["debit"], $post["credit"], $sbj_cat);
           $balance += $post['credit'];
         };
         break;
@@ -313,9 +317,15 @@ class Post extends CActiveRecord
           $balance += $post['debit'];
         };
         break;
+      case 3://
+        foreach($dataArray as $post){
+          $balance = balance2($balance,$post['debit'], $post['credit'], $sbj_cat);
+        };
+        break;        
       default:
         break;
       };
+
       return $balance;
     }
 

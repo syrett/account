@@ -20,10 +20,15 @@ class Profit extends CModel
 
   public function genData($array, $sum_array){
     $data=array();
+    $arr = array();
     foreach($array as $i=>$value){
       if (isset($value["subjects"])) {
-
-        $arr = self::getItem($value["subjects"]);
+        if ($value["id"]=="70") {
+          $arr = self::getItem2($value["subjects"]);
+          
+        }else{
+          $arr = self::getItem($value["subjects"]);
+        };
 
         $arr["name"] = $value["name"];
         
@@ -84,6 +89,26 @@ class Profit extends CModel
     foreach($subjects as $k=>$sbj_id){
       $sum_year += Post::model()->getDebitCredit($sbj_id, $this->date, 0);
       $sum_month += Post::model()->getDebitCredit($sbj_id, $this->date);
+    }
+    return array("sum_year"=>$sum_year,
+          "sum_month"=>$sum_month);
+
+  }
+  
+  /*
+   * 只为了计算: 加:年(期)初未分配利润
+   */
+  function getItem2($subjects){
+    $year = getYear($this->date);
+    $month = getMon($this->date);
+
+    $sum_year = 0;//一年期数额
+    $sum_month = 0;//当月期数额
+    foreach($subjects as $k=>$sbj_id){
+      $lastDate=date("Ym",strtotime("last month",mktime(0,0,0,$month,01,$year)));
+      echo $sbj_id;
+      echo $lastDate;
+      $sum_month += Post::model()->getDebitCredit($sbj_id, $lastDate);
     }
     return array("sum_year"=>$sum_year,
           "sum_month"=>$sum_month);

@@ -31,7 +31,6 @@ class Balance extends CModel
 
         $arr = self::getItem($value["subjects"]);
         $arr["name"] = $value["name"];
-        
         $data[$value["id"]]=$arr;
         
         $data = self::calculate($value, $data);
@@ -107,7 +106,6 @@ class Balance extends CModel
 
   //因为要算到日，所以直接从transition表里读取。
   function getEndNum($sbj_id,$year, $month, $day){
-
     $sql = "SELECT entry_transaction, entry_amount FROM transition WHERE year(entry_date)=:year AND month(entry_date)=:month AND day(entry_date)<:day AND entry_subject REGEXP :sbj_id ";
     if ($this->is_closed == 1){
       //      $sql = "SELECT entry_transaction, entry_amount FROM transition WHERE entry_closing=1 AND year(entry_date)=:year AND month(entry_date)=:month AND day(entry_date)<:day";
