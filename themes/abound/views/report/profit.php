@@ -6,7 +6,7 @@ $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/jquery-ui-1.10.4.custom.js', CClientScript::POS_HEAD);
 $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/jquery-ui-1.10.4.custom.css');
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/profit.js', CClientScript::POS_HEAD);
-
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js', CClientScript::POS_HEAD);
 ?>
 <style>
 .ui-datepicker table{
@@ -59,7 +59,7 @@ function echoData($key, $data, $name="default")
 		<p class="text-center"><span class="pull-left">日期：<?php echo date('Y-m-d',strtotime($date)); ?></span> 编制单位：<?php echo $company ?> <span class="pull-right">金额单位：元</span></p>
 	</div>
 
-	<table class="table table-bordered table-hover">
+	<table id="profit" class="table table-bordered table-hover">
 		<thead>
 		 <tr>
 		 <th>项目</th>
@@ -153,4 +153,16 @@ function echoData($key, $data, $name="default")
 		 </tr>
 		 </td>
 	</table>
+</div>
+
+
+<div>
+    <a id="dlink"  style="display:none;"></a>
+    <?php 
+    if ($data != ""){
+     $d = date('Y-m',strtotime($date));
+      $excel_name = "损益表"."(".$d.").xls";
+     echo "<input type='button' onclick='tableToExcel(\"profit\", \"name\", \"".$excel_name."\")'  value='导出'>";
+}
+    ?>
 </div>

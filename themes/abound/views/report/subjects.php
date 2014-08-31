@@ -1,6 +1,8 @@
 <!-- 科目余额表 -->
 <?php
 Yii::import('ext.select2.Select2');
+$cs = Yii::app()->clientScript;
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js', CClientScript::POS_HEAD);
 
 function echoItmes($items){
    foreach($items as $info) {
@@ -81,7 +83,7 @@ $years = array(2013=>'2013',2014=>'2014');
   	<?php echo $fromMonth."-".$toMonth ?>
   </div>
   
-<table class="table table-bordered">
+<table id="subjects" class="table table-bordered">
 	<thead>
 		<tr>
 		 <th>科目编码</th>
@@ -144,3 +146,12 @@ $years = array(2013=>'2013',2014=>'2014');
 </table>
 </div>
 <?php } ?>
+<div>
+    <a id="dlink"  style="display:none;"></a>
+    <?php 
+    if ($fm != ""){
+      $excel_name = "科目余额表"."(".$fromMonth."-".$toMonth.").xls";
+     echo "<input type='button' onclick='tableToExcel(\"subjects\", \"name\", \"".$excel_name."\")'  value='导出'>";
+}
+    ?>
+</div>

@@ -1,6 +1,8 @@
 <!-- 明细表 -->
 <?php
 Yii::import('ext.select2.Select2');
+$cs = Yii::app()->clientScript;
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js', CClientScript::POS_HEAD);
 ?>
 
 <style>
@@ -86,7 +88,7 @@ Yii::import('ext.select2.Select2');
 	<div class="panel-body">
 		<p><span class="pull-left">日期：<?php echo $fromMonth."-".$toMonth ?></span> <span class="pull-right">金额单位：元</span></p>
 	</div>
-     <table class="table table-bordered table-hover">
+     <table id="detail" class="table table-bordered table-hover">
 		 <tr>
 		 <td colspan=6 align=center> <?php echo $fromMonth."-".$toMonth ?> </td>
 		 </tr>
@@ -196,3 +198,13 @@ Yii::import('ext.select2.Select2');
 
 <?php }
 ?>
+
+<div>
+    <a id="dlink"  style="display:none;"></a>
+    <?php 
+    if ($subject_id != ""){
+      $excel_name = "明细表-".$subject_name."(".$fromMonth."-".$toMonth.").xls";
+     echo "<input type='button' onclick='tableToExcel(\"detail\", \"name\", \"".$excel_name."\")'  value='导出'>";
+}
+    ?>
+</div>

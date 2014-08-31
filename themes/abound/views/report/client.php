@@ -6,7 +6,7 @@ $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/jquery-ui-1.10.4.custom.js', CClientScript::POS_HEAD);
 $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/jquery-ui-1.10.4.custom.css');
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/profit.js', CClientScript::POS_HEAD);
-
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js', CClientScript::POS_HEAD);
 ?>
 <style>
 .ui-datepicker table{
@@ -50,7 +50,7 @@ function echoData($data)
 	<div class="panel-body">
 		<p class="pull-right">金额单位：元</p>
 	</div>
-	<table class="table table-bordered table-hover">
+	<table id="client" class="table table-bordered table-hover">
 	 <tr>
 	 <th>&nbsp;</th>
 	 <th>本期借方</th>
@@ -61,4 +61,13 @@ function echoData($data)
 	 </tr>
      <?php echoData($data) ?>
 	 </table>
+</div>
+<div>
+    <a id="dlink"  style="display:none;"></a>
+    <?php 
+    if ($date != ""){
+     $d = date('Y-m',strtotime($date));
+     echo "<input type='button' onclick='tableToExcel(\"client\", \"name\", "."\"客户表(". $d.").xls\")'  value='导出'>";
+}
+    ?>
 </div>

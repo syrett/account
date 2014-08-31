@@ -7,6 +7,7 @@ $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/jquery-ui-1.10.4.custom.js', CClientScript::POS_HEAD);
 $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/jquery-ui-1.10.4.custom.css');
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/balance.js', CClientScript::POS_HEAD);
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js', CClientScript::POS_HEAD);
 
 ?>
 
@@ -49,6 +50,8 @@ function echoData($key, $data, $name="default")
 	</div>
 	<p>&nbsp;</p>
 	<?php echo CHtml::endForm(); ?>
+
+    
 </div>
 <div <?php if(!$data) echo 'style="display:none"'; ?>" class="panel panel-default">
 	<div class="panel-heading">
@@ -58,7 +61,7 @@ function echoData($key, $data, $name="default")
 		<p class="text-center"><span class="pull-left">日期：<?php echo date('Y-m-d',strtotime($date)); ?></span> 编制单位：<?php echo $company ?> <span class="pull-right">金额单位：元</span></p>
 	</div>
 
-	<table class="table table-bordered table-hover">
+	<table class="table table-bordered table-hover" id="balance">
 		<thead>
 		 <tr>
 		 <th>资产</th>
@@ -254,4 +257,14 @@ function echoData($key, $data, $name="default")
 		 <?php echoData("debt_owner", $data,  "负债及股东权益(所有者权益)合计") ?>
 		 </tr>
 	</table>
+
+</div>
+<div>
+    <a id="dlink"  style="display:none;"></a>
+    <?php 
+    if ($date != ""){
+     $d = date('Y-m-d',strtotime($date));
+     echo "<input type='button' onclick='tableToExcel(\"balance\", \"name\", "."\"资产负债表(". $d.").xls\")'  value='导出'>";
+}
+    ?>
 </div>
