@@ -596,3 +596,6 @@ table.transition>tbody>tr>td>input {
     float: left;
     padding: 15px;
 }
+.monthSelect{
+    width: 50px;
+}

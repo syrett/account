@@ -1,0 +1,3 @@
+account.sql     去除employee外键department_id
+models/post.php balance post表，余额必须是数字，不能是100,000.00，不能有逗号
+凭证打印

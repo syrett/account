@@ -107,7 +107,7 @@ class Post extends CActiveRecord
           $tmp_balance = 0;
         }
         $sbj_cat = Subjects::model()->getCat($subject_id);
-        $balance[$subject_id]['balance']= balance($tmp_balance, $arr['debit'], $arr['credit'], $sbj_cat);
+        $balance[$subject_id]['balance']= str_replace(",", "",balance($tmp_balance, $arr['debit'], $arr['credit'], $sbj_cat));
       }
 
       // 本月没有发生额的科目借贷都为0

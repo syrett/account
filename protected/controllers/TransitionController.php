@@ -6,7 +6,7 @@ class TransitionController extends Controller
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
      * using two-column layout. See 'protected/views/layouts/column2.php'.
      */
-    public $layout = '//layouts/column2';
+    //public $layout = '//layouts/column2';
 
     /**
      * @return array action filters
@@ -34,7 +34,7 @@ class TransitionController extends Controller
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('create', 'update', 'getTranSuffix', 'Appendix', 'ListFirst', 'reorganise', 'ajaxListFirst',
                     'review', 'settlement', 'antiSettlement','listReview',
-                    'ListTransition', 'listPost', 'listReorganise', 'listSettlement', 'Print'),
+                    'ListTransition', 'listPost', 'listReorganise', 'listSettlement', 'Print', 'printp'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -882,32 +882,85 @@ class TransitionController extends Controller
         }
     }
 
+    public function actionPrintP(){
+
+        $this->render("printp");
+    }
     public function actionPrint(){
+        $year = $_REQUEST['year'];
 
-        Post::model()->deleteAll();
-        $id = 2225;
+        $fm = $_REQUEST['fm'];
+        if($fm<10)
+            $fm = $year.'0'. $fm;
+        else
+            $fm = $year.$fm;
+
+        $tm = $_REQUEST['tm'];
+        if($tm<10)
+            $tm = $year.'0'. $tm;
+        else
+            $tm = $year. $tm;
+        $tranList = $this->getAllTransitionList($fm, $tm);
+
+
         $mPDF1 = Yii::app()->ePdf->mpdf();
-//        $mPDF1 = Yii::app()->ePdf->HTML2PDF('P', 'A4', 'en');
-//        $mPDF1->AddFont('STSongStd-Light-Acro', 'stsongstdlight.php');
-//        $mPDF1->setDefaultFont('STSongStdlight');
-
         $mPDF1->setAutoFont(AUTOFONT_ALL);
         $mPDF1->SetDisplayMode('fullpage');
         # Load a stylesheet
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot'). Yii::app()->theme->baseUrl . '/assets/css/print.css');
         $mPDF1->WriteHTML($stylesheet, 1);
 
-        $items = $this->getItemsToUpdate($id);
-        $i = 0;
-        while($i<=2){
-            $mPDF1->WriteHTML($this->renderPartial('print', array('model' => $items,),true,true));
-            $i++;
+
+        $cs = Yii::app()->clientScript;
+        if($_REQUEST['style']=='2')
+            $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/print_2.css');
+        else
+            $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/print.css');
+        foreach($tranList as $id){
+            $items = $this->getItemsToUpdate($id);
+            //$mPDF1->WriteHTML($this->renderPartial('print', array('model' => $items,),true,true));
+            $count = count($items);
+            $page = 0;
+            $pages = array();
+            foreach($items as $key => $item){
+                if($key %5 == 0)
+                    $page++;
+                $pages[$page][] = $item;
+            }
+            $count = count($pages);
+            foreach($pages as $page => $items){
+//                $this->renderPartial('print', array('model' => $items, 'count' => $count, 'page' => $page,),false,true);
+                if($_REQUEST['style']=='2')
+                    $mPDF1->WriteHTML($this->renderPartial('print_2', array('model' => $items, 'count' => $count, 'page' => $page
+                    ),true,true));
+//                    ),false,true));
+                else
+                    $mPDF1->WriteHTML($this->renderPartial('print_1', array('model' => $items, 'count' => $count, 'page' => $page
+                    ),true,true));
+//                    ),false,true));
+            }
         }
 
-//        $mPDF1->WriteHTML($this->renderPartial('print', array('model' => $items,),true));
-        # Outputs ready PDF
-        $mPDF1->Output( 'etc.pdf' , EYiiPdf::OUTPUT_TO_BROWSER );
+        if($_REQUEST['submit']=='打印凭证')
+            $mPDF1->Output( 'etc.pdf' , EYiiPdf::OUTPUT_TO_BROWSER );
+        elseif($_REQUEST['submit']=='下载凭证')
+            $mPDF1->Output( 'etc.pdf' , EYiiPdf::OUTPUT_TO_DOWNLOAD );
+    }
 
+    public function getAllTransitionList($fm, $tm){
+
+        $sql = "SELECT id FROM `transition` group by `entry_num_prefix`,`entry_num` having `entry_num_prefix`>=$fm and `entry_num_prefix`<=$tm";
+
+//        $sql = "select * from subjects where has_sub=0 order by concat(sbj_number) asc"; // 一级科目的为1001～9999
+        $list = Subjects::model()->findAllBySql($sql);
+        $arr = array();
+        foreach ($list as $row) {
+            $arr[] = $row['id'];
+        }
+        return $arr;
+    }
+
+    public function getTransition($id){
 
     }
 }

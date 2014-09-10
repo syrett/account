@@ -498,4 +498,16 @@ class Transition extends CActiveRecord
 
     }
 
+    //有凭证的年份
+    //return array()
+    public function hasTransitionYears(){
+        $sql = 'select year(`entry_date`) as year from `transition` group by year(`entry_date`)';
+        $result = Yii::app()->db->createCommand($sql)->queryAll();
+        $array = array();
+        foreach($result as $item){
+            $array[$item['year']] = $item['year'];
+        }
+        return $array;
+    }
+
 }

@@ -37,7 +37,9 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
             $subject_id = '';
         }
 
-        $years = array(2013=>'2013',2014=>'2014');
+        //$years = array(2013=>'2013',2014=>'2014');
+        //有凭证的年份
+        $years = Transition::model()->hasTransitionYears();
         $months = array(1=>'1',2=>'2',3=>'3',4=>'4',5=>'5',6=>'6',7=>'7',8=>'8',9=>'9',10=>'10',11=>'11',12=>'12');
 
         $this->widget('Select2', array(

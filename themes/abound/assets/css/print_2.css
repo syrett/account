@@ -6,25 +6,27 @@ body, html{
 @page {
     margin-top: 5mm;
     margin-bottom: 1mm;
-      }
+}
 .print {
-    height: 130mm;
+    height: 200mm;
     text-align: center;
     margin: auto;
-    width: 180mm; /*A4宽度 210mm*/
 }
 .print > div span {
     margin: auto;
 }
+.header td{
+    text-align: center;
+}
 .h1{
-    font-size: 26px;
+    font-size: 32px;
     font-weight:bold;
     display:inline;
     text-align: center;
     margin: 0px;
 }
 .h2{
-    font-size: 12px;
+    font-size: 16px;
     line-height: 0px;
     font-weight: normal;
 }
@@ -34,7 +36,6 @@ body, html{
 }
 .left {
     float: left;
-    width: 35mm;  /*210mm/6 = 35*/
     text-align: left;
 }
 .clear {
@@ -42,8 +43,7 @@ body, html{
     height: 0;
 }
 .table{
-    width: 180mm;
-    height: 130mm;
+    height: 200mm;
     border: 2px solid #000;
     border-collapse:collapse;
     margin-bottom: 20px;
@@ -51,28 +51,27 @@ body, html{
 .hr {
     border: 1 dashed #CCCCCC;
     margin: 1px auto;
-    width: 20%;
 }
 .title {
-    font-size: 13px;
+    font-size: 16px;
     border-collapse:collapse;
-    height: 10mm;
+    height: 25mm;
 }
 
 .rowTop td{
     border-top: 1px solid #000011;
-    height: 10mm;
+    height: 15mm;
 }
 .rowBottom td{
     border-bottom: 1px solid #CCCCCC;
 }
 .headerTH th{
     border-bottom: 1px solid #000011;
-    height: 10mm;
+    height: 15mm;
 }
 .page_top{
-    height: 10mm;
+    height: 15mm;
 }
 .rowNormal td{
-    height: 10mm;
+    height: 18mm;
 }
