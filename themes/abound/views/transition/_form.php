@@ -141,6 +141,7 @@ foreach ($model as $i => $item) {
      </div>
      <div class="transition_action">
 	<p>
+	<button class="btn btn-default btn-sm" id="btnAdd" onclick="addRow()"><span class="glyphicon glyphicon-add"></span> 插入新行</button>
 	<button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-chevron-left"></span> 上一页</button>
 	<button class="btn btn-default btn-sm">下一页 <span class="glyphicon glyphicon-chevron-right"></span></button>
 	<?php
