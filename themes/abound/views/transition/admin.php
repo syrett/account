@@ -21,7 +21,7 @@ $('.search-form form').submit(function(){
 $this->menu=array(
 	array('label'=>'<span class="glyphicon glyphicon-plus-sign"></span> 录入凭证',
 		  'url'=>array('create'),
-		  'linkOptions'=>array('class'=>'btn btn-inverse')
+		  'linkOptions'=>array('class'=>'btn btn-default')
 		  ),
 );
 

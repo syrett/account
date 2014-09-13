@@ -8,7 +8,7 @@ $this->breadcrumbs=array(
 $this->menu=array(
 	array('label'=>'<span class="glyphicon glyphicon-th-list"></span> 凭证列表',
 		  'url'=>array('admin'),
-		  'linkOptions'=>array('class'=>'btn btn-inverse')
+		  'linkOptions'=>array('class'=>'btn btn-default')
 		  ),	
 );
 ?>
