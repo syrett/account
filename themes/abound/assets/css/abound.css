@@ -1,8 +1,7 @@
 body {
-	
 	font-size:12px;
 	padding-bottom: 40px;
-	
+	background-color:#ccc;
 }
 .container{padding-top:90px;}
 
@@ -528,7 +527,7 @@ footer {
 }
 
 .breadcrumb {
- margin: 10px 0;
+ margin: 6px 0;
  padding-bottom: 0;
 }
 
@@ -626,3 +625,6 @@ width:150px;height:74px;position:absolute; right:170px; top:50px;color:#f00;
 background:url(../img/audit.png) 0 0 no-repeat;
 text-indent:-9999em;
 }
+.navbar {
+ min-height:35px;
+ }
