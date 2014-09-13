@@ -19,7 +19,7 @@ $this->pageTitle = Yii::app()->name;
                 ?>
         	</a>
         	<div class="caption">
-        		<h4>1. 填制凭证</h4>
+        		<h4>1. 录入凭证</h4>
         	</div>
         	</div>
         </div>
@@ -27,7 +27,7 @@ $this->pageTitle = Yii::app()->name;
         	<div class="thumbnail">
         	<a href="<?= $this->createUrl('Site/operation', array('operation'=>'listReview')) ?>">
                 <?php
-                 echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/pzsh.png','审核',array('style'=>'filter:alpha(opacity=0)'));
+                 echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/pzsh.png','审核凭证',array('style'=>'filter:alpha(opacity=0)'));
                 ?>
         	</a>
         	<div class="caption">
@@ -39,11 +39,11 @@ $this->pageTitle = Yii::app()->name;
         	<div class="thumbnail">
         	<a href="<?= $this->createUrl('Site/operation', array('operation'=>'listTransition')) ?>">
                 <?php
-                echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/pzcz.png','凭证管理',array('style'=>'filter:alpha(opacity=0)'));
+                echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/pzcz.png','查询凭证',array('style'=>'filter:alpha(opacity=0)'));
                 ?>
         	</a>
         	<div class="caption">
-        		<h4>3. 凭证查询</h4>
+        		<h4>3. 查询凭证</h4>
         	</div>
         	</div>
         </div>
@@ -51,11 +51,11 @@ $this->pageTitle = Yii::app()->name;
         	<div class="thumbnail">
         		<a href="<?= $this->createUrl('Site/operation', array('operation'=>'listPost')) ?>">
                 <?php
-                echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/pzdz.png','过账',array('style'=>'filter:alpha(opacity=0)'));
+                echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/pzdz.png','凭证过账',array('style'=>'filter:alpha(opacity=0)'));
                 ?>
         		</a>
         		<div class="caption">
-        			<h4>4. 过账</h4>
+        			<h4>4. 凭证过账</h4>
         		</div>
         	</div>
         </div>
@@ -63,7 +63,7 @@ $this->pageTitle = Yii::app()->name;
         	<div class="thumbnail">
         		<a href="<?= $this->createUrl('Site/operation', array('operation'=>'listSettlement')) ?>">
                 <?php
-                echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/qmjz.png','月末结账',array('style'=>'filter:alpha(opacity=0)'));
+                echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/qmjz.png','期末结账',array('style'=>'filter:alpha(opacity=0)'));
                 ?>
                 </a>
                 <div class="caption">
