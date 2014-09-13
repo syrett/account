@@ -141,9 +141,9 @@ foreach ($model as $i => $item) {
      </div>
      <div class="transition_action">
 	<p>
-	<button class="btn btn-default btn-sm" id="btnAdd" onclick="addRow()"><span class="glyphicon glyphicon-add"></span> 插入新行</button>
-	<button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-chevron-left"></span> 上一页</button>
-	<button class="btn btn-default btn-sm">下一页 <span class="glyphicon glyphicon-chevron-right"></span></button>
+        <button class="btn btn-default btn-sm" id="btnAdd" name="btnAdd" type="button" onclick="addRow()"><span class="glyphicon glyphicon-add"></span> 插入新行</button>
+        <button class="btn btn-default btn-sm" type="button"><span class="glyphicon glyphicon-chevron-left"></span> 上一页</button>
+        <button class="btn btn-default btn-sm" type="button">下一页 <span class="glyphicon glyphicon-chevron-right"></span></button>
 	<?php
 	
 	if(isset($_REQUEST['id']) && $model[0]->entry_memo!='结转凭证' && $model[0]->entry_reviewed!=1 && $model[0]->entry_closing!=1)
