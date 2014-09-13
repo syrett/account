@@ -565,9 +565,19 @@ footer {
  color:#066;
 }
 
+.transition_role,.transition_action {
+ margin:0 3% 20px 3%;
+ width:93%;
+ display:inline-table;
+}
+
+.transition_action p{
+ float:right;
+}
+
 table.transition {
  border:2px solid #000;
- margin:0 3% 20px 3%;
+ margin:0 3% 2px 3%;
  width:93%
 }
 span.dotted{
@@ -598,4 +608,21 @@ table.transition>tbody>tr>td>input {
 }
 .monthSelect{
     width: 50px;
+}
+
+.form-group {
+    margin-bottom:0;
+}
+
+.panel-heading h2{
+   letter-spacing:10px;
+}
+
+.panel-body {
+   position:relative;
+}
+.approved {
+width:150px;height:74px;position:absolute; right:170px; top:50px;color:#f00;
+background:url(../img/audit.png) 0 0 no-repeat;
+text-indent:-9999em;
 }
