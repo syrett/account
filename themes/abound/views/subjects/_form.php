@@ -15,7 +15,7 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
 
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'subjects-form',
-	'htmlOptions'=>array('class'=>'form-horizontal',),
+	'htmlOptions'=>array('class'=>'form-horizontal','role'=>'form'),
 	// Please note: When you enable ajax validation, make sure the corresponding
 	// controller action is handling ajax validation correctly.
 	// There is a call to performAjaxValidation() commented in generated controller code.
@@ -29,15 +29,15 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
 
 	<div class="alert alert-info">注意：所有字段必须填写</div>
 
-	<div class="form-group">
+	<div class="form-group form-group-lg">
 		<?php echo $form->label($model,'sbj_number', array('class'=>'col-sm-2 control-label')); ?>
         <div class="col-sm-10">
 		<?php echo $form->textField($model,'sbj_number',array('class'=>'form-control input-size','maxlength'=>12,'onkeyup'=>'checkInputNum(this)',)); ?>
 		<?php echo $form->error($model,'sbj_number',array('id'=>'sbj_number_msg')); ?>
-	</div>
+		</div>
     </div>
 
-	<div class="form-group">
+	<div class="form-group form-group-lg">
 		<?php echo $form->labelEx($model,'sbj_name',array('class'=>'col-sm-2 control-label')); ?>
         <div class="col-sm-10" id="sbj_name_div">
 		<?php echo $form->textField($model,'sbj_name',array('class'=>'form-control','size'=>20,'maxlength'=>20)); ?>
@@ -45,7 +45,7 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
             </div>
 	</div>
 
-	<div class="form-group">
+	<div class="form-group form-group-lg">
 		<?php echo $form->labelEx($model,'sbj_cat',array('class'=>'col-sm-2 control-label')); ?>
         <div class="col-sm-10">
             <?php
@@ -61,7 +61,7 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
 	</div>
     </div>
 
-	<div class="form-group">
+	<div class="form-group form-group-lg">
 		<?php echo $form->labelEx($model,'sbj_table',array('class'=>'col-sm-2 control-label')); ?>
         <div class="col-sm-10">
 		<?php echo $form->textField($model,'sbj_table',array('class'=>'form-control','size'=>60,'maxlength'=>200,'onkeyup'=>"if(this.value.replace(/^ +| +$/g,'')=='')alert('不能为空!')")); ?>

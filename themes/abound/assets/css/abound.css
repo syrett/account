@@ -1,10 +1,19 @@
 body {
 	font-size:12px;
 	padding-bottom: 40px;
-	background-color:#ccc;
+	background-color:#ddd;
 }
 .container{padding-top:90px;}
 
+.logo {
+	background: url(../img/logo.png) left top no-repeat;
+	height:43px;
+	min-width:180px;
+	text-indent:-9999em;
+}
+.operations {
+	float:right;
+}
 /*Nav bar*/
 .navbar .container{padding-top:0;}
 .navbar .navbar-brand {
@@ -607,10 +616,6 @@ table.transition>tbody>tr>td>input {
 }
 .monthSelect{
     width: 50px;
-}
-
-.form-group {
-    margin-bottom:0;
 }
 
 .panel-heading h2{

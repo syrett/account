@@ -46,6 +46,6 @@ $this->pageTitle = Yii::app()->name;
                     <?=$month?>月
                 </a>
             </dd>
-        <?}?>
+        <?php }?>
         </dl><?php } ?>
 </div>
