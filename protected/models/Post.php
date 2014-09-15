@@ -329,4 +329,20 @@ class Post extends CActiveRecord
       return $balance;
     }
 
+    /*
+     * 设置期初余额,值为0则不设置
+     */
+    public function balance_set($sbj_id,$balance,$year,$month) {
+      if ($balance ==0){
+        return true;
+      }else{
+        $arr = array(
+                "balance"=>$balance,
+                "credit"=>0,
+                "debit"=>0,
+                );
+        $data[$sbj_id]=$arr;
+        return self::savePost($data,$year,$month);
+      }
+    }
 }

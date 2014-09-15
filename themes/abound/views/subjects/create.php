@@ -23,5 +23,8 @@ $this->menu=array(
 			?>
 </div>
 <div class="row">
-    <?php $this->renderPartial('_form', array('model' => $model)); ?>
+    <?php $this->renderPartial('_form', array(
+                                              'model' => $model,
+                                              'balance_set'=>0,
+                                              )); ?>
 </div>

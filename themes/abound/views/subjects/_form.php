@@ -69,6 +69,26 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
         </div>
 	</div>
 
+
+
+    <div class="form-group">
+              <label class="col-sm-2 control-label">
+              期初余额:
+              </label>
+              
+              <div class="col-sm-10">
+              <?php 
+              if($model->balance_set==0){
+                echo ' <input class="form-control" size="60" type="text"  name="sbj_balance" >';
+              }else{
+                echo ' <label class="form-control" >期初余额已经设置,不能更改</label>';
+              }
+              ?>
+             
+              </div>
+
+    </div>
+  
 	<div class="form-group">
 		<div class="col-sm-offset-2 col-sm-10">
 			<?php echo CHtml::submitButton($model->isNewRecord ? '添加' : '保存', array('class'=>'btn btn-primary',)); ?>

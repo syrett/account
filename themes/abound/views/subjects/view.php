@@ -52,6 +52,7 @@ $this->menu=array(
                     '科目名称'=>'sbj_name',
                     '科目分类'=>'sbj_cat',
                     '科目报表'=>'sbj_table',
+                    '是否已经设置期初余额'=>'balance_set',
                 ),
             )); ?>
 </div>

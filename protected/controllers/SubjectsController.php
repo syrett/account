@@ -51,6 +51,7 @@ class SubjectsController extends Controller
 	 */
 	public function actionView($id)
 	{
+      var_dump($this->loadModel($id));
 		$this->render('view',array(
 			'model'=>$this->loadModel($id),
 		));
@@ -79,6 +80,14 @@ class SubjectsController extends Controller
                     Post::model()->tranPost($sbj_id);
                     Subjects::model()->hasSub($sbj_id);
                 }
+
+                //设置期初余额
+                $balance = $_POST["sbj_balance"];
+                if ($balance !="") {
+                  $sbj_id = $model->sbj_number;
+                  $model->balance_set($sbj_id,$balance);
+                }
+                
 				$this->redirect(array('view','id'=>$model->id));
             }
 		}
@@ -102,14 +111,27 @@ class SubjectsController extends Controller
 
 		if(isset($_POST['Subjects']))
 		{
-			$model->attributes=$_POST['Subjects'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
-		}
+          $model->attributes=$_POST['Subjects'];
 
-		$this->render('update',array(
-			'model'=>$model,
-		));
+          if($model->save()){
+
+            //设置期初余额
+            $balance = $_POST["sbj_balance"];
+            if ($balance !="") {
+              $sbj_id = $model->sbj_number;
+              $model->balance_set($sbj_id,$balance);
+            }
+
+
+            $this->redirect(array('view','id'=>$model->id));
+          }
+
+		}else{
+
+          $this->render('update',array(
+                                       'model'=>$model,
+                                     ));
+        }
 	}
 
 	/**

@@ -59,6 +59,7 @@ $this->menu=array(
                     	'filter'=>CHtml::tag('div',array('class'=>'select2-search'),CHtml::textField('sbj_number','',array('class'=>'select2-input'))),
                     	),
                     'sbj_name',
+                    'balance_set',
 //                    array(
 //                        'name'=>'sbj_cat',
 //                            'filter'=>Select2::dropDownList('Subjects[sbj_cat]',$model->sbj_cat,CHtml::listData(Subjects::model()->findall(), 'sbj_cat', 'sbj_cat')),
