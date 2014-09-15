@@ -65,6 +65,13 @@ $tranDate = $command->queryRow(); // execute a query SQL
                 : date('Ymd');?>" id="dp1" readonly />
  	       <input type="hidden" id="entry_num_pre" value="<? echo Yii::app()->createAbsoluteUrl("transition/GetTranSuffix") ?>" />
         </div>
+	<?php
+        if(isset($_REQUEST['id'])&&accessReview($_REQUEST['id'])&&accessSettle($_REQUEST['id'])) {
+                if ($model[0]->entry_reviewed==1)
+                echo '<div class="approved">已审核</div>';
+        }
+	?>
+
 	</div><!-- .panel-body -->
     <!-- Table -->
     <table class="table table-bordered transition" id="transitionRows">
@@ -111,66 +118,71 @@ foreach ($model as $i => $item) {
         </tr>
         <?php $number++;} ?>
     </table>
-	<div class="panel-footer">
-				<?php
-				if(isset($_REQUEST['id']) && $model[0]->entry_memo!='结转凭证' && $model[0]->entry_reviewed!=1 && $model[0]->entry_closing!=1)
-				echo CHtml::htmlbutton(($model[0]->entry_deleted==0)?'<span class="glyphicon glyphicon-remove"></span> 删除凭证':'<span class="glyphicon glyphicon-share-alt"></span> 恢复凭证', array(
-					'submit' => array('transition/delete', array('id'=>$_REQUEST['id'],'action'=>$model[0]->entry_deleted)),
-						'style' => 'float: left',
-						'name' => 'btnDelete',
-						'class' => 'btn btn-danger',
-						'confirm' => ($model[0]->entry_deleted==1)?'确定要恢复该凭证？':'确定要删除该凭证下所有条目？',
-					)
-				);
-//				echo '<p align="center">';
-				echo CHtml::htmlbutton('<span class="glyphicon glyphicon-plus-sign"></span> 继续添加单项', array(
-                        'style' => 'float:right',
-						'name' => 'btnAdd',
-						'class' => 'btn btn-info',
-						'onclick' => "addRow()",
-					)
-				);
-//				echo '</p>';
-				?>
+    <div class="transition_role">
+	<div class="col-md-3">记账：
 
-<?php
+	</div>
+	<div class="col-md-3">审核：
+	<?php
+	
 	if($model[0]->entry_reviewed==1)
 	{
-//		echo "		<tr>";
-//		echo "			<td>";
 		$user = User::model()->findByPk(array('id'=>$model[0]->entry_reviewer));
-		echo '<span class="glyphicon glyphicon-user"></span> 审核人员：'. $user->email;
+		echo $user->email;
 	}
-//	echo "			</td>";
-//	echo "		</tr>";
-?>
+	?>
+	</div>
+	<div class="col-md-3">出纳：
 
-			<div class="form-group buttons text-center">
-				<?php
-					echo $form->error($item,'entry_amount',array('id'=>'entry_amount_msg'));
-				if($model[0]->hasErrors()){
-					echo CHtml::errorSummary($model[0]);
-				}
-				if(isset($_REQUEST['id'])&&accessReview($_REQUEST['id'])&&accessSettle($_REQUEST['id']))
-				echo CHtml::htmlbutton(($model[0]->entry_reviewed==1)?'<span class="glyphicon glyphicon-repeat"></span> 取消审核':'<span class="glyphicon glyphicon-ok"></span> 审核通过', array(
-						'submit' => array('transition/review', array('id'=>$_REQUEST['id'], 'action'=>$model[0]->entry_reviewed)),
-						'name' => 'btnReview',
-						'class' => 'btn btn-danger',
-						'confirm' => ($model[0]->entry_reviewed==1)?'确认取消审核？':'确认通过审核？',
-					)
-				);
-				echo "&nbsp;&nbsp;";
-				if($model[0]->entry_reviewed == 0){
-					//echo CHtml::htmlbutton('<span class="glyphicon glyphicon-floppy-disk"></span> 保存', array('encode'=>false,'class' => 'btn btn-primary',));
-					//echo CHtml::submitButton('保存', array('encode'=>false,'class' => 'btn btn-primary',));
-                    echo CHtml::tag('button',array('encode'=>false,'class' => 'btn btn-primary',),'<span class="glyphicon glyphicon-floppy-disk"></span> 保存');
-				}
-				echo "&nbsp;&nbsp;";
-				echo BtnBack();
-				?>
-			</div>
-		<!-- form -->
+	</div>
+	<div class="col-md-3">制单：
 
+	</div>
+     </div>
+     <div class="transition_action">
+	<p>
+        <button class="btn btn-default btn-sm" id="btnAdd" name="btnAdd" type="button" onclick="addRow()"><span class="glyphicon glyphicon-add"></span> 插入新行</button>
+        <button class="btn btn-default btn-sm" type="button"><span class="glyphicon glyphicon-chevron-left"></span> 上一页</button>
+        <button class="btn btn-default btn-sm" type="button">下一页 <span class="glyphicon glyphicon-chevron-right"></span></button>
+	<?php
+	
+	if(isset($_REQUEST['id']) && $model[0]->entry_memo!='结转凭证' && $model[0]->entry_reviewed!=1 && $model[0]->entry_closing!=1)
+		echo CHtml::htmlbutton(($model[0]->entry_deleted==0)?'<span class="glyphicon glyphicon-remove"></span> 删除凭证':'<span class="glyphicon glyphicon-share-alt"></span> 恢复凭证', array(
+			'submit' => array('transition/delete', array('id'=>$_REQUEST['id'],'action'=>$model[0]->entry_deleted)),
+			'style' => 'float: left',
+			'name' => 'btnDelete',
+			'class' => 'btn btn-default btn-sm',
+			'confirm' => ($model[0]->entry_deleted==1)?'确定要恢复该凭证？':'确定要删除该凭证下所有条目？',
+			)
+		);
+	echo "\n";
+        if(isset($_REQUEST['id'])&&accessReview($_REQUEST['id'])&&accessSettle($_REQUEST['id'])) {
+                 echo CHtml::htmlbutton(($model[0]->entry_reviewed==1)?'<span class="glyphicon glyphicon-repeat"></span> 取消审核':'<span class="glyphicon glyphicon-ok"></span> 审核通过', array(
+                        'submit' => array('transition/review', array('id'=>$_REQUEST['id'], 'action'=>$model[0]->entry_reviewed)),
+                        'name' => 'btnReview',
+                        'class' => 'btn btn-default btn-sm',
+                        'confirm' => ($model[0]->entry_reviewed==1)?'确认取消审核？':'确认通过审核？',
+                        )
+                 );
+	}
+	?>
+	</p>
+     </div>
+     <div class="panel-footer">
+	<div class="form-group buttons text-center">
+	  <?php
+		echo $form->error($item,'entry_amount',array('id'=>'entry_amount_msg'));
+		if($model[0]->hasErrors()){
+			echo CHtml::errorSummary($model[0]);
+		}
+		if($model[0]->entry_reviewed == 0){
+               		echo CHtml::tag('button',array('encode'=>false,'class' => 'btn btn-primary',),'<span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证');
+		}
+		echo "&nbsp;&nbsp;";
+		echo BtnBack();
+	?>
+	</div>
+	<!-- form -->
 
     <input type="hidden" name="entry_num_prefix" id='entry_num_prefix' value="<? echo isset($_REQUEST['id'])==true?$model[0]['entry_num_prefix']:date('Ym', time()) ?>"/>
     <input type="hidden" name="entry_num_prefix_this" id='entry_num_prefix_this' value="<? echo isset($_REQUEST['id'])==true?$model[0]['entry_num_prefix']:date('Ym', time()) ?>"/>

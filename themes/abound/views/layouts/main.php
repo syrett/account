@@ -26,7 +26,7 @@
 	  Yii::app()->clientScript->registerCoreScript('jquery');
 	?>
     <!-- Fav and Touch and touch icons -->
-    <link rel="shortcut icon" href="<?php echo $baseUrl;?>/assets/img/icons/favicon.ico">
+    <link rel="shortcut icon" href="<?php echo $baseUrl;?>/assets/img/icons/favicon.png">
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="<?php echo $baseUrl;?>/assets/img/icons/apple-touch-icon-144-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="<?php echo $baseUrl;?>/assets/img/icons/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="<?php echo $baseUrl;?>/assets/img/icons/apple-touch-icon-57-precomposed.png">

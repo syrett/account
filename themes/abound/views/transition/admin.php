@@ -19,9 +19,9 @@ $('.search-form form').submit(function(){
 });
 ");
 $this->menu=array(
-	array('label'=>'<span class="glyphicon glyphicon-plus-sign"></span> 凭证录入',
+	array('label'=>'<span class="glyphicon glyphicon-plus-sign"></span> 录入凭证',
 		  'url'=>array('create'),
-		  'linkOptions'=>array('class'=>'btn btn-primary')
+		  'linkOptions'=>array('class'=>'btn btn-default')
 		  ),
 );
 
@@ -30,7 +30,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/bootstrap-datep
 $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/datepicker.css');
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/_search.js', CClientScript::POS_HEAD);
 ?>
-<div class="row">
+<div class="operations">
 	<?php $this->widget('zii.widgets.CMenu', array(
 		/*'type'=>'list',*/
 		'encodeLabel'=>false,
@@ -38,8 +38,9 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/_search.js', CC
 		'htmlOptions'=>array('class'=>'nav nav-pills navbar-right'),
 		));
 	?>
-</div>
 <p>&nbsp;</p>
+<p>&nbsp;</p>
+</div>
 <div class="panel panel-default voucher form">
     <!-- Default panel contents -->
     <div class="panel-heading">
@@ -48,10 +49,10 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/_search.js', CC
         if(!isset($operation))
             $operation = 'listTransition';
         switch($operation){
-            case 'listReview' : $title = '凭证审核';break;
-            case 'listTransition' : $title = '凭证查询';break;
+            case 'listReview' : $title = '审核凭证';break;
+            case 'listTransition' : $title = '查询凭证';break;
             case 'listReview' : $title = '凭证过账';break;
-            case 'listReview' : $title = '凭证结账';break;
+            case 'listReview' : $title = '期末结账';break;
         }
         echo $title;
         ?></h2>

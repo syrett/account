@@ -1,11 +1,19 @@
 body {
-	
 	font-size:12px;
 	padding-bottom: 40px;
-	
+	background-color:#ddd;
 }
 .container{padding-top:90px;}
 
+.logo {
+	background: url(../img/logo.png) left top no-repeat;
+	height:43px;
+	min-width:180px;
+	text-indent:-9999em;
+}
+.operations {
+	float:right;
+}
 /*Nav bar*/
 .navbar .container{padding-top:0;}
 .navbar .navbar-brand {
@@ -528,7 +536,7 @@ footer {
 }
 
 .breadcrumb {
- margin: 10px 0;
+ margin: 6px 0;
  padding-bottom: 0;
 }
 
@@ -565,9 +573,19 @@ footer {
  color:#066;
 }
 
+.transition_role,.transition_action {
+ margin:0 3% 20px 3%;
+ width:93%;
+ display:inline-table;
+}
+
+.transition_action p{
+ float:right;
+}
+
 table.transition {
  border:2px solid #000;
- margin:0 3% 20px 3%;
+ margin:0 3% 2px 3%;
  width:93%
 }
 span.dotted{
@@ -599,3 +617,19 @@ table.transition>tbody>tr>td>input {
 .monthSelect{
     width: 50px;
 }
+
+.panel-heading h2{
+   letter-spacing:10px;
+}
+
+.panel-body {
+   position:relative;
+}
+.approved {
+width:150px;height:74px;position:absolute; right:170px; top:50px;color:#f00;
+background:url(../img/audit.png) 0 0 no-repeat;
+text-indent:-9999em;
+}
+.navbar {
+ min-height:35px;
+ }

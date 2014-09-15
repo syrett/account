@@ -1,3 +1,6 @@
+<?php
+if (!(Yii::app()->user->isGuest)) {
+?>
 <div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
       <!-- Brand and toggle get grouped for better mobile display -->
  	  <div class="container">
@@ -8,7 +11,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="<?php echo Yii::app()->homeUrl ?>">我嘉 <small>财务管理系统</small></a>
+        <div class="logo"><a class="navbar-brand" href="<?php echo Yii::app()->homeUrl ?>">我嘉 <small>财务管理系统</small></a></div>
        </div>
 		<!-- Collect the nav links, forms, and other content for toggling -->
         <div class="navbar-collapse collapse" id="account-navbar-collapse">
@@ -130,3 +133,6 @@
            </form> -->
     	</div><!-- container -->
 </div>
+<?php
+}
+?>
