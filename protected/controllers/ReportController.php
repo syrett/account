@@ -99,6 +99,7 @@ class ReportController extends CController
     $model = new SubjectBalance();
     $data = $model->genData($year.$fm, $year.$tm);
     $this->render("subjects",array("dataProvider"=>$data,
+                                   "fm" => $fm,
                                    "fromMonth"=>$year.'年'.$fm.'月',
                                    "toMonth"=>$year.'年'.$tm.'月',
                                  "company"=>"公司名字"));
@@ -131,11 +132,17 @@ class ReportController extends CController
           $subject_id = '';
       }
     $model = new Detail();
-    if($subject_id!='')
-        $data = $model->genData($subject_id, $year, $fm, $tm);
-      else
-          $data = array();
+    $subject_name = "";
+    if($subject_id!=''){
+      $subject_name = Subjects::getName($subject_id);
+      $data = $model->genData($subject_id, $year, $fm, $tm);
+    }
+    else{
+        $data = array();
+    }
+
     $this->render("detail",array("dataProvider"=>$data,
+                                 "subject_name"=>$subject_name,
                                    "fromMonth"=>$year.'年'.$fm.'月',
                                    "toMonth"=>$year.'年'.$tm.'月'));
     
@@ -198,15 +205,18 @@ class ReportController extends CController
         $subject_id = 6401; //主营业收入
       }
       $model = new ProjectRe();
+      $subject_name = Subjects::getName($subject_id);
       $data = $model->project($date, $subject_id);
     }else{
       $data = array();
       $date = '';
       $type = 1;
+      $subject_name = "";
     }
 
     $this->render("project",array("data"=>$data,
                                   "type"=>$type,
+                                 "subject_name" => $subject_name,
                                  "date"=>$date));
 
 
