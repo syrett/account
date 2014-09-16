@@ -12,64 +12,44 @@ $this->pageTitle = Yii::app()->name;
     <!-- search-form -->
     <div class="row row-fluid">
         <div class="col-md-index">
-        	<div class="thumbnail">
-        	<a href="<?= $this->createUrl('Transition/create') ?>">
+        	<a href="<?= $this->createUrl('Transition/create') ?>" class="thumbnail">
                 <?php
                  echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/pzlr.png','填制凭证',array('style'=>'filter:alpha(opacity=0)'));
                 ?>
+        	<span class="caption">1. 录入凭证</span>
         	</a>
-        	<div class="caption">
-        		<h4>1. 录入凭证</h4>
-        	</div>
-        	</div>
         </div>
         <div class="col-md-index">
-        	<div class="thumbnail">
-        	<a href="<?= $this->createUrl('Site/operation', array('operation'=>'listReview')) ?>">
+        	<a href="<?= $this->createUrl('Site/operation', array('operation'=>'listReview')) ?>" class="thumbnail">
                 <?php
                  echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/pzsh.png','审核凭证',array('style'=>'filter:alpha(opacity=0)'));
                 ?>
+        	<span class="caption">2. 审核凭证</span>
         	</a>
-        	<div class="caption">
-        		<h4>2. 审核凭证</h4>
-        	</div>
-        	</div>
         </div>
         <div class="col-md-index">
-        	<div class="thumbnail">
-        	<a href="<?= $this->createUrl('Site/operation', array('operation'=>'listTransition')) ?>">
+        	<a href="<?= $this->createUrl('Site/operation', array('operation'=>'listTransition')) ?>" class="thumbnail">
                 <?php
                 echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/pzcz.png','查询凭证',array('style'=>'filter:alpha(opacity=0)'));
                 ?>
+        	<span class="caption">3. 查询凭证</span>
         	</a>
-        	<div class="caption">
-        		<h4>3. 查询凭证</h4>
-        	</div>
-        	</div>
         </div>
         <div class="col-md-index">
-        	<div class="thumbnail">
-        		<a href="<?= $this->createUrl('Site/operation', array('operation'=>'listPost')) ?>">
+        	<a href="<?= $this->createUrl('Site/operation', array('operation'=>'listPost')) ?>" class="thumbnail">
                 <?php
                 echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/pzdz.png','凭证过账',array('style'=>'filter:alpha(opacity=0)'));
                 ?>
-        		</a>
-        		<div class="caption">
-        			<h4>4. 凭证过账</h4>
-        		</div>
-        	</div>
+        	<span class="caption">4. 凭证过账</span>
+        	</a>
         </div>
         <div class="col-md-index">
-        	<div class="thumbnail">
-        		<a href="<?= $this->createUrl('Site/operation', array('operation'=>'listSettlement')) ?>">
+        	<a href="<?= $this->createUrl('Site/operation', array('operation'=>'listSettlement')) ?>" class="thumbnail">
                 <?php
                 echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/qmjz.png','期末结账',array('style'=>'filter:alpha(opacity=0)'));
                 ?>
-                </a>
-                <div class="caption">
-                	<h4>5. 期末结账</h4>
-                </div>
-        	</div>
+            <span class="caption">5. 期末结账</span>
+        	</a>
         </div>
 
 <!--    <div class="unit-group"><div class='long'>--><?//

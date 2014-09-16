@@ -48,6 +48,22 @@ $tranDate = $command->queryRow(); // execute a query SQL
                     : $this->tranNumber();
         $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime($model[0]->entry_date)) : date('Y-m-d');
 ?>
+	<div class="well well-sm">
+	<?php
+	echo CHtml::htmlButton('<span class="glyphicon glyphicon-save"></span> 保存凭证',array('class' => 'btn btn-default', 'type' => 'submit'));
+	echo "\n";
+	echo CHtml::link('<span class="glyphicon glyphicon-plus"></span> 添加凭证',array('create'),array('class' => 'btn btn-default'));
+	echo "\n";
+	echo CHtml::link('<span class="glyphicon glyphicon-search"></span> 查询凭证',array('admin'),array('class' => 'btn btn-default'));
+	/*
+	 $this->widget('zii.widgets.CMenu', array(
+		'encodeLabel'=>false,
+		'items'=>$this->menu,
+		'htmlOptions'=>array('class'=>'nav nav-pills'),
+		));
+	*/
+	?>
+	</div>
 	<div class="panel-body">
 	<div class="transition_title">
 		<h2>记 账 凭 证</h2>

@@ -9,11 +9,12 @@ $this->breadcrumbs=array(
 );
 ?>
 
-<div class="panel panel-success">
+<div class="panel panel-primary">
 	<div class="panel-heading"><div class="logo">老法师 sorcerer</div></div>
 	<div class="panel-body">
 	  <div class="col-xs-8 col-sm-6">
 		<h5>新闻和操作指南</h5>
+		
 	  </div>
 	  <div class="col-xs-4 col-sm-6">
 			<h2>登 录</h2>

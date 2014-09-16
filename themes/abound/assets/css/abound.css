@@ -557,6 +557,7 @@ footer {
 }
 .row-deleted {
     background-color: #f2dede;
+    text-decoration: line-through;
 }
 .row-reviewed {
     background-color: rgb(204, 255, 204);

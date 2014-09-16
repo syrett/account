@@ -9,7 +9,7 @@
 
         <div class="form">
 
-            <h2>Success </h2>
+            <h2>操作成功！</h2>
 
             <div class="error">
                 <?php

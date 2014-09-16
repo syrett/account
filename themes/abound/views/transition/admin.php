@@ -19,28 +19,25 @@ $('.search-form form').submit(function(){
 });
 ");
 $this->menu=array(
-	array('label'=>'<span class="glyphicon glyphicon-plus-sign"></span> 录入凭证',
+	array('label'=>'<span class="glyphicon glyphicon-plus"></span> 添加',
 		  'url'=>array('create'),
 		  'linkOptions'=>array('class'=>'btn btn-default')
 		  ),
+	array('label'=>'<span class="glyphicon glyphicon-print"></span> 打印',
+		  'url'=>array('#'),
+		  'linkOptions'=>array('class'=>'btn btn-default')
+		  ),
+	array('label'=>'<span class="glyphicon glyphicon-export"></span> 导出',
+		  'url'=>array('#'),
+		  'linkOptions'=>array('class'=>'btn btn-default')
+		  ),
 );
-
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/bootstrap-datepicker.js', CClientScript::POS_HEAD);
 $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/datepicker.css');
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/_search.js', CClientScript::POS_HEAD);
 ?>
-<div class="operations">
-	<?php $this->widget('zii.widgets.CMenu', array(
-		/*'type'=>'list',*/
-		'encodeLabel'=>false,
-		'items'=>$this->menu,
-		'htmlOptions'=>array('class'=>'nav nav-pills navbar-right'),
-		));
-	?>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-</div>
+
 <div class="panel panel-default voucher form">
     <!-- Default panel contents -->
     <div class="panel-heading">
@@ -58,34 +55,48 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/_search.js', CC
         ?></h2>
     </div>
     <div class="panel-body">
-	<?php echo CHtml::beginForm(); ?>
-		<div class="col-md-7">
-		  <div class="input-group">
-			<span class="input-group-addon">开始日期：</span>
-			<?php echo CHtml::textField('s_day', isset($_REQUEST['s_day'])?$_REQUEST['s_day']:"",array('class' => 'form-control',)); ?>
-			<span class="input-group-addon">结束日期：</span>
-			<?php echo CHtml::textField('e_day', isset($_REQUEST['e_day'])?$_REQUEST['e_day']:"",array('class' => 'form-control',)); ?>
-			<span class="input-group-btn">
-			<?php  echo CHtml::submitButton('查找',array('class' => 'btn btn-primary',)); ?>
-			</span>
-		  </div><!-- /input-group -->
-		</div>
-		<div class="col-md-4">
+     <div class="row">
+		<div class="col-md-4 pull-right">
+			<?php
+			$this->widget('zii.widgets.CMenu', array(
+				/*'type'=>'list',*/
+				'encodeLabel'=>false,
+				'items'=>$this->menu,
+				'htmlOptions'=>array('class'=>'nav nav-pills'),
+				));
+			?>
+			<br />
             <?php
             if($operation!='listReview'){
-                ?>
+            ?>
+            <div class="well">
             背景颜色说明：
 			<span class="reviewed">已审核</span>&nbsp;&nbsp;
 			<span class="deleted">已删除</span>
+			</div>
             <?php
             }
-
-            ?>
+            ?>			
 		</div>
-		<?php
-			echo CHtml::endForm();
-		?>
-	<!-- search-form -->
+		<div class="col-md-4">
+		<?php echo CHtml::beginForm(); ?>
+		  <div class="input-group">
+			<span class="input-group-addon">开始日期：</span>
+			<?php echo CHtml::textField('s_day', isset($_REQUEST['s_day'])?$_REQUEST['s_day']:"",array('class' => 'form-control',)); ?>
+		  </div>
+		  <br />
+		  <div class="input-group">
+			<span class="input-group-addon">结束日期：</span>
+			<?php echo CHtml::textField('e_day', isset($_REQUEST['e_day'])?$_REQUEST['e_day']:"",array('class' => 'form-control',)); ?>
+		  </div>
+		  <br />
+			<?php
+			  echo CHtml::htmlButton('<span class="glyphicon glyphicon-search"></span> 查找',array('class' => 'btn btn-primary', 'type' => 'submit'));
+			  echo CHtml::endForm();
+			?>
+			<!-- search-form -->
+		</div>
+		</div>
     </div>
         <?php
 
