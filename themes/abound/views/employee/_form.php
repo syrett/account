@@ -10,7 +10,17 @@ $form=$this->beginWidget('CActiveForm', array(
 	'htmlOptions'=>array('class'=>'form-horizontal',),
 ));
 ?>
-	<div class="alert alert-info">带 <span class="required">*</span> 的必填。</div>
+	<div class="well well-sm">
+	<?php
+	echo CHtml::link('<span class="glyphicon glyphicon-search"></span> 员工列表',array('admin'),array('class' => 'btn btn-default'));
+	if (!($model->isNewRecord)) {
+	echo "\n";
+	echo CHtml::link('<span class="glyphicon glyphicon-plus"></span> 添加员工',array('create'),array('class' => 'btn btn-default'));
+	}
+	?>
+	</div>
+	
+	<div class="panel-body">
 		<div class="form-group">		
 			<?php echo $form->labelEx($model,'name',array('class'=>'col-sm-2 control-label')); ?>
 			<div class="col-sm-10">
@@ -34,12 +44,13 @@ $form=$this->beginWidget('CActiveForm', array(
 			</div>
 			<?php echo $form->error($model,'memo'); ?>
 		</div>
-	</div>
+		
 		<div class="form-group">
 		<div class="col-sm-offset-2 col-sm-10">
 			<?php echo CHtml::submitButton($model->isNewRecord ? '添加' : '保存', array('class'=>'btn btn-primary',)); ?>
 			<?php echo BtnBack(); ?>
 		</div>
 		</div>
+	</div>
 
 <?php $this->endWidget(); ?>

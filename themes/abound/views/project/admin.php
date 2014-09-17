@@ -5,26 +5,19 @@ $this->pageTitle=Yii::app()->name . ' - 项目管理';
 $this->breadcrumbs=array(
 	'项目管理',
 );
-
-$this->menu=array(
-	array('label'=>'<span class="glyphicon glyphicon-plus-sign"></span> 添加项目',
-		  'url'=>array('create'),
-		  'linkOptions'=>array('class'=>'btn btn-primary')
-		  ),
-);
 ?>
-<div class="row">
-	<h2>项目管理</h2>
-		  <?php $this->widget('zii.widgets.CMenu', array(
-			/*'type'=>'list',*/
-			'encodeLabel'=>false,
-			'items'=>$this->menu,
-			'htmlOptions'=>array('class'=>'nav nav-pills navbar-right'),
-			));
-			?>
-</div>
+<div class="panel panel-default voucher form">
+    <!-- Default panel contents -->
+    <div class="panel-heading">
+		<h2>项目管理</h2>
+	</div>
 
-<div class="row">
+	<div class="well well-sm">
+	<?php
+	echo CHtml::link('<span class="glyphicon glyphicon-plus"></span> 添加',array('create'),array('class' => 'btn btn-default'));
+	?>
+	</div>
+    <div class="panel-body">
 
 <?php
 $this->widget('zii.widgets.grid.CGridView', array(
@@ -53,4 +46,5 @@ $this->widget('zii.widgets.grid.CGridView', array(
              ),
         ),
    )); ?>
+	</div>
 </div>
