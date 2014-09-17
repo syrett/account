@@ -20,7 +20,7 @@ $this->pageTitle = Yii::app()->name;
         	</a>
         </div>
         <div class="col-md-index">
-        	<a href="<?= $this->createUrl('Site/operation', array('operation'=>'listReview')) ?>" class="thumbnail">
+        	<a href="<?= $this->createUrl('transition/listreview') ?>" class="thumbnail">
                 <?php
                  echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/pzsh.png','审核凭证',array('style'=>'filter:alpha(opacity=0)'));
                 ?>

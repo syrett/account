@@ -57,22 +57,30 @@ body, html{
     font-size: 13px;
     border-collapse:collapse;
     height: 10mm;
+    width: 180mm;
 }
 
 .rowTop td{
-    border-top: 1px solid #000011;
+    border: 1px solid #000011;
+    border-left: 1px solid #CCCCCC;
     height: 10mm;
 }
 .rowBottom td{
     border-bottom: 1px solid #CCCCCC;
+    border-left: 1px solid #CCCCCC;
 }
 .headerTH th{
-    border-bottom: 1px solid #000011;
+    border: 1px solid #000011;
     height: 10mm;
 }
 .page_top{
     height: 10mm;
 }
 .rowNormal td{
+    border-left: 1px solid #CCCCCC;
     height: 10mm;
+}
+.row td{
+    border-left: 1px solid #CCCCCC;
+
 }

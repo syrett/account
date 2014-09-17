@@ -217,6 +217,21 @@ class Transition extends CActiveRecord
     }
 
     /*
+     * 科目表路径
+     */
+    public function getSbjPath($id)
+    {
+        $path = "";
+        $path .= $this->getSbjName(substr($id,0,4));
+        $length = strlen($id);
+        $i = 6;
+        while($i <= $length){
+            $path .= '/'.$this->getSbjName(substr($id,0,$i));
+            $i = $i + 2;
+        }
+        return $path;
+    }
+    /*
      * 年月日
      */
     public function getTrandate($prefix, $day)

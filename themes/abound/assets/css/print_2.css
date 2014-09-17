@@ -4,7 +4,6 @@ body, html{
     padding:0;
 }
 @page {
-    margin-top: 5mm;
     margin-bottom: 1mm;
 }
 .print {
@@ -59,19 +58,27 @@ body, html{
 }
 
 .rowTop td{
-    border-top: 1px solid #000011;
+    border: 1px solid #000011;
+    border-left: 1px solid #CCCCCC;
     height: 15mm;
 }
 .rowBottom td{
     border-bottom: 1px solid #CCCCCC;
+    border-left: 1px solid #CCCCCC;
 }
 .headerTH th{
-    border-bottom: 1px solid #000011;
+    border: 1px solid #000011;
     height: 15mm;
 }
 .page_top{
     height: 15mm;
 }
 .rowNormal td{
+    border-left: 1px solid #CCCCCC;
     height: 18mm;
+}
+.row td{
+    border-left: 1px solid #CCCCCC;
+    height: 15mm;
+
 }

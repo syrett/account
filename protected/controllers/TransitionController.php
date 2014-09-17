@@ -932,19 +932,19 @@ class TransitionController extends Controller
 //                $this->renderPartial('print', array('model' => $items, 'count' => $count, 'page' => $page,),false,true);
                 if($_REQUEST['style']=='2')
                     $mPDF1->WriteHTML($this->renderPartial('print_2', array('model' => $items, 'count' => $count, 'page' => $page
-                    ),true,true));
-//                    ),false,true));
+//                    ),true,true));
+                    ),false,true));
                 else
                     $mPDF1->WriteHTML($this->renderPartial('print_1', array('model' => $items, 'count' => $count, 'page' => $page
-                    ),true,true));
-//                    ),false,true));
+//                    ),true,true));
+                    ),false,true));
             }
         }
 
-        if($_REQUEST['submit']=='打印凭证')
-            $mPDF1->Output( 'etc.pdf' , EYiiPdf::OUTPUT_TO_BROWSER );
-        elseif($_REQUEST['submit']=='下载凭证')
-            $mPDF1->Output( 'etc.pdf' , EYiiPdf::OUTPUT_TO_DOWNLOAD );
+//        if($_REQUEST['submit']=='打印凭证')
+//            $mPDF1->Output( 'etc.pdf' , EYiiPdf::OUTPUT_TO_BROWSER );
+//        elseif($_REQUEST['submit']=='下载凭证')
+//            $mPDF1->Output( 'etc.pdf' , EYiiPdf::OUTPUT_TO_DOWNLOAD );
     }
 
     public function getAllTransitionList($fm, $tm){

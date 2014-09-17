@@ -39,9 +39,9 @@
             <?php
             $i == 0;
             foreach($model as $item){
-                echo "<tr class='rowNormal'><td>$item[entry_memo]</td><td>".Transition::model()->getSbjName($item[entry_subject])."</td><td style='text-align: right;'></td><td style='text-align: right;'></td></tr>";
+                echo "<tr class='rowNormal'><td>$item[entry_memo]</td><td>".Transition::model()->getSbjPath($item[entry_subject])."</td><td style='text-align: right;'></td><td style='text-align: right;'></td></tr>";
                 if($i==4)
-                    $str = "<tr><td></td><td></td><td style='text-align: right;'>";
+                    $str = "<tr class='row'><td></td><td></td><td style='text-align: right;'>";
                 else
                     $str = "<tr class='rowBottom'><td></td><td></td><td style='text-align: right;'>";if($item[entry_transaction]=='1')
                 $str .= number_format(floatval($item[entry_amount]),2);
@@ -53,11 +53,11 @@
                 $i++;
             }
             while($i<4){
-                echo "<tr><td style='height: 18mm;' colspan='4'>&nbsp;</td></tr><tr class='rowBottom'><td colspan='4'>&nbsp;</td></tr>";
+                echo "<tr class='row'><td>&nbsp;</td><td></td><td></td><td></td></tr><tr class='rowBottom'><td>&nbsp;</td><td></td><td></td><td></td></tr>";
                 $i++;
             }
             if($i == 4)
-                echo "<tr><td style='height: 18mm;' colspan='4'>&nbsp;</td></tr><tr><td colspan='4'>&nbsp;</td></tr>";
+                echo "<tr class='row'><td>&nbsp;</td><td></td><td></td><td></td></tr><tr class='row'><td>&nbsp;</td><td></td><td></td><td></td></tr>";
             ?>
             <tr class="rowTop">
                 <td>附单据数&nbsp;&nbsp;&nbsp;&nbsp;张</td><td>合计：<?php echo UpAmount(1123321.12); ?></td><td style='text-align: right;'><?php echo number_format(1111,2); ?></td><td style='text-align: right;'><?php echo number_format(1111,2); ?></td>
