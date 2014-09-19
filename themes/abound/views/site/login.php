@@ -8,13 +8,17 @@ $this->breadcrumbs=array(
 	'登录',
 );
 ?>
-
-<div class="panel panel-primary">
-	<div class="panel-heading"><div class="logo">老法师 sorcerer</div></div>
+<style>
+body{
+	background-color:#193048;
+}
+</style>
+<div class="logo">老法师 sorcerer</div>
+<div class="panel panel-default">
 	<div class="panel-body">
-	  <div class="col-xs-8 col-sm-6">
-		<h5>新闻和操作指南</h5>
-		
+	<div class="row">
+	  <div class="col-xs-8 col-sm-5">
+		<?php echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/financial-planning.jpg'); ?>
 	  </div>
 	  <div class="col-xs-4 col-sm-6">
 			<h2>登 录</h2>
@@ -40,7 +44,6 @@ $this->breadcrumbs=array(
 					<div class="col-sm-9">
 						<?php echo $form->passwordField($model,'password',array('class'=>'form-control','placeholder'=>'请在此输入用户名')); ?>
 						<?php echo $form->error($model,'password'); ?>
-						<span class="help-block">Can't access your account?</span>
 					</div>
 				</div>
 			
@@ -50,14 +53,15 @@ $this->breadcrumbs=array(
 					<?php echo $form->error($model,'rememberMe'); ?>
 					</div>
 				</div>
-				<div class="col-sm-offset-3 col-sm-10">
 				<br />
-				<?php echo CHtml::submitButton('登录',array('class'=>'btn btn-primary btn-lg')); ?>
+				<div class="col-sm-offset-3 col-sm-10">
+					<?php echo CHtml::submitButton('登录',array('class'=>'btn btn-primary btn-lg','style'=>'float:left;')); ?>
+					<div style="margin-left:10px;float:left;margin-top:13px;font-size:13px"><a href="#">账号无法登录？</a></div>
 				</div>
 				</div>
 			
 			<?php $this->endWidget(); ?>
 			</div><!-- form -->
 		</div>
-	  </div>
+	</div>
 </div>

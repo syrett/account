@@ -21,9 +21,13 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/print.js', CCli
 }
 </style>
 
-<div class="alert alert-info">
+<div class="panel panel-default">
+
+    <!-- Default panel contents -->
+    <div class="panel-heading"><h3>打印凭证</h3></div>
+    <div class="panel-body">
+    <!-- search-form -->
 	<?php echo CHtml::beginForm($this->createUrl('transition/print'),'POST',array('class'=>'form-inline')); ?>
-	<h3>打印凭证</h3>
 	<div class="form-group">
         <label class="control-label" for="date">请选择报表日期：</label>
         <?php
@@ -81,26 +85,24 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/print.js', CCli
         ));
         ?>
         月
-        <div class="clean" >&nbsp;</div>
-        <div style="float:left">
-            <div class="print_style">
-                <img src="<?php echo Yii::app()->theme->baseUrl.'/assets/img/in1.jpg' ?>" alt="横向" /><br />
-                <input type="radio" name="style" value="1" checked="true" />
-            </div>
-            <div class="print_style">
-                <img src="<?php echo Yii::app()->theme->baseUrl.'/assets/img/in2.jpg' ?>" alt="纵向" /><br />
-                <input type="radio" name="style" value="2"/>
-            </div>
-
-            <div class="clean" >&nbsp;</div>
-            <input type="submit" name="submit" class="btn btn-primary" style="margin-left:25px;" value="打印凭证" />
-            <input type="submit" name="submit" class="btn btn-primary" style="margin-left:25px;" value="下载凭证" />
-            <input type="button" style="display:none" id="preview" onclick="WebBrowser1.ExecWB(7,1)" />
-
-        </div>
     </div>
-    <p>&nbsp;</p>
+    <div class="row row-fluid">
+		<div class="col-md-index">
+			<div class="thumbnail">
+				<img src="<?php echo Yii::app()->theme->baseUrl.'/assets/img/in1.jpg' ?>" alt="横向" /><br />
+				<input type="radio" name="style" value="1" checked="true" /> 横向
+			</div>
+		</div>
+		<div class="col-md-index">
+			<div class="thumbnail">
+				<img src="<?php echo Yii::app()->theme->baseUrl.'/assets/img/in2.jpg' ?>" alt="纵向" /><br />
+				<input type="radio" name="style" value="2" /> 纵向
+			</div>
+		</div>
 	</div>
-	<p>&nbsp;</p>
+	<input type="submit" name="submit" class="btn btn-default" style="margin-left:25px;" value="打印凭证" />
+	<input type="submit" name="submit" class="btn btn-default" style="margin-left:25px;" value="下载凭证" />
+	<input type="button" style="display:none" id="preview" onclick="WebBrowser1.ExecWB(7,1)" />
 	<?php echo CHtml::endForm(); ?>
-</div>
+	</div><!-- panel-body -->
+</div><!-- panel -->
