@@ -7,7 +7,6 @@
  */
 
 ?>
-<div class="page_top"></div>
 <div class="print">
     <div>
         <h1 class="h1" style="line-height: 0px;">记账凭证</h1>
@@ -27,7 +26,7 @@
                 <th style="width: 41mm">摘&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;要</th>
                 <th style="width: 69mm">会&nbsp;&nbsp;&nbsp;计&nbsp;&nbsp;&nbsp;科&nbsp;&nbsp;&nbsp;目</th>
                 <th style="width: 33mm">借&nbsp;方&nbsp;金&nbsp;额</th>
-                <th style="width: 33mm">贷&nbsp;方&nbsp;金额&nbsp;</th>
+                <th style="width: 33mm">贷&nbsp;方&nbsp;金&nbsp;额</th>
             </tr>
             <?php
             $i == 0;
@@ -55,11 +54,13 @@
                 $i++;
             }
             while($i<4){
-                echo "<tr class='row'><td>&nbsp;</td><td></td><td></td><td></td></tr><tr class='rowBottom'><td>&nbsp;</td><td></td><td></td><td></td></tr>";
+                echo "<tr class='row'><td>&nbsp;</td><td></td><td></td><td></td></tr>
+<tr class='rowBottom'><td>&nbsp;</td><td></td><td></td><td></td></tr>";
                 $i++;
             }
             if($i == 4)
-                echo "<tr class='row'><td>&nbsp;</td><td></td><td></td><td></td></tr><tr class='row'><td>&nbsp;</td><td></td><td></td><td></td></tr>";
+                echo "<tr class='row'><td>&nbsp;</td><td></td><td></td><td></td></tr>
+<tr class='row5'><td>&nbsp;</td><td></td><td></td><td></td></tr>";
             ?>
             <tr class="rowTop">
                 <td>附单据数&nbsp;&nbsp;&nbsp;&nbsp;张</td>
@@ -67,7 +68,22 @@
                 <td style='text-align: right;'><?php echo number_format($j,2); ?></td>
                 <td style='text-align: right;'><?php echo number_format($d,2); ?></td>
             </tr>
+
+        </table>
+        <table  style="margin-bottom: 15px;" >
+            <tr>
+                <td width="52mm"  >记账：</td>
+                <td width="52mm"  >审核：<?php
+                    if($model[0]->entry_reviewed==1)
+                    {
+                        $user = User::model()->findByPk(array('id'=>$model[0]->entry_reviewer));
+                        echo $user->email;
+                    } ?></td>
+                <td width="52mm"  >出纳：</td>
+                <td  width="52mm" >制单：<?php echo User::model()->findByPk(array('id'=>$model[0]->entry_creater))->email; ?></td>
+            </tr>
         </table>
 
+        <div class="page_bottom"></div>
     </div>
 </div>

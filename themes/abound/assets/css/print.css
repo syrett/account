@@ -46,7 +46,6 @@ body, html{
     height: 130mm;
     border: 2px solid #000;
     border-collapse:collapse;
-    margin-bottom: 20px;
 }
 .hr {
     border: 1 dashed #CCCCCC;
@@ -54,7 +53,6 @@ body, html{
     width: 20%;
 }
 .title {
-    font-size: 13px;
     border-collapse:collapse;
     height: 10mm;
     width: 180mm;
@@ -73,14 +71,17 @@ body, html{
     border: 1px solid #000011;
     height: 10mm;
 }
-.page_top{
-    height: 10mm;
+.page_bottom{
+    height: 15mm;
 }
 .rowNormal td{
     border-left: 1px solid #CCCCCC;
     height: 10mm;
 }
 .row td{
+    height: 10mm;
     border-left: 1px solid #CCCCCC;
-
+}
+.row5 td{
+    border-left: 1px solid #CCCCCC;
 }
