@@ -963,6 +963,37 @@ class TransitionController extends Controller
         }
         return $arr;
     }
+    /*
+     * 凭证上一条下一条
+     * 0为上一条，1为下一条
+     */
+    public function getNextPrevious($type, $entry_num_prefix, $entry_num){
+        $sql = "select * from `transition` where `entry_num_prefix` = $entry_num_prefix ";
+        if($type==0&&$entry_num>1){
+            $sql .= "and `entry_num`= ". --$entry_num. " group by entry_num";
+        }else{
+
+            $sql .= "and `entry_num`= ". ++$entry_num. " group by entry_num";
+        }
+        $tran = Transition::model()->findBySql($sql);
+        return $tran->id;
+
+    }
+    /*
+     * 还有更大或更小的，返回     1
+     * 没有则返回          0
+     */
+    public function hasTransitionM($type,$entry_num_prefix,$entry_num){
+        if($type==0)
+            $sql = "select * from transition where entry_num_prefix= '$entry_num_prefix' and entry_num<'$entry_num'";
+        else
+            $sql = "select * from transition where entry_num_prefix= '$entry_num_prefix' and entry_num>'$entry_num'";
+        $list = Transition::model()->findBySql($sql);
+        if($list==NULL){
+            return 0;
+        }else
+            return 1;
+    }
 
     public function getTransition($id){
 

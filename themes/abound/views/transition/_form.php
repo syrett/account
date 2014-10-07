@@ -82,10 +82,10 @@ $tranDate = $command->queryRow(); // execute a query SQL
  	       <input type="hidden" id="entry_num_pre" value="<? echo Yii::app()->createAbsoluteUrl("transition/GetTranSuffix") ?>" />
         </div>
 	<?php
-        if(isset($_REQUEST['id'])&&accessReview($_REQUEST['id'])&&accessSettle($_REQUEST['id'])) {
+//        if(isset($_REQUEST['id'])&&accessReview($_REQUEST['id'])&&accessSettle($_REQUEST['id'])) {
                 if ($model[0]->entry_reviewed==1)
                 echo '<div class="approved">已审核</div>';
-        }
+//        }
 	?>
 
 	</div><!-- .panel-body -->
@@ -152,15 +152,26 @@ foreach ($model as $i => $item) {
 
 	</div>
 	<div class="col-md-3">制单：
-
 	</div>
      </div>
      <div class="transition_action">
 	<p>
         <button class="btn btn-default btn-sm" id="btnAdd" name="btnAdd" type="button" onclick="addRow()"><span class="glyphicon glyphicon-add"></span> 插入新行</button>
-        <button class="btn btn-default btn-sm" type="button"><span class="glyphicon glyphicon-chevron-left"></span> 上一页</button>
-        <button class="btn btn-default btn-sm" type="button">下一页 <span class="glyphicon glyphicon-chevron-right"></span></button>
-	<?php
+        <?php
+        //0为上一条，即更小的凭证
+        $Min = $this->hasTransitionM(0,$model[0]->entry_num_prefix, $model[0]->entry_num);
+        if($Min==1){
+            echo '<a href='.$this->createUrl("transition/update&id=".$this->getNextPrevious(0,$model[0]->entry_num_prefix, $model[0]->entry_num))
+                .'><button class="btn btn-default btn-sm" id="btnPrevious" name="btnPrevious" type="button"><span class="glyphicon glyphicon-chevron-left"></span> 上一页</button></a>';
+
+        }
+        //1为下一条，即更大的凭证
+        $Min = $this->hasTransitionM(1,$model[0]->entry_num_prefix, $model[0]->entry_num);
+        if($Min==1) {
+            echo '<a href='.$this->createUrl("transition/update&id=".$this->getNextPrevious(1,$model[0]->entry_num_prefix, $model[0]->entry_num))
+                .'><button class="btn btn-default btn-sm" id="btnNext" name="btnNext" type="button">下一页<span class="glyphicon glyphicon-chevron-right"></span></button></a>';
+
+        }
 	
 	if(isset($_REQUEST['id']) && $model[0]->entry_memo!='结转凭证' && $model[0]->entry_reviewed!=1 && $model[0]->entry_closing!=1)
 		echo CHtml::htmlbutton(($model[0]->entry_deleted==0)?'<span class="glyphicon glyphicon-remove"></span> 删除凭证':'<span class="glyphicon glyphicon-share-alt"></span> 恢复凭证', array(
