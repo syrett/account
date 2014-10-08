@@ -512,6 +512,7 @@ class TransitionController extends Controller
         foreach ($_POST['Transition'] as $Tran) {
             if (isset($Tran)) {
                 $Tran['entry_num'] = intval($_POST['entry_num']);
+                $Tran['entry_creater'] = intval($_POST['entry_creater']);
                 $Tran['entry_editor'] = intval($_POST['entry_editor']);
                 $Tran['entry_num_prefix'] = $_POST['entry_num_prefix'];
                 $Tran['entry_date'] = date('Y-m-d H:i:s', strtotime($_POST['entry_date']));

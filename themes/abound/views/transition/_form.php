@@ -215,6 +215,7 @@ foreach ($model as $i => $item) {
     <input type="hidden" name="entry_num_prefix_this" id='entry_num_prefix_this' value="<? echo isset($_REQUEST['id'])==true?$model[0]['entry_num_prefix']:date('Ym', time()) ?>"/>
     <input type="hidden" name="entry_num" id='entry_num' value="<? echo isset($_REQUEST['id'])==true?$model[0]['entry_num']:$this->tranSuffix("") ?>"/>
     <input type="hidden" name="entry_editor" id='entry_editor' value="<?=Yii::app()->user->id?>"/>
+    <input type="hidden" name="entry_creater" id='entry_creater' value="<? echo isset($_REQUEST['id'])==true?$model[0]['entry_creater']:Yii::app()->user->id?>"/>
     <input type="hidden" id="number" value="<?= $number ?>"/>
     <input type="hidden" id="startDate" value="<?= Yii::app()->params['startDate'] ?>"/>
     <input type="hidden" id="transitionDate" value="<?= $tranDate['date'] ?>"/>
