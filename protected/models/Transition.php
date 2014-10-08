@@ -161,8 +161,8 @@ class Transition extends CActiveRecord
         $sort = new CSort();
         $sort->attributes = array(
             'entry_number' => array(
-                'asc' => 'entry_num , entry_num_prefix ASC',
-                'desc' => 'entry_num ,entry_num_prefix DESC'
+                'asc' => ' entry_num_prefix asc ,entry_num  ASC',
+                'desc' => 'entry_num_prefix desc , entry_num  DESC'
             ),
             '*', // this adds all of the other columns as sortable
         );

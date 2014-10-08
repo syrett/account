@@ -725,6 +725,7 @@ class TransitionController extends Controller
         $this->reorganise($entry_prefix); //结账前先整理
         $entry_num = $this->tranSuffix($entry_prefix);
         $entry_memo = '结转凭证';
+        $entry_creater = Yii::app()->user->id;
         $entry_editor = Yii::app()->user->id;
         $entry_reviewer = 0;
         $entry_settlement = 1;
@@ -741,6 +742,7 @@ class TransitionController extends Controller
             $tran->entry_settlement = $entry_settlement;
             $tran->entry_memo = $entry_memo;
             $tran->entry_transaction = $sub['sbj_cat']=='4'?1:2;    //4：收入类 借 5费用类 贷
+            $tran->entry_creater = $entry_creater;
             $tran->entry_editor = $entry_editor;
             $tran->entry_reviewer = $entry_reviewer;
             $tran->entry_subject = $sub['id'];
@@ -760,6 +762,7 @@ class TransitionController extends Controller
             $tran->entry_memo = $entry_memo;
             $tran->entry_date = $date;
             $tran->entry_transaction = 2;    //本年利润 为贷
+            $tran->entry_creater = $entry_creater;
             $tran->entry_editor = $entry_editor;
             $tran->entry_settlement = $entry_settlement;
             $tran->entry_reviewer = $entry_reviewer;

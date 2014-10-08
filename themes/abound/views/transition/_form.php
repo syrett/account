@@ -156,8 +156,15 @@ foreach ($model as $i => $item) {
      </div>
      <div class="transition_action">
 	<p>
-        <button class="btn btn-default btn-sm" id="btnAdd" name="btnAdd" type="button" onclick="addRow()"><span class="glyphicon glyphicon-add"></span> 插入新行</button>
         <?php
+        if($model[0]->entry_reviewed == 0 && $model[0]->entry_settlement== 0){
+            ?>
+            <button class="btn btn-default btn-sm" id="btnAdd" name="btnAdd" type="button" onclick="addRow()"><span
+                    class="glyphicon glyphicon-add"></span> 插入新行
+            </button>
+        <?php
+
+        }
         //0为上一条，即更小的凭证
         $Min = $this->hasTransitionM(0,$model[0]->entry_num_prefix, $model[0]->entry_num);
         if($Min==1){
@@ -202,7 +209,7 @@ foreach ($model as $i => $item) {
 		if($model[0]->hasErrors()){
 			echo CHtml::errorSummary($model[0]);
 		}
-		if($model[0]->entry_reviewed == 0){
+		if($model[0]->entry_reviewed == 0 && $model[0]->entry_settlement== 0){
                		echo CHtml::tag('button',array('encode'=>false,'class' => 'btn btn-primary',),'<span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证');
 		}
 		echo "&nbsp;&nbsp;";
