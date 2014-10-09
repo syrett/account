@@ -141,6 +141,9 @@ class TransitionController extends Controller
         } else {
             $items = $this->getItemsToUpdate($id);
         }
+        if(empty($items)){
+            $this->render('badre');
+        }else
         $this->render('update', array(
             'model' => $items,
         ));
@@ -872,7 +875,8 @@ class TransitionController extends Controller
 
     public function actionListPost(){       //run post
         if(isset($_REQUEST['date'])){
-            Yii::app()->runController('Post/post');
+            Yii::import('application.controllers.PostController');
+            PostController::actionPost($_REQUEST['date']);
         }
     }
     public function actionListReorganise(){     //run Reorganise

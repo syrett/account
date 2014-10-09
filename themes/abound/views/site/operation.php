@@ -1,7 +1,7 @@
 <?php
 /* @var $this SiteController */
 /* @var $operation string */
-
+Yii::import('ext.select2.Select2');
 
 $this->pageTitle = Yii::app()->name;
 ?>
@@ -26,6 +26,7 @@ $this->pageTitle = Yii::app()->name;
     <!-- search-form -->
     <?php
     $list = $this->listMonth($operation);
+
     if(empty($list))
     {
         ?>
@@ -35,17 +36,35 @@ $this->pageTitle = Yii::app()->name;
         </div>
     <?php }
     foreach($list as $year => $months){
+
+        echo CHtml::beginForm($this->createUrl('/Transition/'.$operation), 'post');
         ?>
         <dl>
-        <dt><?=$year?></dt>
+        <dt class="year"><?=$year?></dt>
         <?php
+        $data =  array();
         foreach($months as $month){
+            $data[$year.$month] = $month;
             ?>
             <dd>
-                <a href="<?= $this->createUrl('/Transition/'.$operation.'&date='.$year.$month) ?>">
-                    <?=$month?>月
-                </a>
+
+<!--                <a href="--><?//= $this->createUrl('/Transition/'.$operation.'&date='.$year.$month) ?><!--">-->
+<!--                    --><?//=$month?><!--月-->
+<!--                </a>-->
             </dd>
-        <?php }?>
-        </dl><?php } ?>
+        <?php
+        }
+        $this->widget('Select2', array(
+            'name' => 'date',
+            'data' => $data,
+            'htmlOptions' => array('class'=>'action')
+        ));
+        ?>
+            <input type="submit" class="btn btn-primary" value="<?=$title?>" />
+        </dl><?php
+
+        echo CHtml::endForm();
+    }
+
+    ?>
 </div>
