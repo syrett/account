@@ -148,10 +148,18 @@ $years = array(2013=>'2013',2014=>'2014');
 <?php } ?>
 <div>
     <a id="dlink"  style="display:none;"></a>
-    <?php 
+    <?php
+
+    echo CHtml::beginForm($this->createUrl('/Report/createexcel'), 'post');
     if ($fm != ""){
-      $excel_name = "科目余额表"."(".$fromMonth."-".$toMonth.").xls";
-     echo "<input type='button' onclick='tableToExcel(\"subjects\", \"name\", \"".$excel_name."\")'  value='导出'>";
+      $excel_name = "科目余额表 ".$fromMonth."-".$toMonth.".xls";
+        ?>
+
+    <input type="hidden" name="data" id="data" value="" />
+    <input type="hidden" name="name" id="name" value="<?=$excel_name?>" />
+    <?php
+     echo "<input type='button' onclick='tableToExcel()'  value='导出'>";
 }
+    echo CHtml::endForm();
     ?>
 </div>

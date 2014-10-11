@@ -73,12 +73,19 @@ function echoData($data)
 </div>
 <div>
     <a id="dlink"  style="display:none;"></a>
-    <?php 
-     $d = date('Y-m',strtotime($date));
+    <?php
+    echo CHtml::beginForm($this->createUrl('/Report/createexcel'), 'post');
+    $d = date('Y-m',strtotime($date));
     if ($subject_name != ""){
-     $d = date('Y-m',strtotime($date));
-      $excel_name = "项目表-".$subject_name."(".$d.").xls";
-     echo "<input type='button' onclick='tableToExcel(\"project\", \"name\", \"".$excel_name."\")'  value='导出'>";
-}
+        $d = date('Y-m',strtotime($date));
+        $excel_name = "项目表-".$subject_name." ".$d.".xls";
+        ?>
+
+        <input type="hidden" name="data" id="data" value="" />
+        <input type="hidden" name="name" id="name" value="<?=$excel_name?>" />
+        <?php
+        echo "<input type='button' onclick='tableToExcel()'  value='导出'>";
+    }
+    echo CHtml::endForm();
     ?>
 </div>

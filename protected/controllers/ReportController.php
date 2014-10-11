@@ -63,7 +63,7 @@ class ReportController extends CController
         $data = '';
         $date = '';
     }
-
+//      $this->actionCreateExcel();
     $this->render("profit",array("data"=>$data,
                                  "date"=>$date,
                                  "company"=>"公司名字"));
@@ -250,6 +250,32 @@ class ReportController extends CController
 
 
   }
+
+    public function actionCreateExcel(){
+        Yii::import('ext.phpexcel.PHPExcel');
+
+        $filename =urlencode($_REQUEST['name']);
+        header('Content-type: application/vnd.ms-excel, charset=utf-8');
+        header('Content-Disposition: attachment; filename='.$filename);
+        //echo "<table><tr><td>1</td><td>2</td></tr><tr><td>1</td><td>2</td></tr></table>";
+        //        echo 'test';
+        $style = '<style type="text/css">
+            table{
+                border: 1px solid black;
+            }
+            td{
+                border: 1px solid black;
+            }
+            th{
+                border: 1px solid black;
+
+            }
+
+            </style>';
+        echo $style.$_POST['data'];
+        //        $objExcel->save('php://output');
+
+    }
 
 
 }
