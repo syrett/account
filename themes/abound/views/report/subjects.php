@@ -34,7 +34,9 @@ if(isset($_REQUEST['year']))
  $fm = '';
  $tm = '';
 }
-$years = array(2013=>'2013',2014=>'2014');
+//$years = array(2013=>'2013',2014=>'2014');
+
+$years = Transition::model()->hasTransitionYears();
 ?>
 <style>
 .ui-datepicker table{
