@@ -84,6 +84,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
  if(!empty($dataProvider)) {
 ?>
 <div class="panel panel-default">
+
 	<div class="panel-heading">
 		<h2>明 细 表</h2>
 	</div>
@@ -203,10 +204,17 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
 
 <div>
     <a id="dlink"  style="display:none;"></a>
-    <?php 
+    <?php
+    echo CHtml::beginForm($this->createUrl('/Report/createexcel'), 'post');
     if ($subject_id != ""){
-      $excel_name = "明细表-".$subject_name."(".$fromMonth."-".$toMonth.").xls";
-     echo "<input type='button' onclick='tableToExcel(\"detail\", \"name\", \"".$excel_name."\")'  value='导出'>";
-}
+      $excel_name = "明细表-".$subject_name." ".$fromMonth."-".$toMonth.".xls";
+        ?>
+
+        <input type="hidden" name="data" id="data" value="" />
+        <input type="hidden" name="name" id="name" value="<?=$excel_name?>" />
+        <?php
+     echo "<input type='button' onclick='tableToExcel()'  value='导出'>";
+    }
+    echo CHtml::endForm();
     ?>
 </div>

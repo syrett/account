@@ -64,10 +64,18 @@ function echoData($data)
 </div>
 <div>
     <a id="dlink"  style="display:none;"></a>
-    <?php 
+    <?php
+    echo CHtml::beginForm($this->createUrl('/Report/createexcel'), 'post');
     if ($date != ""){
-     $d = date('Y-m',strtotime($date));
-     echo "<input type='button' onclick='tableToExcel(\"client\", \"name\", "."\"客户表(". $d.").xls\")'  value='导出'>";
-}
+        $d = date('Y-m',strtotime($date));
+        $excel_name = "客户表 ".$d.".xls";
+        ?>
+
+        <input type="hidden" name="data" id="data" value="" />
+        <input type="hidden" name="name" id="name" value="<?=$excel_name?>" />
+        <?php
+        echo "<input type='button' onclick='tableToExcel()'  value='导出'>";
+    }
+    echo CHtml::endForm();
     ?>
 </div>

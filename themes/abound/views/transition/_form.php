@@ -82,10 +82,10 @@ $tranDate = $command->queryRow(); // execute a query SQL
  	       <input type="hidden" id="entry_num_pre" value="<? echo Yii::app()->createAbsoluteUrl("transition/GetTranSuffix") ?>" />
         </div>
 	<?php
-        if(isset($_REQUEST['id'])&&accessReview($_REQUEST['id'])&&accessSettle($_REQUEST['id'])) {
+//        if(isset($_REQUEST['id'])&&accessReview($_REQUEST['id'])&&accessSettle($_REQUEST['id'])) {
                 if ($model[0]->entry_reviewed==1)
                 echo '<div class="approved">已审核</div>';
-        }
+//        }
 	?>
 
 	</div><!-- .panel-body -->
@@ -152,15 +152,33 @@ foreach ($model as $i => $item) {
 
 	</div>
 	<div class="col-md-3">制单：
-
 	</div>
      </div>
      <div class="transition_action">
 	<p>
-        <button class="btn btn-default btn-sm" id="btnAdd" name="btnAdd" type="button" onclick="addRow()"><span class="glyphicon glyphicon-add"></span> 插入新行</button>
-        <button class="btn btn-default btn-sm" type="button"><span class="glyphicon glyphicon-chevron-left"></span> 上一页</button>
-        <button class="btn btn-default btn-sm" type="button">下一页 <span class="glyphicon glyphicon-chevron-right"></span></button>
-	<?php
+        <?php
+        if($model[0]->entry_reviewed == 0 && $model[0]->entry_settlement== 0){
+            ?>
+            <button class="btn btn-default btn-sm" id="btnAdd" name="btnAdd" type="button" onclick="addRow()"><span
+                    class="glyphicon glyphicon-add"></span> 插入新行
+            </button>
+        <?php
+
+        }
+        //0为上一条，即更小的凭证
+        $Min = $this->hasTransitionM(0,$model[0]->entry_num_prefix, $model[0]->entry_num);
+        if($Min==1){
+            echo '<a href='.$this->createUrl("transition/update&id=".$this->getNextPrevious(0,$model[0]->entry_num_prefix, $model[0]->entry_num))
+                .'><button class="btn btn-default btn-sm" id="btnPrevious" name="btnPrevious" type="button"><span class="glyphicon glyphicon-chevron-left"></span> 上一页</button></a>';
+
+        }
+        //1为下一条，即更大的凭证
+        $Min = $this->hasTransitionM(1,$model[0]->entry_num_prefix, $model[0]->entry_num);
+        if($Min==1) {
+            echo '<a href='.$this->createUrl("transition/update&id=".$this->getNextPrevious(1,$model[0]->entry_num_prefix, $model[0]->entry_num))
+                .'><button class="btn btn-default btn-sm" id="btnNext" name="btnNext" type="button">下一页<span class="glyphicon glyphicon-chevron-right"></span></button></a>';
+
+        }
 	
 	if(isset($_REQUEST['id']) && $model[0]->entry_memo!='结转凭证' && $model[0]->entry_reviewed!=1 && $model[0]->entry_closing!=1)
 		echo CHtml::htmlbutton(($model[0]->entry_deleted==0)?'<span class="glyphicon glyphicon-remove"></span> 删除凭证':'<span class="glyphicon glyphicon-share-alt"></span> 恢复凭证', array(
@@ -191,7 +209,7 @@ foreach ($model as $i => $item) {
 		if($model[0]->hasErrors()){
 			echo CHtml::errorSummary($model[0]);
 		}
-		if($model[0]->entry_reviewed == 0){
+		if($model[0]->entry_reviewed == 0 && $model[0]->entry_settlement== 0){
                		echo CHtml::tag('button',array('encode'=>false,'class' => 'btn btn-primary',),'<span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证');
 		}
 		echo "&nbsp;&nbsp;";
@@ -204,6 +222,7 @@ foreach ($model as $i => $item) {
     <input type="hidden" name="entry_num_prefix_this" id='entry_num_prefix_this' value="<? echo isset($_REQUEST['id'])==true?$model[0]['entry_num_prefix']:date('Ym', time()) ?>"/>
     <input type="hidden" name="entry_num" id='entry_num' value="<? echo isset($_REQUEST['id'])==true?$model[0]['entry_num']:$this->tranSuffix("") ?>"/>
     <input type="hidden" name="entry_editor" id='entry_editor' value="<?=Yii::app()->user->id?>"/>
+    <input type="hidden" name="entry_creater" id='entry_creater' value="<? echo isset($_REQUEST['id'])==true?$model[0]['entry_creater']:Yii::app()->user->id?>"/>
     <input type="hidden" id="number" value="<?= $number ?>"/>
     <input type="hidden" id="startDate" value="<?= Yii::app()->params['startDate'] ?>"/>
     <input type="hidden" id="transitionDate" value="<?= $tranDate['date'] ?>"/>

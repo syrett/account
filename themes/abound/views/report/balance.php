@@ -266,10 +266,17 @@ function echoData($key, $data, $name="default")
 </div>
 <div>
     <a id="dlink"  style="display:none;"></a>
-    <?php 
+    <?php
+    echo CHtml::beginForm($this->createUrl('/Report/createexcel'), 'post');
     if ($date != ""){
-     $d = date('Y-m-d',strtotime($date));
+        $excel_name = "资产负债表 ".date('Y-m-d',strtotime($date)).".xls";
+        ?>
+
+    <input type="hidden" name="data" id="data" value="" />
+    <input type="hidden" name="name" id="name" value="<?=$excel_name?>" />
+    <?php
      echo "<input type='button' onclick='tableToExcel(\"balance\", \"name\", "."\"资产负债表(". $d.").xls\")'  value='导出'>";
 }
+    echo CHtml::endForm();
     ?>
 </div>

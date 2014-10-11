@@ -65,7 +65,7 @@ function echoData($data, $subjects)
 	<?php echo CHtml::endForm(); ?>
 </div>
 
-<div <?php if(!$data) echo 'style="display:none"'; ?>" class="panel panel-default">
+<div <?php if(!$data) echo 'style="display:none"'; ?> class="panel panel-default">
 	<div class="panel-heading">
 		<h2>部 门 表</h2>
 	</div>
@@ -78,11 +78,19 @@ function echoData($data, $subjects)
 </div>
 <div>
     <a id="dlink"  style="display:none;"></a>
-    <?php 
-     $d = date('Y-m',strtotime($date));
+    <?php
+    echo CHtml::beginForm($this->createUrl('/Report/createexcel'), 'post');
+
     if ($subject_id != ""){
-     $subj = $list[$subject_id];
-     echo "<input type='button' onclick='tableToExcel(\"depart\", \"name\", "."\"部门表-".$subj."(". $d.").xls\")'  value='导出'>";
-}
+        $subj = $list[$subject_id];
+        $excel_name = "部门表-".$subject_name." ".$d.".xls";
+        ?>
+
+        <input type="hidden" name="data" id="data" value="" />
+        <input type="hidden" name="name" id="name" value="<?=$excel_name?>" />
+        <?php
+        echo "<input type='button' onclick='tableToExcel()'  value='导出'>";
+    }
+    echo CHtml::endForm();
     ?>
 </div>

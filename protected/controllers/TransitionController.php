@@ -2,11 +2,11 @@
 
 class TransitionController extends Controller
 {
-    /**
-     * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
-     * using two-column layout. See 'protected/views/layouts/column2.php'.
-     */
-    //public $layout = '//layouts/column2';
+	/**
+	 * @var string the default layout for the views. Defaults to '//layouts/main', meaning
+	 * using one-column layout. See 'protected/views/layouts/main.php'.
+	 */
+	public $layout='//layouts/main';
 
     /**
      * @return array action filters
@@ -141,6 +141,9 @@ class TransitionController extends Controller
         } else {
             $items = $this->getItemsToUpdate($id);
         }
+        if(empty($items)){
+            $this->render('badre');
+        }else
         $this->render('update', array(
             'model' => $items,
         ));
@@ -512,6 +515,7 @@ class TransitionController extends Controller
         foreach ($_POST['Transition'] as $Tran) {
             if (isset($Tran)) {
                 $Tran['entry_num'] = intval($_POST['entry_num']);
+                $Tran['entry_creater'] = intval($_POST['entry_creater']);
                 $Tran['entry_editor'] = intval($_POST['entry_editor']);
                 $Tran['entry_num_prefix'] = $_POST['entry_num_prefix'];
                 $Tran['entry_date'] = date('Y-m-d H:i:s', strtotime($_POST['entry_date']));
@@ -724,6 +728,7 @@ class TransitionController extends Controller
         $this->reorganise($entry_prefix); //结账前先整理
         $entry_num = $this->tranSuffix($entry_prefix);
         $entry_memo = '结转凭证';
+        $entry_creater = Yii::app()->user->id;
         $entry_editor = Yii::app()->user->id;
         $entry_reviewer = 0;
         $entry_settlement = 1;
@@ -740,6 +745,7 @@ class TransitionController extends Controller
             $tran->entry_settlement = $entry_settlement;
             $tran->entry_memo = $entry_memo;
             $tran->entry_transaction = $sub['sbj_cat']=='4'?1:2;    //4：收入类 借 5费用类 贷
+            $tran->entry_creater = $entry_creater;
             $tran->entry_editor = $entry_editor;
             $tran->entry_reviewer = $entry_reviewer;
             $tran->entry_subject = $sub['id'];
@@ -759,6 +765,7 @@ class TransitionController extends Controller
             $tran->entry_memo = $entry_memo;
             $tran->entry_date = $date;
             $tran->entry_transaction = 2;    //本年利润 为贷
+            $tran->entry_creater = $entry_creater;
             $tran->entry_editor = $entry_editor;
             $tran->entry_settlement = $entry_settlement;
             $tran->entry_reviewer = $entry_reviewer;
@@ -868,7 +875,8 @@ class TransitionController extends Controller
 
     public function actionListPost(){       //run post
         if(isset($_REQUEST['date'])){
-            Yii::app()->runController('Post/post');
+            Yii::import('application.controllers.PostController');
+            PostController::actionPost($_REQUEST['date']);
         }
     }
     public function actionListReorganise(){     //run Reorganise
@@ -907,15 +915,19 @@ class TransitionController extends Controller
         $mPDF1->setAutoFont(AUTOFONT_ALL);
         $mPDF1->SetDisplayMode('fullpage');
         # Load a stylesheet
-        $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot'). Yii::app()->theme->baseUrl . '/assets/css/print.css');
-        $mPDF1->WriteHTML($stylesheet, 1);
 
 
         $cs = Yii::app()->clientScript;
-        if($_REQUEST['style']=='2')
+        if($_REQUEST['style']=='2'){
+
+            $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot'). Yii::app()->theme->baseUrl . '/assets/css/print_2.css');
             $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/print_2.css');
-        else
+        }
+        else{
+            $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot'). Yii::app()->theme->baseUrl . '/assets/css/print.css');
             $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/print.css');
+        }
+        $mPDF1->WriteHTML($stylesheet, 1);
         foreach($tranList as $id){
             $items = $this->getItemsToUpdate($id);
             //$mPDF1->WriteHTML($this->renderPartial('print', array('model' => $items,),true,true));
@@ -932,19 +944,19 @@ class TransitionController extends Controller
 //                $this->renderPartial('print', array('model' => $items, 'count' => $count, 'page' => $page,),false,true);
                 if($_REQUEST['style']=='2')
                     $mPDF1->WriteHTML($this->renderPartial('print_2', array('model' => $items, 'count' => $count, 'page' => $page
-//                    ),true,true));
-                    ),false,true));
+                    ),true,true));
+//                    ),false,true));
                 else
                     $mPDF1->WriteHTML($this->renderPartial('print_1', array('model' => $items, 'count' => $count, 'page' => $page
-//                    ),true,true));
-                    ),false,true));
+                    ),true,true));
+//                    ),false,true));
             }
         }
 
-//        if($_REQUEST['submit']=='打印凭证')
-//            $mPDF1->Output( 'etc.pdf' , EYiiPdf::OUTPUT_TO_BROWSER );
-//        elseif($_REQUEST['submit']=='下载凭证')
-//            $mPDF1->Output( 'etc.pdf' , EYiiPdf::OUTPUT_TO_DOWNLOAD );
+        if($_REQUEST['submit']=='打印凭证')
+            $mPDF1->Output( 'etc.pdf' , EYiiPdf::OUTPUT_TO_BROWSER );
+        elseif($_REQUEST['submit']=='下载凭证')
+            $mPDF1->Output( 'etc.pdf' , EYiiPdf::OUTPUT_TO_DOWNLOAD );
     }
 
     public function getAllTransitionList($fm, $tm){
@@ -958,6 +970,37 @@ class TransitionController extends Controller
             $arr[] = $row['id'];
         }
         return $arr;
+    }
+    /*
+     * 凭证上一条下一条
+     * 0为上一条，1为下一条
+     */
+    public function getNextPrevious($type, $entry_num_prefix, $entry_num){
+        $sql = "select * from `transition` where `entry_num_prefix` = $entry_num_prefix ";
+        if($type==0&&$entry_num>1){
+            $sql .= "and `entry_num`= ". --$entry_num. " group by entry_num";
+        }else{
+
+            $sql .= "and `entry_num`= ". ++$entry_num. " group by entry_num";
+        }
+        $tran = Transition::model()->findBySql($sql);
+        return $tran->id;
+
+    }
+    /*
+     * 还有更大或更小的，返回     1
+     * 没有则返回          0
+     */
+    public function hasTransitionM($type,$entry_num_prefix,$entry_num){
+        if($type==0)
+            $sql = "select * from transition where entry_num_prefix= '$entry_num_prefix' and entry_num<'$entry_num'";
+        else
+            $sql = "select * from transition where entry_num_prefix= '$entry_num_prefix' and entry_num>'$entry_num'";
+        $list = Transition::model()->findBySql($sql);
+        if($list==NULL){
+            return 0;
+        }else
+            return 1;
     }
 
     public function getTransition($id){

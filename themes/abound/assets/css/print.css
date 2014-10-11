@@ -46,15 +46,13 @@ body, html{
     height: 130mm;
     border: 2px solid #000;
     border-collapse:collapse;
-    margin-bottom: 20px;
 }
 .hr {
-    border: 1 dashed #CCCCCC;
+    border: 1 dashed #000011;
     margin: 1px auto;
     width: 20%;
 }
 .title {
-    font-size: 13px;
     border-collapse:collapse;
     height: 10mm;
     width: 180mm;
@@ -62,25 +60,28 @@ body, html{
 
 .rowTop td{
     border: 1px solid #000011;
-    border-left: 1px solid #CCCCCC;
+    border-left: 1px solid #000011;
     height: 10mm;
 }
 .rowBottom td{
-    border-bottom: 1px solid #CCCCCC;
-    border-left: 1px solid #CCCCCC;
+    border-bottom: 1px solid #000011;
+    border-left: 1px solid #000011;
 }
 .headerTH th{
     border: 1px solid #000011;
     height: 10mm;
 }
-.page_top{
-    height: 10mm;
+.page_bottom{
+    height: 15mm;
 }
 .rowNormal td{
-    border-left: 1px solid #CCCCCC;
+    border-left: 1px solid #000011;
     height: 10mm;
 }
 .row td{
-    border-left: 1px solid #CCCCCC;
-
+    height: 10mm;
+    border-left: 1px solid #000011;
+}
+.row5 td{
+    border-left: 1px solid #000011;
 }

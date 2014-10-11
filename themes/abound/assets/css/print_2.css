@@ -2,17 +2,10 @@ body, html{
     line-height: 0px;
     margin-top:0;
     padding:0;
+    text-align: center;
 }
 @page {
     margin-bottom: 1mm;
-}
-.print {
-    height: 200mm;
-    text-align: center;
-    margin: auto;
-}
-.print > div span {
-    margin: auto;
 }
 .header td{
     text-align: center;
@@ -45,40 +38,35 @@ body, html{
     height: 200mm;
     border: 2px solid #000;
     border-collapse:collapse;
-    margin-bottom: 20px;
 }
 .hr {
-    border: 1 dashed #CCCCCC;
+    border: 1 dashed #000011;
     margin: 1px auto;
+    width: 20%;
 }
-.title {
+.title td{
     font-size: 16px;
     border-collapse:collapse;
-    height: 25mm;
+    /*height: 25mm;*/
 }
 
 .rowTop td{
     border: 1px solid #000011;
-    border-left: 1px solid #CCCCCC;
-    height: 15mm;
+    border-left: 1px solid #000011;
 }
 .rowBottom td{
-    border-bottom: 1px solid #CCCCCC;
-    border-left: 1px solid #CCCCCC;
+    border-bottom: 1px solid #000011;
+    border-left: 1px solid #000011;
 }
 .headerTH th{
     border: 1px solid #000011;
-    height: 15mm;
 }
 .page_top{
     height: 15mm;
 }
 .rowNormal td{
-    border-left: 1px solid #CCCCCC;
-    height: 18mm;
+    border-left: 1px solid #000011;
 }
 .row td{
-    border-left: 1px solid #CCCCCC;
-    height: 15mm;
-
+    border-left: 1px solid #000011;
 }
