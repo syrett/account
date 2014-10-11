@@ -116,13 +116,14 @@ class SubjectsController extends Controller
           if($model->save()){
 
             //设置期初余额
-            $balance = $_POST["sbj_balance"];
-            if ($balance !="") {
-              $sbj_id = $model->sbj_number;
-              $model->balance_set($sbj_id,$balance);
+            if(isset($_POST["sbj_balance"])){
+              $balance = $_POST["sbj_balance"];
+              if ($balance !="") {
+                $sbj_id = $model->sbj_number;
+                $model->balance_set($sbj_id,$balance);
             }
 
-
+            }
             $this->redirect(array('view','id'=>$model->id));
           }
 
