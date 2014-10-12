@@ -13,6 +13,10 @@ $this->breadcrumbs=array(
 
 
 ?>
+
+<div>
+注意:改变期初余额将会影响报表的准确性，所以每次改变期初余额后都请反结账！
+</div>
 <form action="?r=subjects/balance" method="POST">
 <table class="table table-bordered transition" id="transitionRows">
   <thead>
