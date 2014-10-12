@@ -83,7 +83,6 @@ class Subjects extends CActiveRecord
                  'sbj_cat' => '科目类别',
                  'sbj_table' => '报表名称',
                  'sbj_balance' => '科目余额',
-                 'balance_set' => '是否已经设置余额'
                  );
   }
 
