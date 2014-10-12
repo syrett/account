@@ -207,6 +207,46 @@ class Subjects extends CActiveRecord
     }
   }
 
+  public function list_can_set_balnce_sbj() {
+    $sql ="SELECT * FROM subjects where has_sub =0 and sbj_cat in (1,2,3) order by sbj_cat";
+    $data = Subjects::model()->findAllBySql($sql, array());
+    return $data;
+  }
+
+  
+  public function set_start_balance($data) {
+    foreach($data as $sbj_id=>$start_balance) {
+      $update_sql = "update subjects set start_balance = '$start_balance' where sbj_number = '$sbj_id'";
+      Yii::app()->db->createCommand($update_sql)->execute();
+
+      Post::model()->balance_set($sbj_id,$start_balance,0,0);
+    }
+  }
+
+  //检测资产负债权益是否平
+  //资产=负债+权益
+  public function check_start_balance($data) {
+     $cat_1=0;
+     $cat_2=0;
+     $cat_3=0;
+      
+    foreach ($data as $sbj_id=>$start_balance) {
+      $sbj_cat=$this->getCat($sbj_id);
+      switch ($sbj_cat) {
+      case 1:$cat_1+=$start_balance;break;
+      case 2:$cat_2+=$start_balance;break;
+      case 3:$cat_3+=$start_balance;break;
+      }
+    }
+    if ($cat_1 == ($cat_2 + $cat_3)){
+
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+
   /*
    * 没有子科目且未设置初始余额的才能设置期初余额,且会更新父科目的balance_set为1
    */    

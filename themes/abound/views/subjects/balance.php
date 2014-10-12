@@ -13,7 +13,7 @@ $this->breadcrumbs=array(
 
 
 ?>
-<?php echo CHtml::beginForm(); ?>
+<form action="?r=subjects/balance" method="POST">
 <table class="table table-bordered transition" id="transitionRows">
   <thead>
   <tr>
@@ -42,13 +42,11 @@ $this->breadcrumbs=array(
  case "1":echo "资产";break;
  case "2":echo "负债";break;
  case "3":echo "权益";break;
-
-  }
-
-; ?>
+ }
+?>
     </td>
     <td id="start_balance" class="col-md-3">
-<?php echo CHtml::activeTextField($item, "[$i]start_balance", array('class' => 'form-control input-size', 'onkeyup'=>'checkInputAmount(this)')); ?>
+      <input name=<?php echo $item["sbj_number"];?> value=<?php echo $item["start_balance"]; ?> />
     </td>
   </tr>
 
@@ -56,5 +54,9 @@ $this->breadcrumbs=array(
 }
 ?>
 
-<button>保存</button>
-<?php echo CHtml::endForm(); ?>
+<div class="form-group  text-center">
+  <?php echo $error; ?>
+
+</div>
+<input type="submit" value="保存" />
+</form>

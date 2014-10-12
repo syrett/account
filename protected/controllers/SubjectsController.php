@@ -215,10 +215,25 @@ class SubjectsController extends Controller
     //余额设置
     public function actionBalance() {
 
-      $data = Subjects::model()->list_can_set_balnce_sbj();
+      $data = Subjects::model()->list_can_set_balnce_sbj();      
+      $err_msg='';
+      if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        //        var_dump($_POST);
+        $model = new Subjects();
+        $bool=$model->check_start_balance($_POST);
+        if ($bool) {
+          Subjects::model()->set_start_balance($_POST);
+          $this->redirect("?r=subjects/balance");
+        }else{
+            $err_msg="资产与负债权益的和不等";
+        }
+        
+      }
+
       $this->render('balance',array(
                                     'data'=>$data,        
-		));      
+                                    'error'=>$err_msg,
+                                    ));      
     }
 
 	/**

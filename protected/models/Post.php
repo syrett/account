@@ -57,6 +57,14 @@ class Post extends CActiveRecord
       $this->select="subject_id, debit, credit, balance";
       $dataArray=$this->search()->getData();
       $arr=array();
+      
+      if (count($dataArray) <=0 ){
+        
+        $post = new Post;
+        $post->year=0;
+        $post->month=0;
+        $dataArray=$post->search()->getData();
+      }
       foreach ($dataArray as $data) {
         $arr[$data['subject_id']]=array('debit'=>$data['debit'],
                                         'credit'=>$data['credit'],
