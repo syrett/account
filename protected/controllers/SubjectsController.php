@@ -28,7 +28,7 @@ class SubjectsController extends Controller
 	{
 		return array(
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                  'actions'=>array('create','update', 'listfirst', 'listsub'),
+                  'actions'=>array('create','update', 'listfirst', 'listsub','balance'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -210,6 +210,16 @@ class SubjectsController extends Controller
                                     'model'=>$model,
 		));
 	}
+
+
+    //余额设置
+    public function actionBalance() {
+
+      $data = Subjects::model()->list_can_set_balnce_sbj();
+      $this->render('balance',array(
+                                    'data'=>$data,        
+		));      
+    }
 
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.

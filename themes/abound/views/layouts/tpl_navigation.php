@@ -43,6 +43,7 @@ if (!(Yii::app()->user->isGuest)) {
                         'items'=>array(
                              //array('label' => '查询', 'url'=>'#'),
                              array('label' => '科目表', 'url' => array('/subjects/admin'),), //Subjects下所有操作高亮
+                             array('label' => '期初余额', 'url' => array('/subjects/balance'),), //Subjects期初余额设置
                              array('label'=>'<div class="divider"></div>'),
                              //array('label' => '期初余额', 'url'=>'#'),
                              array('label' => '结账', 'url' => array('/Site/operation&operation='. 'listSettlement')),

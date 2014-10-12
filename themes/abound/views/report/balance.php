@@ -275,7 +275,7 @@ function echoData($key, $data, $name="default")
     <input type="hidden" name="data" id="data" value="" />
     <input type="hidden" name="name" id="name" value="<?=$excel_name?>" />
     <?php
-     echo "<input type='button' onclick='tableToExcel(\"balance\", \"name\", "."\"资产负债表(". $d.").xls\")'  value='导出'>";
+     echo "<input type='button' onclick='tableToExcel()'  value='导出'>";
 }
     echo CHtml::endForm();
     ?>
