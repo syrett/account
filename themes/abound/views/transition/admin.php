@@ -23,19 +23,21 @@ $this->menu=array(
 		  'url'=>array('create'),
 		  'linkOptions'=>array('class'=>'btn btn-default')
 		  ),
-	array('label'=>'<span class="glyphicon glyphicon-print"></span> 打印',
-		  'url'=>array('#'),
-		  'linkOptions'=>array('class'=>'btn btn-default')
-		  ),
+//	array('label'=>'<span class="glyphicon glyphicon-print"></span> 打印',
+//		  'url'=>array('#'),
+//		  'linkOptions'=>array('class'=>'btn btn-default')
+//		  ),
 	array('label'=>'<span class="glyphicon glyphicon-export"></span> 导出',
-		  'url'=>array('#'),
-		  'linkOptions'=>array('class'=>'btn btn-default')
+		  'url'=>'#',
+		  'linkOptions'=>array('class'=>'btn btn-default', 'onclick'=>'tranToExcel()')
 		  ),
 );
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/bootstrap-datepicker.js', CClientScript::POS_HEAD);
 $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/datepicker.css');
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/_search.js', CClientScript::POS_HEAD);
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js', CClientScript::POS_HEAD);
+
 ?>
 
 <div class="panel panel-default voucher form">
@@ -55,6 +57,11 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/_search.js', CC
         ?></h2>
     </div>
     <div class="panel-body">
+        <?php
+
+        echo CHtml::beginForm($this->createUrl('/Transition/createexcel'), 'post',array('id'=>'export'));
+        echo CHtml::endForm();
+        ?>
      <div class="row">
 		<div class="col-md-4 pull-right">
 			<?php
@@ -81,9 +88,11 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/_search.js', CC
 		<div class="col-md-4">
 		<?php echo CHtml::beginForm(); ?>
 		  <div class="input-group">
+              <p class="tip">开始日期：20140101 &nbsp;&nbsp;&nbsp;&nbsp;结束日期：20140131</p>
 			<span class="input-group-addon">开始日期：</span>
 			<?php echo CHtml::textField('s_day', isset($_REQUEST['s_day'])?$_REQUEST['s_day']:"",array('class' => 'form-control',)); ?>
-		  </div>
+
+          </div>
 		  <br />
 		  <div class="input-group">
 			<span class="input-group-addon">结束日期：</span>

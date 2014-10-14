@@ -249,8 +249,8 @@ class Post extends CActiveRecord
      */
     public static function tranPost($sbj_id){
         $par_id = substr($sbj_id, 0, -2);
-        $sql = "update post set subject_id = '$sbj_id' where subject_id = '$par_id'";
-        Yii::app()->db->createCommand($sql)->execute();
+        $sql = "update post set subject_id = :sbj_id where subject_id = :par_id";
+        Yii::app()->db->createCommand($sql)->bindValues(array(':sbj_id'=>$sbj_id,':par_id'=>$par_id))->execute();
     }
 
     // 得到某个一级科目的及其子科目的余额和

@@ -29,7 +29,7 @@ function accessReview($tranID){
 }
 function accessSettle($tranID){
     $list= Yii::app()->db
-        ->createCommand("select * from transition where id=$tranID and (entry_posting=1 or entry_closing=1)")->queryAll();
+        ->createCommand("select * from transition where id=:tranID and (entry_posting=1 or entry_closing=1)")->bindParam(":tranID",$tranID)->queryAll();
     if(!empty($list))
         return false;
     else

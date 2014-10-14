@@ -27,14 +27,7 @@ class TransitionController extends Controller
     public function accessRules()
     {
         return array(
-            array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'view', 'delete'),
-                'users' => array('*'),
-            ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'getTranSuffix', 'Appendix', 'ListFirst', 'reorganise', 'ajaxListFirst',
-                    'review', 'settlement', 'antiSettlement','listReview',
-                    'ListTransition', 'listPost', 'listReorganise', 'listSettlement', 'Print', 'printp'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -470,10 +463,9 @@ class TransitionController extends Controller
             }
         }
         if ($id) {
-            $data = Yii::app()->db->createCommand()
-                ->select('entry_num_prefix, entry_num')
-                ->from('transition as a')
-                ->where('id="' . $id . '"')
+            $sql = "select entry_num_prefix, entry_num from transition as a where id=:id";
+            $data = Yii::app()->db->createCommand($sql)
+                ->bindValue(":id",$id)
                 ->queryRow();
             // load models which is the same entry_num_prefix+entry_num
             $data = Yii::app()->db->createCommand()
@@ -860,17 +852,15 @@ class TransitionController extends Controller
     }
 
     public function actionListTransition(){
-        if(isset($_REQUEST['date'])){
             $model = new Transition('search');
             $model->unsetAttributes(); // clear any default values
-            $criteria = array('entry_num_prefix' => $_REQUEST['date']);
-            $model->attributes = $criteria;
+            if(isset($_REQUEST['date'])){
+                $criteria = array('entry_num_prefix' => $_REQUEST['date']);
+                $model->attributes = $criteria;
+            }
             $this->render('admin', array(
                 'model' => $model,
             ));
-        }
-        else
-            throw new CHttpException(400, "参数错误，请选择时间");
     }
 
     public function actionListPost(){       //run post
@@ -961,10 +951,12 @@ class TransitionController extends Controller
 
     public function getAllTransitionList($fm, $tm){
 
-        $sql = "SELECT id FROM `transition` group by `entry_num_prefix`,`entry_num` having `entry_num_prefix`>=$fm and `entry_num_prefix`<=$tm";
+        $sql = "SELECT id FROM `transition` group by `entry_num_prefix`,`entry_num` having `entry_num_prefix`>=:fm and `entry_num_prefix`<=:tm";
 
 //        $sql = "select * from subjects where has_sub=0 order by concat(sbj_number) asc"; // 一级科目的为1001～9999
-        $list = Subjects::model()->findAllBySql($sql);
+        $list = Yii::app()->db
+            ->createCommand($sql)->bindValues(array(':fm'=>$fm,':tm'=>$tm))->queryAll();
+//        $list = Subjects::model()->findAllBySql($sql);
         $arr = array();
         foreach ($list as $row) {
             $arr[] = $row['id'];
@@ -976,15 +968,19 @@ class TransitionController extends Controller
      * 0为上一条，1为下一条
      */
     public function getNextPrevious($type, $entry_num_prefix, $entry_num){
-        $sql = "select * from `transition` where `entry_num_prefix` = $entry_num_prefix ";
+        $sql = "select * from `transition` where `entry_num_prefix` = :entry_num_prefix ";
         if($type==0&&$entry_num>1){
-            $sql .= "and `entry_num`= ". --$entry_num. " group by entry_num";
+            --$entry_num;
         }else{
 
-            $sql .= "and `entry_num`= ". ++$entry_num. " group by entry_num";
+            ++$entry_num;
         }
-        $tran = Transition::model()->findBySql($sql);
-        return $tran->id;
+        $sql .= "and `entry_num`= :entry_num group by entry_num";
+        $tran= Yii::app()->db
+            ->createCommand($sql)->bindValues(array(':entry_num_prefix'=>$entry_num_prefix,':entry_num'=>$entry_num))->queryRow();
+
+//        $tran = Transition::model()->findBySql($sql);
+        return $tran['id'];
 
     }
     /*
@@ -993,10 +989,13 @@ class TransitionController extends Controller
      */
     public function hasTransitionM($type,$entry_num_prefix,$entry_num){
         if($type==0)
-            $sql = "select * from transition where entry_num_prefix= '$entry_num_prefix' and entry_num<'$entry_num'";
+            $sql = "select * from transition where entry_num_prefix= :entry_num_prefix and entry_num<:entry_num";
         else
-            $sql = "select * from transition where entry_num_prefix= '$entry_num_prefix' and entry_num>'$entry_num'";
-        $list = Transition::model()->findBySql($sql);
+            $sql = "select * from transition where entry_num_prefix= :entry_num_prefix and entry_num>:entry_num";
+        $list= Yii::app()->db
+            ->createCommand($sql)->bindValues(array(':entry_num_prefix'=>$entry_num_prefix,':entry_num'=>$entry_num))->queryAll();
+
+//        $list = Transition::model()->db()->createCommand($sql)->bindParam(array(':entry_num_prefix'=>$entry_num_prefix,':entry_num'=>$entry_num))->findBySql($sql);
         if($list==NULL){
             return 0;
         }else
@@ -1005,5 +1004,77 @@ class TransitionController extends Controller
 
     public function getTransition($id){
 
+    }
+    public function actionCreateExcel(){
+        Yii::import('ext.phpexcel.PHPExcel');
+        $filename = '导出凭证';
+        $where = '1=1';
+        if(isset($_REQUEST['s_day'])&&trim($_REQUEST['s_day'])!='')
+        {
+            $filename.= $_REQUEST['s_day'];
+            $where .= " and entry_date>=:s_day";
+        }
+        if(isset($_REQUEST['e_day'])&&trim($_REQUEST['e_day'])!='') {
+            $filename .= ' to ' . $_REQUEST['e_day'];
+            $where .= " and entry_date<=:e_day";
+        }
+
+        $sql = "select * from transition where ". $where;
+        $command = Yii::app()->db
+            ->createCommand($sql)
+            ->bindValues(array(':s_day'=> $_REQUEST['s_day'], ':e_day'=> $_REQUEST['e_day']));
+        $data = $command->queryAll();
+//        $model->unsetAttributes(); // clear any default values
+//        if (isset($_GET['Transition']))
+//            $model->attributes = $_GET['Transition'];
+
+        ob_end_clean();
+        header('Content-type: application/vnd.ms-excel, charset=utf-8');
+        header('Content-Disposition: attachment; filename='.urlencode($filename).'.xls');
+        /**
+         * The header of the table
+         * @var string
+         */
+        $table = "<table><tr><td>$filename</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
+        $header = "<tr><td>凭证</td><td>凭证摘要</td><td>借贷</td><td>借贷科目</td><td>交易金额</td><td>附加信息</td><td>过账</td><td>凭证日期</td></tr> ";
+        $rows = "";
+        /**
+         * All the data of the table in a formatted string
+         * @var string
+         */
+        foreach($data as $row){
+            $rows.="<tr><td>".$row['entry_num_prefix'].$this->addZero($row['entry_num'])."</td>
+            <td>".$row['entry_memo']."</td>
+            <td>".Transition::transaction($row['entry_transaction'])."</td>
+            <td>".Transition::getSbjPath($row['entry_subject'])."</td>
+            <td>".$row['entry_amount']."</td>
+            <td>".Transition::getAppendix($row['entry_appendix_type'],$row['entry_appendix_id'])."</td>
+            <td>".Transition::getPosting($row['entry_posting'])."</td>
+            <td>".$row['entry_date']."</td></tr>";
+        }
+        $data = $table.$header.$rows. '</table>';
+        $style = '<style type="text/css">
+            table{
+                border: 1px solid black;
+            }
+            td{
+                border: 1px solid black;
+            }
+            th{
+                border: 1px solid black;
+
+            }
+
+            </style>';
+        echo $style.$data;
+    }
+
+    /*
+     * 科目表名称
+     */
+    public function getSbjName($id)
+    {
+        $model = Subjects::model()->findByAttributes(array('sbj_number' => $id));
+        return $model->sbj_name;
     }
 }

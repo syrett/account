@@ -177,8 +177,8 @@ class Subjects extends CActiveRecord
   public static function hasSub($sbj_id)
   {
     $par_id = substr($sbj_id, 0, -2);
-    $sql = "update subjects set has_sub = 1 where sbj_number = '$par_id'";
-    Yii::app()->db->createCommand($sql)->execute();
+    $sql = "update subjects set has_sub = 1 where sbj_number = :par_id";
+    Yii::app()->db->createCommand($sql)->bindParam('par_id', $par_id)->execute();
   }
 
 

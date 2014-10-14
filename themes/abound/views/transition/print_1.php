@@ -19,7 +19,7 @@
             <tr>
                 <td style="text-align: left">核算单位：<?php $Options = Options::model()->findAllByPk(1);
                     echo $Options[0]['name'];?></td>
-                <td style="text-align: right">第<?php echo $this->addZero($model[0][entry_num]) ?>号 - <?php echo $this->addZero($page).'/'.$this->addZero($count); ?></td>
+                <td style="text-align: right">第<?php echo $this->addZero($model[0][entry_num]) ?>号 &#45;<?php echo '&nbsp;'.$this->addZero($page).'/'.$this->addZero($count); ?></td>
             </tr>
         </table>
         <table class="table">

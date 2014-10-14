@@ -126,7 +126,7 @@ class Transition extends CActiveRecord
         $criteria = new CDbCriteria;
         if(isset($_REQUEST['s_day']) && $_REQUEST['s_day']!="")
         {
-            $a = date('Y-m-d H:i:s', strtotime($_REQUEST['s_day']));
+            $a = date('Y-m-d 00:00:01', strtotime($_REQUEST['s_day']));
             $criteria->addCondition('t.entry_date>="'.$a. '"' , 'AND');
         }
         if(isset($_REQUEST['e_day']) && $_REQUEST['e_day']!="")
@@ -507,8 +507,8 @@ class Transition extends CActiveRecord
     }
 
     public static function hasTransition($date){
-        $sql = 'select `entry_num_prefix` from transition where `entry_num_prefix` = '. $date;
-        $result = Transition::model()->findBySql($sql);
+        $sql = 'select `entry_num_prefix` from transition where `entry_num_prefix` = :date';
+        $result = Yii::app()->db->createCommand($sql)->bindParam('date', $date)->queryAll();
         if($result)
             return true;
         else

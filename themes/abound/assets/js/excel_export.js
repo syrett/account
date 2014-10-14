@@ -16,7 +16,14 @@
 
 var tableToExcel = (function () {
     $("#data").val($(".panel").html())
-    //$("#data").val("<table><tr><td>1</td></tr>")
     $("form").submit()
+
+})
+
+var tranToExcel = (function(){
+    $("#data").val($(".panel").html())
+    $("#export").append('<input type="hidden" name="s_day" value="'+$("#s_day").val()+'" />')
+    $("#export").append('<input type="hidden" name="e_day" value="'+$("#e_day").val()+'" />')
+    $("#export").submit()
 
 })

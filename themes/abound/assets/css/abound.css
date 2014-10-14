@@ -654,3 +654,7 @@ text-indent:-9999em;
 .year{
     font-size: 20px;
 }
+.tip{
+    color: #737373;
+    display: table-caption;
+}
