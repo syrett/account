@@ -72,6 +72,11 @@ function echoData($key, $data, $name="default")
 		 <th>期末数</th>
 		 </tr>
 		</thead>
+          <tr>
+             <th>日期</th>
+             <th>公司</th>
+             <th>金额单位</th>
+         </tr>
 		 <tr> 
 		 <?php echoData(0, $data, "流动资产:") ?>
 		 <?php echoData(0, $data,  "流动负债:") ?>
@@ -270,7 +275,7 @@ function echoData($key, $data, $name="default")
     <input type="hidden" name="data" id="data" value="" />
     <input type="hidden" name="name" id="name" value="<?=$excel_name?>" />
     <?php
-     echo "<input type='button' onclick='tableToExcel(\"balance\", \"name\", "."\"资产负债表(". $d.").xls\")'  value='导出'>";
+     echo "<input type='button' onclick='tableToExcel()'  value='导出'>";
 }
     echo CHtml::endForm();
     ?>

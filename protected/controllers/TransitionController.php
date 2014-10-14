@@ -866,7 +866,8 @@ class TransitionController extends Controller
     public function actionListPost(){       //run post
         if(isset($_REQUEST['date'])){
             Yii::import('application.controllers.PostController');
-            PostController::actionPost($_REQUEST['date']);
+            $postctrl = new PostController();
+            $postctrl->actionPost($_REQUEST['date']);
         }
     }
     public function actionListReorganise(){     //run Reorganise

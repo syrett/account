@@ -28,7 +28,7 @@ class SubjectsController extends Controller
 	{
 		return array(
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                  'actions'=>array('create','update', 'listfirst', 'listsub'),
+                  'actions'=>array('create','update', 'listfirst', 'listsub','balance'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -112,13 +112,14 @@ class SubjectsController extends Controller
           if($model->save()){
 
             //设置期初余额
-            $balance = $_POST["sbj_balance"];
-            if ($balance !="") {
-              $sbj_id = $model->sbj_number;
-              $model->balance_set($sbj_id,$balance);
+            if(isset($_POST["sbj_balance"])){
+              $balance = $_POST["sbj_balance"];
+              if ($balance !="") {
+                $sbj_id = $model->sbj_number;
+                $model->balance_set($sbj_id,$balance);
             }
 
-
+            }
             $this->redirect(array('view','id'=>$model->id));
           }
 
@@ -209,6 +210,31 @@ class SubjectsController extends Controller
                                     'model'=>$model,
 		));
 	}
+
+
+    //余额设置
+    public function actionBalance() {
+
+      $data = Subjects::model()->list_can_set_balnce_sbj();      
+      $err_msg='';
+      if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        //        var_dump($_POST);
+        $model = new Subjects();
+        $bool=$model->check_start_balance($_POST);
+        if ($bool) {
+          Subjects::model()->set_start_balance($_POST);
+          $this->redirect("?r=subjects/balance");
+        }else{
+            $err_msg="资产与负债权益的和不等";
+        }
+        
+      }
+
+      $this->render('balance',array(
+                                    'data'=>$data,        
+                                    'error'=>$err_msg,
+                                    ));      
+    }
 
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.

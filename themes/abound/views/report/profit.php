@@ -56,7 +56,7 @@ function echoData($key, $data, $name="default")
 		<h2>损 益 表</h2>
 	</div>
 	<div class="panel-body">
-		<p class="text-center"><span class="pull-left">日期：<?php echo date('Y-m-d',strtotime($date)); ?></span> 编制单位：<?php echo $company ?> <span class="pull-right">金额单位：元</span></p>
+		<p class="text-center"><span class="pull-left">日期：<?php echo $date; ?></span> 编制单位：<?php echo $company ?> <span class="pull-right">金额单位：元</span></p>
 	</div>
 
 	<table id="profit" class="table table-bordered table-hover">
@@ -161,8 +161,7 @@ function echoData($key, $data, $name="default")
     <?php
     echo CHtml::beginForm($this->createUrl('/Report/createexcel'), 'post');
     if ($data != ""){
-     $d = date('Y-m',strtotime($date));
-      $excel_name = "损益表 ".$d.".xls";
+      $excel_name = "损益表 ".$date.".xls";
     ?>
     <input type="hidden" name="data" id="data" value="" />
     <input type="hidden" name="name" id="name" value="<?=$excel_name?>" />
