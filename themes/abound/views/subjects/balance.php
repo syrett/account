@@ -50,7 +50,11 @@ $this->breadcrumbs=array(
 ?>
     </td>
     <td id="start_balance" class="col-md-3">
-      <input name=<?php echo $item["sbj_number"];?> value=<?php echo $item["start_balance"]; ?> />
+      <?php if ($item["has_sub"]==0){  ?>
+                                       <input name=<?php echo $item["sbj_number"];?> value=<?php echo $item["start_balance"]; ?> />
+                                       <?php }else{?>
+                                                   <label><?php echo $item["start_balance"];?></label>
+                                                   <?php } ?>
     </td>
   </tr>
 

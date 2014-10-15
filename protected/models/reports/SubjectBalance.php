@@ -35,6 +35,10 @@ class SubjectBalance extends CModel
     $start = self::getStart($year, $fromMonth); //期初
     $end = self::getEnd($year, $toMonth); //期末
     $data = array();
+    
+    if (count($sum)==0){
+      $sum=$start;
+    }
     foreach ($sum as $sbj_id=>$arr){
       $sbj_name = Subjects::getName($sbj_id);
       $sbj_cat = Subjects::model()->getCat($sbj_id);

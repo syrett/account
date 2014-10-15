@@ -89,7 +89,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
 		<h2>明 细 表</h2>
 	</div>
 	<div class="panel-body">
-		<p><span class="pull-left">日期：<?php echo $fromMonth."-".$toMonth ?></span> <span class="pull-right">金额单位：元</span></p>
+		<p class="text-center"><span class="pull-left">日期：<?php echo $fromMonth."-".$toMonth ?></span> 编制单位：<?php echo $company ?> <span class="pull-right"><span class="pull-right">金额单位：元</span></p>
 	</div>
      <table id="detail" class="table table-bordered table-hover">
 		 <tr>

@@ -55,7 +55,7 @@ function echoData($data)
 		<h2>项 目 报 表</h2>
 	</div>
 	<div class="panel-body">
-		<p class="text-center"><span class="pull-left">日期：<?php echo date('Y-m-d',strtotime($date)); ?></span>&nbsp;&nbsp;<span class="pull-right">金额单位：元</span></p>
+		<p class="text-center"><span class="pull-left">日期：<?php echo $date; ?></span>编制单位：<?php echo $company ?><span class="pull-right">金额单位：元</span></p>
 	</div>
 	<table id="project" class="table table-bordered table-hover">
 		<thead>
