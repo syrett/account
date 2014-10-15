@@ -342,6 +342,8 @@ class Post extends CActiveRecord
      */
     public function balance_set($sbj_id,$balance,$year,$month) {
       if ($balance ==0){
+        $update_sql = "update post set balance=0 where subject_id='$sbj_id' AND year='$year' AND month='$month'";
+        Yii::app()->db->createCommand($update_sql)->execute();
         return true;
       }else{
         $arr = array(
