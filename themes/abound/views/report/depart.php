@@ -70,7 +70,7 @@ function echoData($data, $subjects)
 		<h2>部 门 表</h2>
 	</div>
 	<div class="panel-body">
-		<p class="pull-right">金额单位：元</p>
+		<p class="text-center"><span class="pull-left">日期：<?php echo $date; ?></span> 编制单位：<?php echo $company ?> <span class="pull-right">金额单位：元</span></p>
 	</div>
 	<table id="depart" class="table table-bordered table-hover">
 		<?php echoData($data, $subjects) ?>
@@ -82,7 +82,8 @@ function echoData($data, $subjects)
     echo CHtml::beginForm($this->createUrl('/Report/createexcel'), 'post');
 
     if ($subject_id != ""){
-        $subj = $list[$subject_id];
+        $subject_name = $list[$subject_id];
+        $d = date('Y-m',strtotime($date));
         $excel_name = "部门表-".$subject_name." ".$d.".xls";
         ?>
 

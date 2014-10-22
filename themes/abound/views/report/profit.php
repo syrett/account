@@ -63,8 +63,8 @@ function echoData($key, $data, $name="default")
 		<thead>
 		 <tr>
 		 <th>项目</th>
-		 <th>本期数</th>
-		 <th>本年累计同期数</th>
+		 <th>本期发生额</th>
+		 <th>本年累计发生额</th>
 		 </tr>
 		</thead>
 		 <tr>

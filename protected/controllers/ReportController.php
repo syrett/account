@@ -43,9 +43,12 @@ class ReportController extends CController
       $model->is_closed=0;
       }*/
 
+    $Options = Options::model()->findAllByPk(1);
+    $company=$Options[0]['name'];
+
     $this->render("balance",array("data"=>$data,
                                   "date"=>$date,
-                                  "company"=>"公司名字"));
+                                  "company"=>$company));
   }
 
 
@@ -64,9 +67,12 @@ class ReportController extends CController
         $date = '';
     }
 //      $this->actionCreateExcel();
+
+    $Options = Options::model()->findAllByPk(1);
+    $company=$Options[0]['name'];
     $this->render("profit",array("data"=>$data,
                                  "date"=>$date,
-                                 "company"=>"公司名字"));
+                                 "company"=>$company));
   }
 
 
@@ -98,11 +104,14 @@ class ReportController extends CController
 
     $model = new SubjectBalance();
     $data = $model->genData($year.$fm, $year.$tm);
+
+    $Options = Options::model()->findAllByPk(1);
+    $company=$Options[0]['name'];
     $this->render("subjects",array("dataProvider"=>$data,
                                    "fm" => $fm,
                                    "fromMonth"=>$year.'年'.$fm.'月',
                                    "toMonth"=>$year.'年'.$tm.'月',
-                                 "company"=>"公司名字"));
+                                 "company"=>$company));
   }
 
 
@@ -141,8 +150,11 @@ class ReportController extends CController
         $data = array();
     }
 
+    $Options = Options::model()->findAllByPk(1);
+    $company=$Options[0]['name'];
     $this->render("detail",array("dataProvider"=>$data,
                                  "subject_name"=>$subject_name,
+                                 "company"=>$company,
                                    "fromMonth"=>$year.'年'.$fm.'月',
                                    "toMonth"=>$year.'年'.$tm.'月'));
     
@@ -163,8 +175,11 @@ class ReportController extends CController
         $date = '';
     }
 
+    $Options = Options::model()->findAllByPk(1);
+    $company=$Options[0]['name'];
     $this->render("client",array("data"=>$data,
-                                 "date"=>$date));
+                                 "date"=>$date,
+                                 "company"=>$company));
 
   }
 
@@ -175,16 +190,19 @@ class ReportController extends CController
   {
     if(isset($_REQUEST['date'])&&$_REQUEST['date']!=''){
       $date=$_REQUEST['date'];
-    $model = new Set();
-    $data = $model->vendor($date);
+      $model = new Set();
+      $data = $model->vendor($date);
 
     }else{
       $data = array();
         $date = '';
     }
 
+    $Options = Options::model()->findAllByPk(1);
+    $company=$Options[0]['name'];
     $this->render("vendor",array("data"=>$data,
-                                 "date"=>$date));
+                                 "date"=>$date,
+                                 "company"=>$company));
 
 
 
@@ -214,10 +232,13 @@ class ReportController extends CController
       $subject_name = "";
     }
 
+    $Options = Options::model()->findAllByPk(1);
+    $company=$Options[0]['name'];
     $this->render("project",array("data"=>$data,
                                   "type"=>$type,
                                  "subject_name" => $subject_name,
-                                 "date"=>$date));
+                                  "date"=>$date,
+                                  "company"=>$company));
 
 
 
@@ -240,12 +261,15 @@ class ReportController extends CController
       $subject_id = "";
     }
     
+    $Options = Options::model()->findAllByPk(1);
+    $company=$Options[0]['name'];
     $list = array(6601=>"销售费用", 6602=>"管理费用", 6603=>"财务费用");
     $this->render("depart",array("data"=>$data["data"],
                                   "subjects"=>$data["subjects"],
                                  "subject_id" => $subject_id,
                                  "list"=>$list,
-                                 "date"=>$date));
+                                 "date"=>$date,
+                                 "company"=>$company));
 
 
 

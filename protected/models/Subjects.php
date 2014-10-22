@@ -207,18 +207,61 @@ class Subjects extends CActiveRecord
   }
 
   public function list_can_set_balnce_sbj() {
-    $sql ="SELECT * FROM subjects where has_sub =0 and sbj_cat in (1,2,3) order by sbj_cat";
-    $data = Subjects::model()->findAllBySql($sql, array());
+    echo "herer";
+    $data = array();
+    //取出1级科目
+    $sql_1 ="SELECT * FROM subjects where sbj_cat in (1,2,3) AND sbj_number<10000 order by sbj_cat,sbj_number";
+    $data_1 = Subjects::model()->findAllBySql($sql_1, array());
+    
+    foreach($data_1 as $key=>$item) {
+        array_push($data,$item);
+      if ($item["has_sub"]==1){
+        $data_sub = $this->list_sub($item["sbj_number"]);
+        foreach($data_sub as $key=>$item_sub){
+          array_push($data,$item_sub);
+        }
+        
+      }
+    }
+
+    //    $sql ="SELECT * FROM subjects where sbj_cat in (1,2,3) order by sbj_cat";
+    //    $data = Subjects::model()->findAllBySql($sql, array());
     return $data;
   }
 
+  public function list_sub($sbj_id) {
+    $data=array();
+    $sbj_max = $sbj_id*100+99;
+    $sql_1 ="SELECT * FROM subjects where sbj_cat in (1,2,3) AND sbj_number REGEXP '$sbj_id' AND sbj_number>'$sbj_id' AND sbj_number<='$sbj_max' order by sbj_number";    
+    $data_1 = Subjects::model()->findAllBySql($sql_1, array());
+
+    foreach($data_1 as $key=>$item) {
+        array_push($data,$item);
+      if ($item["has_sub"]==1){
+        echo $sbj_id;
+        //        exit(1);
+        $data_sub = $this->list_sub($item["sbj_number"]);
+        foreach($data_sub as $key=>$item_sub){
+          array_push($data,$item_sub);
+        }
+        
+      }
+    }
+
+    return $data;
+  }
   
   public function set_start_balance($data) {
     foreach($data as $sbj_id=>$start_balance) {
       $update_sql = "update subjects set start_balance = '$start_balance' where sbj_number = '$sbj_id'";
       Yii::app()->db->createCommand($update_sql)->execute();
-
-      Post::model()->balance_set($sbj_id,$start_balance,0,0);
+      $start_date = Yii::app()->params['startDate'];      
+      $year = getYear($start_date);
+      $month = getMon($start_date);
+      $lastDate=date("Ym",strtotime("last month",mktime(0,0,0,$month,01,$year)));
+      $last_year = getYear($lastDate);
+      $last_month = getMon($lastDate);
+      Post::model()->balance_set($sbj_id,$start_balance,$last_year,$last_month);
     }
   }
 

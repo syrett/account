@@ -48,7 +48,7 @@ function echoData($data)
 		<h2>客 户 表</h2>
 	</div>
 	<div class="panel-body">
-		<p class="pull-right">金额单位：元</p>
+		<p class="text-center"><span class="pull-left">日期：<?php echo $date; ?></span> 编制单位：<?php echo $company ?><span class="pull-right">金额单位：元</span></p>
 	</div>
 	<table id="client" class="table table-bordered table-hover">
 	 <tr>

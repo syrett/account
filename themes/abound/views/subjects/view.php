@@ -43,7 +43,7 @@ $this->menu=array(
 		<h2>科目编号 #<?php echo $model->sbj_number; ?></h2>
 	</div>
 	<div class="panel-body">
-		<p class="alert alert-success"><strong>修改成功！</strong></p>
+		<p class="alert alert-success"><strong>操作成功！</strong></p>
 	</div>
 	<?php $this->widget('zii.widgets.CDetailView', array(
 		'data' => $model,
