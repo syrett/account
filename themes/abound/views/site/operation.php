@@ -39,19 +39,12 @@ $this->pageTitle = Yii::app()->name;
 
         echo CHtml::beginForm($this->createUrl('/Transition/'.$operation), 'post');
         ?>
-        <dl>
-        <dt class="year"><?=$year?></dt>
+		<?=$year?>年
         <?php
         $data =  array();
         foreach($months as $month){
             $data[$year.$month] = $month;
             ?>
-            <dd>
-
-<!--                <a href="--><?//= $this->createUrl('/Transition/'.$operation.'&date='.$year.$month) ?><!--">-->
-<!--                    --><?//=$month?><!--月-->
-<!--                </a>-->
-            </dd>
         <?php
         }
         $this->widget('Select2', array(
@@ -61,7 +54,7 @@ $this->pageTitle = Yii::app()->name;
         ));
         ?>
             <input type="submit" class="btn btn-primary" value="<?=$title?>" />
-        </dl><?php
+        <?php
 
         echo CHtml::endForm();
     }

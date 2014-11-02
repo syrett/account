@@ -207,7 +207,9 @@ foreach ($model as $i => $item) {
 	  <?php
 		echo $form->error($item,'entry_amount',array('id'=>'entry_amount_msg'));
 		if($model[0]->hasErrors()){
+			echo '<div class="alert alert-danger text-left">';
 			echo CHtml::errorSummary($model[0]);
+			echo '</div>';
 		}
 		if($model[0]->entry_reviewed == 0 && $model[0]->entry_settlement== 0){
                		echo CHtml::tag('button',array('encode'=>false,'class' => 'btn btn-primary',),'<span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证');
