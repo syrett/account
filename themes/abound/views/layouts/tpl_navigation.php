@@ -11,7 +11,7 @@ if (!(Yii::app()->user->isGuest)) {
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <div class="logo"><a class="navbar-brand" href="<?php echo Yii::app()->homeUrl ?>">我嘉 <small>财务管理系统</small></a></div>
+        <div class="logo"><a class="navbar-brand" href="<?php echo Yii::app()->homeUrl ?>">老法师 <small>财务管理系统</small></a></div>
        </div>
 		<!-- Collect the nav links, forms, and other content for toggling -->
         <div class="navbar-collapse collapse" id="account-navbar-collapse">
