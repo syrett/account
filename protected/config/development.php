@@ -12,7 +12,8 @@ return array(
     'theme'=>'abound',
     // preloading 'log' component
     'preload'=>array('log'),
-
+    // Change system language to Chinese Simple
+    'language'=>'zh_cn',
     // autoloading model and component classes
     'import'=>array(
         'application.models.*',
