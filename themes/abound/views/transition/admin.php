@@ -106,7 +106,6 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
 			<!-- search-form -->
 		</div>
 		</div>
-    </div>
         <?php
 
         $this->widget('zii.widgets.grid.CGridView', array(
@@ -151,3 +150,4 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
             'itemsCssClass' => 'table table-bordered',
         )); ?>
 </div>
+</div><!-- .panel-body -->
