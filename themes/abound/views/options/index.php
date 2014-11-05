@@ -15,23 +15,17 @@ $this->breadcrumbs=array(
     </div>
     <div class="panel-body">
         <?php echo CHtml::beginForm(); ?>
-        <div class="options">
-
-            <span class="">
-                <h3>公司名称：</h3>
-            </span>
-            <?php echo CHtml::activeTextField($model[0], "name", array('class' => 'form-control input-size')); ?>
-
-
+        <div class="input-group">
+            <span class="input-group-addon">公司名称：</span>
+            <?php echo CHtml::activeTextField($model[0], "name", array('class' => 'form-control')); ?>
         </div>
-        <div class="panel-footer">
-        <div class="form-group buttons text-center">
+        <p>&nbsp;</p>
+        <div class="text-center">
             <?php
-                echo CHtml::tag('button',array('encode'=>false,'class' => 'btn btn-primary',),'<span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证');
+                echo CHtml::tag('button',array('encode'=>false,'class' => 'btn btn-primary',),'<span class="glyphicon glyphicon-floppy-disk"></span> 保存');
 
             ?>
         </div>
-            </div>
         <!-- search-form -->
 
         <?php echo CHtml::endForm(); ?>

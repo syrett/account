@@ -43,12 +43,21 @@ class Post extends CActiveRecord
       //      $sql = "select subjects.sbj_number, subjects.sbj_name from subjects,post where post.subject_id=subjects.sbj_number and post.posted=1;";
     }
 
+    //得到最后一次post的年月
     public function getLastBalance($year, $month)
     {
       $lastPost = new Post;
-      $lastDate=date("Ym",strtotime("last month",mktime(0,0,0,$month,01,$year)));
-      $lastPost->year = substr($lastDate,0,4);
-      $lastPost->month = substr($lastDate,4,2);
+      $sql = "SELECT year,month FROM post order by post_date desc";
+      $data = Post::model()->findBySql($sql,array());
+
+      if (count($data)<1){
+        $lastDate=date("Ym",strtotime("last month",mktime(0,0,0,$month,01,$year)));
+        $lastPost->year = substr($lastDate,0,4);
+        $lastPost->month = substr($lastDate,4,2);
+      }else{
+        $lastPost->year = $data["year"];
+        $lastPost->month = $data["month"];
+      }
       return $lastPost->getBalance();
     }
 

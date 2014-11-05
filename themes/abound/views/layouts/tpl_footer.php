@@ -1,13 +1,11 @@
 <footer>
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-10 col-md-offset-1">
 			<div class="col-md-6">
-				<p class="text-info">&copy; <?php echo date('Y'); ?> <a href="http://www.hitec.org.cn">上海嘉国信息科技有限公司</a> 版权所有</p>
+				<p class="text-info">&copy; <?php echo date('Y'); ?> <a href="http://www.stcsm.org">上海老法师财务咨询有限公司</a> 版权所有</p>
 			</div>
 			<div class="col-md-6">
 				<p class="text-right">隐私策略   |   技术支持   |   账号注册</p>
-			</div>
 			</div>
 		</div>
 		<!--[if lt IE 8]>

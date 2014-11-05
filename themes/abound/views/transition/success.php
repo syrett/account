@@ -1,30 +1,13 @@
-<div class="panel panel-default voucher">
+<div class="panel panel-success">
     <!-- Default panel contents -->
-    <div class="panel-heading">&nbsp;</div>
-    <div class="panel-body v-title">
-        <?php
-        /* @var $this SiteController */
-        /* @var $error array */
-        ?>
-
-        <div class="form">
-
-            <h2>操作成功！</h2>
-
-            <div class="error">
-                <?php
-                /**
-                 * Created by PhpStorm.
-                 * User: jason.wang
-                 * Date: 13-12-11
-                 * Time: 下午8:17
-                 */
-                foreach(Yii::app()->user->getFlashes() as $key => $message) {
-                    echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
-                }
-                ?>
-            </div>
-        </div>
-        <!-- form -->
+    <div class="panel-heading">
+    	<h3 class="panel-title"><span class="glyphicon glyphicon-ok"></span> 操作成功！</h3>
     </div>
-</div></div>
+    <div class="panel-body">
+		<?php
+		foreach(Yii::app()->user->getFlashes() as $key => $message) {
+			echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
+		}
+		?>
+    </div>
+</div>
