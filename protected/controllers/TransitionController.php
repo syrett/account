@@ -727,7 +727,10 @@ class TransitionController extends Controller
         $arr = Subjects::model()->actionListFirst();
         $sum = 0;
         $hasDate = false;
-        $date = getYear($entry_prefix).'-'.getMon($entry_prefix).'-01'.' 00:00:00';
+        $year = getYear($entry_prefix);
+        $month = getMon($entry_prefix);
+        $day = date('t',strtotime("$month.01.$year"));
+        $date = "$year-$month-$day 00:00:00";
         $date = date('Y-m-d H:i:s', strtotime($date));
         foreach($arr as $sub){
             $tran = new Transition();
