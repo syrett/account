@@ -270,8 +270,7 @@ class Subjects extends CActiveRecord
      $cat_1=0;
      $cat_2=0;
      $cat_3=0;
-      
-    foreach ($data as $sbj_id=>$start_balance) {
+     foreach ($data as $sbj_id=>$start_balance) {
       $sbj_cat=$this->getCat($sbj_id);
       switch ($sbj_cat) {
       case 1:$cat_1+=$start_balance;break;
