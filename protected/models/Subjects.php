@@ -207,7 +207,6 @@ class Subjects extends CActiveRecord
   }
 
   public function list_can_set_balnce_sbj() {
-    echo "herer";
     $data = array();
     //取出1级科目
     $sql_1 ="SELECT * FROM subjects where sbj_cat in (1,2,3) AND sbj_number<10000 order by sbj_cat,sbj_number";
