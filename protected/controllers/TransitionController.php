@@ -411,7 +411,10 @@ class TransitionController extends Controller
     */
     public function actionAppendix()
     {
-        echo $this->appendix($_POST["subject"], $_POST["number"]);
+        if(!isset($_POST['subject'])||!isset($_POST['number']))
+            echo '';
+        else
+            echo $this->appendix($_POST["subject"], $_POST["number"]);
     }
 
 
