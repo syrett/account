@@ -207,7 +207,6 @@ class Subjects extends CActiveRecord
   }
 
   public function list_can_set_balnce_sbj() {
-    echo "herer";
     $data = array();
     //取出1级科目
     $sql_1 ="SELECT * FROM subjects where sbj_cat in (1,2,3) AND sbj_number<10000 order by sbj_cat,sbj_number";
@@ -271,8 +270,7 @@ class Subjects extends CActiveRecord
      $cat_1=0;
      $cat_2=0;
      $cat_3=0;
-      
-    foreach ($data as $sbj_id=>$start_balance) {
+     foreach ($data as $sbj_id=>$start_balance) {
       $sbj_cat=$this->getCat($sbj_id);
       switch ($sbj_cat) {
       case 1:$cat_1+=$start_balance;break;
