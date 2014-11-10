@@ -273,13 +273,14 @@ class Subjects extends CActiveRecord
      foreach ($data as $sbj_id=>$start_balance) {
       $sbj_cat=$this->getCat($sbj_id);
       switch ($sbj_cat) {
-      case 1:$cat_1+=$start_balance;break;
-      case 2:$cat_2+=$start_balance;break;
-      case 3:$cat_3+=$start_balance;break;
+      case 1:$cat_1+=(100*$start_balance);break;
+      case 2:$cat_2+=(100*$start_balance);break;
+      case 3:$cat_3+=(100*$start_balance);break;
       }
     }
-    if ($cat_1 == ($cat_2 + $cat_3)){
-
+	$sum1 = $cat_1 ;
+	$sum2 = $cat_2+$cat_3;
+    if ($sum1 == $sum2){
       return true;
     }else{
       return false;
