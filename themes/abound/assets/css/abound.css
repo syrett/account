@@ -658,3 +658,6 @@ text-indent:-9999em;
     color: #737373;
     display: table-caption;
 }
+.v-subject {
+    width: 220px;
+}
