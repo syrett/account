@@ -305,12 +305,16 @@ class Transition extends CActiveRecord
         if(isset($_POST['Transition']))
         foreach ($_POST['Transition'] as $item) {
             if (isset($item['entry_memo']) && trim($item['entry_memo']) != "")
+            {
                 if ($item['entry_transaction'] == "1")
                     $sum += $item['entry_amount'];
-                else
-                    $sum -= $item['entry_amount'];
+                else{
+                    $a = doubleval($item['entry_amount']);
+                    $sum = $sum -$a;
+                }
+            }
         }
-        if ($sum != 0)
+        if ($sum > 0.00001)
             $this->addError($attribute, '借贷必须相等');
         if(isset($_POST['Transition']))
             if($this->$attribute==0)
