@@ -63,7 +63,7 @@ $form=$this->beginWidget('CActiveForm', array(
 			<?php echo $form->error($model,'memo'); ?>
 		</div>
 		<div class="form-group">
-		<div class="col-sm-offset-2 col-sm-10">
+		<div class="col-sm-offset-2 col-sm-10 text-center">
 			<?php echo CHtml::submitButton($model->isNewRecord ? '添加' : '保存', array('class'=>'btn btn-primary',)); ?>
 			<?php echo BtnBack(); ?>
 		</div>

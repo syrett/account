@@ -20,6 +20,10 @@ $this->breadcrumbs=array(
 		<h2>期初余额</h2>
 	</div>
 	<div class="panel-body">
+
+        <div class="errorMessage" style="color: red;">
+            <?php echo $error; ?>
+        </div>
 		<div class="alert alert-info">注意:改变期初余额将会影响报表的准确性，所以每次改变期初余额后都请反结账！</div>
 		<form action="?r=subjects/balance" method="POST">
 		<table class="table table-bordered table-hover">
@@ -55,7 +59,7 @@ $this->breadcrumbs=array(
 			</td>
 			<td id="start_balance" class="col-md-3">
 			  <?php if ($item["has_sub"]==0){  ?>
-											   <input name=<?php echo $item["sbj_number"];?> value=<?php echo $item["start_balance"]; ?> />
+											   <input name=<?php echo $item["sbj_number"];?> value=<?php echo isset($_POST[$item["sbj_number"]])?$_POST[$item["sbj_number"]]:$item["start_balance"]; ?> />
 											   <?php }else{?>
 														   <label><?php echo $item["start_balance"];?></label>
 														   <?php } ?>
@@ -66,7 +70,7 @@ $this->breadcrumbs=array(
 		}
 		?>
 		</table>
-		<div class="form-group">
+		<div class="form-group" >
 		  <?php echo $error; ?>
 			<div class="col-sm-offset-2 col-sm-10">
 			<?php echo CHtml::submitButton('保存', array('class'=>'btn btn-primary',)); ?>

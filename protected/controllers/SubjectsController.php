@@ -203,10 +203,16 @@ class SubjectsController extends Controller
       
       $err_msg='';
       if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $model = new Subjects();
-        $bool=$model->check_start_balance($_POST);
+      	$p_data = array();
+	foreach($_POST as $k=>$v) {
+	    if (is_numeric($k)&&is_numeric($v)){
+	    	$p_data[$k]=$v;
+		}
+	}
+	$model = new Subjects();
+        $bool=$model->check_start_balance($p_data);
         if ($bool) {
-          Subjects::model()->set_start_balance($_POST);
+          Subjects::model()->set_start_balance($p_data);
           $this->redirect("?r=subjects/balance");
         }else{
             $err_msg="资产与负债权益的和不等";

@@ -2,10 +2,10 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-6">
-				<p class="text-info">&copy; <?php echo date('Y'); ?> <a href="http://www.stcsm.org">上海老法师财务咨询有限公司</a> 版权所有</p>
+				<p class="text-info">&copy; <?php echo date('Y'); ?> <a href="http://www.sorcerer.com.cn">老法师（上海）财务咨询有限公司</a> 版权所有</p>
 			</div>
 			<div class="col-md-6">
-				<p class="text-right">隐私策略   |   技术支持   |   账号注册</p>
+				<p class="text-right"><a href="http://www.sorcerer.com.cn/privancy/">隐私策略</a>   |   <a href="http://www.sorcerer.com.cn/about/">关于我们</a>   |   <a href="http://www.sorcerer.com.cn/legal/">法律声明</a></p>
 			</div>
 		</div>
 		<!--[if lt IE 8]>
