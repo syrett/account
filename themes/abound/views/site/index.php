@@ -54,6 +54,6 @@ $this->pageTitle = Yii::app()->name;
     </div><!-- .row -->
     </div><!-- .panel-body -->
     <div class="panel-footer">
-    <p>系统消息：当前为测试版本，如有任何意见及建议，请发送邮件至geek.michael@live.com</p>
+    <p>系统消息：如有任何意见及建议，请联系400-821-0913</p>
     </div>
 </div><!-- .panel -->
