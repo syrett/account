@@ -892,6 +892,8 @@ class TransitionController extends Controller
         $this->render("printp");
     }
     public function actionPrint(){
+        //设置php响应时间为30秒
+        ini_set("max_execution_time",30);set_time_limit(30);
         $year = $_REQUEST['year'];
 
         $fm = $_REQUEST['fm'];
@@ -949,7 +951,6 @@ class TransitionController extends Controller
 //                    ),false,true));
             }
         }
-
         if($_REQUEST['submit']=='打印凭证')
             $mPDF1->Output( 'etc.pdf' , EYiiPdf::OUTPUT_TO_BROWSER );
         elseif($_REQUEST['submit']=='下载凭证')

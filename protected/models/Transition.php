@@ -442,7 +442,7 @@ class Transition extends CActiveRecord
         $First = Subjects::model()->findAllBySql($sql);
         $arr = array();
         foreach ($First as $row) {
-            $arr += array($row['sbj_number'] => $row['sbj_number'] . $row['sbj_name']);
+            $arr += array($row['sbj_number'] => $row['sbj_number'] . Transition::getSbjPath($row['sbj_number']));
         };
         return $arr;
     }
