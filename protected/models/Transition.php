@@ -314,7 +314,7 @@ class Transition extends CActiveRecord
                 }
             }
         }
-        if ($sum > 0.00001)
+        if (abs($sum) > 0.00001)
             $this->addError($attribute, '借贷必须相等');
         if(isset($_POST['Transition']))
             if($this->$attribute==0)
