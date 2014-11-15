@@ -20,10 +20,10 @@ $this->menu=array(
 		  'url'=>array('update', 'id'=>$model->id),
 		  'linkOptions'=>array('class'=>'btn btn-inverse'),
 		  ),	
-	array('label'=>'<span class="glyphicon glyphicon-remove"></span> 删除科目',
-		  'url'=>'#',
-		  'linkOptions'=>array('class' => 'btn btn-inverse','submit' => array('delete', 'id' => $model->id), 'confirm' => '确定删除科目?'),
-		  ),	
+//	array('label'=>'<span class="glyphicon glyphicon-remove"></span> 删除科目',
+//		  'url'=>'#',
+//		  'linkOptions'=>array('class' => 'btn btn-inverse','submit' => array('delete', 'id' => $model->id), 'confirm' => '确定删除科目?'),
+//		  ),
 );
 ?>
 <div class="operations">
