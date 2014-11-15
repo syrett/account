@@ -930,23 +930,25 @@ class TransitionController extends Controller
         foreach($tranList as $id){
             $items = $this->getItemsToUpdate($id);
             //$mPDF1->WriteHTML($this->renderPartial('print', array('model' => $items,),true,true));
-            $count = count($items);
             $page = 0;
             $pages = array();
+            $mount = 0;
             foreach($items as $key => $item){
                 if($key %5 == 0)
                     $page++;
                 $pages[$page][] = $item;
+                if($item->entry_transaction==1)
+                    $mount += $item->entry_amount;
             }
             $count = count($pages);
             foreach($pages as $page => $items){
 //                $this->renderPartial('print', array('model' => $items, 'count' => $count, 'page' => $page,),false,true);
                 if($_REQUEST['style']=='2')
-                    $mPDF1->WriteHTML($this->renderPartial('print_2', array('model' => $items, 'count' => $count, 'page' => $page
+                    $mPDF1->WriteHTML($this->renderPartial('print_2', array('model' => $items, 'count' => $count, 'page' => $page, 'mount' => $mount
                     ),true,true));
 //                    ),false,true));
                 else
-                    $mPDF1->WriteHTML($this->renderPartial('print_1', array('model' => $items, 'count' => $count, 'page' => $page
+                    $mPDF1->WriteHTML($this->renderPartial('print_1', array('model' => $items, 'count' => $count, 'page' => $page, 'mount' => $mount
                     ),true,true));
 //                    ),false,true));
             }
