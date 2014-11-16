@@ -276,10 +276,10 @@ class Post extends CActiveRecord
 
       $year = getYear($date);
       $month = getMon($date);
-      $sql = "SELECT balance FROM post WHERE year(post_date)=:year AND month(post_date)=:month AND subject_id REGEXP :sbj_id";
+      $sql = "SELECT balance FROM post WHERE year(post_date)=:year AND month(post_date)=:month AND subject_id REGEXP '^".$subject_id."'";
       $dataArray = Post::model()->findAllBySql($sql, array(':year'=>$year,
-                                          ':month'=>$month,
-                                          ':sbj_id'=>$subject_id));
+                                                           ':month'=>$month));
+
       $balance = 0;
       foreach($dataArray as $post){
         $balance += $post['balance'];
@@ -292,10 +292,9 @@ class Post extends CActiveRecord
     public function getLastBalanceNum($subject_id, $date) {
       $year = getYear($date);
       $month = getMon($date);
-      $sql = "SELECT year, month FROM (select year,month FROM post  WHERE year <=:year AND subject_id REGEXP :sbj_id) AS p WHERE month <=:month order by year desc, month desc";
+      $sql = "SELECT year, month FROM (select year,month FROM post  WHERE year <=:year AND subject_id REGEXP '^".$subject_id."') AS p WHERE month <=:month order by year desc, month desc";
       $data = Post::model()->findBySql($sql, array(':year'=>$year,
-                                          ':month'=>$month,
-                                          ':sbj_id'=>$subject_id));      
+                                                   ':month'=>$month));
       if ($data == null){
         return 0;
       }else{
@@ -312,13 +311,12 @@ class Post extends CActiveRecord
       $month = getMon($date);
       $sbj_cat = Subjects::model()->getCat($subject_id);
       if ($num==1){ //得到某个月的发生额
-        $sql = "SELECT debit,credit FROM post WHERE year=:year AND month=:month AND subject_id REGEXP :sbj_id";
+        $sql = "SELECT debit,credit FROM post WHERE year=:year AND month=:month AND subject_id REGEXP '^".$subject_id."'";
       }else{ //得到这年到某个月的发生额
-        $sql = "SELECT debit, credit FROM post WHERE year(post_date)=:year AND month(post_date)<=:month AND subject_id REGEXP :sbj_id";
+        $sql = "SELECT debit, credit FROM post WHERE year(post_date)=:year AND month(post_date)<=:month AND subject_id REGEXP  '^".$subject_id."'";
       }
       $dataArray = Post::model()->findAllBySql($sql, array(':year'=>$year,
-                                          ':month'=>$month,
-                                          ':sbj_id'=>$subject_id));
+                                                           ':month'=>$month));
 
       $balance = 0;
 

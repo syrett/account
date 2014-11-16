@@ -231,7 +231,7 @@ class Subjects extends CActiveRecord
   public function list_sub($sbj_id) {
     $data=array();
     $sbj_max = $sbj_id*100+99;
-    $sql_1 ="SELECT * FROM subjects where sbj_cat in (1,2,3) AND sbj_number REGEXP '$sbj_id' AND sbj_number>'$sbj_id' AND sbj_number<='$sbj_max' order by sbj_number";    
+    $sql_1 ="SELECT * FROM subjects where sbj_cat in (1,2,3) AND sbj_number REGEXP '^$sbj_id' AND sbj_number>'$sbj_id' AND sbj_number<='$sbj_max' order by sbj_number";    
     $data_1 = Subjects::model()->findAllBySql($sql_1, array());
 
     foreach($data_1 as $key=>$item) {
