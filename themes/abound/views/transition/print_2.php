@@ -60,7 +60,7 @@
                 echo "<tr class='row'><td style='height: 15mm'>&nbsp;</td><td></td><td></td><td></td></tr><tr class='row'><td>&nbsp;</td><td></td><td></td><td></td></tr>";
             ?>
             <tr class="rowTop">
-                <td>附单据数&nbsp;&nbsp;&nbsp;&nbsp;张</td><td>合计：<?php echo UpAmount(1123321.12); ?></td><td style='text-align: right;'><?php echo number_format(1111,2); ?></td><td style='text-align: right;'><?php echo number_format(1111,2); ?></td>
+                <td>附单据数&nbsp;&nbsp;&nbsp;&nbsp;张</td><td>合计：<?php echo UpAmount($mount); ?></td><td style='text-align: right;'><?php echo number_format($mount,2); ?></td><td style='text-align: right;'><?php echo number_format($mount,2); ?></td>
             </tr>
         </table>
 

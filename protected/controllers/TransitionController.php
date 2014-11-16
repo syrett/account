@@ -411,7 +411,10 @@ class TransitionController extends Controller
     */
     public function actionAppendix()
     {
-        echo $this->appendix($_POST["subject"], $_POST["number"]);
+        if(!isset($_POST['subject'])||!isset($_POST['number']))
+            echo '';
+        else
+            echo $this->appendix($_POST["subject"], $_POST["number"]);
     }
 
 
@@ -727,7 +730,10 @@ class TransitionController extends Controller
         $arr = Subjects::model()->actionListFirst();
         $sum = 0;
         $hasDate = false;
-        $date = getYear($entry_prefix).'-'.getMon($entry_prefix).'-01'.' 00:00:00';
+        $year = getYear($entry_prefix);
+        $month = getMon($entry_prefix);
+        $day = date('t',strtotime("$month.01.$year"));
+        $date = "$year-$month-$day 00:00:00";
         $date = date('Y-m-d H:i:s', strtotime($date));
         foreach($arr as $sub){
             $tran = new Transition();
@@ -886,6 +892,8 @@ class TransitionController extends Controller
         $this->render("printp");
     }
     public function actionPrint(){
+        //设置php响应时间为30秒
+        ini_set("max_execution_time",30);set_time_limit(30);
         $year = $_REQUEST['year'];
 
         $fm = $_REQUEST['fm'];
@@ -922,28 +930,29 @@ class TransitionController extends Controller
         foreach($tranList as $id){
             $items = $this->getItemsToUpdate($id);
             //$mPDF1->WriteHTML($this->renderPartial('print', array('model' => $items,),true,true));
-            $count = count($items);
             $page = 0;
             $pages = array();
+            $mount = 0;
             foreach($items as $key => $item){
                 if($key %5 == 0)
                     $page++;
                 $pages[$page][] = $item;
+                if($item->entry_transaction==1)
+                    $mount += $item->entry_amount;
             }
             $count = count($pages);
             foreach($pages as $page => $items){
 //                $this->renderPartial('print', array('model' => $items, 'count' => $count, 'page' => $page,),false,true);
                 if($_REQUEST['style']=='2')
-                    $mPDF1->WriteHTML($this->renderPartial('print_2', array('model' => $items, 'count' => $count, 'page' => $page
+                    $mPDF1->WriteHTML($this->renderPartial('print_2', array('model' => $items, 'count' => $count, 'page' => $page, 'mount' => $mount
                     ),true,true));
 //                    ),false,true));
                 else
-                    $mPDF1->WriteHTML($this->renderPartial('print_1', array('model' => $items, 'count' => $count, 'page' => $page
+                    $mPDF1->WriteHTML($this->renderPartial('print_1', array('model' => $items, 'count' => $count, 'page' => $page, 'mount' => $mount
                     ),true,true));
 //                    ),false,true));
             }
         }
-
         if($_REQUEST['submit']=='打印凭证')
             $mPDF1->Output( 'etc.pdf' , EYiiPdf::OUTPUT_TO_BROWSER );
         elseif($_REQUEST['submit']=='下载凭证')

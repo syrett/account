@@ -106,7 +106,6 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
 			<!-- search-form -->
 		</div>
 		</div>
-    </div>
         <?php
 
         $this->widget('zii.widgets.grid.CGridView', array(
@@ -128,7 +127,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
                     'htmlOptions'=>array('style'=>'width:30px','width'=>'30px'),
                     'headerHtmlOptions'=>array('width'=>'30px'),
                 ),
-                array('name'=>'entry_subject','value'=>'$data->getSbjName($data->entry_subject)'),
+                array('name'=>'entry_subject','value'=>'$data->getSbjPath($data->entry_subject)'),
                 array('name'=>'entry_amount','htmlOptions'=>array('class'=>'amount')),
                 array('name'=>'entry_appendix','value'=>'$data->getAppendix($data->entry_appendix_type,$data->entry_appendix_id)'),
                 array('name'=>'entry_posting','value'=>'$data->getPosting($data->entry_posting)'),
@@ -151,3 +150,4 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
             'itemsCssClass' => 'table table-bordered',
         )); ?>
 </div>
+</div><!-- .panel-body -->

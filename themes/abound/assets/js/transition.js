@@ -61,17 +61,23 @@ $(document).ready(function () {
     $("div").delegate("select[id$='entry_subject']", "change",function () {
         var number = $(this).next().val();
         url = $("#entry_appendix").val();
+        val = $(this).val();
+        while(val==""){
+            setTimeout(val = $(this).val(),100)
+        }
         $.ajax({
             url: url,
             type: "POST",
             datatype: "json",
-            data: {"subject": $(this).val(), "number": number},
+            data: {"subject": val, "number": number},
             success: function (json) {
-                obj = JSON.parse(json)
-                $("#appendix_" + number).css('display', 'inherit')
-                $("#Transition_"+number+"_entry_appendix_type").val(obj.type)
-                $("#appendix_" + number).html(obj.html)
-                $("select[id='Transition_"+number+"_entry_appendix_id']").select2();
+                if(json!=""){
+                    obj = JSON.parse(json)
+                    $("#appendix_" + number).css('display', 'inherit')
+                    $("#Transition_"+number+"_entry_appendix_type").val(obj.type)
+                    $("#appendix_" + number).html(obj.html)
+                    $("select[id='Transition_"+number+"_entry_appendix_id']").select2();
+                }
             },
             error: function (xhr, err) {
                 alert("readyState: " + xhr.readyState + "\nstatus: " + xhr.status);

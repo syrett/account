@@ -305,12 +305,16 @@ class Transition extends CActiveRecord
         if(isset($_POST['Transition']))
         foreach ($_POST['Transition'] as $item) {
             if (isset($item['entry_memo']) && trim($item['entry_memo']) != "")
+            {
                 if ($item['entry_transaction'] == "1")
                     $sum += $item['entry_amount'];
-                else
-                    $sum -= $item['entry_amount'];
+                else{
+                    $a = doubleval($item['entry_amount']);
+                    $sum = $sum -$a;
+                }
+            }
         }
-        if ($sum != 0)
+        if (abs($sum) > 0.00001)
             $this->addError($attribute, '借贷必须相等');
         if(isset($_POST['Transition']))
             if($this->$attribute==0)
@@ -438,7 +442,7 @@ class Transition extends CActiveRecord
         $First = Subjects::model()->findAllBySql($sql);
         $arr = array();
         foreach ($First as $row) {
-            $arr += array($row['sbj_number'] => $row['sbj_number'] . $row['sbj_name']);
+            $arr += array($row['sbj_number'] => $row['sbj_number'] . Transition::getSbjPath($row['sbj_number']));
         };
         return $arr;
     }

@@ -7,12 +7,13 @@
 // CWebApplication properties can be configured here.
 return array(
     'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
-    'name'=>'Wojia',
+    'name'=>'Sorcerer_Account',
 //    'theme'=>'account',
     'theme'=>'abound',
     // preloading 'log' component
     'preload'=>array('log'),
-
+    // Change system language to Chinese Simple
+    'language'=>'zh_cn',
     // autoloading model and component classes
     'import'=>array(
         'application.models.*',

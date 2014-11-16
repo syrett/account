@@ -31,8 +31,6 @@
             </tr>
             <?php
             $i == 0;
-            $j = 0;
-            $d = 0;
             foreach($model as $item){
                 echo "<tr class='rowNormal'><td>$item[entry_memo]</td><td>".Transition::model()->getSbjPath($item[entry_subject])."</td><td style='text-align: right;'></td><td style='text-align: right;'></td></tr>";
                 if($i==4)
@@ -42,13 +40,11 @@
                 if($item[entry_transaction]=='1')
                 {
                     $str .= number_format(floatval($item[entry_amount]),2);
-                    $j += $item[entry_amount];
                 }
                 $str .= "</td><td style='text-align: right;'>";
                 if($item[entry_transaction]=='2')
                 {
                     $str .= number_format(floatval($item[entry_amount]),2);
-                    $d += $item[entry_amount];
                 }
                 $str .= "</td></tr>";
                 echo $str;
@@ -65,9 +61,9 @@
             ?>
             <tr class="rowTop">
                 <td>附单据数&nbsp;&nbsp;&nbsp;&nbsp;张</td>
-                <td>合计：<?php echo UpAmount($j); ?></td>
-                <td style='text-align: right;'><?php echo number_format($j,2); ?></td>
-                <td style='text-align: right;'><?php echo number_format($d,2); ?></td>
+                <td>合计：<?php echo UpAmount($mount); ?></td>
+                <td style='text-align: right;'><?php echo number_format($mount,2); ?></td>
+                <td style='text-align: right;'><?php echo number_format($mount,2); ?></td>
             </tr>
 
         </table>

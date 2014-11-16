@@ -71,21 +71,21 @@ function echoData($data)
 		<?php echoData($data) ?>
 	</table>
 </div>
-<div>
-    <a id="dlink"  style="display:none;"></a>
-    <?php
-    echo CHtml::beginForm($this->createUrl('/Report/createexcel'), 'post');
-    $d = date('Y-m',strtotime($date));
-    if ($subject_name != ""){
-        $d = date('Y-m',strtotime($date));
-        $excel_name = "项目表-".$subject_name." ".$d.".xls";
-        ?>
-
-        <input type="hidden" name="data" id="data" value="" />
-        <input type="hidden" name="name" id="name" value="<?=$excel_name?>" />
-        <?php
-        echo "<input type='button' onclick='tableToExcel()'  value='导出'>";
-    }
-    echo CHtml::endForm();
-    ?>
+<div class="alert">
+	<a id="dlink"  style="display:none;"></a>
+	<?php
+	echo CHtml::beginForm($this->createUrl('/Report/createexcel'), 'post');
+	if ($date != ""){
+		$d = date('Y-m',strtotime($date));
+		$excel_name = "项目表-".$d.".xls";
+		?>
+		<input type="hidden" name="data" id="data" value="" />
+		<input type="hidden" name="name" id="name" value="<?=$excel_name?>" />
+		<p class="text-right">
+		<?php
+		echo '<button type="button" onclick="tableToExcel()" class="btn btn-primary"><span class="glyphicon glyphicon-export"></span> 导出</button>';
+	}
+	echo CHtml::endForm();
+	?>
+	</p>
 </div>
