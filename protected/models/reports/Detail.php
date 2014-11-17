@@ -17,7 +17,7 @@ class Detail extends CModel
     $this->sbj_cat = Subjects::model()->getCat($sbj_id);
     $post = new Post();
     $arr = $post->getLastBalance($year, $fm);
-    $this->balance = isset($arr["balance"])?$arr["balance"]:0;
+    $this->balance = isset($arr[$sbj_id]["balance"])?$arr[$sbj_id]["balance"]:0;
     $data["start_balance"] = $this->balance; //期初余额
     $info = self::getTransition($sbj_id, $year, $fm, $tm);
     $data["end_balance"] = $this->balance; //期末余额

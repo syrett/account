@@ -231,7 +231,7 @@ class Subjects extends CActiveRecord
   public function list_sub($sbj_id) {
     $data=array();
     $sbj_max = $sbj_id*100+99;
-    $sql_1 ="SELECT * FROM subjects where sbj_cat in (1,2,3) AND sbj_number REGEXP '$sbj_id' AND sbj_number>'$sbj_id' AND sbj_number<='$sbj_max' order by sbj_number";    
+    $sql_1 ="SELECT * FROM subjects where sbj_cat in (1,2,3) AND sbj_number REGEXP '^$sbj_id' AND sbj_number>'$sbj_id' AND sbj_number<='$sbj_max' order by sbj_number";    
     $data_1 = Subjects::model()->findAllBySql($sql_1, array());
 
     foreach($data_1 as $key=>$item) {
@@ -271,13 +271,14 @@ class Subjects extends CActiveRecord
      $cat_2=0;
      $cat_3=0;
      foreach ($data as $sbj_id=>$start_balance) {
-      $sbj_cat=$this->getCat($sbj_id);
+  $sbj_cat=$this->getCat($sbj_id);
       switch ($sbj_cat) {
       case 1:$cat_1+=(100*$start_balance);break;
       case 2:$cat_2+=(100*$start_balance);break;
       case 3:$cat_3+=(100*$start_balance);break;
       }
     }
+	
 	$sum1 = $cat_1 ;
 	$sum2 = $cat_2+$cat_3;
     if ($sum1 == $sum2){

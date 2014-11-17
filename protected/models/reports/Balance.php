@@ -44,9 +44,7 @@ class Balance extends CModel
         $data = self::calculate($value, $data);
 
     };
-
       return $data;
-
   }
 
   function calculate($item, $data){
@@ -93,29 +91,27 @@ class Balance extends CModel
     $end = 0;//到某日的余额
     foreach($subjects as $k=>$sbj_id){
       $start_year += Post::model()->getLastBalanceNum($sbj_id, ($year-1)."12");
-      $balance = Post::model()->getLastBalanceNum($sbj_id, $lastDate);
+	  $balance = Post::model()->getLastBalanceNum($sbj_id, $lastDate);
       $sbj_cat = Subjects::model()->getCat($sbj_id);
       $arr = self::getEndNum($sbj_id, $year, $month, $day);
       $end += balance($balance, $arr['debit'], $arr['credit'], $sbj_cat);
     }
-
-    return array("start"=>$start_year,
+    
+	return array("start"=>$start_year,
           "end"=>$end);
 
   }
 
   //因为要算到日，所以直接从transition表里读取。
   function getEndNum($sbj_id,$year, $month, $day){
-    $sql = "SELECT entry_transaction, entry_amount FROM transition WHERE year(entry_date)=:year AND month(entry_date)=:month AND day(entry_date)<:day AND entry_subject REGEXP :sbj_id ";
+    $sql = "SELECT entry_transaction, entry_amount FROM transition WHERE year(entry_date)=:year AND month(entry_date)=:month AND day(entry_date)<:day AND entry_subject REGEXP '^".$sbj_id."'  ";
     if ($this->is_closed == 1){
       //      $sql = "SELECT entry_transaction, entry_amount FROM transition WHERE entry_closing=1 AND year(entry_date)=:year AND month(entry_date)=:month AND day(entry_date)<:day";
       $sql = $sql . " AND entry_closing=1";
     }
-
     $data = Transition::model()->findAllBySql($sql, array(':year'=>$year,
                                                           ':month'=>$month,
-                                                          ':day'=>$day+1,
-                                                          ':sbj_id'=>$sbj_id));
+                                                          ':day'=>$day+1));
 
     
     $debit=0;
