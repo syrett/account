@@ -12,7 +12,7 @@ $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/jquery-ui-1.10.4.
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/transition.js', CClientScript::POS_HEAD);
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/checkinput.js', CClientScript::POS_HEAD);
 $this->pageTitle = Yii::app()->name;
-$sql = 'select date from transitionDate'; // 一级科目的为1001～9999$SQL="SQL Statemet"
+$sql = 'select date from transitiondate'; // 一级科目的为1001～9999$SQL="SQL Statemet"
 $connection = Yii::app()->db;
 $command = $connection->createCommand($sql);
 $tranDate = $command->queryRow(); // execute a query SQL
