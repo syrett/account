@@ -62,7 +62,6 @@ $this->breadcrumbs=array(
 											   <input name=<?php echo $item["sbj_number"];?> value=<?php echo isset($_POST[$item["sbj_number"]])?$_POST[$item["sbj_number"]]:$item["start_balance"]; ?> />
 											   <?php }else{?>
 														   <label><?php echo $item["start_balance"];?></label>
-											   <input type='hidden' name=<?php echo $item["sbj_number"];?> value=<?php echo isset($_POST[$item["sbj_number"]])?$_POST[$item["sbj_number"]]:$item["start_balance"]; ?> />                                                               
 														   <?php } ?>
 			</td>
 		  </tr>
