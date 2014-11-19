@@ -107,6 +107,11 @@ class Transition extends CActiveRecord
         );
     }
 
+    public function listByPrefix($prefix, $select) {
+      $sql = "select ".$select." from transition where entry_num_prefix=".$prefix;
+      $data = $this->findAllBySql($sql, array());
+      return $data;
+    }
     /**
      * Retrieves a list of models based on the current search/filter conditions.
      *
