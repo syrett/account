@@ -173,7 +173,7 @@ function echoData($key, $data, $name="default")
 		 <?php echoData(44, $data) ?>
 		 </tr>
 		 <tr>
-		 <?php echoData(22,$data, "减:累计折旧(或摊销)") ?>
+		 <?php echoData(0,$data, "减:累计折旧(或摊销)") ?>
 		 <?php echoData("unflow_debt",$data, "非流动负债合计") ?>
 		 </tr>
 		 <tr>
@@ -197,24 +197,12 @@ function echoData($key, $data, $name="default")
 		 <?php echoData(50, $data) ?>
 		 </tr>
 		 <tr>
-		 <?php echoData(0, $data,  "减:在建工程减值准备") ?>
+		 <?php echoData(0, $data,  "固定资产清理") ?>
 		 <?php echoData(51, $data) ?>
 		 </tr>
 		 <tr>
-		 <?php echoData(25, $data,  "工程物资") ?>
-		 <?php echoData(54,  $data) ?>
-		 </tr>
-		 <tr>
-		 <?php echoData(0, $data,  "减:工程物资减值准备") ?>
-		 <?php echoData(52, $data) ?>
-		 </tr>
-		 <tr>
-		 <?php echoData(0, $data,  "固定资产清理") ?>
-		 <?php echoData(0, $data,  "其中:法定盈余公积") ?>
-		 </tr>
-		 <tr>
 		 <?php echoData(26,  $data, "无形资产") ?>
-		 <?php echoData(0,  $data, "任意盈余公积") ?>
+		 <?php echoData(52, $data) ?>
 		 </tr>
 		 <tr>
 		 <?php echoData(0,  $data, "其中:土地使用权") ?>
