@@ -150,16 +150,14 @@ return array(
 
                                //收入类
                                array("id"=>55 ,"name"=>"一、营业收入","subjects"=>array(6001,6011,6021,6031,6041,6051), "to"=>"trading_profit", "function"=>"sum"),
-                               array("id"=>56 ,"name"=>"财务费用","subjects"=>array(6061)),
                                array("id"=>57 ,"name"=>"加:公允价值变动收益","subjects"=>array(6101), "to"=>"trading_profit", "function"=>"sum"),
                                array("id"=>58 ,"name"=>"投资收益","subjects"=>array(6111), "to"=>"trading_profit", "function"=>"sum"),
-                               array("id"=>59 ,"name"=>"财务费用","subjects"=>array(6201,6202,6203)),
                                array("id"=>60 ,"name"=>"加:营业外收入","subjects"=>array(6301), "to"=>"profit_sum", "function"=>"sum"),
 
                                //费用类
                                array("id"=>61 ,"name"=>"减:营业成本","subjects"=>array(6401,6402), "to"=>"trading_profit", "function"=>"minus"),
                                array("id"=>62 ,"name"=>"营业税金及附加","subjects"=>array(6403), "to"=>"trading_profit", "function"=>"minus"),
-                               array("id"=>63 ,"name"=>"财务费用","subjects"=>array(6411,6421,6501,6502,6511,6521,6531,6541,6542,6603), "to"=>"trading_profit", "function"=>"minus"),
+                               array("id"=>63 ,"name"=>"财务费用","subjects"=>array(6061,6201,6202,6203,6411,6421,6501,6502,6511,6521,6531,6541,6542,6603), "to"=>"trading_profit", "function"=>"minus"),
                                array("id"=>64 ,"name"=>"销售费用","subjects"=>array(6601), "to"=>"trading_profit", "function"=>"minus"),
                                array("id"=>65 ,"name"=>"管理费用","subjects"=>array(6602,6604), "to"=>"trading_profit", "function"=>"minus"),
                                array("id"=>66 ,"name"=>"资产减值损失","subjects"=>array(6701), "to"=>"trading_profit", "function"=>"minus"),
