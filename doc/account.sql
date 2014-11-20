@@ -331,7 +331,7 @@ CREATE TABLE IF NOT EXISTS `transition` (
 --
 -- 表的结构 `transitiondate`
 --
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `transitionDate` AS select max(`transition`.`entry_num_prefix`) AS `date` from `transition` where ((`transition`.`entry_closing` = 1) or (`transition`.`entry_settlement` = 1));
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `transitiondate` AS select max(`transition`.`entry_num_prefix`) AS `date` from `transition` where ((`transition`.`entry_closing` = 1) or (`transition`.`entry_settlement` = 1));
 
 -- --------------------------------------------------------
 
