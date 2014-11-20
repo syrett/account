@@ -442,7 +442,7 @@ class TransitionController extends Controller
 //        $arr = Subjects::model()->actionListFirst();
         $result = array();
         foreach ($arr as $number => $item) {
-            array_push($result, array($number, $item));
+            array_push($result, array($number, $number.Transition::getSbjPath($number)));
         }
         echo json_encode($result);
     }

@@ -137,7 +137,14 @@ class SubjectBalance extends CModel
 
     }
 
-    return $catData;
+	$catData2 = array();
+    for($i=1;$i<6;$i++){
+      if (isset($catData[$i])) {
+        $catData2[$i]=$catData[$i];
+      }
+    }
+    return $catData2;
+//`    return $catData;
 
   }
 
