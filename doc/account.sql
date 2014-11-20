@@ -115,7 +115,7 @@ CREATE TABLE IF NOT EXISTS `post` (
   `posted` tinyint(1) NOT NULL DEFAULT '0',
   `debit` double NOT NULL DEFAULT '0' COMMENT '借',
   `credit` double NOT NULL DEFAULT '0' COMMENT '贷',
-  `post_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `post_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
