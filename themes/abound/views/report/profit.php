@@ -83,7 +83,7 @@ function echoData($key, $data, $name="default")
 		 <?php echoData(65, $data) ?>
 		 </tr>
 		 <tr>
-		 <?php echoData(59, $data) ?>
+		 <?php echoData(63, $data) ?>
 		 </tr>
 		 <tr>
 		 <?php echoData(66, $data) ?>
