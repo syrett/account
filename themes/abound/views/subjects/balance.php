@@ -72,7 +72,7 @@ $this->breadcrumbs=array(
 		</table>
 		<div class="form-group" >
 		  <?php echo $error; ?>
-			<div class="col-sm-offset-2 col-sm-10">
+			<div class="text-center">
 			<?php echo CHtml::submitButton('保存', array('class'=>'btn btn-primary',)); ?>
 			<?php echo BtnBack(); ?>
 			</div>
