@@ -634,7 +634,6 @@ class TransitionController extends Controller
             $id = $_REQUEST[0]['id'];
             $list = $this->getItems($id);
             $valid = true;
-            $itmes = array();
             foreach($list as $item){
                 $item = $this->loadModel($item['id']);
                 if($valid = $item->validate() && $valid)
@@ -655,13 +654,10 @@ class TransitionController extends Controller
                 } //当前登陆用户id
                 $items[] = $item;
             }
-            if($valid)
-                $this->redirect($this->createUrl('transition/admin'));
-            else{
-                $this->render('update', array(
-                    'model' => $items,
-                ));
-            }
+
+            $this->render('update', array(
+                'model' => $items,
+            ));
 //                $this->redirect(array('update','id'=>$id));
 //                $this->redirect($this->createUrl('transition/update'), array('admin'));
         }

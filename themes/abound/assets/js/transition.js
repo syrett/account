@@ -55,9 +55,17 @@ $(document).ready(function () {
         {var a=parseFloat($(this).val());
             $(this).val(decimals(a))
         }
+        //更新借贷方合计
+        $("#sum").html(sumMoney)
     })
     $("select[id^='Transition']").select2();
     $("div").on("load","select[id^='Transition']", function(){$(this).select2()})
+    //凭证借贷变化时，更新借贷方合计
+    $("div").delegate("select[id$='_entry_transaction']", "change",function () {
+
+        $("#sum").html(sumMoney)
+
+    })
     $("div").delegate("select[id$='entry_subject']", "change",function () {
         var number = $(this).next().val();
         url = $("#entry_appendix").val();
@@ -212,3 +220,17 @@ var rmRow = function (ob) {
     $("#row_" + number).remove();
 }
 
+//更新借贷方合计
+var sumMoney = function (ob) {
+    var result = 0
+    $("select[id$='_entry_transaction']").each(function(){
+        var mon = $(this).parent().next().children().val()
+        if(mon =="")
+            return
+        if($(this).val()==1 && mon != '')
+            result = result + parseFloat(mon)
+        else
+            result = result - parseFloat(mon)
+    })
+    return result
+}

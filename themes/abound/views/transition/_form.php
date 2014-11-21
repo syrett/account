@@ -155,6 +155,7 @@ foreach ($model as $i => $item) {
 	</div>
      </div>
      <div class="transition_action">
+         借贷方合计:<span id="sum" class="sum">0</span>
 	<p>
         <?php
         if($model[0]->entry_reviewed == 0 && $model[0]->entry_settlement== 0){
