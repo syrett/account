@@ -251,18 +251,26 @@ class Subjects extends CActiveRecord
   }
   
   public function set_start_balance($data) {
+    //更新老的期初余额都为0
+    $update_old = "update subjects set start_balance = 0";
+    Yii::app()->db->createCommand($update_old)->execute();
+
+    $start_date = Yii::app()->params['startDate'];      
+    $year = getYear($start_date);
+    $month = getMon($start_date);
+    $lastDate=date("Ym",strtotime("last month",mktime(0,0,0,$month,01,$year)));
+    $last_year = getYear($lastDate);
+    $last_month = getMon($lastDate);
+
+    Post::model()->balance_delete($last_year,$last_month);
+
     foreach($data as $sbj_id=>$start_balance) {
       $update_sql = "update subjects set start_balance = '$start_balance' where sbj_number = '$sbj_id'";
       Yii::app()->db->createCommand($update_sql)->execute();
-      $start_date = Yii::app()->params['startDate'];      
-      $year = getYear($start_date);
-      $month = getMon($start_date);
-      $lastDate=date("Ym",strtotime("last month",mktime(0,0,0,$month,01,$year)));
-      $last_year = getYear($lastDate);
-      $last_month = getMon($lastDate);
+
       Post::model()->balance_set($sbj_id,$start_balance,$last_year,$last_month);
-    }
-  }
+    }  
+}
 
   //检测资产负债权益是否平
   //资产=负债+权益

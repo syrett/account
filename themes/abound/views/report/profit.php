@@ -20,8 +20,8 @@ function echoData($key, $data, $name="default")
   if (empty($data[$key]))
     {
       echo "<th>".$name."</th>";
-      echo "<td>0</td>";
-      echo "<td>0</td>";
+      echo "<td>0.00</td>";
+      echo "<td>0.00</td>";
     }
   else
     {
@@ -34,8 +34,8 @@ function echoData($key, $data, $name="default")
         {
           echo "<th>".$name."</th>";
         }
-      echo "<td>".$arr["sum_month"]." </td>";
-      echo "<td>" .$arr["sum_year"]."</td>";
+      echo "<td>".number_format($arr["sum_month"],2,".",",")." </td>";
+      echo "<td>" .number_format($arr["sum_year"],2,".",",")."</td>";
     }
 }
 
@@ -83,7 +83,7 @@ function echoData($key, $data, $name="default")
 		 <?php echoData(65, $data) ?>
 		 </tr>
 		 <tr>
-		 <?php echoData(59, $data) ?>
+		 <?php echoData(63, $data) ?>
 		 </tr>
 		 <tr>
 		 <?php echoData(66, $data) ?>

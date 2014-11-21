@@ -49,7 +49,6 @@ class Post extends CActiveRecord
       $lastPost = new Post;
       $sql = "SELECT year,month FROM post order by post_date desc";
       $data = Post::model()->findBySql($sql,array());
-
       if (count($data)<1){
         $lastDate=date("Ym",strtotime("last month",mktime(0,0,0,$month,01,$year)));
         $lastPost->year = substr($lastDate,0,4);
@@ -63,8 +62,12 @@ class Post extends CActiveRecord
 
     public function getBalance()
     {
-      $this->select="subject_id, debit, credit, balance";
-      $dataArray=$this->search()->getData();
+      $sql = "select subject_id,debit,credit,balance from post where year=:year and month=:month";
+      $dataArray = $this->findAllBySql($sql,array(
+                                                  ":year"=>$this->year,
+                                                  ":month"=>$this->month,
+                                                  ));
+
       $arr=array();
       
       if (count($dataArray) <=0 ){
@@ -85,13 +88,26 @@ class Post extends CActiveRecord
     public function postAll()
     {
       $lastBalanceArr = self::getLastBalance($this->year,$this->month);
+  //echo "<pre>";
+    //    var_dump($lastBalanceArr);
+//        echo "</pre>";exit(1);
 
       $transition = new Transition();
-      $transition->unsetAttributes();
+/*  
+    $transition->unsetAttributes();
       $transition->select="entry_subject,entry_transaction,entry_amount";
       $transition->entry_num_prefix=beTranPrefix($this->year,$this->month);
       $tranDataArray = $transition->search()->getData();
+*/
 
+      $prefix = beTranPrefix($this->year,$this->month);
+      $select="entry_subject,entry_transaction,entry_amount";
+      $tranDataArray = $transition->listByPrefix($prefix,$select);
+/*
+	echo "<pre>";
+var_dump($tranDataArray);exit(1);
+	echo "</pre>";
+*/
       $balance=array();
       
       foreach($tranDataArray as $t){
@@ -292,7 +308,7 @@ class Post extends CActiveRecord
     public function getLastBalanceNum($subject_id, $date) {
       $year = getYear($date);
       $month = getMon($date);
-      $sql = "SELECT year, month FROM (select year,month FROM post  WHERE year <=:year AND subject_id REGEXP '^".$subject_id."') AS p WHERE month <=:month order by year desc, month desc";
+      $sql = "select year,month from post where post_date<='$year-$month-31' and subject_id regexp '^".$subject_id."' order by post_date desc";
       $data = Post::model()->findBySql($sql, array(':year'=>$year,
                                                    ':month'=>$month));
       if ($data == null){
@@ -342,6 +358,12 @@ class Post extends CActiveRecord
       };
 
       return $balance;
+    }
+
+    //设置期初余额的时候，删除原来的期初余额
+    public function balance_delete($year,$month) {
+      $delete_sql = "delete from post where year=$year and month=$month";      
+	Yii::app()->db->createCommand($delete_sql)->execute();
     }
 
     /*
