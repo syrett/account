@@ -308,7 +308,7 @@ var_dump($tranDataArray);exit(1);
     public function getLastBalanceNum($subject_id, $date) {
       $year = getYear($date);
       $month = getMon($date);
-      $sql = "SELECT year, month FROM (select year,month FROM post  WHERE year <=:year AND subject_id REGEXP '^".$subject_id."') AS p WHERE month <=:month order by year desc, month desc";
+      $sql = "select year,month from post where post_date<='$year-$month-31' and subject_id regexp '^".$subject_id."' order by post_date desc";
       $data = Post::model()->findBySql($sql, array(':year'=>$year,
                                                    ':month'=>$month));
       if ($data == null){
