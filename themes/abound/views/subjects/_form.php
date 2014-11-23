@@ -32,7 +32,12 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
 	<div class="form-group form-group-lg">
 		<?php echo $form->label($model,'sbj_number', array('class'=>'col-sm-2 control-label')); ?>
         <div class="col-sm-10">
-		<?php echo $form->textField($model,'sbj_number',array('class'=>'form-control input-size','readonly'=>"true",'maxlength'=>12,'onkeyup'=>'checkInputNum(this)',)); ?>
+		<?php
+        if($model->isNewRecord)
+            echo $form->textField($model,'sbj_number',array('class'=>'form-control input-size','maxlength'=>12));
+        else
+            echo $form->textField($model,'sbj_number',array('class'=>'form-control input-size','readOnly'=>'true','maxlength'=>12,'onkeyup'=>'checkInputNum(this)',));
+        ?>
 		<?php echo $form->error($model,'sbj_number',array('id'=>'sbj_number_msg')); ?>
 		</div>
     </div>
