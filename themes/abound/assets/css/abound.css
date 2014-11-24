@@ -615,6 +615,9 @@ table.transition>tbody>tr>td>input {
  height:24px;
  padding: 2px 6px;
 }
+table#balance td, table#profit td, table#subjects td, table#project td, table#depart td {
+	text-align:right;
+}
 #transition_date > .form-control {
     width: 100px;
     height: 25px;
