@@ -18,10 +18,10 @@ body{
 <div class="panel panel-default">
 	<div class="panel-body">
 	<div class="row">
-	  <div class="col-xs-8 col-sm-5">
+	  <div class="col-md-6 hidden-sm hidden-xs">
 		<?php echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/financial-planning.jpg'); ?>
 	  </div>
-	  <div class="col-xs-4 col-sm-6">
+	  <div class="col-xs-12 col-sm-9 col-md-5">
 			<h2>登 录</h2>
 			<div class="form">
 			<?php $form=$this->beginWidget('CActiveForm', array(
