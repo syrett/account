@@ -21,11 +21,11 @@ function echoData($data)
       {
         echo "<tr>";
         echo "<td>".$ti["company"]."</td>";
-        echo "<td>".number_format($ti["month_debit"], 2)."</td>";
-        echo "<td>".number_format($ti["month_credit"], 2)."</td>";
-        echo "<td>".number_format($ti["year_debit"], 2)."</td>";
-        echo "<td>".number_format($ti["year_credit"], 2)."</td>";
-        echo "<td>".number_format($ti["balance"], 2)."</td>";
+        echo '<td class="text-right">'.number_format($ti["month_debit"], 2)."</td>";
+        echo '<td class="text-right">'.number_format($ti["month_credit"], 2)."</td>";
+        echo '<td class="text-right">'.number_format($ti["year_debit"], 2)."</td>";
+        echo '<td class="text-right">'.number_format($ti["year_credit"], 2)."</td>";
+        echo '<td class="text-right">'.number_format($ti["balance"], 2)."</td>";
         echo "<tr>";                                                   
       }
 }
@@ -52,12 +52,12 @@ function echoData($data)
 	<table id="vendor" class="table table-bordered table-hover">
 		<thead>
 		 <tr>
-		 <th>&nbsp;</th>
-		 <th>本期借方</th>
-		 <th>本期贷方</th>
-		 <th>本年借方</th>
-		 <th>本年贷方</th>
-		 <th>余额</th>
+		 <th>供应商</th>
+		 <th class="text-right">本期借方</th>
+		 <th class="text-right">本期贷方</th>
+		 <th class="text-right">本年借方</th>
+		 <th class="text-right">本年贷方</th>
+		 <th class="text-right">余额</th>
 		 </tr>
 		</thead>
 <?php echoData($data) ?>
