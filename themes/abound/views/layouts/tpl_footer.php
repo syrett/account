@@ -1,10 +1,10 @@
 <footer>
 	<div class="container">
 		<div class="row">
-			<div class="col-md-6">
+			<div class="col-md-6 col-xs-12 col-sm-6">
 				<p class="text-info">&copy; <?php echo date('Y'); ?> <a href="http://www.sorcerer.com.cn">老法师（上海）财务咨询有限公司</a> 版权所有</p>
 			</div>
-			<div class="col-md-6">
+			<div class="col-xs-12 col-sm-5 col-md-5">
 				<p class="text-right"><a href="http://www.sorcerer.com.cn/privancy/">隐私策略</a>   |   <a href="http://www.sorcerer.com.cn/about/">关于我们</a>   |   <a href="http://www.sorcerer.com.cn/legal/">法律声明</a></p>
 			</div>
 		</div>

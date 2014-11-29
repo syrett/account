@@ -100,9 +100,9 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
 		 <th>日期</th>
 		 <th>凭证号码</th>
 		 <th>描述</th>
-		 <th>借方</th>
-		 <th>贷方</th>
-		 <th>余额</th>
+		 <th class="text-right">借方</th>
+		 <th class="text-right">贷方</th>
+		 <th class="text-right">余额</th>
 		 </tr>
 
 		 <tr>
@@ -111,7 +111,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
 		 <th>期初余额</th>
 		 <th>&nbsp;</th>
 		 <th>&nbsp;</th>
-		 <th><?php echo $dataProvider["start_balance"] ?></th>
+		 <th class="text-right"><?php echo $dataProvider["start_balance"] ?></th>
 		 </tr>
 		 <tr>
 <?php
@@ -143,9 +143,9 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
      $month_balance = balance($month_balance, $month_debit, $month_credit, $sbj_cat);
      echo "<tr>";
      echo "<td colspan=3>".$month."月总计 </td>";
-     echo "<td>".number_format($month_debit, 2)."</td>";
-     echo "<td>".number_format($month_credit, 2)."</td>";
-     echo "<td>".$month_balance."</td>";
+     echo '<td class="text-right">'.number_format($month_debit, 2)."</td>";
+     echo '<td class="text-right">'.number_format($month_credit, 2)."</td>";
+     echo '<td> class="text-right"'.$month_balance."</td>";
      echo "</tr>";
      $month_debit = $debit;
      $month_credit = $credit;
@@ -158,7 +158,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
    echo "<td>".$ti["entry_memo"]."</td>";
 
    if(isset($ti["debit"])){
-     echo "<td>".number_format($ti["debit"],2)."</td>";
+     echo '<td class="text-right">'.number_format($ti["debit"],2)."</td>";
      $debit = $ti["debit"];
    }else{
      echo "<td> </td>";
@@ -166,13 +166,13 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
    }
       
    if(isset($ti["credit"])){
-     echo "<td>".number_format($ti["credit"],2)."</td>";
+     echo '<td class="text-right">'.number_format($ti["credit"],2)."</td>";
      $credit = $ti["credit"];
    }else{
      echo "<td> </td>";
      $credit = 0;
    }
-   echo "<td>".number_format($ti["balance"],2)."</td>";
+   echo '<td class="text-right">'.number_format($ti["balance"],2)."</td>";
    echo "</div>";
    echo "</tr>";
 
@@ -182,9 +182,9 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
  if($month != 0){
      echo "<tr>";
      echo "<td colspan=3>".$month."月总计 </td>";
-     echo "<td>".number_format($month_debit, 2)."</td>";
-     echo "<td>".number_format($month_credit, 2)."</td>";
-     echo "<td>".balance($month_balance, $month_debit, $month_credit, $sbj_cat)."</td>";
+     echo '<td class="text-right">'.number_format($month_debit, 2)."</td>";
+     echo '<td class="text-right">'.number_format($month_credit, 2)."</td>";
+     echo '<td class="text-right">'.balance($month_balance, $month_debit, $month_credit, $sbj_cat)."</td>";
      echo "</tr>";
  }
 ?>
@@ -192,9 +192,9 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
 				 <th>&nbsp;</th>
 				 <th>&nbsp;</th>
 				 <th>总计</th>
- <th ><?php echo number_format($dataProvider["sum_debit"],2) ?></th>
- <th ><?php echo number_format($dataProvider["sum_credit"],2) ?></th>
- <th ><?php echo number_format($dataProvider["end_balance"],2) ?></th>
+ <th class="text-right"><?php echo number_format($dataProvider["sum_debit"],2) ?></th>
+ <th class="text-right"><?php echo number_format($dataProvider["sum_credit"],2) ?></th>
+ <th class="text-right"><?php echo number_format($dataProvider["end_balance"],2) ?></th>
 				 </tr>
 		</table>
 </div>

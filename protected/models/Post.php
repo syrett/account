@@ -47,7 +47,7 @@ class Post extends CActiveRecord
     public function getLastBalance($year, $month)
     {
       $lastPost = new Post;
-      $sql = "SELECT year,month FROM post order by post_date desc";
+      $sql = "SELECT year,month FROM post WHERE post_date < '$year-$month-1'order by post_date desc";
       $data = Post::model()->findBySql($sql,array());
       if (count($data)<1){
         $lastDate=date("Ym",strtotime("last month",mktime(0,0,0,$month,01,$year)));

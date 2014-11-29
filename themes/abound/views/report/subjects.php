@@ -88,14 +88,14 @@ $years = Transition::model()->hasTransitionYears();
 <table id="subjects" class="table table-bordered">
 	<thead>
 		<tr>
-		 <th>科目编码</th>
-		 <th>科目名称</th>
-		 <th>期初借方</th>
-		 <th>期初贷方</th>
-		 <th>本期发生借方</th>
-		 <th>本期发生贷方</th>
-		 <th>期末借方</th>
-		 <th>期末贷方</th>
+		 <th class="text-right">科目编码</th>
+		 <th class="text-right">科目名称</th>
+		 <th class="text-right">期初借方</th>
+		 <th class="text-right">期初贷方</th>
+		 <th class="text-right">本期发生借方</th>
+		 <th class="text-right">本期发生贷方</th>
+		 <th class="text-right">期末借方</th>
+		 <th class="text-right">期末贷方</th>
 		</tr>
 <?php
   foreach($dataProvider as $sbjCat=>$sbjCat_info) {
