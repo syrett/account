@@ -19,9 +19,9 @@ function echoData($data, $subjects)
 {
   $column = array();
     echo "<tr>";
-    echo "<th>&nbsp;</th>";
+    echo "<th class='text-right'>&nbsp;</th>";
   foreach($subjects as $sbj_id=>$sbj_name){
-    echo "<th>".$sbj_name."</th>";
+    echo "<th class='text-right'>".$sbj_name."</th>";
     $column[]=$sbj_id;
   }
   echo "</tr>";
