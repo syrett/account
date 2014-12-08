@@ -66,14 +66,6 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
 	</div>
     </div>
 
-	<div class="form-group form-group-lg">
-		<?php echo $form->labelEx($model,'sbj_table',array('class'=>'col-sm-2 control-label')); ?>
-        <div class="col-sm-10">
-		<?php echo $form->textField($model,'sbj_table',array('class'=>'form-control','size'=>60,'maxlength'=>200,'onkeyup'=>"if(this.value.replace(/^ +| +$/g,'')=='')alert('不能为空!')")); ?>
-		<?php echo $form->error($model,'sbj_table'); ?>
-        </div>
-	</div>
-
 
 	<div class="form-group">
 		<div class="col-sm-offset-2 col-sm-10">
