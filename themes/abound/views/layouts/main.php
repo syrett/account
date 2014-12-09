@@ -7,7 +7,6 @@
     <meta name="description" content="适合小微企业的在线财务管理系统">
     <meta name="author" content="http://www.stcsm.org">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>老法师 -- 财务管理系统</title>
     
 	<link href='http://fonts.useso.com/css?family=Carrois+Gothic' rel='stylesheet' type='text/css'>

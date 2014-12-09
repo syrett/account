@@ -61,11 +61,11 @@ function echoData($data)
 		<thead>
 		 <tr>
 		 <th>&nbsp;</th>
-		 <th>本期借方</th>
-		 <th>本期贷方</th>
-		 <th>本年借方</th>
-		 <th>本年贷方</th>
-		 <th>余额</th>
+		 <th class="text-right">本期借方</th>
+		 <th class="text-right">本期贷方</th>
+		 <th class="text-right">本年借方</th>
+		 <th class="text-right">本年贷方</th>
+		 <th class="text-right">余额</th>
 		 </tr>
 		</thead>
 		<?php echoData($data) ?>
