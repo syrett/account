@@ -728,8 +728,8 @@ class TransitionController extends Controller
         $hasDate = false;
         $year = getYear($entry_prefix);
         $month = getMon($entry_prefix);
-        $day = date('t',strtotime("$month.01.$year"));
-        $date = "$year-$month-$day 00:00:00";
+        $day = date('t',strtotime("01.$month.$year"));
+        $date = "$year-$month-$day 23:59:59";
         $date = date('Y-m-d H:i:s', strtotime($date));
         foreach($arr as $sub){
             $tran = new Transition();
