@@ -162,15 +162,24 @@ class Subjects extends CActiveRecord
   /**
    * 列出科目
    */
-  public function listSubjects($sbj_cat)
+  public function listSubjects()
   {
-    $sql = "select * from subjects where sbj_cat=:sbj_cat order by concat(`sbj_number`) asc"; //
-    $First = Subjects::model()->findAllBySql($sql, array(':sbj_cat'=>$sbj_cat));
-    $arr = array();
-    foreach ($First as $row) {
-      $arr += array($row['sbj_number'] => $row['sbj_number'] . $row['sbj_name']);
-    };
-    return $arr;
+      $sql = "select * from subjects order by concat(`sbj_number`) asc"; //
+      $First = Subjects::model()->findAllBySql($sql);
+      $arr = array();
+      foreach ($First as $row) {
+          $arr += array($row['sbj_number'] => $row['sbj_number'] . Transition::getSbjPath($row['sbj_number']));
+      };
+      return $arr;
+      //旧的，不知道有没有地方用到过
+      //函数参数 $sbj_cat
+//    $sql = "select * from subjects where sbj_cat=:sbj_cat order by concat(`sbj_number`) asc"; //
+//    $First = Subjects::model()->findAllBySql($sql, array(':sbj_cat'=>$sbj_cat));
+//    $arr = array();
+//    foreach ($First as $row) {
+//      $arr += array($row['sbj_number'] => $row['sbj_number'] . $row['sbj_name']);
+//    };
+//    return $arr;
   }
 
   public static function hasSub($sbj_id)
@@ -342,4 +351,31 @@ class Subjects extends CActiveRecord
       Yii::app()->db->createCommand($update_sql)->execute();
     }    
   }
+
+    public function init_new_sbj_number($sbj_nubmer, $type){    //1为同级科目，2为子科目
+        if(strlen($sbj_nubmer)==4&&$type==1){   //一级科目不能创建同级科目
+            return 0;
+        }else{
+            //select max(sbj_number) from subjects where sbj_number like '1123%'
+            if($type==1){
+                $length = strlen($sbj_nubmer);
+                $sbj_nubmer = substr($sbj_nubmer,0,-2);
+            }else
+                $length = strlen($sbj_nubmer)+2;
+
+
+            $sql = "select max(sbj_number) as sbj_number from subjects where `sbj_number` like :sbj_number and length(`sbj_number`)=:length";
+
+            $number= Yii::app()->db
+                ->createCommand($sql)
+                ->bindValues(array(':sbj_number'=>$sbj_nubmer.'%',':length'=>$length))
+                ->queryRow();
+
+            if($number['sbj_number']!=null)
+                return (int)$number['sbj_number'] + 1;
+            else
+                return $sbj_nubmer. '01';
+        }
+    }
+
 }

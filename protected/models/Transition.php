@@ -230,11 +230,11 @@ class Transition extends CActiveRecord
     public function getSbjPath($id)
     {
         $path = "";
-        $path .= $this->getSbjName(substr($id,0,4));
+        $path .= Transition::getSbjName(substr($id,0,4));
         $length = strlen($id);
         $i = 6;
         while($i <= $length){
-            $path .= '/'.$this->getSbjName(substr($id,0,$i));
+            $path .= '/'.Transition::getSbjName(substr($id,0,$i));
             $i = $i + 2;
         }
         return $path;

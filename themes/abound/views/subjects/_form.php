@@ -7,7 +7,7 @@ require_once(dirname(__FILE__).'/../viewfunctions.php');
 Yii::app()->clientScript->registerCoreScript('jquery');
 Yii::import('ext.select2.Select2');
 $cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/checkinput.js', CClientScript::POS_HEAD);
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/subjects.js', CClientScript::POS_HEAD);
 CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
 ?>
 
@@ -28,19 +28,62 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
 )); ?>
 
 	<div class="alert alert-info">注意：所有字段必须填写</div>
+    <?php
+    if($model->getIsNewRecord()) {
+    ?>
+        <div class="form-group form-group-lg">
+            <label class="col-sm-2 control-label">科目级别</label>
 
+            <div class="col-sm-10">
+                <?php
+                $model->getIsNewRecord();
+                $data = array(1 => '同级科目', 2 => '子科目');
+                if(isset($_REQUEST['sbj_type']))
+                    $value = $_REQUEST['sbj_type'];
+                else
+                    $value = 2;
+                $this->widget('Select2', array(
+                    'name' => 'sbj_type',
+                    'value' => $value,
+                    'data' => $data,
+                ));
+
+                ?>
+                一级科目无法添加同级科目
+            </div>
+        </div>
 	<div class="form-group form-group-lg">
-		<?php echo $form->label($model,'sbj_number', array('class'=>'col-sm-2 control-label')); ?>
+		<?php echo $form->label($model,'sbj_name', array('class'=>'col-sm-2 control-label')); ?>
         <div class="col-sm-10">
-		<?php
-        if($model->isNewRecord)
-            echo $form->textField($model,'sbj_number',array('class'=>'form-control input-size','maxlength'=>12));
-        else
-            echo $form->textField($model,'sbj_number',array('class'=>'form-control input-size','readOnly'=>'true','maxlength'=>12,'onkeyup'=>'checkInputNum(this)',));
-        ?>
-		<?php echo $form->error($model,'sbj_number',array('id'=>'sbj_number_msg')); ?>
+            <?php
+            $data = Subjects::model()->listSubjects();
+
+            $this->widget('Select2', array(
+                'model' => $model,
+                'attribute' => 'sbj_number',
+                'value' => 1,
+                'data' => $data,
+                'htmlOptions' => array('class'=>'v-subject'),
+            ));
+            ?>
 		</div>
     </div>
+
+    <?php
+    }
+    else{
+        ?>
+        <div class="form-group form-group-lg">
+            <?php echo $form->label($model,'sbj_number', array('class'=>'col-sm-2 control-label')); ?>
+            <div class="col-sm-10">
+                <?php
+                echo $form->textField($model,'sbj_number',array('class'=>'form-control input-size','readOnly'=>'true'));
+                ?>
+            </div>
+        </div>
+    <?php
+    }
+    ?>
 
 	<div class="form-group form-group-lg">
 		<?php echo $form->labelEx($model,'sbj_name',array('class'=>'col-sm-2 control-label')); ?>
