@@ -92,16 +92,16 @@ return array(
             'routes'=>array(
                 array(
                     'class' => 'CProfileLogRoute',
-                    'class'=>'ext.yii-debug-toolbar.YiiDebugToolbarRoute',
-                    'ipFilters'=>array('127.0.0.1','192.168.1.215','192.168.72.28'),
+//                    'class'=>'ext.yii-debug-toolbar.YiiDebugToolbarRoute',
+//                    'ipFilters'=>array('127.0.0.1','192.168.1.215','192.168.72.28'),
                     'levels' => 'profile',
                     'enabled' => true,
                 ),
                 // uncomment the following to show log messages on web pages
 
-                array(
-                    'class'=>'CWebLogRoute',
-                ),
+//                array(
+//                    'class'=>'CWebLogRoute',
+//                ),
 
             ),
         ),
