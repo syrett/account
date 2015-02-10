@@ -2,7 +2,7 @@
 
 
 $domain=str_replace('.'.$_SERVER['SERVER_NAME'],'',$_SERVER['HTTP_HOST']);
-if(preg_match('/[^\.]*/',$_SERVER['HTTP_HOST'],$match))
+if(preg_match('/\..*/',$_SERVER['HTTP_HOST'],$match))
     $domain = $match[0];
 $domain = substr($domain,1);
 defined('LoginURL') or define('LoginURL','http://manage.'.$domain.'/frontend/web/index.php?r=users/guest/login');
