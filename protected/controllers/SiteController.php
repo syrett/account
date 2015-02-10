@@ -111,26 +111,28 @@ class SiteController extends Controller
 	 */
 	public function actionLogin()
 	{
-		$model=new LoginForm;
+			$this->redirect(LoginURL);
 
 		// if it is ajax validation request
-		if(isset($_POST['ajax']) && $_POST['ajax']==='login-form')
-		{
-			echo CActiveForm::validate($model);
-			Yii::app()->end();
-		}
-
-		// collect user input data
-		if(isset($_POST['LoginForm']))
-		{
-            $_POST['LoginForm']['password'] = md5($_POST['LoginForm']['password']);
-			$model->attributes=$_POST['LoginForm'];
-			// validate user input and redirect to the previous page if valid
-			if($model->validate() && $model->login())
-				$this->redirect(Yii::app()->user->returnUrl);
-		}
-		// display the login form
-		$this->render('login',array('model'=>$model));
+		//单点登陆，注释掉这部分登陆页面
+//		$model=new LoginForm;
+//		if(isset($_POST['ajax']) && $_POST['ajax']==='login-form')
+//		{
+//			echo CActiveForm::validate($model);
+//			Yii::app()->end();
+//		}
+//
+//		// collect user input data
+//		if(isset($_POST['LoginForm']))
+//		{
+//            $_POST['LoginForm']['password'] = md5($_POST['LoginForm']['password']);
+//			$model->attributes=$_POST['LoginForm'];
+//			// validate user input and redirect to the previous page if valid
+//			if($model->validate() && $model->login())
+//				$this->redirect(Yii::app()->user->returnUrl);
+//		}
+//		// display the login form
+//		$this->render('login',array('model'=>$model));
 	}
 
 	/**

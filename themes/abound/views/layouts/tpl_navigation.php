@@ -29,7 +29,9 @@ if (!(Yii::app()->user->isGuest)) {
                             array('label' => '备份', 'url'=>'#'),
                             array('label' => '恢复', 'url'=>'#'),
                         )), */
-                        array('label'=>'设置 <span class="caret"></span>', 'url'=>'#','itemOptions'=>array('class'=>'dropdown','tabindex'=>"-3"),'linkOptions'=>array('class'=>'dropdown-toggle','data-toggle'=>"dropdown"), 
+
+                        array('label'=>'设置', 'url'=>UserURL, 'linkOptions'=>array('target'=>'_blank')),
+                        array('label'=>'基本信息 <span class="caret"></span>', 'url'=>'#','itemOptions'=>array('class'=>'dropdown','tabindex'=>"-3"),'linkOptions'=>array('class'=>'dropdown-toggle','data-toggle'=>"dropdown"),
                         'items'=>array(
                              //array('label' => '公司信息', 'url'=>'#'),
                              array('label'=>'公司设置', 'url'=>array('/options/index')),
@@ -87,15 +89,16 @@ if (!(Yii::app()->user->isGuest)) {
 
                         )), */
                         array('label'=>'登录', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
-                        array('label'=>'<i class="icon-user icon-white"></i> '.Yii::app()->user->name.' <span class="caret"></span>', 'url'=>'#', 'visible'=>!Yii::app()->user->isGuest,'itemOptions'=>array('class'=>'dropdown','tabindex'=>"-8"),'linkOptions'=>array('class'=>'dropdown-toggle','data-toggle'=>"dropdown"), 
-                        'items'=>array(
-                            //array('label'=>'系统信息 <span class="badge badge-warning pull-right">26</span>', 'url'=>'#'),
-							//array('label'=>'任务 <span class="badge badge-important pull-right">112</span>', 'url'=>'#'),
-							//array('label'=>'My Invoices <span class="badge badge-info pull-right">12</span>', 'url'=>'#'),
-							//array('label'=>'更新个人资料', 'url'=>array('/user/update&id='.Yii::app()->user->id)),
-							array('label'=>'<div class="divider"></div>'),
-	                        array('label'=>'退出 ('.Yii::app()->user->name.')', 'url'=>array('/site/logout')),
-                        )),
+                        array('label'=>'退出', 'url'=>LogoutURL),
+//                        array('label'=>'<i class="icon-user icon-white"></i> '.Yii::app()->user->name.' <span class="caret"></span>', 'url'=>'#', 'visible'=>!Yii::app()->user->isGuest,'itemOptions'=>array('class'=>'dropdown','tabindex'=>"-8"),'linkOptions'=>array('class'=>'dropdown-toggle','data-toggle'=>"dropdown"),
+//                        'items'=>array(
+//                            //array('label'=>'系统信息 <span class="badge badge-warning pull-right">26</span>', 'url'=>'#'),
+//							//array('label'=>'任务 <span class="badge badge-important pull-right">112</span>', 'url'=>'#'),
+//							//array('label'=>'My Invoices <span class="badge badge-info pull-right">12</span>', 'url'=>'#'),
+//							//array('label'=>'更新个人资料', 'url'=>array('/user/update&id='.Yii::app()->user->id)),
+//							array('label'=>'<div class="divider"></div>'),
+//	                        array('label'=>'退出 ('.Yii::app()->user->name.')', 'url'=>array('/site/logout')),
+//                        )),
                     ),
                 )); ?>
     	</div>

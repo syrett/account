@@ -40,6 +40,16 @@ return array(
             // enable cookie-based authentication
             'class'=>'WebUser',
             'allowAutoLogin'=>true,
+            'identityCookie'=>array('domain' => '.abc.com','path' => '/'),//配置用户cookie作用域
+        ),
+        'session' => array(
+            'savePath' => 'd:/temp',
+//            'cookieMode' => 'allow',
+            'cookieParams' => array(
+                'path' => '/',
+                'domain' => '.abc.com',
+                'httpOnly' => true,
+            ),
         ),
         // uncomment the following to enable URLs in path-format
         /*
@@ -55,7 +65,16 @@ return array(
         // uncomment the following to use a MySQL database
 
         'db'=>array(
-            'connectionString' => 'mysql:host=127.0.0.1;dbname=account',
+            'connectionString' => 'mysql:host=127.0.0.1;dbname=account_abc',
+            'emulatePrepare' => true,
+            'username' => 'dev',
+            'password' => 'P@ssw0rd',
+            'charset' => 'utf8',
+            'enableProfiling' => true,
+            'enableParamLogging' => true,
+        ),
+        'dbadmin'=>array(
+            'connectionString' => 'mysql:host=127.0.0.1;dbname=admin',
             'emulatePrepare' => true,
             'username' => 'dev',
             'password' => 'P@ssw0rd',
@@ -73,17 +92,17 @@ return array(
             'routes'=>array(
                 array(
                     'class' => 'CProfileLogRoute',
-//                    'class'=>'ext.yii-debug-toolbar.YiiDebugToolbarRoute',
-//                    'ipFilters'=>array('127.0.0.1','192.168.1.215','192.168.72.28'),
+                    'class'=>'ext.yii-debug-toolbar.YiiDebugToolbarRoute',
+                    'ipFilters'=>array('127.0.0.1','192.168.1.215','192.168.72.28'),
                     'levels' => 'profile',
                     'enabled' => true,
                 ),
                 // uncomment the following to show log messages on web pages
-                /*
+
                 array(
                     'class'=>'CWebLogRoute',
                 ),
-                */
+
             ),
         ),
         // custom CGridView widget style

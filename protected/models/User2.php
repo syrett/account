@@ -11,6 +11,10 @@
  */
 class User2 extends CActiveRecord
 {
+	public function getDbConnection() {
+
+		return Yii::app()->dbadmin;
+	}
 	/**
 	 * @return string the associated database table name
 	 */

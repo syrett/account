@@ -8,6 +8,10 @@
 
 class WebUser extends CWebUser
 {
+    public function init(){
+        parent::init();
+        $this->setStateKeyPrefix('');
+    }
     /**
      * Overrides a Yii method that is used for roles in controllers (accessRules).
      *
