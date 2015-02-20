@@ -14,14 +14,14 @@
  * @property integer $sys_role
  * @property string $roles
  */
-class User extends CActiveRecord
+class User extends UserActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'user';
+		return 'yii2_start_users';
 	}
 
 	/**

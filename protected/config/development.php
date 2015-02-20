@@ -74,7 +74,8 @@ return array(
             'enableParamLogging' => true,
         ),
         'dbadmin'=>array(
-            'connectionString' => 'mysql:host=127.0.0.1;dbname=admin',
+            'class'            => 'CDbConnection',
+            'connectionString' => 'mysql:host=127.0.0.1;dbname=manage',
             'emulatePrepare' => true,
             'username' => 'dev',
             'password' => 'P@ssw0rd',
