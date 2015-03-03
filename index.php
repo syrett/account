@@ -19,7 +19,6 @@ if (false !== strpos('abc.com', $domain)) {
     if(preg_match('/[^\.]*/',$_SERVER['HTTP_HOST'],$match))
         $dbname = $match[0];
     define('SYSDB',$dbprefix.$dbname);
-    define('YII_DEBUG',true);
     $yii=dirname(__FILE__).'/vendor/yii/framework/yii.php';
     $config=dirname(__FILE__).'/protected/config/production.php';
 }
