@@ -1,0 +1,64 @@
+.ui-datepicker{
+    z-index: 10 !important;
+}
+.action{
+    text-align: center;
+    font-size: 18px;
+}
+.action > li{
+    cursor: pointer;
+}
+.itemsetting {
+    width: 80%;
+    height: 90%;
+}
+.options {
+    float: left;
+}
+.options-div{
+    float: left;
+}
+.options > button {
+    margin: 6px 0;
+    height: 30px;
+    padding: 0 10px;
+    text-align: left;
+}
+.flow-arrow{
+    margin: 0 5px;
+    font-size: 40px;
+    color: grey;
+}
+/*去除jquery ui dialog 的头部标题*/
+/*.ui-dialog-titlebar { display:none; }*/
+
+.table-tr{
+    background-color: #d2d2d2;
+}
+
+.list-hover tr:hover{
+    background-color: #a0a0a0;
+}
+
+.path-success{
+    color: #00713D;
+}
+.path-fail{
+    color: #f39c12;
+}
+.table>tbody>tr>td, .table>tbody>tr>th {
+    padding: 4px;
+    vertical-align: inherit;
+}
+.half{
+    width: 83px;
+}
+.tip{
+    color: #a0a0a0;
+}
+.new-item{
+    margin: 5px 0;
+}
+.btn-history{
+    float: right;
+}
