@@ -8,7 +8,9 @@ $form=$this->beginWidget('CActiveForm', array(
 	// See class documentation of CActiveForm for details on this.
 	'enableAjaxValidation'=>false,
 	'htmlOptions'=>array('class'=>'form-horizontal',),
-)); ?>
+));
+$dapartType = array(1=>'生产部门',2=>'管理部门',3=>'销售部门',4=>'研发部门');
+?>
 	<div class="well well-sm">
 	<?php
 	echo CHtml::link('<span class="glyphicon glyphicon-search"></span> 部门列表',array('admin'),array('class' => 'btn btn-default'));
@@ -26,7 +28,13 @@ $form=$this->beginWidget('CActiveForm', array(
 			</div>
 			<?php echo $form->error($model,'name'); ?>
 		</div>
-
+		<div class="form-group">
+			<?php echo $form->labelEx($model,'type',array('class'=>'col-sm-2 control-label')); ?>
+			<div class="col-sm-10">
+				<?php echo $form->dropDownList($model,'type', $dapartType,array('class'=>'form-control')); ?>
+			</div>
+			<?php echo $form->error($model,'type'); ?>
+		</div>
 		<div class="form-group">	
 			<?php echo $form->labelEx($model,'memo',array('class'=>'col-sm-2 control-label')); ?>
 			<div class="col-sm-10">

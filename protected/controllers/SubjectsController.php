@@ -66,10 +66,12 @@ class SubjectsController extends Controller
 
 		if(isset($_POST['Subjects']))
 		{
-            $sbj_number = $_POST['Subjects']['sbj_number'];
+            $old_sbj_number = $_POST['Subjects']['sbj_number'];
             $sbj_type = $_POST['sbj_type'];
-            $sbj_number = Subjects::model()->init_new_sbj_number($sbj_number,$sbj_type);
-            $_POST['Subjects']['sbj_number'] = $sbj_number;
+            $sbj_number = Subjects::model()->init_new_sbj_number($old_sbj_number,$sbj_type);
+			$_POST['Subjects']['sbj_number'] = $sbj_number;
+			$sbj_cat = Subjects::model()->getCat($old_sbj_number);
+			$_POST['Subjects']['sbj_cat'] = $sbj_cat;
             $model->attributes=$_POST['Subjects'];
 			if($model->save())
             {

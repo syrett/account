@@ -1,7 +1,7 @@
 <?php
 
 // uncomment the following to define a path alias
-// Yii::setPathOfAlias('local','path/to/local-folder');
+ Yii::setPathOfAlias('vova07','vendor/vova07');
 
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
@@ -51,6 +51,9 @@ return array(
                 'httpOnly' => true,
             ),
         ),
+        'excel'=>array(
+            'class'=>'application.extensions.phpexcel.PHPExcel',
+        ),
         // uncomment the following to enable URLs in path-format
         /*
         'urlManager'=>array(
@@ -66,6 +69,16 @@ return array(
 
         'db'=>array(
             'connectionString' => 'mysql:host=127.0.0.1;dbname=account_abc',
+            'emulatePrepare' => true,
+            'username' => 'dev',
+            'password' => 'P@ssw0rd',
+            'charset' => 'utf8',
+            'enableProfiling' => true,
+            'enableParamLogging' => true,
+        ),
+        'db2'=>array(
+            'class'            => 'CDbConnection',
+            'connectionString' => 'mysql:host=127.0.0.1;dbname=laofashi',
             'emulatePrepare' => true,
             'username' => 'dev',
             'password' => 'P@ssw0rd',
@@ -162,7 +175,7 @@ return array(
         'businessAccounting' =>'某某某某有限公司',
         'adminEmail'=>'webmaster@example.com',
         'sbj_cat'=>array(1 =>  '资产类 ' ,2 =>  '负债类 ' ,3 =>  '权益类 ' ,4 =>  '收入类 ' ,5 =>  '费用类'),
-        'startDate'=>'201401',
+        'startDate'=>'201501',
         'profitReport_sum' => array(
                                     array("id"=>"trading_profit", "name"=>"二、营业利润", "to"=>"profit_sum", "function"=>"sum"),
                                     array("id"=>"profit_sum", "name"=>"三‘利润总额", "to"=>"net_profit", "function"=>"sum"),

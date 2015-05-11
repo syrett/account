@@ -32,7 +32,7 @@
             <?php
             $i == 0;
             foreach($model as $item){
-                echo "<tr class='rowNormal'><td>$item[entry_memo]</td><td>".Transition::model()->getSbjPath($item[entry_subject])."</td><td style='text-align: right;'></td><td style='text-align: right;'></td></tr>";
+                echo "<tr class='rowNormal'><td>$item[entry_memo]</td><td>".Subjects::model()->getSbjPath($item[entry_subject])."</td><td style='text-align: right;'></td><td style='text-align: right;'></td></tr>";
                 if($i==4)
                     $str = "<tr class='row'><td></td><td></td><td style='text-align: right;'>";
                 else

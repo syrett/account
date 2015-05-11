@@ -223,14 +223,16 @@ var rmRow = function (ob) {
 //更新借贷方合计
 var sumMoney = function (ob) {
     var result = 0
-    $("select[id$='_entry_transaction']").each(function(){
+    $("select[id$='_entry_transaction']").each(function(key, value){
         var mon = $(this).parent().next().children().val()
         if(mon =="")
             return
+        result = parseFloat(result);
         if($(this).val()==1 && mon != '')
             result = result + parseFloat(mon)
         else
             result = result - parseFloat(mon)
+        result = result.toFixed(2);
     })
     return result
 }

@@ -92,7 +92,9 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
 		<?php echo $form->error($model,'sbj_name',array('id'=>'sbj_name_msg')); ?>
             </div>
 	</div>
-
+    <?
+    if(!$model->getIsNewRecord()) {
+    ?>
 	<div class="form-group form-group-lg">
 		<?php echo $form->labelEx($model,'sbj_cat',array('class'=>'col-sm-2 control-label')); ?>
         <div class="col-sm-10">
@@ -108,7 +110,7 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
 		<?php echo $form->error($model,'sbj_cat',array('id'=>'sbj_cat_msg')); ?>
 	</div>
     </div>
-
+    <? } ?>
 
 	<div class="form-group">
 		<div class="col-sm-offset-2 col-sm-10">

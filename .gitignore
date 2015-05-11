@@ -3,3 +3,5 @@ protected/runtime/*
 protected/config/
 themes/classic/views/
 /framework/*
+test/*
+cache/*

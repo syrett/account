@@ -27,7 +27,7 @@ class Department extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('id', 'numerical', 'integerOnly'=>true),
-			array('name', 'required'),
+			array('name, type', 'required'),
 			array('name', 'length', 'max'=>100),
 			array('memo', 'length', 'max'=>200),
 			// The following rule is used by search().
@@ -56,6 +56,7 @@ class Department extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'name' => '部门',
+			'type' => '部门属性',
 			'memo' => '部门描述',
 		);
 	}
@@ -80,6 +81,7 @@ class Department extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
+		$criteria->compare('type',$this->type,true);
 		$criteria->compare('memo',$this->memo,true);
 
 		return new CActiveDataProvider($this, array(

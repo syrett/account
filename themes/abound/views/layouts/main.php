@@ -8,7 +8,7 @@
     <meta name="author" content="http://www.stcsm.org">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>老法师 -- 财务管理系统</title>
-    
+
 	<link href='http://fonts.useso.com/css?family=Carrois+Gothic' rel='stylesheet' type='text/css'>
 
 	<!--[if lt IE 9]><script src="../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->

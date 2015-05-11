@@ -51,14 +51,14 @@ class Transition extends CActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('entry_num, entry_transaction, entry_subject, entry_amount,entry_creater, entry_editor, entry_reviewer', 'required'),
+            array('entry_num, entry_transaction, entry_subject, entry_amount,entry_creater, entry_editor', 'required'),
             array('entry_num, entry_transaction, entry_subject,entry_creater, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing', 'numerical', 'integerOnly' => true),
             array('entry_amount', 'type', 'type' => 'float'),
             array('entry_num_prefix', 'length', 'max' => 10),
             array('entry_memo, entry_appendix', 'length', 'max' => 100),
-            array('entry_appendix_id, entry_appendix_type, entry_date, entry_time', 'safe'),
+            array('entry_appendix_id, entry_appendix_type, entry_name, data_type, data_id, entry_date, entry_time', 'safe'),
             // The following rule is used by search().
-            // @todo Please remove those attributes that should not be searched.
+
             array('id, entry_number, entry_num_prefix, entry_num, entry_date, entry_time, entry_memo, entry_transaction,
             entry_subject, entry_amount, entry_appendix, entry_appendix_id, entry_appendix_type,entry_creater, entry_editor, entry_reviewer,
             entry_deleted, entry_reviewed, entry_posting, entry_closing, entry_settlement', 'safe', 'on' => 'search'),
@@ -88,6 +88,9 @@ class Transition extends CActiveRecord
             'entry_num' => '凭证号',
             'entry_time' => '日',
             'entry_date' => '凭证日期',
+            'entry_name' => '交易对象名称',
+            'data_type' => '交易类型',
+            'data_id' => '原数据ID',
             'entry_memo' => '凭证摘要',
             'entry_transaction' => '借贷',
             'entry_subject' => '借贷科目',
@@ -216,28 +219,11 @@ class Transition extends CActiveRecord
     }
 
     /*
-     * 科目表名称
-     */
-    public function getSbjName($id)
-    {
-        $model = Subjects::model()->findByAttributes(array('sbj_number' => $id));
-        return $model->sbj_name;
-    }
-
-    /*
      * 科目表路径
      */
-    public function getSbjPath($id)
+    public static function getSbjPath($id)
     {
-        $path = "";
-        $path .= Transition::getSbjName(substr($id,0,4));
-        $length = strlen($id);
-        $i = 6;
-        while($i <= $length){
-            $path .= '/'.Transition::getSbjName(substr($id,0,$i));
-            $i = $i + 2;
-        }
-        return $path;
+        return Subjects::getSbjPath($id);
     }
     /*
      * 年月日
@@ -447,7 +433,7 @@ class Transition extends CActiveRecord
         $First = Subjects::model()->findAllBySql($sql);
         $arr = array();
         foreach ($First as $row) {
-            $arr += array($row['sbj_number'] => $row['sbj_number'] . Transition::getSbjPath($row['sbj_number']));
+            $arr += array($row['sbj_number'] => $row['sbj_number'] . Subjects::getSbjPath($row['sbj_number']));
         };
         return $arr;
     }
@@ -537,4 +523,38 @@ class Transition extends CActiveRecord
         return $array;
     }
 
+    public static function getTransitionDate(){
+        $sql = 'select date from `transitiondate` ';
+        $date = Yii::app()->db->createCommand($sql)->queryRow();
+        if(!empty($date['date']))
+            return $date['date'];
+        else
+        {
+            $date = Yii::app()->params['startDate'];
+            $date = new DateTime($date.'01');
+            $date->modify('last month');
+            return $date->format('Ymd');
+        }
+    }
+    public static function createCheckDate($date){
+        $tdate = self::transitionDate();
+        if($tdate!=null)
+        {
+            $tdate = new DateTime($tdate.'01');
+            $tdate->modify('+1 month');
+        }
+        else
+            $tdate = new DateTime(Yii::app()->params['startDate']. '01');
+        $date = new DateTime($date);
+        if($date>=$tdate)
+            return true;
+        else
+            return false;
+    }
+    public static function transitionDate(){
+        $sql = 'select date from `transitiondate` ';
+        $date = Yii::app()->db->createCommand($sql)->queryRow();
+        return $date['date'];
+
+    }
 }

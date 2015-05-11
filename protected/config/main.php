@@ -62,6 +62,13 @@ return array(
 			'password' => 'P@ssw0rd',
 			'charset' => 'utf8',
 		),
+		'db2'=>array(
+			'connectionString' => 'mysql:host=127.0.0.1;dbname=laofashi',
+			'emulatePrepare' => true,
+			'username' => 'dev',
+			'password' => 'P@ssw0rd',
+			'charset' => 'utf8',
+		),
 
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors

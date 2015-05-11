@@ -570,7 +570,7 @@ footer .container{
     background-color: #f2dede;
     text-decoration: line-through;
 }
-.row-reviewed {
+.row-reviewed, .row-saved {
     background-color: rgb(204, 255, 204);
 }
 
@@ -666,4 +666,19 @@ text-indent:-9999em;
 }
 .sum{
     color: red;
+}
+.right{
+  float: right;
+}
+.head-button{
+  margin-bottom: 0;
+}
+.import-tab{
+  margin-top: 9px;
+}
+.input_mid{
+  width: 100px;
+}
+.info_warning{
+  color: #DD514C;
 }
