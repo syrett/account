@@ -42,6 +42,9 @@ return array(
             'allowAutoLogin'=>true,
             'identityCookie'=>array('domain' => '.sorcerer.com.cn','path' => '/'),//配置用户cookie作用域
         ),
+        'cache'=>array(
+            'class'=>'system.caching.CDbCache'
+        ),
         'session' => array(
             'savePath' => '/www/peteraccount/sessions',
 //            'savePath' => 'd:/temp',
@@ -51,6 +54,9 @@ return array(
                 'domain' => '.abc.com',
                 'httpOnly' => true,
             ),
+        ),
+        'excel' => array(
+            'class' => 'application.extensions.phpexcel.PHPExcel',
         ),
         // uncomment the following to enable URLs in path-format
         /*
@@ -73,6 +79,16 @@ return array(
             'charset' => 'utf8',
             'enableProfiling' => YII_DEBUG,
             'enableParamLogging' => YII_DEBUG,
+        ),
+        'db2' => array(
+            'class' => 'CDbConnection',
+            'connectionString' => 'mysql:host=127.0.0.1;dbname=laofashi',
+            'emulatePrepare' => true,
+            'username' => 'dev',
+            'password' => 'P@ssw0rd',
+            'charset' => 'utf8',
+            'enableProfiling' => true,
+            'enableParamLogging' => true,
         ),
         'dbadmin'=>array(
             'class'            => 'CDbConnection',
@@ -163,7 +179,7 @@ return array(
         'businessAccounting' =>'某某某某有限公司',
         'adminEmail'=>'webmaster@example.com',
         'sbj_cat'=>array(1 =>  '资产类 ' ,2 =>  '负债类 ' ,3 =>  '权益类 ' ,4 =>  '收入类 ' ,5 =>  '费用类'),
-        'startDate'=>'201401',
+        'startDate'=>'201501',
         'profitReport_sum' => array(
                                     array("id"=>"trading_profit", "name"=>"二、营业利润", "to"=>"profit_sum", "function"=>"sum"),
                                     array("id"=>"profit_sum", "name"=>"三‘利润总额", "to"=>"net_profit", "function"=>"sum"),
