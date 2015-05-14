@@ -52,6 +52,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/import_datepick
             ?>
             <table class="table table-bordered dataTable">
                 <tr>
+                    <th></th>
                     <th style="width: 155px"><?= $form->labelEx($model, 'target') ?></th>
                     <th><?= $form->labelEx($model, 'date') ?></th>
                     <th><?= $form->labelEx($model, 'memo') ?></th>
@@ -69,6 +70,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/import_datepick
                     $key = 1;
                     ?>
                     <tr line="<?= $key ?>" <?= $key % 2 == 1 ? 'class="table-tr"' : '' ?>>
+                        <td><input type="checkbox" /> </td>
                         <td><input type="text" id="tran_name_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entry_name]" placeholder="对方名称"
                                    value="<?= isset($item['target']) ? $item['target'] : $data['entry_name'] ?>"></td>

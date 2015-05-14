@@ -597,7 +597,7 @@ class Bank extends \vova07\bank\models\Bank
                                 $result = self::getInvoice();
                         }*/
                         return self::endOption($options[3]);
-                        $result = self::afterEmployee($data[3]);
+                        $result = self::afterEmployee($data[1]);
                     $result['type'] = 'droplist';
 
                     break;
