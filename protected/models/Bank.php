@@ -25,7 +25,7 @@ class Bank extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'lfs_bank';
+		return 'bank';
 	}
 
 	/**
@@ -117,14 +117,6 @@ class Bank extends CActiveRecord
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
-	}
-
-	/**
-	 * @return CDbConnection the database connection used for this class
-	 */
-	public function getDbConnection()
-	{
-		return Yii::app()->db2;
 	}
 
 	/**

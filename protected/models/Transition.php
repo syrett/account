@@ -716,7 +716,7 @@ class Transition extends CActiveRecord
         if($id=="" || $id=="0")
             return false;
         $tran = Transition::model()->findByAttributes(['data_id'=>$id]);
-        if($tran->entry_reviewed==1)
+        if(!empty($tran) && $tran->entry_reviewed==1)
             return true;
         else
             return false;
