@@ -408,7 +408,7 @@ class Bank extends \vova07\bank\models\Bank
             $result = ['银行借款', '其他借款'];
             $target = false;
         } elseif ($type == 3) {//还款
-            $arr = [1122, 1221, 2203, 1123, 2001, 2501];
+            $arr = [1122, 1221, 2203, 1123, 2501];
             $new = 'no';
             $result = $subject->getitem($arr, $key);
             $target = true;
@@ -545,7 +545,7 @@ class Bank extends \vova07\bank\models\Bank
 //                        } else
 //                            $result = self::afterSupplier($data[3]);
 
-                    $result = self::afterSupplier($data[3]);
+                    $result = self::afterSupplier($data[1]);
                     $result['type'] = 'droplist';
 //                        $result = self::getSupplier($data[1]);
                     break;

@@ -423,6 +423,62 @@ class Transition extends CActiveRecord
         else
             return false;
     }
+    //结账
+    public function settlement($entry_prefix){
+        $this->reorganise($entry_prefix); //结账前先整理
+        $entry_num = $this->tranSuffix($entry_prefix);
+        $entry_memo = '结转凭证';
+        $entry_creater = Yii::app()->user->id;
+        $entry_editor = Yii::app()->user->id;
+        $entry_reviewer = 0;
+        $entry_settlement = 1;
+        $arr = Subjects::model()->actionListFirst();
+        $sum = 0;
+        $hasDate = false;
+        $year = getYear($entry_prefix);
+        $month = getMon($entry_prefix);
+        $day = date('t', strtotime("01.$month.$year"));
+        $date = "$year-$month-$day 23:59:59";
+        $date = date('Y-m-d H:i:s', strtotime($date));
+        foreach ($arr as $sub) {
+            $tran = new Transition();
+            $tran->entry_num_prefix = $entry_prefix;
+            $tran->entry_num = $entry_num;
+            $tran->entry_date = $date;
+            $tran->entry_settlement = $entry_settlement;
+            $tran->entry_memo = $entry_memo;
+            $tran->entry_transaction = $sub['sbj_cat'] == '4' ? 1 : 2;    //4：收入类 借 5费用类 贷
+            $tran->entry_creater = $entry_creater;
+            $tran->entry_editor = $entry_editor;
+            $tran->entry_reviewer = $entry_reviewer;
+            $tran->entry_subject = $sub['id'];
+            $amount = $this->getEntry_amount($entry_prefix, $sub['id']);
+            $tran->entry_amount = $this->getEntry_amount($entry_prefix, $sub['id']);
+            $sum = $sub['sbj_cat'] == '4' ? $sum + $amount : $sum - $amount;     //该科目合计多少
+//          $trans[] = $tran;
+            if ($amount > 0) {
+                $tran->save();
+                $hasDate = true;
+            }
+        }
+        if ($hasDate > 0) {
+            $tran = new Transition();
+            $tran->entry_num_prefix = $entry_prefix;
+            $tran->entry_num = $entry_num;
+            $tran->entry_memo = $entry_memo;
+            $tran->entry_date = $date;
+            $tran->entry_transaction = 2;    //本年利润 为贷
+            $tran->entry_creater = $entry_creater;
+            $tran->entry_editor = $entry_editor;
+            $tran->entry_settlement = $entry_settlement;
+            $tran->entry_reviewer = $entry_reviewer;
+            $tran->entry_subject = '4103';              //本年利润
+            $tran->entry_amount = $sum;
+            $tran->save();
+        }
+        if ($sum == 0)
+            $tran->setClosing(1);
+    }
 
     /**
      * 列出科目
@@ -555,6 +611,114 @@ class Transition extends CActiveRecord
         $sql = 'select date from `transitiondate` ';
         $date = Yii::app()->db->createCommand($sql)->queryRow();
         return $date['date'];
+    }
+    /*
+     * 删除凭证数据库记录时，如果是导入数据生成的凭证，删除对应的原始数据
+     * @prefix
+     */
+    public static function delData($prefix){
+        $arr = Transition::model()->findAllByAttributes(['entry_num_prefix'=>$prefix, 'entry_deleted' => 1]);
+        if(!empty($arr)){
+            foreach($arr as $item){
+                if(isset($item['data_type'])&&$item['data_type']==1)    //bank
+                    Bank::model()->deleteAll('id=:id',[':id'=>$item['data_id']]);
+                if(isset($item['data_type'])&&$item['data_type']==2)    //cash
+                    Cash::model()->deleteAll('id=:id',[':id'=>$item['data_id']]);
+            }
+        }
+    }
 
+    /*
+     * 设置凭证审核通过
+     */
+    public function setReviewed(){
+        $this->entry_reviewed = 1;
+        $this->entry_reviewer = Yii::app()->user->id;
+        $this->save();
+    }
+
+    /*
+     * 按月批量审核凭证
+     */
+    public static function setReviewedMul($date){
+        $command = Yii::app()->db->createCommand();
+        $tran = new Transition();
+        $command->update($tran->tableName(),['entry_reviewed'=>1, 'entry_reviewer'=>Yii::app()->user->id],'entry_num_prefix=:date', [':date'=> $date]);
+    }
+
+    //整理凭证
+    public function reorganise($date)
+    {
+        $prefix = $date;
+        Transition::model()->delData($prefix);
+        $del_condition = 'entry_num_prefix=:prefix and entry_deleted=:bool';
+        Transition::model()->deleteAll($del_condition, array(':prefix' => $prefix, ':bool' => 1));
+        $sql = "select id,entry_num from transition where entry_num_prefix=:prefix order by entry_num ASC"; //从小到大排序
+        $data = Transition::model()->findAllBySql($sql, array(':prefix' => $prefix));
+
+        $num = 1;
+        $i = 1;
+        $last = 0;
+        foreach ($data as $row) {
+            if ($num == 1)
+                $last = $row['entry_num'];
+
+            if ($last != $row['entry_num']) {
+                $i++;
+            }
+            $pk = $row['id'];
+            Transition::model()->updateByPk($pk, array('entry_num' => $i));
+            $last = $row['entry_num'];
+            $num++;
+        }
+    }
+
+    public function tranSuffix($prefix = "")
+    {
+        if ($prefix == "")
+            $prefix = date("Ym", time());
+        $data = Yii::app()->db->createCommand()
+            ->select('max(a.entry_num) b')
+            ->from('transition as a')
+            ->where('entry_num_prefix="' . $prefix . '"')
+            ->queryRow();
+        if ($data['b'] == '')
+            $data['b'] = 0;
+        $num = $data['b'] + 1;
+        $num = $this->AddZero($num); //数字补0
+        return $num;
+    }
+
+    /*
+     * 本期科目发生额合计
+     */
+    public function getEntry_amount($prefix, $sub_id)
+    {
+        $sql = "SELECT sum(entry_amount) amount FROM `transition` WHERE entry_num_prefix='$prefix' and entry_subject='$sub_id'";
+        $data = Yii::app()->db->createCommand($sql)->queryAll();
+        if (isset($data[0]['amount']))
+            return $data[0]['amount'];
+        else
+            return 0;
+    }
+
+    /*
+     * 反结账
+     */
+    public function antiSettlement(){
+
+    }
+    /*
+     * 检查凭证是否已经审核过
+     * @id Integer Bank表 或 Cash表 的ID，不是transition表
+     */
+    public static function checkReviewed($id){
+        if($id=="" || $id=="0")
+            return false;
+        $tran = Transition::model()->findByAttributes(['data_id'=>$id]);
+        if($tran->entry_reviewed==1)
+            return true;
+        else
+            return false;
     }
 }

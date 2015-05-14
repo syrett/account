@@ -682,3 +682,10 @@ text-indent:-9999em;
 .info_warning{
   color: #DD514C;
 }
+.btn-setting{
+  line-height: normal;
+}
+.actionSetting{
+  float: right;
+
+}

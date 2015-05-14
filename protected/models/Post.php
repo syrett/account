@@ -384,4 +384,19 @@ var_dump($tranDataArray);exit(1);
         return self::savePost($data,$year,$month);
       }
     }
+
+    /*
+     * 凭证过账
+     */
+    public function postTransition($date){
+        $transition = new Transition;
+        $transition->entry_num_prefix = $date;
+        $this->year = substr($date, 0, 4);
+        $this->month = substr($date, 4, 2);
+        if ($this->postAll()) {
+            $transition->setPosted(1);
+            if($transition->hasSettlement($date))
+                $transition->setClosing(1);
+        }
+    }
 }

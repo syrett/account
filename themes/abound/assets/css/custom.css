@@ -19,8 +19,8 @@
     float: left;
 }
 .options > button {
-    margin: 6px 0;
-    height: 30px;
+    margin: 2px 0;
+    height: 25px;
     padding: 0 10px;
     text-align: left;
 }
@@ -61,4 +61,8 @@
 }
 .btn-history{
     float: right;
+}
+.selectSetting{
+    padding: 1px;
+    margin: 4px;
 }

@@ -135,14 +135,7 @@ class PostController extends Controller
           throw new CHttpException(400, $date."还有凭证未整理");
         }
       if ($transition->isAllReviewed($date)) {
-        $model = new Post;
-        $model->year = substr($date, 0, 4);
-        $model->month = substr($date, 4, 2);
-        if ($model->postAll()) {
-            $transition->setPosted(1);
-            if($transition->hasSettlement($date))
-                $transition->setClosing(1);
-        }
+		Post::model()->postTransition($date);
         Yii::app()->user->setFlash('success', $date."过账成功!");
         $this->render('/site/success');
       } else

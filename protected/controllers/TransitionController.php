@@ -1,5 +1,4 @@
 <?php
-
 class TransitionController extends Controller
 {
     /**
@@ -198,7 +197,7 @@ class TransitionController extends Controller
                 $sheetData = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
                 if (!isset($_REQUEST['first']))
                     array_shift($sheetData);
-            } else {
+            } elseif(!isset($_FILES['attachment'])){
                 //保存按钮
                 $arr = $this->saveAll(1);
                 if (!empty($arr))
@@ -270,34 +269,8 @@ class TransitionController extends Controller
 //            $prefix = date('Y') . date('m');
 //        };
         //整理按月为结点
-        $this->reorganise($date);
+        Transition::model()->reorganise($date);
         $this->redirect("index.php?r=transition/index");
-    }
-
-    public function reorganise($date)
-    {
-        $prefix = $date;
-        $del_condition = 'entry_num_prefix=:prefix and entry_deleted=:bool';
-        Transition::model()->deleteAll($del_condition, array(':prefix' => $prefix, ':bool' => 1));
-
-        $sql = "select id,entry_num from transition where entry_num_prefix=:prefix order by entry_num ASC"; //从小到大排序
-        $data = Transition::model()->findAllBySql($sql, array(':prefix' => $prefix));
-
-        $num = 1;
-        $i = 1;
-        $last = 0;
-        foreach ($data as $row) {
-            if ($num == 1)
-                $last = $row['entry_num'];
-
-            if ($last != $row['entry_num']) {
-                $i++;
-            }
-            $pk = $row['id'];
-            Transition::model()->updateByPk($pk, array('entry_num' => $i));
-            $last = $row['entry_num'];
-            $num++;
-        }
     }
 
     /**
@@ -352,18 +325,7 @@ class TransitionController extends Controller
      */
     public function tranSuffix($prefix = "")
     {
-        if ($prefix == "")
-            $prefix = date("Ym", time());
-        $data = Yii::app()->db->createCommand()
-            ->select('max(a.entry_num) b')
-            ->from('transition as a')
-            ->where('entry_num_prefix="' . $prefix . '"')
-            ->queryRow();
-        if ($data['b'] == '')
-            $data['b'] = 0;
-        $num = $data['b'] + 1;
-        $num = $this->AddZero($num); //数字补0
-        return $num;
+        return Transition::model()->tranSuffix($prefix);
     }
 
     /*
@@ -710,11 +672,10 @@ class TransitionController extends Controller
                     if ($_REQUEST[0]['action'] == 1) {
                         $item->entry_reviewed = 0;
                         $item->entry_reviewer = 0;
+                        $item->save();
                     } else {
-                        $item->entry_reviewed = 1;
-                        $item->entry_reviewer = Yii::app()->user->id;
+                        $item->setReviewed();
                     }
-                    $item->save();
                 } else {
                 } //当前登陆用户id
                 $items[] = $item;
@@ -741,7 +702,7 @@ class TransitionController extends Controller
             ->from('transition as a')
             ->where('id="' . $id . '"')
             ->queryRow();
-        // load models which is the same entry_num_prefix+entry_num
+        // load models which is same with entry_num_prefix+entry_num
         $data = Yii::app()->db->createCommand()
             ->select('id')
             ->from('transition as a')
@@ -779,59 +740,7 @@ class TransitionController extends Controller
 
         if (!Transition::model()->checkSettlement($entry_prefix))
             throw new CHttpException(400, $entry_prefix . "结账失败");
-        $this->reorganise($entry_prefix); //结账前先整理
-        $entry_num = $this->tranSuffix($entry_prefix);
-        $entry_memo = '结转凭证';
-        $entry_creater = Yii::app()->user->id;
-        $entry_editor = Yii::app()->user->id;
-        $entry_reviewer = 0;
-        $entry_settlement = 1;
-        $arr = Subjects::model()->actionListFirst();
-        $sum = 0;
-        $hasDate = false;
-        $year = getYear($entry_prefix);
-        $month = getMon($entry_prefix);
-        $day = date('t', strtotime("01.$month.$year"));
-        $date = "$year-$month-$day 23:59:59";
-        $date = date('Y-m-d H:i:s', strtotime($date));
-        foreach ($arr as $sub) {
-            $tran = new Transition();
-            $tran->entry_num_prefix = $entry_prefix;
-            $tran->entry_num = $entry_num;
-            $tran->entry_date = $date;
-            $tran->entry_settlement = $entry_settlement;
-            $tran->entry_memo = $entry_memo;
-            $tran->entry_transaction = $sub['sbj_cat'] == '4' ? 1 : 2;    //4：收入类 借 5费用类 贷
-            $tran->entry_creater = $entry_creater;
-            $tran->entry_editor = $entry_editor;
-            $tran->entry_reviewer = $entry_reviewer;
-            $tran->entry_subject = $sub['id'];
-            $amount = $this->getEntry_amount($entry_prefix, $sub['id']);
-            $tran->entry_amount = $this->getEntry_amount($entry_prefix, $sub['id']);
-            $sum = $sub['sbj_cat'] == '4' ? $sum + $amount : $sum - $amount;     //该科目合计多少
-//          $trans[] = $tran;
-            if ($amount > 0) {
-                $tran->save();
-                $hasDate = true;
-            }
-        }
-        if ($hasDate > 0) {
-            $tran = new Transition();
-            $tran->entry_num_prefix = $entry_prefix;
-            $tran->entry_num = $entry_num;
-            $tran->entry_memo = $entry_memo;
-            $tran->entry_date = $date;
-            $tran->entry_transaction = 2;    //本年利润 为贷
-            $tran->entry_creater = $entry_creater;
-            $tran->entry_editor = $entry_editor;
-            $tran->entry_settlement = $entry_settlement;
-            $tran->entry_reviewer = $entry_reviewer;
-            $tran->entry_subject = '4103';              //本年利润
-            $tran->entry_amount = $sum;
-            $tran->save();
-        }
-        if ($sum == 0)
-            $tran->setClosing(1);
+        Transition::model()->settlement($entry_prefix);
         Yii::app()->user->setFlash('success', $entry_prefix . "结账成功!");
         $this->render('success');
     }
@@ -843,19 +752,6 @@ class TransitionController extends Controller
     {
         $entry_prefix = $this->tranPrefix();
         return $entry_prefix;
-    }
-
-    /*
-     * 本期科目发生额合计
-     */
-    public function getEntry_amount($prefix, $sub_id)
-    {
-        $sql = "SELECT sum(entry_amount) amount FROM `transition` WHERE entry_num_prefix='$prefix' and entry_subject='$sub_id'";
-        $data = Yii::app()->db->createCommand($sql)->queryAll();
-        if (isset($data[0]['amount']))
-            return $data[0]['amount'];
-        else
-            return 0;
     }
 
     /*
@@ -881,7 +777,6 @@ class TransitionController extends Controller
         $updated = $newModel->setPosted(0);
         $updated = $newModel->setClosing(0) || $updated;
         if ($model >= 1 or $updated) {
-//            header('refresh:2;url=index.php');
             Yii::app()->user->setFlash('success', $date . " 反结账成功!");
             $this->render('success');
         } else
@@ -1180,7 +1075,7 @@ class TransitionController extends Controller
             if ($type == 2)
                 $model = new Cash;
             if($newone==0)
-            if ($id != '')
+            if ($id != '' && $id != '0')
                 $model = $model::model()->findByPk($id);
             elseif (!empty($item['Transition']['d_id']))
                 $model = $model::model()->findByPk($item['Transition']['d_id']);
@@ -1192,17 +1087,32 @@ class TransitionController extends Controller
             if ($arr['entry_amount'] == "" || $arr['entry_amount'] == 0) {
                 $arr['error'] = ['金额不能为空或为0'];
                 $result[] = ['status' => 0, 'data' => $arr];
-                break;
+                continue;
+            }elseif(!checkAmount($arr['entry_amount'])){
+                $arr['error'] = ['金额格式不正确'];
+                $result[] = ['status' => 0, 'data' => $arr];
+                continue;
+            }
+            if ($arr['entry_memo'] == "") {
+                $arr['error'] = ['交易说明不能为空'];
+                $result[] = ['status' => 0, 'data' => $arr];
+                continue;
             }
             if ($arr['entry_date'] == "") {
                 $arr['error'] = ['日期不能为空'];
                 $result[] = ['status' => 0, 'data' => $arr];
-                break;
+                continue;
             }elseif(!Transition::createCheckDate($arr['entry_date'])){   //该日期是否已经过账
-                $arr['error'] = ['该日期是已经结账，或早于账套起始日期'];
+                $arr['error'] = ['该日期已经结账，或早于账套起始日期'];
                 $result[] = ['status' => 0, 'data' => $arr];
-                break;
+                continue;
             }
+            if(Transition::model()->checkReviewed($id)){
+                $arr['error'] = ['该数据生成凭证已经审核，无法修改'];
+                $result[] = ['status' => 0, 'data' => $arr];
+                continue;
+            }
+
             if ($model->save() && $arr['entry_subject'] != '') {   //有科目编号才能创建凭证
 
                 $tran = new Transition;

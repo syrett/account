@@ -25,26 +25,26 @@ $(document).ready(function () {
 function itemsplit(e) {
 
     //直接复制  需要重新设置item 和 id
-    $(e.parentNode.parentNode).after($(e.parentNode.parentNode).clone());
+    $(e.parentNode.parentNode.parentNode).after($(e.parentNode.parentNode.parentNode).clone());
     //$(e.parentNode.parentNode.nextSibling.lastChild.previousSibling.previousSibling));
-    $(e.parentNode.parentNode.nextSibling).find("input[name*='amount']").val(0);
-    $(e.parentNode.parentNode.nextSibling).find("span[class*='tip']").remove();
+    $(e.parentNode.parentNode.parentNode.nextSibling).find("input[name*='amount']").val(0);
+    $(e.parentNode.parentNode.parentNode.nextSibling).find("span[class*='tip']").remove();
 
     //设置id 条目 的name属性 lists[<?= $key ?>][Transition][entry_subject]
     var id = (parseInt($("#rows").val()) + 1).toString();
-    $.each($(e.parentNode.parentNode.nextSibling).find("input[name^='lists']"), function (key, value) {
+    $.each($(e.parentNode.parentNode.parentNode.nextSibling).find("input[name^='lists']"), function (key, value) {
         var name = $(value).attr("name");
         if (name != "" && name) {
             name = name.replace(/\[\d*\]/, "[" + id + "]");
             $(value).attr("name", name);
         }
     })
-    $.each($(e.parentNode.parentNode.nextSibling).find("[id*='_']"), function (key, value) {
+    $.each($(e.parentNode.parentNode.parentNode.nextSibling).find("[id*='_']"), function (key, value) {
         var item_id = $(value).attr("id");
         if (item_id.substr(0, 3) == 'id_')
             $(value).val(id)
         if (item_id != "" && item_id) {
-            item_id = item_id.replace(/_\d*/, "_" + id);
+            item_id = item_id.replace(/_\d+/, "_" + id);
             $(value).attr("id", item_id);
         }
     })
@@ -53,22 +53,28 @@ function itemsplit(e) {
 }
 
 function itemclose(e) {
-    e.parentNode.parentNode.remove();
+    e.parentNode.parentNode.parentNode.remove();
 }
 function itemsetting(e) {
-    $("#itemSetting").dialog({
-        autoOpen: true,
-        width: "80%",
-        height: "500",
-        show: "blind",
-        hide: "explode",
-        modal: true     //设置背景灰的
-    });
-    cleanDialog();
-    $("#itemSetting").dialog("open");
-    var id = $(e.parentNode).find("input[id^='id_']")[0].value;
-    $("#item_id").val(id);
-    $("#data").val(getInfo(e));
+    //$("#itemSetting").dialog({
+    //    autoOpen: true,
+    //    width: "80%",
+    //    height: "500",
+    //    show: "blind",
+    //    hide: "explode",
+    //    modal: true     //设置背景灰的
+    //});
+    //cleanDialog();
+    //$("#itemSetting").dialog("open");
+    if(!$("#trSetting").is(":visible")){
+        $(e.parentNode.parentNode.parentNode).after($("#trSetting"));
+        $("#trSetting").show();
+        $("#itemSetting").slideDown();
+        var id = $(e.parentNode.parentNode).find("input[id^='id_']")[0].value;
+        $("#item_id").val(id);
+        $("#data").val(getInfo(e.parentNode));
+    }else
+        dialogClose();
 }
 function chooseType(e, a) {
     $.ajax({
@@ -79,9 +85,9 @@ function chooseType(e, a) {
         success: function (data) {
             var data = JSON.parse(data);
             var str = '<div class="options-div"><span class="fa fa-angle-right flow-arrow"></span></div>' +
-                '<div class="options" >';
+                '<div class="options btn-group-xs" >';
             $.each(data, function (key, value) {
-                str += '<button class="btn btn-primary" type="button" onclick="chooseOption(this)" value="' + key + '">' + value + '</button><br />'
+                str += '<button class="btn btn-default" type="button" onclick="chooseOption(this)" value="' + key + '">' + value + '</button><br />'
             });
             str += '</div>';
             choosed(e);
@@ -137,9 +143,9 @@ function chooseOption(e) {
             }
             else if (data.rule == 'goon') {
                 var str = '<div class="options-div"><span class="fa fa-angle-right flow-arrow"></span></div>' +
-                    '<div class="options" >';
+                    '<div class="options btn-group-xs" >';
                 if (data.type == 'droplist') {
-                    str += '<select id="droplist" >';
+                    str += '<select id="droplist" class="selectSetting" ><option>请选择</option>';
 
                     $.each(data.data, function (key, value) {
                         if (IsNum(key.toString().substring(1))) //json.parse会把数组重新排序，所以key为数字数组，key前面都添加了下划线'_'
@@ -151,7 +157,7 @@ function chooseOption(e) {
                     $.each(data.data, function (key, value) {
                         if (IsNum(key.toString().substring(1))) //json.parse会把数组重新排序，所以key为数字数组，key前面都添加了下划线'_'
                             key = key.toString().substring(1)
-                        str += '<button class="btn btn-primary" type="button" onclick="chooseOption(this)" value="' + key + '">' + value + '</button><br />'
+                        str += '<button class="btn btn-default" type="button" onclick="chooseOption(this)" value="' + key + '">' + value + '</button><br />'
                     });
                 if (data.option != 0) {
                     $.each(data.option, function (key, value) {
@@ -195,7 +201,7 @@ function chooseOption(e) {
                             str += '</select>';
                         });
                     }
-                    str += '<br ><button value="" id="button" onclick="chooseSubject(this)">选择</button>'
+                    str += '<br ><button value="" id="button" onclick="chooseSubject(this)">新建</button>'
                 }
                 else if (data.new == 'employee') {
                     str += '<input type="hidden" name="new-type" id="new-type" value="2">' +
@@ -211,9 +217,9 @@ function chooseOption(e) {
                 choosed(e);
                 $(e).parent().nextAll().remove();
                 $(e).parent().after(str);
-                $("#droplist").select2();
-                if (data.new == 'employee')
-                    $("#new-department").select2();
+                //$("#droplist").select2();
+                //if (data.new == 'employee')
+                //    $("#new-department").select2();
                 if (data.target == true) {
                     $("div.options").removeClass("target");
                     $("div.options").last().addClass("target");
@@ -267,11 +273,13 @@ function itemSet() {
         e.html("未选择");
     }
     setTarget(item_id);
-    $("#itemSetting").dialog("close");
+    dialogClose();
 }
 //保存凭证，此时再根据选择的科目计算一些数值
 function save() {
-    $("#abc table tr:first").nextAll('tr').each(function (key, value) {
+    if(!checkInput())
+        return true;
+    $("#abc table tr:first").nextAll('tr:visible').each(function (key, value) {
         var item_id = $(value).find("input[id^='id_']").val();
         var sbj = $("#subject_" + item_id).val();
         $("#invoice_" + item_id).val($("#new-invoice").val() == 2 ? 1 : 0);
@@ -307,7 +315,7 @@ function getListTitle() {
 
 //支出或收入
 function getType() {
-    if ($("#setting").children(":first").find("button[class*='active']").html() == "支出")
+    if ($("#setting").children(":first").find("button[class*='active']").html().trim() == "支出")
         return 1;
     else
         return 2;
@@ -319,7 +327,9 @@ function cleanDialog() {
 
 }
 function dialogClose() {
-    $("#itemSetting").dialog("close");
+
+    $("#trSetting").hide('100');
+    $("#itemSetting").hide();
 }
 //总金额
 function sumAmount(e) {
@@ -353,7 +363,7 @@ function addNew(e) {
                         if (a.children("button[value=" + data + "]").length != 0) { //检测是否已经存在
                             a.children("button[value=" + data + "]")[0].click();
                         } else {
-                            var str = '<button class="btn btn-primary" type="button" onclick="chooseOption(this)" value="' +
+                            var str = '<button class="btn btn-default" type="button" onclick="chooseOption(this)" value="' +
                                 data + '">' + a.children("select[name*=new-depart]")[0].selectedOptions[0].innerHTML + '/' + a.children("input[name=new-name]").val() + '</button><br />'
                             a.prepend(str);
                             a.children(":first-child").click();
@@ -380,7 +390,7 @@ function addNew(e) {
                         if (a.children("button[value=" + msg + "]").length != 0) { //检测是否已经存在
                             a.children("button[value=" + msg + "]")[0].click();
                         } else {
-                            var str = '<button class="btn btn-primary" type="button" onclick="chooseOption(this)" value="' +
+                            var str = '<button class="btn btn-default" type="button" onclick="chooseOption(this)" value="' +
                                 msg + '">' + a.children("#new-sbjname").val() + '/' + a.children("input[name=new-name]").val() + '</button><br />'
                             a.prepend(str);
                             a.children(":first-child").click();
@@ -451,10 +461,10 @@ function setTax(item_id) {
 }
 //设置按钮宽度
 function setWidth(e) {
-    var width = Math.max.apply(Math, $(e.parentNode.nextSibling.nextSibling).find('button[class*=btn-primary]').map(function () {
+    var width = Math.max.apply(Math, $(e.parentNode.nextSibling.nextSibling).find('button[class*="btn-"]').map(function () {
         return $(this).width();
     }).get());
-    $(e.parentNode.nextSibling.nextSibling).find('button[class*=btn-primary]').width(width);
+    $(e.parentNode.nextSibling.nextSibling).find('button[class*="btn-"]').width(width);
 }
 
 //设置交易方名称
@@ -478,9 +488,9 @@ function removePath(path) {
 function setTransaction(id) {
     var type = $(".options:first > button.active").val();
     if (type == '支出')
-        $("#transaction_" + id).val(1)
-    if (type == '收入')
         $("#transaction_" + id).val(2)
+    if (type == '收入')
+        $("#transaction_" + id).val(1)
 }
 
 //消除数据，设置前先消除
@@ -491,4 +501,31 @@ function unset(id) {
     //如果选择了项目，才消除 已经存在的科目编号
     $("input[name^='lists\[" + id + "\]\[Transition\]\[entry_subject\]']").val(sbj);
     $("input[name^='lists\[" + id + "\]\[Transition\]\[entry_transaction\]']").val(sbja);
+}
+
+function checkInput(){
+    var check = true;
+    $.each($("input[id*='tran_memo_']"), function(key, e){
+        if(e.value=='')
+        {
+            $(e).after('<span class="info_warning" >不能为空</span>');
+            check = false;
+        }
+    })
+    $.each($("input[id*='tran_amount_']"), function(key,e){
+        if(e.value=='')
+        {
+            $(e).after('<span class="info_warning" >金额不能为空</span>');
+            check = false;
+        }else{
+            var b = /-?[1-9]?\d*\.?\d?\d?|-?0\.\d?\d?/;
+            if(e.value != b.exec(e.value))
+            {
+                $(e).after('<span class="info_warning" >金额格式不正确</span>');
+                check = false;
+            }
+        }
+
+    })
+    return check;
 }

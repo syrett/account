@@ -159,3 +159,15 @@ function UpAmount($num){
     }
 
 }
+
+function checkAmount($amount){
+    $reg = "/-?[1-9]?\d*\.?\d?\d?|-?0\.\d?\d?/";
+    preg_match($reg, $amount, $arr);
+    $result = $arr[0];
+    //不知道为什么，这样会报错
+//  if( $arr[0] == $amount)
+    if( $result == $amount)
+        return true;
+    else
+        return false;
+}

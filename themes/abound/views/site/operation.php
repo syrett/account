@@ -44,8 +44,6 @@ $this->pageTitle = Yii::app()->name;
         $data =  array();
         foreach($months as $month){
             $data[$year.$month] = $month;
-            ?>
-        <?php
         }
         $this->widget('Select2', array(
             'name' => 'date',
