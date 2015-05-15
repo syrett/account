@@ -15,6 +15,7 @@ $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/theme.css');
 $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/custom.css');
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/import.js', CClientScript::POS_HEAD);
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/checkinput.js', CClientScript::POS_HEAD);
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/filechoose.js', CClientScript::POS_HEAD);
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/import_datepicker.js', CClientScript::POS_HEAD);
 $this->pageTitle = Yii::app()->name;
 $sql = 'select date from transitiondate'; // 一级科目的为1001～9999$SQL="SQL Statemet"
@@ -46,7 +47,7 @@ $tranDate = $command->queryRow(); // execute a query SQL
     <div class="right">
         <? echo CHtml::link('<span class="glyphicon glyphicon-search"></span> 已导入数据', array('/' . $type), array('class' => 'btn btn-default')); ?>
 
-        <input type="hidden" id="dp_startdate" value="<?=Transition::getTransitionDate()?>" >
+        <input type="hidden" id="dp_startdate" value="<?= Transition::getTransitionDate() ?>">
     </div>
 </div>
 <div class="panel-body">
@@ -56,10 +57,25 @@ $tranDate = $command->queryRow(); // execute a query SQL
     <div class="row">
         <div class="col-xs-9">
             <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data"]); ?>
+            <div class="choose-file choose-btn">
+                <a href="/download/导入模板.xlsx">
+                    <button type="submit" class="btn btn-default">模板下载</button>
+                </a>
+            </div>
             <!--                <i class="fa fa-paperclip"></i> 上传Excel-->
-            <input type="file" name="attachment">
-            <input type="checkbox" class="" name="first" /><label>第一行包含数据</label>
-            <button type="submit" class="btn btn-default" >导入</button>
+            <div class="choose-file">
+                <div class="input-group choose-btn-group">
+                <span class="input-group-btn">
+                    <span class="btn btn-default btn-file">
+                        选择文件<input name="attachment" type="file" accept=".xls,.xlsx" >
+                    </span>
+                </span>
+                    <input type="text" class="form-control" id="import_file_name" readonly="">
+                </div>
+                <input type="checkbox" class="" name="first"/><label>第一行包含数据</label>
+                <button type="submit" class="btn btn-default right">导入</button>
+
+            </div>
             <?php echo CHtml::endForm(); ?>
         </div>
     </div>
@@ -101,7 +117,8 @@ $tranDate = $command->queryRow(); // execute a query SQL
                                        name="lists[<?= $key ?>][Transition][entry_memo]"
                                        value="<?= isset($item['entry_memo']) ? $item['entry_memo'] : $item['C'] ?>">
                             </td>
-                            <td><input class="input_mid" onkeyup="checkInputAmount(this)" type="text" id="tran_amount_<?= $key ?>"
+                            <td><input class="input_mid" onkeyup="checkInputAmount(this)" type="text"
+                                       id="tran_amount_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_amount]"
                                        value="<?= isset($item['entry_amount']) ? $item['entry_amount'] : $item['D'] ?>">
                         <span class="tip2">总金额：<label
@@ -132,7 +149,8 @@ $tranDate = $command->queryRow(); // execute a query SQL
                                        name="lists[<?= $key ?>][Transition][additional][1][amount]" value="">
 
                                 <div class="btn-group btn-group-xs" role="group">
-                                    <button type="button" class="btn btn-default" onclick="itemsetting(this)">记账</button>
+                                    <button type="button" class="btn btn-default" onclick="itemsetting(this)">记账
+                                    </button>
                                     <button type="button" class="btn btn-default" onclick="itemsplit(this)">拆分</button>
                                     <button type="button" class="btn btn-default" onclick="itemclose(this)">删分</button>
                                 </div>
