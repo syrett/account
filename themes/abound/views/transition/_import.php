@@ -58,9 +58,9 @@ $tranDate = $command->queryRow(); // execute a query SQL
         <div class="col-xs-9">
             <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data"]); ?>
             <div class="choose-file choose-btn">
-                <button type="button" onclick="window.location.href='/download/导入模板.xlsx'" class=" btn btn-default
-                ">模板下载</button>
-
+                <a href="/download/导入模板.xlsx" download>
+                    <button type="button" class=" btn btn-default">模板下载</button>
+                </a>
             </div>
             <!--                <i class="fa fa-paperclip"></i> 上传Excel-->
             <div class="choose-file">
