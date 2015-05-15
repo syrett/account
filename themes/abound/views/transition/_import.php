@@ -58,16 +58,16 @@ $tranDate = $command->queryRow(); // execute a query SQL
         <div class="col-xs-9">
             <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data"]); ?>
             <div class="choose-file choose-btn">
-                <a href="/download/导入模板.xlsx">
-                    <button type="submit" class="btn btn-default">模板下载</button>
-                </a>
+                <button type="button" onclick="window.location.href='/download/导入模板.xlsx'" class=" btn btn-default
+                ">模板下载</button>
+
             </div>
             <!--                <i class="fa fa-paperclip"></i> 上传Excel-->
             <div class="choose-file">
                 <div class="input-group choose-btn-group">
                 <span class="input-group-btn">
                     <span class="btn btn-default btn-file">
-                        选择文件<input name="attachment" type="file" accept=".xls,.xlsx" >
+                        选择文件<input name="attachment" type="file" accept=".xls,.xlsx">
                     </span>
                 </span>
                     <input type="text" class="form-control" id="import_file_name" readonly="">
