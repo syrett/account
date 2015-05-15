@@ -73,8 +73,22 @@ return [
     'user' => [
         'type' => 1,
         'description' => 'User',
+        'children' => [
+            'accessBackend',
+            'administrateRbac',
+            'administrateUsers',
+            'administrateBank',
+            'administrateComments',
+        ],
     ],
     'admin' => [
+        'type' => 1,
+        'description' => 'Admin',
+        'children' => [
+            'user',
+        ],
+    ],
+    'normal' => [
         'type' => 1,
         'description' => 'Admin',
         'children' => [
@@ -86,11 +100,6 @@ return [
         'description' => 'Super admin',
         'children' => [
             'admin',
-            'accessBackend',
-            'administrateRbac',
-            'administrateUsers',
-            'administrateBank',
-            'administrateComments',
         ],
     ],
     'administrateUsers' => [
@@ -304,5 +313,8 @@ return [
         'type' => 2,
         'description' => 'Can delete own comments',
         'ruleName' => 'author',
+    ],
+    '' => [
+        'type' => 1,
     ],
 ];
