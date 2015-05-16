@@ -123,7 +123,7 @@ function chooseOption(e) {
             if (data.rule == 'end') {
                 $("#subject").val(data.subject);
                 $(e).parent().nextAll().remove();
-                var str = '<div class="options alert alert-success alert-dismissable">';
+                var str = '<div class="options-div"><span class="fa fa-angle-right flow-arrow"></span></div><div class="options alert alert-success alert-dismissable">';
                 str += '<i class="icon fa fa-check"></i> 已选择 => <span id="sub_name">"' + data.sbj_name + '"</span>';
                 if (data.option != 0) {
                     $.each(data.option, function (key, value) {

@@ -53,6 +53,7 @@ class Bank extends \vova07\bank\models\Bank
             '技术转让' => '技术转让',
             '资产租赁' => '资产租赁',
             '支付股利' => '支付股利',         //  8
+            '支付税金' => '支付税金',
             '现金提取' => '现金提取',
             '其他支出' => '其他支出',     //  9
         ];
@@ -449,6 +450,15 @@ class Bank extends \vova07\bank\models\Bank
         ];
     }
 
+    private static function getTaxFee($key = ''){
+        $subject = new Subject();
+        $arr = [2221];
+        $result = $subject->getitem($arr, $key);
+        $result['_660207']=Subject::getSbjPath(660207);
+        return [
+            'data' => $result,
+        ];
+    }
     /*
      * 选项
      * 1支出 2收入
@@ -650,6 +660,12 @@ class Bank extends \vova07\bank\models\Bank
                         return self::endOption($options[3]);
                     } else
                         $result = self::getDividend($data[1]);
+                    break;
+                case '支付税金'  :  //将应交税费2221子科目列出
+                    if (isset($options[3])) {
+                        return self::endOption($options[3]);
+                    } else
+                        $result = self::getTaxFee($data[1]);
                     break;
                 case '现金提取'  :  //将营业外支出6711作为借方科目，形成会计分录
                     return self::endOption(1001);

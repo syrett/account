@@ -77,7 +77,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/import_datepick
                         <td><input class="input_mid" type="text" id="tran_date_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entry_date]"
                                    value="<?= isset($item['date']) ? $item['date'] : $data['entry_date'] ?>"></td>
-                        <td><input type="text" id="tran_memo_<?= $key ?>"
+                        <td><input class="input_full" type="text" id="tran_memo_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entry_memo]"
                                    value="<?= isset($item['memo']) ? $item['memo'] : $data['entry_memo'] ?>"></td>
                         <td><input class="input_mid" type="text" id="tran_amount_<?= $key ?>"

@@ -211,8 +211,12 @@ class TransitionController extends Controller
                             $sheetData[] = $item['data'];
                         }
                     }
-                else
+                else{
                     Yii::app()->user->setFlash('success', "保存成功!");
+                    //跳转到历史数据管理页面
+                    $this->redirect(Yii::app()->createUrl('bank'));
+
+                }
             }
         }
 
@@ -251,8 +255,11 @@ class TransitionController extends Controller
                             $sheetData[] = $item['data'];
                         }
                     }
-                else
+                else{
                     Yii::app()->user->setFlash('success', "保存成功!");
+                    //跳转到历史数据管理页面
+                    $this->redirect(Yii::app()->createUrl('cash'));
+                }
             }
         }
 

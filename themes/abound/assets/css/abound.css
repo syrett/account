@@ -720,3 +720,6 @@ text-indent:-9999em;
 .choose-btn-group{
     margin-bottom: 3px;
 }
+.input_full{
+    width: 100%;
+}

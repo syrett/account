@@ -91,7 +91,7 @@ $tranDate = $command->queryRow(); // execute a query SQL
             <table class="table table-bordered dataTable">
                 <tr>
                     <th class="input_checkbox"><input type="checkbox"></th>
-                    <th>交易方名称</th>
+                    <th class="input_mid">交易方名称</th>
                     <th class="input_mid"><select id="selectItem1" name="selectItem1"><?= $select ?></select></th>
                     <th><select id="selectItem2" name="selectItem2"><?= $select ?></select></th>
                     <th class="input_mid"><select id="selectItem3" name="selectItem3"><?= $select ?></select></th>
@@ -113,7 +113,7 @@ $tranDate = $command->queryRow(); // execute a query SQL
                                        name="lists[<?= $key ?>][Transition][entry_date]"
                                        value="<?= isset($item['entry_date']) ? $item['entry_date'] : $item['B'] ?>">
                             </td>
-                            <td><input type="text" id="tran_memo_<?= $key ?>"
+                            <td><input class="input_full" type="text" id="tran_memo_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_memo]"
                                        value="<?= isset($item['entry_memo']) ? $item['entry_memo'] : $item['C'] ?>">
                             </td>
