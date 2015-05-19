@@ -124,6 +124,7 @@ class ProgressBar
                 }
                 $result = 101;break;
         }
+//        $result = 101;
         return $result;
     }
 

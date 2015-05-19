@@ -7,14 +7,6 @@
     }
     function open_progress_bar()
     {
-        my_title = 'Processing, please wait...';
-        $('#modalDivProgress').dialog({
-            autoOpen: true,
-            width: 800,
-            height:150,
-            modal: true,
-            title: my_title
-        });
         $("#progressbar").progressbar({value: 0});
         show_progress();
     }
@@ -31,12 +23,11 @@
             if (percentage > 100)
                 percentage = 100;
             $("#progressbar").progressbar( "value", percentage);
-            var percentage_txt = percentage + "%" + " [" + done + "/" + total + "]";
+            var percentage_txt = percentage + "%";
             $("#percentage").text(percentage_txt);
             if (percentage == 100) {
-                alert('Done');
-                $("#progressbar").progressbar( "destroy");
-                $("#modalDivProgress").dialog("close");
+                alert('已经结账成功');
+                location.reload();
             } else {
                 show_progress();
             }
@@ -91,8 +82,3 @@
     }
 
 </script>
-
-<div id="modalDivProgress" style="margin: 20px auto;">
-    <div id="progressbar" style="width:780px;"></div>
-    <div id="percentage" style="margin-top: -22px;margin-left:310px;"></div>
-</div>

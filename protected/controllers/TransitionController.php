@@ -764,15 +764,22 @@ class TransitionController extends Controller
     /*
      * 反结账
      */
-    public function actionAntiSettlement()
+    public function actionAntiSettlement($edate)
     {
-
-        $date = date('Ym', time());
-        while ($date > Yii::app()->params['startDate']) {
-            if (!Transition::model()->isPosted($date))
-                break;
+        $date= date('Ym', time());
+        $result = false;
+        while ($date > Yii::app()->params['startDate'] && $date >= $edate) {
+            $result = $this->antiSettlement($date);
             $date = date('Ym', strtotime('-1 months', strtotime($date . '01')));
         }
+
+        if ($result) {
+            $this->render('success');
+        } else
+            throw new CHttpException(400, $date . " 反结账失败");
+    }
+
+    public function antiSettlement($date){
 
         $model = Transition::model()->deleteAllByAttributes(array('entry_num_prefix' => $date, 'entry_settlement' => 1,));
         //删除post表中的数据
@@ -783,11 +790,10 @@ class TransitionController extends Controller
         $newModel->entry_num_prefix = $date;
         $updated = $newModel->setPosted(0);
         $updated = $newModel->setClosing(0) || $updated;
-        if ($model >= 1 or $updated) {
-            Yii::app()->user->setFlash('success', $date . " 反结账成功!");
-            $this->render('success');
-        } else
-            throw new CHttpException(400, $date . " 反结账失败");
+        if ($model >= 1 or $updated)
+            return true;
+        else
+            return false;
     }
 
     public function actionSuccess()
@@ -851,6 +857,13 @@ class TransitionController extends Controller
     {     //run settlement
         if (isset($_REQUEST['date'])) {
             $this->actionSettlement($_REQUEST['date']);
+        }
+    }
+
+    public function actionListAntiSettlement()
+    {     //run settlement
+        if (isset($_REQUEST['date'])) {
+            $this->actionAntiSettlement($_REQUEST['date']);
         }
     }
 

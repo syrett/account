@@ -456,7 +456,7 @@ class Transition extends CActiveRecord
             $tran->entry_amount = $this->getEntry_amount($entry_prefix, $sub['id']);
             $sum = $sub['sbj_cat'] == '4' ? $sum + $amount : $sum - $amount;     //该科目合计多少
 //          $trans[] = $tran;
-            if ($amount > 0) {
+            if ($amount != 0) {
                 $tran->save();
                 $hasDate = true;
             }
@@ -515,6 +515,10 @@ class Transition extends CActiveRecord
     public static  function listSettlement(){
         $tran = new Transition();
         return $tran->listDate(array('entry_closing'=> 0));
+    }
+    public static  function listAntiSettlement(){
+        $tran = new Transition();
+        return $tran->listDate(array('entry_posting'=> 1));
     }
     public static  function listDate($arr){
         $criteria = new CDbCriteria(array('group'=>'entry_num_prefix'));
