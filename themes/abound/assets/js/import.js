@@ -488,9 +488,9 @@ function removePath(path) {
 function setTransaction(id) {
     var type = $(".options:first > button.active").val();
     if (type == '支出')
-        $("#transaction_" + id).val(2)
-    if (type == '收入')
         $("#transaction_" + id).val(1)
+    if (type == '收入')
+        $("#transaction_" + id).val(2)
 }
 
 //消除数据，设置前先消除
