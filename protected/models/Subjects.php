@@ -419,7 +419,7 @@ class Subjects extends CActiveRecord
                 return [(int)$number['sbj_number'] + 1, $number['sbj_cat']];
             else{
 
-                $subj = self::findByPk($sbj_nubmer);
+                $subj = self::findByAttributes(['sbj_number'=>$sbj_nubmer]);
                 return [$sbj_nubmer . '01', $subj->sbj_cat];
             }
         }
