@@ -77,9 +77,12 @@ class BankController extends Controller
 		}else {
 			$model = $this->loadModel($id);
 			//收费版需要加载跟此数据相关的，关键字为parent
-            $tran = Transition::model()->find(['condition' => 'data_id=:data_id', 'params' => [':data_id' => $id]]);
 			$sheetData[0]['data'] = Transition::getSheetData($model->attributes);
-            $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
+            if($model->status_id==1)
+            {
+                $tran = Transition::model()->find(['condition' => 'data_id=:data_id', 'params' => [':data_id' => $id]]);
+                $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
+            }
 		}
 
 		$this->render('update',array(
