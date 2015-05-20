@@ -58,6 +58,7 @@
 }
 .new-item{
     margin: 5px 0;
+    padding: 0 4px;
 }
 .btn-history{
     float: right;

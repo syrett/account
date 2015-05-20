@@ -68,8 +68,8 @@ class SubjectsController extends Controller
 		{
             $old_sbj_number = $_POST['Subjects']['sbj_number'];
             $sbj_type = $_POST['sbj_type'];
-            $sbj_number = Subjects::model()->init_new_sbj_number($old_sbj_number,$sbj_type);
-			$_POST['Subjects']['sbj_number'] = $sbj_number;
+            $new_sbj = Subjects::model()->init_new_sbj_number($old_sbj_number,$sbj_type);
+			$_POST['Subjects']['sbj_number'] = $new_sbj[0];
 			$sbj_cat = Subjects::model()->getCat($old_sbj_number);
 			$_POST['Subjects']['sbj_cat'] = $sbj_cat;
             $model->attributes=$_POST['Subjects'];
@@ -77,7 +77,7 @@ class SubjectsController extends Controller
             {
                 //如果是新的子科目，将post中科目表id修改为新id
 //                $sbj_id = trim($_POST['Subjects']['sbj_number']);
-                $sbj_id = $sbj_number;
+                $sbj_id = $new_sbj[0];
                 if(strlen($sbj_id)>4&&$sbj_type==2)  ////1为同级科目，2为子科目
                 {
                     Post::model()->tranPost($sbj_id);

@@ -13,7 +13,6 @@ $this->pageTitle = Yii::app()->name;
     <div class="row row-fluid">
         <div class="col-md-index">
         	<a href="<?= $this->createUrl('Transition/bank') ?>" class="thumbnail">
-<!--                <a href="backend/web/index.php?r=bank/default/index" class="thumbnail">-->
                 <?php
                  echo CHtml::image(Yii::app()->theme->baseUrl. '/assets/img/pzlr.gif','填制凭证');
                 ?>

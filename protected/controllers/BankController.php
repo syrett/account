@@ -28,7 +28,7 @@ class BankController extends Controller
 	{
 		return array(
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+				'actions'=>array('create','update','type','option','createemployee','createsubject','save'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -57,7 +57,9 @@ class BankController extends Controller
 				foreach ($sheetData as $item) {
 					if ($item['status'] == 0) {
 						Yii::app()->user->setFlash('error', "保存失败!");
-						$model = new Bank();
+                        $model = $this->loadModel($id);
+                        $sheetData[0]['status'] = 0;
+                        $sheetData[0]['data'] = Transition::getSheetData($item['data']);
 					}
 					if ($item['status'] == 2) {
 						Yii::app()->user->setFlash('error', "数据保存成功，未生成凭证");
@@ -68,12 +70,16 @@ class BankController extends Controller
 			{
 				Yii::app()->user->setFlash('success', "保存成功!");
 				$model = $this->loadModel($id);
-				$sheetData[0]['data'] = Transition::model()->find(['condition' => 'data_id=:data_id', 'params' => [':data_id' => $id]]);
-			}
+                $tran = Transition::model()->find(['condition' => 'data_id=:data_id', 'params' => [':data_id' => $id]]);
+                $sheetData[0]['data'] = Transition::getSheetData($model->attributes);
+                $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
+            }
 		}else {
 			$model = $this->loadModel($id);
 			//收费版需要加载跟此数据相关的，关键字为parent
-			$sheetData[0]['data'] = Transition::model()->find(['condition' => 'data_id=:data_id', 'params' => [':data_id' => $id]]);
+            $tran = Transition::model()->find(['condition' => 'data_id=:data_id', 'params' => [':data_id' => $id]]);
+			$sheetData[0]['data'] = Transition::getSheetData($model->attributes);
+            $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
 		}
 
 		$this->render('update',array(
@@ -147,4 +153,67 @@ class BankController extends Controller
 			Yii::app()->end();
 		}
 	}
+
+    /*
+     * ajax
+     */
+    public function actionType()
+    {
+        if (Yii::app()->request->isAjaxRequest)
+            echo json_encode(Bank::chooseType($_POST['type']));
+        else
+            throw new CHttpException(403,'不允许提交');
+    }
+
+    /*
+     * 返回的选项
+     * $_POST['pid'] int 父id
+     * $_POST['id']  int 当前选择id
+     */
+    public function actionOption()
+    {
+        if (Yii::app()->request->isAjaxRequest) {
+            echo json_encode(Bank::chooseOption($_POST['type'], $_POST['option'], $_POST['data']));
+        } else
+            throw new CHttpException(403,'不允许提交');
+    }
+
+    /*
+     * 保存员工
+     */
+    public function actionCreateemployee()
+    {
+        if (Yii::app()->request->isAjaxRequest ) {
+            $model = new Employee();
+            $data['name'] = $_POST['name'];
+            $data['department_id'] = $_POST['department'];
+            $a = $model->model()->findByAttributes($data);
+            if ($a != null)
+                echo $a->id;
+            else {
+                $model->name = $_POST['name'];
+                $model->department_id = $_POST['department'];
+                if ($model->save())
+                    echo $model->id;
+                else
+                    echo 0;
+            }
+        }
+    }
+
+    /*
+     * 新建科目
+     */
+    public function actionCreatesubject()
+    {
+        if (Yii::app()->request->isAjaxRequest) {
+            $name = $_POST['name'];
+            $sbj = $_POST['subject'];
+            $id = Subjects::model()->createSubject($name, $sbj);
+            if ($id)
+                echo $id;
+            else
+                echo 0;
+        }
+    }
 }

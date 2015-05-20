@@ -5,6 +5,7 @@
 /* @var $action string */
 require_once(dirname(__FILE__) . '/../viewfunctions.php');
 
+Yii::import('ext.select2.Select2');
 Yii::app()->clientScript->registerCoreScript('jquery');
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/select2/select2.js', CClientScript::POS_HEAD);
@@ -56,7 +57,7 @@ $tranDate = $command->queryRow(); // execute a query SQL
     ?>
     <div class="row">
         <div class="col-xs-9">
-            <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data"]); ?>
+            <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data",'id' => 'form']); ?>
             <div class="choose-file choose-btn">
                 <a href="/download/导入模板.xlsx" download>
                     <button type="button" class=" btn btn-default">模板下载</button>
@@ -74,17 +75,27 @@ $tranDate = $command->queryRow(); // execute a query SQL
                 </div>
                 <input type="checkbox" class="" name="first"/><label>第一行包含数据</label>
                 <button type="submit" class="btn btn-default right">导入</button>
-
             </div>
-            <?php echo CHtml::endForm(); ?>
+            <div class="choose-file">
+                <?
+                $banks = Subjects::model()->list_sub(1002);
+                $data = [];
+                foreach($banks as $item){
+                    $data[$item['sbj_number']] = $item['sbj_name'];
+                }
+                $this->widget('Select2', array(
+                    'name' => 'sbj_bank',
+                    'id' => 'sbj_bank',
+                    'data' => $data,
+                ));
+                ?>
+            </div>
         </div>
     </div>
     <div class="row import-tab" id="abc">
         <div class="box">
 
             <?php
-            //            echo CHtml::beginForm(Laofashi . $this->createUrl('/'. $type. '/default/save'), 'post', ['id' => 'form']);
-
             echo CHtml::beginForm('', 'post', ['id' => 'form']);
             ?>
 
@@ -107,46 +118,46 @@ $tranDate = $command->queryRow(); // execute a query SQL
                                        value="<?= isset($item['id']) ? $item['id'] : '' ?>"></td>
                             <td><input type="text" id="tran_name_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_name]" placeholder="对方名称"
-                                       value="<?= isset($item['entry_name']) ? $item['entry_name'] : $item['A'] ?>">
+                                       value="<?= $item['entry_name']?>">
                             </td>
                             <td><input class="input_mid" type="text" id="tran_date_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_date]"
-                                       value="<?= isset($item['entry_date']) ? $item['entry_date'] : $item['B'] ?>">
+                                       value="<?= $item['entry_date'] ?>">
                             </td>
                             <td><input class="input_full" type="text" id="tran_memo_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_memo]"
-                                       value="<?= isset($item['entry_memo']) ? $item['entry_memo'] : $item['C'] ?>">
+                                       value="<?= $item['entry_memo'] ?>">
                             </td>
                             <td><input class="input_mid" onkeyup="checkInputAmount(this)" type="text"
                                        id="tran_amount_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_amount]"
-                                       value="<?= isset($item['entry_amount']) ? $item['entry_amount'] : $item['D'] ?>">
+                                       value="<?= $item['entry_amount'] ?>">
                         <span class="tip2">总金额：<label
-                                id="amount_<?= $key ?>"><?= isset($item['entry_amount']) ? $item['entry_amount'] : $item['D'] ?></label>
+                                id="amount_<?= $key ?>"><?= $item['entry_amount'] ?></label>
                         </span></td>
                             <td class="action">
                                 <input type="hidden" id="did_<?= $key ?>" name="lists[<?= $key ?>][Transition][d_id]"
                                        value="<?= isset($item['d_id']) ? $item['d_id'] : '' ?>">
                                 <input type="hidden" id="id_<?= $key ?>" value="<?= $key ?>">
                                 <input type="hidden" id="subject_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][entry_subject]" value="">
+                                       name="lists[<?= $key ?>][Transition][entry_subject]" value="<?= $item['entry_subject']?>">
                                 <input type="hidden" id="transaction_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][entry_transaction]" value="">
+                                       name="lists[<?= $key ?>][Transition][entry_transaction]" value="<?= $item['entry_transaction']?>">
                                 <input type="hidden" id="invoice_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][invoice]" value="">
-                                <input type="hidden" id="withtax_<?= $key ?>" value="">
+                                       name="lists[<?= $key ?>][Transition][invoice]" value="<?= $item['invoice']?>">
+                                <input type="hidden" id="withtax_<?= $key ?>" value="<?= $item['tax']>0?1:0?>">
                                 <input type="hidden" id="tax_<?= $key ?>" name="lists[<?= $key ?>][Transition][tax]"
-                                       value="">
+                                       value="<?= $item['tax']?>">
                                 <input type="hidden" id="parent_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][parent]" value="">
+                                       name="lists[<?= $key ?>][Transition][parent]" value="<?= $item['parent']?>">
                                 <input type="hidden" id="additional_sbj0_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][additional][0][subject]" value="">
+                                       name="lists[<?= $key ?>][Transition][additional][0][subject]" value="<?= $item['additional'][0]['subject']?>">
                                 <input type="hidden" id="additional_amount0_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][additional][0][amount]" value="">
+                                       name="lists[<?= $key ?>][Transition][additional][0][amount]" value="<?= $item['additional'][0]['amount']?>">
                                 <input type="hidden" id="additional_sbj1_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][additional][1][subject]" value="">
+                                       name="lists[<?= $key ?>][Transition][additional][1][subject]" value="<?= $item['additional'][1]['subject']?>">
                                 <input type="hidden" id="additional_amount1_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][additional][1][amount]" value="">
+                                       name="lists[<?= $key ?>][Transition][additional][1][amount]" value="<?= $item['additional'][1]['amount']?>">
 
                                 <div class="btn-group btn-group-xs" role="group">
                                     <button type="button" class="btn btn-default" onclick="itemsetting(this)">记账
@@ -180,18 +191,18 @@ $tranDate = $command->queryRow(); // execute a query SQL
                         <div id="itemSetting" title="记账设置" class="box">
                             <!--    <div class="modal-header bg-light-blue-active" >设置</div>-->
                             <div>
-                                <input id="type" type="hidden" value="<?= Laofashi . $this->createUrl(
-                                    '/bank/default/type'
+                                <input id="type" type="hidden" value="<?= $this->createUrl(
+                                    '/bank/type'
                                 ) ?>">
 
-                                <input id="option" type="hidden" value="<?= Laofashi . $this->createUrl(
-                                    '/bank/default/option'
+                                <input id="option" type="hidden" value="<?= $this->createUrl(
+                                    '/bank/option'
                                 ) ?>">
-                                <input id="employee" type="hidden" value="<?= Laofashi . $this->createUrl(
-                                    '/bank/default/createemployee'
+                                <input id="employee" type="hidden" value="<?= $this->createUrl(
+                                    '/bank/createemployee'
                                 ) ?>">
-                                <input id="new-url" type="hidden" value="<?= Laofashi . $this->createUrl(
-                                    '/bank/default/createsubject'
+                                <input id="new-url" type="hidden" value="<?= $this->createUrl(
+                                    '/bank/createsubject'
                                 ) ?>">
 
                                 <input id="data" type="hidden" value="">

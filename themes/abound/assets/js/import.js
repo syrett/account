@@ -19,7 +19,6 @@ $(document).ready(function () {
     })
     $("div").delegate("#droplist", "change", function () {
         chooseOption(this)
-
     })
 })
 function itemsplit(e) {
@@ -201,7 +200,7 @@ function chooseOption(e) {
                             str += '</select>';
                         });
                     }
-                    str += '<br ><button value="" id="button" onclick="chooseSubject(this)">新建</button>'
+                    str += '<br ><button value="" type="button" id="button" onclick="chooseSubject(this)">新建</button>'
                 }
                 else if (data.new == 'employee') {
                     str += '<input type="hidden" name="new-type" id="new-type" value="2">' +
@@ -279,7 +278,7 @@ function itemSet() {
 function save() {
     if(!checkInput())
         return true;
-    $("#abc table tr:first").nextAll('tr:visible').each(function (key, value) {
+    $("#abc table tr:first").nextAll('tr:visible[id!=trSetting]').each(function (key, value) {
         var item_id = $(value).find("input[id^='id_']").val();
         var sbj = $("#subject_" + item_id).val();
         $("#invoice_" + item_id).val($("#new-invoice").val() == 2 ? 1 : 0);
@@ -465,6 +464,7 @@ function setWidth(e) {
         return $(this).width();
     }).get());
     $(e.parentNode.nextSibling.nextSibling).find('button[class*="btn-"]').width(width);
+    $(e.parentNode.nextSibling.nextSibling).find('input[class*="new-"]:visible').width(width);
 }
 
 //设置交易方名称

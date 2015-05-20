@@ -50,7 +50,7 @@ class Subjects extends CActiveRecord
         // will receive user inputs.
         return array(
             array('sbj_number, sbj_name, sbj_cat', 'required', 'message' => '{attribute}不能为空'),
-            array('sbj_number,sbj_name', 'unique', 'message' => '{attribute}:{value} 已经存在!'),
+            array('sbj_number', 'unique', 'message' => '{attribute}:{value} 已经存在!'),
             array('sbj_number', 'numerical', 'integerOnly' => true),
             array('sbj_name', 'length', 'max' => 20),
             array('sbj_cat', 'length', 'max' => 1),
@@ -164,24 +164,18 @@ class Subjects extends CActiveRecord
     /**
      * 列出科目
      */
-    public function listSubjects()
+    public function listSubjects($sbj='')
     {
+        if($sbj=='')
         $sql = "select * from subjects order by concat(`sbj_number`) asc"; //
+        else
+            $sql = "select * from subjects where sbj_number like '$sbj%' order by concat(`sbj_number`) asc";
         $First = Subjects::model()->findAllBySql($sql);
         $arr = array();
         foreach ($First as $row) {
             $arr += array($row['sbj_number'] => $row['sbj_number'] . Subjects::getSbjPath($row['sbj_number']));
         };
         return $arr;
-        //旧的，不知道有没有地方用到过
-        //函数参数 $sbj_cat
-//    $sql = "select * from subjects where sbj_cat=:sbj_cat order by concat(`sbj_number`) asc"; //
-//    $First = Subjects::model()->findAllBySql($sql, array(':sbj_cat'=>$sbj_cat));
-//    $arr = array();
-//    foreach ($First as $row) {
-//      $arr += array($row['sbj_number'] => $row['sbj_number'] . $row['sbj_name']);
-//    };
-//    return $arr;
     }
 
     public static function hasSub($sbj_id)
@@ -258,25 +252,42 @@ class Subjects extends CActiveRecord
         return $data;
     }
 
-    public function list_sub($sbj_id)
+    /*
+     * 列出子科目
+     * @sbj_id Integer 科目编号
+     * @key String 关键字
+     * @options Array   参数，$rej=[], $level=2, $type=1
+     */
+    public function list_sub($sbj_id, $key = '', $options = [])
     {
+        $level = isset($options['level']) ? $options['level'] : 2;
+        $reject = isset($options['reject']) ? $options['reject'] : [];
         $data = array();
         $sbj_max = $sbj_id * 100 + 99;
-        $sql_1 = "SELECT * FROM subjects where sbj_cat in (1,2,3) AND sbj_number REGEXP '^$sbj_id' AND sbj_number>'$sbj_id' AND sbj_number<='$sbj_max' order by sbj_number";
-        $data_1 = Subjects::model()->findAllBySql($sql_1, array());
-
-        foreach ($data_1 as $key => $item) {
-            array_push($data, $item);
-            if ($item["has_sub"] == 1) {
-                echo $sbj_id;
-                //        exit(1);
-                $data_sub = $this->list_sub($item["sbj_number"]);
-                foreach ($data_sub as $key => $item_sub) {
-                    array_push($data, $item_sub);
-                }
-
-            }
+        $rejSbj = '';
+        foreach($reject as $item){  //去除包含需要剔除关键字的科目
+            $rejSbj .= " And sbj_name not like '%$item%' ";
         }
+        $sql_1 = "SELECT * FROM subjects where sbj_number REGEXP '^$sbj_id' ";
+        if($level==1)
+            $sql_1.= "AND sbj_number>='$sbj_id' ";
+        else
+            $sql_1.= "AND sbj_number>'$sbj_id' ";
+        $sql_1 .= "AND sbj_number<='$sbj_max' AND sbj_name like '%".$key."%'";
+        $sql_1 .= $rejSbj!=""?$rejSbj:"";
+        $sql_1 .= " order by INSTR(sbj_name,'$key') desc";
+        $data_1 = self::findAllBySql($sql_1, array());
+
+        if (!empty($data_1))
+            foreach ($data_1 as $key => $item) {
+                array_push($data, $item->attributes);
+                if ($item["has_sub"] == 1) {
+                    $data_sub = $this->list_sub($item["sbj_number"], $key, $options);
+                    foreach ($data_sub as $key => $item_sub) {
+                        array_push($data, $item_sub->attributes);
+                    }
+                }
+            }
 
         return $data;
     }
@@ -397,7 +408,7 @@ class Subjects extends CActiveRecord
                 $length = strlen($sbj_nubmer) + 2;
 
 
-            $sql = "select max(sbj_number) as sbj_number from subjects where `sbj_number` like :sbj_number and length(`sbj_number`)=:length";
+            $sql = "select max(sbj_number) as sbj_number, sbj_cat from subjects where `sbj_number` like :sbj_number and length(`sbj_number`)=:length";
 
             $number = Yii::app()->db
                 ->createCommand($sql)
@@ -405,10 +416,113 @@ class Subjects extends CActiveRecord
                 ->queryRow();
 
             if ($number['sbj_number'] != null)
-                return (int)$number['sbj_number'] + 1;
-            else
-                return $sbj_nubmer . '01';
+                return [(int)$number['sbj_number'] + 1, $number['sbj_cat']];
+            else{
+
+                $subj = self::findByPk($sbj_nubmer);
+                return [$sbj_nubmer . '01', $subj->sbj_cat];
+            }
         }
     }
 
+    /*
+     * @arr Array 科目列表
+     * @key String  关键字
+     * @options Array   参数，$rej=[], $level=2, $type=1
+     *
+     * @return Array
+     */
+    public function getitem($arr, $key = '', $options = [])
+    {
+        $subject = new Subjects();
+        $result = [];
+        $type = isset($options['type']) ? $options['type'] : 1;
+        foreach ($arr as $item) {
+            $arr_subj = $subject->list_sub($item, $key, $options);
+            foreach ($arr_subj as $subj) {
+                if($type==0){
+                    $result['_'. $subj['sbj_number']] = $subj['sbj_name'];
+                }else
+                    $result['_' . $subj['sbj_number']]=Subjects::getSbjPath($subj['sbj_number']);
+            }
+        }
+        if(empty($result))
+            foreach ($arr as $item) {
+                $arr_subj = $subject->list_sub($item, '', $options);
+                foreach ($arr_subj as $subj) {
+                    if($type==0){
+                        $result['_'. $subj['sbj_number']] = $subj['sbj_name'];
+                    }else
+                        $result['_' . $subj['sbj_number']]=Subjects::getSbjPath($subj['sbj_number']);
+                }
+            }
+        return $result;
+    }
+    /*
+     * 根据关键字匹配科目表
+     * @key Integer 关键字
+     * @subject Array   科目编号数组
+     * @level Integer 层数，0代表科目编号下所有子科目，1代表当前科目编号的子科目，子科目的子科目不包含
+     */
+    public static function matchSubject($key, $subjects, $level = 0)
+    {
+        //似乎应该完成匹配
+        $data = Yii::app()->db->createCommand("select * from ". self::model()->tableSchema->name. " where sbj_name like '%$key%'")->queryAll();
+        $sbj = 0;
+        $percent = 100;
+        foreach ($data as $item) {
+            $per = levenshtein($key, $item['sbj_name']);
+            if ($percent > $per && in_array(substr($item['sbj_number'], 0, 4), $subjects)) {
+                if ($level != 0 && strlen($item['sbj_number']) <= (4 + $level * 2)) {
+                    $sbj = $item['sbj_number'];
+                    $percent = $per;
+                }
+            }
+        }
+        if ($sbj == 0)
+            $sbj = Subjects::createSubject($key, $subjects[0]);
+        return $sbj;
+    }
+
+    /*
+     * 如果没有就新建科目
+     */
+    public static function createSubject($key, $sbj)
+    {
+        $model = new Subjects();
+        $check = self::checkSbj($sbj, trim($key));
+        if ($check != 0) {
+            return $check;
+        }
+        $subj = $model->model()->init_new_sbj_number($sbj, 2);
+        $model->sbj_number = $subj[0];
+        $model->sbj_name = $key;
+        $model->sbj_cat = $subj[1];
+
+        if ($model->save()) {
+            //如果是新的子科目，将post中科目表id修改为新id
+            if (strlen($subj[0]) > 4 && substr($subj[0], -2) == '01')  ////1为同级科目，2为子科目
+            {
+                Post::tranPost($subj[0]);
+                self::hasSub($subj[0]);
+            }
+            return $model->sbj_number;
+        } else {
+            throw new HttpException(400);
+        }
+    }
+
+    /*
+     * 创建科目时，检测子科目下是否已经存在该科目
+     */
+    public static function checkSbj($key, $name)
+    {
+        $sbj_max = $key * 100 + 99;
+        $sql = "SELECT sbj_number FROM subjects where sbj_number REGEXP '^$key' AND sbj_number>'$key' AND sbj_number<='$sbj_max' AND sbj_name='$name'";
+        $model = self::model()->findBySql($sql);
+        if ($model != null)
+            return $model->sbj_number;
+        else
+            return 0;
+    }
 }

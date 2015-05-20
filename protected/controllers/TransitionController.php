@@ -192,23 +192,27 @@ class TransitionController extends Controller
         Yii::import('ext.phpexcel.PHPExcel.PHPExcel_IOFactory');
         if (Yii::app()->request->isPostRequest) {
             //上传附件查看
-            if (isset($_FILES['attachment']) == true && file_exists($_FILES['attachment']['tmp_name'])) {
+            if ($_FILES['attachment']!='' && file_exists($_FILES['attachment']['tmp_name'])) {
                 $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
-                $sheetData = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+                $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
                 if (!isset($_REQUEST['first']))
-                    array_shift($sheetData);
-            } elseif(!isset($_FILES['attachment'])){
+                    array_shift($list);
+                foreach($list as $item){
+                    $sheetData[] = Transition::getSheetData($item);
+                }
+            } elseif($_FILES['attachment']['name']==''){
                 //保存按钮
                 $arr = $this->saveAll(1);
                 if (!empty($arr))
                     foreach ($arr as $item) {
+                        $data = Transition::getSheetData($item['data']);
                         if ($item['status'] == 0) {
                             Yii::app()->user->setFlash('error', "保存失败!");
-                            $sheetData[] = $item['data'];
+                            $sheetData[] = $data;
                         }
                         if ($item['status'] == 2) {
                             Yii::app()->user->setFlash('error', "数据保存成功，未生成凭证");
-                            $sheetData[] = $item['data'];
+                            $sheetData[] = $data;
                         }
                     }
                 else{
@@ -220,8 +224,9 @@ class TransitionController extends Controller
             }
         }
 
-        if (empty($sheetData))
-            $sheetData = array(array('A' => '', 'B' => date('Ymd'), 'C' => '', 'D' => '0'));
+        if (empty($sheetData)){
+            $sheetData[] = Transition::getSheetData();
+        }
 
         $model[] = new Transition();
         return $this->render('head', ['type' => 'bank', 'sheetData' => $sheetData, 'info' => $info]);
@@ -764,9 +769,10 @@ class TransitionController extends Controller
     /*
      * 反结账
      */
-    public function actionAntiSettlement($edate)
+    public function actionAntiSettlement($edate='')
     {
         $date= date('Ym', time());
+//        $date = '201509';
         $result = false;
         while ($date > Yii::app()->params['startDate'] && $date >= $edate) {
             $result = $this->antiSettlement($date);
@@ -876,8 +882,8 @@ class TransitionController extends Controller
     public function actionPrint()
     {
         //设置php响应时间为30秒
-        ini_set("max_execution_time", 30);
-        set_time_limit(30);
+        ini_set("max_execution_time", 300);
+        set_time_limit(300);
         $year = $_REQUEST['year'];
 
         $fm = $_REQUEST['fm'];
@@ -1089,6 +1095,7 @@ class TransitionController extends Controller
         $trans = $_POST['lists'];
         $result = [];
         $newone = 0;
+        $sbj_bank = $_POST['sbj_bank'];
         foreach ($trans as $key => $item) {
             if ($type == 1)
                 $model = new Bank;
@@ -1102,6 +1109,7 @@ class TransitionController extends Controller
             $newone ++;
             $arr = $item['Transition'];
             $arr['amount'] = $arr['entry_amount'];
+            $arr['sbj_bank'] = $sbj_bank;
             $arr['updated_at'] = time();
             $model->load($arr);
             if ($arr['entry_amount'] == "" || $arr['entry_amount'] == 0) {
@@ -1174,9 +1182,7 @@ class TransitionController extends Controller
                         $data['entry_transaction'] = $tran->entry_transaction == 1 ? 2 : 1;
                     else
                         $tran['entry_amount'] = -$tran['entry_amount'];
-//                    $model = Subj::findOne ($tran->entry_subject);  //银行交易 中的对应银行存款1002，银行存款二级科目可供选择
-//                    $data['entry_subject'] = $model->sub_sub;
-                    $data['entry_subject'] = 1002;  // 银行存款（1002）
+                    $data['entry_subject'] = $sbj_bank;  // 银行存款（1002）
                     $tran2->attributes = $data;
                     if ($model->id != '')
                         $this->delTran(1, $model->id);

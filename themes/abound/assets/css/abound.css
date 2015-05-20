@@ -712,9 +712,10 @@ text-indent:-9999em;
     width: 200px;
     padding: 5px;
     display: table-cell;
+    vertical-align: top;
+
 }
 .choose-btn{
-    vertical-align: top;
     width: auto;
 }
 .choose-btn-group{

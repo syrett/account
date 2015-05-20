@@ -22,12 +22,12 @@ if (false !== strpos('abc.com', $domain)) {
     $config=dirname(__FILE__).'/protected/config/production.php';
 }
 //use yii2 with yii1 http://www.yiiframework.com/doc-2.0/guide-tutorial-yii-integration.html
-require(__DIR__ . '/protected/components/Yii.php');
-$yii2Config = require(__DIR__ . '/backend/config/main.php');
-new yii\web\Application($yii2Config); // Do NOT call run()
+//require(__DIR__ . '/protected/components/Yii.php');
+//$yii2Config = require(__DIR__ . '/backend/config/main.php');
+//new yii\web\Application($yii2Config); // Do NOT call run()
 
-defined('Laofashi') or define('Laofashi', '/backend/web');
+//defined('Laofashi') or define('Laofashi', '/backend/web');
 
 require_once(dirname(__FILE__).'/protected/extensions/utils.php');
-//require_once($yii);
+require_once($yii);
 Yii::createWebApplication($config)->run();
