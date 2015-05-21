@@ -2,35 +2,47 @@
 
 function beTranPrefix($year, $month)
 {
-  if($year==null || $month==null)
-    return date('Y').date('m');
-  else
-    return date("Ym", mktime(0,0,0,$month,01,$year));
+    if ($year == null || $month == null)
+        return date('Y') . date('m');
+    else
+        return date("Ym", mktime(0, 0, 0, $month, 01, $year));
 }
-function getYear($date){
+
+function getYear($date)
+{
     return substr($date, 0, 4);
 }
-function getMon($date){
+
+function getMon($date)
+{
     return substr($date, 4, 2);
 }
-function getYearMon($date){
+
+function getYearMon($date)
+{
     return substr($date, 0, 6);
 }
-function getDay($date){
+
+function getDay($date)
+{
     return substr($date, 6, 2);
 }
-function accessReview($tranID){
+
+function accessReview($tranID)
+{
     $user = Yii::app()->user->id;
-    $access = Transition::model()->findByAttributes(array('id'=>$tranID,'entry_editor'=>$user));
-    if(empty($access))
+    $access = Transition::model()->findByAttributes(array('id' => $tranID, 'entry_editor' => $user));
+    if (empty($access))
         return true;
     else
         return false;
 }
-function accessSettle($tranID){
-    $list= Yii::app()->db
-        ->createCommand("select * from transition where id=:tranID and (entry_posting=1 or entry_closing=1)")->bindParam(":tranID",$tranID)->queryAll();
-    if(!empty($list))
+
+function accessSettle($tranID)
+{
+    $list = Yii::app()->db
+        ->createCommand("select * from transition where id=:tranID and (entry_posting=1 or entry_closing=1)")->bindParam(":tranID", $tranID)->queryAll();
+    if (!empty($list))
         return false;
     else
         return true;
@@ -38,68 +50,66 @@ function accessSettle($tranID){
 
 function balance($last_balance, $debit, $credit, $sbj_cat)
 {
-  $balance = 0;
-  switch($sbj_cat)
-    {
-    case 1: //资产类
-      $balance = $last_balance + $debit - $credit;
-      break;
-    case 2: //负债类
-      $balance = $last_balance + $credit - $debit;
-      break;
-    case 3: //权益类
-      $balance = $last_balance + $credit - $debit;
-      break;
-    case 4: //收入类
-      $balance = $credit - $debit;
-      break;
-    case 5: //费用类
-      $balance = $debit - $credit;
-      break;
-    default:
-      $balance = 0;
-      break;
+    $balance = 0;
+    switch ($sbj_cat) {
+        case 1: //资产类
+            $balance = $last_balance + $debit - $credit;
+            break;
+        case 2: //负债类
+            $balance = $last_balance + $credit - $debit;
+            break;
+        case 3: //权益类
+            $balance = $last_balance + $credit - $debit;
+            break;
+        case 4: //收入类
+            $balance = $credit - $debit;
+            break;
+        case 5: //费用类
+            $balance = $debit - $credit;
+            break;
+        default:
+            $balance = 0;
+            break;
     }
-  return number_format($balance, 2,'.','');
+    return number_format($balance, 2, '.', '');
 }
 
 function balance2($last_balance, $debit, $credit, $sbj_cat)
 {
-  $balance = 0;
-  switch($sbj_cat)
-    {
-    case 5: //费用类
-    case 1: //资产类
-      $balance = $last_balance + $debit - $credit;
-      break;
-    case 4: //收入类
-    case 2: //负债类
-      $balance = $last_balance + $credit - $debit;
-      break;
-    case 3: //权益类
-      $balance = $last_balance + $credit - $debit;
-      break;
-    default:
-      $balance = 0;
-      break;
+    $balance = 0;
+    switch ($sbj_cat) {
+        case 5: //费用类
+        case 1: //资产类
+            $balance = $last_balance + $debit - $credit;
+            break;
+        case 4: //收入类
+        case 2: //负债类
+            $balance = $last_balance + $credit - $debit;
+            break;
+        case 3: //权益类
+            $balance = $last_balance + $credit - $debit;
+            break;
+        default:
+            $balance = 0;
+            break;
     }
-  return number_format($balance, 2,'.','');
+    return number_format($balance, 2, '.', '');
 }
 
-function menuIsActive($arrs, $str, $id){
-    if($str == 'options4' ){
-        if(isset($_REQUEST['operation'])&&in_array($_REQUEST['operation'], $arrs)){
-        return true;
-    }
-    else
-    {
-        return $id=='subjects'?true:false;
-    }
+function menuIsActive($arrs, $str, $id)
+{
+    if ($str == 'options4') {
+        if (isset($_REQUEST['operation']) && in_array($_REQUEST['operation'], $arrs)) {
+            return true;
+        } else {
+            return $id == 'subjects' ? true : false;
+        }
         return false;
     }
 }
 
-function UpAmount($num){
+function UpAmount($num)
+{
     /**
      *数字金额转换成中文大写金额的函数
      *String Int $num 要转换的小写数字或小写字符串
@@ -117,7 +127,7 @@ function UpAmount($num){
     $c = "";
     while (1) {
         if ($i == 0) {
-            $n = substr($num, strlen($num)-1, 1);
+            $n = substr($num, strlen($num) - 1, 1);
         } else {
             $n = $num % 10;
         }
@@ -143,31 +153,44 @@ function UpAmount($num){
             $left = substr($c, 0, $j);
             $right = substr($c, $j + 3);
             $c = $left . $right;
-            $j = $j-3;
-            $slen = $slen-3;
+            $j = $j - 3;
+            $slen = $slen - 3;
         }
         $j = $j + 3;
     }
 
-    if (substr($c, strlen($c)-3, 3) == '零') {
-        $c = substr($c, 0, strlen($c)-3);
+    if (substr($c, strlen($c) - 3, 3) == '零') {
+        $c = substr($c, 0, strlen($c) - 3);
     }
     if (empty($c)) {
         return "零元整";
-    }else{
+    } else {
         return $c . "整";
     }
 
 }
 
-function checkAmount($amount){
+function checkAmount($amount)
+{
     $reg = "/-?[1-9]?\d*\.?\d?\d?|-?0\.\d?\d?/";
     preg_match($reg, $amount, $arr);
     $result = $arr[0];
     //不知道为什么，这样会报错
 //  if( $arr[0] == $amount)
-    if( $result == $amount)
+    if ($result == $amount)
         return true;
     else
         return false;
+}
+
+/*
+ * 将日期转换为yyyymd的格式
+ */
+function convertDate($str)
+{
+    if (strlen($str) > 8) {
+        $str = str_replace(".", "-", $str);
+        return date('Ymd', strtotime($str));
+    } else
+        return $str;
 }

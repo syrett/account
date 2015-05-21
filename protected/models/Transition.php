@@ -352,7 +352,7 @@ class Transition extends CActiveRecord
             $arr = array_merge($arr,$items);
             if (isset($items['A'])){
                 $arr['entry_name'] = trim($items['A']);
-                $arr['entry_date'] = trim($items['B']);
+                $arr['entry_date'] = convertDate($items['B']);
                 $arr['entry_memo'] = trim($items['C']);
                 $arr['entry_amount'] = str_replace(",","",trim($items['D']));
             }
@@ -364,8 +364,8 @@ class Transition extends CActiveRecord
                         $arr[$key] = trim($item);
                         if($key=='entry_amount')
                             $arr[$key] = str_replace(",", "", trim($item));
-                        if($key=='entry_date' && strlen($item)>6)
-                            $arr[$key] = date('Ymd', strtotime($item));
+                        if($key=='entry_date')
+                            $arr[$key] = convertDate($item);
                     }
                 }
                 $arr['entry_name'] = isset($items['target'])?$items['target']:$arr['entry_name'];
@@ -427,7 +427,7 @@ class Transition extends CActiveRecord
             'id' => 'ID',
             'entry_num_prefix' => '凭证前缀',
             'entry_num' => '凭证号',
-            'entry_time' => '日',
+            'entry_time' => '录入时间',
             'entry_date' => '凭证日期',
             'entry_name' => '交易对象名称',
             'data_type' => '交易类型',
@@ -447,7 +447,6 @@ class Transition extends CActiveRecord
             'entry_closing' => '结转',
             'entry_settlement' => '结转凭证',
             'entry_number' => '凭证编号',
-            'entry_time' => '录入时间',
         );
     }
 
