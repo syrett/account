@@ -57,10 +57,10 @@ $tranDate = $command->queryRow(); // execute a query SQL
     ?>
     <div class="row">
         <div class="col-xs-9">
-            <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data",'id' => 'form']); ?>
-            <div class="choose-file choose-btn">
+            <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form']); ?>
+            <div class="choose-file  choose-btn-group">
                 <a href="/download/导入模板.xlsx" download>
-                    <button type="button" class=" btn btn-default">模板下载</button>
+                    <button type="button" class=" btn btn-default choose-btn">模板下载</button>
                 </a>
             </div>
             <!--                <i class="fa fa-paperclip"></i> 上传Excel-->
@@ -71,24 +71,32 @@ $tranDate = $command->queryRow(); // execute a query SQL
                         选择文件<input name="attachment" type="file" accept=".xls,.xlsx">
                     </span>
                 </span>
-                    <input type="text" class="form-control" id="import_file_name" readonly="">
+                    <input type="text" class="form-control btn-file"" id="import_file_name" readonly="">
                 </div>
                 <input type="checkbox" class="" name="first"/><label>第一行包含数据</label>
-                <button type="submit" class="btn btn-default right">导入</button>
+                <button type="submit" class="btn btn-default right btn-file">导入</button>
             </div>
             <div class="choose-file">
                 <?
                 $banks = Subjects::model()->list_sub(1002);
                 $data = [];
-                foreach($banks as $item){
+                foreach ($banks as $item) {
                     $data[$item['sbj_number']] = $item['sbj_name'];
                 }
                 $this->widget('Select2', array(
                     'name' => 'sbj_bank',
                     'id' => 'sbj_bank',
+                    'htmlOptions' => ['class'=>'choose-bank'],
                     'data' => $data,
                 ));
                 ?>
+                <div class="choose-file">
+                    <input id="bank_name" placeholder="银行名称" type="text" class="input_mid"/>
+                </div>
+
+                <div class="choose-file">
+                    <button class="btn btn-default btn-file right" type="button" onclick="addBank()">添加</button>
+                </div>
             </div>
         </div>
     </div>
@@ -118,7 +126,7 @@ $tranDate = $command->queryRow(); // execute a query SQL
                                        value="<?= isset($item['id']) ? $item['id'] : '' ?>"></td>
                             <td><input type="text" id="tran_name_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_name]" placeholder="对方名称"
-                                       value="<?= $item['entry_name']?>">
+                                       value="<?= $item['entry_name'] ?>">
                             </td>
                             <td><input class="input_mid" type="text" id="tran_date_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_date]"
@@ -140,24 +148,30 @@ $tranDate = $command->queryRow(); // execute a query SQL
                                        value="<?= isset($item['d_id']) ? $item['d_id'] : '' ?>">
                                 <input type="hidden" id="id_<?= $key ?>" value="<?= $key ?>">
                                 <input type="hidden" id="subject_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][entry_subject]" value="<?= $item['entry_subject']?>">
+                                       name="lists[<?= $key ?>][Transition][entry_subject]"
+                                       value="<?= $item['entry_subject'] ?>">
                                 <input type="hidden" id="transaction_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][entry_transaction]" value="<?= $item['entry_transaction']?>">
+                                       name="lists[<?= $key ?>][Transition][entry_transaction]"
+                                       value="<?= $item['entry_transaction'] ?>">
                                 <input type="hidden" id="invoice_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][invoice]" value="<?= $item['invoice']?>">
-                                <input type="hidden" id="withtax_<?= $key ?>" value="<?= $item['tax']>0?1:0?>">
+                                       name="lists[<?= $key ?>][Transition][invoice]" value="<?= $item['invoice'] ?>">
+                                <input type="hidden" id="withtax_<?= $key ?>" value="<?= $item['tax'] > 0 ? 1 : 0 ?>">
                                 <input type="hidden" id="tax_<?= $key ?>" name="lists[<?= $key ?>][Transition][tax]"
-                                       value="<?= $item['tax']?>">
+                                       value="<?= $item['tax'] ?>">
                                 <input type="hidden" id="parent_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][parent]" value="<?= $item['parent']?>">
+                                       name="lists[<?= $key ?>][Transition][parent]" value="<?= $item['parent'] ?>">
                                 <input type="hidden" id="additional_sbj0_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][additional][0][subject]" value="<?= $item['additional'][0]['subject']?>">
+                                       name="lists[<?= $key ?>][Transition][additional][0][subject]"
+                                       value="<?= $item['additional'][0]['subject'] ?>">
                                 <input type="hidden" id="additional_amount0_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][additional][0][amount]" value="<?= $item['additional'][0]['amount']?>">
+                                       name="lists[<?= $key ?>][Transition][additional][0][amount]"
+                                       value="<?= $item['additional'][0]['amount'] ?>">
                                 <input type="hidden" id="additional_sbj1_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][additional][1][subject]" value="<?= $item['additional'][1]['subject']?>">
+                                       name="lists[<?= $key ?>][Transition][additional][1][subject]"
+                                       value="<?= $item['additional'][1]['subject'] ?>">
                                 <input type="hidden" id="additional_amount1_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][additional][1][amount]" value="<?= $item['additional'][1]['amount']?>">
+                                       name="lists[<?= $key ?>][Transition][additional][1][amount]"
+                                       value="<?= $item['additional'][1]['amount'] ?>">
 
                                 <div class="btn-group btn-group-xs" role="group">
                                     <button type="button" class="btn btn-default" onclick="itemsetting(this)">记账

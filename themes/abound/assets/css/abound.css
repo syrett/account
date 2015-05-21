@@ -692,6 +692,9 @@ text-indent:-9999em;
 .btn-file {
     position: relative;
     overflow: hidden;
+    height: 26px;
+    font-size: 13.4px;
+    padding: 3px 10px;
 }
 .btn-file input[type=file] {
     position: absolute;
@@ -716,10 +719,16 @@ text-indent:-9999em;
 
 }
 .choose-btn{
-    width: auto;
+    height: 26px;
+    padding: 3px 10px;
+    font-size: 13.33px;
 }
 .choose-btn-group{
+    width: auto;
     margin-bottom: 3px;
+}
+.choose-bank{
+    width: 100%;
 }
 .input_full{
     width: 100%;

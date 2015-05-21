@@ -65,14 +65,14 @@ function itemsetting(e) {
     //});
     //cleanDialog();
     //$("#itemSetting").dialog("open");
-    if(!$("#trSetting").is(":visible")){
+    if (!$("#trSetting").is(":visible")) {
         $(e.parentNode.parentNode.parentNode).after($("#trSetting"));
         $("#trSetting").show();
         $("#itemSetting").slideDown();
         var id = $(e.parentNode.parentNode).find("input[id^='id_']")[0].value;
         $("#item_id").val(id);
         $("#data").val(getInfo(e.parentNode));
-    }else
+    } else
         dialogClose();
 }
 function chooseType(e, a) {
@@ -260,7 +260,7 @@ function itemSet() {
                 str += "=>" + $(value).html();
         })
         //设置含税，简单版可以这样设置，复杂版要重新设计
-        if($("#new-option").is(":checked") == true)
+        if ($("#new-option").is(":checked") == true)
             $("#withtax_" + item_id).val(1);
         else
             $("#withtax_" + item_id).val(0);
@@ -276,16 +276,16 @@ function itemSet() {
 }
 //保存凭证，此时再根据选择的科目计算一些数值
 function save() {
-    if(!checkInput())
+    if (!checkInput())
         return true;
     $("#abc table tr:first").nextAll('tr:visible[id!=trSetting]').each(function (key, value) {
         var item_id = $(value).find("input[id^='id_']").val();
         var sbj = $("#subject_" + item_id).val();
         $("#invoice_" + item_id).val($("#new-invoice").val() == 2 ? 1 : 0);
-        $("#tax_" + item_id).val($("#withtax_"+item_id).val()==1?3:0);
+        $("#tax_" + item_id).val($("#withtax_" + item_id).val() == 1 ? 3 : 0);
 
         //主营业务收入才计算税率
-        if (sbj.substr(0, 4) == "6001" && $("#withtax_"+item_id).val() == 1)
+        if (sbj.substr(0, 4) == "6001" && $("#withtax_" + item_id).val() == 1)
             setTax(item_id);    //设置税
     })
     $("#form").submit();
@@ -417,12 +417,6 @@ function IsNum(s) {
  * 选择科目，
  */
 function chooseSubject(e) {
-    //if($("select:visible[id*='new-category-']").length==0) //如果没有，那就是第一个
-    //{
-    //    chooseOption($("select[id*='new-category-']")[0]);
-    //    $("#button").val($("select[id*='new-category-']")[0].selectedOptions[0].innerHTML)
-    //}
-    //else{
     if ($("#new-invoice").val() == 1) { //第一个下拉框，如果是否定的，才会新建子科目；比如 不是借款 无发票
         var sbj = $("select:visible[id*='new-category-']")[0].value;
         $("#new-subject").val(sbj);
@@ -503,24 +497,21 @@ function unset(id) {
     $("input[name^='lists\[" + id + "\]\[Transition\]\[entry_transaction\]']").val(sbja);
 }
 
-function checkInput(){
+function checkInput() {
     var check = true;
-    $.each($("input[id*='tran_memo_']"), function(key, e){
-        if(e.value=='')
-        {
+    $.each($("input[id*='tran_memo_']"), function (key, e) {
+        if (e.value == '') {
             $(e).after('<span class="info_warning" >不能为空</span>');
             check = false;
         }
     })
-    $.each($("input[id*='tran_amount_']"), function(key,e){
-        if(e.value=='')
-        {
+    $.each($("input[id*='tran_amount_']"), function (key, e) {
+        if (e.value == '') {
             $(e).after('<span class="info_warning" >金额不能为空</span>');
             check = false;
-        }else{
+        } else {
             var b = /-?[1-9]?\d*\.?\d?\d?|-?0\.\d?\d?/;
-            if(e.value != b.exec(e.value))
-            {
+            if (e.value != b.exec(e.value)) {
                 $(e).after('<span class="info_warning" >金额格式不正确</span>');
                 check = false;
             }
@@ -529,3 +520,47 @@ function checkInput(){
     })
     return check;
 }
+
+function createSubject(url, data) {
+    var result = 0;
+    $.ajax({
+        async: false,
+        type: "POST",
+        url: url,
+        data: data,
+        //{
+        //        name: a.children("input[name=new-name]").val(),
+        //        subject: a.children("input[name=new-subject]").val()
+        //    },
+        success: function (data) {
+            result = data;
+        },
+        error: function (msg) {
+            result = msg;
+        }
+    })
+    return result;
+}
+
+/*
+ 添加银行 银行存款二级科目
+ */
+function addBank() {
+    var url = $("#new-url").val();
+    var name = $("#bank_name").val();
+    var data = {
+        name: name,
+        subject: 1002
+    }
+    var msg = createSubject(url, data);
+    if (msg > 0 && $("#sbj_bank > option[value='" + msg + "']").length == 0) {
+        $("#sbj_bank").append(new Option(name, msg))
+        alert('添加成功');
+        ;
+    }
+    $("#sbj_bank option").each(function () {
+        this.selected = (this.value == msg);
+    });
+    $("#sbj_bank").select2();
+}
+

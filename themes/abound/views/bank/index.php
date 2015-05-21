@@ -67,7 +67,7 @@ $('.search-form form').submit(function(){
                         }
                     });
                 }else{
-                    alert("请选择要删除的关键字!");
+                    alert("请选择要删除的行!");
                 }
             }
             /*]]>*/

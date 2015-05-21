@@ -80,16 +80,6 @@ return array(
             'enableProfiling' => YII_DEBUG,
             'enableParamLogging' => YII_DEBUG,
         ),
-        'db2' => array(
-            'class' => 'CDbConnection',
-            'connectionString' => 'mysql:host=127.0.0.1;dbname=laofashi',
-            'emulatePrepare' => true,
-            'username' => 'dev',
-            'password' => 'P@ssw0rd',
-            'charset' => 'utf8',
-            'enableProfiling' => true,
-            'enableParamLogging' => true,
-        ),
         'dbadmin'=>array(
             'class'            => 'CDbConnection',
             'connectionString' => 'mysql:host=127.0.0.1;dbname=manage',
