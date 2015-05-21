@@ -350,7 +350,7 @@ class Transition extends CActiveRecord
         ];
         if (is_array($items)) {
             $arr = array_merge($arr,$items);
-            if (isset($items['A'])){
+            if (isset($items['B'])||isset($items['C'])){
                 $arr['entry_name'] = trim($items['A']);
                 $arr['entry_date'] = convertDate($items['B']);
                 $arr['entry_memo'] = trim($items['C']);
