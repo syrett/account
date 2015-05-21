@@ -49,6 +49,29 @@ $('.search-form form').submit(function(){
 			提示：可以通过比较符号 (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>或者 <b>=</b>) 来进行搜索
 		</div>
 		<!-- search-form -->
+
+        <script type="text/javascript">
+            /*<![CDATA[*/
+            var GetCheckbox = function (){
+                var data=new Array();
+                $("input:checkbox[name='selectdel[]']").each(function (){
+                    if($(this).attr("checked")=="checked"){
+                        data.push($(this).val());
+                    }
+                });
+                if(data.length > 0){
+                    $.post('<?php echo CHtml::normalizeUrl(array('/bank/delall/'));?>',{'selectdel[]':data}, function (data) {
+                        var ret = $.parseJSON(data);
+                        if (ret != null && ret.success != null && ret.success) {
+                            $.fn.yiiGridView.update("subjects-grid");
+                        }
+                    });
+                }else{
+                    alert("请选择要删除的关键字!");
+                }
+            }
+            /*]]>*/
+        </script>
 		<?php
 		$this->widget('zii.widgets.grid.CGridView', array(
 			'id' => 'subjects-grid',
@@ -59,6 +82,13 @@ $('.search-form form').submit(function(){
 			'rowCssClassExpression' =>'$data->getClass($row,$data->status_id)',
 			'itemsCssClass' => 'table table-bordered',
 			'columns' => array(
+                array(
+                    'selectableRows' => 2,
+                    'footer' => '<span class="glyphicon glyphicon-trash" onclick="GetCheckbox();" ></span>',
+                    'class' => 'CCheckBoxColumn',
+                    'headerHtmlOptions' => array('width'=>'33px'),
+                    'checkBoxHtmlOptions' => array('name' => 'selectdel[]'),
+                ),
 				'target',
 				'date',
 				'memo',

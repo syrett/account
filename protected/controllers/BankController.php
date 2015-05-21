@@ -28,13 +28,10 @@ class BankController extends Controller
 	{
 		return array(
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update','type','option','createemployee','createsubject','save'),
+				'actions'=>array('index','create','delall','update','type','option','createemployee','createsubject','save'),
 				'users'=>array('@'),
 			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('index','delete'),
-				'users'=>array('@'),
-			),
+
 			array('deny',  // deny all users
 				'users'=>array('*'),
 			),
@@ -108,6 +105,29 @@ class BankController extends Controller
 		if(!isset($_GET['ajax']))
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 	}
+
+    /*
+     * delete all
+     */
+    public function actionDelall(){
+        if (Yii::app()->request->isPostRequest)
+        {
+            $criteria= new CDbCriteria;
+            $criteria->addInCondition('id', $_POST['selectdel']);
+            $cri = new CDbCriteria;
+            $cri->addInCondition('data_id', $_POST['selectdel']);
+            Bank::model()->deleteAll($criteria);
+            Transition::model()->deleteAll($cri);
+
+
+            if(isset(Yii::app()->request->isAjaxRequest)) {
+                echo CJSON::encode(array('success' => true));
+            } else
+                $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
+        }
+        else
+            throw new CHttpException(400,'不合法的请求，请稍后重试');
+    }
 
 	/**
 	 * Lists all models.

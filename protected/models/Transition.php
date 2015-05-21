@@ -354,10 +354,11 @@ class Transition extends CActiveRecord
                 $arr['entry_name'] = trim($items['A']);
                 $arr['entry_date'] = convertDate($items['B']);
                 $arr['entry_memo'] = trim($items['C']);
-                $arr['entry_amount'] = str_replace(",","",trim($items['D']));
+
+                $amount = trim($items['D'])!= ''?$items['D']:$items['E'];
+                $arr['entry_amount'] = str_replace(",","",$amount);
             }
             else{
-
                 foreach ($items as $key => $item) {
                     if(!is_array($item))
                     {
