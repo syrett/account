@@ -554,9 +554,7 @@ function addBank() {
     }
     var msg = createSubject(url, data);
     if (msg > 0 && $("#sbj_bank > option[value='" + msg + "']").length == 0) {
-        $("#sbj_bank").append(new Option(name, msg))
-        alert('添加成功');
-        ;
+        $("#sbj_bank").append(new Option(name, msg));
     }
     $("#sbj_bank option").each(function () {
         this.selected = (this.value == msg);

@@ -356,7 +356,9 @@ class Transition extends CActiveRecord
                 $arr['entry_memo'] = trim($items['C']);
 
                 $amount = trim($items['D'])!= ''?$items['D']:$items['E'];
-                $arr['entry_amount'] = str_replace(",","",$amount);
+                $amount = str_replace(" ",'',$amount);  //英文空格
+                $amount = str_replace(" ",'',$amount);  //可能是中文或英文全角空格
+                $arr['entry_amount'] = str_replace(",","",trim($amount));
             }
             else{
                 foreach ($items as $key => $item) {
