@@ -72,6 +72,7 @@ function itemsetting(e) {
         var id = $(e.parentNode.parentNode).find("input[id^='id_']")[0].value;
         $("#item_id").val(id);
         $("#data").val(getInfo(e.parentNode));
+        unsetting();
     } else
         dialogClose();
 }
@@ -497,6 +498,10 @@ function unset(id) {
     //如果选择了项目，才消除 已经存在的科目编号
     $("input[name^='lists\[" + id + "\]\[Transition\]\[entry_subject\]']").val(sbj);
     $("input[name^='lists\[" + id + "\]\[Transition\]\[entry_transaction\]']").val(sbja);
+}
+//清除科目选择里面的数据，否则直接点确定的话，subject里面有上一次的科目编号
+function unsetting(){
+    $("#subject").val('')
 }
 
 function checkInput() {
