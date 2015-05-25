@@ -30,7 +30,7 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
     foreach(Yii::app()->user->getFlashes() as $key => $message) {
         echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
     }?>
-	<div class="alert alert-info">注意：所有字段必须填写</div>
+	<div class="alert alert-info">注意：新建科目为所选科目“子科目”</div>
     <?php
     if($model->getIsNewRecord()) {
     ?>
