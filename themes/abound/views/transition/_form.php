@@ -24,6 +24,7 @@ $tranDate = $command->queryRow(); // execute a query SQL
   $model = array();
   $model[0]=new Transition();
   }*/
+$subjects = Transition::model()->listSubjectsGrouped();
 ?>
 
 <?php echo CHtml::beginForm(); ?>
@@ -112,7 +113,7 @@ foreach ($model as $i => $item) {
                <?php echo $form->error($item, '[$i]_entry_memo'); ?>
             </td>
             <td class="col-md-3">
-               <? echo CHtml::activeDropDownList($item, "[$i]entry_subject",Transition::model()->listSubjects(), array('class'=>'v-subject')); ?>
+               <? echo CHtml::activeDropDownList($item, "[$i]entry_subject",$subjects, array('class'=>'v-subject')); ?>
                <input type="hidden" value="<?= $i ?>"/>
             </td>
             <td class="col-md-1">

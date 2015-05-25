@@ -145,21 +145,19 @@ $(document).ready(function () {
         var number = $(this).next().val();
         subjects(this,$("select[id='Transition_"+number+"_entry_transaction']"));
     })
-    $(document).on('paste','.select2-search__field', function() {
-
-    })
+    //$("#test").select2();
 });
 
 $(window).load(function() {
+    $("input.select2-input").on('keyup-change', function(){
+        $('.select2-results li').show();
+    })
     $('.select2-results').on('click', 'li', function(){
         if($(this).find('li').is(":visible"))
             $(this).find('li').hide();
         else
             $(this).find('li').show();
     });
-    $("input.select2-input").on('keyup-change', function(){
-        console.log('test')
-    })
 });
 var subjects = function(se,ob){
 //    if($(se).val()>=6000 && $(se).val()<=6399)

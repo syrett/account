@@ -777,6 +777,26 @@ class Transition extends CActiveRecord
         return $arr;
     }
 
+    /*
+     * 列出科目，以分组的形式
+     */
+    public function listSubjectsGrouped(){
+        $sel = "select * from subjects where has_sub=0 ";
+        $order = " order by concat(`sbj_number`) asc"; //
+        $sbj_cat = 1;
+        $arr = array();
+        while($sbj_cat<6){
+            $sql = $sel. "and sbj_cat=". $sbj_cat .$order;
+            $subjects = Subjects::model()->findAllBySql($sql);
+            $arr[Subjects::getCatName($sbj_cat)] = [];
+            foreach ($subjects as $row) {
+                $arr[Subjects::getCatName($sbj_cat)] += [$row['sbj_number'] => $row['sbj_number'] . Subjects::getSbjPath($row['sbj_number'])];
+            };
+            $sbj_cat++;
+        }
+        return $arr;
+    }
+
     //整理凭证
 
     public function hasSettlement($date)

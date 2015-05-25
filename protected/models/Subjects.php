@@ -525,4 +525,24 @@ class Subjects extends CActiveRecord
         else
             return 0;
     }
+
+    /*
+     * 科目类别
+     */
+    public static function getCatName($cat){
+        $name = '';
+        switch($cat){
+            case 1:
+                $name = '资产类';break;
+            case 2:
+                $name = '负债类';break;
+            case 3:
+                $name = '权益类';break;
+            case 4:
+                $name = '收入类';break;
+            case 5:
+                $name = '费用类';break;
+        }
+        return $name;
+    }
 }
