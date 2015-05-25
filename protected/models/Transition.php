@@ -35,6 +35,87 @@ class Transition extends CActiveRecord
     public $entry_time;
     public $select; // search的时候，定义返回字段
 
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules()
+    {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return array(
+            array('entry_num, entry_subject, entry_amount,entry_creater, entry_editor', 'required'),
+            array('entry_num, entry_transaction, entry_subject,entry_creater, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing', 'numerical', 'integerOnly' => true),
+            array('entry_amount', 'type', 'type' => 'float'),
+            array('entry_num_prefix', 'length', 'max' => 10),
+            array('entry_memo, entry_appendix', 'length', 'max' => 100),
+            array('entry_appendix_id, entry_appendix_type, entry_name, data_type, data_id, entry_date, entry_time', 'safe'),
+            // The following rule is used by search().
+
+            array('id, entry_number, entry_num_prefix, entry_num, entry_date, entry_time, entry_memo, entry_transaction,
+            entry_subject, entry_amount, entry_appendix, entry_appendix_id, entry_appendix_type,entry_creater, entry_editor, entry_reviewer,
+            entry_deleted, entry_reviewed, entry_posting, entry_closing, entry_settlement', 'safe', 'on' => 'search'),
+            //自定义验证规则
+            array('entry_amount', 'check_entry_amount', 'on' => 'create,update'), //借贷相等
+        );
+    }
+
+    /**
+     * @return array relational rules.
+     */
+    public function relations()
+    {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array();
+    }
+
+    /*
+     * 返回凭证是否都已经过账, attributes由实例传入
+     */
+
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels()
+    {
+        return array(
+            'id' => 'ID',
+            'entry_num_prefix' => '凭证前缀',
+            'entry_num' => '凭证号',
+            'entry_time' => '录入时间',
+            'entry_date' => '凭证日期',
+            'entry_name' => '交易对象名称',
+            'data_type' => '交易类型',
+            'data_id' => '原数据ID',
+            'entry_memo' => '凭证摘要',
+            'entry_transaction' => '借贷',
+            'entry_subject' => '借贷科目',
+            'entry_amount' => '交易金额',
+            'entry_appendix' => '附加信息',
+            'entry_appendix_id' => '客户、供应商、员工、项目',
+            'entry_creater' => '制单人员',
+            'entry_editor' => '录入人员',
+            'entry_reviewer' => '审核人员',
+            'entry_deleted' => '凭证删除',
+            'entry_reviewed' => '凭证审核',
+            'entry_posting' => '过账',
+            'entry_closing' => '结转',
+            'entry_settlement' => '结转凭证',
+            'entry_number' => '凭证编号',
+        );
+    }
+
+    /**
+     * Returns the static model of the specified AR class.
+     * Please note that you should have this exact method in all your CActiveRecord descendants!
+     * @param string $className active record class name.
+     * @return Transition the static model class
+     */
+    public static function model($className = __CLASS__)
+    {
+        return parent::model($className);
+    }
+
     public static function getSbjPath($id)
     {
         return Subjects::getSbjPath($id);
@@ -162,17 +243,6 @@ class Transition extends CActiveRecord
             }
         }
         return $arr;
-    }
-
-    /**
-     * Returns the static model of the specified AR class.
-     * Please note that you should have this exact method in all your CActiveRecord descendants!
-     * @param string $className active record class name.
-     * @return Transition the static model class
-     */
-    public static function model($className = __CLASS__)
-    {
-        return parent::model($className);
     }
 
     public static function listTransition()
@@ -381,76 +451,6 @@ class Transition extends CActiveRecord
         return $arr;
 
 
-    }
-
-    /**
-     * @return array validation rules for model attributes.
-     */
-    public function rules()
-    {
-        // NOTE: you should only define rules for those attributes that
-        // will receive user inputs.
-        return array(
-            array('entry_num, entry_subject, entry_amount,entry_creater, entry_editor', 'required'),
-            array('entry_num, entry_transaction, entry_subject,entry_creater, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing', 'numerical', 'integerOnly' => true),
-            array('entry_amount', 'type', 'type' => 'float'),
-            array('entry_num_prefix', 'length', 'max' => 10),
-            array('entry_memo, entry_appendix', 'length', 'max' => 100),
-            array('entry_appendix_id, entry_appendix_type, entry_name, data_type, data_id, entry_date, entry_time', 'safe'),
-            // The following rule is used by search().
-
-            array('id, entry_number, entry_num_prefix, entry_num, entry_date, entry_time, entry_memo, entry_transaction,
-            entry_subject, entry_amount, entry_appendix, entry_appendix_id, entry_appendix_type,entry_creater, entry_editor, entry_reviewer,
-            entry_deleted, entry_reviewed, entry_posting, entry_closing, entry_settlement', 'safe', 'on' => 'search'),
-            //自定义验证规则
-            array('entry_amount', 'check_entry_amount', 'on' => 'create,update'), //借贷相等
-        );
-    }
-
-    /**
-     * @return array relational rules.
-     */
-    public function relations()
-    {
-        // NOTE: you may need to adjust the relation name and the related
-        // class name for the relations automatically generated below.
-        return array();
-    }
-
-    /*
-     * 返回凭证是否都已经过账, attributes由实例传入
-     */
-
-    /**
-     * @return array customized attribute labels (name=>label)
-     */
-    public function attributeLabels()
-    {
-        return array(
-            'id' => 'ID',
-            'entry_num_prefix' => '凭证前缀',
-            'entry_num' => '凭证号',
-            'entry_time' => '录入时间',
-            'entry_date' => '凭证日期',
-            'entry_name' => '交易对象名称',
-            'data_type' => '交易类型',
-            'data_id' => '原数据ID',
-            'entry_memo' => '凭证摘要',
-            'entry_transaction' => '借贷',
-            'entry_subject' => '借贷科目',
-            'entry_amount' => '交易金额',
-            'entry_appendix' => '附加信息',
-            'entry_appendix_id' => '客户、供应商、员工、项目',
-            'entry_creater' => '制单人员',
-            'entry_editor' => '录入人员',
-            'entry_reviewer' => '审核人员',
-            'entry_deleted' => '凭证删除',
-            'entry_reviewed' => '凭证审核',
-            'entry_posting' => '过账',
-            'entry_closing' => '结转',
-            'entry_settlement' => '结转凭证',
-            'entry_number' => '凭证编号',
-        );
     }
 
     /*

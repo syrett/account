@@ -26,32 +26,35 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
         'validateOnSubmit'=>true,
     ),
 )); ?>
-
+    <?
+    foreach(Yii::app()->user->getFlashes() as $key => $message) {
+        echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
+    }?>
 	<div class="alert alert-info">注意：所有字段必须填写</div>
     <?php
     if($model->getIsNewRecord()) {
     ?>
-        <div class="form-group form-group-lg">
-            <label class="col-sm-2 control-label">科目级别</label>
-
-            <div class="col-sm-10">
-                <?php
-                $model->getIsNewRecord();
-                $data = array(1 => '同级科目', 2 => '子科目');
-                if(isset($_REQUEST['sbj_type']))
-                    $value = $_REQUEST['sbj_type'];
-                else
-                    $value = 2;
-                $this->widget('Select2', array(
-                    'name' => 'sbj_type',
-                    'value' => $value,
-                    'data' => $data,
-                ));
-
-                ?>
-                一级科目无法添加同级科目
-            </div>
-        </div>
+<!--        <div class="form-group form-group-lg">-->
+<!--            <label class="col-sm-2 control-label">科目级别</label>-->
+<!---->
+<!--            <div class="col-sm-10">-->
+<!--                --><?php
+//                $model->getIsNewRecord();
+//                $data = array(1 => '同级科目', 2 => '子科目');
+//                if(isset($_REQUEST['sbj_type']))
+//                    $value = $_REQUEST['sbj_type'];
+//                else
+//                    $value = 2;
+//                $this->widget('Select2', array(
+//                    'name' => 'sbj_type',
+//                    'value' => $value,
+//                    'data' => $data,
+//                ));
+//
+//                ?>
+<!--                一级科目无法添加同级科目-->
+<!--            </div>-->
+<!--        </div>-->
 	<div class="form-group form-group-lg">
 		<?php echo $form->label($model,'sbj_name', array('class'=>'col-sm-2 control-label')); ?>
         <div class="col-sm-10">
@@ -93,25 +96,12 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
             </div>
 	</div>
     <?
-    if(!$model->getIsNewRecord()) {
+    if($model->hasErrors()){
+        echo '<div class="alert alert-danger text-left">';
+        echo CHtml::errorSummary($model);
+        echo '</div>';
+    }
     ?>
-	<div class="form-group form-group-lg">
-		<?php echo $form->labelEx($model,'sbj_cat',array('class'=>'col-sm-2 control-label')); ?>
-        <div class="col-sm-10">
-            <?php
-            $data = Yii::app()->params['sbj_cat'];
-            $this->widget('Select2', array(
-                'model' => $model,
-                'attribute' => 'sbj_cat',
-                'value' => 1,
-                'data' => $data,
-            ));
-            ?>
-		<?php echo $form->error($model,'sbj_cat',array('id'=>'sbj_cat_msg')); ?>
-	</div>
-    </div>
-    <? } ?>
-
 	<div class="form-group">
 		<div class="col-sm-offset-2 col-sm-10">
 			<?php echo CHtml::submitButton($model->isNewRecord ? '添加' : '保存', array('class'=>'btn btn-primary',)); ?>

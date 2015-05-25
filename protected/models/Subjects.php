@@ -49,14 +49,15 @@ class Subjects extends CActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('sbj_number, sbj_name, sbj_cat', 'required', 'message' => '{attribute}不能为空'),
+            array('sbj_number, sbj_name', 'required', 'message' => '{attribute}不能为空'),
             array('sbj_number', 'unique', 'message' => '{attribute}:{value} 已经存在!'),
             array('sbj_number', 'numerical', 'integerOnly' => true),
             array('sbj_name', 'length', 'max' => 20),
             array('sbj_cat', 'length', 'max' => 1),
             // The following rule is used by search().
-            // @todo Please remove those attributes that should not be searched.
             array('id, sbj_number, sbj_name, sbj_cat, sbj_table, has_sub', 'safe', 'on' => 'search'),
+
+            array('sbj_name','checkSbjName', 'on' => 'create,update'), //借贷相等
         );
     }
 
@@ -544,5 +545,22 @@ class Subjects extends CActiveRecord
                 $name = '费用类';break;
         }
         return $name;
+    }
+
+    /*
+     * 自定义验证规则
+     */
+    public function checkSbjName($attribute, $params){
+        $sbj_name = $_POST['Subjects']['sbj_name'];
+        $sbj_number = $_POST['Subjects']['sbj_number'];
+        $sbj_num = strlen($sbj_number)>4?substr($sbj_number,0,4):$sbj_number;
+        $criteria = new CDbCriteria;
+        $criteria->addCondition('sbj_name=:sbj_name');
+        $criteria->addCondition('sbj_number like :sbj_num');
+        $criteria->params = ['sbj_name'=>$sbj_name, 'sbj_num'=>$sbj_num.'%'];
+        $sub = Subjects::model()->find($criteria);
+        if($sub!=null && $sub->sbj_number != $sbj_number)
+            $this->addError($attribute, '科目名已经存在');
+
     }
 }
