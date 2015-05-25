@@ -349,6 +349,9 @@ class Bank extends CActiveRecord
     {
         $model = new Subjects();
         $arr_subj = $model->list_sub(6603, $key);
+        if(empty($arr_subj))
+            $arr_subj = $model->list_sub(6603);
+        $list = [];
         foreach ($arr_subj as $subj) {
             $list['_' . $subj['sbj_number']] = $subj['sbj_name'];
         }
