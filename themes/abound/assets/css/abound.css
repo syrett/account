@@ -733,3 +733,6 @@ text-indent:-9999em;
 .input_full{
     width: 100%;
 }
+.select2-result-sub > li.select2-result {
+    display: none;
+}

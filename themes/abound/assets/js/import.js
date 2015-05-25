@@ -485,6 +485,8 @@ function setTransaction(id) {
         $("#transaction_" + id).val(1)
     if (type == '收入')
         $("#transaction_" + id).val(2)
+    if ($("#subject").val()==660302)
+        $("#transaction_" + id).val(1)
 }
 
 //消除数据，设置前先消除

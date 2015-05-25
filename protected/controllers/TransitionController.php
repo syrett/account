@@ -520,6 +520,7 @@ class TransitionController extends Controller
                 ->select('id')
                 ->from('transition as a')
                 ->where('entry_num_prefix="' . $data['entry_num_prefix'] . '" and entry_num="' . $data['entry_num'] . '"')
+                ->order('entry_transaction')
                 ->queryAll();
             foreach ($data as $key => $item) {
                 $items[$key] = $this->loadModel($item['id']);
