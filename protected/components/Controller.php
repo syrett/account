@@ -27,4 +27,34 @@ class Controller extends CController
     public function AddZero($num){
         return substr(strval($num + 10000), 1, 4);
     }
+
+    /*
+     * 账套权限检验
+     */
+    public function beforeAction($action){
+        //以下controller才执行权限检验
+        $controllers = ['bank','cash','client','department','employee','options','post','project','report','subjects','transition','vendor'];
+        if(!in_array($this->uniqueId, $controllers))
+            return true;
+        else{
+            $dbname = substr(SYSDB, 8);
+            $test = ['test','account'];  //均为测试账套，所有人都有权限
+            if(in_array($dbname,$test))
+                return true;
+            $cri = new CDbCriteria;
+            $cri->compare('dbname',$dbname);
+            $con = Condom::model()->find($cri);
+            if(!$con)   //不存在账套
+                throw new CHttpException(403, '你没有权限操作此账套，请从管理页重新进入账套');
+
+            $cri = new CDbCriteria;
+            $cri->compare('user_id',Yii::app()->user->id);
+            $cri->compare('condom_id',$con->id);
+            $acc = Access::model()->find($cri);
+            if($acc)
+                return true;
+            else
+                throw new CHttpException(403, '你没有权限操作此账套，请从管理页重新进入账套');
+        }
+    }
 }
