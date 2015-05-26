@@ -260,7 +260,7 @@ function itemSet() {
                 $("#additional_amount0_" + item_id).val(amount - parseFloat($("#new-option").val()));
             }
             else
-                str += "=>" + $(value).html();
+                str += "=>" + removePath($(value).html());
         })
         //设置含税，简单版可以这样设置，复杂版要重新设计
         if ($("#new-option").is(":checked") == true)
