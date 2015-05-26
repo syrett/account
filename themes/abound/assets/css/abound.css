@@ -779,3 +779,20 @@ div.flash-success a
 {
     color:#264409;
 }
+.options>.active{
+    border: 1px solid #4cae4c;
+    position: relative;
+}
+.options>.active>i{
+    background-image: url(../img/check-16-icon.png);
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 12px;
+    height: 12px;
+    text-indent: -99em;
+    overflow: hidden;
+    display: block;
+    background-position: -1px -4px;
+    background-repeat: no-repeat;
+}

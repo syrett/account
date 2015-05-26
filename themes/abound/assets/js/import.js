@@ -103,7 +103,9 @@ function chooseType(e, a) {
 //按钮激活状态
 function choosed(e) {
     $(e).parent().children('button').removeClass('active');
+    $(e).parent().children('button').children('i').remove();
     $(e).addClass('active');
+    active(e);
 }
 //选择子选项 p:父id，e当前id
 function chooseOption(e) {
@@ -315,7 +317,7 @@ function getListTitle() {
 
 //支出或收入
 function getType() {
-    if ($("#setting").children(":first").find("button[class*='active']").html().trim() == "支出")
+    if ($("#setting").children(":first").find("button[class*='active']").val().trim() == "支出")
         return 1;
     else
         return 2;
@@ -465,16 +467,19 @@ function setWidth(e) {
 //设置交易方名称
 function setTarget(id) {
     var target = $("div.target > button.active").html();
-    if (target != undefined)
+    if (target != undefined && $("#tran_name_" + id).val()=="")
         $("#tran_name_" + id).val(removePath(target));
 }
 
 //去除路径，只保留交易方名称abc ，路径格式为 ***/**/abc
 function removePath(path) {
     //正则匹配
-    var reg = /[^/]*$/;
-    if (reg.test(path))
-        return path.match(reg)
+    var reg = /[^/]([^\x00-\xff]|\w)+(<i>|$)/;
+    if (reg.test(path)){
+        path = path.match(reg)
+        reg = /[^<i>]*/;
+        return path[0].match(reg);
+    }
     else
         return path;
 }
@@ -569,3 +574,6 @@ function addBank() {
     $("#sbj_bank").select2();
 }
 
+function active(e){
+    $(e).append('<i>已选择</i>')
+}
