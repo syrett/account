@@ -147,16 +147,43 @@ $(document).ready(function () {
     })
     //$("#test").select2();
 });
-
 $(window).load(function() {
-    $("input.select2-input").on('keyup-change', function(){
+    //搜索
+    $("input.select2-input").live("keyup-change",function () {
+        //$("input.select2-input").on('keyup-change', function(){
         $('.select2-results li').show();
     })
-    $('.select2-results').on('click', 'li', function(){
-        if($(this).find('li').is(":visible"))
-            $(this).find('li').hide();
-        else
-            $(this).find('li').show();
+    //点击时，更新科目表数据
+    $("div").delegate("select[id$='entry_subject']", "select2-open",function () {
+        var url = $("#url_get_subjects").val();
+        var select = this;
+        $.ajax({
+            url: url,
+            type: "POST",
+            datatype: "json",
+            success: function (json) {
+                if(json!="") {
+                    var obj = JSON.parse(json);
+
+                    $(select).children().remove();
+                    //$(select).empty();
+                    $.each(obj, function(key,value){
+                        $(select).append($("<optgroup></optgroup>")
+                            .attr("label", key));
+                        $.each(value, function(number,name){
+                            $(select).children(":last-child").append($("<option></option>").attr("value",number).text(name))
+                        })
+                    })
+                    $(select).select2("updateResults"); //在select2.js里面添加了allowedMethods，不知道怎么在外部修改
+                    $("#select2-drop>.select2-results>li").click(function(){
+                        if($(this).find('li').is(":visible"))
+                            $(this).find('li').hide();
+                        else
+                            $(this).find('li').show();
+                    })
+                }
+            }
+        });
     });
 });
 var subjects = function(se,ob){
@@ -199,13 +226,23 @@ var addRow = function () {
         '<td class="col-md-3"><select class="v-subject" id="Transition_' + number + '_entry_subject" name="Transition[' + number + '][entry_subject]" >'
     $.ajax({
         type: "POST",
-        url: $("#ajax_listfirst").val(),
+        url: $("#url_get_subjects").val(),
         async: false,
         success: function (msg) {
-            msg = $.parseJSON(msg);
-            for (i = 0; i < msg.length; i++) {
-                html += "<option value='" + msg[i][0] + "'>" + msg[i][1] + "</option>";
-            }
+            //msg = $.parseJSON(msg);
+            //for (i = 0; i < msg.length; i++) {
+            //    html += "<option value='" + msg[i][0] + "'>" + msg[i][1] + "</option>";
+            //}
+            //var obj = JSON.parse(msg);
+            obj = $.parseJSON(msg);
+
+            $.each(obj, function(key,value){
+                html += '<optgroup label="'+ key+ '">';
+                $.each(value, function(number,name){
+                    html += '<option value="'+ number+ '">'+ name+ '</option>';
+                })
+                html += '</optgroup>';
+            })
         },
         error: function(msg){
             alert('服务器错误')
@@ -222,11 +259,16 @@ var addRow = function () {
         "<button type='button' class='close' aria-hidden='true' name='" + number + "' onclick='rmRow(this)'>&times;</button></td></tr>"
 
     $("#transitionRows").append(html)
-    $("select[id^='Transition_"+number+"']").select2();
+    $("select[id^='Transition_"+number+"']").select2({
+        //formatSelection: format
+    });
     number = (parseInt($("#number").val()) + 1).toString();
     $("#number").val(number)
 }
-
+function format(state){
+    if (!state.id)
+    return ""
+}
 var rmRow = function (ob) {
     var number = ob.name
     $("#row_" + number).remove();

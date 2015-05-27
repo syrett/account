@@ -261,4 +261,25 @@ class SubjectsController extends Controller
             Yii::app()->end();
         }
     }
+
+    /*
+     * ajax 获取科目表
+     */
+    public function actionAjaxGetSubjects(){
+        if(Yii::app()->request->isAjaxRequest)
+        {
+            $sbj = Transition::model()->listSubjectsGrouped();
+            //json数据前台会自动按number重新转换顺序，目前无更好解决办法
+            $arr = [];
+            foreach($sbj as $cat => $items){
+                $subjcts = [];
+                foreach($items as $key => $item){
+                    $subjcts['_'. $key] = $item;
+                }
+                $arr[$cat] = $subjcts;
+            }
+            echo json_encode($arr);
+        }else
+            throw new CHttpException(403, "无效的请求");
+    }
 }
