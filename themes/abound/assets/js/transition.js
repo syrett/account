@@ -171,7 +171,7 @@ $(window).load(function() {
                         $(select).append($("<optgroup></optgroup>")
                             .attr("label", key));
                         $.each(value, function(number,name){
-                            $(select).children(":last-child").append($("<option></option>").attr("value",number).text(name))
+                            $(select).children(":last-child").append($("<option></option>").attr("value",number.toString().substring(1)).text(name))
                         })
                     })
                     $(select).select2("updateResults"); //在select2.js里面添加了allowedMethods，不知道怎么在外部修改
