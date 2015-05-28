@@ -894,13 +894,13 @@ eof;
                         $result = self::getInterest();
                     break;
                 case '材料销售'  :
-                    return self::endOption(640201);
+                    return self::endOption(605101);
                     break;
                 case '技术转让'  :
-                    return self::endOption(640202);
+                    return self::endOption(605102);
                     break;
                 case '资产租赁'  :
-                    return self::endOption(640203);
+                    return self::endOption(605103);
                     break;
 //                    if (isset($options[3])) {
 //                        return self::endOption($options[3]);

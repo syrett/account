@@ -176,7 +176,6 @@ class Cash extends CActiveRecord
     private static function getPay()
     {
         return [
-            '工资社保' => '工资社保',     // 1
             '支付押金' => '支付押金',   //  2
             '借出款项' => '借出款项',
             '归还借款' => '归还借款',
@@ -189,7 +188,6 @@ class Cash extends CActiveRecord
             '资产租赁' => '资产租赁',
             '支付股利' => '支付股利',         //  8
             '支付税金' => '支付税金',
-            '现金提取' => '现金提取',
             '其他支出' => '其他支出',     //  9
         ];
     }
@@ -207,7 +205,6 @@ class Cash extends CActiveRecord
             '材料销售' => '材料销售',           //  6
             '技术转让' => '技术转让',
             '资产租赁' => '资产租赁',
-            '存入现金' => '存入现金',
             '其他收入' => '其他收入',           //  7
         ];
     }
@@ -628,38 +625,6 @@ eof;
 //        $a = new Cash();
         if ($type == 1) { //支出
             switch ($options[2]) {
-                case '工资社保'  :
-                    if (isset($options[3])) {
-                        if (isset($options[4])) {
-                            $department = Employee::getDepartType($options[4]);
-                            switch ($department) {
-                                case 1:
-                                    $result = Subjects::matchSubject($options[3], array(6401));
-                                    break;
-                                case 2:
-                                    $result = Subjects::matchSubject($options[3], array(6602), 1);
-                                    break;
-                                case 3:
-                                    $result = Subjects::matchSubject($options[3], array(6601));
-                                    break;
-                                case 4:
-                                    $result = Subjects::matchSubject($options[3], array(660202));
-                                    break;
-                            }
-                            return self::endOption($result);
-                        }
-                        //304 若付款金额小于上期预提的金额，则将应付职工薪酬2211或其他应付款2241作为一级科目形成分录
-                        /*if ($data[4] < $a->prospect()) {   //$data[3] 为金额  假设为30000
-                            if ($options[3] == '工资与资金')
-                                return self::endOption(2211);
-                            else
-                                return self::endOption(2241);
-                        } else {*/
-                        $result = self::getEmployee($data[1]);//员工列表
-//                        }
-                    } else
-                        $result = self::getSalary();
-                    break;
                 case '支付押金'  :
                 case '借出款项'  :
                 case '归还借款'  :
@@ -808,9 +773,6 @@ eof;
                     } else
                         $result = self::getTaxFee($data[1]);
                     break;
-                case '现金提取'  :  //将营业外支出6711作为借方科目，形成会计分录
-                    return self::endOption(1001);
-                    break;
                 case '其他支出'  :
                     return self::endOption(6711);
                     break;
@@ -894,22 +856,19 @@ eof;
                         $result = self::getInterest();
                     break;
                 case '材料销售'  :
-                    return self::endOption(640201);
+                    return self::endOption(605101);
                     break;
                 case '技术转让'  :
-                    return self::endOption(640202);
+                    return self::endOption(605102);
                     break;
                 case '资产租赁'  :
-                    return self::endOption(640203);
+                    return self::endOption(605103);
                     break;
 //                    if (isset($options[3])) {
 //                        return self::endOption($options[3]);
 //                    } else
 //                        $result = self::getBorrow($data[1]);
 //                    break;
-                case '存入现金'  :
-                    return self::endOption(1001);
-                    break;
                 case '其他收入'  :
                     return self::endOption(6301);
                     break;
