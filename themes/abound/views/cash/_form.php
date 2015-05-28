@@ -56,79 +56,70 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/import_datepick
                 </tr>
                 <?php
                 if (!empty($model)) {
-                    $item = $model;
-                    if (!empty($sheetData[0]['data'])) {
-                        $data = $sheetData[0]['data'];
-                        $item->loadOld($data);
-                    }
+                    $item = $sheetData[0]['data'];
                     $key = 1;
                     ?>
                     <tr line="<?= $key ?>" <?= $key % 2 == 1 ? 'class="table-tr"' : '' ?>>
                         <td><input type="checkbox" /> </td>
                         <td><input type="text" id="tran_name_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entry_name]" placeholder="对方名称"
-                                   value="<?= isset($item['target']) ? $item['target'] : $data['entry_name'] ?>"></td>
+                                   value="<?=$item['entry_name'] ?>"></td>
                         <td><input class="input_mid" type="text" id="tran_date_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entry_date]"
-                                   value="<?= isset($item['date']) ? $item['date'] : $data['entry_date'] ?>"></td>
-                        <td><input type="text" id="tran_memo_<?= $key ?>"
+                                   value="<?=$item['entry_date'] ?>"></td>
+                        <td><input class="input_full" type="text" id="tran_memo_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entry_memo]"
-                                   value="<?= isset($item['memo']) ? $item['memo'] : $data['entry_memo'] ?>"></td>
+                                   value="<?=$item['entry_memo'] ?>"></td>
                         <td><input class="input_mid" type="text" id="tran_amount_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entry_amount]"
-                                   value="<?= isset($item['amount']) ? $item['amount'] : $data['entry_amount'] ?>">
+                                   value="<?=$item['entry_amount'] ?>">
                         <span class="tip2">总金额：<label
-                                id="amount_<?= $key ?>"><?= isset($item['amount']) ? $item['amount'] : $data['entry_amount'] ?></label>
+                                id="amount_<?= $key ?>"><?=$item['entry_amount'] ?></label>
                         </span></td>
                         <td class="action">
                             <input type="hidden" id="id_<?= $key ?>" value="<?= $key ?>">
+                            <input id="subject_2" name="subject_2" type="hidden" value="<?=$model['subject_2']?>">
                             <input type="hidden" id="subject_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entry_subject]"
-                                   value="<?= isset($item->subject) ? $item->subject : $data['entry_subject'] ?>">
+                                   value="<?= $item['entry_subject'] ?>">
                             <input type="hidden" id="transaction_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entry_transaction]"
-                                   value="<?= $item->status_id == 1 ? $data['entry_transaction'] : '' ?>">
+                                   value="<?= $item['entry_transaction'] ?>">
                             <input type="hidden" id="invoice_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][invoice]" value="">
                             <input type="hidden" id="tax_<?= $key ?>" name="lists[<?= $key ?>][Transition][tax]"
-                                   value="<?
-                                   $tax = 0;
-                                   if (!empty($item->tax))
-                                       $tax = $item->tax;
-                                   if (!empty($data['tax']))
-                                       $tax = $data['tax'];
-                                   echo $tax;
-                                   ?>">
+                                   value="<?= $item['tax']?>">
                             <input type="hidden" id="withtax_<?= $key ?>"
-                                   value="<?= $tax > 1 ? 1 : 0 ?>">
+                                   value="<?= $item['tax'] > 0 ? 1 : 0 ?>">
                             <input type="hidden" id="parent_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][parent]" value="">
                             <input type="hidden" id="additional_sbj0_<?= $key ?>"
-                                   name="lists[<?= $key ?>][Transition][additional][0][subject]" value="">
+                                   name="lists[<?= $key ?>][Transition][additional][0][subject]" value="<?=$item['additional'][0]['subject']?>">
                             <input type="hidden" id="additional_amount0_<?= $key ?>"
-                                   name="lists[<?= $key ?>][Transition][additional][0][amount]" value="">
+                                   name="lists[<?= $key ?>][Transition][additional][0][amount]" value="<?=$item['additional'][0]['amount']?>">
                             <input type="hidden" id="additional_sbj1_<?= $key ?>"
-                                   name="lists[<?= $key ?>][Transition][additional][1][subject]" value="">
+                                   name="lists[<?= $key ?>][Transition][additional][1][subject]" value="<?=$item['additional'][1]['subject']?>">
                             <input type="hidden" id="additional_amount1_<?= $key ?>"
-                                   name="lists[<?= $key ?>][Transition][additional][1][amount]" value="">
+                                   name="lists[<?= $key ?>][Transition][additional][1][amount]" value="<?=$item['additional'][1]['amount']?>">
 
                             <div class="btn-group btn-group-xs" role="group">
                                 <button type="button" class="btn btn-default" onclick="itemsetting(this)">记账</button>
                                 <button type="button" class="btn btn-default" onclick="itemsplit(this)">拆分</button>
                                 <button type="button" class="btn btn-default" onclick="itemclose(this)">删分</button>
                             </div>
-                        </td>
+
+                           </td>
                         <td>
                             <span id="info_<?= $key ?>" class="<?
                             if (isset($sheetData[0]['status']) && $sheetData[0]['status'] != 1)
                                 echo "info_warning";
                             ?>">
                             <?
-                            if (!empty($item->subject)) {
-                                echo Subjects::getSbjPath($item->subject);
+                            if (!empty($item['entry_subject'])) {
+                                echo Subjects::getSbjPath($item['entry_subject']). "<br />";
                             }
                             if (isset($sheetData[0]['status']) && $sheetData[0]['status'] != 1) {
-                                foreach ($data['error'] as $err) {
+                                foreach ($item['error'] as $err) {
                                     echo $err;
                                 }
                             }
@@ -149,18 +140,18 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/import_datepick
                         <div id="itemSetting" title="记账设置" class="box">
                             <!--    <div class="modal-header bg-light-blue-active" >设置</div>-->
                             <div>
-                                <input id="type" type="hidden" value="<?= Laofashi . $this->createUrl(
-                                    '/bank/default/type'
+                                <input id="type" type="hidden" value="<?= $this->createUrl(
+                                    '/cash/type'
                                 ) ?>">
 
-                                <input id="option" type="hidden" value="<?= Laofashi . $this->createUrl(
-                                    '/bank/default/option'
+                                <input id="option" type="hidden" value="<?= $this->createUrl(
+                                    '/cash/option'
                                 ) ?>">
-                                <input id="employee" type="hidden" value="<?= Laofashi . $this->createUrl(
-                                    '/bank/default/createemployee'
+                                <input id="employee" type="hidden" value="<?= $this->createUrl(
+                                    '/cash/createemployee'
                                 ) ?>">
-                                <input id="new-url" type="hidden" value="<?= Laofashi . $this->createUrl(
-                                    '/bank/default/createsubject'
+                                <input id="new-url" type="hidden" value="<?= $this->createUrl(
+                                    '/cash/createsubject'
                                 ) ?>">
 
                                 <input id="data" type="hidden" value="">
@@ -170,13 +161,11 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/import_datepick
                             <div id="setting">
                                 <div class="options btn-group-xs">
                                     <button class="btn btn-default" type="button" onclick="chooseType(this,1)"
-                                            value="支出">
-                                        支出
+                                            value="支出">支出
                                     </button>
                                     <br/>
                                     <button class="btn btn-default" type="button" onclick="chooseType(this,2)"
-                                            value="收入">
-                                        收入
+                                            value="收入">收入
                                     </button>
                                 </div>
                             </div>
@@ -190,7 +179,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/import_datepick
                 </tr>
             </table>
             <?
-            if ($item->status_id == 1 && $data['entry_reviewed'] == 1) {
+            if ($model->status_id == 1 && $item['entry_reviewed'] == 1) {
                 ?>
                 <span class="info-">该数据生成凭证已经审核，无法修改</span>
             <?

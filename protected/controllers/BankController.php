@@ -49,7 +49,7 @@ class BankController extends Controller
 		if (Yii::app()->request->isPostRequest) {
 			$cat = Yii::app()->createController('Transition');
 			$cat = $cat[0];
-			$sheetData = $cat->saveAll(1, $id);
+			$sheetData = $cat->saveAll('bank', $id);
 			if (!empty($sheetData))
 				foreach ($sheetData as $item) {
 					if ($item['status'] == 0) {

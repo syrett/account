@@ -78,25 +78,37 @@ $tranDate = $command->queryRow(); // execute a query SQL
             </div>
             <div class="choose-file">
                 <?
-                $banks = Subjects::model()->list_sub(1002);
+                if ($type == 'bank')
+                    $sbj = 1002;
+                if ($type == 'cash')
+                    $sbj = 1001;
+                $banks = Subjects::model()->list_sub($sbj);
                 $data = [];
-                foreach ($banks as $item) {
-                    $data[$item['sbj_number']] = $item['sbj_name'];
-                }
-                $this->widget('Select2', array(
-                    'name' => 'sbj_bank',
-                    'id' => 'sbj_bank',
-                    'htmlOptions' => ['class'=>'choose-bank'],
-                    'data' => $data,
-                ));
-                ?>
-                <div class="choose-file">
-                    <input id="bank_name" placeholder="银行名称" type="text" class="input_mid"/>
-                </div>
+                $class = 'choose-bank';
+                if (empty($banks)) {
+                    echo '<input type="hidden" name="subject_2" value="1001" />';
+                } else {
+                    foreach ($banks as $item) {
+                        $data[$item['sbj_number']] = $item['sbj_name'];
+                    }
+                    $this->widget('Select2', array(
+                        'name' => 'subject_2',
+                        'id' => 'subject_2',
+                        'htmlOptions' => ['class'=>$class],
+                        'data' => $data,
+                    ));
 
-                <div class="choose-file">
-                    <button class="btn btn-default btn-file right" type="button" onclick="addBank()">添加</button>
-                </div>
+                    ?>
+                    <div class="choose-file">
+                        <input id="bank_name" placeholder="银行名称" type="text" class="input_mid"/>
+                    </div>
+
+                    <div class="choose-file">
+                        <button class="btn btn-default btn-file right" type="button" onclick="addBank()">添加</button>
+                    </div>
+                <?
+                }
+                ?>
             </div>
         </div>
     </div>
