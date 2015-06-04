@@ -84,7 +84,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/import_datepick
                         </span></td>
                         <td class="action">
                             <input type="hidden" id="id_<?= $key ?>" value="<?= $key ?>">
-                            <input id="sbj_bank" name="sbj_bank" type="hidden" value="<?=$model['sbj_bank']?>">
+                            <input id="subject_2" name="subject_2" type="hidden" value="<?=$model['subject_2']?>">
                             <input type="hidden" id="subject_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entry_subject]"
                                    value="<?= $item['entry_subject'] ?>">

@@ -57,10 +57,11 @@ $this->menu=array(
 					'itemsCssClass' => 'table table-striped table-hover',
 	//                'filterSelector'=>'{filter}, #sbj_cat',
 					'columns' => array(
-						array(
-							'name'=>'sbj_number',
-							'filter'=>CHtml::tag('div',array('class'=>'select2-search'),CHtml::textField('sbj_number','',array('class'=>'select2-input'))),
-							),
+                        'sbj_number',
+//						array(
+//							'name'=>'sbj_number',
+//							'filter'=>CHtml::tag('div',array('class'=>'select2-search'),CHtml::textField('sbj_number','',array('class'=>'select2-input'))),
+//							),
 						'sbj_name',
 	//                    array(
 	//                        'name'=>'sbj_cat',

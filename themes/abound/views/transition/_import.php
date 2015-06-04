@@ -52,12 +52,12 @@ $tranDate = $command->queryRow(); // execute a query SQL
     </div>
 </div>
 <div class="panel-body">
+    <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form']); ?>
     <?
     $select = '<option value=1 >日期</option><option value=2 >交易说明</option><option value=3 >金额</option>';
     ?>
     <div class="row">
         <div class="col-xs-9">
-            <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form']); ?>
             <div class="choose-file  choose-btn-group">
                 <a href="/download/导入模板.xlsx" download>
                     <button type="button" class=" btn btn-default choose-btn">模板下载</button>
@@ -94,7 +94,7 @@ $tranDate = $command->queryRow(); // execute a query SQL
                     $this->widget('Select2', array(
                         'name' => 'subject_2',
                         'id' => 'subject_2',
-                        'htmlOptions' => ['class'=>$class],
+                        'htmlOptions' => ['class' => $class],
                         'data' => $data,
                     ));
 
@@ -114,12 +114,7 @@ $tranDate = $command->queryRow(); // execute a query SQL
     </div>
     <div class="row import-tab" id="abc">
         <div class="box">
-
-            <?php
-            echo CHtml::beginForm('', 'post', ['id' => 'form']);
-            ?>
-
-            <table class="table table-bordered dataTable">
+            <table id="data_import" class="table table-bordered dataTable">
                 <tr>
                     <th class="input_checkbox"><input type="checkbox"></th>
                     <th class="input_mid">交易方名称</th>
@@ -255,9 +250,19 @@ $tranDate = $command->queryRow(); // execute a query SQL
                     </td>
                 </tr>
             </table>
+
+            <div class="transition_action">
+                <p>
+                    <button class="btn btn-default btn-sm" id="btnAdd" name="btnAdd" type="button"
+                            onclick="addRow()"><span
+                            class="glyphicon glyphicon-add"></span> 插入新行
+                    </button>
+                </p>
+            </div>
+
             <input class="btn btn-block btn-success" type="button" onclick="save()" value="保存凭证">
-            <?php echo CHtml::endForm(); ?>
 
         </div>
     </div>
+    <?php echo CHtml::endForm(); ?>
 </div>

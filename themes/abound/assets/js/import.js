@@ -48,7 +48,6 @@ function itemsplit(e) {
         }
     })
     $("#rows").val(id);
-
 }
 
 function itemclose(e) {
@@ -576,4 +575,32 @@ function addBank() {
 
 function active(e){
     $(e).append('<i>已选择</i>')
+}
+
+//插入新行
+function addRow(){
+    //复制
+    itemsplit($("#data_import tr[id!='trSetting']:last td div button")[0]);
+    //删除值，去除复制后相关联的信息
+    var e = $("#data_import tr[id!='trSetting']:last");
+    var item = $("#data_import tr[id!='trSetting']:last input[id^='id_']").val();
+    $(e).attr('line',item);
+    if($(e).attr("class")=="table-tr")
+        $(e).removeClass();
+    else
+        $(e).addClass("table-tr");
+    $("#data_import tr[id!='trSetting']:last input[id!='id_"+item+"']").val("");
+    //添加 总金额提示
+    var html = '<span class="tip2">总金额：<label id="amount_'+item+'">'+0+'</label></span>'
+    $(e).find("[id^='tran_amount_']").after(html)
+    $('body').on('focus',"input[name$='\[entry_date\]']", function(){
+        $(this).datepicker({
+            dateFormat: "yymmdd",
+            minDate: getDate()
+
+        });
+    });
+    $(e).children(':last-child').find("span").html('');
+
+
 }

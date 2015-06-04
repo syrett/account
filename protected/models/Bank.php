@@ -163,7 +163,7 @@ class Bank extends CActiveRecord
 		$this->setAttribute('memo', $item['entry_memo']);
 		$this->setAttribute('amount', $item['entry_amount']);
         $this->setAttribute('subject', $item['entry_subject']);
-        $this->setAttribute('sbj_bank', $item['sbj_bank']);
+        $this->setAttribute('subject_2', $item['subject_2']);
 		$this->setAttribute('parent', isset($item['parent'])?$item['parent']:'');
 		$this->setAttribute('invoice', isset($item['invoice'])?$item['invoice']:'');
 		$this->setAttribute('tax',  isset($item['tax'])?$item['tax']:'');
