@@ -299,7 +299,7 @@ class Subjects extends CActiveRecord
         $update_old = "update subjects set start_balance = 0";
         Yii::app()->db->createCommand($update_old)->execute();
 
-        $start_date = Yii::app()->params['startDate'];
+        $start_date = Condom::model()->getStartTime();
         $year = getYear($start_date);
         $month = getMon($start_date);
         $lastDate = date("Ym", strtotime("last month", mktime(0, 0, 0, $month, 01, $year)));

@@ -54,6 +54,7 @@ if (!(Yii::app()->user->isGuest)) {
 //                    array('label' => '反结账', 'url' => array('/transition/antisettlement')),
                     array('label' => '反结账', 'url' => array('/Site/operation&operation=' . 'listAntiSettlement')),
                     array('label' => '账套操作', 'url' => array('/Site/onekey')),
+                    array('label' => '结账情况', 'url' => array('/Site/condomstatus')),
                     //array('label' => '账套打印', 'url'=>'#'),
                 )),
             array('label' => '凭证 <span class="caret"></span>', 'url' => '#', 'itemOptions' => array('class' => 'dropdown', 'tabindex' => "-5"), 'linkOptions' => array('class' => 'dropdown-toggle', 'data-toggle' => "dropdown"),

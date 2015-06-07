@@ -196,7 +196,7 @@ $tranDate = $command->queryRow(); // execute a query SQL
     <input type="hidden" name="entry_num" id='entry_num' value="<? echo isset($_REQUEST['id'])==true?$model[0]['entry_num']:$this->tranSuffix("") ?>"/>
     <input type="hidden" name="entry_editor" id='entry_editor' value="1"/>
     <input type="hidden" id="number" value="<?= $number ?>"/>
-    <input type="hidden" id="transitionDate" value="<?= isset($tranDate['date'])?$tranDate['date']:Yii::app()->params['startDate']; ?>"/>
+    <input type="hidden" id="transitionDate" value="<?= isset($tranDate['date'])?$tranDate['date']:Condom::model()->getStartTime(); ?>"/>
     <input type="hidden" value="<? echo Yii::app()->createAbsoluteUrl("transition/Appendix") ?>" id="entry_appendix"/>
     <input type="hidden" value="<? echo Yii::app()->createAbsoluteUrl("transition/ajaxlistfirst") ?>"
            id="ajax_listfirst"/>

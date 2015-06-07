@@ -186,4 +186,10 @@ class SiteController extends Controller
         echo json_encode($response);
     }
 
+    /*
+     * 结账情况
+     */
+    public function actionCondomStatus(){
+        $this->render('status');
+    }
 }

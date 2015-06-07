@@ -128,4 +128,15 @@ class Condom extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+    public function getStartTime(){
+        $cri = new CDbCriteria();
+        $cri->addCondition('dbname=:SYSDB');
+        $cri->params['SYSDB'] = substr(SYSDB,8);
+        $condom = Condom::model()->find($cri);
+        if(!empty($condom)){
+            $time = $condom->starttime;
+            return date("Ym", $time);
+        }
+    }
 }

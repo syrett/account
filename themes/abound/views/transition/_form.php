@@ -52,9 +52,9 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
 ?>
 <div class="well well-sm">
     <?php
-    echo CHtml::htmlButton('<span class="glyphicon glyphicon-save"></span> 保存凭证', array('class' => 'btn btn-default', 'type' => 'submit'));
+    echo CHtml::link('<span class="glyphicon glyphicon-plus"></span> 银行交易', array('bank'), array('class' => 'btn btn-default'));
     echo "\n";
-    echo CHtml::link('<span class="glyphicon glyphicon-plus"></span> 添加凭证', array('create'), array('class' => 'btn btn-default'));
+    echo CHtml::link('<span class="glyphicon glyphicon-plus"></span> 现金交易', array('cash'), array('class' => 'btn btn-default'));
     echo "\n";
     echo CHtml::link('<span class="glyphicon glyphicon-search"></span> 查询凭证', array('admin'), array('class' => 'btn btn-default'));
     /*
@@ -237,7 +237,7 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
     <input type="hidden" name="entry_creater" id='entry_creater'
            value="<? echo isset($_REQUEST['id']) == true ? $model[0]['entry_creater'] : Yii::app()->user->id ?>"/>
     <input type="hidden" id="number" value="<?= $number ?>"/>
-    <input type="hidden" id="startDate" value="<?= Yii::app()->params['startDate'] ?>"/>
+    <input type="hidden" id="startDate" value="<?= Condom::model()->getStartTime();?>"/>
     <input type="hidden" id="transitionDate" value="<?= $tranDate['date'] ?>"/>
     <input type="hidden" value="<? echo Yii::app()->createAbsoluteUrl("transition/Appendix") ?>" id="entry_appendix"/>
     <input type="hidden" value="<? echo Yii::app()->createAbsoluteUrl("transition/ajaxlistfirst") ?>"

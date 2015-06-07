@@ -35,87 +35,6 @@ class Transition extends CActiveRecord
     public $entry_time;
     public $select; // search的时候，定义返回字段
 
-    /**
-     * @return array validation rules for model attributes.
-     */
-    public function rules()
-    {
-        // NOTE: you should only define rules for those attributes that
-        // will receive user inputs.
-        return array(
-            array('entry_num, entry_subject, entry_amount,entry_creater, entry_editor', 'required'),
-            array('entry_num, entry_transaction, entry_subject,entry_creater, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing', 'numerical', 'integerOnly' => true),
-            array('entry_amount', 'type', 'type' => 'float'),
-            array('entry_num_prefix', 'length', 'max' => 10),
-            array('entry_memo, entry_appendix', 'length', 'max' => 100),
-            array('entry_appendix_id, entry_appendix_type, entry_name, data_type, data_id, entry_date, entry_time', 'safe'),
-            // The following rule is used by search().
-
-            array('id, entry_number, entry_num_prefix, entry_num, entry_date, entry_time, entry_memo, entry_transaction,
-            entry_subject, entry_amount, entry_appendix, entry_appendix_id, entry_appendix_type,entry_creater, entry_editor, entry_reviewer,
-            entry_deleted, entry_reviewed, entry_posting, entry_closing, entry_settlement', 'safe', 'on' => 'search'),
-            //自定义验证规则
-            array('entry_amount', 'check_entry_amount', 'on' => 'create,update'), //借贷相等
-        );
-    }
-
-    /**
-     * @return array relational rules.
-     */
-    public function relations()
-    {
-        // NOTE: you may need to adjust the relation name and the related
-        // class name for the relations automatically generated below.
-        return array();
-    }
-
-    /*
-     * 返回凭证是否都已经过账, attributes由实例传入
-     */
-
-    /**
-     * @return array customized attribute labels (name=>label)
-     */
-    public function attributeLabels()
-    {
-        return array(
-            'id' => 'ID',
-            'entry_num_prefix' => '凭证前缀',
-            'entry_num' => '凭证号',
-            'entry_time' => '录入时间',
-            'entry_date' => '凭证日期',
-            'entry_name' => '交易对象名称',
-            'data_type' => '交易类型',
-            'data_id' => '原数据ID',
-            'entry_memo' => '凭证摘要',
-            'entry_transaction' => '借贷',
-            'entry_subject' => '借贷科目',
-            'entry_amount' => '交易金额',
-            'entry_appendix' => '附加信息',
-            'entry_appendix_id' => '客户、供应商、员工、项目',
-            'entry_creater' => '制单人员',
-            'entry_editor' => '录入人员',
-            'entry_reviewer' => '审核人员',
-            'entry_deleted' => '凭证删除',
-            'entry_reviewed' => '凭证审核',
-            'entry_posting' => '过账',
-            'entry_closing' => '结转',
-            'entry_settlement' => '结转凭证',
-            'entry_number' => '凭证编号',
-        );
-    }
-
-    /**
-     * Returns the static model of the specified AR class.
-     * Please note that you should have this exact method in all your CActiveRecord descendants!
-     * @param string $className active record class name.
-     * @return Transition the static model class
-     */
-    public static function model($className = __CLASS__)
-    {
-        return parent::model($className);
-    }
-
     public static function getSbjPath($id)
     {
         return Subjects::getSbjPath($id);
@@ -134,6 +53,9 @@ class Transition extends CActiveRecord
             throw new CHttpException(400, $date . " 还有凭证未审核或未过账");
     }
 
+    /*
+     * 返回凭证是否都已经过账, attributes由实例传入
+     */
     public function isAllPosted($date)
     {
         $this->unsetAttributes();
@@ -224,7 +146,10 @@ class Transition extends CActiveRecord
         return $tran->listDate(array('entry_reviewed' => 0));
     }
 
-    public static function listDate($arr)
+    /*
+     * 有凭证的日期
+     */
+    public static function listDate($arr=array())
     {
         $criteria = new CDbCriteria(array('group' => 'entry_num_prefix'));
         $list = Transition::model()->findAllByAttributes(
@@ -245,15 +170,22 @@ class Transition extends CActiveRecord
         return $arr;
     }
 
+    /**
+     * Returns the static model of the specified AR class.
+     * Please note that you should have this exact method in all your CActiveRecord descendants!
+     * @param string $className active record class name.
+     * @return Transition the static model class
+     */
+    public static function model($className = __CLASS__)
+    {
+        return parent::model($className);
+    }
+
     public static function listTransition()
     {
         $tran = new Transition();
         return $tran->listDate(array());
     }
-
-    /*
-     * 补全4位
-     */
 
     public static function listPost()
     {
@@ -262,9 +194,8 @@ class Transition extends CActiveRecord
     }
 
     /*
-     * transaction 借贷
+     * 可整理日期
      */
-
     public static function listReorganise()
     {
         $tran = new Transition();
@@ -272,9 +203,8 @@ class Transition extends CActiveRecord
     }
 
     /*
-     * 科目表路径
+     * 可结账日期
      */
-
     public static function listSettlement()
     {
         $tran = new Transition();
@@ -282,9 +212,8 @@ class Transition extends CActiveRecord
     }
 
     /*
-     * 年月日
+     * 可反结账日期
      */
-
     public static function listAntiSettlement()
     {
         $tran = new Transition();
@@ -292,9 +221,8 @@ class Transition extends CActiveRecord
     }
 
     /*
-     * 过账
+     * 是否有凭证
      */
-
     public static function hasTransition($date)
     {
         $sql = 'select `entry_num_prefix` from transition where `entry_num_prefix` = :date';
@@ -306,10 +234,6 @@ class Transition extends CActiveRecord
 
     }
 
-    /*
-     * 附加信息名称
-     */
-
     public static function getTransitionDate()
     {
         $sql = 'select date from `transitiondate` ';
@@ -317,7 +241,7 @@ class Transition extends CActiveRecord
         if (!empty($date['date']))
             return $date['date'];
         else {
-            $date = Yii::app()->params['startDate'];
+            $date = Condom::model()->getStartTime();
             $date = new DateTime($date . '01');
             $date->modify('last month');
             return $date->format('Ymd');
@@ -325,13 +249,25 @@ class Transition extends CActiveRecord
     }
 
     /*
-     * admin页面不同状态不同颜色
-     * $var row
-     * $var reviewed
-     * $var deleted
-     * @return css class name
+     * 账套日期
      */
+    public static function getCondomDate()
+    {
+        $sql = 'select date from `condomdate` ';
+        $date = Yii::app()->db->createCommand($sql)->queryRow();
+        if (!empty($date['date']))
+            return $date['date'];
+        else {
+            $date = Condom::model()->getStartTime();
+            $date = new DateTime($date . '01');
+            $date->modify('last month');
+            return $date->format('Ymd');
+        }
+    }
 
+    /*
+     * 添加凭证时，检查日期是否已经过账
+     */
     public static function createCheckDate($date)
     {
         $tdate = self::transitionDate();
@@ -339,7 +275,7 @@ class Transition extends CActiveRecord
             $tdate = new DateTime($tdate . '01');
             $tdate->modify('+1 month');
         } else
-            $tdate = new DateTime(Yii::app()->params['startDate'] . '01');
+            $tdate = new DateTime(Condom::model()->getStartTime() . '01');
         $date = new DateTime($date);
         if ($date >= $tdate)
             return true;
@@ -348,9 +284,8 @@ class Transition extends CActiveRecord
     }
 
     /*
-     * 验证凭证借贷相等  金额不能为0
+     * 已经过账的日期，根据凭证表视图判断
      */
-
     public static function transitionDate()
     {
         $sql = 'select date from `transitiondate` ';
@@ -358,20 +293,12 @@ class Transition extends CActiveRecord
         return $date['date'];
     }
 
-    /*
-     * 验证凭证借贷相等
-     */
-
     public static function setReviewedMul($date)
     {
         $command = Yii::app()->db->createCommand();
         $tran = new Transition();
         $command->update($tran->tableName(), ['entry_reviewed' => 1, 'entry_reviewer' => Yii::app()->user->id], 'entry_num_prefix=:date', [':date' => $date]);
     }
-
-    /*
-     * 返回凭证是否都已经被审核, attributes由实例传入 
-     */
 
     /**
      * @return string the associated database table name
@@ -381,6 +308,9 @@ class Transition extends CActiveRecord
         return 'transition';
     }
 
+    /*
+     * 是否已经审核
+     */
     public static function checkReviewed($id)
     {
         if ($id == "" || $id == "0")
@@ -392,6 +322,9 @@ class Transition extends CActiveRecord
             return false;
     }
 
+    /*
+     * 初始数据
+     */
     public static function getSheetData($items = [])
     {
         $arr = [
@@ -419,33 +352,31 @@ class Transition extends CActiveRecord
             "entry_reviewed" => "0",
         ];
         if (is_array($items)) {
-            $arr = array_merge($arr,$items);
-            if (isset($items['B'])||isset($items['C'])){
+            $arr = array_merge($arr, $items);
+            if (isset($items['B']) || isset($items['C'])) {
                 $arr['entry_name'] = trim($items['A']);
                 $arr['entry_date'] = convertDate($items['B']);
                 $arr['entry_memo'] = trim($items['C']);
 
-                $amount = trim($items['D'])!= ''?$items['D']:$items['E'];
-                $amount = str_replace(" ",'',$amount);  //英文空格
-                $amount = str_replace(" ",'',$amount);  //可能是中文或英文全角空格
-                $arr['entry_amount'] = str_replace(",","",trim($amount));
-            }
-            else{
+                $amount = trim($items['D']) != '' ? $items['D'] : $items['E'];
+                $amount = str_replace(" ", '', $amount);  //英文空格
+                $amount = str_replace(" ", '', $amount);  //可能是中文或英文全角空格
+                $arr['entry_amount'] = str_replace(",", "", trim($amount));
+            } else {
                 foreach ($items as $key => $item) {
-                    if(!is_array($item))
-                    {
+                    if (!is_array($item)) {
                         $arr[$key] = trim($item);
-                        if($key=='entry_amount')
+                        if ($key == 'entry_amount')
                             $arr[$key] = str_replace(",", "", trim($item));
-                        if($key=='entry_date')
+                        if ($key == 'entry_date')
                             $arr[$key] = convertDate($item);
                     }
                 }
-                $arr['entry_name'] = isset($items['target'])?$items['target']:$arr['entry_name'];
-                $arr['entry_date'] = isset($items['date'])?$items['date']:$arr['entry_date'];
-                $arr['entry_memo'] = isset($items['memo'])?$items['memo']:$arr['entry_memo'];
-                $arr['entry_amount'] = str_replace(",","",trim(isset($items['amount'])?$items['amount']:$arr['entry_amount']));
-                $arr['entry_subject'] = isset($items['subject'])?$items['subject']:$arr['entry_subject'];
+                $arr['entry_name'] = isset($items['target']) ? $items['target'] : $arr['entry_name'];
+                $arr['entry_date'] = isset($items['date']) ? $items['date'] : $arr['entry_date'];
+                $arr['entry_memo'] = isset($items['memo']) ? $items['memo'] : $arr['entry_memo'];
+                $arr['entry_amount'] = str_replace(",", "", trim(isset($items['amount']) ? $items['amount'] : $arr['entry_amount']));
+                $arr['entry_subject'] = isset($items['subject']) ? $items['subject'] : $arr['entry_subject'];
             }
         }
         return $arr;
@@ -453,10 +384,71 @@ class Transition extends CActiveRecord
 
     }
 
-    /*
-     * 是否可以结账
-     * return bool
+    /**
+     * @return array validation rules for model attributes.
      */
+    public function rules()
+    {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return array(
+            array('entry_num, entry_subject, entry_amount,entry_creater, entry_editor', 'required'),
+            array('entry_num, entry_transaction, entry_subject,entry_creater, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing', 'numerical', 'integerOnly' => true),
+            array('entry_amount', 'type', 'type' => 'float'),
+            array('entry_num_prefix', 'length', 'max' => 10),
+            array('entry_memo, entry_appendix', 'length', 'max' => 100),
+            array('entry_appendix_id, entry_appendix_type, entry_name, data_type, data_id, entry_date, entry_time', 'safe'),
+            // The following rule is used by search().
+
+            array('id, entry_number, entry_num_prefix, entry_num, entry_date, entry_time, entry_memo, entry_transaction,
+            entry_subject, entry_amount, entry_appendix, entry_appendix_id, entry_appendix_type,entry_creater, entry_editor, entry_reviewer,
+            entry_deleted, entry_reviewed, entry_posting, entry_closing, entry_settlement', 'safe', 'on' => 'search'),
+            //自定义验证规则
+            array('entry_amount', 'check_entry_amount', 'on' => 'create,update'), //借贷相等
+        );
+    }
+
+    /**
+     * @return array relational rules.
+     */
+    public function relations()
+    {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array();
+    }
+
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels()
+    {
+        return array(
+            'id' => 'ID',
+            'entry_num_prefix' => '凭证前缀',
+            'entry_num' => '凭证号',
+            'entry_time' => '录入时间',
+            'entry_date' => '凭证日期',
+            'entry_name' => '交易对象名称',
+            'data_type' => '交易类型',
+            'data_id' => '原数据ID',
+            'entry_memo' => '凭证摘要',
+            'entry_transaction' => '借贷',
+            'entry_subject' => '借贷科目',
+            'entry_amount' => '交易金额',
+            'entry_appendix' => '附加信息',
+            'entry_appendix_id' => '客户、供应商、员工、项目',
+            'entry_creater' => '制单人员',
+            'entry_editor' => '录入人员',
+            'entry_reviewer' => '审核人员',
+            'entry_deleted' => '凭证删除',
+            'entry_reviewed' => '凭证审核',
+            'entry_posting' => '过账',
+            'entry_closing' => '结转',
+            'entry_settlement' => '结转凭证',
+            'entry_number' => '凭证编号',
+        );
+    }
 
     public function listByPrefix($prefix, $select)
     {
@@ -465,14 +457,10 @@ class Transition extends CActiveRecord
         return $data;
     }
 
-    //当前日期是否已经结账
-
     public function transaction($action)
     {
         return $action == 1 ? "借" : "贷";
     }
-
-    //结账
 
     public function getTrandate($prefix, $day)
     {
@@ -485,9 +473,8 @@ class Transition extends CActiveRecord
     }
 
     /*
-     * 所有操作按年月为时间段
+     * 附加信息
      */
-
     public function getAppendix($type, $id)
     {
         $str = "";
@@ -514,6 +501,13 @@ class Transition extends CActiveRecord
         return $str;
     }
 
+    /*
+     * admin页面不同状态不同颜色
+     * $var row
+     * $var reviewed
+     * $var deleted
+     * @return css class name
+     */
     public function getClass($row, $reviewed, $deleted)
     {
         $class = $row % 2 == 1 ? "row-odd" : 'row-even';
@@ -524,6 +518,9 @@ class Transition extends CActiveRecord
         return $class;
     }
 
+    /*
+     * transaction 借贷
+     */
     public function check_entry_amount($attribute, $params)
     {
 //        $this->
@@ -558,6 +555,10 @@ class Transition extends CActiveRecord
         }
     }
 
+    /*
+     * 检查凭证是否已经审核过
+     * @id Integer Bank表 或 Cash表 的ID，不是transition表
+     */
     public function isAllReviewed($date)
     {
         $this->unsetAttributes();
@@ -592,7 +593,6 @@ class Transition extends CActiveRecord
     }
 
     //是否有过结账操作
-
     public function isPosted($date)
     {
         $this->unsetAttributes();
@@ -670,9 +670,9 @@ class Transition extends CActiveRecord
             $tran->setClosing(1);
     }
 
-    //有凭证的年份
-    //return array()
-
+    /*
+     * 整理凭证
+     */
     public function reorganise($date)
     {
         $prefix = $date;
@@ -728,15 +728,13 @@ class Transition extends CActiveRecord
         return $num;
     }
 
+    /*
+     * 补全4位
+     */
     public function addZero($num)
     {
         return substr(strval($num + 10000), 1, 4);
     }
-
-    /*
-     * 删除凭证数据库记录时，如果是导入数据生成的凭证，删除对应的原始数据
-     * @prefix
-     */
 
     public function getEntry_amount($prefix, $sub_id)
     {
@@ -748,20 +746,12 @@ class Transition extends CActiveRecord
             return 0;
     }
 
-    /*
-     * 设置凭证审核通过
-     */
-
     public function setClosing($bool = 1)
     {
         return Transition::model()->updateAll(array('entry_closing' => $bool),
             'entry_num_prefix=:prefix',
             array(':prefix' => $this->entry_num_prefix));
     }
-
-    /*
-     * 按月批量审核凭证
-     */
 
     /**
      * 列出科目
@@ -780,13 +770,14 @@ class Transition extends CActiveRecord
     /*
      * 列出科目，以分组的形式
      */
-    public function listSubjectsGrouped(){
+    public function listSubjectsGrouped()
+    {
         $sel = "select * from subjects where has_sub=0 ";
         $order = " order by concat(`sbj_number`) asc"; //
         $sbj_cat = 1;
         $arr = array();
-        while($sbj_cat<6){
-            $sql = $sel. "and sbj_cat=". $sbj_cat .$order;
+        while ($sbj_cat < 6) {
+            $sql = $sel . "and sbj_cat=" . $sbj_cat . $order;
             $subjects = Subjects::model()->findAllBySql($sql);
             $arr[Subjects::getCatName($sbj_cat)] = [];
             foreach ($subjects as $row) {
@@ -796,8 +787,6 @@ class Transition extends CActiveRecord
         }
         return $arr;
     }
-
-    //整理凭证
 
     public function hasSettlement($date)
     {
@@ -821,9 +810,8 @@ class Transition extends CActiveRecord
     }
 
     /*
-     * 本期科目发生额合计
+     * 有凭证数据的年份
      */
-
     public function hasTransitionYears()
     {
         $sql = 'select year(`entry_date`) as year from `transition` group by year(`entry_date`)';
@@ -836,23 +824,60 @@ class Transition extends CActiveRecord
     }
 
     /*
-     * 反结账
+     * 设置通过审核
      */
-
     public function setReviewed()
     {
-        $this->entry_reviewed = 1;
-        $this->entry_reviewer = Yii::app()->user->id;
-        $this->save();
+        if ($this->reviewAccess()) {
+            $this->entry_reviewed = 1;
+            $this->entry_reviewer = Yii::app()->user->id;
+            $this->save();
+        }
     }
 
     /*
-     * 检查凭证是否已经审核过
-     * @id Integer Bank表 或 Cash表 的ID，不是transition表
+     * 检查是否可以审核
      */
-
-    public function antiSettlement()
+    public function reviewAccess()
     {
+        if ($this->entry_creater == Yii::app()->user->id)  //录入人和审核人不能为同一人
+            return false;
+        if ($this->entry_posting == 1) //已经过账不能审核
+            return false;
+        if ($this->entry_closing == 1) //已经结账不能审核
+            return false;
+        return true;
+    }
+
+    /*
+     * 设置取消审核
+     */
+    public function unReviewed()
+    {
+        if ($this->unreviewAccess()) {
+            $this->entry_reviewed = 0;
+            $this->entry_reviewer = 0;
+            $this->save();
+        }
+    }
+
+
+    /*
+     * 检查是否可以取消审核
+     */
+    public function unreviewAccess()
+    {
+        if ($this->entry_posting == 1) //已经过账不能取消审核
+            return false;
+        if ($this->entry_closing == 1) //已经结账不能取消审核
+            return false;
+        return true;
+    }
+
+
+    public function transitions()
+    {
+        $sql = 'select * from ';
 
     }
 }

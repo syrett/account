@@ -82,7 +82,10 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
 			<span class="deleted">已删除</span>
 			</div>
             <?php
+                $review = '<span title="审核通过" class="glyphicon glyphicon-ok-circle" onclick="setreviewed();" ></span><span title="取消审核" class="glyphicon glyphicon-ban-circle" onclick="unreviewed();" ></span>';
             }
+            else
+                $review = '<span title="审核通过" class="glyphicon glyphicon-ok-circle" onclick="setreviewed();" ></span>';
             ?>			
 		</div>
 		<div class="col-md-4">
@@ -109,13 +112,21 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
         <?php
 
         $this->widget('zii.widgets.grid.CGridView', array(
-//            'id' => 'transition-grid',
+            'id' => 'transition-grid',
             'dataProvider' => $model->search(),
             'rowCssClass'=>array('row-odd','row-even'),
             'filter' => $model,
             'rowCssClassExpression' =>'$data->getClass($row,$data->entry_reviewed,$data->entry_deleted)',
             'pager' => array('class'=>'CLinkPager', 'header' => '','firstPageLabel'=>'首页','lastPageLabel'=>'末页','nextPageLabel'=>'下一页','prevPageLabel'=>'上一页'),
             'columns' => array(
+                array(
+                    'selectableRows' => 2,
+                    'footer' => $review,
+                    'class' => 'CCheckBoxColumn',
+                    'headerHtmlOptions' => array('width'=>'33px'),
+                    'value' => '$data->entry_num_prefix. $data->addZero($data->entry_num)',
+                    'checkBoxHtmlOptions' => array('name' => 'selectall[]'),
+                ),
                 array(
                     'name'=>'entry_number',
                     'value'=>'$data->entry_num_prefix. $data->addZero($data->entry_num)'),
@@ -151,3 +162,49 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
         )); ?>
 </div>
 </div><!-- .panel-body -->
+<script type="text/javascript">
+    /*<![CDATA[*/
+    var setreviewed = function (){
+        var data=new Array();
+        var sbj_number = '';
+        $("input:checkbox[name='selectall[]']").each(function (){
+            if($(this).attr("checked")=="checked" && sbj_number != $(this).parent().next().html()){
+                data.push($(this).val());
+                sbj_number = $(this).parent().next().html();
+            }
+        });
+        if(data.length > 0){
+            $.post('<?php echo CHtml::normalizeUrl(array('/transition/setreviewedall/'));?>',{'selectall[]':data}, function (data) {
+                var ret = $.parseJSON(data);
+                if (ret != null && ret.success != null && ret.success) {
+                    $.fn.yiiGridView.update("transition-grid");
+                }
+            });
+        }else{
+            alert("请选择要操作的行!");
+        }
+    }
+
+    var unreviewed = function () {
+        var data=new Array();
+        var sbj_number = '';
+        $("input:checkbox[name='selectall[]']").each(function (){
+            if($(this).attr("checked")=="checked" && sbj_number != $(this).parent().next().html()){
+                data.push($(this).val());
+                sbj_number = $(this).parent().next().html();
+            }
+        });
+        if(data.length > 0){
+            $.post('<?php echo CHtml::normalizeUrl(array('/transition/unreviewedall/'));?>',{'selectall[]':data}, function (data) {
+                var ret = $.parseJSON(data);
+                if (ret != null && ret.success != null && ret.success) {
+                    $.fn.yiiGridView.update("transition-grid");
+                }
+            });
+        }else{
+            alert("请选择要操作的行!");
+        }
+
+    }
+    /*]]>*/
+</script>

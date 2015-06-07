@@ -283,9 +283,6 @@ class TransitionController extends Controller
 
     public function actionReorganise($date)
     {
-//        if (!isset($_POST['entry_num_prefix'])) {
-//            $prefix = date('Y') . date('m');
-//        };
         //整理按月为结点
         Transition::model()->reorganise($date);
         $this->redirect("index.php?r=transition/index");
@@ -689,9 +686,7 @@ class TransitionController extends Controller
                 $item = $this->loadModel($item['id']);
                 if ($valid = $item->validate() && $valid) {
                     if ($_REQUEST[0]['action'] == 1) {
-                        $item->entry_reviewed = 0;
-                        $item->entry_reviewer = 0;
-                        $item->save();
+                        $item->unReviewed();
                     } else {
                         $item->setReviewed();
                     }
@@ -707,6 +702,68 @@ class TransitionController extends Controller
 //                $this->redirect($this->createUrl('transition/update'), array('admin'));
         }
 
+    }
+
+    /*
+     * 批量审核
+     */
+    public function actionSetReviewedAll(){
+        if (Yii::app()->request->isPostRequest)
+        {
+            //凭证编号 ：2015050001
+            foreach($_POST['selectall'] as $item){
+                $criteria= new CDbCriteria;
+                $entry_num_prefix = substr($item,0,6);
+                $entry_num = (int)substr($item,6);
+                $criteria->addCondition('entry_num_prefix= :entry_num_prefix');
+                $criteria->addCondition('entry_num = :entry_num');
+                $criteria->params['entry_num_prefix'] = $entry_num_prefix;
+                $criteria->params['entry_num'] = $entry_num;
+                $trans = Transition::model()->findAll($criteria);
+                if(!empty($trans)){
+                    foreach($trans as $item){
+                        $item->setReviewed();
+                    }
+                }
+            }
+            if(isset(Yii::app()->request->isAjaxRequest)) {
+                echo CJSON::encode(array('success' => true));
+            } else
+                $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
+        }
+        else
+            throw new CHttpException(400,'不合法的请求，请稍后重试');
+    }
+
+    /*
+     * 批量取消审核
+     */
+    public function actionUnReviewedAll(){
+        if (Yii::app()->request->isPostRequest)
+        {
+            //凭证编号 ：2015050001
+            foreach($_POST['selectall'] as $item){
+                $criteria= new CDbCriteria;
+                $entry_num_prefix = substr($item,0,6);
+                $entry_num = (int)substr($item,6);
+                $criteria->addCondition('entry_num_prefix= :entry_num_prefix');
+                $criteria->addCondition('entry_num = :entry_num');
+                $criteria->params['entry_num_prefix'] = $entry_num_prefix;
+                $criteria->params['entry_num'] = $entry_num;
+                $trans = Transition::model()->findAll($criteria);
+                if(!empty($trans)){
+                    foreach($trans as $item){
+                        $item->unReviewed();
+                    }
+                }
+            }
+            if(isset(Yii::app()->request->isAjaxRequest)) {
+                echo CJSON::encode(array('success' => true));
+            } else
+                $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
+        }
+        else
+            throw new CHttpException(400,'不合法的请求，请稍后重试');
     }
 
     /*
@@ -744,9 +801,9 @@ class TransitionController extends Controller
      */
     public function actionSettlement($entry_prefix)
     {
-        if ($entry_prefix > Yii::app()->params['startDate']) {
+        if ($entry_prefix > Condom::model()->getStartTime()) {
             $lastdate = date('Ym', strtotime('-1 months', strtotime($entry_prefix . '01')));
-            while ($lastdate > Yii::app()->params['startDate']) {
+            while ($lastdate > Condom::model()->getStartTime()) {
                 if (Transition::model()->hasTransition($lastdate)) {
                     if (!Transition::model()->tranSettlement($lastdate))
                         throw new CHttpException(400, $lastdate . "需要先结账");
@@ -781,7 +838,7 @@ class TransitionController extends Controller
         $date= date('Ym', time());
 //        $date = '201509';
         $result = false;
-        while ($date > Yii::app()->params['startDate'] && $date >= $edate) {
+        while ($date > Condom::model()->getStartTime() && $date >= $edate) {
             $result = $this->antiSettlement($date);
             $date = date('Ym', strtotime('-1 months', strtotime($date . '01')));
         }
