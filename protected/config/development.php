@@ -71,7 +71,7 @@ return array(
         // uncomment the following to use a MySQL database
 
         'db' => array(
-            'connectionString' => 'mysql:host=127.0.0.1;dbname=account_abc',
+            'connectionString' => 'mysql:host=127.0.0.1;dbname=account_test',
             'emulatePrepare' => true,
             'username' => 'dev',
             'password' => 'P@ssw0rd',

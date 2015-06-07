@@ -9,7 +9,7 @@ defined('LogoutURL') or define('LogoutURL','http://manage.'.$domain.'/frontend/w
 defined('UserURL') or define('UserURL','http://manage.'.$domain.'/backend/web/index.php?r=users%2Fdefault%2Findex');
 $yii=dirname(__FILE__).'/vendor/yii/framework/yii.php';
 if (false !== strpos('abc.com', $domain)) {
-    define('SYSDB','account_abc');
+    define('SYSDB','account_test');
     defined('YII_DEBUG') or define('YII_DEBUG',true);
     defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
     $config=dirname(__FILE__).'/protected/config/development.php';

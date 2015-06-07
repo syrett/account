@@ -179,7 +179,7 @@ $tranDate = $command->queryRow(); // execute a query SQL
                                     <button type="button" class="btn btn-default" onclick="itemsetting(this)">记账
                                     </button>
                                     <button type="button" class="btn btn-default" onclick="itemsplit(this)">拆分</button>
-                                    <button type="button" class="btn btn-default" onclick="itemclose(this)">删分</button>
+                                    <button type="button" id="btn_del_<?= $key ?>" class="btn btn-default" onclick="itemclose(this)" disabled>删分</button>
                                 </div>
                             </td>
                             <td>
@@ -255,9 +255,13 @@ $tranDate = $command->queryRow(); // execute a query SQL
                 </p>
             </div>
 
-            <input class="btn btn-block btn-success" type="button" onclick="save()" value="保存凭证">
-
         </div>
     </div>
     <?php echo CHtml::endForm(); ?>
+</div>
+<div class="panel-footer">
+    <div class="form-group buttons text-center">
+        <input class="btn btn-primary btn-success" type="button" onclick="save()" value="保存凭证">
+
+    </div>
 </div>

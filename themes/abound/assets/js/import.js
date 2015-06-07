@@ -46,6 +46,9 @@ function itemsplit(e) {
             item_id = item_id.replace(/_\d+/, "_" + id);
             $(value).attr("id", item_id);
         }
+        if (item_id.substr(0, 7) == "btn_del") {
+            $(value).removeAttr("disabled");
+        }
     })
     $("#rows").val(id);
 }
@@ -600,6 +603,7 @@ function addRow(){
 
         });
     });
+    $(e).find("[id*='btn_del']").attr("disabled",true);
     $(e).children(':last-child').find("span").html('');
 
 
