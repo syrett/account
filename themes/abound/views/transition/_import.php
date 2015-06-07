@@ -57,7 +57,7 @@ $tranDate = $command->queryRow(); // execute a query SQL
     $select = '<option value=1 >日期</option><option value=2 >交易说明</option><option value=3 >金额</option>';
     ?>
     <div class="row">
-        <div class="col-xs-9">
+        <div class="col-xs-12">
             <div class="choose-file  choose-btn-group">
                 <a href="/download/导入模板.xlsx" download>
                     <button type="button" class=" btn btn-default choose-btn">模板下载</button>
@@ -71,12 +71,12 @@ $tranDate = $command->queryRow(); // execute a query SQL
                         选择文件<input name="attachment" type="file" accept=".xls,.xlsx">
                     </span>
                 </span>
-                    <input type="text" class="form-control btn-file"" id="import_file_name" readonly="">
+                    <input type="text" class="form-control btn-file" id="import_file_name" readonly="">
                 </div>
-                <input type="checkbox" class="" name="first"/><label>第一行包含数据</label>
-                <button type="submit" class="btn btn-default right btn-file">导入</button>
             </div>
-            <div class="choose-file">
+            <input type="checkbox" class="" name="first"/><label>第一行包含数据</label>
+            <button type="submit" class="btn btn-default btn-file">导入</button>
+            <div class="choose-bank-group">
                 <?
                 if ($type == 'bank')
                     $sbj = 1002;
@@ -86,30 +86,25 @@ $tranDate = $command->queryRow(); // execute a query SQL
                 $data = [];
                 $class = 'choose-bank';
                 if (empty($banks)) {
-                    echo '<input type="hidden" name="subject_2" value="1001" />';
+                    echo '<input type="hidden" name="subject_2" value="1001" /></div>';
                 } else {
-                    foreach ($banks as $item) {
-                        $data[$item['sbj_number']] = $item['sbj_name'];
-                    }
-                    $this->widget('Select2', array(
-                        'name' => 'subject_2',
-                        'id' => 'subject_2',
-                        'htmlOptions' => ['class' => $class],
-                        'data' => $data,
-                    ));
-
-                    ?>
-                    <div class="choose-file">
-                        <input id="bank_name" placeholder="银行名称" type="text" class="input_mid"/>
-                    </div>
-
-                    <div class="choose-file">
-                        <button class="btn btn-default btn-file right" type="button" onclick="addBank()">添加</button>
-                    </div>
-                <?
+                foreach ($banks as $item) {
+                    $data[$item['sbj_number']] = $item['sbj_name'];
                 }
+                $this->widget('Select2', array(
+                    'name' => 'subject_2',
+                    'id' => 'subject_2',
+                    'htmlOptions' => ['class' => $class],
+                    'data' => $data,
+                ));
+
                 ?>
             </div>
+                <input id="bank_name" placeholder="银行名称" type="text" class="input_mid"/>
+                <button class="btn btn-default btn-file" type="button" onclick="addBank()">添加</button>
+            <?
+            }
+            ?>
         </div>
     </div>
     <div class="row import-tab" id="abc">
