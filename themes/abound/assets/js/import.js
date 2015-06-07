@@ -5,7 +5,7 @@ $(document).ready(function () {
     $("#selectItem2").val(2);
     $("#selectItem3").val(3);
     $("#dialog").hide();
-    $("div").on('blur', 'input', function (e) {
+    $("div").on('blur', "input[id*='tran_amount']", function (e) {
         sumAmount(this.parentNode.parentNode)
     })
     $("div").delegate("#new-invoice", "change", function () {
@@ -54,7 +54,9 @@ function itemsplit(e) {
 }
 
 function itemclose(e) {
+    var line = $(e.parentNode.parentNode.parentNode).attr("line");
     e.parentNode.parentNode.parentNode.remove();
+    sumAmount($("#data_import").find("tr[line="+line+"]:first"));
 }
 function itemsetting(e) {
     //$("#itemSetting").dialog({
