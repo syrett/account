@@ -129,6 +129,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
                 ),
                 array(
                     'name'=>'entry_number',
+                    'footer'=>'批量审核操作时，部分由您生成的凭证，需要由他人审核',
                     'value'=>'$data->entry_num_prefix. $data->addZero($data->entry_num)'),
                 array('name'=>'entry_memo','type'=>'shortText'),
                 array(
