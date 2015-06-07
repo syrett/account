@@ -6,6 +6,7 @@ Yii::import('ext.select2.Select2');
 $this->pageTitle = Yii::app()->name;
 
 $date = Transition::model()->getCondomDate();
+$date = substr($date,0,6);
 $arr = Transition::model()->listDate();
 ?>
 

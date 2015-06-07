@@ -293,11 +293,27 @@ class Transition extends CActiveRecord
         return $date['date'];
     }
 
-    public static function setReviewedMul($date)
+    public static function setReviewedMul($date,$type=1)
     {
         $command = Yii::app()->db->createCommand();
         $tran = new Transition();
-        $command->update($tran->tableName(), ['entry_reviewed' => 1, 'entry_reviewer' => Yii::app()->user->id], 'entry_num_prefix=:date', [':date' => $date]);
+        if($type==1)
+        $command->update($tran->tableName(), ['entry_reviewed' => 1, 'entry_reviewer' => Yii::app()->user->id],
+                'entry_num_prefix=:date and '.
+                'entry_reviewed!=:reviewed and '.
+                'entry_creater!=:creator'
+            ,
+            [
+                ':date' => $date,
+                ':reviewed' => 0,
+                ':creator' => Yii::app()->user->id,
+            ]);
+        elseif($type==2)    //生成的结账凭证，审核人可以是创建人
+            $command->update($tran->tableName(), ['entry_reviewed' => 1, 'entry_reviewer' => Yii::app()->user->id],
+                'entry_num_prefix=:date',
+                [
+                    ':date' => $date,
+                ]);
     }
 
     /**

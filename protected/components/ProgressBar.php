@@ -84,6 +84,7 @@ class ProgressBar
         Yii::import('application.controllers.PostController');
         //这3个操作可以在一个循环里完成
 
+        $allReviewed = true;
         switch ($done) {
             case 0:
                 //整理凭证,
@@ -94,9 +95,13 @@ class ProgressBar
                 $result = 10;break;
             case 10:
                 //审核凭证
+                $tran = new Transition();
                 foreach ($data as $item) {
                     $pre_fix = $item['entry_num_prefix'];
                     Transition::setReviewedMul($pre_fix);
+                    //检查凭证是否全部都审核了，
+                    $reviewed = $tran->isAllReviewed($pre_fix);
+                    $allReviewed = $allReviewed?$reviewed:false;
                 }
                 $result = 30;break;
             case 30:
@@ -118,14 +123,17 @@ class ProgressBar
                 //结转凭证 操作同上 审核凭证、凭证过账
                 foreach ($data as $item) {
                     $pre_fix = $item['entry_num_prefix'];
-                    Transition::setReviewedMul($pre_fix);
+                    Transition::setReviewedMul($pre_fix,2);
                     $post = new Post();
                     $post->postTransition($pre_fix);
                 }
                 $result = 101;break;
         }
 //        $result = 101;
-        return $result;
+        if($allReviewed)
+            return $result;
+        else
+            return 0;
     }
 
 }
