@@ -569,13 +569,13 @@ function addBank() {
         subject: 1002
     }
     var msg = createSubject(url, data);
-    if (msg > 0 && $("#sbj_bank > option[value='" + msg + "']").length == 0) {
-        $("#sbj_bank").append(new Option(name, msg));
+    if (msg > 0 && $("#subject_2 > option[value='" + msg + "']").length == 0) {
+        $("#subject_2").append(new Option(name, msg));
     }
-    $("#sbj_bank option").each(function () {
+    $("#subject_2 option").each(function () {
         this.selected = (this.value == msg);
     });
-    $("#sbj_bank").select2();
+    $("#subject_2").select2();
 }
 
 function active(e){
