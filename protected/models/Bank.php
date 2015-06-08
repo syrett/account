@@ -593,9 +593,12 @@ eof;
 
     private static function getTaxFee($key = ''){
         $subject = new Subjects();
-        $arr = [2221];
+        $arr = [2221, 6403];
         $result = $subject->getitem($arr, $key);
-        $result['_660207']=Subjects::getSbjPath(660207);
+        $sbj = $subject->getitem([660207], $key, ['level'=>0, 'type'=>2]); //印花税
+        if(!empty($sbj))
+            $result += $sbj;
+
         return [
             'data' => $result,
         ];

@@ -257,7 +257,7 @@ class Subjects extends CActiveRecord
      * 列出子科目
      * @sbj_id Integer 科目编号
      * @key String 关键字
-     * @options Array   参数，$rej=[], $level=2, $type=1
+     * @options Array   参数，$rej=[], $level=2, $level=0 无匹配返回原科目 $type=1 无匹配返回所有 $type=2 无匹配不返回
      */
     public function list_sub($sbj_id, $key = '', $options = [])
     {
@@ -270,7 +270,9 @@ class Subjects extends CActiveRecord
             $rejSbj .= " And sbj_name not like '%$item%' ";
         }
         $sql_1 = "SELECT * FROM subjects where sbj_number REGEXP '^$sbj_id' ";
-        if($level==1)
+        if($level==0)
+            $sql_1.= "AND sbj_number='$sbj_id' ";
+        elseif($level==1)
             $sql_1.= "AND sbj_number>='$sbj_id' ";
         else
             $sql_1.= "AND sbj_number>'$sbj_id' ";
@@ -429,7 +431,7 @@ class Subjects extends CActiveRecord
     /*
      * @arr Array 科目列表
      * @key String  关键字
-     * @options Array   参数，$rej=[], $level=2, $type=1
+     * @options Array   参数，$rej=[], $level=2, $type=1无匹配不返回 $type=2无匹配子科目则返回父科目
      *
      * @return Array
      */
@@ -444,9 +446,10 @@ class Subjects extends CActiveRecord
                 if($type==0){
                     $result['_'. $subj['sbj_number']] = $subj['sbj_name'];
                 }else
-                    $result['_' . $subj['sbj_number']]=Subjects::getSbjPath($subj['sbj_number']);
+                    $result['_' . $subj['sbj_number']] = Subjects::getSbjPath($subj['sbj_number']);
             }
         }
+        if($type==1)
         if(empty($result))
             foreach ($arr as $item) {
                 $arr_subj = $subject->list_sub($item, '', $options);
