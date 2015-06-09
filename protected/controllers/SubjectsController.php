@@ -95,6 +95,7 @@ class SubjectsController extends Controller
                 if (strlen($sbj_id) > 4 && $sbj_type == 2)  ////1为同级科目，2为子科目
                 {
                     Post::model()->tranPost($sbj_id);
+                    Transition::model()->updateSubject($old_sbj_number, $sbj_id);
                     Subjects::model()->hasSub($sbj_id);
                 }
                 Yii::app()->user->setFlash('success', "添加成功!");
@@ -144,47 +145,46 @@ class SubjectsController extends Controller
      */
     public function actionDelete($id)
     {
-//		$this->loadModel($id)->delete();
-//
-//		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-//		if(!isset($_GET['ajax']))
-//			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        $sbj = $this->loadModel($id);
+        //无子科目，无期初余额
+        if($sbj->has_sub==1 || $sbj->start_balance!=0)
+            return true;
+        //有凭证
+        if(Subjects::model()->hasTransition($sbj->sbj_number)){
+            //有兄弟科目
+            if(Subjects::model()->hasBrother($sbj->sbj_number)){
+                echo "此科目不能删除！";
+                //不能删
+            }else{
+                Bank::model()->updateSubject($sbj->sbj_number);
+                Post::model()->updateSubject($sbj->sbj_number);
+                Transition::model()->updateSubject($sbj->sbj_number, substr($sbj->sbj_number,0,-2));
+                Subjects::model()->noSub($sbj->sbj_number);
+                $sbj->delete();
+                echo "删除成功！";
+            }
+        }else{  //无凭证
+            try{
+                Bank::model()->updateSubject($sbj->sbj_number);
+                //有兄弟科目，可直接删除
+                if(Subjects::model()->hasBrother($sbj->sbj_number))
+                    $sbj->delete();
+                else{   //无兄弟科目
+                    Post::model()->updateSubject($sbj->sbj_number);
+                    //设置父科目 无子科目
+                    Subjects::model()->noSub($sbj->sbj_number);
+                    $sbj->delete();
+                }
+                echo "删除成功！";
+            }catch (CDbException $e){
+                echo "删除失败！";
+            }
+        }
+
+		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+		if(!isset($_GET['ajax']))
+			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
     }
-//
-//    /**
-//     * 列出一级科目
-//     */
-//    public function actionListFirst()
-//    {
-//      $sql = "select * from subjects where sbj_number < 10000"; // 一级科目的为1001～9999
-//      $First = Subjects::model()->findAllBySql($sql);
-//      $arr = array();
-//      foreach($First as $row) {
-//                  array_push($arr, $row['sbj_number'], $row['sbj_name']);
-//      };
-//      return $arr;
-//    }
-//
-//    /*
-//     * 列出二级,三级科目
-//     */
-//    public function actionListSub($sbj_number=1001)
-//    {
-//      //todo
-//      //      $sbj_number = $_POST['sbj_number'];
-//      $sql = "select * from Subjects where sbj_number > :min and sbj_number < :max";
-//      $min = (int)(((string)$sbj_number)."00");
-//      $max = (int)(((string)$sbj_number)."99");
-//      $data = Subjects::model()->findAllBySql($sql, array(':min'=>$min,
-//                                                          ':max'=>$max));
-//      foreach($data as $row) {
-//        $arr[$row['sbj_number']] = array($row['sbj_name'], $row['has_sub']);
-//        //        array_push($arr, $row['sbj_number'], $row['sbj_name']);
-//      };
-//      $this->render('list', array(
-//                                  'list'=>$arr,
-//                                  ));
-//    }
 
     /**
      * Lists all models.

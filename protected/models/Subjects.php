@@ -186,6 +186,12 @@ class Subjects extends CActiveRecord
         Yii::app()->db->createCommand($sql)->bindParam('par_id', $par_id)->execute();
     }
 
+    public static function noSub($sbj){
+        $par_id = substr($sbj, 0, -2);
+        $sql = "update subjects set has_sub = 0 where sbj_number = :par_id";
+        Yii::app()->db->createCommand($sql)->bindParam('par_id', $par_id)->execute();
+    }
+
 
     /*
      * 得到科目的所属类别:
@@ -565,5 +571,41 @@ class Subjects extends CActiveRecord
         if($sub!=null && $sub->sbj_number != $sbj_number)
             $this->addError($attribute, '科目名已经存在');
 
+    }
+
+    /*
+     * 科目下是否有凭证
+     */
+    public static function hasTransition($sbj){
+        $criteria = new CDbCriteria;
+        $criteria->compare('entry_subject', $sbj, true);
+        $tran = Transition::model()->find($criteria);
+        if(empty($tran))
+            return false;
+        else
+            return true;
+    }
+
+    /*
+     * @sbj Integer 科目编号
+     * 有兄弟科目
+     */
+    public static function hasBrother($sbj){
+        if(strlen($sbj)<=4)
+            return false;
+        $psbj = substr($sbj,0,-2);
+        $criteria = new CDbCriteria;
+        $criteria->addCondition('sbj_number != :sbj_number');
+        $criteria->params[ ':sbj_number' ] = $sbj;
+
+        $criteria->addCondition('sbj_number like :psbj');
+        $criteria->params[ ':psbj' ] = "$psbj%";
+        $criteria->addCondition('length(sbj_number) > '. strlen($psbj));
+
+        $sub = Subjects::model()->find($criteria);
+        if(empty($sub))
+            return false;
+        else
+            return true;
     }
 }

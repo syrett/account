@@ -219,7 +219,6 @@ class TransitionController extends Controller
                     Yii::app()->user->setFlash('success', "保存成功!");
                     //跳转到历史数据管理页面
                     $this->redirect(Yii::app()->createUrl('bank'));
-
                 }
             }
         }
@@ -1250,6 +1249,7 @@ class TransitionController extends Controller
                     $tran2->attributes = $data;
                     if ($model->id != '')
                         $this->delTran(1, $model->id);
+                    if($arr['enabled']=="1")
                     if ($tran->save() && $tran2->save()) {
                         foreach ($list as $item) {
                             $item->save();

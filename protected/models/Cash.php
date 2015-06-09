@@ -137,9 +137,9 @@ class Cash extends CActiveRecord
      * @return css class name
      */
 	public function getClass($row, $saved){
-		$class = $row%2==1 ? "row-odd" : 'row-even';
-		if($saved==1)
-			$class = "row-saved";
+//		$class = $row%2==1 ? "row-odd" : 'row-even';
+//		if($saved==1)
+        $class = "row-odd";
 		return $class;
 	}
 

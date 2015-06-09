@@ -91,10 +91,12 @@ $tranDate = $command->queryRow(); // execute a query SQL
                 foreach ($banks as $item) {
                     $data[$item['sbj_number']] = $item['sbj_name'];
                 }
+                $user = User::model()->find(Yii::app()->user->id);
                 $this->widget('Select2', array(
                     'name' => 'subject_2',
                     'id' => 'subject_2',
-                    'htmlOptions' => ['class' => $class],
+                    'value' => $user->bank,
+                    'htmlOptions' => ['class' => $class, ],
                     'data' => $data,
                 ));
 
@@ -102,6 +104,7 @@ $tranDate = $command->queryRow(); // execute a query SQL
             </div>
                 <input id="bank_name" placeholder="银行名称" type="text" class="input_mid"/>
                 <button class="btn btn-default btn-file" type="button" onclick="addBank()">添加</button>
+                <button class="btn btn-default btn-file" type="button" onclick="lockBank(this)" value="0">解锁银行</button>
             <?
             }
             ?>
@@ -149,6 +152,9 @@ $tranDate = $command->queryRow(); // execute a query SQL
                                 <input type="hidden" id="did_<?= $key ?>" name="lists[<?= $key ?>][Transition][d_id]"
                                        value="<?= isset($item['d_id']) ? $item['d_id'] : '' ?>">
                                 <input type="hidden" id="id_<?= $key ?>" value="<?= $key ?>">
+                                <input type="hidden" id="enable_<?= $key ?>"
+                                       name="lists[<?= $key ?>][Transition][enabled]"
+                                       value="1">
                                 <input type="hidden" id="subject_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_subject]"
                                        value="<?= $item['entry_subject'] ?>">
@@ -210,7 +216,9 @@ $tranDate = $command->queryRow(); // execute a query SQL
                                 <input id="type" type="hidden" value="<?= $this->createUrl(
                                     '/bank/type'
                                 ) ?>">
-
+                                <input id="user-bank" type="hidden" value="<?= $this->createUrl(
+                                    '/user/savebank'
+                                ) ?>">
                                 <input id="option" type="hidden" value="<?= $this->createUrl(
                                     '/bank/option'
                                 ) ?>">

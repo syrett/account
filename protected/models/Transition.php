@@ -890,10 +890,18 @@ class Transition extends CActiveRecord
         return true;
     }
 
-
     public function transitions()
     {
         $sql = 'select * from ';
-
     }
+
+    /*
+     * 修改科目凭证科目为父科目
+     */
+    public static function updateSubject($sbj, $sbj2){
+        $criteria = new CDbCriteria();
+        $criteria->addCondition('entry_subject='. $sbj);
+        $rows = Transition::model()->updateAll(['entry_subject' => $sbj2], $criteria);
+    }
+
 }

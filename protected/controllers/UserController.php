@@ -28,12 +28,11 @@ class UserController extends Controller
 	{
 		return array(
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
-				'roles'=>array('admin'),
+				'actions'=>array('admin'),
+				'roles'=>array('@'),
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
@@ -166,4 +165,12 @@ class UserController extends Controller
 			Yii::app()->end();
 		}
 	}
+
+    public function actionSaveBank(){
+        if (Yii::app()->request->isAjaxRequest) {
+            if(isset($_POST['bank']))
+                User::model()->saveBank($_POST['bank']);
+        } else
+            throw new CHttpException(403,'不允许提交');
+    }
 }

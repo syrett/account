@@ -137,9 +137,9 @@ class Bank extends CActiveRecord
      * @return css class name
      */
 	public function getClass($row, $saved){
-		$class = $row%2==1 ? "row-odd" : 'row-even';
-		if($saved==1)
-			$class = "row-saved";
+//		$class = $row%2==1 ? "row-odd" : 'row-even';
+//		if($saved==1)
+			$class = "row-odd";
 		return $class;
 	}
 
@@ -190,6 +190,7 @@ class Bank extends CActiveRecord
             '支付股利' => '支付股利',         //  8
             '支付税金' => '支付税金',
             '现金提取' => '现金提取',
+            '银行转账' => '银行转账',
             '其他支出' => '其他支出',     //  9
         ];
     }
@@ -207,6 +208,7 @@ class Bank extends CActiveRecord
             '材料销售' => '材料销售',           //  6
             '技术转让' => '技术转让',
             '资产租赁' => '资产租赁',
+            '银行转账' => '银行转账',
             '存入现金' => '存入现金',
             '其他收入' => '其他收入',           //  7
         ];
@@ -593,12 +595,29 @@ eof;
 
     private static function getTaxFee($key = ''){
         $subject = new Subjects();
-        $arr = [2221, 6403];
-        $result = $subject->getitem($arr, $key);
-        $sbj = $subject->getitem([660207], $key, ['level'=>0, 'type'=>2]); //印花税
+        $arr = [2221];
+        $result['个人所得税费用'] = '个人所得税费用';
+        $result['营业税金及附加'] = '营业税金及附加';
+        $result += $subject->getitem($arr, $key);
+        $sbj = $subject->getitem([6801,660207], $key, ['level'=>0, 'type'=>2]); //印花税
         if(!empty($sbj))
             $result += $sbj;
-
+        return [
+            'data' => $result,
+        ];
+    }
+    private static function getTaxFee2($key = ''){
+        $subject = new Subjects();
+        $arr = [6403];
+        $result = $subject->getitem($arr, $key);
+        return [
+            'data' => $result,
+        ];
+    }
+    private static function getBank($key = ''){
+        $subject = new Subjects();
+        $arr = [1002];
+        $result = $subject->getitem($arr, $key);
         return [
             'data' => $result,
         ];
@@ -807,9 +826,44 @@ eof;
                     break;
                 case '支付税金'  :  //将应交税费2221子科目列出
                     if (isset($options[3])) {
-                        return self::endOption($options[3]);
+                        if($options[3]=='个人所得税费用')
+                        {
+                            if(isset($options[4])) {
+                                $department = Employee::getDepartType($options[4]);
+                                switch ($department) {
+                                    case 1:
+                                        $result = Subjects::matchSubject('工资与奖金', array(6401));
+                                        break;
+                                    case 2:
+                                        $result = Subjects::matchSubject('工资与奖金', array(6602), 1);
+                                        break;
+                                    case 3:
+                                        $result = Subjects::matchSubject('工资与奖金', array(6601));
+                                        break;
+                                    case 4:
+                                        $result = Subjects::matchSubject('工资与奖金', array(660202));
+                                        break;
+                                }
+                                return self::endOption($result);
+                            }
+                            else
+                            $result = self::getEmployee($data[1]);
+                        }elseif($options[3]=='营业税金及附加'){
+                            if(isset($options[4]))
+                                return self::endOption($options[4]);
+                            else
+                                $result = self::getTaxFee2($data[1]);
+                        }
+                        else
+                            return self::endOption($options[3]);
                     } else
                         $result = self::getTaxFee($data[1]);
+                    break;
+                case '银行转账'  :  //银行资金互转
+                    if (isset($options[3])) {
+                        return self::endOption($options[3]);
+                    } else
+                        $result = self::getBank($data[1]);
                     break;
                 case '现金提取'  :  //将营业外支出6711作为借方科目，形成会计分录
                     return self::endOption(1001);
@@ -905,11 +959,12 @@ eof;
                 case '资产租赁'  :
                     return self::endOption(605103);
                     break;
-//                    if (isset($options[3])) {
-//                        return self::endOption($options[3]);
-//                    } else
-//                        $result = self::getBorrow($data[1]);
-//                    break;
+                case '银行转账'  :  //银行资金互转
+                    if (isset($options[3])) {
+                        return self::endOption($options[3]);
+                    } else
+                        $result = self::getBank($data[1]);
+                    break;
                 case '存入现金'  :
                     return self::endOption(1001);
                     break;
@@ -952,5 +1007,17 @@ eof;
     public function prospect()
     {
         return 3000;
+    }
+
+    /*
+     * 修改科目凭证科目为父科目
+     */
+    public static function updateSubject($sbj){
+        $criteria = new CDbCriteria();
+        $criteria->compare('subject', $sbj, true);
+        $rows = Bank::model()->updateAll(['subject' => substr($sbj,0,-2)], $criteria);
+        $criteria = new CDbCriteria();
+        $criteria->compare('subject_2', $sbj, true);
+        $rows = Bank::model()->updateAll(['subject_2' => substr($sbj,0,-2)], $criteria);
     }
 }

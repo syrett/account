@@ -15,12 +15,15 @@ $(document).ready(function () {
         //可以重新考虑后台设置此处的显示规则
         if (this.value == 2)   //和发票有关
             $("#new-category-3").show();
-
     })
     $("div").delegate("#droplist", "change", function () {
         chooseOption(this)
     })
 })
+$(window).bind("load", function() {
+    $("#subject_2").select2("readonly",true);
+    // code here
+});
 function itemsplit(e) {
 
     //直接复制  需要重新设置item 和 id
@@ -283,6 +286,9 @@ function itemSet() {
 }
 //保存凭证，此时再根据选择的科目计算一些数值
 function save() {
+    //判断银行是否锁定
+    if (!checkBank())
+        return true;
     if (!checkInput())
         return true;
     $("#abc table tr:first").nextAll('tr:visible[id!=trSetting]').each(function (key, value) {
@@ -493,10 +499,17 @@ function setTransaction(id) {
     var type = $(".options:first > button.active").val();
     if (type == '支出')
         $("#transaction_" + id).val(1)
-    if (type == '收入')
+    if (type == '收入'){
         $("#transaction_" + id).val(2)
+    }
     if ($("#subject").val()==660302)
         $("#transaction_" + id).val(1)
+    //设置是否需要生成凭证，例：银行互转，收入方不需要
+    var option = $(".options:nth-of-type(3) > button.active").val();
+    if (option=='银行转账')
+        $("#enable_"+ id).val("0")
+    else
+        $("#enable_"+ id).val("1")
 }
 
 //消除数据，设置前先消除
@@ -535,6 +548,13 @@ function checkInput() {
 
     })
     return check;
+}
+
+function checkBank(){
+    if ($("#subject_2").attr("readonly")==undefined)
+        alert("请锁定银行")
+    else
+        return true;
 }
 
 function createSubject(url, data) {
@@ -576,6 +596,28 @@ function addBank() {
         this.selected = (this.value == msg);
     });
     $("#subject_2").select2();
+}
+
+/*
+ 解锁，锁定银行
+ */
+function lockBank(e){
+    if(e.value==1)
+    {
+        var url = $("#user-bank").val();
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {"bank": $("#subject_2").val()}
+        })
+        $("#subject_2").select2("readonly", true);
+        $(e).html("解锁银行");
+    }
+    else{
+        $("#subject_2").select2("readonly", false);
+        $(e).html("锁定银行");
+    }
+    e.value = e.value==0?1:0;
 }
 
 function active(e){

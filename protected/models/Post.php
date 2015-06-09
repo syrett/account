@@ -286,6 +286,15 @@ var_dump($tranDataArray);exit(1);
         Yii::app()->db->createCommand($sql)->bindValues(array(':sbj_id'=>$sbj_id,':par_id'=>$par_id))->execute();
     }
 
+    /*
+     * 修改科目为父科目
+     */
+    public static function updateSubject($sbj){
+        $criteria = new CDbCriteria();
+        $criteria->compare('subject_id', $sbj, true);
+        $rows = Post::model()->updateAll(['subject_id' => substr($sbj,0,-2)], $criteria);
+    }
+
     // 得到某个一级科目的及其子科目的余额和
     public function getBalanceNum($subject_id, $date)
     {

@@ -25,26 +25,6 @@ class User extends UserActiveRecord
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array(
-			array('roles', 'required'),
-			array('sys_role', 'numerical', 'integerOnly'=>true),
-			array('userid, password, fullname', 'length', 'max'=>100),
-			array('mobile, email', 'length', 'max'=>20),
-			array('title', 'length', 'max'=>50),
-			array('roles', 'length', 'max'=>16),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, userid, password, fullname, mobile, email, title, sys_role, roles', 'safe', 'on'=>'search'),
-		);
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()
@@ -61,15 +41,6 @@ class User extends UserActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'userid' => 'Userid',
-			'password' => 'Password',
-			'fullname' => 'Fullname',
-			'mobile' => 'Mobile',
-			'email' => 'Email',
-			'title' => 'Title',
-			'sys_role' => 'Sys Role',
-			'roles' => 'Roles',
 		);
 	}
 
@@ -99,12 +70,19 @@ class User extends UserActiveRecord
 		$criteria->compare('email',$this->email,true);
 		$criteria->compare('title',$this->title,true);
 		$criteria->compare('sys_role',$this->sys_role);
-		$criteria->compare('roles',$this->roles,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}
+
+    /**
+     * @return CDbConnection the database connection used for this class
+     */
+    public function getDbConnection()
+    {
+        return Yii::app()->dbadmin;
+    }
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -116,4 +94,10 @@ class User extends UserActiveRecord
 	{
 		return parent::model($className);
 	}
+
+    public static function saveBank($bank){
+        $user = User::model()->find(Yii::app()->user->id);
+        $user->bank = $bank;
+        $user->save();
+    }
 }
