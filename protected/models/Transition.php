@@ -847,8 +847,10 @@ class Transition extends CActiveRecord
         if ($this->reviewAccess()) {
             $this->entry_reviewed = 1;
             $this->entry_reviewer = Yii::app()->user->id;
-            $this->save();
-        }
+            if($this->save())
+                return true;
+        }else
+            return false;
     }
 
     /*

@@ -709,6 +709,7 @@ class TransitionController extends Controller
     public function actionSetReviewedAll(){
         if (Yii::app()->request->isPostRequest)
         {
+            $result = true;
             //凭证编号 ：2015050001
             foreach($_POST['selectall'] as $item){
                 $criteria= new CDbCriteria;
@@ -721,12 +722,15 @@ class TransitionController extends Controller
                 $trans = Transition::model()->findAll($criteria);
                 if(!empty($trans)){
                     foreach($trans as $item){
-                        $item->setReviewed();
+                        $result = $item->setReviewed()?$result:false;
                     }
                 }
             }
             if(isset(Yii::app()->request->isAjaxRequest)) {
-                echo CJSON::encode(array('success' => true));
+                if($result)
+                    echo CJSON::encode(array('success' => true));
+                else
+                    echo CJSON::encode(array('success' => false));
             } else
                 $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
         }
@@ -1247,22 +1251,26 @@ class TransitionController extends Controller
                         $tran['entry_amount'] = -$tran['entry_amount'];
                     $data['entry_subject'] = $subject_2;  // 银行存款（1002），现金
                     $tran2->attributes = $data;
-                    if ($model->id != '')
-                        $this->delTran(1, $model->id);
-                    if($arr['enabled']=="1")
-                    if ($tran->save() && $tran2->save()) {
-                        foreach ($list as $item) {
-                            $item->save();
-                        }
-                        //设置该记录已经生成凭证
-                        $model->status_id = 1;
-                        $model->save();
-                        //保存成功，不返回数据
+                    try{
+                        if ($model->id != '')
+                            $this->delTran(1, $model->id);
+                        if($arr['status_id']=="1"||$arr['status_id']=="0")  //为2是银行间转账，不需要生成凭证
+                            if ($tran->save() && $tran2->save()) {
+                                foreach ($list as $item) {
+                                    $item->save();
+                                }
+                                //设置该记录已经生成凭证
+                                $model->status_id = 1;
+                                $model->save();
+                                //保存成功，不返回数据
 //                        $result[] = ['status'=>2, 'data'=>''];
-                    } else {
-                        $arr['d_id'] = $model->id;
-                        $arr['error'] = $tran->getErrors();
-                        $result[] = ['status' => 1, 'data' => $arr];
+                            } else {
+                                $arr['d_id'] = $model->id;
+                                $arr['error'] = $tran->getErrors();
+                                $result[] = ['status' => 1, 'data' => $arr];
+                            }
+                    }catch (CDbException $e){
+
                     }
                 }
             } else {//未保存

@@ -82,11 +82,8 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
 			<span class="deleted">已删除</span>
 			</div>
             <?php
-                $review = '<span title="审核通过" class="glyphicon glyphicon-ok-circle" onclick="setreviewed();" ></span><span title="取消审核" class="glyphicon glyphicon-ban-circle" onclick="unreviewed();" ></span>';
             }
-            else
-                $review = '<span title="审核通过" class="glyphicon glyphicon-ok-circle" onclick="setreviewed();" ></span>';
-            ?>			
+            ?>
 		</div>
 		<div class="col-md-4">
 		<?php echo CHtml::beginForm(); ?>
@@ -121,7 +118,6 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
             'columns' => array(
                 array(
                     'selectableRows' => 2,
-                    'footer' => $review,
                     'class' => 'CCheckBoxColumn',
                     'headerHtmlOptions' => array('width'=>'33px'),
                     'value' => '$data->entry_num_prefix. $data->addZero($data->entry_num)',
@@ -129,7 +125,6 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
                 ),
                 array(
                     'name'=>'entry_number',
-                    'footer'=>'批量审核操作时，部分由您生成的凭证，需要由他人审核',
                     'value'=>'$data->entry_num_prefix. $data->addZero($data->entry_num)'),
                 array('name'=>'entry_memo','type'=>'shortText'),
                 array(
@@ -160,7 +155,24 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
                 ),
             ),
             'itemsCssClass' => 'table table-bordered',
-        )); ?>
+        ));
+        echo '<div class="transition_action" ><p>';
+        echo CHtml::htmlbutton('<span class="glyphicon glyphicon-ok"></span> 审核通过', array(
+                'onclick' => 'setreviewed()',
+                'name' => 'btnSetReview',
+                'class' => 'btn btn-default btn-sm',
+                'confirm' => '确认通过审核？',
+            )
+        );
+        echo CHtml::htmlbutton('<span class="glyphicon glyphicon-repeat"></span> 取消审核', array(
+                'onclick' => 'unreviewed()',
+                'name' => 'btnUnReview',
+                'class' => 'btn btn-default btn-sm',
+                'confirm' => '确认取消审核？',
+            )
+        );
+        echo '</p></div>';
+        ?>
 </div>
 </div><!-- .panel-body -->
 <script type="text/javascript">
@@ -177,7 +189,9 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
         if(data.length > 0){
             $.post('<?php echo CHtml::normalizeUrl(array('/transition/setreviewedall/'));?>',{'selectall[]':data}, function (data) {
                 var ret = $.parseJSON(data);
-                if (ret != null && ret.success != null && ret.success) {
+                if (ret != null && ret.success != null){
+                    if(!ret.success)
+                        alert('部分凭证必须由他人审核');
                     $.fn.yiiGridView.update("transition-grid");
                 }
             });
