@@ -109,6 +109,12 @@
 						<a href="<?= $this->createUrl('department/create') ?>">
 						<i class="icon-users"></i> 部门</a>
 					</li>
+					<li class="divider">
+					</li>
+					<li>
+						<a href="<?= $this->createUrl('subject/create') ?>">
+						<i class="icon-note"></i> 会计科目</a>
+					</li>
 				</ul>
 			</div>
 		</div>

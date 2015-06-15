@@ -152,9 +152,9 @@ $tranDate = $command->queryRow(); // execute a query SQL
                                 <input type="hidden" id="did_<?= $key ?>" name="lists[<?= $key ?>][Transition][d_id]"
                                        value="<?= isset($item['d_id']) ? $item['d_id'] : '' ?>">
                                 <input type="hidden" id="id_<?= $key ?>" value="<?= $key ?>">
-                                <input type="hidden" id="enable_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][enabled]"
-                                       value="1">
+                                <input type="hidden" id="status_id_<?= $key ?>"
+                                       name="lists[<?= $key ?>][Transition][status_id]"
+                                       value="0">
                                 <input type="hidden" id="subject_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_subject]"
                                        value="<?= $item['entry_subject'] ?>">
