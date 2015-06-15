@@ -3,13 +3,22 @@
 // uncomment the following to define a path alias
 Yii::setPathOfAlias('vova07', 'vendor/vova07');
 
+// Set Temporary folder based on different OS
+if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+   // This is a server using Windows!
+   $TMPPATH = 'd:/temp';
+} else {
+   // A server not using Windows!
+   $TMPPATH = '/tmp';
+}
+
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
     'name' => 'Sorcerer_Account',
 //    'theme'=>'account',
-    'theme' => 'abound',
+    'theme' => 'metronic',
     // preloading 'log' component
     'preload' => array('log'),
     // Change system language to Chinese Simple
@@ -40,17 +49,17 @@ return array(
             // enable cookie-based authentication
             'class' => 'WebUser',
             'allowAutoLogin' => true,
-            'identityCookie' => array('domain' => '.abc.com', 'path' => '/'),//配置用户cookie作用域
+            'identityCookie' => array('domain' => $_SERVER['SERVER_NAME'], 'path' => '/'),//配置用户cookie作用域
         ),
         'cache'=>array(
             'class'=>'system.caching.CDbCache'
         ),
         'session' => array(
-            'savePath' => 'd:/temp',
+            'savePath' => $TMPPATH,
 //            'cookieMode' => 'allow',
             'cookieParams' => array(
                 'path' => '/',
-                'domain' => '.abc.com',
+                'domain' => $_SERVER['SERVER_NAME'],
                 'httpOnly' => true,
             ),
         ),

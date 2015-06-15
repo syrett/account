@@ -3,6 +3,16 @@
 // uncomment the following to define a path alias
 // Yii::setPathOfAlias('local','path/to/local-folder');
 
+// Set Temporary folder based on different OS
+if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+   // This is a server using Windows!
+   $TMPPATH = 'd:/temp';
+} else {
+   // A server not using Windows!
+   $TMPPATH = '/tmp';
+}
+
+
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
 return array(
@@ -46,8 +56,8 @@ return array(
             'class'=>'system.caching.CDbCache'
         ),
         'session' => array(
-            'savePath' => '/www/peteraccount/sessions',
-//            'savePath' => 'd:/temp',
+//            'savePath' => '/www/peteraccount/sessions',
+            'savePath' => $TMPPATH,
 //            'cookieMode' => 'allow',
             'cookieParams' => array(
                 'path' => '/',
