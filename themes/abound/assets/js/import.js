@@ -507,9 +507,9 @@ function setTransaction(id) {
     //设置是否需要生成凭证，例：银行互转，收入方不需要
     var option = $(".options:nth-of-type(3) > button.active").val();
     if (option=='银行转账')
-        $("#enable_"+ id).val("0")
+        $("#status_id_"+ id).val("2")   //这种状态不需要生成凭证
     else
-        $("#enable_"+ id).val("1")
+        $("#status_id_"+ id).val("1")
 }
 
 //消除数据，设置前先消除

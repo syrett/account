@@ -594,6 +594,9 @@ footer .container{
 .transition_action p{
  float:right;
 }
+.transition_action p button{
+    margin: 0 5px;
+}
 
 table.transition {
  border:2px solid #000;
