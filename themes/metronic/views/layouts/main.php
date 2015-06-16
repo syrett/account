@@ -10,9 +10,6 @@
         'jquery.min.js'=>false,
         );
 	$baseUrl = Yii::app()->theme->baseUrl; 
-	$cs = Yii::app()->clientScript;
-	$cs->registerScript('MetronicInit','Metronic.init();', CClientScript::POS_READY);
-	$cs->registerScript('LayoutInit','Layout.init();', CClientScript::POS_READY);
 ?>
 <!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
@@ -463,3 +460,8 @@
 </body>
 <!-- END BODY -->
 </html>
+<?php 
+	$cs = Yii::app()->clientScript;
+	$cs->registerScript('MetronicInit','Metronic.init();', CClientScript::POS_READY);
+	$cs->registerScript('LayoutInit','Layout.init();', CClientScript::POS_READY);
+?>

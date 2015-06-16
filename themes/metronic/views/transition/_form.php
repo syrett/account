@@ -79,7 +79,10 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
         			    ? date('Ymd', strtotime($model[0]->entry_date))
         			    : date('Ymd'); ?>" id="dp1" readonly />
 					<span class="input-group-btn">
-					<button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+					<button class="btn default" type="button">
+					<span class="md-click-circle md-click-animate" style="height: 47px; width: 47px; top: -7.5px; left: 2.25px;"></span>
+					<i class="fa fa-calendar"></i>
+					</button>
 					</span>
 					<input type="hidden" id="entry_num_pre" value="<?php echo Yii::app()->createAbsoluteUrl("transition/GetTranSuffix") ?>"/>
 				</div>
