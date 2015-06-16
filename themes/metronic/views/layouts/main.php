@@ -110,7 +110,7 @@
 					<li class="divider">
 					</li>
 					<li>
-						<a href="<?= $this->createUrl('subject/create') ?>">
+						<a href="<?= $this->createUrl('subjects/create') ?>">
 						<i class="icon-note"></i> 会计科目</a>
 					</li>
 				</ul>

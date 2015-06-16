@@ -223,7 +223,7 @@ var addRow = function () {
         "<td class=col-md-3 > " +
         "<input class='form-control input-size' name='Transition[" + number + "][entry_memo]' id='Transition_" + number + "_entry_memo' type='text'>" +
         "</td>" +
-        '<td class="col-md-3"><select class="v-subject" id="Transition_' + number + '_entry_subject" name="Transition[' + number + '][entry_subject]" >'
+        '<td class="col-md-3"><select class="form-control v-subject" id="Transition_' + number + '_entry_subject" name="Transition[' + number + '][entry_subject]" >'
     $.ajax({
         type: "POST",
         url: $("#url_get_subjects").val(),
@@ -249,7 +249,7 @@ var addRow = function () {
         }
     });
     html += '</select><input type="hidden" value="' + number + '"/></div>' +
-        "<td class='col-md-1'><select id='Transition_" + number + "_entry_transaction'name=Transition[" + number + "][entry_transaction] >" +
+        "<td class='col-md-1'><select class='form-control' id='Transition_" + number + "_entry_transaction'name=Transition[" + number + "][entry_transaction] >" +
         "<option value=1 >借</option><option value=2>贷</option>" +
         "</select></td>" +
         '<td class="col-md-2"><input onkeyup="checkInputAmount(this)" class="form-control input-size" name="Transition[' + number + '][entry_amount]" id="Transition_' + number + '_entry_amount' +

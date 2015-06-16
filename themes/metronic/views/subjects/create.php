@@ -1,4 +1,12 @@
 <?php
+//Yii::app()->clientScript->registerCoreScript('jquery');
+Yii::import('ext.select2.Select2');
+$cs = Yii::app()->clientScript;
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scripts/select2/select2.js', CClientScript::POS_END);
+$cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scripts/select2/select2.css');
+$cs = Yii::app()->clientScript;
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/admin/layout/scripts/subjects.js', CClientScript::POS_END);
+
 $this->pageTitle=Yii::app()->name . ' - 会计科目表管理';
 $this->breadcrumbs=array(
 	'会计科目表管理',

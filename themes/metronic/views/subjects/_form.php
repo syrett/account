@@ -4,10 +4,7 @@ require_once(dirname(__FILE__).'/../viewfunctions.php');
 /* @var $this SubjectsController */
 /* @var $model Subjects */
 /* @var $form CActiveForm */
-Yii::app()->clientScript->registerCoreScript('jquery');
-Yii::import('ext.select2.Select2');
-$cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/subjects.js', CClientScript::POS_HEAD);
+
 CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
 ?>
 
@@ -25,8 +22,7 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
     'clientOptions'=>array(
         'validateOnSubmit'=>true,
     ),
-)); ?>
-    <?
+	)); 
     foreach(Yii::app()->user->getFlashes() as $key => $message) {
         echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
     }?>
@@ -95,7 +91,7 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
 		<?php echo $form->error($model,'sbj_name',array('id'=>'sbj_name_msg')); ?>
             </div>
 	</div>
-    <?
+    <?php
     if($model->hasErrors()){
         echo '<div class="alert alert-danger text-left">';
         echo CHtml::errorSummary($model);
