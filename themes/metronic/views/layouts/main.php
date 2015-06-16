@@ -447,11 +447,6 @@
 <script src="<?php echo $baseUrl;?>/assets/global/plugins/uniform/jquery.uniform.min.js" type="text/javascript"></script>
 <script src="<?php echo $baseUrl;?>/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
 <!-- END CORE PLUGINS -->
-<!-- BEGIN PAGE LEVEL PLUGINS -->
-<script src="<?php echo $baseUrl;?>/assets/global/plugins/flot/jquery.flot.min.js" type="text/javascript"></script>
-<script src="<?php echo $baseUrl;?>/assets/global/plugins/flot/jquery.flot.pie.min.js"></script>
-<script src="<?php echo $baseUrl;?>/assets/admin/pages/scripts/charts-flotcharts.js"></script>
-<!-- END PAGE LEVEL PLUGINS -->
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <script src="<?php echo $baseUrl;?>/assets/global/scripts/metronic.js" type="text/javascript"></script>
 <script src="<?php echo $baseUrl;?>/assets/admin/layout/scripts/layout.js" type="text/javascript"></script>

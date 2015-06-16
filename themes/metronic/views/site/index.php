@@ -10,6 +10,9 @@ $cs = Yii::app()->clientScript;
 $cs->registerScript('ChartsFlotchartsInit','ChartsFlotcharts.init();', CClientScript::POS_READY);
 $cs->registerScript('ChartsFlotchartsInitPie','ChartsFlotcharts.initPieCharts();', CClientScript::POS_READY);
 
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/flot/jquery.flot.min.js', CClientScript::POS_END);
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/flot/jquery.flot.pie.min.js', CClientScript::POS_END);
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/pages/scripts/charts-flotcharts.js', CClientScript::POS_END);
 ?>
 <!-- BEGIN PAGE HEADER-->
 <h3 class="page-title">
