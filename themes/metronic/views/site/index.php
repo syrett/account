@@ -5,6 +5,11 @@ $this->pageTitle = Yii::app()->name;
 date_default_timezone_set('Asia/Shanghai');
 $weekarray = array("日","一","二","三","四","五","六");  
 $dayoftoday = "星期".$weekarray[date("w")]; 
+
+$cs = Yii::app()->clientScript;
+$cs->registerScript('ChartsFlotchartsInit','ChartsFlotcharts.init();', CClientScript::POS_READY);
+$cs->registerScript('ChartsFlotchartsInitPie','ChartsFlotcharts.initPieCharts();', CClientScript::POS_READY);
+
 ?>
 <!-- BEGIN PAGE HEADER-->
 <h3 class="page-title">

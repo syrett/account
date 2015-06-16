@@ -5,10 +5,14 @@
 		header("location: http://www.sorcerer.com.cn");
 		exit; 
 	}
+	Yii::app()->clientScript->scriptMap=array(
+        'jquery.js'=>false,
+        'jquery.min.js'=>false,
+        );
 	$baseUrl = Yii::app()->theme->baseUrl; 
 	$cs = Yii::app()->clientScript;
-	$cs->registerScript('ChartsFlotchartsInit','ChartsFlotcharts.init();', CClientScript::POS_READY);
-	$cs->registerScript('ChartsFlotchartsInitPie','ChartsFlotcharts.initPieCharts();', CClientScript::POS_READY);
+	$cs->registerScript('MetronicInit','Metronic.init();', CClientScript::POS_READY);
+	$cs->registerScript('LayoutInit','Layout.init();', CClientScript::POS_READY);
 ?>
 <!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
@@ -62,7 +66,7 @@
 		<!-- BEGIN LOGO -->
 		<div class="page-logo">
 			<a href="<?php echo Yii::app()->homeUrl; ?>">
-			<img src="<?php echo $baseUrl;?>/assets/admin/layout/img/laofashigroup-logo-inverse.png" alt="logo" />
+			<img src="<?php echo $baseUrl;?>/assets/admin/layout/img/laofashigroup-logo-inverse.png" class="laofashi-logo" alt="logo" />
 			</a>
 			<div class="menu-toggler sidebar-toggler">
 			</div>
@@ -276,10 +280,6 @@
 							<h3><span class="bold">系统选项</span></h3>
 						</li>
 						<li>
-							<a href="#">
-							<i class="icon-lock"></i> 锁屏 </a>
-						</li>
-						<li>
 							<a href="<?= $this->createUrl('site/logout')?>">
 							<i class="icon-key"></i> 退出 </a>
 						</li>
@@ -453,9 +453,6 @@
 <!-- BEGIN PAGE LEVEL PLUGINS -->
 <script src="<?php echo $baseUrl;?>/assets/global/plugins/flot/jquery.flot.min.js" type="text/javascript"></script>
 <script src="<?php echo $baseUrl;?>/assets/global/plugins/flot/jquery.flot.pie.min.js"></script>
-<script src="<?php echo $baseUrl;?>/assets/global/plugins/flot/jquery.flot.resize.min.js" type="text/javascript"></script>
-<script src="<?php echo $baseUrl;?>/assets/global/plugins/flot/jquery.flot.categories.min.js" type="text/javascript"></script>
-<script src="<?php echo $baseUrl;?>/assets/global/plugins/jquery.pulsate.min.js" type="text/javascript"></script>
 <script src="<?php echo $baseUrl;?>/assets/admin/pages/scripts/charts-flotcharts.js"></script>
 <!-- END PAGE LEVEL PLUGINS -->
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
@@ -463,13 +460,6 @@
 <script src="<?php echo $baseUrl;?>/assets/admin/layout/scripts/layout.js" type="text/javascript"></script>
 <script src="<?php echo $baseUrl;?>/assets/admin/pages/scripts/index.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
-<script>
-jQuery(document).ready(function() {    
-   Metronic.init(); // init metronic core componets
-   Layout.init(); // init layout
-});
-</script>
-<!-- END JAVASCRIPTS -->
 </body>
 <!-- END BODY -->
 </html>
