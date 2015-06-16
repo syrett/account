@@ -3,18 +3,7 @@
 /* @var $model Transition */
 /* @var $form CActiveForm */
 /* @var $action string */
-require_once(dirname(__FILE__) . '/../viewfunctions.php');
 
-Yii::app()->clientScript->registerCoreScript('jquery');
-//Yii::import('ext.select2.Select2');
-$cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/select2/select2.js', CClientScript::POS_HEAD);
-$cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/js/select2/select2.css');
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/jquery-ui.js', CClientScript::POS_HEAD);
-$cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/jquery-ui.min.css');
-$cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/theme.css');
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/transition.js', CClientScript::POS_HEAD);
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/checkinput.js', CClientScript::POS_HEAD);
 $this->pageTitle = Yii::app()->name;
 $sql = 'select date from transitiondate'; // 一级科目的为1001～9999$SQL="SQL Statemet"
 $connection = Yii::app()->db;
@@ -50,9 +39,11 @@ $transition_number = (isset($_REQUEST[0]['id']) && $_REQUEST[0]['id'] != "")
     : $this->tranNumber();
 $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime($model[0]->entry_date)) : date('Y-m-d');
 ?>
-<div class="well well-sm">
+<div class="table-toolbar">
+	<div class="row">
+	<div class="col-md-10">
     <?php
-    echo CHtml::link('<span class="glyphicon glyphicon-plus"></span> 银行交易', array('bank'), array('class' => 'btn btn-default'));
+    echo CHtml::link('<span class="glyphicon glyphicon-plus"></span> 银行交易', array('bank'), array('class' => 'btn green'));
     echo "\n";
     echo CHtml::link('<span class="glyphicon glyphicon-plus"></span> 现金交易', array('cash'), array('class' => 'btn btn-default'));
     echo "\n";
@@ -65,8 +56,10 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
         ));
     */
     ?>
+    </div>
+    </div>
 </div>
-<div class="panel-body">
+<div class="dataTables_wrapper no-footer">
     <div class="transition_title">
         <h2>记 账 凭 证</h2>
     </div>
@@ -77,12 +70,21 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
         ?>" readonly/>
     </div>
     <div class="col-md-4" id="transition_date">
-        制单日期：<input type="text" name="entry_date" class="form-control" value="<?
-        echo isset($model[0]->entry_num_prefix)
-            ? date('Ymd', strtotime($model[0]->entry_date))
-            : date('Ymd'); ?>" id="dp1" readonly/>
-        <input type="hidden" id="entry_num_pre"
-               value="<? echo Yii::app()->createAbsoluteUrl("transition/GetTranSuffix") ?>"/>
+    	<div class="form-group">
+    		<label class="control-label col-md-4">制单日期：</label>
+    		<div class="col-md-3">
+				<div class="input-group input-small date date-picker" data-date-format="dd-mm-yyyy" data-date-start-date="+0d">
+					<input type="text" name="entry_date" class="form-control" value="<?php
+				        echo isset($model[0]->entry_num_prefix)
+        			    ? date('Ymd', strtotime($model[0]->entry_date))
+        			    : date('Ymd'); ?>" id="dp1" readonly />
+					<span class="input-group-btn">
+					<button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+					</span>
+					<input type="hidden" id="entry_num_pre" value="<?php echo Yii::app()->createAbsoluteUrl("transition/GetTranSuffix") ?>"/>
+				</div>
+			</div>
+		</div>
     </div>
     <?php
     //        if(isset($_REQUEST['id'])&&accessReview($_REQUEST['id'])&&accessSettle($_REQUEST['id'])) {
@@ -110,22 +112,22 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
         ?>
         <tr id="row_<?php echo $i; ?>">
             <td class="col-md-3">
-                <?php echo CHtml::activeTextField($item, "[$i]entry_memo", array('class' => 'form-control input-size')); ?>
+                <?php echo CHtml::activeTextField($item, "[$i]entry_memo", array('class' => 'form-control')); ?>
                 <?php echo $form->error($item, '[$i]_entry_memo'); ?>
             </td>
             <td class="col-md-3">
-                <? echo CHtml::activeDropDownList($item, "[$i]entry_subject", $subjects, array('class' => 'v-subject')); ?>
+                <?php echo CHtml::activeDropDownList($item, "[$i]entry_subject", $subjects, array('class' => 'form-control v-subject')); ?>
                 <input type="hidden" value="<?= $i ?>"/>
             </td>
             <td class="col-md-1">
-                <? echo CHtml::activeDropDownList($item, "[$i]entry_transaction", array(1 => '借', 2 => '贷')); ?>
+                <?php echo CHtml::activeDropDownList($item, "[$i]entry_transaction", array(1 => '借', 2 => '贷'), array('class' => 'form-control')); ?>
             </td>
             <td class="col-md-2">
-                <?php echo CHtml::activeTextField($item, "[$i]entry_amount", array('class' => 'form-control input-size', 'onkeyup' => 'checkInputAmount(this)',)); ?>
+                <?php echo CHtml::activeTextField($item, "[$i]entry_amount", array('class' => 'form-control', 'onkeyup' => 'checkInputAmount(this)',)); ?>
             </td>
             <td class="col-md-3">
                 <span id="appendix_<?= $i; ?>"
-                      style="<? if ($item['entry_appendix_type'] == "" || $item['entry_appendix_type'] == 0) { ?>display: none; <? } ?>float: left">
+                      style="<?php if ($item['entry_appendix_type'] == '' || $item['entry_appendix_type'] == 0) { echo 'display: none;'; } ?>float: left">
                                     <?php
                                     $data = $this->appendixList($item['entry_appendix_type']);
                                     $item->entry_appendix_id = $item['entry_appendix_id'];
@@ -209,7 +211,7 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
         ?>
     </p>
 </div>
-<div class="panel-footer">
+<div class="row">
     <div class="form-group buttons text-center">
         <?php
         echo $form->error($item, 'entry_amount', array('id' => 'entry_amount_msg'));
@@ -228,19 +230,19 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
     <!-- form -->
 
     <input type="hidden" name="entry_num_prefix" id='entry_num_prefix'
-           value="<? echo isset($_REQUEST['id']) == true ? $model[0]['entry_num_prefix'] : date('Ym', time()) ?>"/>
+           value="<?php echo isset($_REQUEST['id']) == true ? $model[0]['entry_num_prefix'] : date('Ym', time()) ?>"/>
     <input type="hidden" name="entry_num_prefix_this" id='entry_num_prefix_this'
-           value="<? echo isset($_REQUEST['id']) == true ? $model[0]['entry_num_prefix'] : date('Ym', time()) ?>"/>
+           value="<?php echo isset($_REQUEST['id']) == true ? $model[0]['entry_num_prefix'] : date('Ym', time()) ?>"/>
     <input type="hidden" name="entry_num" id='entry_num'
-           value="<? echo isset($_REQUEST['id']) == true ? $model[0]['entry_num'] : $this->tranSuffix("") ?>"/>
+           value="<?php echo isset($_REQUEST['id']) == true ? $model[0]['entry_num'] : $this->tranSuffix("") ?>"/>
     <input type="hidden" name="entry_editor" id='entry_editor' value="<?= Yii::app()->user->id ?>"/>
     <input type="hidden" name="entry_creater" id='entry_creater'
-           value="<? echo isset($_REQUEST['id']) == true ? $model[0]['entry_creater'] : Yii::app()->user->id ?>"/>
+           value="<?php echo isset($_REQUEST['id']) == true ? $model[0]['entry_creater'] : Yii::app()->user->id ?>"/>
     <input type="hidden" id="number" value="<?= $number ?>"/>
     <input type="hidden" id="startDate" value="<?= Condom::model()->getStartTime();?>"/>
     <input type="hidden" id="transitionDate" value="<?= $tranDate['date'] ?>"/>
-    <input type="hidden" value="<? echo Yii::app()->createAbsoluteUrl("transition/Appendix") ?>" id="entry_appendix"/>
-    <input type="hidden" value="<? echo Yii::app()->createAbsoluteUrl("transition/ajaxlistfirst") ?>"
+    <input type="hidden" value="<?php echo Yii::app()->createAbsoluteUrl("transition/Appendix") ?>" id="entry_appendix"/>
+    <input type="hidden" value="<?php echo Yii::app()->createAbsoluteUrl("transition/ajaxlistfirst") ?>"
            id="ajax_listfirst"/>
     <input type="hidden" value="<?= Yii::app()->createAbsoluteUrl("subjects/ajaxgetsubjects") ?>"
            id="url_get_subjects"/>
