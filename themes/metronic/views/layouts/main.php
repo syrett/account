@@ -6,8 +6,9 @@
 		exit; 
 	}
 	$baseUrl = Yii::app()->theme->baseUrl; 
-	//$cs = Yii::app()->getClientScript();
-	//Yii::app()->clientScript->registerCoreScript('jquery');
+	$cs = Yii::app()->clientScript;
+	$cs->registerScript('ChartsFlotchartsInit','ChartsFlotcharts.init();', CClientScript::POS_READY);
+	$cs->registerScript('ChartsFlotchartsInitPie','ChartsFlotcharts.initPieCharts();', CClientScript::POS_READY);
 ?>
 <!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
@@ -61,7 +62,7 @@
 		<!-- BEGIN LOGO -->
 		<div class="page-logo">
 			<a href="<?php echo Yii::app()->homeUrl; ?>">
-			<img src="<?php echo $baseUrl;?>/assets/admin/layout/img/logo.png" alt="logo" class="logo-default"/>
+			<img src="<?php echo $baseUrl;?>/assets/admin/layout/img/laofashigroup-logo-inverse.png" alt="logo" />
 			</a>
 			<div class="menu-toggler sidebar-toggler">
 			</div>
@@ -466,8 +467,6 @@
 jQuery(document).ready(function() {    
    Metronic.init(); // init metronic core componets
    Layout.init(); // init layout
-   ChartsFlotcharts.init();
-   ChartsFlotcharts.initPieCharts();
 });
 </script>
 <!-- END JAVASCRIPTS -->
