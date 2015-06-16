@@ -33,9 +33,9 @@
 <!-- BEGIN THEME STYLES -->
 <link href="<?php echo $baseUrl;?>/assets/global/css/components-md.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo $baseUrl;?>/assets/global/css/plugins-md.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo $baseUrl;?>/assets/admin/layout2/css/layout.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo $baseUrl;?>/assets/admin/layout2/css/themes/grey.css" rel="stylesheet" type="text/css" id="style_color"/>
-<link href="<?php echo $baseUrl;?>/assets/admin/layout2/css/custom.css" rel="stylesheet" type="text/css"/>
+<link href="<?php echo $baseUrl;?>/assets/admin/layout/css/layout.css" rel="stylesheet" type="text/css"/>
+<link href="<?php echo $baseUrl;?>/assets/admin/layout/css/themes/grey.css" rel="stylesheet" type="text/css" id="style_color"/>
+<link href="<?php echo $baseUrl;?>/assets/admin/layout/css/custom.css" rel="stylesheet" type="text/css"/>
 <!-- END THEME STYLES -->
 <!-- Fav and Touch and touch icons -->
 <link rel="shortcut icon" href="<?php echo $baseUrl;?>/assets/img/icons/favicon.png">
@@ -456,8 +456,6 @@
 <script src="<?php echo $baseUrl;?>/assets/global/plugins/flot/jquery.flot.resize.min.js" type="text/javascript"></script>
 <script src="<?php echo $baseUrl;?>/assets/global/plugins/flot/jquery.flot.categories.min.js" type="text/javascript"></script>
 <script src="<?php echo $baseUrl;?>/assets/global/plugins/jquery.pulsate.min.js" type="text/javascript"></script>
-<script src="<?php echo $baseUrl;?>/assets/global/plugins/bootstrap-daterangepicker/moment.min.js" type="text/javascript"></script>
-<script src="<?php echo $baseUrl;?>/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.js" type="text/javascript"></script>
 <script src="<?php echo $baseUrl;?>/assets/admin/pages/scripts/charts-flotcharts.js"></script>
 <!-- END PAGE LEVEL PLUGINS -->
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
