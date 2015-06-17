@@ -1,0 +1,116 @@
+/* here put own css to customize and override the theme */
+*/
+
+
+.reviewed, .deleted {
+  width:50px; padding:6px;
+  margin-right:5px;
+  display:inline-block;
+}
+.reviewed{
+    background-color: rgb(204, 255, 204);
+}
+.deleted{
+    background-color: #f2dede;
+}
+
+.row-even {
+    background-color: #f9f9f9;
+}
+.row-deleted {
+    background-color: #f2dede;
+    text-decoration: line-through;
+}
+.row-reviewed {
+    background-color: rgb(204, 255, 204);
+}
+
+.transition_title {
+    text-align:center;
+    padding-bottom:20px;
+}
+.transition_title h2{
+ border-bottom-style:double;
+ font-weight:bold;
+ display:inline;
+ color:#066;
+}
+
+.transition_role,.transition_action {
+ margin:0 3% 20px 3%;
+ width:93%;
+ display:inline-table;
+}
+
+.transition_action p{
+ float:right;
+}
+
+table.transition {
+ border:2px solid #eee;
+ margin:0 3% 2px 3%;
+ width:93%
+}
+span.dotted{
+ border-bottom:1px dotted #066;
+}
+table.transition>thead>tr>th {
+ text-align:center;
+ color:#066;
+}
+table.transition>thead>tr>th, table.transition>tbody>tr>td {
+ border:1px dotted #ccc;
+}
+
+table#balance td, table#profit td, table#subjects td, table#project td, table#depart td {
+	text-align:right;
+}
+
+.thumbnail { text-align:center; }
+.col-md-index {
+    width: 20%;
+    float: left;
+    padding: 15px;
+}
+.monthSelect{
+    width: 50px;
+}
+
+.panel-heading h2{
+   letter-spacing:10px;
+}
+
+.panel-body {
+   position:relative;
+}
+.approved {
+width:150px;height:74px;position:absolute; right:170px; top:50px;color:#f00;
+background:url(../img/audit.png) 0 0 no-repeat;
+text-indent:-9999em;
+}
+.navbar {
+ min-height:35px;
+ }
+.options{
+
+}
+.action{
+    margin: 30px;
+}
+.year{
+    font-size: 20px;
+}
+.tip{
+    color: #737373;
+    display: table-caption;
+}
+.v-subject {
+    width: 220px;
+}
+.sum{
+    color: red;
+}
+
+.laofashi-logo{
+	padding-top:10px;
+}

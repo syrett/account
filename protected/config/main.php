@@ -8,7 +8,7 @@
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 	'name'=>'Sorcerer_Account',
-	'theme'=>'abound',
+	'theme'=>'metronic',
 //    'theme'=>'blackboot',
 	// preloading 'log' component
 	'preload'=>array('log'),
