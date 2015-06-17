@@ -7,7 +7,8 @@ $domain = substr($domain,1);
 defined('LoginURL') or define('LoginURL','http://manage.'.$domain.'/frontend/web/index.php?r=users/guest/login');
 defined('LogoutURL') or define('LogoutURL','http://manage.'.$domain.'/frontend/web/index.php?r=users/user/logout');
 $yii=dirname(__FILE__).'/vendor/yii/framework/yii.php';
-if (false == strpos('abc.com', $domain)) {
+//if (false == strpos('abc.com', $domain)) {
+if ('abc.com' == $domain) {
     define('SYSDB','account_test');
     defined('YII_DEBUG') or define('YII_DEBUG',true);
     defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
