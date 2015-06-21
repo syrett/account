@@ -1,16 +1,10 @@
 <?php
 
 // uncomment the following to define a path alias
-Yii::setPathOfAlias('vova07', 'vendor/vova07');
+// Yii::setPathOfAlias('local','path/to/local-folder');
 
-// Set Temporary folder based on different OS
-if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-   // This is a server using Windows!
-   $TMPPATH = 'd:/temp';
-} else {
-   // A server not using Windows!
-   $TMPPATH = '/tmp';
-}
+// Set Temporary folder 
+$TMPPATH = sys_get_temp_dir();
 
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
@@ -49,7 +43,7 @@ return array(
             // enable cookie-based authentication
             'class' => 'WebUser',
             'allowAutoLogin' => true,
-            'identityCookie' => array('domain' => $_SERVER['SERVER_NAME'], 'path' => '/'),//配置用户cookie作用域
+            'identityCookie' => array('domain' => '.'. $GLOBALS['domain'], 'path' => '/'),//配置用户cookie作用域
         ),
         'cache'=>array(
             'class'=>'system.caching.CDbCache'
@@ -59,7 +53,7 @@ return array(
 //            'cookieMode' => 'allow',
             'cookieParams' => array(
                 'path' => '/',
-                'domain' => $_SERVER['SERVER_NAME'],
+                'domain' => '.'. $GLOBALS['domain'],
                 'httpOnly' => true,
             ),
         ),

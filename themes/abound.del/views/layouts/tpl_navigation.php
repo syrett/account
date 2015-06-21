@@ -30,11 +30,8 @@ if (!(Yii::app()->user->isGuest)) {
                 array('label' => '恢复', 'url'=>'#'),
             )), */
 
-            array('label' => '设置', 'url' => UserURL, 'linkOptions' => array('target' => '_blank')),
             array('label' => '基本信息 <span class="caret"></span>', 'url' => '#', 'itemOptions' => array('class' => 'dropdown', 'tabindex' => "-3"), 'linkOptions' => array('class' => 'dropdown-toggle', 'data-toggle' => "dropdown"),
                 'items' => array(
-                    //array('label' => '公司信息', 'url'=>'#'),
-                    array('label' => '公司设置', 'url' => array('/options/index')),
                     array('label' => '项目', 'url' => array('/project/admin')),
                     array('label' => '部门', 'url' => array('/department/admin')),
                     array('label' => '员工', 'url' => array('/employee/admin')),
