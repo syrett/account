@@ -18,6 +18,7 @@
 <!-- BEGIN HEAD -->
 <head>
 <meta charset="utf-8"/>
+<script src="<?php echo $baseUrl;?>/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
 <title>老法师 -- 云端财务管理系统</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
@@ -35,7 +36,7 @@
 <link href="<?php echo $baseUrl;?>/assets/global/css/components-md.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo $baseUrl;?>/assets/global/css/plugins-md.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo $baseUrl;?>/assets/admin/layout/css/layout.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo $baseUrl;?>/assets/admin/layout/css/themes/grey.css" rel="stylesheet" type="text/css" id="style_color"/>
+<link href="<?php echo $baseUrl;?>/assets/admin/layout/css/themes/blue.css" rel="stylesheet" type="text/css" id="style_color"/>
 <link href="<?php echo $baseUrl;?>/assets/admin/layout/css/custom.css" rel="stylesheet" type="text/css"/>
 <!-- END THEME STYLES -->
 <!-- Fav and Touch and touch icons -->
@@ -63,7 +64,7 @@
 		<!-- BEGIN LOGO -->
 		<div class="page-logo">
 			<a href="<?php echo Yii::app()->homeUrl; ?>">
-			<img src="<?php echo $baseUrl;?>/assets/admin/layout/img/laofashigroup-logo-inverse.png" class="laofashi-logo" alt="logo" />
+			<img src="<?php echo $baseUrl;?>/assets/admin/layout/img/laofashigroup-logo-inverse.png" class="logo-default" alt="logo" />
 			</a>
 			<div class="menu-toggler sidebar-toggler">
 			</div>
@@ -435,7 +436,6 @@
 <script src="<?php echo $baseUrl;?>/assets/global/plugins/respond.min.js"></script>
 <script src="<?php echo $baseUrl;?>/assets/global/plugins/excanvas.min.js"></script> 
 <![endif]-->
-<script src="<?php echo $baseUrl;?>/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
 <script src="<?php echo $baseUrl;?>/assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
 <!-- IMPORTANT! Load jquery-ui.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
 <script src="<?php echo $baseUrl;?>/assets/global/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>

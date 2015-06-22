@@ -40,25 +40,25 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
 
 ?>
 
-<div class="panel panel-default voucher form">
+<div class="portlet box blue">
     <!-- Default panel contents -->
-    <div class="panel-heading">
-	<h2><?php
-        $title = '';
-        if(!isset($operation))
-            $operation = 'listTransition';
-        switch($operation){
-            case 'listReview' : $title = '审核凭证';break;
-            case 'listTransition' : $title = '查询凭证';break;
-            case 'listReview' : $title = '凭证过账';break;
-            case 'listReview' : $title = '期末结账';break;
-        }
-        echo $title;
-        ?></h2>
+    <div class="portlet-title">
+		<div class="caption"><?php
+			$title = '';
+			if(!isset($operation))
+				$operation = 'listTransition';
+			switch($operation){
+				case 'listReview' : $title = '审核凭证';break;
+				case 'listTransition' : $title = '查询凭证';break;
+				case 'listReview' : $title = '凭证过账';break;
+				case 'listReview' : $title = '期末结账';break;
+			}
+			echo $title;
+			?>
+		</div>
     </div>
-    <div class="panel-body">
+    <div class="portlet-body voucher form">
         <?php
-
         echo CHtml::beginForm($this->createUrl('/Transition/createexcel'), 'post',array('id'=>'export'));
         echo CHtml::endForm();
         ?>
@@ -174,7 +174,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
         echo '</p></div>';
         ?>
 </div>
-</div><!-- .panel-body -->
+</div><!-- .portlet -->
 <script type="text/javascript">
     /*<![CDATA[*/
     var setreviewed = function (){

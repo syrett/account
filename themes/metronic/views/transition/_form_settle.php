@@ -41,7 +41,7 @@ $tranDate = $command->queryRow(); // execute a query SQL
     }
 
 ?>
-    <div class="row">
+    <div class="form-body">
         <div class="col-md-4">
             <h5>
                 凭证号:<input type="text" id='tranNumber' readonly value="<?
@@ -160,7 +160,7 @@ $tranDate = $command->queryRow(); // execute a query SQL
                         echo $form->error($item, 'entry_reviewer');
                         ?>-->
                     </div>
-                    <div class="form-group buttons text-center">
+                    <div class="form-actions buttons text-center">
                         <?php
                             echo $form->error($item,'entry_amount',array('id'=>'entry_amount_msg'));
                         if($model[0]->hasErrors()){
