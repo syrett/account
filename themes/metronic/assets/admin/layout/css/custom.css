@@ -115,6 +115,14 @@ text-indent:-9999em;
 	margin:10px 0 0 0 !important;
 }
 
+.page-header.navbar .top-menu .navbar-nav > li.dropdown {
+	border-left: 1px solid #ededed;
+}
+.page-header.navbar .page-actions {
+  margin:0;
+  padding-top: 10px;
+  float:none;
+}
 .options, .options-div { 
 	float:left;
 }

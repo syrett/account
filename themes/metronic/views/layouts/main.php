@@ -33,8 +33,8 @@
 <link href="<?php echo $baseUrl;?>/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css"/>
 <!-- END GLOBAL MANDATORY STYLES -->
 <!-- BEGIN THEME STYLES -->
-<link href="<?php echo $baseUrl;?>/assets/global/css/components-md.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo $baseUrl;?>/assets/global/css/plugins-md.css" rel="stylesheet" type="text/css"/>
+<link href="<?php echo $baseUrl;?>/assets/global/css/components.css" rel="stylesheet" type="text/css"/>
+<link href="<?php echo $baseUrl;?>/assets/global/css/plugins.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo $baseUrl;?>/assets/admin/layout/css/layout.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo $baseUrl;?>/assets/admin/layout/css/themes/blue.css" rel="stylesheet" type="text/css" id="style_color"/>
 <link href="<?php echo $baseUrl;?>/assets/admin/layout/css/custom.css" rel="stylesheet" type="text/css"/>
@@ -74,177 +74,11 @@
 		<a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
 		</a>
 		<!-- END RESPONSIVE MENU TOGGLER -->
-		<!-- BEGIN PAGE ACTIONS -->
-		<!-- DOC: Remove "hide" class to enable the page header actions -->
-		<div class="page-actions">
-			<div class="btn-group">
-				<button type="button" class="btn btn-circle green-haze dropdown-toggle" data-toggle="dropdown">
-				<i class="glyphicon glyphicon-plus"></i>&nbsp;<span class="hidden-sm hidden-xs">新建&nbsp;</span>&nbsp;<i class="fa fa-angle-down"></i>
-				</button>
-				<ul class="dropdown-menu" role="menu">
-					<li>
-						<a href="<?= $this->createUrl('Transition/create') ?>">
-						<i class="icon-notebook"></i> 凭证</a>
-					</li>
-					<li class="divider">
-					</li>
-					<li>
-						<a href="<?= $this->createUrl('client/create') ?>">
-						<i class="icon-user-following"></i> 客户</a>
-					</li>
-					<li>
-						<a href="<?= $this->createUrl('vendor/create') ?>">
-						<i class="icon-basket-loaded"></i> 供应商 </a>
-					</li>
-					<li>
-						<a href="<?= $this->createUrl('project/create') ?>">
-						<i class="icon-rocket"></i> 项目</a>
-					</li>
-					<li>
-						<a href="<?= $this->createUrl('employee/create') ?>">
-						<i class="icon-user"></i> 员工</a>
-					</li>
-					<li>
-						<a href="<?= $this->createUrl('department/create') ?>">
-						<i class="icon-users"></i> 部门</a>
-					</li>
-					<li class="divider">
-					</li>
-					<li>
-						<a href="<?= $this->createUrl('subjects/create') ?>">
-						<i class="icon-note"></i> 会计科目</a>
-					</li>
-				</ul>
-			</div>
-		</div>
-		<!-- END PAGE ACTIONS -->
 		<!-- BEGIN PAGE TOP -->
-		<div class="page-top">
-			<!-- BEGIN HEADER SEARCH BOX -->
-			<!-- DOC: Apply "search-form-expanded" right after the "search-form" class to have half expanded search box -->
-			<form class="search-form search-form-expanded" action="extra_search.html" method="GET">
-				<div class="input-group">
-					<input type="text" class="form-control" placeholder="输入凭证字号..." name="query">
-					<span class="input-group-btn">
-					<a href="javascript:;" class="btn submit"><i class="icon-magnifier"></i></a>
-					</span>
-				</div>
-			</form>
-			<!-- END HEADER SEARCH BOX -->
-		
+		<div class="page-top text-center">
 			<!-- BEGIN TOP NAVIGATION MENU -->
 			<div class="top-menu">
 			<ul class="nav navbar-nav pull-right">
-				<!-- BEGIN NOTIFICATION DROPDOWN -->
-				<!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-				<li class="dropdown dropdown-extended dropdown-notification hide" id="header_notification_bar">
-					<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-					<i class="icon-bell"></i>
-					<span class="badge badge-default">
-					7 </span>
-					</a>
-					<ul class="dropdown-menu">
-						<li class="external">
-							<h3>消息 <span class="bold">12条未读</span></h3>
-							<a href="extra_profile.html">查看全部</a>
-						</li>
-						<li>
-							<ul class="dropdown-menu-list scroller" style="height: 250px;" data-handle-color="#637283">
-								<li>
-									<a href="javascript:;">
-									<span class="time">刚才</span>
-									<span class="details">
-									<span class="label label-sm label-icon label-success">
-									<i class="fa fa-plus"></i>
-									</span>
-									6月结账完成</span>
-									</a>
-								</li>
-								<li>
-									<a href="javascript:;">
-									<span class="time">3分钟前</span>
-									<span class="details">
-									<span class="label label-sm label-icon label-danger">
-									<i class="fa fa-bolt"></i>
-									</span>
-									凭证审核未通过</span>
-									</a>
-								</li>
-								<li>
-									<a href="javascript:;">
-									<span class="time">10分钟前</span>
-									<span class="details">
-									<span class="label label-sm label-icon label-warning">
-									<i class="fa fa-bell-o"></i>
-									</span>
-									反结账失败</span>
-									</a>
-								</li>
-								<li>
-									<a href="javascript:;">
-									<span class="time">14小时前</span>
-									<span class="details">
-									<span class="label label-sm label-icon label-info">
-									<i class="fa fa-bullhorn"></i>
-									</span>
-									系统升级通知</span>
-									</a>
-								</li>
-								<li>
-									<a href="javascript:;">
-									<span class="time">2天前</span>
-									<span class="details">
-									<span class="label label-sm label-icon label-danger">
-									<i class="fa fa-bolt"></i>
-									</span>
-									系统升级通知</span>
-									</a>
-								</li>
-								<li>
-									<a href="javascript:;">
-									<span class="time">3天前</span>
-									<span class="details">
-									<span class="label label-sm label-icon label-danger">
-									<i class="fa fa-bolt"></i>
-									</span>
-									登录失败</span>
-									</a>
-								</li>
-								<li>
-									<a href="javascript:;">
-									<span class="time">4天前</span>
-									<span class="details">
-									<span class="label label-sm label-icon label-warning">
-									<i class="fa fa-bell-o"></i>
-									</span>
-									登录失败</span>
-									</a>
-								</li>
-								<li>
-									<a href="javascript:;">
-									<span class="time">5天前</span>
-									<span class="details">
-									<span class="label label-sm label-icon label-info">
-									<i class="fa fa-bullhorn"></i>
-									</span>
-									欢迎使用在线财务管理系统</span>
-									</a>
-								</li>
-								<li>
-									<a href="javascript:;">
-									<span class="time">9天前</span>
-									<span class="details">
-									<span class="label label-sm label-icon label-danger">
-									<i class="fa fa-bolt"></i>
-									</span>
-									注册成功</span>
-									</a>
-								</li>
-							</ul>
-						</li>
-					</ul>
-				</li>
-				<!-- END NOTIFICATION DROPDOWN -->
 				<!-- BEGIN USER LOGIN DROPDOWN -->
 				<!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
 				<li class="dropdown dropdown-extended">
@@ -252,7 +86,6 @@
 					<i class="icon-settings"></i>
 					<span class="username username-hide-on-mobile">
 					公司名称 </span>
-					<i class="fa fa-angle-down"></i>
 					</a>
 					<ul class="dropdown-menu" role="menu">
 						<li class="external">
@@ -289,6 +122,7 @@
 				<li class="dropdown dropdown-extended">
 					<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
 					<i class="glyphicon glyphicon-question-sign"></i>
+					<span class="username username-hide-on-mobile"> 帮助 </span>
 					</a>
 					<ul class="dropdown-menu" role="menu">
 						<li class="external">
@@ -313,8 +147,86 @@
 				</li>
 				<!-- END QUICK SIDEBAR TOGGLER -->
 			</ul>
-		</div>
+			</div>
 			<!-- END TOP NAVIGATION MENU -->
+			<!-- BEGIN PAGE ACTIONS -->
+			<div class="page-actions">
+				<div class="btn-group btn-group-lg">
+					<button type="button" class="btn green dropdown-toggle" data-toggle="dropdown">
+					<i class="glyphicon glyphicon-plus"></i>
+					</button>
+					<ul class="dropdown-menu" role="menu">
+						<li>
+							<a href="<?= $this->createUrl('Transition/create') ?>">
+							<i class="icon-notebook"></i> 凭证</a>
+						</li>
+						<li class="divider">
+						</li>
+						<li>
+							<a href="<?= $this->createUrl('client/create') ?>">
+							<i class="icon-user-following"></i> 客户</a>
+						</li>
+						<li>
+							<a href="<?= $this->createUrl('vendor/create') ?>">
+							<i class="icon-basket-loaded"></i> 供应商 </a>
+						</li>
+						<li>
+							<a href="<?= $this->createUrl('project/create') ?>">
+							<i class="icon-rocket"></i> 项目</a>
+						</li>
+						<li>
+							<a href="<?= $this->createUrl('employee/create') ?>">
+							<i class="icon-user"></i> 员工</a>
+						</li>
+						<li>
+							<a href="<?= $this->createUrl('department/create') ?>">
+							<i class="icon-users"></i> 部门</a>
+						</li>
+						<li class="divider">
+						</li>
+						<li>
+							<a href="<?= $this->createUrl('subjects/create') ?>">
+							<i class="icon-note"></i> 会计科目</a>
+						</li>
+					</ul>
+				</div>
+				<div class="btn-group btn-group-lg">
+					<button type="button" class="btn blue dropdown-toggle" data-toggle="dropdown">
+					<i class="glyphicon glyphicon-search"></i>
+					</button>
+					<div class="dropdown-menu dropdown-content input-large hold-on-click" role="menu">
+						<div class="portlet light">
+						<div class="portlet-title">
+							<div class="caption">搜索凭证</div>
+						</div>
+						<div class="portlet-body">
+						<form action="#">
+							<div class="input-icon right">
+								<i class="fa fa-search"></i>
+								<input type="text" class="form-control" placeholder="输入凭证字号，日期，内容等...">
+							</div>
+						</form>
+						<p><a href="#">高级搜索...</a></p>
+						</div>
+						</div>
+					</div>
+				</div>
+				<!-- BEGIN NOTIFICATION DROPDOWN -->
+				<!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+				<div class="btn-group btn-group-lg">
+					<button type="button" class="btn blue dropdown-toggle" data-toggle="dropdown">
+					<i class="glyphicon glyphicon-bell"></i>
+					</button>
+					<ul class="dropdown-menu" role="menu">
+						<li class="external">
+							<h3>近期操作记录</h3>
+							<a href="#">更多...</a>
+						</li>
+					</ul>
+				</div>
+				<!-- END NOTIFICATION DROPDOWN -->
+			</div>
+			<!-- END PAGE ACTIONS -->		
 		</div>
 		<!-- END PAGE TOP -->
 	</div>

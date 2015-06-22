@@ -191,46 +191,6 @@ $tranDate = $command->queryRow(); // execute a query SQL
                 ?>
                 <tr id="trSetting" style="display: none">
                     <td colspan="100">
-                    <!--
-                        <div id="itemSetting" title="记账设置" class="box">
-                            <div>
-                                <input id="type" type="hidden" value="<?= $this->createUrl(
-                                    '/bank/type'
-                                ) ?>">
-                                <input id="user-bank" type="hidden" value="<?= $this->createUrl(
-                                    '/user/savebank'
-                                ) ?>">
-                                <input id="option" type="hidden" value="<?= $this->createUrl(
-                                    '/bank/option'
-                                ) ?>">
-                                <input id="employee" type="hidden" value="<?= $this->createUrl(
-                                    '/bank/createemployee'
-                                ) ?>">
-                                <input id="new-url" type="hidden" value="<?= $this->createUrl(
-                                    '/bank/createsubject'
-                                ) ?>">
-
-                                <input id="data" type="hidden" value="">
-                                <input id="subject" type="hidden" value="">
-                                <input id="item_id" type="hidden" value="">
-                            </div>
-                            <div id="setting">
-                                <div class="options btn-group-xs">
-                                    <button class="btn btn-default" type="button" onclick="chooseType(this,1)"
-                                            value="支出">支出
-                                    </button>
-                                    <br/>
-                                    <button class="btn btn-default" type="button" onclick="chooseType(this,2)"
-                                            value="收入">收入
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="actionSetting" style="margin-top: 20px;text-align: center;">
-                                <button class="btn btn-success " type="button" onclick="itemSet()">确定</button>
-                                <button class="btn btn-default" type="button" onclick="dialogClose()">取消</button>
-                            </div>
-                        </div>
-					-->
                     </td>
                 </tr>
             </table>

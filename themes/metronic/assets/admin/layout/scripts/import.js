@@ -133,7 +133,7 @@ function chooseOption(e) {
                 $("#subject").val(data.subject);
                 $(e).parent().nextAll().remove();
                 var str = '<div class="options-div"><span class="fa fa-angle-right flow-arrow"></span></div><div class="options alert alert-success alert-dismissable">';
-                str += '<i class="icon fa fa-check"></i> 已选择 => <span id="sub_name">"' + data.sbj_name + '"</span>';
+                str += '<i class="fa fa-check"></i> 已选择 => <span id="sub_name">"' + data.sbj_name + '"</span>';
                 if (data.option != 0) {
                     $.each(data.option, function (key, value) {
                         if (value[0] == 'text')
@@ -171,7 +171,7 @@ function chooseOption(e) {
                 if (data.option != 0) {
                     $.each(data.option, function (key, value) {
                         if (value[0] == 'text')
-                            str += '<input type="text" name="option-' + key + '" id="option-' + key + '" placeholder="' + value[1] + '" ><br >'
+                            str += '<input type="text" name="option-' + key + '" id="option-' + key + '" placeholder="' + value[1] + '" ><br />'
                         if (value[0] == 'select') {
                             str += '<select name="option-' + key + '" id="option-' + key + '">';
                             $.each(value[1], function (key, value) {
