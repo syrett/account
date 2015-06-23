@@ -116,13 +116,35 @@ text-indent:-9999em;
 }
 
 .page-header.navbar .top-menu .navbar-nav > li.dropdown {
-	border-left: 1px solid #ededed;
+	border-left: 1px solid #ccc;
 }
 .page-header.navbar .page-actions {
   margin:0;
   padding-top: 10px;
   float:none;
 }
+
+.navbar-collapse.collapse {
+        text-align: center;
+        display: block !important;
+        height: auto !important;
+        padding-bottom: 0;
+        overflow: visible !important;
+}
+.navbar-nav {
+    display: inline-block;
+    float: none;
+    margin: 0;
+}
+.nav>li {
+	float:left;
+	margin-left:1px;
+}
+
+.page-header.navbar .page-top {
+  background: #e3eaf3;
+}
+
 .options, .options-div { 
 	float:left;
 }

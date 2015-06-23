@@ -151,50 +151,12 @@
 			<!-- END TOP NAVIGATION MENU -->
 			<!-- BEGIN PAGE ACTIONS -->
 			<div class="page-actions">
-				<div class="btn-group btn-group-lg">
-					<button type="button" class="btn green dropdown-toggle" data-toggle="dropdown">
-					<i class="glyphicon glyphicon-plus"></i>
-					</button>
-					<ul class="dropdown-menu" role="menu">
-						<li>
-							<a href="<?= $this->createUrl('Transition/create') ?>">
-							<i class="icon-notebook"></i> 凭证</a>
-						</li>
-						<li class="divider">
-						</li>
-						<li>
-							<a href="<?= $this->createUrl('client/create') ?>">
-							<i class="icon-user-following"></i> 客户</a>
-						</li>
-						<li>
-							<a href="<?= $this->createUrl('vendor/create') ?>">
-							<i class="icon-basket-loaded"></i> 供应商 </a>
-						</li>
-						<li>
-							<a href="<?= $this->createUrl('project/create') ?>">
-							<i class="icon-rocket"></i> 项目</a>
-						</li>
-						<li>
-							<a href="<?= $this->createUrl('employee/create') ?>">
-							<i class="icon-user"></i> 员工</a>
-						</li>
-						<li>
-							<a href="<?= $this->createUrl('department/create') ?>">
-							<i class="icon-users"></i> 部门</a>
-						</li>
-						<li class="divider">
-						</li>
-						<li>
-							<a href="<?= $this->createUrl('subjects/create') ?>">
-							<i class="icon-note"></i> 会计科目</a>
-						</li>
-					</ul>
-				</div>
-				<div class="btn-group btn-group-lg">
-					<button type="button" class="btn blue dropdown-toggle" data-toggle="dropdown">
-					<i class="glyphicon glyphicon-search"></i>
-					</button>
-					<div class="dropdown-menu dropdown-content input-large hold-on-click" role="menu">
+				<ul class="nav navbar-nav">
+					<li class="mega-menu-dropdown mega-menu-full">
+						<a data-toggle="dropdown" href="javascript:;" class="btn blue-dark dropdown-toggle" aria-expanded="false">
+						<i class="fa fa-search fa-2x"></i>
+						</a>
+						<div class="dropdown-menu dropdown-content input-large hold-on-click" role="menu">
 						<div class="portlet light">
 						<div class="portlet-title">
 							<div class="caption">搜索凭证</div>
@@ -210,21 +172,86 @@
 						</div>
 						</div>
 					</div>
-				</div>
-				<!-- BEGIN NOTIFICATION DROPDOWN -->
-				<!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-				<div class="btn-group btn-group-lg">
-					<button type="button" class="btn blue dropdown-toggle" data-toggle="dropdown">
-					<i class="glyphicon glyphicon-bell"></i>
-					</button>
-					<ul class="dropdown-menu" role="menu">
-						<li class="external">
-							<h3>近期操作记录</h3>
-							<a href="#">更多...</a>
-						</li>
-					</ul>
-				</div>
-				<!-- END NOTIFICATION DROPDOWN -->
+					</li>
+					<li class="mega-menu-dropdown mega-menu-full">
+						<a data-toggle="dropdown" href="javascript:;" class="btn blue dropdown-toggle" aria-expanded="false">
+						<i class="fa fa-plus fa-2x"></i>
+						</a>
+						<ul class="dropdown-menu" style="min-width: 700px;">
+							<li>
+								<div class="mega-menu-content">
+									<div class="row">
+									<div class="col-md-10">
+										<div class="col-md-4">
+											<h3>Create</h3>
+											<ul class="mega-menu-submenu">
+												<li>Transaction</li>
+												<li>Transaction</li>
+												<li>Transaction</li>
+											</ul>
+										</div>
+										<div class="col-md-4">
+											<h3>Create</h3>
+											<ul class="mega-menu-submenu">
+												<li>Transaction</li>
+												<li>Transaction</li>
+												<li>Transaction</li>
+											</ul>
+										</div>
+										<div class="col-md-4">
+											<h3>Create</h3>
+											<ul class="mega-menu-submenu">
+												<li>Transaction</li>
+												<li>Transaction</li>
+												<li>Transaction</li>
+											</ul>
+										</div>
+									</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</li>
+					<li class="mega-menu-dropdown mega-menu-full">
+						<a data-toggle="dropdown" href="javascript:;" class="btn btn-lg blue-dark dropdown-toggle" aria-expanded="false">
+						<i class="fa fa-history fa-2x"></i>
+						</a>
+						<ul class="dropdown-menu" style="min-width: 700px;">
+							<li>
+								<div class="mega-menu-content">
+									<div class="row">
+									<div class="col-md-10">
+										<div class="col-md-4">
+											<h3>Create</h3>
+											<ul class="mega-menu-submenu">
+												<li>Transaction</li>
+												<li>Transaction</li>
+												<li>Transaction</li>
+											</ul>
+										</div>
+										<div class="col-md-4">
+											<h3>Create</h3>
+											<ul class="mega-menu-submenu">
+												<li>Transaction</li>
+												<li>Transaction</li>
+												<li>Transaction</li>
+											</ul>
+										</div>
+										<div class="col-md-4">
+											<h3>Create</h3>
+											<ul class="mega-menu-submenu">
+												<li>Transaction</li>
+												<li>Transaction</li>
+												<li>Transaction</li>
+											</ul>
+										</div>
+									</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</li>
+				</ul>
 			</div>
 			<!-- END PAGE ACTIONS -->		
 		</div>
