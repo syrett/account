@@ -85,7 +85,7 @@
 					<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
 					<i class="icon-settings"></i>
 					<span class="username username-hide-on-mobile">
-					公司名称 </span>
+					上海优刻得信息科技有限公司</span>
 					</a>
 					<ul class="dropdown-menu" role="menu">
 						<li class="external">
@@ -96,8 +96,8 @@
 							<i class="icon-info"></i> 公司信息</a>
 						</li>
 						<li>
-							<a href="<?= $this->createUrl('department/admin') ?>">
-							<i class="icon-grid"></i> 部门设置 </a>
+							<a href="<?= $this->createUrl('subjects/balance') ?>">
+							<i class="icon-grid"></i> 期初余额 </a>
 						</li>
 						<li>
 							<a href="<?= $this->createUrl('project/admin') ?>">
@@ -152,12 +152,12 @@
 			<!-- BEGIN PAGE ACTIONS -->
 			<div class="page-actions">
 				<ul class="nav navbar-nav">
-					<li class="mega-menu-dropdown mega-menu-full">
+					<li class="mega-menu-dropdown">
 						<a data-toggle="dropdown" href="javascript:;" class="btn blue-dark dropdown-toggle" aria-expanded="false">
 						<i class="fa fa-search fa-2x"></i>
 						</a>
 						<div class="dropdown-menu dropdown-content input-large hold-on-click" role="menu">
-						<div class="portlet light">
+							<div class="portlet light">
 						<div class="portlet-title">
 							<div class="caption">搜索凭证</div>
 						</div>
@@ -171,85 +171,128 @@
 						<p><a href="#">高级搜索...</a></p>
 						</div>
 						</div>
-					</div>
+							<div class="dropdown-menu-header"></div>
+						</div>
 					</li>
-					<li class="mega-menu-dropdown mega-menu-full">
-						<a data-toggle="dropdown" href="javascript:;" class="btn blue dropdown-toggle" aria-expanded="false">
+					<li class="menu-dropdown mega-menu-dropdown">
+						<a data-toggle="dropdown" href="javascript:;" class="btn blue-dark dropdown-toggle hover-initialized" aria-expanded="false">
 						<i class="fa fa-plus fa-2x"></i>
 						</a>
-						<ul class="dropdown-menu" style="min-width: 700px;">
-							<li>
-								<div class="mega-menu-content">
-									<div class="row">
-									<div class="col-md-10">
-										<div class="col-md-4">
-											<h3>Create</h3>
-											<ul class="mega-menu-submenu">
-												<li>Transaction</li>
-												<li>Transaction</li>
-												<li>Transaction</li>
-											</ul>
-										</div>
-										<div class="col-md-4">
-											<h3>Create</h3>
-											<ul class="mega-menu-submenu">
-												<li>Transaction</li>
-												<li>Transaction</li>
-												<li>Transaction</li>
-											</ul>
-										</div>
-										<div class="col-md-4">
-											<h3>Create</h3>
-											<ul class="mega-menu-submenu">
-												<li>Transaction</li>
-												<li>Transaction</li>
-												<li>Transaction</li>
-											</ul>
-										</div>
+						<div class="dropdown-menu dropdown-content input-xlarge hold-on-click" role="menu">
+							<div class="portlet light">
+							<div class="portlet-title">
+								<div class="caption">新建</div>
+							</div>
+							<div class="portlet-body">
+								<div class="row">
+									<div class="col-md-4">
+										<h4>组织</h4>
+										<ul class="list-unstyled">
+											<li><a href="<?= $this->createUrl('project/admin') ?>">项目</a></li>
+											<li><a href="<?= $this->createUrl('client/admin') ?>">客户</a></li>
+											<li><a href="<?= $this->createUrl('vendor/admin') ?>">供应商</a></li>
+											<li><a href="<?= $this->createUrl('employee/admin') ?>">员工</a></li>
+											<li><a href="<?= $this->createUrl('department/admin') ?>">部门</a></li>
+										</ul>
 									</div>
+									<div class="col-md-4">
+										<h4>凭证</h4>
+										<ul class="list-unstyled">
+											<li><a href="<?= $this->createUrl('transition/bank') ?>">导入银行交易</a></li>
+											<li><a href="<?= $this->createUrl('transition/cash') ?>">导入现金流水</a></li>
+											<li><a href="<?= $this->createUrl('transition/create') ?>">手动输入</a></li>
+										</ul>
+									</div>
+									<div class="col-md-4">
+										<h4>其它</h4>
+										<ul class="list-unstyled">
+											<li><a href="<?= $this->createUrl('subject/create') ?>">会计科目</a></li>
+											<li><a href="<?= $this->createUrl('project/admin') ?>">Transaction</a></li>
+										</ul>
 									</div>
 								</div>
-							</li>
-						</ul>
+							</div>
+						</div>
+							<div class="dropdown-menu-header"></div>
+						</div>
 					</li>
-					<li class="mega-menu-dropdown mega-menu-full">
+					<li class="mega-menu-dropdown">
 						<a data-toggle="dropdown" href="javascript:;" class="btn btn-lg blue-dark dropdown-toggle" aria-expanded="false">
 						<i class="fa fa-history fa-2x"></i>
 						</a>
-						<ul class="dropdown-menu" style="min-width: 700px;">
-							<li>
-								<div class="mega-menu-content">
-									<div class="row">
-									<div class="col-md-10">
-										<div class="col-md-4">
-											<h3>Create</h3>
-											<ul class="mega-menu-submenu">
-												<li>Transaction</li>
-												<li>Transaction</li>
-												<li>Transaction</li>
-											</ul>
-										</div>
-										<div class="col-md-4">
-											<h3>Create</h3>
-											<ul class="mega-menu-submenu">
-												<li>Transaction</li>
-												<li>Transaction</li>
-												<li>Transaction</li>
-											</ul>
-										</div>
-										<div class="col-md-4">
-											<h3>Create</h3>
-											<ul class="mega-menu-submenu">
-												<li>Transaction</li>
-												<li>Transaction</li>
-												<li>Transaction</li>
-											</ul>
-										</div>
-									</div>
-									</div>
-								</div>
-							</li>
-						</ul>
+						<div class="dropdown-menu dropdown-content input-xlarge hold-on-click" role="menu">
+							<div class="portlet light">
+						<div class="portlet-title">
+							<div class="caption">最新凭证操作日志</div>
+						</div>
+						<div class="portlet-body">
+							<div class="row">
+									<table class="table table-condensed table-hover table-no-border">
+									<tbody>
+									<tr>
+										<td>
+											 支付
+										</td>
+										<td>
+											 2015/6/15
+										</td>
+										<td>
+											 RMB2000.00
+										</td>
+										<td>
+											 刘德华
+										</td>
+									</tr>
+									<tr>
+										<td>
+											 支票支付-票号1
+										</td>
+										<td>
+											 2015/6/14
+										</td>
+										<td>
+											 RMB35000.00
+										</td>
+										<td>
+											 李宗盛
+										</td>
+									</tr>
+									<tr>
+										<td>
+											 新建发票#20150613
+										</td>
+										<td>
+											 2015/6/13
+										</td>
+										<td>
+											 RMB1200.00
+										</td>
+										<td>
+											 张学友
+										</td>
+									</tr>
+									<tr>
+										<td>
+											 应收账款
+										</td>
+										<td>
+											 2015/6/10
+										</td>
+										<td>
+											 RMB200000.00
+										</td>
+										<td>
+											 乔布斯
+										</td>
+									</tr>
+									</tbody>
+									</table>
+							</div>
+							<p><a href="#">更多...</a></p>
+						</div>
+						</div>
+							<div class="dropdown-menu-header"></div>
+						</div>
 					</li>
 				</ul>
 			</div>
