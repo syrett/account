@@ -55,8 +55,9 @@ $tranDate = $command->queryRow(); // execute a query SQL
 			<button type="submit" class="btn btn-default btn-file btn-xs purple">导入</button>
 			</div>
         </div>
-        <div class="col-md-8 col-sm-12">
-            <div class="choose-bank-group">
+        <div class="col-md-6 col-sm-12">
+            <div class="form-inline pull-right">
+            	<div class="form-group">
                 <?php
                 if ($type == 'bank')
                     $sbj = 1002;
@@ -64,7 +65,7 @@ $tranDate = $command->queryRow(); // execute a query SQL
                     $sbj = 1001;
                 $banks = Subjects::model()->list_sub($sbj);
                 $data = [];
-                $class = 'choose-bank';
+                $class = 'form-control';
                 if (empty($banks)) {
                     echo '<input type="hidden" name="subject_2" value="1001" /></div>';
                 } else {
@@ -80,10 +81,11 @@ $tranDate = $command->queryRow(); // execute a query SQL
                     'data' => $data,
                 ));
                 ?>
+            		<input id="bank_name" placeholder="银行名称" type="text" class="form-control"/>
+            		<button class="btn btn-default btn-file" type="button" onclick="addBank()">添加</button>
+            		<button class="btn btn-default btn-file" type="button" onclick="lockBank(this)" value="0">解锁银行</button>
+            	</div>
             </div>
-            <input id="bank_name" placeholder="银行名称" type="text" class="input_mid"/>
-            <button class="btn btn-default btn-file" type="button" onclick="addBank()">添加</button>
-            <button class="btn btn-default btn-file" type="button" onclick="lockBank(this)" value="0">解锁银行</button>
             <?
             }
             ?>
@@ -160,11 +162,9 @@ $tranDate = $command->queryRow(); // execute a query SQL
 
                                 <div class="btn-group-vertical" role="group">
                                     <div class="btn-group">
-                                    <a class="btn btn-xs blue dropdown-toggle" data-toggle="modal" href="#category-box"><i class="fa fa-file-o"></i> 记-账
+                                    <a class="btn btn-xs blue dropdown-toggle" data-toggle="modal" href="#category-box"><i class="fa fa-file-o"></i> 记账
                                     </a>
 									</div>
-                                    <!-- button type="button" class="btn btn-xs blue" onclick="itemsetting(this)"><i class="fa fa-file-o"></i> 记账
-                                    </button -->
                                     <button type="button" class="btn btn-xs" onclick="itemsplit(this)"><i class="fa fa-unlink"></i> 拆分</button>
                                     <button type="button" id="btn_del_<?= $key ?>" class="btn btn-xs" onclick="itemclose(this)" disabled><i class="fa fa-times"></i>删分</button>
                                 </div>

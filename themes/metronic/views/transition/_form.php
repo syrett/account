@@ -43,18 +43,12 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
 	<div class="row">
 	<div class="col-md-10">
     <?php
-    echo CHtml::link('<span class="glyphicon glyphicon-plus"></span> 银行交易', array('bank'), array('class' => 'btn green'));
-    echo "\n";
-    echo CHtml::link('<span class="glyphicon glyphicon-plus"></span> 现金交易', array('cash'), array('class' => 'btn btn-default'));
-    echo "\n";
-    echo CHtml::link('<span class="glyphicon glyphicon-search"></span> 查询凭证', array('admin'), array('class' => 'btn btn-default'));
-    /*
-     $this->widget('zii.widgets.CMenu', array(
-        'encodeLabel'=>false,
-        'items'=>$this->menu,
-        'htmlOptions'=>array('class'=>'nav nav-pills'),
-        ));
-    */
+		echo CHtml::link('<i class="fa fa-bank"><i></i></i><div>导入银行交易</div>', array('bank'), array('class' => 'icon-btn'));
+		echo "\n";
+		echo CHtml::link('<i class="fa fa-money"><i></i></i><div>导入现金交易</div>', array('cash'), array('class' => 'icon-btn'));
+		echo "\n";
+		echo CHtml::link('<i class="fa fa-edit"><i></i></i><div>手动录入</div>', array('create'), array('class' => 'icon-btn'));
+
     ?>
     </div>
     </div>

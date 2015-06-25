@@ -25,10 +25,10 @@ $this->breadcrumbs=array(
 
 ?>
 
-<div class="portlet box blue">
+<div class="portlet light">
 	<div class="portlet-title">
 		<div class="caption">
-		<i class="fa fa-edit"></i>录入凭证
+		<span class="font-green-sharp">录入凭证</span>
 		</div>
 	</div>
 	<div class="portlet-body">

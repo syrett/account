@@ -16,9 +16,11 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scrip
 $cs->registerScript('ComponentsPickersInit','ComponentsPickers.init();', CClientScript::POS_READY);
 ?>
 
-<div class="portlet box blue">
+<div class="portlet light">
 	<div class="portlet-title">
-		<div class="caption">导入<?= Yii::t('import', $type) ?>交易</div>
+		<div class="caption">
+		<span class="font-green-sharp">导入<?= Yii::t('import', $type) ?>交易</span>
+		</div>
 	</div>
 	<div class="portlet-body">
 	<?php

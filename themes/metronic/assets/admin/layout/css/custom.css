@@ -115,6 +115,11 @@ text-indent:-9999em;
 	margin:10px 0 0 0 !important;
 }
 
+.page-sidebar .page-sidebar-menu > li > a > i,
+.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li > a > i {
+  font-size: 28px;
+}
+
 .top-menu .navbar-nav > li.dropdown {
 	border-left: 1px solid #ccc;
 }

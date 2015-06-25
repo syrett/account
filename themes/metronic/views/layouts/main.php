@@ -188,11 +188,11 @@
 									<div class="col-md-4">
 										<h4>组织</h4>
 										<ul class="list-unstyled">
-											<li><a href="<?= $this->createUrl('project/admin') ?>">项目</a></li>
-											<li><a href="<?= $this->createUrl('client/admin') ?>">客户</a></li>
-											<li><a href="<?= $this->createUrl('vendor/admin') ?>">供应商</a></li>
-											<li><a href="<?= $this->createUrl('employee/admin') ?>">员工</a></li>
-											<li><a href="<?= $this->createUrl('department/admin') ?>">部门</a></li>
+											<li><a href="<?= $this->createUrl('project/create') ?>">项目</a></li>
+											<li><a href="<?= $this->createUrl('client/create') ?>">客户</a></li>
+											<li><a href="<?= $this->createUrl('vendor/create') ?>">供应商</a></li>
+											<li><a href="<?= $this->createUrl('employee/create') ?>">员工</a></li>
+											<li><a href="<?= $this->createUrl('department/create') ?>">部门</a></li>
 										</ul>
 									</div>
 									<div class="col-md-4">
@@ -212,7 +212,7 @@
 									</div>
 								</div>
 							</div>
-						</div>
+							</div>
 							<div class="dropdown-menu-header"></div>
 						</div>
 					</li>
