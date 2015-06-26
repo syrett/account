@@ -5,25 +5,26 @@ Yii::import('ext.select2.Select2');
 
 $this->pageTitle = Yii::app()->name;
 ?>
-
-<div class="panel panel-default voucher form">
-
-    <!-- Default panel contents -->
-    <div class="panel-heading"><h2>
+<div class="portlet light">
+	<div class="portlet-title">
+		<div class="caption">
+		<span class="font-green-sharp">
             <?php
             $title = '';
-                switch($operation){
-                    case 'listReview' : $title = '审核凭证';break;
-                    case 'listTransition' : $title = '查询凭证';break;
-                    case 'listPost' : $title = '凭证过账';break;
-                    case 'listSettlement' : $title = '期末结账';break;
-                    case 'listAntiSettlement' : $title = '反结账';break;
-                    case 'listReorganise' : $title = '整理凭证';break;
-                }
+			switch($operation){
+				case 'listReview' : $title = '审核凭证';break;
+				case 'listTransition' : $title = '查询凭证';break;
+				case 'listPost' : $title = '凭证过账';break;
+				case 'listSettlement' : $title = '期末结账';break;
+				case 'listAntiSettlement' : $title = '反结账';break;
+				case 'listReorganise' : $title = '整理凭证';break;
+			}
             echo $title;
-            ?>
-    </h2></div>
-    <div class="panel-body v-title">
+            ?>		
+		</span>
+		</div>
+	</div>
+	<div class="portlet-body">
     <!-- search-form -->
     <?php
     $list = $this->listMonth($operation);
@@ -52,11 +53,12 @@ $this->pageTitle = Yii::app()->name;
             'htmlOptions' => array('class'=>'action')
         ));
         ?>
-            <input type="submit" class="btn btn-primary" value="<?=$title?>" />
+        <input type="submit" class="btn btn-primary" value="<?=$title?>" />
         <?php
 
         echo CHtml::endForm();
     }
 
     ?>
+    </div>
 </div>

@@ -1,14 +1,10 @@
 <?php
 require_once(dirname(__FILE__) . '/../viewfunctions.php');
 
-//Yii::app()->clientScript->registerCoreScript('jquery');
-//Yii::import('ext.select2.Select2');
+Yii::import('ext.select2.Select2');
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scripts/select2/select2.js', CClientScript::POS_END);
 $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scripts/select2/select2.css');
-//
-//$cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/jquery-ui.min.css');
-//$cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/theme.css');
 $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css');
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scripts/transition.js', CClientScript::POS_END);
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scripts/checkinput.js', CClientScript::POS_END);

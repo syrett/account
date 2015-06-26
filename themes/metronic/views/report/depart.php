@@ -1,12 +1,14 @@
 <!-- 部门报表 -->
 <?php
 Yii::import('ext.select2.Select2');
-Yii::app()->clientScript->registerCoreScript('jquery');
 $cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/jquery-ui-1.10.4.custom.js', CClientScript::POS_HEAD);
-$cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/jquery-ui-1.10.4.custom.css');
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/profit.js', CClientScript::POS_HEAD);
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js', CClientScript::POS_HEAD);
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js', CClientScript::POS_END);
+$cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css');
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scripts/profit.js', CClientScript::POS_HEAD);
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scripts/excel_export.js', CClientScript::POS_HEAD);
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/pages/scripts/components-pickers.js', CClientScript::POS_END);
+
+$cs->registerScript('ComponentsPickersInit','ComponentsPickers.init();', CClientScript::POS_READY);
 ?>
 <style>
 .ui-datepicker table{
@@ -50,7 +52,7 @@ function echoData($data, $subjects)
 	<h3>部 门 表</h3>
 	<div class="form-group">
 		<label class="control-label" for="date">请选择报表日期：</label>
-		<input class="form-control" type="text" name="date" id="date" value="<?php echo isset($date)?$date:'' ?>" readonly />
+		<input type="text" data-date="201210" data-date-format="yyyymm" data-date-viewmode="years" data-date-minviewmode="months" name="date" class="form-control form-control-inline input-small date-picker" value="<?php echo isset($date)?$date:'' ?>" id="date" readonly="">
         <label class="control-label" for="sbj_id">选择科目</label>
         <?php
         $this->widget('Select2', array(

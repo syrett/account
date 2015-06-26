@@ -129,11 +129,11 @@
 							<h3><span class="bold">常见问题 FAQ</span></h3>
 						</li>
 						<li>
-							<a href="extra_profile.html">
+							<a href="#">
 							<i class="icon-user"></i> 如何录入凭证？ </a>
 						</li>
 						<li>
-							<a href="page_calendar.html">
+							<a href="#">
 							<i class="icon-calendar"></i> 更多内容</a>
 						</li>
 						<li class="external">

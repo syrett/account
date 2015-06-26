@@ -100,7 +100,7 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
     ?>
 	<div class="form-group">
 		<div class="col-sm-offset-2 col-sm-10">
-			<?php echo CHtml::submitButton($model->isNewRecord ? '添加' : '保存', array('class'=>'btn btn-primary',)); ?>
+			<?php echo CHtml::submitButton($model->isNewRecord ? '添加' : '保存', array('class'=>'btn btn-circle btn-primary',)); ?>
 			<?php echo BtnBack(); ?>
 		</div>
 	</div>

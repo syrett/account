@@ -10,17 +10,6 @@ $form=$this->beginWidget('CActiveForm', array(
 	'htmlOptions'=>array('class'=>'form-horizontal',),
 ));
 ?>
-	<div class="well well-sm">
-	<?php
-	echo CHtml::link('<span class="glyphicon glyphicon-search"></span> 员工列表',array('admin'),array('class' => 'btn btn-default'));
-	if (!($model->isNewRecord)) {
-	echo "\n";
-	echo CHtml::link('<span class="glyphicon glyphicon-plus"></span> 添加员工',array('create'),array('class' => 'btn btn-default'));
-	}
-	?>
-	</div>
-	
-	<div class="panel-body">
 		<div class="form-group">		
 			<?php echo $form->labelEx($model,'name',array('class'=>'col-sm-2 control-label')); ?>
 			<div class="col-sm-10">
@@ -47,10 +36,9 @@ $form=$this->beginWidget('CActiveForm', array(
 		
 		<div class="form-group">
 		<div class="col-sm-offset-2 col-sm-10 text-center">
-			<?php echo CHtml::submitButton($model->isNewRecord ? '添加' : '保存', array('class'=>'btn btn-primary',)); ?>
+			<?php echo CHtml::submitButton($model->isNewRecord ? '添加' : '保存', array('class'=>'btn btn-circle btn-primary',)); ?>
 			<?php echo BtnBack(); ?>
 		</div>
 		</div>
-	</div>
 
 <?php $this->endWidget(); ?>

@@ -2,10 +2,9 @@
 <?php
 require_once(dirname(__FILE__).'/../viewfunctions.php');
 
-Yii::app()->clientScript->registerCoreScript('jquery');
 $cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/checkinput.js', CClientScript::POS_HEAD);
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/subjects.js', CClientScript::POS_HEAD);
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scripts/checkinput.js', CClientScript::POS_END);
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scripts/subjects.js', CClientScript::POS_END);
 
 $this->pageTitle=Yii::app()->name . ' - 科目期初余额';
 $this->breadcrumbs=array(
@@ -15,12 +14,16 @@ $this->breadcrumbs=array(
 
 
 ?>
-<div class="panel panel-default">
-	<div class="panel-heading">
-		<h2>期初余额</h2>
+<div class="portlet light">
+	<div class="portlet-title">
+		<div class="caption">
+		<span class="font-green-sharp">期初余额</span>
+		</div>
+		<div class="actions">
+			<a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title="" data-original-title title="全屏"></a>
+		</div>
 	</div>
-	<div class="panel-body">
-
+	<div class="portlet-body">
         <div class="errorMessage" style="color: red;">
             <?php echo $error; ?>
         </div>
@@ -73,10 +76,10 @@ $this->breadcrumbs=array(
 		<div class="form-group" >
 		  <?php echo $error; ?>
 			<div class="text-center">
-			<?php echo CHtml::submitButton('保存', array('class'=>'btn btn-primary',)); ?>
+			<?php echo CHtml::submitButton('保存', array('class'=>'btn btn-circle btn-primary',)); ?>
 			<?php echo BtnBack(); ?>
 			</div>
 		</div>
 		</form>
-	</div><!-- .panel-body -->
-</div><!-- .panel -->
+	</div><!-- .portlet-body -->
+</div><!-- .portlet -->

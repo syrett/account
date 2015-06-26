@@ -7,12 +7,59 @@ $weekarray = array("日","一","二","三","四","五","六");
 $dayoftoday = "星期".$weekarray[date("w")]; 
 
 $cs = Yii::app()->clientScript;
-$cs->registerScript('ChartsFlotchartsInit','ChartsFlotcharts.init();', CClientScript::POS_READY);
-$cs->registerScript('ChartsFlotchartsInitPie','ChartsFlotcharts.initPieCharts();', CClientScript::POS_READY);
 
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/flot/jquery.flot.min.js', CClientScript::POS_END);
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/flot/jquery.flot.pie.min.js', CClientScript::POS_END);
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/pages/scripts/charts-flotcharts.js', CClientScript::POS_END);
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/amcharts/amcharts/amcharts.js', CClientScript::POS_END);
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/amcharts/amcharts/pie.js', CClientScript::POS_END);
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/amcharts/amcharts/themes/light.js', CClientScript::POS_END);
+
+$js_str = 'var chart = AmCharts.makeChart( "chartdiv-homepage-3d-pie", {
+  "type": "pie",
+  "theme": "light",
+  "dataProvider": [ {
+    "category": "人员工资",
+    "value": 17000
+  }, {
+    "category": "固定资产",
+    "value": 800
+  }, {
+    "category": "原材料采购",
+    "value": 3000
+  }, {
+    "category": "租金",
+    "value": 5000
+  }, {
+    "category": "差旅费",
+    "value": 2000
+  } ],
+  "valueField": "value",
+  "titleField": "category",
+  "startEffect": "elastic",
+  "startDuration": 2,
+  "labelRadius": 15,
+  "innerRadius": "50%",
+  "depth3D": 10,
+  "balloonText": "[[title]]<br><span style=font-size:14px><b>[[value]]</b> ([[percents]]%)</span>",
+  "angle": 15,
+  "export": {
+    "enabled": true
+  }
+} );
+jQuery( ".chart-input" ).off().on( "input change", function() {
+  var property = jQuery( this ).data( "property" );
+  var target = chart;
+  var value = Number( this.value );
+  chart.startDuration = 0;
+
+  if ( property == "innerRadius" ) {
+    value += "%";
+  }
+
+  target[ property ] = value;
+  chart.validateNow();
+} );';
+
+$cs->registerScript('ChartsFlotchartsInitPie',$js_str, CClientScript::POS_READY);
+
 ?>
 <!-- BEGIN PAGE HEADER-->
 <h3 class="page-title">
@@ -133,11 +180,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/pages/script
 				<h1>27,800.00</h1>本月
 			</div>
 			<div class="col-md-9">
-				<div id="donut" class="chart" style="padding: 0px; position: relative;">
-					<canvas class="flot-base" width="468" height="300" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 468px; height: 300px;"></canvas><canvas class="flot-overlay" width="468" height="300" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 468px; height: 300px;"></canvas>
-					<div class="legend">
-					<div style="position: absolute; width: 55px; height: 153px; top: 5px; right: 5px; opacity: 0.85; background-color: rgb(255, 255, 255);"> </div>
-					</div>
+				<div id="chartdiv-homepage-3d-pie">
 				</div>
 			</div>
 			<div class="clearfix"></div>

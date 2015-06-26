@@ -6,18 +6,19 @@ $this->breadcrumbs=array(
 	'员工管理',
 );
 ?>
-<div class="panel panel-default voucher form">
-    <!-- Default panel contents -->
-    <div class="panel-heading">
-		<h2>员工管理</h2>
+<div class="portlet light">
+	<div class="portlet-title">
+		<div class="caption">
+		<span class="font-green-sharp">员工管理</span>
+		</div>
+		<div class="actions">
+		    <?php
+				echo CHtml::link('<i class="fa fa-plus"></i> 添加员工', array('create'), array('class' => 'btn btn-circle btn-primary btn-sm'));
+    		?>
+			<a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title="" data-original-title title="全屏"></a>
+		</div>
 	</div>
-
-	<div class="well well-sm">
-	<?php
-	echo CHtml::link('<span class="glyphicon glyphicon-plus"></span> 添加',array('create'),array('class' => 'btn btn-default'));
-	?>
-	</div>
-    <div class="panel-body">
+	<div class="portlet-body">
 
 <?php
 $this->widget('zii.widgets.grid.CGridView', array(
@@ -47,4 +48,5 @@ $this->widget('zii.widgets.grid.CGridView', array(
              ),
         ),
    )); ?>
+   </div>
 </div>

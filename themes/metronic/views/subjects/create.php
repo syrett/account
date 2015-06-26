@@ -13,31 +13,21 @@ $this->breadcrumbs=array(
 	'添加'
 );
 
-$this->menu=array(
-	array('label'=>'<span class="glyphicon glyphicon-th-list"></span> 会计科目列表',
-		  'url'=>array('admin'),
-		  'linkOptions'=>array('class'=>'btn btn-inverse')
-		  ),	
-);
 ?>
 
-<div class="operations">
-	<?php $this->widget('zii.widgets.CMenu', array(
-		/*'type'=>'list',*/
-		'encodeLabel'=>false,
-		'items'=>$this->menu,
-		'htmlOptions'=>array('class'=>'nav nav-pills navbar-right'),
-		));
-		?>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-
-</div>
-<div class="panel panel-default">
-	<div class="panel-heading">
-		<h2>会计科目管理</h2>
+<div class="portlet light">
+	<div class="portlet-title">
+		<div class="caption">
+		<span class="font-green-sharp">科目表管理</span>
+		</div>
+		<div class="actions">
+		    <?php
+				echo CHtml::link('<i class="fa fa-edit"></i> 科目列表', array('admin'), array('class' => 'btn btn-circle btn-primary btn-sm'));
+    		?>
+			<a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title="" data-original-title title="全屏"></a>
+		</div>
 	</div>
-	<div class="panel-body">
+	<div class="portlet-body">
 		<?php $this->renderPartial('_form', array('model' => $model)); ?>
 	</div>
 </div>
