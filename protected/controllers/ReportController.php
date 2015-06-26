@@ -20,6 +20,14 @@ class ReportController extends CController
             ),
         );
     }
+    
+  /**
+  报表索引页
+  */
+  public function actionAdmin()
+  {
+   $this->render("admin",array());
+  }
   /**
    * 资产负债表
    */
