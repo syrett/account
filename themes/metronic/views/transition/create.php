@@ -30,6 +30,14 @@ $this->breadcrumbs=array(
 		<div class="caption">
 		<span class="font-green-sharp">录入凭证</span>
 		</div>
+		<div class="actions">
+		    <?php
+				echo CHtml::link('<i class="fa fa-bank"></i> 导入银行交易', array('bank'), array('class' => 'btn btn-circle btn-default btn-sm'));
+				echo "\n";
+				echo CHtml::link('<i class="fa fa-money"></i> 导入现金交易', array('cash'), array('class' => 'btn btn-circle btn-default btn-sm'));
+    		?>
+			<a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title="" data-original-title title="全屏"></a>
+		</div>
 	</div>
 	<div class="portlet-body">
     <?php $this->renderPartial('_form', array('model' => $model)); ?>

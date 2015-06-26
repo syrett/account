@@ -3,7 +3,7 @@
 /* @var $model Transition */
 /* @var $form CActiveForm */
 /* @var $action string */
-
+require_once(dirname(__FILE__) . '/../viewfunctions.php');
 $this->pageTitle = Yii::app()->name;
 $sql = 'select date from transitiondate'; // 一级科目的为1001～9999$SQL="SQL Statemet"
 $connection = Yii::app()->db;
@@ -39,20 +39,6 @@ $transition_number = (isset($_REQUEST[0]['id']) && $_REQUEST[0]['id'] != "")
     : $this->tranNumber();
 $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime($model[0]->entry_date)) : date('Y-m-d');
 ?>
-<div class="table-toolbar">
-	<div class="row">
-	<div class="col-md-10">
-    <?php
-		echo CHtml::link('<i class="fa fa-bank"><i></i></i><div>导入银行交易</div>', array('bank'), array('class' => 'icon-btn'));
-		echo "\n";
-		echo CHtml::link('<i class="fa fa-money"><i></i></i><div>导入现金交易</div>', array('cash'), array('class' => 'icon-btn'));
-		echo "\n";
-		echo CHtml::link('<i class="fa fa-edit"><i></i></i><div>手动录入</div>', array('create'), array('class' => 'icon-btn'));
-
-    ?>
-    </div>
-    </div>
-</div>
 <div class="dataTables_wrapper no-footer">
     <div class="transition_title">
         <h2>记 账 凭 证</h2>
@@ -218,7 +204,7 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
             echo '</div>';
         }
         if ($model[0]->entry_reviewed == 0 && $model[0]->entry_settlement == 0) {
-            echo CHtml::tag('button', array('encode' => false, 'class' => 'btn btn-primary',), '<span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证');
+            echo CHtml::tag('button', array('encode' => false, 'class' => 'btn btn-circle btn-primary',), '<span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证');
         }
         echo "&nbsp;&nbsp;";
         echo BtnBack();

@@ -5,7 +5,7 @@
 /* @var $action string */
 require_once(dirname(__FILE__) . '/../viewfunctions.php');
 
-Yii::import('ext.select2.Select2');
+Yii::import('ext.select2.Select2', true);
 //Yii::app()->clientScript->registerCoreScript('jquery');
 //$cs = Yii::app()->clientScript;
 //$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/select2/select2.js', CClientScript::POS_END);
@@ -94,22 +94,22 @@ $tranDate = $command->queryRow(); // execute a query SQL
     </div>
     <div class="import-tab" id="abc">
         <div class="box">
-            <table id="data_import" class="table table-bordered dataTable">
+            <table id="data_import" class="table table-bordered table-striped table-hover" id="import_table">
                 <tr>
-                    <th class="input_checkbox"><input type="checkbox"></th>
+                    <th class="table_checkbox"><input type="checkbox" class="group-checkable" data-set="#import_table .checkboxes"></th>
                     <th class="input_mid">交易方名称</th>
                     <th class="input_mid"><select id="selectItem1" name="selectItem1"><?= $select ?></select></th>
                     <th><select id="selectItem2" name="selectItem2"><?= $select ?></select></th>
                     <th class="input_mid"><select id="selectItem3" name="selectItem3"><?= $select ?></select></th>
-                    <th style="width: 150px">操作</th>
+                    <th style="width: 75px">操作</th>
                     <th style="width: 10%">&nbsp;</th>
                 </tr>
                 <?php
                 if (!empty($sheetData)) {
                     foreach ($sheetData as $key => $item) {
                         ?>
-                        <tr line="<?= $key ?>" <?= $key % 2 == 1 ? 'class="table-tr"' : '' ?>>
-                            <td><input type="checkbox" id="item_<?= $key ?>" name="lists[<?= $key ?>]"
+                        <tr line="<?= $key ?>" <?= $key % 2 == 1 ? 'class="table-tr odd greadX"' : '' ?>>
+                            <td><input type="checkbox" class="checkboxes" value="1" id="item_<?= $key ?>" name="lists[<?= $key ?>]"
                                        value="<?= isset($item['id']) ? $item['id'] : '' ?>"></td>
                             <td><input type="text" id="tran_name_<?= $key ?>" name="lists[<?= $key ?>][Transition][entry_name]" placeholder="对方名称" value="<?= $item['entry_name'] ?>" class="form-control input-small">
                             </td>
@@ -210,7 +210,7 @@ $tranDate = $command->queryRow(); // execute a query SQL
 </div>
 <div class="dataTables_wrapper no-footer">
     <div class="form-group buttons text-center">
-        <input class="btn btn-primary btn-success" type="button" onclick="save()" value="保存凭证">
+        <input class="btn btn-primary btn-circle btn-success" type="button" onclick="save()" value="保存凭证">
     </div>
 </div>
 
@@ -246,10 +246,10 @@ $tranDate = $command->queryRow(); // execute a query SQL
 							<input id="item_id" type="hidden" value="">
 							<div id="setting">
 							    <div class="options btn-group-vertical margin-right-10">
-									<button class="btn yellow" type="button" onclick="chooseType(this,1)"
+									<button class="btn btn-circle yellow" type="button" onclick="chooseType(this,1)"
 											value="支出">支出
 									</button>
-									<button class="btn green" type="button" onclick="chooseType(this,2)"
+									<button class="btn btn-circle green" type="button" onclick="chooseType(this,2)"
 											value="收入">收入
 									</button>
 								</div>
@@ -260,8 +260,8 @@ $tranDate = $command->queryRow(); // execute a query SQL
 				</div><!-- .simScrollDiv -->
 			</div><!-- .modal-body -->
 			<div class="modal-footer">
-				<button class="btn green" type="button" onclick="itemSet()">确定</button>
-				<button class="btn default" data-dismiss="modal" type="button" onclick="dialogClose()">取消</button>
+				<button class="btn btn-circle green" type="button" onclick="itemSet()">确定</button>
+				<button class="btn btn-circle default" data-dismiss="modal" type="button" onclick="dialogClose()">取消</button>
 			</div>
 		</div><!-- .modal-content -->
 	</div><!-- modal-dialog -->

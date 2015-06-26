@@ -2,7 +2,7 @@
 /* @var $this BankController */
 /* @var $model Data Array */
 /* @var $form CActiveForm */
-
+/*
 Yii::app()->clientScript->registerCoreScript('jquery');
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/select2/select2.js', CClientScript::POS_HEAD);
@@ -13,32 +13,9 @@ $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/theme.css');
 $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/custom.css');
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/import.js', CClientScript::POS_HEAD);
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/import_datepicker.js', CClientScript::POS_HEAD);
+*/
+
 ?>
-
-<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/main.css"/>
-<div class="well-sm">
-    <?php
-    echo CHtml::link('<span class="glyphicon glyphicon-plus"></span> 银行交易', array('/transition/bank'), array('class' => 'btn btn-default'));
-    echo "\n";
-    echo CHtml::link('<span class="glyphicon glyphicon-plus"></span> 现金交易', array('/transition/cash'), array('class' => 'btn btn-default'));
-    echo "\n";
-    echo CHtml::link('<span class="glyphicon glyphicon-pencil"></span> 手动录入', array('/transition/create'), array('class' => 'btn btn-default'));
-    /*
-     $this->widget('zii.widgets.CMenu', array(
-        'encodeLabel'=>false,
-        'items'=>$this->menu,
-        'htmlOptions'=>array('class'=>'nav nav-pills'),
-        ));
-    */
-    echo "\n";
-    ?>
-    <div class="right">
-        <? echo CHtml::link('<span class="glyphicon glyphicon-search"></span> 已导入数据', array('/bank'), array('class' => 'btn btn-default')); ?>
-
-        <input type="hidden" id="dp_startdate" value="<?= Transition::getTransitionDate() ?>">
-    </div>
-</div>
-<div class="panel-body">
     <div class="row" id="abc">
         <div class="box">
 
@@ -57,7 +34,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/import_datepick
                     <th><?= $form->labelEx($model, 'date') ?></th>
                     <th><?= $form->labelEx($model, 'memo') ?></th>
                     <th><?= $form->labelEx($model, 'amount') ?></th>
-                    <th style="width: 150px">操作</th>
+                    <th style="width: 75px">操作</th>
                     <th style="width: 10%">&nbsp;</th>
                 </tr>
                 <?php
@@ -111,11 +88,14 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/import_datepick
                             <input type="hidden" id="additional_amount1_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][additional][1][amount]" value="<?=$item['additional'][1]['amount']?>">
 
-                            <div class="btn-group btn-group-xs" role="group">
-                                <button type="button" class="btn btn-default" onclick="itemsetting(this)">记账</button>
-                                <button type="button" class="btn btn-default" onclick="itemsplit(this)">拆分</button>
-                                <button type="button" class="btn btn-default" onclick="itemclose(this)">删分</button>
-                            </div>
+                                <div class="btn-group-vertical" role="group">
+                                    <div class="btn-group">
+                                    <a class="btn btn-xs blue dropdown-toggle" data-toggle="modal" href="#category-box"><i class="fa fa-file-o"></i> 记账
+                                    </a>
+									</div>
+                                    <button type="button" class="btn btn-xs" onclick="itemsplit(this)"><i class="fa fa-unlink"></i> 拆分</button>
+                                    <button type="button" id="btn_del_<?= $key ?>" class="btn btn-xs" onclick="itemclose(this)" disabled><i class="fa fa-times"></i>删分</button>
+                                </div>
 
                            </td>
                         <td>
@@ -194,12 +174,10 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/import_datepick
             <?
             } else {
                 ?>
-                <input class="btn btn-block btn-success" type="button" onclick="save()" value="保存凭证">
+                <div class="text-center"><input class="btn btn-circle btn-success" type="button" onclick="save()" value="保存凭证"></div>
             <?php
             }
             $this->endWidget(); ?>
 
         </div>
     </div>
-
-</div>

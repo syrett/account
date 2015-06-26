@@ -10,6 +10,9 @@
         'jquery.min.js'=>false,
         );
 	$baseUrl = Yii::app()->theme->baseUrl; 
+	$cs = Yii::app()->clientScript;
+	$cs->registerScript('MetronicInit','Metronic.init();', CClientScript::POS_READY);
+	$cs->registerScript('LayoutInit','Layout.init();', CClientScript::POS_READY);
 ?>
 <!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
@@ -168,7 +171,10 @@
 								<input type="text" class="form-control" placeholder="输入凭证字号，日期，内容等...">
 							</div>
 						</form>
-						<p><a href="#">高级搜索...</a></p>
+						<ul>
+							<li><a href="<?= $this->createUrl('Site/operation&operation=listTransition') ?>">逐月查询</a></li>
+							<li><a href="<?= $this->createUrl('transition/listreview') ?>">审核凭证</a></li>
+						</ul>
 						</div>
 						</div>
 							<div class="dropdown-menu-header"></div>
@@ -437,8 +443,3 @@
 </body>
 <!-- END BODY -->
 </html>
-<?php 
-	$cs = Yii::app()->clientScript;
-	$cs->registerScript('MetronicInit','Metronic.init();', CClientScript::POS_READY);
-	$cs->registerScript('LayoutInit','Layout.init();', CClientScript::POS_READY);
-?>

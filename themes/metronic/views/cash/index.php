@@ -7,28 +7,19 @@ $this->breadcrumbs=array(
 );
 
 ?>
-
-<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/main.css"/>
-<div class="panel panel-default">
-	<div class="panel-heading">
-		<h2>现金原始数据管理</h2>
+<div class="portlet light">
+	<div class="portlet-title">
+		<div class="caption">
+		<span class="font-green-sharp">现金原始数据管理</span>
+		</div>
+		<div class="actions">
+		    <a href="<?= $this->createUrl('transition/bank') ?>"  class="btn btn-circle btn-info btn-sm"><i class="fa fa-bank"></i> 导入银行交易</a>
+		    <a href="<?= $this->createUrl('transition/cash') ?>"  class="btn btn-circle btn-info btn-sm"><i class="fa fa-money"></i> 导入现金交易</a>
+		    <a href="<?= $this->createUrl('transition/create') ?>"  class="btn btn-circle btn-default btn-sm"><i class="fa fa-edit"></i> 手动录入凭证</a>
+			<a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title="" data-original-title title="全屏"></a>
+		</div>
 	</div>
-	<div class="panel-body">
-        <?php
-        foreach(Yii::app()->user->getFlashes() as $key => $message) {
-            echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
-        }
-        ?>
-        <div class="well well-sm head-button">
-            <?php
-            echo CHtml::link('<span class="glyphicon glyphicon-plus"></span> 银行交易', array('transition/bank'), array('class' => 'btn btn-default'));
-            echo "\n";
-            echo CHtml::link('<span class="glyphicon glyphicon-plus"></span> 现金交易', array('transition/cash'), array('class' => 'btn btn-default'));
-            echo "\n";
-            echo CHtml::link('<span class="glyphicon glyphicon-pencil"></span> 手动录入', array('transition/create'), array('class' => 'btn btn-default'));
-            echo "\n";
-            ?>
-        </div>
+	<div class="portlet-body">
 		<div class="alert alert-info">提示：可以通过比较符号 (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>或者 <b>=</b>) 来进行搜索</div>
 		<div class="operations">
 			<?php $this->widget('zii.widgets.CMenu', array(
