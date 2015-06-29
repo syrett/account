@@ -6,7 +6,7 @@ $(document).ready(function () {
     $("#selectItem3").val(3);
     $("#dialog").hide();
     $("div").on('blur', "input[id*='tran_amount']", function (e) {
-        totalAmount(this.parentNode.parentNode)
+        sumAmount(this.parentNode.parentNode)
     })
     $("div").delegate("#new-invoice", "change", function () {
         $("select[name='new-category']").hide();
@@ -18,26 +18,10 @@ $(document).ready(function () {
     })
     $("div").delegate("#droplist", "change", function () {
         chooseOption(this)
-    });
-
-    $("input[name$='\[entry_date\]']").attr('readonly', true);
-    $('body').on('focus', "input[name$='\[entry_date\]']", function () {
-        $(this).datepicker({
-            autoclose: true,
-            format: "yyyymmdd",
-            startDate: getDate()
-
-        });
-    });
-
-    $('body').on('keyup', "input[name$='\[entry_memo\]']", function () {
-        $(this).nextAll("span[class*='label-warning']").html("");
     })
-
-});
-
-$(window).bind("load", function () {
-    $("#subject_2").select2("readonly", true);
+})
+$(window).bind("load", function() {
+    $("#subject_2").select2("readonly",true);
 });
 function itemsplit(e) {
 
@@ -49,7 +33,7 @@ function itemsplit(e) {
 
     //设置id 条目 的name属性 lists[<?= $key ?>][Transition][entry_subject]
     var id = (parseInt($("#rows").val()) + 1).toString();
-    $.each($(e.parentNode.parentNode.parentNode.nextSibling).find("input[name^='lists']"), function (key, value) {
+    $.each($(e.parentNode.parentNode.parentNode.nextSibling).find("[name^='lists[']"), function (key, value) {
         var name = $(value).attr("name");
         if (name != "" && name) {
             name = name.replace(/\[\d*\]/, "[" + id + "]");
@@ -64,9 +48,9 @@ function itemsplit(e) {
             item_id = item_id.replace(/_\d+/, "_" + id);
             $(value).attr("id", item_id);
         }
-        if (item_id.substr(0, 7) == "btn_del") {
-            $(value).removeAttr("disabled");
-        }
+        //if (item_id.substr(0, 7) == "btn_del") {
+        //    $(value).removeAttr("disabled");
+        //}
     })
     $("#rows").val(id);
 }
@@ -74,7 +58,7 @@ function itemsplit(e) {
 function itemclose(e) {
     var line = $(e.parentNode.parentNode.parentNode).attr("line");
     e.parentNode.parentNode.parentNode.remove();
-    sumAmount($("#data_import").find("tr[line=" + line + "]:first"));
+    sumAmount($("#data_import").find("tr[line="+line+"]:first"));
 }
 function itemsetting(e) {
     //$("#itemSetting").dialog({
@@ -87,10 +71,16 @@ function itemsetting(e) {
     //});
     //cleanDialog();
     //$("#itemSetting").dialog("open");
-    var id = $(e.parentNode.parentNode).find("input[id^='id_']")[0].value;
-    $("#item_id").val(id);
-    $("#data").val(getInfo(e.parentNode));
-    unsetting();
+    if (!$("#trSetting").is(":visible")) {
+        $(e.parentNode.parentNode.parentNode).after($("#trSetting"));
+        $("#trSetting").show();
+        $("#itemSetting").slideDown();
+        var id = $(e.parentNode.parentNode).find("input[id^='id_']")[0].value;
+        $("#item_id").val(id);
+        $("#data").val(getInfo(e.parentNode));
+        unsetting();
+    } else
+        dialogClose();
 }
 function chooseType(e, a) {
     $.ajax({
@@ -100,10 +90,10 @@ function chooseType(e, a) {
         data: {"type": a},
         success: function (data) {
             var data = JSON.parse(data);
-            //var str = '<div class="options-div"><span class="fa fa-angle-right flow-arrow"></span></div>' +
-            var str = '<div class="options btn-group-xs" >';
+            var str = '<div class="options-div"><span class="fa fa-angle-right flow-arrow"></span></div>' +
+                '<div class="options btn-group-xs" >';
             $.each(data, function (key, value) {
-                str += '<button class="btn " type="button" onclick="chooseOption(this)" value="' + key + '">' + value + '</button>'
+                str += '<button class="btn btn-default" type="button" onclick="chooseOption(this)" value="' + key + '">' + value + '</button><br />'
             });
             str += '</div>';
             choosed(e);
@@ -141,9 +131,8 @@ function chooseOption(e) {
             if (data.rule == 'end') {
                 $("#subject").val(data.subject);
                 $(e).parent().nextAll().remove();
-                //var str = '<div class="options-div"><span class="fa fa-angle-right flow-arrow"></span></div><div class="options alert alert-success alert-dismissable">';
-                var str = '<div class="options alert alert-success alert-dismissable">';
-                str += '<i class="fa fa-check"></i> 已选择 => <span id="sub_name">"' + data.sbj_name + '"</span>';
+                var str = '<div class="options-div"><span class="fa fa-angle-right flow-arrow"></span></div><div class="options alert alert-success alert-dismissable">';
+                str += '<i class="icon fa fa-check"></i> 已选择 => <span id="sub_name">"' + data.sbj_name + '"</span>';
                 if (data.option != 0) {
                     $.each(data.option, function (key, value) {
                         if (value[0] == 'text')
@@ -161,8 +150,8 @@ function chooseOption(e) {
 
             }
             else if (data.rule == 'goon') {
-                //var str = '<div class="options-div"><span class="fa fa-angle-right flow-arrow"></span></div>' +
-                var str = '<div class="options btn-group-xs" >';
+                var str = '<div class="options-div"><span class="fa fa-angle-right flow-arrow"></span></div>' +
+                    '<div class="options btn-group-xs" >';
                 if (data.type == 'droplist') {
                     str += '<select id="droplist" class="selectSetting" ><option>请选择</option>';
 
@@ -176,12 +165,12 @@ function chooseOption(e) {
                     $.each(data.data, function (key, value) {
                         if (IsNum(key.toString().substring(1))) //json.parse会把数组重新排序，所以key为数字数组，key前面都添加了下划线'_'
                             key = key.toString().substring(1)
-                        str += '<button class="btn " type="button" onclick="chooseOption(this)" value="' + key + '">' + value + '</button>'
+                        str += '<button class="btn btn-default" type="button" onclick="chooseOption(this)" value="' + key + '">' + value + '</button><br />'
                     });
                 if (data.option != 0) {
                     $.each(data.option, function (key, value) {
                         if (value[0] == 'text')
-                            str += '<input type="text" name="option-' + key + '" id="option-' + key + '" placeholder="' + value[1] + '" ><br />'
+                            str += '<input type="text" name="option-' + key + '" id="option-' + key + '" placeholder="' + value[1] + '" ><br >'
                         if (value[0] == 'select') {
                             str += '<select name="option-' + key + '" id="option-' + key + '">';
                             $.each(value[1], function (key, value) {
@@ -200,7 +189,7 @@ function chooseOption(e) {
                     str += '<input type="hidden" name="new-type" id="new-type" value="1">' +
                     '<input type="hidden" id="new-subject" name="new-subject" value="' + newsbj + '" > ' +
                     '<input type="hidden" id="new-sbjname" value="' + newsbjname + '" > ' +
-                    '<br ><input type="text" class="new-item" placeholder="手动填写" id="new-name" name="new-name" value="' + $("#tran_name_" + id).val() + '" >';
+                    '<input type="text" class="new-item" placeholder="手动填写" id="new-name" name="new-name" value="' + $("#tran_name_" + id).val() + '" >';
 
                     if (data.list != '') {
                         str += '<select id="new-invoice" name="new-invoice" data-placeholder="请选择">';
@@ -220,16 +209,16 @@ function chooseOption(e) {
                             str += '</select>';
                         });
                     }
-                    str += '<br ><button value="" class="btn" id="button" onclick="chooseSubject(this)">新建</button>'
+                    str += '<br ><button value="" type="button" id="button" onclick="chooseSubject(this)">新建</button>'
                 }
                 else if (data.new == 'employee') {
                     str += '<input type="hidden" name="new-type" id="new-type" value="2">' +
-                    '<br ><input type="text" class="new-item" placeholder="新员工姓名" id="new-name" name="new-name"  value="' + $("#tran_name_" + id).val() + '" >' +
+                    '<input type="text" class="new-item" placeholder="新员工姓名" id="new-name" name="new-name"  value="' + $("#tran_name_" + id).val() + '" >' +
                     '<br ><select id="new-department" name="new-department" data-placeholder="新员工所属部门">';
                     $.each(data.list, function (key, value) {
                         str += '<option value="' + value['id'] + '">' + value['name'] + '</option>';
                     })
-                    str += '</select><br ><input type="button" class="btn" value="添加新员工" onclick="addNew(this)"> ';
+                    str += '</select><br ><input type="button" value="添加新员工" onclick="addNew(this)"> ';
                 }
                 str += '</div>';
 
@@ -256,15 +245,15 @@ function chooseOption(e) {
 function itemSet() {
     //如果有需要添加新元素，比如新员工 新的公司名字 新供应商等
     //addNew();
-    $sbj = $("#subject").val();
+    var sbj = $("#subject").val();
     var item_id = $("#item_id").val()
     unset(item_id);
     e = $("#info_" + item_id);
     e.removeClass();
     setTransaction(item_id);
-    if ($sbj != "") {
-        $("#subject_" + item_id).val($sbj);
-        e.attr('title', $sbj);
+    if (sbj != "") {
+        $("#subject_" + item_id).val(sbj);
+        e.attr('title', sbj);
         //显示选择路径
         var str = "";
         $.each($(".options").find("button[class*='active']"), function (key, value) {
@@ -292,23 +281,62 @@ function itemSet() {
         e.html("未选择");
     }
     setTarget(item_id);
+    dialogClose();
+}
+//采购销售时的确认按钮
+function itemSetDefault(e, type){
+    var id = $(e.parentNode.parentNode).find("input[id^='id_']")[0].value;
+    if($("#tran_subject_"+id).val()!='商品采购'){
+        var sbj = $("#tran_subject_"+id).val();
+    }else{
+        var name = $("#tran_entry_name_"+id).val();
+        var data = {
+            name: name,
+            subject: 1405
+        }
+        var sbj = createSubject(data);
+    }
+    $("#subject_" + id).val(sbj);
+    $("#transaction_" + id).val(1);
+    //choose vendor
+    //data = {name:name};
+    //var vendor = createVendor(data);
+    var vendor = $("#tran_appendix_id_"+id).val();
+
+    $("#vendor_id_" + id).val(vendor);
+    name = $("#tran_appendix_id_"+id).find("option:selected").text();
+    data = {
+        name: name,
+        subject: 2202
+    }
+    sbj = createSubject(data);
+    $("#subject_2_" + id).val(sbj);
+    if($("#tran_tax_"+id).val()!=0)
+    setTax(id, type);
+    else
+    removeTax(id, type);
+    $("#info_"+id).html('已确认');
+    $("#info_"+id).attr('class', 'label-success');
 }
 //保存凭证，此时再根据选择的科目计算一些数值
 function save() {
     //判断银行是否锁定
-    if (!checkBank())
-        return true;
-    if (!checkInput())
-        return true;
+    //if (!checkBank())
+    //    return true;
+    //if (!checkInput())
+    //    return true;
     $("#abc table tr:first").nextAll('tr:visible[id!=trSetting]').each(function (key, value) {
         var item_id = $(value).find("input[id^='id_']").val();
         var sbj = $("#subject_" + item_id).val();
         $("#invoice_" + item_id).val($("#new-invoice").val() == 2 ? 1 : 0);
-        $("#tax_" + item_id).val($("#withtax_" + item_id).val() == 1 ? 3 : 0);
+        //$("#tax_" + item_id).val($("#withtax_" + item_id).val() == 1 ? 3 : 0);
 
         //主营业务收入才计算税率
         if (sbj.substr(0, 4) == "6001" && $("#withtax_" + item_id).val() == 1)
             setTax(item_id);    //设置税
+    })
+    $("#abc table tr:first").nextAll('tr:visible[id!=trSetting]').find('button').each(function(key,value){
+        $(value).click();
     })
     $("#form").submit();
 }
@@ -347,8 +375,13 @@ function cleanDialog() {
     $("#setting div:first-child").nextAll().remove();
 
 }
+function dialogClose() {
+
+    $("#trSetting").hide('100');
+    $("#itemSetting").hide();
+}
 //总金额
-function totalAmount(e) {
+function sumAmount(e) {
     var l = $(e).attr("line");
     var amount = 0;
     $.each($("tr[line='" + l + "']"), function (key, value) {
@@ -379,8 +412,8 @@ function addNew(e) {
                         if (a.children("button[value=" + data + "]").length != 0) { //检测是否已经存在
                             a.children("button[value=" + data + "]")[0].click();
                         } else {
-                            var str = '<button class="btn " type="button" onclick="chooseOption(this)" value="' +
-                                data + '">' + a.children("select[name*=new-depart]")[0].selectedOptions[0].innerHTML + '/' + a.children("input[name=new-name]").val() + '</button>'
+                            var str = '<button class="btn btn-default" type="button" onclick="chooseOption(this)" value="' +
+                                data + '">' + a.children("select[name*=new-depart]")[0].selectedOptions[0].innerHTML + '/' + a.children("input[name=new-name]").val() + '</button><br />'
                             a.prepend(str);
                             a.children(":first-child").click();
                         }
@@ -406,8 +439,8 @@ function addNew(e) {
                         if (a.children("button[value=" + msg + "]").length != 0) { //检测是否已经存在
                             a.children("button[value=" + msg + "]")[0].click();
                         } else {
-                            var str = '<button class="btn " type="button" onclick="chooseOption(this)" value="' +
-                                msg + '">' + a.children("#new-sbjname").val() + '/' + a.children("input[name=new-name]").val() + '</button>'
+                            var str = '<button class="btn btn-default" type="button" onclick="chooseOption(this)" value="' +
+                                msg + '">' + a.children("#new-sbjname").val() + '/' + a.children("input[name=new-name]").val() + '</button><br />'
                             a.prepend(str);
                             a.children(":first-child").click();
                         }
@@ -452,22 +485,34 @@ function chooseSubject(e) {
     //}
     choosed($("#button"));
 }
-function setTax(item_id) {
+function setTax(item_id, type) {
     //设置相关参数值，现在默认最多2个参数，如果过多要重新写函数
     //设置税费，目前只设置税费
-    //简单版，统一税率为3%
-    //if($("#new-category-3").is(":visible")){
-    $("#additional_sbj0_" + item_id).val(222102);//科目编号,应交税费2221的二级科目 进项（采购默认）参考gbl数据库
-    var amount = 0;
-    if ($("#tran_amount_" + item_id != ''))
-        amount = parseFloat($("#tran_amount_" + item_id).val());
-    //var tax = $("#new-category-3").val()    //税率
-    var tax = 3;
-    amount = amount - amount / (100 + parseFloat(tax)) * 100;
-
-    $("#additional_amount0_" + item_id).val(amount);
+    $("#withtax_" + item_id).val(1);
+    if(type=='purchase'){
+        var sbj = 22210101;
+    }else if(arguments(1)=='sale'){
+        var sbj = 22210102;
+    }else{
+        var sbj = 22210101;
+    }
+    $("#additional_sbj0_" + item_id).val(sbj);
+    var price = 0;
+    if ($("#tran_price_" + item_id != ''))
+        price = parseFloat($("#tran_price_" + item_id).val());
+    price = price * parseFloat($("#tran_count_" + item_id).val())
+    var taxr = $("#tran_tax_"+item_id).val()    //税率
+    var tax = price - price / (100 + parseFloat(taxr)) * 100;
+    $("#entry_amount_"+ item_id).val(price);
+    $("#additional_amount0_" + item_id).val(tax);
 
     //}
+}
+function removeTax(item_id,type){
+    $("#withtax_" + item_id).val(0);
+    $("#additional_sbj0_" + item_id).val('');
+    var price = parseFloat($("#tran_price_" + item_id).val()) * parseFloat($("#tran_count_" + item_id).val());
+    $("#entry_amount_"+ item_id).val(price);
 }
 //设置按钮宽度
 function setWidth(e) {
@@ -481,16 +526,15 @@ function setWidth(e) {
 //设置交易方名称
 function setTarget(id) {
     var target = $("div.target > button.active").html();
-    if (target != undefined && $("#tran_name_" + id).val() == "")
+    if (target != undefined && $("#tran_name_" + id).val()=="")
         $("#tran_name_" + id).val(removePath(target));
 }
 
 //去除路径，只保留交易方名称abc ，路径格式为 ***/**/abc
 function removePath(path) {
     //正则匹配
-    path = $('<div>'+path+'</div>').text();
     var reg = /[^/]([^\x00-\xff]|\w)+(<i>|$)/;
-    if (reg.test(path)) {
+    if (reg.test(path)){
         path = path.match(reg)
         reg = /[^<i>]*/;
         return path[0].match(reg);
@@ -504,17 +548,17 @@ function setTransaction(id) {
     var type = $(".options:first > button.active").val();
     if (type == '支出')
         $("#transaction_" + id).val(1)
-    if (type == '收入') {
+    if (type == '收入'){
         $("#transaction_" + id).val(2)
     }
-    if ($("#subject").val() == 660302)
+    if ($("#subject").val()==660302)    //利息费用
         $("#transaction_" + id).val(1)
     //设置是否需要生成凭证，例：银行互转，收入方不需要
     var option = $(".options:nth-of-type(3) > button.active").val();
-    if (option == '银行转账')
-        $("#status_id_" + id).val("2")   //这种状态不需要生成凭证
+    if (option=='银行转账')
+        $("#status_id_"+ id).val("2")   //这种状态不需要生成凭证
     else
-        $("#status_id_" + id).val("1")
+        $("#status_id_"+ id).val("1")
 }
 
 //消除数据，设置前先消除
@@ -527,7 +571,7 @@ function unset(id) {
     $("input[name^='lists\[" + id + "\]\[Transition\]\[entry_transaction\]']").val(sbja);
 }
 //清除科目选择里面的数据，否则直接点确定的话，subject里面有上一次的科目编号
-function unsetting() {
+function unsetting(){
     $("#subject").val('')
 }
 
@@ -555,14 +599,36 @@ function checkInput() {
     return check;
 }
 
-function checkBank() {
-    if ($("#subject_2").attr("readonly") == undefined)
+function checkBank(){
+    if ($("#subject_2").attr("readonly")==undefined)
         alert("请锁定银行")
     else
         return true;
 }
 
-function createSubject(url, data) {
+function createSubject(data) {
+    var url = $("#new-url").val();
+    var result = 0;
+    $.ajax({
+        async: false,
+        type: "POST",
+        url: url,
+        data: data,
+        //{
+        //        name: a.children("input[name=new-name]").val(),
+        //        subject: a.children("input[name=new-subject]").val()
+        //    },
+        success: function (data) {
+            result = data;
+        },
+        error: function (msg) {
+            result = msg;
+        }
+    })
+    return result;
+}
+function createVendor(data){
+    var url = $("#new-vendor").val();
     var result = 0;
     $.ajax({
         async: false,
@@ -587,13 +653,12 @@ function createSubject(url, data) {
  添加银行 银行存款二级科目
  */
 function addBank() {
-    var url = $("#new-url").val();
     var name = $("#bank_name").val();
     var data = {
         name: name,
         subject: 1002
     }
-    var msg = createSubject(url, data);
+    var msg = createSubject(data);
     if (msg > 0 && $("#subject_2 > option[value='" + msg + "']").length == 0) {
         $("#subject_2").append(new Option(name, msg));
     }
@@ -601,14 +666,14 @@ function addBank() {
         this.selected = (this.value == msg);
     });
     $("#subject_2").select2();
-    $("#bank_name").val('');
 }
 
 /*
  解锁，锁定银行
  */
-function lockBank(e) {
-    if (e.value == 1) {
+function lockBank(e){
+    if(e.value==1)
+    {
         var url = $("#user-bank").val();
         $.ajax({
             type: "POST",
@@ -618,50 +683,47 @@ function lockBank(e) {
         $("#subject_2").select2("readonly", true);
         $(e).html("解锁银行");
     }
-    else {
+    else{
         $("#subject_2").select2("readonly", false);
         $(e).html("锁定银行");
     }
-    e.value = e.value == 0 ? 1 : 0;
+    e.value = e.value==0?1:0;
 }
 
-function active(e) {
-    //$(e).append('<i>已选择</i>')
+function active(e){
+    $(e).append('<i>已选择</i>')
 }
 
 //插入新行
-function addRow() {
+function addRow(){
     //复制
-    itemsplit($("#data_import tr:last td div button[data-type='double']")[0]);
+    itemsplit($("#data_import tr[id!='trSetting']:last td div button")[0]);
     //删除值，去除复制后相关联的信息
     var e = $("#data_import tr[id!='trSetting']:last");
     var item = $("#data_import tr[id!='trSetting']:last input[id^='id_']").val();
-    $(e).attr('line', item);
-    if ($(e).attr("class") == "table-tr")
+    $(e).attr('line',item);
+    if($(e).attr("class")=="table-tr")
         $(e).removeClass();
     else
         $(e).addClass("table-tr");
-    $("#data_import tr[id!='trSetting']:last input[id!='id_" + item + "']").val("");
+
+    //去除select div,重新设置select2
+    $("tr[line='"+item+"'] div[class*='select2-container']").remove();
+    $.each($("tr[line='"+item+"'] select"),function(key,value){
+        $(value).select2();
+    });
+
+    $("#data_import tr[id!='trSetting']:last input[id!='id_"+item+"']").val("");
     //添加 总金额提示
-    var html = '<span class="help-block help-tip">总金额：<label id="amount_' + item + '">' + 0 + '</label></span>'
-    $(e).find("[id^='tran_amount_']").after(html)
-    $('body').on('focus', "input[name$='\[entry_date\]']", function () {
+    var html = '<span class="tip2">总金额：<label id="amount_'+item+'">'+0+'</label></span>'
+    //$(e).find("[id^='tran_amount_']").after(html)
+    $('body').on('focus',"input[name$='\[entry_date\]']", function(){
         $(this).datepicker({
             dateFormat: "yymmdd",
             minDate: getDate()
 
         });
     });
-    $(e).find("[id*='btn_del']").attr("disabled", true);
+    //$(e).find("[id*='btn_del']").attr("disabled",true);
     $(e).children(':last-child').find("span").html('');
-}
-
-//日期选择器的起始日期
-function getDate() {
-    var startDate = $("#dp_startdate").val();
-    var year = startDate.substring(0, 4);
-    var month = startDate.substring(4, 6);
-    var date = new Date(year, month - 1, 1);
-    date.setMonth(date.getMonth() + 1);
-    return date;
 }
