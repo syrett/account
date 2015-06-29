@@ -1212,8 +1212,10 @@ class TransitionController extends Controller
         $newone = 0;
         foreach ($trans as $key => $item) {
             $arr = $item['Transition'];
-            $subject_2 = $arr['subject_2'];
-            $arr['amount'] = $arr['entry_amount'];
+            $subject_2 = $_POST['subject_2'];
+            $arr['subject_2'] = $subject_2;
+            $arr['updated_at'] = time();
+            $arr['price'] = $arr['entry_amount'];
             $arr['entry_date'] = date('Ymd',strtotime($arr['entry_date']));
             if ($type == 'bank'){
                 $model = new Bank;
@@ -1235,8 +1237,6 @@ class TransitionController extends Controller
             elseif (!empty($item['Transition']['d_id']))
                 $model = $model::model()->findByPk($item['Transition']['d_id']);
             $newone ++;
-            $arr['subject_2'] = $subject_2;
-            $arr['updated_at'] = time();
             $model->load($arr);
             if ($arr['price'] == "" || $arr['price'] == 0) {
                 $arr['error'] = ['金额不能为空或为0'];
