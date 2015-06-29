@@ -35,13 +35,13 @@ if ($bank_money == 'cash')
 <div class="portlet light">
 	<div class="portlet-title">
 		<div class="caption">
-		<span class="font-green-sharp">导入<?= Yii::t('import', strtoupper($type)) ?>交易</span>
+		<span class="font-green-sharp">导入<?= Yii::t('import', strtoupper($type)) ?></span>
 		</div>
 		<div class="actions">
 			<?php echo CHtml::link('<i class="glyphicon glyphicon-search"></i> 已导入数据', array('/' . $type), array('class' => 'btn btn-circle btn-default')); ?>
 			<input type="hidden" id="dp_startdate" value="<?= Transition::getTransitionDate() ?>">
 		    <?php
-				echo CHtml::link('<i class="fa fa-'.$bank_money_icon.'"></i> 导入'.Yii::t('import', $bank_money).'交易', array($bank_money), array('class' => 'btn btn-circle btn-info btn-sm'));
+				echo CHtml::link('<i class="fa fa-'.$bank_money_icon.'"></i> 导入'.Yii::t('import', $bank_money), array($bank_money), array('class' => 'btn btn-circle btn-info btn-sm'));
 				echo "\n";
 				echo CHtml::link('<i class="fa fa-edit"></i> 手动录入凭证', array('create'), array('class' => 'btn btn-circle btn-default btn-sm'));
     		?>

@@ -1,28 +1,32 @@
--- MySQL dump 10.13  Distrib 5.5.40, for debian-linux-gnu (x86_64)
+-- phpMyAdmin SQL Dump
+-- version 4.1.14
+-- http://www.phpmyadmin.net
 --
--- Host: localhost    Database: account_test
--- ------------------------------------------------------
--- Server version	5.5.40-0ubuntu0.14.04.1
+-- Host: 127.0.0.1
+-- Generation Time: 2015-06-29 14:50:39
+-- 服务器版本： 5.6.17
+-- PHP Version: 5.5.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `bank`
+-- Database: `account_test`
 --
 
-DROP TABLE IF EXISTS `bank`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `bank` (
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `bank`
+--
+
+CREATE TABLE IF NOT EXISTS `bank` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `target` varchar(512) DEFAULT NULL COMMENT '交易对象',
   `date` varchar(64) DEFAULT NULL COMMENT '日期',
@@ -31,7 +35,7 @@ CREATE TABLE `bank` (
   `parent` int(11) DEFAULT NULL COMMENT '父，相关',
   `order` text COMMENT '订单号',
   `subject` varchar(16) DEFAULT NULL COMMENT '科目',
-  `subject_2` varchar(16) DEFAULT NULL,
+  `subject_2` int(12) DEFAULT NULL,
   `invoice` tinyint(4) DEFAULT '0' COMMENT '有无发票',
   `tax` int(8) DEFAULT NULL COMMENT '税率',
   `status_id` tinyint(4) NOT NULL DEFAULT '0' COMMENT '1:已经生成凭证 ',
@@ -41,28 +45,25 @@ CREATE TABLE `bank` (
   KEY `status_id` (`status_id`),
   KEY `created_at` (`created_at`),
   KEY `updated_at` (`updated_at`),
-  KEY `parent` (`parent`)
-) ENGINE=InnoDB AUTO_INCREMENT=557 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  KEY `parent` (`parent`),
+  KEY `sbj_bank` (`subject_2`),
+  KEY `sbj_bank_2` (`subject_2`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
--- Dumping data for table `bank`
+-- 转存表中的数据 `bank`
 --
 
-LOCK TABLES `bank` WRITE;
-/*!40000 ALTER TABLE `bank` DISABLE KEYS */;
-INSERT INTO `bank` VALUES (374,'上海市数字证书认证中心有限公司','20150225','企业证书费用',300,NULL,NULL,'660102','100201',0,0,1,'2015-05-22 05:57:23',1432274243),(375,'','20150225','服务费',500,NULL,NULL,'660206','100201',0,0,1,'2015-05-22 05:57:23',1432274243),(376,'b公司','20150225','借款',800,NULL,NULL,'224101','100201',0,0,1,'2015-05-22 05:57:23',1432274243),(377,'重庆猪八戒网络有限公司','20150227','圈圈橙的文字商标注册费用',1500,NULL,NULL,'660102','100201',0,0,1,'2015-05-22 05:57:23',1432274243),(378,'朱筠','20150227','投资款',10000,NULL,NULL,'4001','100201',0,0,1,'2015-05-22 05:57:23',1432274243),(379,'','20150302','手续费',4,NULL,NULL,'660301','100201',0,0,1,'2015-05-22 06:11:25',1432275085),(380,'','20150302','手续费',0.4,NULL,NULL,'660301','100201',0,0,1,'2015-05-22 06:11:25',1432275085),(381,'朱筠','20150304','上海银行基本账户开户费用',800,NULL,NULL,'660102','100201',0,0,1,'2015-05-22 06:11:25',1432275085),(382,'朱筠','20150304','亿美软通短信通道服务费',5000,NULL,NULL,'660206','100201',0,0,1,'2015-05-22 06:11:25',1432275085),(383,'朱筠','20150304','阿里云服务器租赁年费',68,NULL,NULL,'660210','100201',0,0,1,'2015-05-22 06:11:25',1432275085),(384,'朱筠','20150304','公司注册费用',500,NULL,NULL,'660102','100201',0,0,1,'2015-05-22 06:11:25',1432275085),(385,'朱筠','20150304','朱筠投资款',10000,NULL,NULL,'4001','100201',0,0,1,'2015-05-22 06:11:25',1432275085),(386,'老法师（上海）财务咨询有限公司','20150304','3个月财务代理费用',900,NULL,NULL,'660206','100201',0,0,1,'2015-05-22 06:11:25',1432275085),(387,'陆晓峰','20150315','注资',50000,NULL,NULL,'4001','100201',0,0,1,'2015-05-22 06:11:25',1432275085),(388,'朱筠','20150316','税务盘购买',1020,NULL,NULL,'660102','100201',0,0,1,'2015-05-22 06:11:26',1432275086),(389,'','20150320','利息收入',10.02,NULL,NULL,'660302','100201',0,0,1,'2015-05-22 06:11:26',1432275086),(390,'朱筠','20150330','差旅费',346,NULL,NULL,'660212','100201',0,0,1,'2015-05-22 06:11:26',1432275086),(391,'顾雨婷','20150331','微信收入',0.13,NULL,NULL,'6301','100201',0,0,1,'2015-05-22 06:11:26',1432275086),(392,'朱筠','20150331','朱筠的第二笔投资款',50000,NULL,NULL,'4001','100201',0,0,1,'2015-05-22 06:11:26',1432275086),(393,'朱筠','20150331','电脑购买',9195,NULL,NULL,'160101','100201',0,0,1,'2015-05-22 06:11:26',1432275086),(394,'深圳市腾讯计算机系统有限公司','20150331','微信收入',0.01,NULL,NULL,'6301','100201',0,0,1,'2015-05-22 06:11:26',1432275086),(396,'--','20150421','手续费',35,NULL,NULL,'','100201',0,0,0,'2015-05-25 06:42:04',1432536124),(397,'上海市公积金管理中心（静安支行）','20150423','公积金',3360,NULL,NULL,'','100201',0,0,0,'2015-05-25 06:42:04',1432536124),(398,'--','20150428','手续费',1,NULL,NULL,'','100201',0,0,0,'2015-05-25 06:42:04',1432536124),(399,'阳君','20150429','工资奖金收入',3300,NULL,NULL,'','100201',0,0,0,'2015-05-25 06:42:04',1432536124),(400,'赵新伟','20150429','工资奖金收入',3300,NULL,NULL,'','100201',0,0,0,'2015-05-25 06:42:04',1432536124),(401,'嵇正超','20150429','工资奖金收入',3300,NULL,NULL,'','100201',0,0,0,'2015-05-25 06:42:04',1432536124),(402,'陈一菠','20150429','工资奖金收入',354.55,NULL,NULL,'','100201',0,0,0,'2015-05-25 06:42:04',1432536124),(403,'张丹洁','20150429','工资奖金收入',3300,NULL,NULL,'','100201',0,0,0,'2015-05-25 06:42:04',1432536124),(404,'杨润华','20150429','工资奖金收入',3300,NULL,NULL,'','100201',0,0,0,'2015-05-25 06:42:04',1432536124),(405,'李旭辉','20150429','工资奖金收入',3300,NULL,NULL,'','100201',0,0,0,'2015-05-25 06:42:04',1432536124),(406,'易超','20150429','工资奖金收入',3445,NULL,NULL,'','100201',0,0,0,'2015-05-25 06:42:04',1432536124),(407,'张志辉','20150429','工资奖金收入',3506.62,NULL,NULL,'','100201',0,0,0,'2015-05-25 06:42:04',1432536124),(408,'褚魁','20150429','工资奖金收入',2825,NULL,NULL,'','100201',0,0,0,'2015-05-25 06:42:04',1432536124),(409,'施威','20150429','工资奖金收入',2256.82,NULL,NULL,'','100201',0,0,0,'2015-05-25 06:42:04',1432536124),(410,'陈军','20150429','工资奖金收入',1359.09,NULL,NULL,'','100201',0,0,0,'2015-05-25 06:42:04',1432536124),(441,'国家金库上海市奉贤区支库','20150420','个税',1150,NULL,NULL,'222101','100201',0,0,1,'2015-05-25 07:06:59',1432537643),(457,'--','20150421','手续费',35,NULL,NULL,'1','100201',0,0,0,'2015-05-25 07:13:19',1432537999),(458,'国家金库上海市奉贤区支库','20150420','个税',1150,NULL,NULL,'222101','100201',0,0,1,'2015-05-25 07:16:51',1432538211),(474,'a公司','20150301','项目转账',5000,NULL,NULL,'222101','100201',0,0,1,'2015-05-25 07:23:29',1432538609),(475,'押金','20150301','项目转账',5000,NULL,NULL,'122103','100201',0,0,1,'2015-05-25 07:23:29',1432538609),(476,'','20150302','项目转账',5,NULL,NULL,'222101','100201',0,0,1,'2015-05-25 07:24:45',1432538685),(477,'b公司','20150302','项目转账',5,NULL,NULL,'122102','100201',0,0,1,'2015-05-25 07:24:45',1432538685),(478,'某某某公司','20150301','项目转账',5000,NULL,NULL,'222101','100201',0,0,1,'2015-05-25 07:26:40',1432538800),(534,'董凌虹','20150415','备用金',50000,NULL,NULL,'1001','100201',0,0,1,'2015-05-25 08:56:16',1432544176),(535,'国家金库上海市奉贤区支库','20150420','个税',1150,NULL,NULL,'222101','100201',0,0,1,'2015-05-25 08:56:16',1432544176),(536,'--','20150421','手续费',35,NULL,NULL,'222101','100201',0,0,1,'2015-05-25 08:56:16',1432544176),(537,'上海市公积金管理中心（静安支行）','20150423','公积金',3360,NULL,NULL,'222101','100201',0,0,1,'2015-05-25 08:56:17',1432544177),(538,'--','20150428','手续费',1,NULL,NULL,'222101','100201',0,0,1,'2015-05-25 08:56:17',1432544177),(539,'阳君','20150429','工资奖金收入',3300,NULL,NULL,'222101','100201',0,0,1,'2015-05-25 08:56:17',1432544177),(540,'赵新伟','20150429','工资奖金收入',3300,NULL,NULL,'222101','100201',0,0,1,'2015-05-25 08:56:17',1432544177),(541,'嵇正超','20150429','工资奖金收入',3300,NULL,NULL,'222101','100201',0,0,1,'2015-05-25 08:56:17',1432544177),(542,'陈一菠','20150429','工资奖金收入',354.55,NULL,NULL,'222101','100201',0,0,1,'2015-05-25 08:56:17',1432544177),(543,'张丹洁','20150429','工资奖金收入',3300,NULL,NULL,'222101','100201',0,0,1,'2015-05-25 08:56:17',1432544177),(544,'杨润华','20150429','工资奖金收入',3300,NULL,NULL,'222101','100201',0,0,1,'2015-05-25 08:56:17',1432544177),(545,'李旭辉','20150429','工资奖金收入',3300,NULL,NULL,'222101','100201',0,0,1,'2015-05-25 08:56:17',1432544177),(546,'易超','20150429','工资奖金收入',3445,NULL,NULL,'222101','100201',0,0,1,'2015-05-25 08:56:17',1432544177),(547,'张志辉','20150429','工资奖金收入',3506.62,NULL,NULL,'222101','100201',0,0,1,'2015-05-25 08:56:17',1432544177),(548,'褚魁','20150429','工资奖金收入',2825,NULL,NULL,'222101','100201',0,0,1,'2015-05-25 08:56:17',1432544177),(549,'施威','20150429','工资奖金收入',2256.82,NULL,NULL,'222101','100201',0,0,1,'2015-05-25 08:56:17',1432544177),(550,'陈军','20150429','工资奖金收入',1359.09,NULL,NULL,'222101','100201',0,0,1,'2015-05-25 08:56:17',1432544177),(551,'董凌虹','20150415','备用金',50000,NULL,NULL,'4001','100201',0,0,1,'2015-05-25 09:00:55',1432544455),(552,'国家金库上海市奉贤区支库','20150420','个税',1150,NULL,NULL,'222101','100201',0,0,1,'2015-05-25 09:00:55',1432544455),(553,'--','20150421','手续费',35,NULL,NULL,'660301','100201',0,0,1,'2015-05-25 09:00:55',1432544455),(554,'国家金库上海市奉贤区支库','20150420','个税',112,NULL,NULL,'222101','100201',0,0,1,'2015-06-07 05:40:14',1433920840),(555,'--','20150421','手续费',31,NULL,NULL,'660301','100203',0,0,0,'2015-06-07 05:40:14',1433920489),(556,'AAADFAS','20150609','fsadfasd',1033,NULL,NULL,'224101','100203',0,0,1,'2015-06-09 11:49:02',1433995279);
-/*!40000 ALTER TABLE `bank` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `bank` (`id`, `target`, `date`, `memo`, `amount`, `parent`, `order`, `subject`, `subject_2`, `invoice`, `tax`, `status_id`, `created_at`, `updated_at`) VALUES
+(1, '张三', '20150505', 'test', 123, NULL, NULL, '220201', 100202, 0, 0, 1, '2015-06-29 11:56:28', 1435578988);
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `cash`
+-- 表的结构 `cash`
 --
 
-DROP TABLE IF EXISTS `cash`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cash` (
+CREATE TABLE IF NOT EXISTS `cash` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `target` varchar(512) DEFAULT NULL COMMENT '交易对象',
   `date` varchar(64) DEFAULT NULL COMMENT '日期',
@@ -71,7 +72,7 @@ CREATE TABLE `cash` (
   `parent` int(11) DEFAULT NULL COMMENT '父，相关',
   `order` text COMMENT '订单号',
   `subject` varchar(16) DEFAULT NULL COMMENT '科目',
-  `subject_2` int(12) NOT NULL,
+  `subject_2` int(12) DEFAULT NULL,
   `invoice` tinyint(4) DEFAULT '0' COMMENT '有无发票',
   `tax` int(8) DEFAULT NULL COMMENT '税率',
   `status_id` tinyint(4) NOT NULL DEFAULT '0' COMMENT '1:已经生成凭证 ',
@@ -81,28 +82,17 @@ CREATE TABLE `cash` (
   KEY `status_id` (`status_id`),
   KEY `created_at` (`created_at`),
   KEY `updated_at` (`updated_at`),
-  KEY `parent` (`parent`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  KEY `parent` (`parent`),
+  KEY `sbj_bank` (`subject_2`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `cash`
+-- 表的结构 `client`
 --
 
-LOCK TABLES `cash` WRITE;
-/*!40000 ALTER TABLE `cash` DISABLE KEYS */;
-INSERT INTO `cash` VALUES (1,'提供服务','20150203','',11,NULL,NULL,'600102',0,0,0,1,'2015-05-12 07:28:38',1431415718),(2,'国家金库上海市奉贤区支库','20150420','个税',1151,NULL,NULL,'222101',0,0,0,1,'2015-06-07 05:44:14',1433655854),(3,'--','20150421','手续费',36,NULL,NULL,'660301',0,0,0,1,'2015-06-07 05:44:14',1433655854),(4,'ttt','20150409','123',12,NULL,NULL,'660301',1001,0,0,1,'2015-06-07 05:46:03',1433655963);
-/*!40000 ALTER TABLE `cash` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `client`
---
-
-DROP TABLE IF EXISTS `client`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `client` (
+CREATE TABLE IF NOT EXISTS `client` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `company` varchar(256) NOT NULL,
   `vat` varchar(45) DEFAULT NULL,
@@ -111,117 +101,91 @@ CREATE TABLE `client` (
   `memo` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `client`
+-- 替换视图以便查看 `condomdate`
 --
-
-LOCK TABLES `client` WRITE;
-/*!40000 ALTER TABLE `client` DISABLE KEYS */;
-/*!40000 ALTER TABLE `client` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Temporary table structure for view `condomdate`
---
-
-DROP TABLE IF EXISTS `condomdate`;
-/*!50001 DROP VIEW IF EXISTS `condomdate`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `condomdate` (
-  `date` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
+CREATE TABLE IF NOT EXISTS `condomdate` (
+`date` varchar(10)
+);
+-- --------------------------------------------------------
 
 --
--- Table structure for table `department`
+-- 表的结构 `department`
 --
 
-DROP TABLE IF EXISTS `department`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `department` (
+CREATE TABLE IF NOT EXISTS `department` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) DEFAULT NULL,
   `type` int(11) NOT NULL COMMENT '1\\2\\3\\4 为生产部门、管理部门、销售部门 、研发部门',
   `memo` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
--- Dumping data for table `department`
+-- 转存表中的数据 `department`
 --
 
-LOCK TABLES `department` WRITE;
-/*!40000 ALTER TABLE `department` DISABLE KEYS */;
-INSERT INTO `department` VALUES (1,'研发部',4,'研发部'),(2,'生产厂区部门',1,''),(3,'行政管理',2,''),(4,'销售人员部门',3,'');
-/*!40000 ALTER TABLE `department` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `department` (`id`, `name`, `type`, `memo`) VALUES
+(1, '研发部', 4, '研发部'),
+(2, '生产厂区部门', 1, ''),
+(3, '行政管理', 2, ''),
+(4, '销售人员部门', 3, '');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `employee`
+-- 表的结构 `employee`
 --
 
-DROP TABLE IF EXISTS `employee`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `employee` (
+CREATE TABLE IF NOT EXISTS `employee` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) DEFAULT NULL,
-  `memo` varchar(200) DEFAULT NULL,
   `department_id` int(11) DEFAULT NULL,
+  `position` varchar(512) DEFAULT NULL COMMENT '职位',
+  `memo` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
--- Dumping data for table `employee`
+-- 转存表中的数据 `employee`
 --
 
-LOCK TABLES `employee` WRITE;
-/*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` VALUES (1,'张三','',2),(2,'李四',NULL,3),(3,'bb',NULL,1),(4,'bb',NULL,3),(5,'朱筠',NULL,3),(6,'朱筠',NULL,1);
-/*!40000 ALTER TABLE `employee` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `employee` (`id`, `name`, `department_id`, `position`, `memo`) VALUES
+(1, '张三', 2, 'xxx', ''),
+(2, '李四', 1, NULL, NULL);
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `meta`
+-- 表的结构 `meta`
 --
 
-DROP TABLE IF EXISTS `meta`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `meta` (
+CREATE TABLE IF NOT EXISTS `meta` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `option` varchar(32) CHARACTER SET utf8 NOT NULL COMMENT '属性名称',
   `value` varchar(256) CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
--- Dumping data for table `meta`
+-- 转存表中的数据 `meta`
 --
 
-LOCK TABLES `meta` WRITE;
-/*!40000 ALTER TABLE `meta` DISABLE KEYS */;
-INSERT INTO `meta` VALUES (1,'transitionDate','201401');
-/*!40000 ALTER TABLE `meta` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `meta` (`id`, `option`, `value`) VALUES
+(1, 'transitionDate', '201401');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `options`
+-- 表的结构 `options`
 --
 
-DROP TABLE IF EXISTS `options`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `options` (
+CREATE TABLE IF NOT EXISTS `options` (
   `id` int(11) NOT NULL,
   `name` varchar(100) DEFAULT NULL,
   `support` varchar(100) DEFAULT NULL,
@@ -230,26 +194,21 @@ CREATE TABLE `options` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `options`
+-- 转存表中的数据 `options`
 --
 
-LOCK TABLES `options` WRITE;
-/*!40000 ALTER TABLE `options` DISABLE KEYS */;
-INSERT INTO `options` VALUES (1,'我嘉',NULL,NULL,NULL);
-/*!40000 ALTER TABLE `options` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `options` (`id`, `name`, `support`, `url`, `entrynum`) VALUES
+(1, '我嘉', NULL, NULL, NULL);
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `post`
+-- 表的结构 `post`
 --
 
-DROP TABLE IF EXISTS `post`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `post` (
+CREATE TABLE IF NOT EXISTS `post` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `subject_id` int(11) NOT NULL,
   `year` int(11) NOT NULL,
@@ -261,54 +220,1559 @@ CREATE TABLE `post` (
   `post_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
-  KEY `fk_subject_id_idx` (`subject_id`),
-  CONSTRAINT `fk_subject_id` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`sbj_number`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=348 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  KEY `fk_subject_id_idx` (`subject_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
--- Dumping data for table `post`
+-- 转存表中的数据 `post`
 --
 
-LOCK TABLES `post` WRITE;
-/*!40000 ALTER TABLE `post` DISABLE KEYS */;
-INSERT INTO `post` VALUES (285,660102,2015,2,-54000,1,1800,55800,'2015-01-31 16:00:00'),(286,100201,2015,2,8500,1,10800,2300,'2015-01-31 16:00:00'),(287,660206,2015,2,-15000,1,500,15500,'2015-01-31 16:00:00'),(288,224101,2015,2,800,1,0,800,'2015-01-31 16:00:00'),(289,4001,2015,2,10000,1,0,10000,'2015-01-31 16:00:00'),(290,4103,2015,2,-71300,1,0,-71300,'2015-01-31 16:00:00'),(333,660301,2015,3,0,1,4.4,4.4,'2015-02-28 16:00:00'),(334,100201,2015,3,85666.76,1,110010.16,32843.4,'2015-02-28 16:00:00'),(335,660102,2015,3,0,1,2320,2320,'2015-02-28 16:00:00'),(336,660206,2015,3,0,1,5900,5900,'2015-02-28 16:00:00'),(337,660210,2015,3,0,1,68,68,'2015-02-28 16:00:00'),(338,4001,2015,3,120000,1,0,110000,'2015-02-28 16:00:00'),(339,660302,2015,3,0,1,-10.02,-10.02,'2015-02-28 16:00:00'),(340,660212,2015,3,0,1,346,346,'2015-02-28 16:00:00'),(341,6301,2015,3,0,1,0.14,0.14,'2015-02-28 16:00:00'),(342,160101,2015,3,9195,1,9195,0,'2015-02-28 16:00:00'),(343,222101,2015,3,-10005,1,10005,0,'2015-02-28 16:00:00'),(344,122103,2015,3,5000,1,5000,0,'2015-02-28 16:00:00'),(345,122102,2015,3,5,1,5,0,'2015-02-28 16:00:00'),(346,224101,2015,3,800,1,0,0,'2015-02-28 16:00:00'),(347,4103,2015,3,-79928.24,1,0,-8628.24,'2015-02-28 16:00:00');
-/*!40000 ALTER TABLE `post` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `post` (`id`, `subject_id`, `year`, `month`, `balance`, `posted`, `debit`, `credit`, `post_date`) VALUES
+(3, 110104, 2014, 9, 12, 1, 0, 0, '2014-08-31 16:00:00'),
+(4, 220201, 2014, 9, 12, 1, 0, 0, '2014-08-31 16:00:00');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `project`
+-- 表的结构 `product`
 --
 
-DROP TABLE IF EXISTS `project`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `project` (
+CREATE TABLE IF NOT EXISTS `product` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_no` int(11) NOT NULL COMMENT '订单号',
+  `saled_date` int(11) NOT NULL COMMENT '销售日期',
+  `client_id` int(11) NOT NULL COMMENT '客户ID',
+  `product` varchar(512) NOT NULL COMMENT '商品名称',
+  `price` float NOT NULL COMMENT '价格',
+  `amount` int(11) NOT NULL,
+  `unit` varchar(32) NOT NULL COMMENT '单位',
+  `tax` int(11) NOT NULL COMMENT '税率',
+  `paied` float NOT NULL COMMENT '已收金额',
+  `subject` int(11) DEFAULT NULL,
+  `subject_2` int(11) DEFAULT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` int(11) NOT NULL,
+  `status_id` tinyint(4) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `client_id` (`client_id`),
+  KEY `subject_2` (`subject_2`),
+  KEY `subject` (`subject`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `project`
+--
+
+CREATE TABLE IF NOT EXISTS `project` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(60) DEFAULT NULL,
   `memo` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `project`
+-- 表的结构 `purchase`
 --
 
-LOCK TABLES `project` WRITE;
-/*!40000 ALTER TABLE `project` DISABLE KEYS */;
-/*!40000 ALTER TABLE `project` ENABLE KEYS */;
-UNLOCK TABLES;
+CREATE TABLE IF NOT EXISTS `purchase` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_no` varchar(16) NOT NULL COMMENT '订单号',
+  `purchase_date` varchar(16) NOT NULL COMMENT '采购日期',
+  `vendor_id` int(11) NOT NULL COMMENT '供应商ID',
+  `commodity` varchar(512) NOT NULL COMMENT '商品名称',
+  `entry_memo` varchar(1024) DEFAULT NULL,
+  `price` float NOT NULL COMMENT '价格',
+  `count` int(11) NOT NULL DEFAULT '1',
+  `unit` varchar(32) DEFAULT NULL COMMENT '单位',
+  `tax` int(11) NOT NULL COMMENT '税率',
+  `paied` float NOT NULL COMMENT '已付金额',
+  `subject` int(11) DEFAULT NULL,
+  `subject_2` int(11) DEFAULT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` int(11) NOT NULL,
+  `status_id` tinyint(4) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `vendor_id` (`vendor_id`),
+  KEY `subject` (`subject`,`subject_2`),
+  KEY `subject_2` (`subject_2`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=52 ;
 
 --
--- Table structure for table `subjects`
+-- 转存表中的数据 `purchase`
 --
 
-DROP TABLE IF EXISTS `subjects`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `subjects` (
+INSERT INTO `purchase` (`id`, `order_no`, `purchase_date`, `vendor_id`, `commodity`, `entry_memo`, `price`, `count`, `unit`, `tax`, `paied`, `subject`, `subject_2`, `create_time`, `update_time`, `status_id`) VALUES
+(3, 'PO2015060001', '20150601', 1, '电信宽带电信宽带电信宽带电信宽带电信宽带电信宽带', NULL, 15.3, 1, '个', 0, 0, NULL, NULL, '2015-06-20 05:07:10', 0, 1),
+(5, 'PO2015060001', '20150601', 22, '水杯', NULL, 23, 0, NULL, 0, 0, 140503, 220203, '2015-06-24 11:46:31', 0, 0),
+(6, 'PO2015060002', '20150601', 22, '水杯', NULL, 23, 0, NULL, 0, 0, 140503, 220203, '2015-06-24 11:53:03', 0, 0),
+(10, 'PO2015060002', '20150601', 1, '水杯', NULL, 33, 0, NULL, 0, 0, 660204, 220202, '2015-06-24 12:15:04', 0, 0),
+(11, 'PO2015060002', '20150601', 1, '水杯', NULL, 11, 0, NULL, 3, 0, 660206, 220202, '2015-06-24 12:28:01', 0, 0),
+(12, 'PO2015060003', '20150601', 23, '电脑', NULL, 10000, 0, NULL, 0, 0, 160101, 220204, '2015-06-24 12:33:23', 0, 0),
+(13, 'PO2015060003', '20150601', 23, '电脑', NULL, 10000, 0, NULL, 0, 0, 160101, 220204, '2015-06-24 12:48:36', 0, 1),
+(14, 'PO2015060004', '20150601', 23, '电脑', NULL, 8000, 0, NULL, 0, 0, 140504, 220204, '2015-06-24 12:50:41', 0, 1),
+(15, 'PO2015060005', '20150601', 1, '路由器', NULL, 333, 1, NULL, 0, 0, 140505, 220202, '2015-06-24 12:57:42', 0, 1),
+(16, 'PO2015060006', '20150601', 1, '水杯', NULL, 34, 1, NULL, 0, 0, 140503, 220202, '2015-06-24 13:00:10', 0, 1),
+(17, 'PO2015060007', '20150601', 1, '水杯', NULL, 34, 1, NULL, 0, 0, 140503, 220202, '2015-06-24 13:03:10', 0, 1),
+(18, 'PO2015060008', '20150601', 1, '水杯', NULL, 34, 1, NULL, 0, 0, 140503, 220202, '2015-06-24 13:10:25', 0, 1),
+(19, 'PO2015060009', '20150601', 1, '水杯', NULL, 34, 1, NULL, 0, 0, 140503, 220202, '2015-06-24 13:15:49', 0, 1),
+(20, 'PO2015060010', '20150601', 2, '水杯', NULL, 34, 1, NULL, 0, 0, 140503, 220203, '2015-06-24 13:17:31', 0, 1),
+(21, 'PO2015060011', '20150601', 1, '水杯', NULL, 34, 1, NULL, 3, 0, 140503, 220202, '2015-06-24 13:20:17', 0, 1),
+(22, 'PO2015060012', '20150601', 1, '水杯', NULL, 11, 3, NULL, 3, 0, 140503, 220202, '2015-06-24 13:25:40', 0, 1),
+(23, 'PO2015060013', '06/02/2015', 24, '路由器', NULL, 999, 2, NULL, 0, 0, 140505, 220205, '2015-06-24 13:29:42', 0, 1),
+(24, 'PO2015060014', '06/01/2015', 1, '水杯', NULL, 999, 3, NULL, 3, 0, 140503, 220202, '2015-06-24 13:31:30', 0, 1),
+(25, 'PO2015060015', '20150601', 1, '路由器', NULL, 888, 2, NULL, 13, 0, 140505, 220202, '2015-06-24 13:39:16', 0, 1),
+(26, 'PO2015060016', '20150601', 2, '电脑', NULL, 4500, 4, NULL, 0, 0, 160101, 220203, '2015-06-25 05:33:41', 0, 1),
+(27, 'PO2015060017', '20150601', 2, '电脑', NULL, 4500, 4, NULL, 0, 0, 160101, 220203, '2015-06-25 05:35:30', 0, 1),
+(28, 'PO2015060018', '20150601', 2, '电脑', NULL, 4500, 4, NULL, 0, 0, 160101, 220203, '2015-06-25 05:37:16', 0, 1),
+(29, 'PO2015060019', '20150601', 2, '电脑', NULL, 4500, 4, NULL, 0, 0, 160101, 220203, '2015-06-25 05:45:13', 0, 1),
+(30, 'PO2015060020', '05/04/2015', 2, '电脑', NULL, 10000, 4, NULL, 13, 0, 160101, 220203, '2015-06-25 05:46:22', 0, 1),
+(31, 'PO2015060021', '20150604', 2, '路由器', NULL, 100, 4, NULL, 0, 0, 160101, 220203, '2015-06-25 05:48:19', 0, 1),
+(32, 'PO2015060022', '20150504', 24, '路由器', NULL, 150, 10, NULL, 0, 0, 140505, 220205, '2015-06-25 05:50:56', 0, 1),
+(33, 'PO2015060023', '20150504', 24, '路由器', NULL, 150, 10, NULL, 0, 0, 140505, 220205, '2015-06-25 05:53:59', 0, 1),
+(34, 'PO2015060024', '20150601', 1, '电话', NULL, 500, 2, NULL, 0, 0, 160101, 220202, '2015-06-25 06:40:41', 0, 1),
+(35, 'PO2015060025', '20150602', 2, '手机', NULL, 2000, 2, NULL, 3, 0, 140506, NULL, '2015-06-25 06:40:41', 0, 0),
+(36, 'PO2015060026', '20150601', 1, '水杯', NULL, 2, 1, NULL, 0, 0, 160101, 220202, '2015-06-25 06:51:22', 0, 1),
+(37, 'PO2015060027', '20150602', 1, '水杯', NULL, 2, 2, NULL, 0, 0, 160101, 220202, '2015-06-25 06:51:23', 0, 1),
+(38, 'PO2015060028', '20150601', 1, '水杯', NULL, 22, 1, NULL, 0, 0, 160101, 220202, '2015-06-25 06:52:08', 0, 1),
+(39, 'PO2015060029', '20150602', 1, '电脑', NULL, 33, 2, NULL, 0, 0, 160101, 220202, '2015-06-25 06:52:10', 0, 1),
+(40, 'PO2015060030', '20150601', 1, '水杯', NULL, 11, 1, NULL, 0, 0, 160101, 220202, '2015-06-25 06:52:55', 0, 1),
+(41, 'PO2015060031', '20150602', 1, '路由器', NULL, 22, 2, NULL, 3, 0, 140503, 220202, '2015-06-25 06:52:55', 0, 1),
+(42, 'PO2015060032', '20150601', 1, '水杯', NULL, 211, 1, NULL, 0, 0, 160101, 220202, '2015-06-25 06:54:15', 0, 1),
+(43, 'PO2015060033', '20150602', 1, '水杯', NULL, 222, 2, NULL, 0, 0, 160101, 220202, '2015-06-25 06:54:15', 0, 1),
+(44, 'PO2015060034', '20150601', 1, '水杯', NULL, 666, 1, NULL, 0, 0, 160101, 220202, '2015-06-25 06:59:23', 0, 1),
+(45, 'PO2015060035', '20150602', 1, '水杯', NULL, 777, 1, NULL, 3, 0, 160101, 220202, '2015-06-25 06:59:23', 0, 1),
+(46, 'PO2015060036', '20150601', 1, '水杯', NULL, 33, 2, NULL, 0, 0, 140503, 220202, '2015-06-25 07:25:57', 0, 1),
+(47, 'PO2015060037', '20150601', 1, '水杯', NULL, 33, 2, NULL, 0, 0, 140503, 220202, '2015-06-25 07:26:49', 0, 1),
+(48, 'PO2015060038', '20150601', 1, '水杯', NULL, 33, 3, NULL, 0, 0, 140503, 220202, '2015-06-25 07:28:25', 0, 1),
+(49, 'PO2015060039', '20150601', 23, '笔记本', NULL, 12000, 2, NULL, 3, 0, 160101, 220204, '2015-06-25 07:29:53', 0, 1),
+(50, 'PO2015060048', '20150604', 23, '笔记本', 'test1222', 44, 2, NULL, 0, 0, 160104, 220204, '2015-06-25 07:41:03', 0, 1),
+(51, 'PO2015060049', '20150601', 22, '水杯', 'sdsd', 3, 1, NULL, 0, 0, 160102, 220206, '2015-06-25 11:55:40', 0, 1);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `stock`
+--
+
+CREATE TABLE IF NOT EXISTS `stock` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `no` varchar(64) NOT NULL COMMENT '编号',
+  `order_no` varchar(16) NOT NULL COMMENT '订单号',
+  `name` varchar(512) NOT NULL COMMENT '名字',
+  `vendor_id` int(11) DEFAULT NULL COMMENT '供应商',
+  `in_date` varchar(16) NOT NULL COMMENT '日期',
+  `in_price` float NOT NULL COMMENT '价格',
+  `out_date` timestamp NULL DEFAULT NULL,
+  `out_price` float DEFAULT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1:正常，2出库，3退货',
+  PRIMARY KEY (`id`),
+  KEY `vendor_id` (`vendor_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1393 ;
+
+--
+-- 转存表中的数据 `stock`
+--
+
+INSERT INTO `stock` (`id`, `no`, `order_no`, `name`, `vendor_id`, `in_date`, `in_price`, `out_date`, `out_price`, `create_time`, `status`) VALUES
+(1, '0001', 'PO201506001', '水杯', 4, '2015-06-21 15:20', 80, NULL, NULL, '2015-06-21 07:20:48', 2),
+(2, '0001', 'PO201506001', '水杯', 1, '2015-06-21 15:21', 80, NULL, NULL, '2015-06-21 07:21:18', 3),
+(3, '0001', 'PO201506001', '电脑', 1, '2015-06-22 16:54', 8000, NULL, NULL, '2015-06-21 07:21:18', 1),
+(4, '0001', 'PO201506001', '路由器', 1, '2015-06-22 16:54', 200, NULL, NULL, '2015-06-21 07:21:18', 1),
+(5, '0001', 'PO201506002', '路由器', 1, '2015-06-22 16:54', 200, NULL, NULL, '2015-06-21 07:21:18', 1),
+(6, '', 'PO2015060036', '水杯', 1, '06/01/2015', 33, NULL, NULL, '2015-06-25 07:25:56', 0),
+(7, '', 'PO2015060036', '水杯', 1, '06/01/2015', 33, NULL, NULL, '2015-06-25 07:25:56', 0),
+(8, '', 'PO2015060037', '水杯', 1, '06/01/2015', 33, NULL, NULL, '2015-06-25 07:26:48', 1),
+(9, '', 'PO2015060037', '水杯', 1, '06/01/2015', 33, NULL, NULL, '2015-06-25 07:26:48', 1),
+(10, '', 'PO2015060038', '水杯', 1, '20150601', 33, NULL, NULL, '2015-06-25 07:28:25', 1),
+(11, '', 'PO2015060038', '水杯', 1, '20150601', 33, NULL, NULL, '2015-06-25 07:28:25', 1),
+(12, '', 'PO2015060038', '水杯', 1, '20150601', 33, NULL, NULL, '2015-06-25 07:28:25', 1),
+(13, '', 'PO2015060039', '笔记本', 23, '20150601', 12000, NULL, NULL, '2015-06-25 07:29:52', 1),
+(14, '', 'PO2015060039', '笔记本', 23, '20150601', 12000, NULL, NULL, '2015-06-25 07:29:52', 1),
+(15, '', 'PO2015060040', '水杯', 1, '19700101', 23, NULL, NULL, '2015-06-25 07:40:54', 1),
+(16, '', 'PO2015060040', '水杯', 1, '20150604', 23, NULL, NULL, '2015-06-25 07:41:03', 1),
+(17, '', 'PO2015060041', '水杯', 22, '19700101', 0, NULL, NULL, '2015-06-25 11:04:31', 1),
+(18, '', 'PO2015060041', '水杯', 22, '19700101', 0, NULL, NULL, '2015-06-25 11:06:29', 1),
+(19, '', 'PO2015060041', '水杯', 22, '19700101', 0, NULL, NULL, '2015-06-25 11:06:49', 1),
+(20, '', 'PO2015060041', '水杯', 22, '19700101', 0, NULL, NULL, '2015-06-25 11:09:17', 1),
+(21, '', 'PO2015060041', '水杯', 22, '19700101', 0, NULL, NULL, '2015-06-25 11:09:24', 1),
+(22, '', 'PO2015060041', '水杯', 22, '20150601', 0, NULL, NULL, '2015-06-25 11:09:38', 1),
+(23, '', 'PO2015060041', '水杯', 22, '20150601', 0, NULL, NULL, '2015-06-25 11:16:31', 1),
+(24, '', 'PO2015060041', '水杯', 22, '20150601', 0, NULL, NULL, '2015-06-25 11:16:51', 1),
+(25, '', 'PO2015060041', '水杯', 22, '20150601', 0, NULL, NULL, '2015-06-25 11:16:58', 1),
+(26, '', 'PO2015060041', '水杯', 24, '20150604', 23, NULL, NULL, '2015-06-25 11:19:02', 1),
+(27, '', 'PO2015060041', '水杯', 24, '20150604', 23, NULL, NULL, '2015-06-25 11:19:02', 1),
+(28, '', 'PO2015060041', '水杯', 24, '20150604', 23, NULL, NULL, '2015-06-25 11:19:02', 1),
+(29, '', 'PO2015060041', '电脑', 23, '20150604', 33, NULL, NULL, '2015-06-25 11:21:54', 1),
+(30, '', 'PO2015060041', '电脑', 23, '20150604', 33, NULL, NULL, '2015-06-25 11:21:54', 1),
+(31, '', 'PO2015060042', '笔记本', 23, '20150604', 33, NULL, NULL, '2015-06-25 11:24:01', 1),
+(32, '', 'PO2015060042', '笔记本', 23, '20150604', 33, NULL, NULL, '2015-06-25 11:24:01', 1),
+(33, '', 'PO2015060043', '笔记本', 23, '20150604', 33, NULL, NULL, '2015-06-25 11:24:20', 1),
+(34, '', 'PO2015060043', '笔记本', 23, '20150604', 33, NULL, NULL, '2015-06-25 11:24:20', 1),
+(35, '', 'PO2015060044', '笔记本', 23, '20150604', 33, NULL, NULL, '2015-06-25 11:24:36', 1),
+(36, '', 'PO2015060044', '笔记本', 23, '20150604', 33, NULL, NULL, '2015-06-25 11:24:36', 1),
+(37, '', 'PO2015060045', '笔记本', 23, '20150604', 33, NULL, NULL, '2015-06-25 11:25:21', 1),
+(38, '', 'PO2015060045', '笔记本', 23, '20150604', 33, NULL, NULL, '2015-06-25 11:25:21', 1),
+(39, '', 'PO2015060046', '笔记本', 23, '20150604', 33, NULL, NULL, '2015-06-25 11:26:16', 1),
+(40, '', 'PO2015060046', '笔记本', 23, '20150604', 33, NULL, NULL, '2015-06-25 11:26:16', 1),
+(41, '', 'PO2015060047', '笔记本', 23, '20150604', 44, NULL, NULL, '2015-06-25 11:52:30', 1),
+(42, '', 'PO2015060047', '笔记本', 23, '20150604', 44, NULL, NULL, '2015-06-25 11:52:30', 1),
+(43, '', 'PO2015060048', '笔记本', 23, '20150604', 44, NULL, NULL, '2015-06-25 11:54:57', 1),
+(44, '', 'PO2015060048', '笔记本', 23, '20150604', 44, NULL, NULL, '2015-06-25 11:54:57', 1),
+(45, '', 'PO2015060048', '笔记本', 23, '20150604', 44, NULL, NULL, '2015-06-25 11:55:07', 1),
+(46, '', 'PO2015060048', '笔记本', 23, '20150604', 44, NULL, NULL, '2015-06-25 11:55:07', 1),
+(47, '', 'PO2015060048', '笔记本', 23, '20150604', 44, NULL, NULL, '2015-06-25 11:55:17', 1),
+(48, '', 'PO2015060048', '笔记本', 23, '20150604', 44, NULL, NULL, '2015-06-25 11:55:17', 1),
+(58, '', 'PO2015060049', '水杯', 22, '20150601', 3, NULL, NULL, '2015-06-25 12:54:30', 1),
+(59, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(60, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(61, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(62, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(63, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(64, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(65, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(66, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(67, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(68, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(69, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(70, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(71, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(72, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(73, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(74, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(75, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(76, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(77, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(78, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(79, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(80, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(81, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(82, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(83, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(84, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(85, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(86, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(87, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(88, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(89, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(90, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(91, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(92, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(93, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(94, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(95, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(96, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(97, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(98, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(99, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(100, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(101, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(102, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(103, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(104, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(105, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(106, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(107, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(108, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(109, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(110, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(111, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(112, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(113, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(114, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(115, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(116, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(117, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(118, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(119, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(120, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(121, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(122, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(123, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(124, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(125, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(126, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(127, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(128, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(129, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(130, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(131, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(132, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(133, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(134, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(135, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(136, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(137, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(138, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(139, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(140, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(141, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(142, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(143, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(144, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(145, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(146, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(147, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(148, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(149, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(150, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(151, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(152, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(153, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(154, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(155, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(156, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(157, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(158, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(159, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(160, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(161, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(162, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(163, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(164, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(165, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(166, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(167, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(168, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(169, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(170, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(171, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(172, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(173, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(174, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(175, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(176, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(177, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(178, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(179, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(180, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(181, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(182, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(183, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(184, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(185, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(186, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(187, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(188, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(189, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(190, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(191, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(192, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(193, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(194, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(195, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(196, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(197, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(198, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(199, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(200, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(201, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(202, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(203, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(204, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(205, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(206, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(207, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(208, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(209, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(210, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(211, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(212, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(213, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(214, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(215, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(216, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(217, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(218, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(219, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(220, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(221, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(222, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(223, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(224, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(225, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(226, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(227, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(228, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(229, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(230, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(231, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(232, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(233, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(234, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(235, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(236, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(237, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(238, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(239, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(240, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(241, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(242, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(243, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(244, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(245, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(246, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(247, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(248, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(249, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(250, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(251, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(252, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(253, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(254, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(255, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(256, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(257, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(258, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(259, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(260, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(261, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(262, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(263, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(264, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(265, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(266, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(267, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(268, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(269, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(270, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(271, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(272, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(273, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(274, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(275, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(276, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(277, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(278, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(279, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(280, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(281, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(282, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(283, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(284, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(285, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(286, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(287, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(288, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(289, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(290, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(291, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(292, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(293, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(294, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(295, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(296, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(297, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(298, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(299, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(300, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(301, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(302, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(303, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(304, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(305, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(306, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(307, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(308, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(309, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(310, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(311, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(312, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(313, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(314, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(315, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(316, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(317, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(318, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(319, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(320, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(321, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(322, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(323, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(324, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(325, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(326, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(327, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(328, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(329, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(330, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(331, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(332, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(333, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(334, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(335, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(336, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(337, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(338, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(339, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(340, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(341, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(342, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(343, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(344, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(345, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(346, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(347, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(348, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(349, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(350, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(351, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(352, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(353, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(354, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(355, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(356, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(357, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(358, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(359, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(360, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(361, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(362, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(363, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(364, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(365, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(366, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(367, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(368, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(369, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(370, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(371, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(372, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(373, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(374, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(375, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(376, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(377, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(378, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(379, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(380, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(381, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(382, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(383, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(384, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(385, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(386, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(387, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(388, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(389, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(390, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(391, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(392, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(393, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(394, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(395, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(396, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(397, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(398, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(399, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(400, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(401, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(402, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(403, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(404, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(405, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(406, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(407, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(408, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(409, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(410, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(411, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(412, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(413, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(414, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(415, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(416, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(417, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(418, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(419, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(420, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(421, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(422, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(423, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(424, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(425, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(426, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(427, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(428, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(429, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(430, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(431, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(432, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(433, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(434, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(435, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(436, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(437, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(438, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(439, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(440, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(441, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(442, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(443, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(444, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(445, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(446, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(447, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(448, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(449, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(450, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(451, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(452, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(453, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(454, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(455, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(456, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(457, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(458, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(459, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(460, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(461, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(462, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(463, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(464, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(465, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(466, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(467, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(468, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(469, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(470, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(471, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(472, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(473, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(474, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(475, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(476, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(477, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(478, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(479, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(480, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(481, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(482, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(483, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(484, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(485, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(486, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(487, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(488, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(489, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(490, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(491, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(492, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(493, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(494, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(495, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(496, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(497, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(498, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(499, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(500, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(501, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(502, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(503, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(504, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(505, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(506, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1);
+INSERT INTO `stock` (`id`, `no`, `order_no`, `name`, `vendor_id`, `in_date`, `in_price`, `out_date`, `out_price`, `create_time`, `status`) VALUES
+(507, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(508, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(509, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(510, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(511, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(512, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(513, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(514, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(515, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(516, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(517, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(518, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(519, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(520, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(521, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(522, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(523, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(524, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(525, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(526, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(527, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(528, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(529, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(530, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(531, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(532, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(533, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(534, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(535, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(536, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(537, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(538, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(539, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(540, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(541, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(542, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(543, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(544, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(545, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(546, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(547, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(548, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(549, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(550, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(551, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(552, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(553, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(554, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(555, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(556, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(557, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(558, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(559, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(560, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(561, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(562, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(563, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(564, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(565, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(566, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(567, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(568, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(569, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(570, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(571, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(572, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(573, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(574, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(575, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(576, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(577, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(578, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(579, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(580, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(581, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(582, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(583, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(584, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(585, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(586, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(587, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(588, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(589, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(590, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(591, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(592, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(593, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(594, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(595, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(596, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(597, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(598, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(599, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(600, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(601, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(602, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(603, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(604, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(605, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(606, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(607, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(608, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(609, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(610, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(611, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(612, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(613, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(614, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(615, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(616, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(617, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(618, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(619, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(620, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(621, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(622, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(623, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(624, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(625, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(626, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(627, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(628, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(629, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(630, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(631, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(632, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(633, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(634, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(635, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(636, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(637, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(638, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(639, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(640, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(641, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(642, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(643, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(644, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(645, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(646, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(647, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(648, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(649, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(650, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(651, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(652, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(653, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(654, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(655, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(656, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(657, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(658, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(659, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(660, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(661, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(662, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(663, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(664, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(665, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(666, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(667, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(668, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(669, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(670, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(671, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(672, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(673, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(674, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(675, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(676, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(677, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(678, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(679, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(680, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(681, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(682, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(683, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(684, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(685, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(686, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(687, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(688, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(689, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(690, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(691, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(692, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(693, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(694, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(695, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(696, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(697, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(698, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(699, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(700, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(701, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(702, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(703, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(704, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(705, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(706, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(707, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(708, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(709, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(710, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(711, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(712, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(713, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(714, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(715, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(716, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(717, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(718, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(719, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(720, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(721, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(722, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(723, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(724, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(725, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(726, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(727, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(728, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(729, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(730, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(731, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(732, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(733, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(734, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(735, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(736, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(737, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(738, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(739, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(740, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(741, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(742, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(743, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(744, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(745, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(746, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(747, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(748, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(749, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(750, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(751, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(752, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(753, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(754, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(755, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(756, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(757, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(758, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(759, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(760, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(761, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(762, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(763, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(764, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(765, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(766, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(767, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(768, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(769, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(770, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(771, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(772, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(773, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(774, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(775, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(776, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(777, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(778, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(779, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(780, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(781, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(782, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(783, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(784, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(785, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(786, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(787, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(788, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(789, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(790, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(791, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(792, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(793, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(794, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(795, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(796, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(797, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(798, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(799, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(800, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(801, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(802, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(803, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(804, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(805, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(806, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(807, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(808, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(809, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(810, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(811, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(812, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(813, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(814, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(815, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(816, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(817, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(818, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(819, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(820, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(821, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(822, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(823, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(824, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(825, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(826, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(827, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(828, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(829, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(830, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(831, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(832, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(833, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(834, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(835, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(836, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(837, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(838, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(839, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(840, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(841, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(842, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(843, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(844, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(845, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(846, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(847, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(848, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(849, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(850, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(851, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(852, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(853, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(854, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(855, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(856, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(857, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(858, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(859, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(860, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(861, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(862, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(863, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(864, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(865, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(866, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(867, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(868, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(869, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(870, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(871, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(872, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(873, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(874, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(875, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(876, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(877, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(878, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(879, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(880, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(881, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(882, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(883, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(884, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(885, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(886, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(887, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(888, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(889, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(890, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(891, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(892, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(893, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(894, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(895, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(896, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(897, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(898, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(899, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(900, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(901, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(902, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(903, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(904, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(905, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(906, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(907, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(908, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(909, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(910, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(911, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(912, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(913, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(914, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(915, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(916, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(917, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(918, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(919, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(920, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(921, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(922, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(923, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(924, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(925, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(926, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(927, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(928, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(929, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(930, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(931, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(932, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(933, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(934, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(935, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(936, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(937, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(938, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(939, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(940, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(941, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(942, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(943, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(944, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(945, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(946, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(947, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(948, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(949, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(950, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(951, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(952, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(953, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(954, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(955, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(956, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(957, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(958, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(959, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(960, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(961, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(962, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(963, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(964, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(965, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(966, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(967, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(968, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(969, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(970, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(971, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(972, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(973, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(974, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(975, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(976, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(977, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(978, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(979, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(980, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(981, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(982, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(983, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(984, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(985, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(986, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(987, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(988, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(989, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(990, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(991, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(992, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(993, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(994, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(995, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(996, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(997, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(998, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(999, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1);
+INSERT INTO `stock` (`id`, `no`, `order_no`, `name`, `vendor_id`, `in_date`, `in_price`, `out_date`, `out_price`, `create_time`, `status`) VALUES
+(1000, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1001, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1002, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1003, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1004, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1005, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1006, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1007, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1008, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1009, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1010, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1011, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1012, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1013, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1014, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1015, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1016, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1017, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1018, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1019, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1020, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1021, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1022, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1023, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1024, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1025, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1026, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1027, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1028, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1029, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1030, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1031, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1032, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1033, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1034, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1035, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1036, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1037, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1038, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1039, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1040, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1041, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1042, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1043, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1044, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1045, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1046, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1047, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1048, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1049, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1050, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1051, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1052, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1053, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1054, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1055, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1056, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1057, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1058, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1059, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1060, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1061, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1062, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1063, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1064, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1065, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1066, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1067, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1068, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1069, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1070, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1071, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1072, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1073, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1074, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1075, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1076, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1077, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1078, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1079, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1080, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1081, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1082, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1083, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1084, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1085, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1086, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1087, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1088, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1089, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1090, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1091, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1092, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1093, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1094, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1095, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1096, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1097, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1098, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1099, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1100, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1101, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1102, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1103, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1104, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1105, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1106, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1107, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1108, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1109, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1110, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1111, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1112, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1113, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1114, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1115, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1116, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1117, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1118, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1119, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1120, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1121, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1122, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1123, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1124, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1125, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1126, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1127, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1128, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1129, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1130, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1131, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1132, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1133, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1134, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1135, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1136, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1137, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1138, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1139, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1140, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1141, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1142, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1143, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1144, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1145, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1146, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1147, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1148, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1149, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1150, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1151, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1152, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1153, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1154, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1155, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1156, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1157, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1158, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1159, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1160, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1161, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1162, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1163, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1164, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1165, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1166, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1167, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1168, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1169, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1170, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1171, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1172, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1173, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1174, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1175, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1176, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1177, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1178, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1179, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1180, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1181, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1182, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1183, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1184, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1185, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1186, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1187, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1188, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1189, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1190, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1191, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1192, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1193, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1194, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1195, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1196, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1197, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1198, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1199, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1200, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1201, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1202, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1203, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1204, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1205, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1206, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1207, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1208, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1209, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1210, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1211, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1212, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1213, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1214, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1215, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1216, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1217, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1218, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1219, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1220, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1221, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1222, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1223, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1224, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1225, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1226, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1227, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1228, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1229, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1230, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1231, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1232, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1233, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1234, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1235, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1236, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1237, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1238, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1239, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1240, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1241, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1242, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1243, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1244, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1245, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1246, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1247, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1248, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1249, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1250, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1251, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1252, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1253, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1254, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1255, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1256, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1257, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1258, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1259, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1260, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1261, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1262, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1263, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1264, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1265, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1266, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1267, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1268, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1269, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1270, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1271, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1272, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1273, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1274, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1275, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1276, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1277, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1278, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1279, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1280, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1281, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1282, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1283, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1284, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1285, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1286, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1287, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1288, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1289, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1290, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1291, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1292, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1293, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1294, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1295, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1296, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1297, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1298, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1299, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1300, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1301, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1302, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1303, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1304, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1305, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1306, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1307, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1308, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1309, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1310, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1311, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1312, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1313, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1314, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1315, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1316, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1317, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1318, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1319, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1320, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1321, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1322, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1323, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1324, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1325, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1326, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1327, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1328, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1329, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1330, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1331, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1332, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1333, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1334, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1335, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1336, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1337, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1338, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1339, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1340, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1341, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1342, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1343, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1344, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1345, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1346, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1347, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1348, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1349, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1350, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1351, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1352, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1353, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1354, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1355, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1356, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1357, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1358, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1359, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1360, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1361, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1362, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1363, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1364, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1365, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1366, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1367, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1368, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1369, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1370, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1371, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1372, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1373, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1374, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1375, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1376, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1377, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1378, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1379, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1380, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1381, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1382, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1383, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1384, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1385, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1386, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1387, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1388, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1389, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1390, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1391, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1),
+(1392, '', 'PO2015060050', '水杯', NULL, '19700101', 32003300, NULL, NULL, '2015-06-27 06:11:33', 1);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `subjects`
+--
+
+CREATE TABLE IF NOT EXISTS `subjects` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `sbj_number` int(12) NOT NULL DEFAULT '0',
   `sbj_name` varchar(20) DEFAULT NULL,
@@ -320,34 +1784,245 @@ CREATE TABLE `subjects` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `No` (`sbj_number`)
-) ENGINE=InnoDB AUTO_INCREMENT=527 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=595 ;
 
 --
--- Dumping data for table `subjects`
+-- 转存表中的数据 `subjects`
 --
 
-LOCK TABLES `subjects` WRITE;
-/*!40000 ALTER TABLE `subjects` DISABLE KEYS */;
-INSERT INTO `subjects` VALUES (23,1001,'库存现金','1',NULL,0,1,0),(24,1002,'银行存款','1',NULL,1,1,0),(25,1003,'存放中央银行款项','1',NULL,0,1,0),(26,1102,'短期投资跌价准备','1',NULL,0,1,0),(27,1021,'结算备付金','1',NULL,0,1,0),(28,1031,'存出保证金','1',NULL,0,1,0),(29,1101,'交易性金融资产','1',NULL,1,1,0),(30,1111,'买入返售金融资产','1',NULL,0,1,0),(31,1121,'应收票据','1',NULL,0,1,0),(32,1122,'应收账款','1',NULL,0,1,0),(33,1123,'预付账款','1',NULL,0,1,0),(34,1131,'应收股利','1',NULL,0,1,0),(35,1132,'应收利息','1',NULL,0,1,0),(36,1201,'应收代位追偿款','1',NULL,0,1,0),(37,1211,'应收分保账款','1',NULL,0,1,0),(38,1212,'应收分保合同准备金','1',NULL,0,1,0),(39,1221,'其他应收款','1',NULL,1,1,0),(40,1231,'坏账准备','1',NULL,0,1,0),(41,1301,'贴现资产','1',NULL,0,1,0),(42,1302,'拆出资金','1',NULL,0,1,0),(43,1303,'贷款','1',NULL,0,1,0),(44,1304,'贷款损失准备','1',NULL,0,1,0),(45,1311,'代理兑付证券','1',NULL,0,1,0),(46,1321,'代理业务资产','1',NULL,0,1,0),(47,1401,'材料采购','1',NULL,0,1,0),(48,1402,'在途物资','1',NULL,0,1,0),(49,1403,'原材料','1',NULL,0,1,0),(50,1404,'材料成本差异','1',NULL,0,1,0),(51,1405,'库存商品','1',NULL,0,1,0),(52,1406,'发出商品','1',NULL,0,1,0),(53,1407,'商品进销差价','1',NULL,0,1,0),(54,1408,'委托加工物资','1',NULL,0,1,0),(55,1411,'周转材料','1',NULL,0,1,0),(56,1412,'包装物及低值易耗品','1',NULL,0,1,0),(57,1421,'消耗性生物资产','1',NULL,0,1,0),(58,1431,'贵金属','1',NULL,0,1,0),(59,1441,'抵债资产','1',NULL,0,1,0),(60,1451,'损余物资','1',NULL,0,1,0),(61,1461,'融资租赁资产','1',NULL,0,1,0),(62,1471,'存货跌价准备','1',NULL,0,1,0),(63,1501,'持有至到期投资','1',NULL,0,1,0),(64,1502,'持有至到期投资减值准备','1',NULL,0,1,0),(65,1503,'可供出售金融资产','1',NULL,0,1,0),(66,1511,'长期股权投资','1',NULL,1,1,0),(67,1512,'长期股权投资减值准备','1',NULL,0,1,0),(68,1521,'投资性房地产','1',NULL,0,1,0),(69,1531,'长期应收款','1',NULL,0,1,0),(70,1532,'未实现融资收益','1',NULL,0,1,0),(71,1541,'存出资本保证金','1',NULL,0,1,0),(72,1601,'固定资产','1',NULL,1,1,0),(73,1602,'累计折旧','1',NULL,0,1,0),(74,1603,'固定资产减值准备','1',NULL,0,1,0),(75,1604,'在建工程','1',NULL,0,1,0),(76,1605,'工程物资','1',NULL,0,1,0),(77,1606,'固定资产清理','1',NULL,0,1,0),(78,1611,'未担保余值','1',NULL,0,1,0),(79,1621,'生产性生物资产','1',NULL,0,1,0),(80,1622,'生产性生物资产累计折旧','1',NULL,0,1,0),(81,1623,'公益性生物资产','1',NULL,0,1,0),(82,1631,'油气资产','1',NULL,0,1,0),(83,1632,'累计折耗','1',NULL,0,1,0),(84,1701,'无形资产','1',NULL,0,1,0),(85,1702,'累计摊销','1',NULL,0,1,0),(86,1703,'无形资产减值准备','1',NULL,0,1,0),(87,1711,'商誉','1',NULL,0,1,0),(88,1801,'长期待摊费用','1',NULL,0,1,0),(89,1811,'递延所得税资产','1',NULL,0,1,0),(90,1821,'独立账户资产','1',NULL,0,1,0),(91,1901,'待处理财产损溢','1',NULL,0,1,0),(228,2001,'短期借款','2',NULL,1,1,0),(229,2002,'存入保证金','2',NULL,0,1,0),(230,2003,'拆入资金','2',NULL,0,1,0),(231,2004,'向中央银行借款','2',NULL,0,1,0),(232,2011,'吸收存款','2',NULL,0,1,0),(233,2012,'同业存放','2',NULL,0,1,0),(234,2021,'贴现负债','2',NULL,0,1,0),(235,2101,'交易性金融负债','2',NULL,0,1,0),(276,2111,'卖出回购金融资产款金','2',NULL,0,1,0),(277,2201,'应付票据','2',NULL,0,1,0),(278,2202,'应付账款','2',NULL,0,1,0),(279,2203,'预收账款','2',NULL,1,1,0),(280,2211,'应付职工薪酬','2',NULL,0,1,0),(281,2221,'应交税费','2',NULL,1,1,0),(282,2231,'应付利息','2',NULL,0,1,0),(283,2232,'应付股利','2',NULL,1,1,0),(284,2241,'其他应付款','2',NULL,1,1,0),(285,2251,'应付保单红利','2',NULL,0,1,0),(286,2261,'应付分保账款','2',NULL,0,1,0),(287,2311,'代理买卖证券款','2',NULL,0,1,0),(288,2312,'代理承销证券款','2',NULL,0,1,0),(289,2313,'代理兑付证券款','2',NULL,0,1,0),(290,2314,'代理业务负债','2',NULL,0,1,0),(291,2401,'递延收益','2',NULL,0,1,0),(292,2501,'长期借款','2',NULL,0,1,0),(293,2502,'应付债券','2',NULL,0,1,0),(294,2601,'未到期责任准备金','2',NULL,0,1,0),(295,2602,'保险责任准备金','2',NULL,0,1,0),(296,2611,'保户储金','2',NULL,0,1,0),(297,2621,'独立账户负债','2',NULL,0,1,0),(298,2701,'长期应付款','2',NULL,0,1,0),(299,2702,'未确认融资费用','2',NULL,0,1,0),(300,2711,'专项应付款','2',NULL,0,1,0),(301,2801,'预计负债','2',NULL,0,1,0),(302,2901,'递延所得税负债','2',NULL,0,1,0),(303,4001,'实收资本','3',NULL,0,1,0),(304,4002,'资本公积','3',NULL,0,1,0),(305,4101,'盈余公积','3',NULL,0,1,0),(306,4102,'一般风险准备','3',NULL,0,1,0),(307,4103,'本年利润','3',NULL,0,1,0),(308,4104,'利润分配','3',NULL,0,1,0),(309,4201,'库存股','3',NULL,0,1,0),(310,6001,'主营业务收入','4',NULL,1,1,0),(311,6011,'利息收入','4',NULL,0,1,0),(312,6021,'手续费及佣金收入','4',NULL,0,1,0),(313,6031,'保费收入','4',NULL,0,1,0),(314,6041,'租赁收入','4',NULL,0,1,0),(315,6051,'其他业务收入','4',NULL,1,1,0),(316,6061,'汇兑损益','4',NULL,0,1,0),(317,6101,'公允价值变动损益','4',NULL,0,1,0),(318,6111,'投资收益','4',NULL,1,1,0),(319,6201,'摊回保险责任准备金','4',NULL,0,1,0),(320,6202,'摊回赔付支出','4',NULL,0,1,0),(321,6203,'摊回分保费用','4',NULL,0,1,0),(322,6301,'营业外收入','4',NULL,0,1,0),(323,6401,'主营业务成本','5',NULL,1,1,0),(324,6402,'其他业务支出','5',NULL,1,1,0),(325,6403,'营业税金及附加','5',NULL,1,1,0),(326,6411,'利息支出','5',NULL,0,1,0),(327,6421,'手续费及佣金支出','5',NULL,0,1,0),(328,6501,'提取未到期责任准备金','5',NULL,0,1,0),(329,6502,'提取保险责任准备金','5',NULL,0,1,0),(330,6511,'赔付支出','5',NULL,0,1,0),(331,6521,'保户红利支出','5',NULL,0,1,0),(332,6531,'退保金','5',NULL,0,1,0),(333,6541,'分出保费','5',NULL,0,1,0),(334,6542,'分保费用','5',NULL,0,1,0),(335,6601,'销售费用','5',NULL,1,1,0),(336,6602,'管理费用','5',NULL,1,1,0),(337,6603,'财务费用','5',NULL,1,1,0),(338,6604,'勘探费用','5',NULL,0,1,0),(339,6701,'资产减值损失','5',NULL,0,1,0),(340,6711,'营业外支出','5',NULL,0,1,0),(341,6801,'所得税费用','5',NULL,0,1,0),(342,6901,'以前年度损益调整','5',NULL,0,1,0),(405,660201,'工资','5',NULL,0,0,0),(406,640101,'工资','5',NULL,0,0,0),(420,160101,'电子设备','1',NULL,0,0,0),(421,160102,'办公设备','1',NULL,0,0,0),(422,160103,'运输设备','1',NULL,0,0,0),(423,160104,'生产设备','1',NULL,0,0,0),(425,660202,'研发费','5',NULL,1,0,0),(428,660102,'办公费','5',NULL,0,0,0),(432,110101,'股票','1',NULL,0,0,0),(433,110102,'基金','1',NULL,0,0,0),(434,110103,'债券','1',NULL,0,0,0),(435,660301,'手续费','5',NULL,0,0,0),(436,640201,'材料销售','5',NULL,0,0,0),(437,640202,'技术转让','5',NULL,0,0,0),(438,640203,'固定资产租赁','5',NULL,0,0,0),(444,660302,'利息费用','5',NULL,0,0,0),(445,605101,'材料销售','4',NULL,0,0,0),(446,605102,'技术转让','4',NULL,0,0,0),(447,222101,'增值税','2',NULL,0,0,0),(463,110104,'其他','1',NULL,0,0,0),(464,660204,'招待费','5',NULL,0,0,0),(471,640102,'社保','5',NULL,0,0,0),(478,660103,'社保','5',NULL,0,0,0),(481,640103,'工资与奖金','5',NULL,0,0,0),(482,640104,'社保公积金','5',NULL,0,0,0),(483,200101,'中国银行','2',NULL,0,0,0),(484,200102,'招商银行','2',NULL,0,0,0),(485,200103,'农业银行','2',NULL,0,0,0),(486,200104,'建设银行','2',NULL,0,0,0),(487,200105,'工商银行','2',NULL,0,0,0),(488,600101,'销售产品','4',NULL,0,0,0),(489,600102,'提供服务','4',NULL,0,0,0),(490,611101,'股票','4',NULL,0,0,0),(491,611102,'基金','4',NULL,0,0,0),(492,611103,'债券','4',NULL,0,0,0),(493,611104,'其他','4',NULL,0,0,0),(495,66020201,'工资与奖金','5',NULL,0,0,0),(496,660205,'工资与奖金','5',NULL,0,0,0),(498,660104,'工资与奖金','5',NULL,0,0,0),(500,660206,'服务费','5',NULL,0,0,0),(503,122101,'a公司','1',NULL,0,0,0),(504,122102,'b公司','1',NULL,0,0,0),(505,223201,'bb公司','2',NULL,0,0,0),(506,224101,'b公司','2',NULL,0,0,0),(507,151101,'a公司','1',NULL,0,0,0),(508,611105,'a公司','4',NULL,0,0,0),(511,660207,'印花税','5',NULL,0,0,0),(512,660208,'社保公积金','5',NULL,0,0,0),(513,66020202,'社保公积金','5',NULL,0,0,0),(514,660209,'交通费','5',NULL,0,0,0),(515,660210,'test','5',NULL,0,0,0),(516,660211,'快递费','5',NULL,0,0,0),(517,660212,'差旅费','5',NULL,0,0,0),(518,100201,'中国银行','1',NULL,0,0,0),(519,100202,'工商银行','1',NULL,0,0,0),(520,100203,'交通银行','1',NULL,0,0,0),(521,122103,'押金','1',NULL,0,0,0),(522,122104,'--','1',NULL,0,0,0),(523,640301,'城建税','5',NULL,0,0,0),(524,640302,'教育费附加','5',NULL,0,0,0),(525,640303,'河道管理费','5',NULL,0,0,0),(526,640304,'营业税','5',NULL,0,0,0);
-/*!40000 ALTER TABLE `subjects` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `subjects` (`id`, `sbj_number`, `sbj_name`, `sbj_cat`, `sbj_table`, `has_sub`, `balance_set`, `start_balance`) VALUES
+(23, 1001, '库存现金', '1', NULL, 0, 1, 0),
+(24, 1002, '银行存款', '1', NULL, 1, 1, 0),
+(25, 1003, '存放中央银行款项', '1', NULL, 0, 1, 0),
+(26, 1102, '短期投资跌价准备', '1', NULL, 0, 1, 0),
+(27, 1021, '结算备付金', '1', NULL, 0, 1, 0),
+(28, 1031, '存出保证金', '1', NULL, 0, 1, 0),
+(29, 1101, '交易性金融资产', '1', NULL, 1, 1, 0),
+(30, 1111, '买入返售金融资产', '1', NULL, 0, 1, 0),
+(31, 1121, '应收票据', '1', NULL, 0, 1, 0),
+(32, 1122, '应收账款', '1', NULL, 0, 1, 0),
+(33, 1123, '预付账款', '1', NULL, 0, 1, 0),
+(34, 1131, '应收股利', '1', NULL, 0, 1, 0),
+(35, 1132, '应收利息', '1', NULL, 0, 1, 0),
+(36, 1201, '应收代位追偿款', '1', NULL, 0, 1, 0),
+(37, 1211, '应收分保账款', '1', NULL, 0, 1, 0),
+(38, 1212, '应收分保合同准备金', '1', NULL, 0, 1, 0),
+(39, 1221, '其他应收款', '1', NULL, 1, 1, 0),
+(40, 1231, '坏账准备', '1', NULL, 0, 1, 0),
+(41, 1301, '贴现资产', '1', NULL, 0, 1, 0),
+(42, 1302, '拆出资金', '1', NULL, 0, 1, 0),
+(43, 1303, '贷款', '1', NULL, 0, 1, 0),
+(44, 1304, '贷款损失准备', '1', NULL, 0, 1, 0),
+(45, 1311, '代理兑付证券', '1', NULL, 0, 1, 0),
+(46, 1321, '代理业务资产', '1', NULL, 0, 1, 0),
+(47, 1401, '材料采购', '1', NULL, 0, 1, 0),
+(48, 1402, '在途物资', '1', NULL, 0, 1, 0),
+(49, 1403, '原材料', '1', NULL, 0, 1, 0),
+(50, 1404, '材料成本差异', '1', NULL, 0, 1, 0),
+(51, 1405, '库存商品', '1', NULL, 1, 1, 0),
+(52, 1406, '发出商品', '1', NULL, 0, 1, 0),
+(53, 1407, '商品进销差价', '1', NULL, 0, 1, 0),
+(54, 1408, '委托加工物资', '1', NULL, 0, 1, 0),
+(55, 1411, '周转材料', '1', NULL, 0, 1, 0),
+(56, 1412, '包装物及低值易耗品', '1', NULL, 0, 1, 0),
+(57, 1421, '消耗性生物资产', '1', NULL, 0, 1, 0),
+(58, 1431, '贵金属', '1', NULL, 0, 1, 0),
+(59, 1441, '抵债资产', '1', NULL, 0, 1, 0),
+(60, 1451, '损余物资', '1', NULL, 0, 1, 0),
+(61, 1461, '融资租赁资产', '1', NULL, 0, 1, 0),
+(62, 1471, '存货跌价准备', '1', NULL, 0, 1, 0),
+(63, 1501, '持有至到期投资', '1', NULL, 0, 1, 0),
+(64, 1502, '持有至到期投资减值准备', '1', NULL, 0, 1, 0),
+(65, 1503, '可供出售金融资产', '1', NULL, 0, 1, 0),
+(66, 1511, '长期股权投资', '1', NULL, 0, 1, 0),
+(67, 1512, '长期股权投资减值准备', '1', NULL, 0, 1, 0),
+(68, 1521, '投资性房地产', '1', NULL, 0, 1, 0),
+(69, 1531, '长期应收款', '1', NULL, 0, 1, 0),
+(70, 1532, '未实现融资收益', '1', NULL, 0, 1, 0),
+(71, 1541, '存出资本保证金', '1', NULL, 0, 1, 0),
+(72, 1601, '固定资产', '1', NULL, 1, 1, 0),
+(73, 1602, '累计折旧', '1', NULL, 0, 1, 0),
+(74, 1603, '固定资产减值准备', '1', NULL, 0, 1, 0),
+(75, 1604, '在建工程', '1', NULL, 0, 1, 0),
+(76, 1605, '工程物资', '1', NULL, 0, 1, 0),
+(77, 1606, '固定资产清理', '1', NULL, 0, 1, 0),
+(78, 1611, '未担保余值', '1', NULL, 0, 1, 0),
+(79, 1621, '生产性生物资产', '1', NULL, 0, 1, 0),
+(80, 1622, '生产性生物资产累计折旧', '1', NULL, 0, 1, 0),
+(81, 1623, '公益性生物资产', '1', NULL, 0, 1, 0),
+(82, 1631, '油气资产', '1', NULL, 0, 1, 0),
+(83, 1632, '累计折耗', '1', NULL, 0, 1, 0),
+(84, 1701, '无形资产', '1', NULL, 0, 1, 0),
+(85, 1702, '累计摊销', '1', NULL, 0, 1, 0),
+(86, 1703, '无形资产减值准备', '1', NULL, 0, 1, 0),
+(87, 1711, '商誉', '1', NULL, 0, 1, 0),
+(88, 1801, '长期待摊费用', '1', NULL, 0, 1, 0),
+(89, 1811, '递延所得税资产', '1', NULL, 0, 1, 0),
+(90, 1821, '独立账户资产', '1', NULL, 0, 1, 0),
+(91, 1901, '待处理财产损溢', '1', NULL, 0, 1, 0),
+(228, 2001, '短期借款', '2', NULL, 1, 1, 0),
+(229, 2002, '存入保证金', '2', NULL, 0, 1, 0),
+(230, 2003, '拆入资金', '2', NULL, 0, 1, 0),
+(231, 2004, '向中央银行借款', '2', NULL, 0, 1, 0),
+(232, 2011, '吸收存款', '2', NULL, 0, 1, 0),
+(233, 2012, '同业存放', '2', NULL, 0, 1, 0),
+(234, 2021, '贴现负债', '2', NULL, 0, 1, 0),
+(235, 2101, '交易性金融负债', '2', NULL, 0, 1, 0),
+(276, 2111, '卖出回购金融资产款金', '2', NULL, 0, 1, 0),
+(277, 2201, '应付票据', '2', NULL, 0, 1, 0),
+(278, 2202, '应付账款', '2', NULL, 1, 1, 0),
+(279, 2203, '预收账款', '2', NULL, 0, 1, 0),
+(280, 2211, '应付职工薪酬', '2', NULL, 0, 1, 0),
+(281, 2221, '应交税费', '2', NULL, 1, 1, 0),
+(282, 2231, '应付利息', '2', NULL, 0, 1, 0),
+(283, 2232, '应付股利', '2', NULL, 0, 1, 0),
+(284, 2241, '其他应付款', '2', NULL, 0, 1, 0),
+(285, 2251, '应付保单红利', '2', NULL, 0, 1, 0),
+(286, 2261, '应付分保账款', '2', NULL, 0, 1, 0),
+(287, 2311, '代理买卖证券款', '2', NULL, 0, 1, 0),
+(288, 2312, '代理承销证券款', '2', NULL, 0, 1, 0),
+(289, 2313, '代理兑付证券款', '2', NULL, 0, 1, 0),
+(290, 2314, '代理业务负债', '2', NULL, 0, 1, 0),
+(291, 2401, '递延收益', '2', NULL, 0, 1, 0),
+(292, 2501, '长期借款', '2', NULL, 0, 1, 0),
+(293, 2502, '应付债券', '2', NULL, 0, 1, 0),
+(294, 2601, '未到期责任准备金', '2', NULL, 0, 1, 0),
+(295, 2602, '保险责任准备金', '2', NULL, 0, 1, 0),
+(296, 2611, '保户储金', '2', NULL, 0, 1, 0),
+(297, 2621, '独立账户负债', '2', NULL, 0, 1, 0),
+(298, 2701, '长期应付款', '2', NULL, 0, 1, 0),
+(299, 2702, '未确认融资费用', '2', NULL, 0, 1, 0),
+(300, 2711, '专项应付款', '2', NULL, 0, 1, 0),
+(301, 2801, '预计负债', '2', NULL, 0, 1, 0),
+(302, 2901, '递延所得税负债', '2', NULL, 0, 1, 0),
+(303, 4001, '实收资本', '3', NULL, 0, 1, 0),
+(304, 4002, '资本公积', '3', NULL, 0, 1, 0),
+(305, 4101, '盈余公积', '3', NULL, 0, 1, 0),
+(306, 4102, '一般风险准备', '3', NULL, 0, 1, 0),
+(307, 4103, '本年利润', '3', NULL, 0, 1, 0),
+(308, 4104, '利润分配', '3', NULL, 0, 1, 0),
+(309, 4201, '库存股', '3', NULL, 0, 1, 0),
+(310, 6001, '主营业务收入', '4', NULL, 1, 1, 0),
+(311, 6011, '利息收入', '4', NULL, 0, 1, 0),
+(312, 6021, '手续费及佣金收入', '4', NULL, 0, 1, 0),
+(313, 6031, '保费收入', '4', NULL, 0, 1, 0),
+(314, 6041, '租赁收入', '4', NULL, 0, 1, 0),
+(315, 6051, '其他业务收入', '4', NULL, 1, 1, 0),
+(316, 6061, '汇兑损益', '4', NULL, 0, 1, 0),
+(317, 6101, '公允价值变动损益', '4', NULL, 0, 1, 0),
+(318, 6111, '投资收益', '4', NULL, 1, 1, 0),
+(319, 6201, '摊回保险责任准备金', '4', NULL, 0, 1, 0),
+(320, 6202, '摊回赔付支出', '4', NULL, 0, 1, 0),
+(321, 6203, '摊回分保费用', '4', NULL, 0, 1, 0),
+(322, 6301, '营业外收入', '4', NULL, 0, 1, 0),
+(323, 6401, '主营业务成本', '5', NULL, 1, 1, 0),
+(324, 6402, '其他业务支出', '5', NULL, 1, 1, 0),
+(325, 6403, '营业税金及附加', '5', NULL, 1, 1, 0),
+(326, 6411, '利息支出', '5', NULL, 0, 1, 0),
+(327, 6421, '手续费及佣金支出', '5', NULL, 0, 1, 0),
+(328, 6501, '提取未到期责任准备金', '5', NULL, 0, 1, 0),
+(329, 6502, '提取保险责任准备金', '5', NULL, 0, 1, 0),
+(330, 6511, '赔付支出', '5', NULL, 0, 1, 0),
+(331, 6521, '保户红利支出', '5', NULL, 0, 1, 0),
+(332, 6531, '退保金', '5', NULL, 0, 1, 0),
+(333, 6541, '分出保费', '5', NULL, 0, 1, 0),
+(334, 6542, '分保费用', '5', NULL, 0, 1, 0),
+(335, 6601, '销售费用', '5', NULL, 1, 1, 0),
+(336, 6602, '管理费用', '5', NULL, 1, 1, 0),
+(337, 6603, '财务费用', '5', NULL, 1, 1, 0),
+(338, 6604, '勘探费用', '5', NULL, 0, 1, 0),
+(339, 6701, '资产减值损失', '5', NULL, 0, 1, 0),
+(340, 6711, '营业外支出', '5', NULL, 0, 1, 0),
+(341, 6801, '企业所得税费用', '5', NULL, 0, 1, 0),
+(342, 6901, '以前年度损益调整', '5', NULL, 0, 1, 0),
+(405, 660201, '工资', '5', NULL, 0, 0, 0),
+(406, 640101, '工资', '5', NULL, 0, 0, 0),
+(420, 160101, '电子设备', '1', NULL, 0, 0, 0),
+(421, 160102, '办公设备', '1', NULL, 0, 0, 0),
+(422, 160103, '运输设备', '1', NULL, 0, 0, 0),
+(423, 160104, '生产设备', '1', NULL, 0, 0, 0),
+(425, 660202, '研发费', '5', NULL, 1, 0, 0),
+(428, 660102, '办公费', '5', NULL, 0, 0, 0),
+(432, 110101, '股票', '1', NULL, 0, 0, 0),
+(433, 110102, '基金', '1', NULL, 0, 0, 0),
+(434, 110103, '债券', '1', NULL, 0, 0, 0),
+(435, 660301, '手续费', '5', NULL, 0, 0, 0),
+(436, 640201, '材料销售', '5', NULL, 0, 0, 0),
+(437, 640202, '技术转让', '5', NULL, 0, 0, 0),
+(438, 640203, '固定资产租赁', '5', NULL, 0, 0, 0),
+(444, 660302, '利息费用', '5', NULL, 0, 0, 0),
+(445, 605101, '材料销售', '4', NULL, 0, 0, 0),
+(446, 605102, '技术转让', '4', NULL, 0, 0, 0),
+(448, 222101, '增值税', '1', NULL, 1, 0, 0),
+(463, 110104, '其他', '1', NULL, 0, 0, 12),
+(464, 660204, '招待费', '5', NULL, 0, 0, 0),
+(471, 640102, '社保', '5', NULL, 0, 0, 0),
+(478, 660103, '社保', '5', NULL, 0, 0, 0),
+(481, 640103, '工资与奖金', '5', NULL, 0, 0, 0),
+(482, 640104, '社保公积金', '5', NULL, 0, 0, 0),
+(483, 200101, '中国银行', '2', NULL, 0, 0, 0),
+(484, 200102, '招商银行', '2', NULL, 0, 0, 0),
+(485, 200103, '农业银行', '2', NULL, 0, 0, 0),
+(486, 200104, '建设银行', '2', NULL, 0, 0, 0),
+(487, 200105, '工商银行', '2', NULL, 0, 0, 0),
+(488, 600101, '销售产品', '4', NULL, 0, 0, 0),
+(489, 600102, '提供服务', '4', NULL, 0, 0, 0),
+(490, 611101, '股票', '4', NULL, 0, 0, 0),
+(491, 611102, '基金', '4', NULL, 0, 0, 0),
+(492, 611103, '债券', '4', NULL, 0, 0, 0),
+(493, 611104, '其他', '4', NULL, 0, 0, 0),
+(495, 66020201, '工资与奖金', '5', NULL, 0, 0, 0),
+(496, 660205, '工资与奖金', '5', NULL, 0, 0, 0),
+(498, 660104, '工资与奖金', '5', NULL, 0, 0, 0),
+(500, 660206, '服务费', '5', NULL, 0, 0, 0),
+(511, 660207, '印花税', '5', NULL, 0, 0, 0),
+(512, 660208, '社保公积金', '5', NULL, 0, 0, 0),
+(513, 66020202, '社保公积金', '5', NULL, 0, 0, 0),
+(514, 660209, '交通费', '5', NULL, 0, 0, 0),
+(516, 660211, '快递费', '5', NULL, 0, 0, 0),
+(517, 660212, '差旅费', '5', NULL, 0, 0, 0),
+(532, 200106, '交通银行', '2', NULL, 0, 0, 0),
+(533, 605103, '固定资产租赁', '4', NULL, 0, 0, 0),
+(535, 640301, '城建税', '5', NULL, 0, 0, 0),
+(536, 640302, '教育费附加', '5', NULL, 0, 0, 0),
+(537, 640303, '河道管理费', '5', NULL, 0, 0, 0),
+(545, 640304, '营业税', '5', NULL, 0, 0, 0),
+(568, 140501, '商品名', '1', NULL, 0, 0, 0),
+(570, 22210101, '进项', '1', NULL, 0, 0, 0),
+(571, 22210102, '销项', '1', NULL, 0, 0, 0),
+(572, 140502, 'b', '1', NULL, 0, 0, 0),
+(575, 220201, '应付主', '2', NULL, 0, 0, 12),
+(576, 140503, '水杯', '1', NULL, 0, 0, 0),
+(577, 220202, '电信供应商', '2', NULL, 0, 0, 0),
+(578, 220203, '移动通信', '2', NULL, 0, 0, 0),
+(579, 220204, 'Dell', '2', NULL, 0, 0, 0),
+(580, 140504, '电脑', '1', NULL, 0, 0, 0),
+(581, 140505, '路由器', '1', NULL, 0, 0, 0),
+(582, 220205, 'cicso', '2', NULL, 0, 0, 0),
+(583, 140506, '手机', '1', NULL, 0, 0, 0),
+(584, 220206, '水杯', '2', NULL, 0, 0, 0),
+(588, 640105, '服务费', '5', NULL, 0, 0, 0),
+(589, 640106, '原材料', '5', NULL, 0, 0, 0),
+(590, 140507, 'test', '1', NULL, 0, 0, 0),
+(591, 100201, '中国银行', '1', NULL, 0, 0, 0),
+(592, 100202, '交通银行', '1', NULL, 0, 0, 0),
+(593, 100203, '建设银行', '1', NULL, 0, 0, 0),
+(594, 122101, 'tes', '1', NULL, 0, 0, 0);
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `transition`
+-- 表的结构 `transition`
 --
 
-DROP TABLE IF EXISTS `transition`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `transition` (
+CREATE TABLE IF NOT EXISTS `transition` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `entry_num_prefix` varchar(10) DEFAULT NULL,
   `entry_num` int(11) NOT NULL,
   `entry_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '录入时间',
   `entry_date` timestamp NULL DEFAULT NULL COMMENT '凭证日期，非录入时间',
   `entry_name` varchar(512) NOT NULL COMMENT '交易方名称',
-  `data_type` tinyint(4) NOT NULL COMMENT '类型1：银行,2：现金',
+  `data_type` varchar(16) NOT NULL COMMENT '类型1：银行,2：现金',
   `data_id` int(11) NOT NULL COMMENT '原始数据ID',
   `entry_memo` varchar(512) CHARACTER SET utf8 COLLATE utf8_swedish_ci DEFAULT NULL,
   `entry_transaction` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1:借;2:贷',
@@ -368,42 +2043,141 @@ CREATE TABLE `transition` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `subject_id_idx` (`entry_subject`),
   KEY `re_employee_id_idx` (`entry_reviewer`),
-  KEY `ed_employee_id_idx` (`entry_editor`),
-  CONSTRAINT `transition_ibfk_1` FOREIGN KEY (`entry_subject`) REFERENCES `subjects` (`sbj_number`)
-) ENGINE=InnoDB AUTO_INCREMENT=934 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  KEY `ed_employee_id_idx` (`entry_editor`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=141 ;
 
 --
--- Dumping data for table `transition`
+-- 转存表中的数据 `transition`
 --
 
-LOCK TABLES `transition` WRITE;
-/*!40000 ALTER TABLE `transition` DISABLE KEYS */;
-INSERT INTO `transition` VALUES (519,'201502',1,'2015-05-22 05:57:23','2015-02-24 16:00:00','上海市数字证书认证中心有限公司',1,374,'企业证书费用',1,660102,300.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(520,'201502',1,'2015-05-22 05:57:23','2015-02-24 16:00:00','上海市数字证书认证中心有限公司',1,374,'企业证书费用',2,100201,300.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(521,'201502',2,'2015-05-22 05:57:23','2015-02-24 16:00:00','',1,375,'服务费',1,660206,500.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(522,'201502',2,'2015-05-22 05:57:23','2015-02-24 16:00:00','',1,375,'服务费',2,100201,500.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(523,'201502',3,'2015-05-22 05:57:23','2015-02-24 16:00:00','b公司',1,376,'借款',2,224101,800.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(524,'201502',3,'2015-05-22 05:57:23','2015-02-24 16:00:00','b公司',1,376,'借款',1,100201,800.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(525,'201502',4,'2015-05-22 05:57:23','2015-02-26 16:00:00','重庆猪八戒网络有限公司',1,377,'圈圈橙的文字商标注册费用',1,660102,1500.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(526,'201502',4,'2015-05-22 05:57:23','2015-02-26 16:00:00','重庆猪八戒网络有限公司',1,377,'圈圈橙的文字商标注册费用',2,100201,1500.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(527,'201502',5,'2015-05-22 05:57:23','2015-02-26 16:00:00','朱筠',1,378,'投资款',2,4001,10000.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(528,'201502',5,'2015-05-22 05:57:23','2015-02-26 16:00:00','朱筠',1,378,'投资款',1,100201,10000.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(529,'201502',6,'2015-05-22 06:01:04','2015-02-28 15:59:59','',0,0,'结转凭证',2,660102,1800.00,NULL,NULL,NULL,52,52,48,0,1,1,1,1),(530,'201502',6,'2015-05-22 06:01:04','2015-02-28 15:59:59','',0,0,'结转凭证',2,660206,500.00,NULL,NULL,NULL,52,52,48,0,1,1,1,1),(531,'201502',6,'2015-05-22 06:01:04','2015-02-28 15:59:59','',0,0,'结转凭证',2,4103,-2300.00,NULL,NULL,NULL,52,52,48,0,1,1,1,1),(532,'201503',1,'2015-05-22 06:11:25','2015-03-01 16:00:00','',1,379,'手续费',1,660301,4.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(533,'201503',1,'2015-05-22 06:11:25','2015-03-01 16:00:00','',1,379,'手续费',2,100201,4.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(534,'201503',2,'2015-05-22 06:11:25','2015-03-01 16:00:00','',1,380,'手续费',1,660301,0.40,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(535,'201503',2,'2015-05-22 06:11:25','2015-03-01 16:00:00','',1,380,'手续费',2,100201,0.40,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(536,'201503',3,'2015-05-22 06:11:25','2015-03-03 16:00:00','朱筠',1,381,'上海银行基本账户开户费用',1,660102,800.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(537,'201503',3,'2015-05-22 06:11:25','2015-03-03 16:00:00','朱筠',1,381,'上海银行基本账户开户费用',2,100201,800.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(538,'201503',4,'2015-05-22 06:11:25','2015-03-03 16:00:00','朱筠',1,382,'亿美软通短信通道服务费',1,660206,5000.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(539,'201503',4,'2015-05-22 06:11:25','2015-03-03 16:00:00','朱筠',1,382,'亿美软通短信通道服务费',2,100201,5000.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(540,'201503',5,'2015-05-22 06:11:25','2015-03-03 16:00:00','朱筠',1,383,'阿里云服务器租赁年费',1,660210,68.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(541,'201503',5,'2015-05-22 06:11:25','2015-03-03 16:00:00','朱筠',1,383,'阿里云服务器租赁年费',2,100201,68.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(542,'201503',6,'2015-05-22 06:11:25','2015-03-03 16:00:00','朱筠',1,384,'公司注册费用',1,660102,500.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(543,'201503',6,'2015-05-22 06:11:25','2015-03-03 16:00:00','朱筠',1,384,'公司注册费用',2,100201,500.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(544,'201503',7,'2015-05-22 06:11:25','2015-03-03 16:00:00','朱筠',1,385,'朱筠投资款',2,4001,10000.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(545,'201503',7,'2015-05-22 06:11:25','2015-03-03 16:00:00','朱筠',1,385,'朱筠投资款',1,100201,10000.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(546,'201503',8,'2015-05-22 06:11:25','2015-03-03 16:00:00','老法师（上海）财务咨询有限公司',1,386,'3个月财务代理费用',1,660206,900.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(547,'201503',8,'2015-05-22 06:11:25','2015-03-03 16:00:00','老法师（上海）财务咨询有限公司',1,386,'3个月财务代理费用',2,100201,900.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(548,'201503',9,'2015-05-22 06:11:25','2015-03-14 16:00:00','陆晓峰',1,387,'注资',2,4001,50000.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(549,'201503',9,'2015-05-22 06:11:26','2015-03-14 16:00:00','陆晓峰',1,387,'注资',1,100201,50000.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(550,'201503',10,'2015-05-22 06:11:26','2015-03-15 16:00:00','朱筠',1,388,'税务盘购买',1,660102,1020.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(551,'201503',10,'2015-05-22 06:11:26','2015-03-15 16:00:00','朱筠',1,388,'税务盘购买',2,100201,1020.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(552,'201503',11,'2015-05-22 06:11:26','2015-03-19 16:00:00','',1,389,'利息收入',1,660302,-10.02,NULL,NULL,0,52,52,48,0,1,1,0,1),(553,'201503',11,'2015-05-22 06:11:26','2015-03-19 16:00:00','',1,389,'利息收入',1,100201,10.02,NULL,NULL,0,52,52,48,0,1,1,0,1),(554,'201503',12,'2015-05-22 06:11:26','2015-03-29 16:00:00','朱筠',1,390,'差旅费',1,660212,346.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(555,'201503',12,'2015-05-22 06:11:26','2015-03-29 16:00:00','朱筠',1,390,'差旅费',2,100201,346.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(556,'201503',13,'2015-05-22 06:11:26','2015-03-30 16:00:00','顾雨婷',1,391,'微信收入',2,6301,0.13,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(557,'201503',13,'2015-05-22 06:11:26','2015-03-30 16:00:00','顾雨婷',1,391,'微信收入',1,100201,0.13,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(558,'201503',14,'2015-05-22 06:11:26','2015-03-30 16:00:00','朱筠',1,392,'朱筠的第二笔投资款',2,4001,50000.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(559,'201503',14,'2015-05-22 06:11:26','2015-03-30 16:00:00','朱筠',1,392,'朱筠的第二笔投资款',1,100201,50000.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(560,'201503',15,'2015-05-22 06:11:26','2015-03-30 16:00:00','朱筠',1,393,'电脑购买',1,160101,9195.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(561,'201503',15,'2015-05-22 06:11:26','2015-03-30 16:00:00','朱筠',1,393,'电脑购买',2,100201,9195.00,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(562,'201503',16,'2015-05-22 06:11:26','2015-03-30 16:00:00','深圳市腾讯计算机系统有限公司',1,394,'微信收入',2,6301,0.01,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(563,'201503',16,'2015-05-22 06:11:26','2015-03-30 16:00:00','深圳市腾讯计算机系统有限公司',1,394,'微信收入',1,100201,0.01,NULL,NULL,NULL,52,52,48,0,1,1,0,1),(564,'201502',7,'2015-05-22 06:18:21','2015-02-28 15:59:59','',0,0,'结转凭证',2,660102,3600.00,NULL,NULL,NULL,52,52,48,0,1,1,1,1),(565,'201502',7,'2015-05-22 06:18:21','2015-02-28 15:59:59','',0,0,'结转凭证',2,660206,1000.00,NULL,NULL,NULL,52,52,48,0,1,1,1,1),(566,'201502',7,'2015-05-22 06:18:21','2015-02-28 15:59:59','',0,0,'结转凭证',2,4103,-4600.00,NULL,NULL,NULL,52,52,48,0,1,1,1,1),(673,'201504',1,'2015-05-25 07:07:23','2015-04-19 16:00:00','国家金库上海市奉贤区支库',1,441,'个税',0,222101,1150.00,NULL,NULL,NULL,1,1,0,0,0,0,0,0),(674,'201504',1,'2015-05-25 07:07:23','2015-04-19 16:00:00','国家金库上海市奉贤区支库',1,441,'个税',1,100201,1150.00,NULL,NULL,NULL,1,1,0,0,0,0,0,0),(676,'201504',2,'2015-05-25 07:16:51','2015-04-19 16:00:00','国家金库上海市奉贤区支库',1,458,'个税',2,222101,1150.00,NULL,NULL,NULL,1,1,0,0,0,0,0,0),(677,'201504',2,'2015-05-25 07:16:51','2015-04-19 16:00:00','国家金库上海市奉贤区支库',1,458,'个税',1,100201,1150.00,NULL,NULL,NULL,1,1,0,0,0,0,0,0),(708,'201503',17,'2015-05-25 07:23:29','2015-02-28 16:00:00','a公司',1,474,'项目转账',1,222101,5000.00,NULL,NULL,NULL,1,1,48,0,1,1,0,1),(709,'201503',17,'2015-05-25 07:23:29','2015-02-28 16:00:00','a公司',1,474,'项目转账',2,100201,5000.00,NULL,NULL,NULL,1,1,48,0,1,1,0,1),(710,'201503',18,'2015-05-25 07:23:29','2015-02-28 16:00:00','押金',1,475,'项目转账',1,122103,5000.00,NULL,NULL,NULL,1,1,48,0,1,1,0,1),(711,'201503',18,'2015-05-25 07:23:29','2015-02-28 16:00:00','押金',1,475,'项目转账',2,100201,5000.00,NULL,NULL,NULL,1,1,48,0,1,1,0,1),(712,'201503',19,'2015-05-25 07:24:45','2015-03-01 16:00:00','',1,476,'项目转账',1,222101,5.00,NULL,NULL,NULL,1,1,48,0,1,1,0,1),(713,'201503',19,'2015-05-25 07:24:45','2015-03-01 16:00:00','',1,476,'项目转账',2,100201,5.00,NULL,NULL,NULL,1,1,48,0,1,1,0,1),(714,'201503',20,'2015-05-25 07:24:45','2015-03-01 16:00:00','b公司',1,477,'项目转账',1,122102,5.00,NULL,NULL,NULL,1,1,48,0,1,1,0,1),(715,'201503',20,'2015-05-25 07:24:45','2015-03-01 16:00:00','b公司',1,477,'项目转账',2,100201,5.00,NULL,NULL,NULL,1,1,48,0,1,1,0,1),(716,'201503',21,'2015-05-25 07:26:40','2015-02-28 16:00:00','某某某公司',1,478,'项目转账',1,222101,5000.00,NULL,NULL,NULL,1,1,48,0,1,1,0,1),(717,'201503',21,'2015-05-25 07:26:40','2015-02-28 16:00:00','某某某公司',1,478,'项目转账',2,100201,5000.00,NULL,NULL,NULL,1,1,48,0,1,1,0,1),(828,'201504',3,'2015-05-25 08:56:16','2015-04-14 16:00:00','董凌虹',1,534,'备用金',1,1001,50000.00,NULL,NULL,NULL,1,1,0,0,0,0,0,0),(829,'201504',3,'2015-05-25 08:56:16','2015-04-14 16:00:00','董凌虹',1,534,'备用金',2,100201,50000.00,NULL,NULL,NULL,1,1,0,0,0,0,0,0),(830,'201504',4,'2015-05-25 08:56:16','2015-04-19 16:00:00','国家金库上海市奉贤区支库',1,535,'个税',1,222101,1150.00,NULL,NULL,NULL,1,1,0,0,0,0,0,0),(831,'201504',4,'2015-05-25 08:56:16','2015-04-19 16:00:00','国家金库上海市奉贤区支库',1,535,'个税',2,100201,1150.00,NULL,NULL,NULL,1,1,0,0,0,0,0,0),(832,'201504',5,'2015-05-25 08:56:16','2015-04-20 16:00:00','--',1,536,'手续费',1,222101,35.00,NULL,NULL,NULL,1,1,0,0,0,0,0,0),(833,'201504',5,'2015-05-25 08:56:16','2015-04-20 16:00:00','--',1,536,'手续费',2,100201,35.00,NULL,NULL,NULL,1,1,0,0,0,0,0,0),(834,'201504',6,'2015-05-25 08:56:17','2015-04-22 16:00:00','上海市公积金管理中心（静安支行）',1,537,'公积金',1,222101,3360.00,NULL,NULL,NULL,1,1,0,0,0,0,0,0),(835,'201504',6,'2015-05-25 08:56:17','2015-04-22 16:00:00','上海市公积金管理中心（静安支行）',1,537,'公积金',2,100201,3360.00,NULL,NULL,NULL,1,1,0,0,0,0,0,0),(836,'201504',7,'2015-05-25 08:56:17','2015-04-27 16:00:00','--',1,538,'手续费',1,222101,1.00,NULL,NULL,NULL,1,1,0,0,0,0,0,0),(837,'201504',7,'2015-05-25 08:56:17','2015-04-27 16:00:00','--',1,538,'手续费',2,100201,1.00,NULL,NULL,NULL,1,1,0,0,0,0,0,0),(838,'201504',8,'2015-05-25 08:56:17','2015-04-28 16:00:00','阳君',1,539,'工资奖金收入',1,222101,3300.00,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(839,'201504',8,'2015-05-25 08:56:17','2015-04-28 16:00:00','阳君',1,539,'工资奖金收入',2,100201,3300.00,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(840,'201504',9,'2015-05-25 08:56:17','2015-04-28 16:00:00','赵新伟',1,540,'工资奖金收入',1,222101,3300.00,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(841,'201504',9,'2015-05-25 08:56:17','2015-04-28 16:00:00','赵新伟',1,540,'工资奖金收入',2,100201,3300.00,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(842,'201504',10,'2015-05-25 08:56:17','2015-04-28 16:00:00','嵇正超',1,541,'工资奖金收入',1,222101,3300.00,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(843,'201504',10,'2015-05-25 08:56:17','2015-04-28 16:00:00','嵇正超',1,541,'工资奖金收入',2,100201,3300.00,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(844,'201504',11,'2015-05-25 08:56:17','2015-04-28 16:00:00','陈一菠',1,542,'工资奖金收入',1,222101,354.55,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(845,'201504',11,'2015-05-25 08:56:17','2015-04-28 16:00:00','陈一菠',1,542,'工资奖金收入',2,100201,354.55,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(846,'201504',12,'2015-05-25 08:56:17','2015-04-28 16:00:00','张丹洁',1,543,'工资奖金收入',1,222101,3300.00,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(847,'201504',12,'2015-05-25 08:56:17','2015-04-28 16:00:00','张丹洁',1,543,'工资奖金收入',2,100201,3300.00,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(848,'201504',13,'2015-05-25 08:56:17','2015-04-28 16:00:00','杨润华',1,544,'工资奖金收入',1,222101,3300.00,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(849,'201504',13,'2015-05-25 08:56:17','2015-04-28 16:00:00','杨润华',1,544,'工资奖金收入',2,100201,3300.00,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(850,'201504',14,'2015-05-25 08:56:17','2015-04-28 16:00:00','李旭辉',1,545,'工资奖金收入',1,222101,3300.00,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(851,'201504',14,'2015-05-25 08:56:17','2015-04-28 16:00:00','李旭辉',1,545,'工资奖金收入',2,100201,3300.00,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(852,'201504',15,'2015-05-25 08:56:17','2015-04-28 16:00:00','易超',1,546,'工资奖金收入',1,222101,3445.00,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(853,'201504',15,'2015-05-25 08:56:17','2015-04-28 16:00:00','易超',1,546,'工资奖金收入',2,100201,3445.00,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(854,'201504',16,'2015-05-25 08:56:17','2015-04-28 16:00:00','张志辉',1,547,'工资奖金收入',1,222101,3506.62,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(855,'201504',16,'2015-05-25 08:56:17','2015-04-28 16:00:00','张志辉',1,547,'工资奖金收入',2,100201,3506.62,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(856,'201504',17,'2015-05-25 08:56:17','2015-04-28 16:00:00','褚魁',1,548,'工资奖金收入',1,222101,2825.00,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(857,'201504',17,'2015-05-25 08:56:17','2015-04-28 16:00:00','褚魁',1,548,'工资奖金收入',2,100201,2825.00,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(858,'201504',18,'2015-05-25 08:56:17','2015-04-28 16:00:00','施威',1,549,'工资奖金收入',1,222101,2256.82,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(859,'201504',18,'2015-05-25 08:56:17','2015-04-28 16:00:00','施威',1,549,'工资奖金收入',2,100201,2256.82,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(860,'201504',19,'2015-05-25 08:56:17','2015-04-28 16:00:00','陈军',1,550,'工资奖金收入',1,222101,1359.09,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(861,'201504',19,'2015-05-25 08:56:17','2015-04-28 16:00:00','陈军',1,550,'工资奖金收入',2,100201,1359.09,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(862,'201504',20,'2015-05-25 09:00:55','2015-04-14 16:00:00','董凌虹',1,551,'备用金',2,4001,50000.00,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(863,'201504',20,'2015-05-25 09:00:55','2015-04-14 16:00:00','董凌虹',1,551,'备用金',1,100201,50000.00,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(864,'201504',21,'2015-05-25 09:00:55','2015-04-19 16:00:00','国家金库上海市奉贤区支库',1,552,'个税',1,222101,1150.00,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(865,'201504',21,'2015-05-25 09:00:55','2015-04-19 16:00:00','国家金库上海市奉贤区支库',1,552,'个税',2,100201,1150.00,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(866,'201504',22,'2015-05-25 09:00:55','2015-04-20 16:00:00','--',1,553,'手续费',1,660301,35.00,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(867,'201504',22,'2015-05-25 09:00:55','2015-04-20 16:00:00','--',1,553,'手续费',2,100201,35.00,NULL,NULL,NULL,1,1,48,0,1,0,0,0),(868,'201502',8,'2015-05-29 02:16:53','2015-02-28 15:59:59','',0,0,'结转凭证',2,660102,7200.00,NULL,NULL,NULL,52,52,48,0,1,1,1,1),(869,'201502',8,'2015-05-29 02:16:53','2015-02-28 15:59:59','',0,0,'结转凭证',2,660206,2000.00,NULL,NULL,NULL,52,52,48,0,1,1,1,1),(870,'201502',8,'2015-05-29 02:16:53','2015-02-28 15:59:59','',0,0,'结转凭证',2,4103,-9200.00,NULL,NULL,NULL,52,52,48,0,1,1,1,1),(879,'201502',9,'2015-06-07 05:37:39','2015-02-28 15:59:59','',0,0,'结转凭证',2,660102,14400.00,NULL,NULL,NULL,1,1,48,0,1,1,1,1),(880,'201502',9,'2015-06-07 05:37:40','2015-02-28 15:59:59','',0,0,'结转凭证',2,660206,4000.00,NULL,NULL,NULL,1,1,48,0,1,1,1,1),(881,'201502',9,'2015-06-07 05:37:40','2015-02-28 15:59:59','',0,0,'结转凭证',2,4103,-18400.00,NULL,NULL,NULL,1,1,48,0,1,1,1,1),(890,'201502',10,'2015-06-07 05:39:15','2015-02-28 15:59:59','',0,0,'结转凭证',2,660102,28800.00,NULL,NULL,NULL,48,48,48,0,1,1,1,1),(891,'201502',10,'2015-06-07 05:39:15','2015-02-28 15:59:59','',0,0,'结转凭证',2,660206,8000.00,NULL,NULL,NULL,48,48,48,0,1,1,1,1),(892,'201502',10,'2015-06-07 05:39:15','2015-02-28 15:59:59','',0,0,'结转凭证',2,4103,-36800.00,NULL,NULL,NULL,48,48,48,0,1,1,1,1),(893,'201503',22,'2015-06-07 05:39:15','2015-03-31 15:59:59','',0,0,'结转凭证',1,6301,0.14,NULL,NULL,NULL,48,48,48,0,1,1,1,1),(894,'201503',22,'2015-06-07 05:39:15','2015-03-31 15:59:59','',0,0,'结转凭证',2,660102,2320.00,NULL,NULL,NULL,48,48,48,0,1,1,1,1),(895,'201503',22,'2015-06-07 05:39:15','2015-03-31 15:59:59','',0,0,'结转凭证',2,660301,4.40,NULL,NULL,NULL,48,48,48,0,1,1,1,1),(896,'201503',22,'2015-06-07 05:39:15','2015-03-31 15:59:59','',0,0,'结转凭证',2,660302,-10.02,NULL,NULL,NULL,48,48,48,0,1,1,1,1),(897,'201503',22,'2015-06-07 05:39:15','2015-03-31 15:59:59','',0,0,'结转凭证',2,660206,5900.00,NULL,NULL,NULL,48,48,48,0,1,1,1,1),(898,'201503',22,'2015-06-07 05:39:15','2015-03-31 15:59:59','',0,0,'结转凭证',2,660210,68.00,NULL,NULL,NULL,48,48,48,0,1,1,1,1),(899,'201503',22,'2015-06-07 05:39:15','2015-03-31 15:59:59','',0,0,'结转凭证',2,660212,346.00,NULL,NULL,NULL,48,48,48,0,1,1,1,1),(900,'201503',22,'2015-06-07 05:39:15','2015-03-31 15:59:59','',0,0,'结转凭证',2,4103,-8628.24,NULL,NULL,NULL,48,48,48,0,1,1,1,1),(905,'201504',25,'2015-06-07 05:44:14','2015-04-19 16:00:00','国家金库上海市奉贤区支库',0,2,'个税',1,222101,1151.00,NULL,NULL,NULL,48,48,1,0,1,0,0,0),(906,'201504',25,'2015-06-07 05:44:14','2015-04-19 16:00:00','国家金库上海市奉贤区支库',0,2,'个税',2,1001,1151.00,NULL,NULL,NULL,48,48,1,0,1,0,0,0),(907,'201504',26,'2015-06-07 05:44:14','2015-04-20 16:00:00','--',0,3,'手续费',1,660301,36.00,NULL,NULL,NULL,48,48,1,0,1,0,0,0),(908,'201504',26,'2015-06-07 05:44:14','2015-04-20 16:00:00','--',0,3,'手续费',2,1001,36.00,NULL,NULL,NULL,48,48,1,0,1,0,0,0),(909,'201504',27,'2015-06-07 05:46:03','2015-04-08 16:00:00','ttt',0,4,'123',1,660301,12.00,NULL,NULL,NULL,48,48,1,0,1,0,0,0),(910,'201504',27,'2015-06-07 05:46:03','2015-04-08 16:00:00','ttt',0,4,'123',2,1001,12.00,NULL,NULL,NULL,48,48,1,0,1,0,0,0),(927,'201504',30,'2015-06-10 07:14:49','2015-04-20 16:00:00','--',0,555,'手续费',0,660301,31.00,NULL,NULL,NULL,48,48,0,0,0,0,0,0),(930,'201504',33,'2015-06-10 07:20:40','2015-04-19 16:00:00','国家金库上海市奉贤区支库',0,554,'个税',0,222101,112.00,NULL,NULL,NULL,48,48,0,0,0,0,0,0),(931,'201504',33,'2015-06-10 07:20:40','2015-04-19 16:00:00','国家金库上海市奉贤区支库',0,554,'个税',1,100201,112.00,NULL,NULL,NULL,48,48,0,0,0,0,0,0),(932,'201506',6,'2015-06-11 04:01:19','2015-06-08 16:00:00','AAADFAS',0,556,'fsadfasd',1,224101,1033.00,NULL,NULL,NULL,48,48,0,0,0,0,0,0),(933,'201506',6,'2015-06-11 04:01:19','2015-06-08 16:00:00','AAADFAS',0,556,'fsadfasd',2,100203,1033.00,NULL,NULL,NULL,48,48,0,0,0,0,0,0);
-/*!40000 ALTER TABLE `transition` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `transition` (`id`, `entry_num_prefix`, `entry_num`, `entry_time`, `entry_date`, `entry_name`, `data_type`, `data_id`, `entry_memo`, `entry_transaction`, `entry_subject`, `entry_amount`, `entry_appendix`, `entry_appendix_type`, `entry_appendix_id`, `entry_creater`, `entry_editor`, `entry_reviewer`, `entry_deleted`, `entry_reviewed`, `entry_posting`, `entry_settlement`, `entry_closing`) VALUES
+(1, '201506', 1, '2015-06-20 11:07:07', '2015-06-19 16:00:00', '', '0', 0, 'asdf', 1, 1001, '1.00', NULL, NULL, 0, 1, 1, 1, 0, 0, 0, 0, 0),
+(2, '201506', 1, '2015-06-20 11:07:07', '2015-06-19 16:00:00', '', '0', 0, 'asdf', 2, 220201, '1.00', NULL, NULL, 0, 1, 1, 1, 0, 0, 0, 0, 0),
+(3, '201506', 2, '2015-06-23 08:03:50', '2015-06-22 16:00:00', '', '0', 0, 'test', 1, 220201, '5.00', NULL, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0),
+(4, '201506', 2, '2015-06-23 08:03:50', '2015-06-22 16:00:00', '', '0', 0, 'tt', 2, 1001, '5.00', NULL, NULL, 0, 1, 1, 1, 0, 0, 0, 0, 0),
+(5, '06/01/', 1, '2015-06-24 11:46:31', '0000-00-00 00:00:00', '水杯', '0', 5, 'te', 1, 140503, '44.66', NULL, NULL, 2, 1, 1, 0, 0, 0, 0, 0, 0),
+(6, '06/01/', 1, '2015-06-24 11:46:32', '0000-00-00 00:00:00', '水杯', '0', 5, 'te', 2, 220203, '46.00', NULL, NULL, 2, 1, 1, 0, 0, 0, 0, 0, 0),
+(7, '06/01/', 1, '2015-06-24 11:46:32', '0000-00-00 00:00:00', '水杯', '0', 5, 'te', 1, 22210101, '1.34', NULL, NULL, 2, 1, 1, 0, 0, 0, 0, 0, 0),
+(8, '06/01/', 2, '2015-06-24 11:53:03', '0000-00-00 00:00:00', '水杯', '0', 6, 'te', 1, 140503, '46.00', NULL, NULL, 2, 1, 1, 0, 0, 0, 0, 0, 0),
+(9, '06/01/', 2, '2015-06-24 11:53:03', '0000-00-00 00:00:00', '水杯', '0', 6, 'te', 2, 220203, '46.00', NULL, NULL, 2, 1, 1, 0, 0, 0, 0, 0, 0),
+(10, '06/01/', 2, '2015-06-24 11:53:03', '0000-00-00 00:00:00', '水杯', '0', 6, 'te', 1, 22210101, '0.00', NULL, NULL, 2, 1, 1, 0, 0, 0, 0, 0, 0),
+(11, '05/01/', 1, '2015-06-24 12:33:24', '0000-00-00 00:00:00', '电脑', '0', 12, '电脑', 1, 160101, '9708.74', NULL, NULL, 23, 1, 1, 0, 0, 0, 0, 0, 0),
+(12, '05/01/', 1, '2015-06-24 12:33:24', '0000-00-00 00:00:00', '电脑', '0', 12, '电脑', 2, 220204, '10000.00', NULL, NULL, 23, 1, 1, 0, 0, 0, 0, 0, 0),
+(13, '05/01/', 1, '2015-06-24 12:33:24', '0000-00-00 00:00:00', '电脑', '0', 12, '电脑', 1, 22210101, '291.26', NULL, NULL, 23, 1, 1, 0, 0, 0, 0, 0, 0),
+(14, '05/01/', 2, '2015-06-24 12:48:36', '0000-00-00 00:00:00', '电脑', '0', 13, '电脑', 1, 160101, '9708.74', NULL, NULL, 23, 1, 1, 0, 0, 0, 0, 0, 0),
+(15, '05/01/', 2, '2015-06-24 12:48:36', '0000-00-00 00:00:00', '电脑', '0', 13, '电脑', 2, 220204, '10000.00', NULL, NULL, 23, 1, 1, 0, 0, 0, 0, 0, 0),
+(16, '05/01/', 2, '2015-06-24 12:48:36', '0000-00-00 00:00:00', '电脑', '0', 13, '电脑', 1, 22210101, '291.26', NULL, NULL, 23, 1, 1, 0, 0, 0, 0, 0, 0),
+(17, '06/03/', 1, '2015-06-24 12:50:41', '0000-00-00 00:00:00', '电脑', '0', 14, 'cc', 1, 140504, '15533.98', NULL, NULL, 23, 1, 1, 0, 0, 0, 0, 0, 0),
+(18, '06/03/', 1, '2015-06-24 12:50:41', '0000-00-00 00:00:00', '电脑', '0', 14, 'cc', 2, 220204, '16000.00', NULL, NULL, 23, 1, 1, 0, 0, 0, 0, 0, 0),
+(19, '06/03/', 1, '2015-06-24 12:50:42', '0000-00-00 00:00:00', '电脑', '0', 14, 'cc', 1, 22210101, '466.02', NULL, NULL, 23, 1, 1, 0, 0, 0, 0, 0, 0),
+(20, '06/01/', 3, '2015-06-24 12:57:43', '0000-00-00 00:00:00', '路由器', '0', 15, 'f', 1, 140505, '323.30', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(21, '06/01/', 3, '2015-06-24 12:57:43', '0000-00-00 00:00:00', '路由器', '0', 15, 'f', 2, 220202, '333.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(22, '06/01/', 3, '2015-06-24 12:57:43', '0000-00-00 00:00:00', '路由器', '0', 15, 'f', 1, 22210101, '9.70', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(23, '201506', 3, '2015-06-24 13:00:10', '2015-05-31 16:00:00', '水杯', '0', 16, 'ff', 1, 140503, '33.01', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(24, '201506', 3, '2015-06-24 13:00:10', '2015-05-31 16:00:00', '水杯', '0', 16, 'ff', 2, 220202, '34.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(25, '201506', 3, '2015-06-24 13:00:10', '2015-05-31 16:00:00', '水杯', '0', 16, 'ff', 1, 22210101, '0.99', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(26, '201506', 4, '2015-06-24 13:03:10', '2015-05-31 16:00:00', '水杯', '0', 17, 'ff', 1, 140503, '33.01', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(27, '201506', 4, '2015-06-24 13:03:10', '2015-05-31 16:00:00', '水杯', '0', 17, 'ff', 2, 220202, '34.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(28, '201506', 4, '2015-06-24 13:03:10', '2015-05-31 16:00:00', '水杯', '0', 17, 'ff', 1, 22210101, '0.99', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(29, '201506', 5, '2015-06-24 13:10:25', '2015-05-31 16:00:00', '水杯', '0', 18, 'ff', 1, 140503, '33.01', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(30, '201506', 5, '2015-06-24 13:10:25', '2015-05-31 16:00:00', '水杯', '0', 18, 'ff', 2, 220202, '34.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(31, '201506', 5, '2015-06-24 13:10:26', '2015-05-31 16:00:00', '水杯', '0', 18, 'ff', 1, 22210101, '0.99', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(32, '201506', 6, '2015-06-24 13:15:49', '2015-05-31 16:00:00', '水杯', '0', 19, 'ff', 1, 140503, '33.01', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(33, '201506', 6, '2015-06-24 13:15:49', '2015-05-31 16:00:00', '水杯', '0', 19, 'ff', 2, 220202, '34.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(34, '201506', 6, '2015-06-24 13:15:49', '2015-05-31 16:00:00', '水杯', '0', 19, 'ff', 1, 22210101, '0.99', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(35, '201506', 7, '2015-06-24 13:17:31', '2015-05-31 16:00:00', '水杯', '0', 20, 'ff', 1, 140503, '129.52', NULL, NULL, 2, 1, 1, 0, 0, 0, 0, 0, 0),
+(36, '201506', 7, '2015-06-24 13:17:31', '2015-05-31 16:00:00', '水杯', '0', 20, 'ff', 2, 220203, '136.00', NULL, NULL, 2, 1, 1, 0, 0, 0, 0, 0, 0),
+(37, '201506', 7, '2015-06-24 13:17:31', '2015-05-31 16:00:00', '水杯', '0', 20, 'ff', 1, 22210101, '6.48', NULL, NULL, 2, 1, 1, 0, 0, 0, 0, 0, 0),
+(38, '201506', 8, '2015-06-24 13:20:17', '2015-05-31 16:00:00', '水杯', '0', 21, 'ff', 1, 140503, '33.01', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(39, '201506', 8, '2015-06-24 13:20:17', '2015-05-31 16:00:00', '水杯', '0', 21, 'ff', 2, 220202, '34.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(40, '201506', 8, '2015-06-24 13:20:18', '2015-05-31 16:00:00', '水杯', '0', 21, 'ff', 1, 22210101, '0.99', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(41, '201506', 9, '2015-06-24 13:25:41', '2015-05-31 16:00:00', '水杯', '0', 22, 'ff', 1, 140503, '31.13', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(42, '201506', 9, '2015-06-24 13:25:41', '2015-05-31 16:00:00', '水杯', '0', 22, 'ff', 2, 220202, '33.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(43, '201506', 9, '2015-06-24 13:25:41', '2015-05-31 16:00:00', '水杯', '0', 22, 'ff', 1, 22210101, '1.87', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(44, '06/02/', 1, '2015-06-24 13:29:42', '0000-00-00 00:00:00', '路由器', '0', 23, 'f', 1, 140505, '1707.69', NULL, NULL, 24, 1, 1, 0, 0, 0, 0, 0, 0),
+(45, '06/02/', 1, '2015-06-24 13:29:43', '0000-00-00 00:00:00', '路由器', '0', 23, 'f', 2, 220205, '1998.00', NULL, NULL, 24, 1, 1, 0, 0, 0, 0, 0, 0),
+(46, '06/02/', 1, '2015-06-24 13:29:43', '0000-00-00 00:00:00', '路由器', '0', 23, 'f', 1, 22210101, '290.31', NULL, NULL, 24, 1, 1, 0, 0, 0, 0, 0, 0),
+(47, '06/01/', 4, '2015-06-24 13:31:31', '0000-00-00 00:00:00', '水杯', '0', 24, 'cg', 1, 140503, '2561.54', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(48, '06/01/', 4, '2015-06-24 13:31:31', '0000-00-00 00:00:00', '水杯', '0', 24, 'cg', 2, 220202, '2997.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(49, '06/01/', 4, '2015-06-24 13:31:31', '0000-00-00 00:00:00', '水杯', '0', 24, 'cg', 1, 22210101, '435.46', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(50, '201506', 10, '2015-06-24 13:39:17', '2015-05-31 16:00:00', '路由器', '0', 25, 'ff', 1, 140505, '1571.68', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(51, '201506', 10, '2015-06-24 13:39:17', '2015-05-31 16:00:00', '路由器', '0', 25, 'ff', 2, 220202, '1776.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(52, '201506', 10, '2015-06-24 13:39:17', '2015-05-31 16:00:00', '路由器', '0', 25, 'ff', 1, 22210101, '204.32', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(53, '201506', 11, '2015-06-25 05:33:41', '2015-05-31 16:00:00', '电脑', '0', 26, 'g', 1, 160101, '2.86', NULL, NULL, 2, 1, 1, 0, 0, 0, 0, 0, 0),
+(54, '201506', 11, '2015-06-25 05:33:41', '2015-05-31 16:00:00', '电脑', '0', 26, 'g', 2, 220203, '3.00', NULL, NULL, 2, 1, 1, 0, 0, 0, 0, 0, 0),
+(55, '201506', 11, '2015-06-25 05:33:41', '2015-05-31 16:00:00', '电脑', '0', 26, 'g', 1, 22210101, '0.14', NULL, NULL, 2, 1, 1, 0, 0, 0, 0, 0, 0),
+(56, '201506', 12, '2015-06-25 05:35:30', '2015-05-31 16:00:00', '电脑', '0', 27, 'g', 1, 160101, '2.86', NULL, NULL, 2, 1, 1, 0, 0, 0, 0, 0, 0),
+(57, '201506', 12, '2015-06-25 05:35:30', '2015-05-31 16:00:00', '电脑', '0', 27, 'g', 2, 220203, '3.00', NULL, NULL, 2, 1, 1, 0, 0, 0, 0, 0, 0),
+(58, '201506', 12, '2015-06-25 05:35:30', '2015-05-31 16:00:00', '电脑', '0', 27, 'g', 1, 22210101, '0.14', NULL, NULL, 2, 1, 1, 0, 0, 0, 0, 0, 0),
+(59, '201506', 13, '2015-06-25 05:40:35', '2015-05-31 16:00:00', '电脑', '0', 28, 'g', 1, 160101, '2.86', NULL, NULL, 2, 1, 1, 0, 0, 0, 0, 0, 0),
+(60, '201506', 13, '2015-06-25 05:40:36', '2015-05-31 16:00:00', '电脑', '0', 28, 'g', 2, 220203, '3.00', NULL, NULL, 2, 1, 1, 0, 0, 0, 0, 0, 0),
+(61, '201506', 13, '2015-06-25 05:40:36', '2015-05-31 16:00:00', '电脑', '0', 28, 'g', 1, 22210101, '0.14', NULL, NULL, 2, 1, 1, 0, 0, 0, 0, 0, 0),
+(62, '201506', 14, '2015-06-25 05:45:13', '2015-05-31 16:00:00', '电脑', '0', 29, 'g', 1, 160101, '18000.00', NULL, NULL, 2, 1, 1, 0, 0, 0, 0, 0, 0),
+(63, '201506', 14, '2015-06-25 05:45:13', '2015-05-31 16:00:00', '电脑', '0', 29, 'g', 2, 220203, '18000.00', NULL, NULL, 2, 1, 1, 0, 0, 0, 0, 0, 0),
+(64, '05/04/', 1, '2015-06-25 05:46:22', '0000-00-00 00:00:00', '电脑', '0', 30, 'g', 1, 160101, '35398.23', NULL, NULL, 2, 1, 1, 0, 0, 0, 0, 0, 0),
+(65, '05/04/', 1, '2015-06-25 05:46:22', '0000-00-00 00:00:00', '电脑', '0', 30, 'g', 2, 220203, '40000.00', NULL, NULL, 2, 1, 1, 0, 0, 0, 0, 0, 0),
+(66, '05/04/', 1, '2015-06-25 05:46:22', '0000-00-00 00:00:00', '电脑', '0', 30, 'g', 1, 22210101, '4601.77', NULL, NULL, 2, 1, 1, 0, 0, 0, 0, 0, 0),
+(67, '201506', 15, '2015-06-25 05:48:19', '2015-06-03 16:00:00', '路由器', '0', 31, 'g', 1, 160101, '400.00', NULL, NULL, 2, 1, 1, 0, 0, 0, 0, 0, 0),
+(68, '201506', 15, '2015-06-25 05:48:19', '2015-06-03 16:00:00', '路由器', '0', 31, 'g', 2, 220203, '400.00', NULL, NULL, 2, 1, 1, 0, 0, 0, 0, 0, 0),
+(69, '05/04/', 2, '2015-06-25 05:50:56', '0000-00-00 00:00:00', '路由器', '0', 32, 'lyq', 1, 140505, '1500.00', NULL, NULL, 24, 1, 1, 0, 0, 0, 0, 0, 0),
+(70, '05/04/', 2, '2015-06-25 05:50:56', '0000-00-00 00:00:00', '路由器', '0', 32, 'lyq', 2, 220205, '1500.00', NULL, NULL, 24, 1, 1, 0, 0, 0, 0, 0, 0),
+(71, '201505', 1, '2015-06-25 05:53:59', '2015-05-03 16:00:00', '路由器', '0', 33, 'lyq', 1, 140505, '1500.00', NULL, NULL, 24, 1, 1, 0, 0, 0, 0, 0, 0),
+(72, '201505', 1, '2015-06-25 05:53:59', '2015-05-03 16:00:00', '路由器', '0', 33, 'lyq', 2, 220205, '1500.00', NULL, NULL, 24, 1, 1, 0, 0, 0, 0, 0, 0),
+(73, '201506', 16, '2015-06-25 06:40:41', '2015-05-31 16:00:00', '电话', '0', 34, 'dh', 1, 160101, '1000.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(74, '201506', 16, '2015-06-25 06:40:41', '2015-05-31 16:00:00', '电话', '0', 34, 'dh', 2, 220202, '1000.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(75, '201506', 17, '2015-06-25 06:51:22', '2015-05-31 16:00:00', '水杯', '0', 36, 't', 1, 160101, '2.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(76, '201506', 17, '2015-06-25 06:51:23', '2015-05-31 16:00:00', '水杯', '0', 36, 't', 2, 220202, '2.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(77, '201506', 18, '2015-06-25 06:51:23', '2015-06-01 16:00:00', '水杯', '0', 37, 't', 1, 160101, '4.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(78, '201506', 18, '2015-06-25 06:51:23', '2015-06-01 16:00:00', '水杯', '0', 37, 't', 2, 220202, '4.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(79, '201506', 19, '2015-06-25 06:52:08', '2015-05-31 16:00:00', '水杯', '0', 38, 'ttt', 1, 160101, '22.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(80, '201506', 19, '2015-06-25 06:52:08', '2015-05-31 16:00:00', '水杯', '0', 38, 'ttt', 2, 220202, '22.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(81, '201506', 20, '2015-06-25 06:52:10', '2015-06-01 16:00:00', '电脑', '0', 39, '工资', 1, 160101, '66.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(82, '201506', 20, '2015-06-25 06:52:10', '2015-06-01 16:00:00', '电脑', '0', 39, '工资', 2, 220202, '66.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(83, '201506', 21, '2015-06-25 06:52:55', '2015-05-31 16:00:00', '水杯', '0', 40, 'ha', 1, 160101, '2.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(84, '201506', 21, '2015-06-25 06:52:55', '2015-05-31 16:00:00', '水杯', '0', 40, 'ha', 2, 220202, '2.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(85, '201506', 22, '2015-06-25 06:52:56', '2015-06-01 16:00:00', '路由器', '0', 41, '工资', 1, 140503, '3.88', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(86, '201506', 22, '2015-06-25 06:52:56', '2015-06-01 16:00:00', '路由器', '0', 41, '工资', 2, 220202, '4.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(87, '201506', 22, '2015-06-25 06:52:56', '2015-06-01 16:00:00', '路由器', '0', 41, '工资', 1, 22210101, '0.12', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(88, '201506', 23, '2015-06-25 06:54:15', '2015-05-31 16:00:00', '水杯', '0', 42, 'asdf', 1, 160101, '211.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(89, '201506', 23, '2015-06-25 06:54:15', '2015-05-31 16:00:00', '水杯', '0', 42, 'asdf', 2, 220202, '211.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(90, '201506', 24, '2015-06-25 06:54:15', '2015-06-01 16:00:00', '水杯', '0', 43, 'asdf', 1, 160101, '444.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(91, '201506', 24, '2015-06-25 06:54:16', '2015-06-01 16:00:00', '水杯', '0', 43, 'asdf', 2, 220202, '444.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(92, '201506', 25, '2015-06-25 06:59:23', '2015-05-31 16:00:00', '水杯', '0', 44, 'test', 1, 160101, '666.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(93, '201506', 25, '2015-06-25 06:59:23', '2015-05-31 16:00:00', '水杯', '0', 44, 'test', 2, 220202, '666.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(94, '201506', 26, '2015-06-25 06:59:23', '2015-06-01 16:00:00', '水杯', '0', 45, 'asdf', 1, 160101, '754.37', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(95, '201506', 26, '2015-06-25 06:59:23', '2015-06-01 16:00:00', '水杯', '0', 45, 'asdf', 2, 220202, '777.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(96, '201506', 26, '2015-06-25 06:59:23', '2015-06-01 16:00:00', '水杯', '0', 45, 'asdf', 1, 22210101, '22.63', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(97, '201506', 27, '2015-06-25 07:25:57', '2015-05-31 16:00:00', '水杯', '0', 46, 'ad', 1, 140503, '66.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(98, '201506', 27, '2015-06-25 07:25:57', '2015-05-31 16:00:00', '水杯', '0', 46, 'ad', 2, 220202, '66.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(99, '201506', 28, '2015-06-25 07:26:49', '2015-05-31 16:00:00', '水杯', '0', 47, 'ad', 1, 140503, '66.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(100, '201506', 28, '2015-06-25 07:26:49', '2015-05-31 16:00:00', '水杯', '0', 47, 'ad', 2, 220202, '66.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(101, '201506', 29, '2015-06-25 07:28:25', '2015-05-31 16:00:00', '水杯', '0', 48, 'ad', 1, 140503, '99.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(102, '201506', 29, '2015-06-25 07:28:25', '2015-05-31 16:00:00', '水杯', '0', 48, 'ad', 2, 220202, '99.00', NULL, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 0),
+(103, '201506', 30, '2015-06-25 07:29:53', '2015-05-31 16:00:00', '笔记本', '0', 49, 't', 1, 160101, '23300.97', NULL, NULL, 23, 1, 1, 0, 0, 0, 0, 0, 0),
+(104, '201506', 30, '2015-06-25 07:29:53', '2015-05-31 16:00:00', '笔记本', '0', 49, 't', 2, 220204, '24000.00', NULL, NULL, 23, 1, 1, 0, 0, 0, 0, 0, 0),
+(105, '201506', 30, '2015-06-25 07:29:53', '2015-05-31 16:00:00', '笔记本', '0', 49, 't', 1, 22210101, '699.03', NULL, NULL, 23, 1, 1, 0, 0, 0, 0, 0, 0),
+(131, '201506', 41, '2015-06-25 11:55:17', '2015-06-03 16:00:00', '笔记本', 'purchase', 50, 'test1222', 1, 160104, '88.00', NULL, NULL, 23, 1, 1, 0, 0, 0, 0, 0, 0),
+(132, '201506', 41, '2015-06-25 11:55:17', '2015-06-03 16:00:00', '笔记本', 'purchase', 50, 'test1222', 2, 220204, '88.00', NULL, NULL, 23, 1, 1, 0, 0, 0, 0, 0, 0),
+(137, '201506', 44, '2015-06-25 12:54:30', '2015-05-31 16:00:00', '水杯', 'purchase', 51, 'sdsd', 1, 160102, '3.00', NULL, NULL, 22, 1, 1, 0, 0, 0, 0, 0, 0),
+(138, '201506', 44, '2015-06-25 12:54:30', '2015-05-31 16:00:00', '水杯', 'purchase', 51, 'sdsd', 2, 220206, '3.00', NULL, NULL, 22, 1, 1, 0, 0, 0, 0, 0, 0),
+(139, '201505', 2, '2015-06-29 11:56:28', '2015-05-04 16:00:00', '张三', 'bank', 1, 'test', 1, 220201, '123.00', NULL, NULL, NULL, 1, 1, 0, 0, 0, 0, 0, 0),
+(140, '201505', 2, '2015-06-29 11:56:29', '2015-05-04 16:00:00', '张三', 'bank', 1, 'test', 2, 100202, '123.00', NULL, NULL, NULL, 1, 1, 0, 0, 0, 0, 0, 0);
+
+-- --------------------------------------------------------
 
 --
--- Temporary table structure for view `transitiondate`
+-- 替换视图以便查看 `transitiondate`
 --
-
-DROP TABLE IF EXISTS `transitiondate`;
-/*!50001 DROP VIEW IF EXISTS `transitiondate`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `transitiondate` (
-  `date` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
+CREATE TABLE IF NOT EXISTS `transitiondate` (
+`date` varchar(10)
+);
+-- --------------------------------------------------------
 
 --
--- Table structure for table `user`
+-- 表的结构 `user`
 --
 
-DROP TABLE IF EXISTS `user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user` (
+CREATE TABLE IF NOT EXISTS `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(30) NOT NULL,
   `email` varchar(100) NOT NULL,
@@ -421,26 +2195,15 @@ CREATE TABLE `user` (
   KEY `role` (`role`),
   KEY `status_id` (`status_id`),
   KEY `created_at` (`created_at`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `user`
+-- 表的结构 `vendor`
 --
 
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `vendor`
---
-
-DROP TABLE IF EXISTS `vendor`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `vendor` (
+CREATE TABLE IF NOT EXISTS `vendor` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `company` varchar(256) NOT NULL,
   `vat` varchar(45) DEFAULT NULL,
@@ -449,63 +2212,89 @@ CREATE TABLE `vendor` (
   `memo` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=25 ;
 
 --
--- Dumping data for table `vendor`
+-- 转存表中的数据 `vendor`
 --
 
-LOCK TABLES `vendor` WRITE;
-/*!40000 ALTER TABLE `vendor` DISABLE KEYS */;
-/*!40000 ALTER TABLE `vendor` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `vendor` (`id`, `company`, `vat`, `phone`, `add`, `memo`) VALUES
+(1, '电信供应商', '', '10000', '', ''),
+(2, '移动通信', '', '10086', '', ''),
+(4, 'aaa', NULL, NULL, NULL, NULL),
+(21, '联通公司', NULL, NULL, NULL, NULL),
+(22, '水杯', NULL, NULL, NULL, NULL),
+(23, 'Dell', NULL, NULL, NULL, NULL),
+(24, 'cicso', NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
 
 --
--- Final view structure for view `condomdate`
+-- 视图结构 `condomdate`
 --
+DROP TABLE IF EXISTS `condomdate`;
 
-/*!50001 DROP TABLE IF EXISTS `condomdate`*/;
-/*!50001 DROP VIEW IF EXISTS `condomdate`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`dev`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `condomdate` AS select max(`transition`.`entry_num_prefix`) AS `date` from `transition` where (`transition`.`entry_closing` = 1) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `condomdate` AS select max(`transition`.`entry_num_prefix`) AS `date` from `transition` where (`transition`.`entry_closing` = 1);
+
+-- --------------------------------------------------------
 
 --
--- Final view structure for view `transitiondate`
+-- 视图结构 `transitiondate`
+--
+DROP TABLE IF EXISTS `transitiondate`;
+
+CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `transitiondate` AS select max(`transition`.`entry_num_prefix`) AS `date` from `transition` where ((`transition`.`entry_closing` = 1) or (`transition`.`entry_settlement` = 1));
+
+--
+-- 限制导出的表
 --
 
-/*!50001 DROP TABLE IF EXISTS `transitiondate`*/;
-/*!50001 DROP VIEW IF EXISTS `transitiondate`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `transitiondate` AS select max(`transition`.`entry_num_prefix`) AS `date` from `transition` where ((`transition`.`entry_closing` = 1) or (`transition`.`entry_settlement` = 1)) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+--
+-- 限制表 `bank`
+--
+ALTER TABLE `bank`
+  ADD CONSTRAINT `bank_ibfk_1` FOREIGN KEY (`subject_2`) REFERENCES `subjects` (`sbj_number`);
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+--
+-- 限制表 `cash`
+--
+ALTER TABLE `cash`
+  ADD CONSTRAINT `cash_ibfk_1` FOREIGN KEY (`subject_2`) REFERENCES `subjects` (`sbj_number`);
+
+--
+-- 限制表 `post`
+--
+ALTER TABLE `post`
+  ADD CONSTRAINT `fk_subject_id` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`sbj_number`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- 限制表 `product`
+--
+ALTER TABLE `product`
+  ADD CONSTRAINT `product_ibfk_1` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`),
+  ADD CONSTRAINT `product_ibfk_2` FOREIGN KEY (`subject`) REFERENCES `subjects` (`sbj_number`),
+  ADD CONSTRAINT `product_ibfk_3` FOREIGN KEY (`subject_2`) REFERENCES `subjects` (`sbj_number`);
+
+--
+-- 限制表 `purchase`
+--
+ALTER TABLE `purchase`
+  ADD CONSTRAINT `purchase_ibfk_1` FOREIGN KEY (`vendor_id`) REFERENCES `vendor` (`id`),
+  ADD CONSTRAINT `purchase_ibfk_2` FOREIGN KEY (`subject`) REFERENCES `subjects` (`sbj_number`),
+  ADD CONSTRAINT `purchase_ibfk_3` FOREIGN KEY (`subject_2`) REFERENCES `subjects` (`sbj_number`);
+
+--
+-- 限制表 `stock`
+--
+ALTER TABLE `stock`
+  ADD CONSTRAINT `stock_ibfk_1` FOREIGN KEY (`vendor_id`) REFERENCES `vendor` (`id`) ON DELETE SET NULL;
+
+--
+-- 限制表 `transition`
+--
+ALTER TABLE `transition`
+  ADD CONSTRAINT `transition_ibfk_1` FOREIGN KEY (`entry_subject`) REFERENCES `subjects` (`sbj_number`);
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2015-06-22  9:01:50

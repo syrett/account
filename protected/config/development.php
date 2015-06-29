@@ -3,7 +3,7 @@
 // uncomment the following to define a path alias
 // Yii::setPathOfAlias('local','path/to/local-folder');
 
-// Set Temporary folder 
+// Set Temporary folder
 $TMPPATH = sys_get_temp_dir();
 
 // This is the main Web application configuration. Any writable
@@ -11,7 +11,6 @@ $TMPPATH = sys_get_temp_dir();
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
     'name' => 'Sorcerer_Account',
-//    'theme'=>'abound',
     'theme' => 'metronic',
     // preloading 'log' component
     'preload' => array('log'),
@@ -45,8 +44,8 @@ return array(
             'allowAutoLogin' => true,
             'identityCookie' => array('domain' => '.'. $GLOBALS['domain'], 'path' => '/'),//配置用户cookie作用域
         ),
-        'cache'=>array(
-            'class'=>'system.caching.CDbCache'
+        'cache' => array(
+            'class' => 'system.caching.CDbCache'
         ),
         'session' => array(
             'savePath' => $TMPPATH,
@@ -97,21 +96,21 @@ return array(
             // use 'site/error' action to display errors
             'errorAction' => 'site/error',
         ),
-//        'log' => array(
-//            'class' => 'CLogRouter',
-//            'routes' => array(
+//        'log'=>array(
+//            'class'=>'CLogRouter',
+//            'routes'=>array(
 //                array(
 //                    'class' => 'CProfileLogRoute',
-//                    'class' => 'ext.yii-debug-toolbar.YiiDebugToolbarRoute',
-//                    'ipFilters' => array('127.0.0.1', '192.168.1.215', '192.168.72.28'),
+////                    'class'=>'ext.yii-debug-toolbar.YiiDebugToolbarRoute',
+////                    'ipFilters'=>array('127.0.0.1','192.168.1.215','192.168.72.28'),
 //                    'levels' => 'profile',
 //                    'enabled' => true,
 //                ),
 //                // uncomment the following to show log messages on web pages
 //
-//                array(
-//                    'class' => 'CWebLogRoute',
-//                ),
+////                array(
+////                    'class'=>'CWebLogRoute',
+////                ),
 //
 //            ),
 //        ),
@@ -182,16 +181,14 @@ return array(
 
             //收入类
             array("id" => 55, "name" => "一、营业收入", "subjects" => array(6001, 6011, 6021, 6031, 6041, 6051), "to" => "trading_profit", "function" => "sum"),
-            array("id" => 56, "name" => "财务费用", "subjects" => array(6061)),
             array("id" => 57, "name" => "加:公允价值变动收益", "subjects" => array(6101), "to" => "trading_profit", "function" => "sum"),
             array("id" => 58, "name" => "投资收益", "subjects" => array(6111), "to" => "trading_profit", "function" => "sum"),
-            array("id" => 59, "name" => "财务费用", "subjects" => array(6201, 6202, 6203)),
             array("id" => 60, "name" => "加:营业外收入", "subjects" => array(6301), "to" => "profit_sum", "function" => "sum"),
 
             //费用类
             array("id" => 61, "name" => "减:营业成本", "subjects" => array(6401, 6402), "to" => "trading_profit", "function" => "minus"),
             array("id" => 62, "name" => "营业税金及附加", "subjects" => array(6403), "to" => "trading_profit", "function" => "minus"),
-            array("id" => 63, "name" => "财务费用", "subjects" => array(6411, 6421, 6501, 6502, 6511, 6521, 6531, 6541, 6542, 6603), "to" => "trading_profit", "function" => "minus"),
+            array("id" => 63, "name" => "财务费用", "subjects" => array(6061, 6201, 6202, 6203, 6411, 6421, 6501, 6502, 6511, 6521, 6531, 6541, 6542, 6603), "to" => "trading_profit", "function" => "minus"),
             array("id" => 64, "name" => "销售费用", "subjects" => array(6601), "to" => "trading_profit", "function" => "minus"),
             array("id" => 65, "name" => "管理费用", "subjects" => array(6602, 6604), "to" => "trading_profit", "function" => "minus"),
             array("id" => 66, "name" => "资产减值损失", "subjects" => array(6701), "to" => "trading_profit", "function" => "minus"),
@@ -234,14 +231,14 @@ return array(
             array("id" => 19, "name" => "长期应收款", "subjects" => array(1531), "to" => "unflow_property", "function" => "sum"),
             array("id" => 20, "name" => "其它非流动资产", "subjects" => array(1532, 1541, 1611, 1621, 1622, 1623, 1631, 1632, 1821, 1901), "to" => "unflow_property", "function" => "sum"),
             array("id" => 21, "name" => "固定资产", "subjects" => array(1601), "to" => "unflow_property", "function" => "sum"),
-            array("id" => 22, "name" => "减:累计折旧", "subjects" => array(1602), "to" => "unflow_property", "function" => "minus"),
+            array("id" => 22, "name" => "减:累计折旧", "subjects" => array(1602), "to" => "unflow_property", "function" => "sum"),
             array("id" => 23, "name" => "减:固定资产减值准备", "subjects" => array(1603), "to" => "unflow_property", "function" => "minus"),
             array("id" => 24, "name" => "在建工程", "subjects" => array(1604), "to" => "unflow_property", "function" => "sum"),
             array("id" => 25, "name" => "工程物资", "subjects" => array(1605), "to" => "unflow_property", "function" => "sum"),
             array("id" => 26, "name" => "无形资产", "subjects" => array(1701, 1702), "to" => "unflow_property", "function" => "sum"),
             array("id" => 27, "name" => "减:无形资产减值准备", "subjects" => array(1703), "to" => "unflow_property", "function" => "minus"),
             array("id" => 28, "name" => "商誉", "subjects" => array(1711), "to" => "unflow_property", "function" => "sum"),
-            array("id" => 29, "name" => "长期待摊费用", "subjects" => array(1801), "to" => "unflow_property", "function" => "minus"),
+            array("id" => 29, "name" => "长期待摊费用", "subjects" => array(1801), "to" => "unflow_property", "function" => "sum"),
             array("id" => 30, "name" => "递延所得税资产", "subjects" => array(1811), "to" => "unflow_property", "function" => "sum"),
             //负债类
             array("id" => 31, "name" => "短期借款", "subjects" => array(2001, 2002, 2003, 2004, 2011, 2012, 2021), "to" => "flow_debt", "function" => "sum"),
