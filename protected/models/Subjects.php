@@ -51,6 +51,7 @@ class Subjects extends CActiveRecord
         return array(
             array('sbj_number, sbj_name', 'required', 'message' => '{attribute}不能为空'),
             array('sbj_number', 'unique', 'message' => '{attribute}:{value} 已经存在!'),
+            array('start_balance', 'numerical'),
             array('sbj_number', 'numerical', 'integerOnly' => true),
             array('sbj_name', 'length', 'max' => 20),
             array('sbj_cat', 'length', 'max' => 1),
@@ -192,6 +193,12 @@ class Subjects extends CActiveRecord
         Yii::app()->db->createCommand($sql)->bindParam('par_id', $par_id)->execute();
     }
 
+    public function tranBalance($sbj){
+        $model = $this->findByAttributes(['sbj_number'=>$sbj]);
+        $parent = $this->findByAttributes(['sbj_number'=>substr($sbj,0,-2)]);
+        $parent->start_balance = $model->start_balance;
+        $parent->save();
+    }
 
     /*
      * 得到科目的所属类别:
@@ -443,6 +450,8 @@ class Subjects extends CActiveRecord
      */
     public function getitem($arr, $key = '', $options = [])
     {
+        //有前缀，顺序不会随科目编号影响，在前台需要去除第一个字符"_"，没有前缀，json数据会自动从新排序
+        $prefix = isset($options['prefix'])?$options['prefix']:'_';
         $subject = new Subjects();
         $result = [];
         $type = isset($options['type']) ? $options['type'] : 1;
@@ -450,9 +459,9 @@ class Subjects extends CActiveRecord
             $arr_subj = $subject->list_sub($item, $key, $options);
             foreach ($arr_subj as $subj) {
                 if($type==0){
-                    $result['_'. $subj['sbj_number']] = $subj['sbj_name'];
+                    $result[$prefix. $subj['sbj_number']] = $subj['sbj_name'];
                 }else
-                    $result['_' . $subj['sbj_number']] = Subjects::getSbjPath($subj['sbj_number']);
+                    $result[$prefix . $subj['sbj_number']] = Subjects::getSbjPath($subj['sbj_number']);
             }
         }
         if($type==1)
@@ -461,9 +470,9 @@ class Subjects extends CActiveRecord
                 $arr_subj = $subject->list_sub($item, '', $options);
                 foreach ($arr_subj as $subj) {
                     if($type==0){
-                        $result['_'. $subj['sbj_number']] = $subj['sbj_name'];
+                        $result[$prefix. $subj['sbj_number']] = $subj['sbj_name'];
                     }else
-                        $result['_' . $subj['sbj_number']]=Subjects::getSbjPath($subj['sbj_number']);
+                        $result[$prefix . $subj['sbj_number']]=Subjects::getSbjPath($subj['sbj_number']);
                 }
             }
         return $result;
@@ -608,4 +617,43 @@ class Subjects extends CActiveRecord
         else
             return true;
     }
+
+    /*
+     * 获取期初余额
+     *
+     * @sbj Integer 科目编号
+     * @return Float 科目编号所有子科目下的期初余额总和
+     */
+    public static function get_balance($sbj){
+        $sbj = Subjects::model()->findByAttributes(['sbj_number'=>$sbj]);
+        $result = $sbj->start_balance;
+        if($sbj->has_sub){
+            $subs = Subjects::model()->get_sub($sbj->sbj_number);
+            foreach($subs as $item){
+                $result += $item->start_balance;
+            }
+        }
+        return $result;
+    }
+
+    /*
+     * 获取科目编号下的，所有子科目
+     *
+     * @sbj Integer 科目编号
+     * @type Integer 是否包含$sbj参数科目
+     * @return Array 所有子科目
+     */
+    public function get_sub($sbj, $type=1){
+        if($sbj=='')
+            return [];
+        $model = $this->findByAttributes(['sbj_number'=>$sbj]);
+        if($model==null||$model->has_sub==0)
+            return [];
+        $table = $this->tableName();
+        $sql = "select * from $table where sbj_number like '$sbj%'";
+        $sql .= $type==1?"and sbj_number <> '$sbj'":"";
+        $subs = $this->findAllBySql($sql);
+        return $subs;
+    }
+
 }

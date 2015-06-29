@@ -1,7 +1,7 @@
 <?php
 /* @var $this SiteController */
 /* @var $operation string */
-Yii::import('ext.select2.Select2');
+Yii::import('ext.select2.ESelect2');
 
 $this->pageTitle = Yii::app()->name;
 
@@ -31,7 +31,7 @@ $list = $this->listMonth('listSettlement');
                     $data[$year . $month] = $year . '年' . $month;
                 }
             }
-            $this->widget('Select2', array(
+            $this->widget('ESelect2', array(
                 'name' => 'edate',
                 'data' => $data,
                 'htmlOptions' => array('class' => 'action')

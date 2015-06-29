@@ -348,9 +348,16 @@ class Transition extends CActiveRecord
             "entry_date" => "",
             "entry_memo" => "",
             "entry_amount" => "",
+            "entry_transaction" => "",
             "d_id" => "",
             "entry_subject" => "",
-            "entry_transaction" => "",
+            "subject_2" => "",
+            "entry_appendix_id" => "",
+            "vendor_id" => "",
+            "price" => "",
+            "count" => "1",
+            "unit" => "",
+            "paid" => "",
             "invoice" => "0",
             "tax" => "0",
             "parent" => "",
@@ -366,6 +373,7 @@ class Transition extends CActiveRecord
 
             ],
             "entry_reviewed" => "0",
+            "status_id" => "1",
         ];
         if (is_array($items)) {
             $arr = array_merge($arr, $items);
@@ -906,4 +914,63 @@ class Transition extends CActiveRecord
         $rows = Transition::model()->updateAll(['entry_subject' => $sbj2], $criteria);
     }
 
+    /*
+     * 税率
+     */
+    public static function getTaxArray($type='sale'){
+        if($type=='sale'){
+            return [
+                '3'=>'3%增值税发票',
+                '5'=>'5%营业税发票',
+                '6'=>'6%增值税发票',
+                '13'=>'13%增值税发票',
+                '17'=>'17%增值税发票',
+            ];
+        }elseif($type=='purchase'){
+                return [
+                    '3'=>'3%增值税专用发票',
+                    '6'=>'6%增值税专用发票',
+                    '13'=>'13%增值税专用发票',
+                    '17'=>'17%增值税专用发票',
+                    '0'=>'其他发票',
+                ];
+        }
+    }
+
+    /*
+     * 税率
+     */
+    public static function getSubjectArray($prefix='_'){
+        $subject = new Subjects();
+        $arr = [1601, 1403, 1405, 6602, 6601, 6401, 1701];
+        $result = $subject->getitem($arr, '', ['reject' => ['工资', '社保', '公积金', '折旧费', '研发费'],'prefix'=>$prefix]);
+        return $result;
+    }
+
+    /*
+     *
+     */
+    public static function getAllMount($sbj,$transaction){
+        $arr = Subjects::model()->get_sub($sbj, 2);
+        $result = 0;
+        foreach($arr as $item){
+            $result += self::getMount($item['sbj_number'],$transaction);
+        }
+        return $result;
+    }
+    /*
+     *
+     */
+    public static function getMount($sbj,$transaction){
+        $models = Transition::model()->findAllByAttributes(['entry_subject'=>$sbj,'entry_transaction'=>$transaction]);
+        $mount = 0;
+        if(!empty($models)){
+            foreach($models as $item){
+                $mount += $item->entry_amount;
+            }
+            return $mount;
+        }
+        else
+            return 0;
+    }
 }

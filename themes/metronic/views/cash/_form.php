@@ -13,7 +13,6 @@ $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/jquery-ui.min.css
 $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/theme.css');
 $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/custom.css');
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/import.js', CClientScript::POS_HEAD);
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/import_datepicker.js', CClientScript::POS_HEAD);
 */
 
 ?>

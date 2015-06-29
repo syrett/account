@@ -186,6 +186,54 @@ class TransitionController extends Controller
     /**
      * 银行.
      */
+    public function actionPurchase()
+    {
+        $info = [];
+        Yii::import('ext.phpexcel.PHPExcel.PHPExcel_IOFactory');
+        if (Yii::app()->request->isPostRequest) {
+            //上传附件查看
+            if ($_FILES['attachment']!='' && file_exists($_FILES['attachment']['tmp_name'])) {
+                $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
+                $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+                if (!isset($_REQUEST['first']))
+                    array_shift($list);
+                foreach($list as $item){
+                    $sheetData[] = Transition::getSheetData($item);
+                }
+            } elseif($_FILES['attachment']['name']==''){
+                //保存按钮
+                $arr = $this->saveAll('purchase');
+                if (!empty($arr))
+                    foreach ($arr as $item) {
+                        $data = Transition::getSheetData($item['data']);
+                        if ($item['status'] == 0) {
+                            Yii::app()->user->setFlash('error', "保存失败!");
+                            $sheetData[] = $data;
+                        }
+                        if ($item['status'] == 2) {
+                            Yii::app()->user->setFlash('error', "数据保存成功，未生成凭证");
+                            $sheetData[] = $data;
+                        }
+                    }
+                else{
+                    Yii::app()->user->setFlash('success', "保存成功!");
+                    //跳转到历史数据管理页面
+                    $this->redirect(Yii::app()->createUrl('purchase'));
+                }
+            }
+        }
+
+        if (empty($sheetData)){
+            $sheetData[] = Transition::getSheetData();
+        }
+
+        $model[] = new Transition();
+        return $this->render('head', ['type' => 'purchase', 'sheetData' => $sheetData, 'info' => $info]);
+    }
+
+    /**
+     * 银行.
+     */
     public function actionBank()
     {
         $info = [];
@@ -1162,28 +1210,39 @@ class TransitionController extends Controller
         $trans = $_POST['lists'];
         $result = [];
         $newone = 0;
-        $subject_2 = $_POST['subject_2'];
         foreach ($trans as $key => $item) {
-            if ($type == 'bank')
+            $arr = $item['Transition'];
+            $subject_2 = $arr['subject_2'];
+            $arr['amount'] = $arr['entry_amount'];
+            $arr['entry_date'] = date('Ymd',strtotime($arr['entry_date']));
+            if ($type == 'bank'){
                 $model = new Bank;
-            if ($type == 'cash')
+            }
+            if ($type == 'cash'){
                 $model = new Cash;
+            }
+            if ($type == 'purchase'){
+                $model = new Purchase();
+                $arr['order_no'] = isset($arr['order_no'])?$arr['order_no']:$model->initOrderno();
+                $stock = new Stock();
+                $stock->load($arr);
+                $stock->delStock();
+                $stock->saveMultiple($arr['count']);
+            }
             if($newone==0)
             if ($id != '' && $id != '0')
                 $model = $model::model()->findByPk($id);
             elseif (!empty($item['Transition']['d_id']))
                 $model = $model::model()->findByPk($item['Transition']['d_id']);
             $newone ++;
-            $arr = $item['Transition'];
-            $arr['amount'] = $arr['entry_amount'];
             $arr['subject_2'] = $subject_2;
             $arr['updated_at'] = time();
             $model->load($arr);
-            if ($arr['entry_amount'] == "" || $arr['entry_amount'] == 0) {
+            if ($arr['price'] == "" || $arr['price'] == 0) {
                 $arr['error'] = ['金额不能为空或为0'];
                 $result[] = ['status' => 0, 'data' => $arr];
                 continue;
-            }elseif(!checkAmount($arr['entry_amount'])){
+            }elseif(!checkAmount($arr['price'])){
                 $arr['error'] = ['金额格式不正确'];
                 $result[] = ['status' => 0, 'data' => $arr];
                 continue;

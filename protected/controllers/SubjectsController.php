@@ -84,11 +84,15 @@ class SubjectsController extends Controller
 //            $sbj_type = $_POST['sbj_type'];
             $sbj_type = 2;
             $new_sbj = Subjects::model()->init_new_sbj_number($old_sbj_number, $sbj_type);
+            $pmodel = Subjects::model()->findByAttributes(['sbj_number'=>$old_sbj_number]);
+
             $_POST['Subjects']['sbj_number'] = $new_sbj[0];
-            $sbj_cat = Subjects::model()->getCat($old_sbj_number);
-            $_POST['Subjects']['sbj_cat'] = $sbj_cat;
+            $_POST['Subjects']['sbj_cat'] = $pmodel->sbj_cat;
+            $_POST['Subjects']['start_balance'] = $pmodel->start_balance;
             $model->attributes = $_POST['Subjects'];
             if ($model->save()) {
+                $pmodel->start_balance = 0;
+                $pmodel->save();
                 //如果是新的子科目，将post中科目表id修改为新id
 //                $sbj_id = trim($_POST['Subjects']['sbj_number']);
                 $sbj_id = $new_sbj[0];
@@ -146,9 +150,9 @@ class SubjectsController extends Controller
     public function actionDelete($id)
     {
         $sbj = $this->loadModel($id);
-        //无子科目，无期初余额
-        if($sbj->has_sub==1 || $sbj->start_balance!=0)
-            return true;
+        //有子科目，无法删除
+        if($sbj->has_sub==1)
+            echo "有子科目不能删除！";
         //有凭证
         if(Subjects::model()->hasTransition($sbj->sbj_number)){
             //有兄弟科目
@@ -160,6 +164,7 @@ class SubjectsController extends Controller
                 Post::model()->updateSubject($sbj->sbj_number);
                 Transition::model()->updateSubject($sbj->sbj_number, substr($sbj->sbj_number,0,-2));
                 Subjects::model()->noSub($sbj->sbj_number);
+                Subjects::model()->tranBalance($sbj->sbj_number);
                 $sbj->delete();
                 echo "删除成功！";
             }
@@ -173,6 +178,7 @@ class SubjectsController extends Controller
                     Post::model()->updateSubject($sbj->sbj_number);
                     //设置父科目 无子科目
                     Subjects::model()->noSub($sbj->sbj_number);
+                    Subjects::model()->tranBalance($sbj->sbj_number);
                     $sbj->delete();
                 }
                 echo "删除成功！";
@@ -281,5 +287,21 @@ class SubjectsController extends Controller
             echo json_encode($arr);
         }else
             throw new CHttpException(403, "无效的请求");
+    }
+
+    /*
+     * 新建科目
+     */
+    public function actionCreatesubject()
+    {
+        if (Yii::app()->request->isAjaxRequest) {
+            $name = $_POST['name'];
+            $sbj = $_POST['subject'];
+            $id = Subjects::model()->createSubject($name, $sbj);
+            if ($id)
+                echo $id;
+            else
+                echo 0;
+        }
     }
 }

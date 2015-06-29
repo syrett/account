@@ -20,7 +20,7 @@ class User2 extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'tbl_user2';
+		return 'yii2_start_users';
 	}
 
 	/**
@@ -101,4 +101,15 @@ class User2 extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+    public static function checkVIP($uid=0){
+        if($uid==0)
+            $uid = Yii::app()->user->id;
+        $user = User2::model()->find($uid);
+        if(empty($user) || $user->vip==0){
+            return false;
+        }else{
+            return true;
+        }
+    }
 }

@@ -1,6 +1,6 @@
 <!-- 科目余额表 -->
 <?php
-Yii::import('ext.select2.Select2');
+Yii::import('ext.select2.ESelect2');
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js', CClientScript::POS_HEAD);
 
@@ -49,7 +49,7 @@ $years = Transition::model()->hasTransitionYears();
 	请选择日期：
 	<div class="form-group">
     <?php
-         $this->widget('Select2', array(
+         $this->widget('ESelect2', array(
              'name' => 'year',
              'value' => $year,
              'data' => $years,
@@ -58,7 +58,7 @@ $years = Transition::model()->hasTransitionYears();
 	年
     <?php
          $months = array(1=>'1',2=>'2',3=>'3',4=>'4',5=>'5',6=>'6',7=>'7',8=>'8',9=>'9',10=>'10',11=>'11',12=>'12');
-         $this->widget('Select2', array(
+         $this->widget('ESelect2', array(
          'name' => 'fm',
          'value' => $fm,
          'data' => $months,
@@ -67,7 +67,7 @@ $years = Transition::model()->hasTransitionYears();
          月 至
          <?php
 
-         $this->widget('Select2', array(
+         $this->widget('ESelect2', array(
              'name' => 'tm',
              'value' => $tm,
              'data' => $months,

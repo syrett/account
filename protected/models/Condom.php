@@ -139,4 +139,15 @@ class Condom extends CActiveRecord
             return date("Ym", $time);
         }
     }
+
+    public function getName($dbname=''){
+        if($dbname==''){
+            $dbname = substr(SYSDB, 8);
+        }
+        $model = $this->findByAttributes(["dbname"=>$dbname]);
+        if($model!=null)
+            return $model->company;
+        else
+            return '未找到此公司名字';
+    }
 }

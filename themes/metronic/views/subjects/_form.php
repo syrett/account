@@ -57,7 +57,7 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
             <?php
             $data = Subjects::model()->listSubjects();
 
-            $this->widget('Select2', array(
+            $this->widget('ext.select2.ESelect2', array(
                 'model' => $model,
                 'attribute' => 'sbj_number',
                 'value' => 1,

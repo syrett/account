@@ -27,17 +27,16 @@ class VendorController extends Controller
 	public function accessRules()
 	{
 		return array(
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
-				'users'=>array('@'),
-			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
-				'users'=>array('@'),
-			),
-			array('deny',  // deny all users
-				'users'=>array('*'),
-			),
+            array('allow', // allow authenticated user to perform 'create' and 'update' actions
+                'users' => array('@'),
+            ),
+            array('allow', // allow admin user to perform 'admin' and 'delete' actions
+                'actions' => array('admin', 'delete'),
+                'users' => array('@'),
+            ),
+            array('deny',  // deny all users
+                'users' => array('*'),
+            ),
 		);
 	}
 
@@ -168,4 +167,39 @@ class VendorController extends Controller
 			Yii::app()->end();
 		}
 	}
+
+    /*
+     * 新建供应商
+     */
+    public function actionCreatevendor()
+    {
+        if (Yii::app()->request->isAjaxRequest ) {
+            $model = new Vendor();
+            $data['company'] = $_POST['name'];
+            $a = $model->model()->findByAttributes($data);
+            if ($a != null)
+                echo $a->id;
+            else {
+                $model = new Vendor;
+                $model->attributes = $data;
+                if ($model->save())
+                    echo $model->id;
+                else
+                    echo 0;
+            }
+        }
+    }
+
+    /*
+     * 获取供应商列表
+     */
+    public function actionGetvendor(){
+        if (Yii::app()->request->isAjaxRequest ) {
+            $vendors = Vendor::model()->findAll();
+            foreach($vendors as $vendor){
+                $result[$vendor->id] = $vendor->company;
+            }
+            echo json_encode($result);
+        }
+    }
 }

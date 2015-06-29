@@ -1,4 +1,3 @@
-
 <?php
 /* @var $this SubjectController */
 /* @var $dataProvider CActiveDataProvider */
@@ -38,4 +37,3 @@ $this->menu=array(
 		<?php $this->renderPartial('_form', array('model' => $model)); ?>
 	</div>
 </div>
-

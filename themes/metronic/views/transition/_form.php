@@ -14,6 +14,7 @@ $tranDate = $command->queryRow(); // execute a query SQL
   $model[0]=new Transition();
   }*/
 $subjects = Transition::model()->listSubjectsGrouped();
+
 ?>
 
 <?php echo CHtml::beginForm(); ?>
@@ -99,7 +100,17 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
                 <?php echo $form->error($item, '[$i]_entry_memo'); ?>
             </td>
             <td class="col-md-3">
-                <?php echo CHtml::activeDropDownList($item, "[$i]entry_subject", $subjects, array('class' => 'form-control v-subject')); ?>
+                <?php
+
+                $this->widget('ext.select2.ESelect2', array(
+                    'name' => "[$i]entry_subject",
+                    'id' => "Transition_$i". "_entry_subject",
+                    'value' => $item['entry_subject'],
+                    'data' => $subjects,
+                    'htmlOptions' => array('class' => 'form-control v-subject',)
+                ));
+//                CHtml::activeDropDownList($item, "[$i]entry_subject", $subjects, array('class' => 'form-control v-subject'));
+                ?>
                 <input type="hidden" value="<?= $i ?>"/>
             </td>
             <td class="col-md-1">

@@ -5,7 +5,7 @@
 /* @var $action string */
 
 Yii::app()->clientScript->registerCoreScript('jquery');
-Yii::import('ext.select2.Select2');
+Yii::import('ext.select2.ESelect2');
 $cs = Yii::app()->clientScript;
 //$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/jquery-ui-1.10.4.custom.js', CClientScript::POS_HEAD);
 //$cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/css/jquery-ui-1.10.4.custom.css');
@@ -152,7 +152,7 @@ $tranDate = $command->queryRow(); // execute a query SQL
                             $arr += array($row['id']=> $row['email']);
                         };
 //                        echo CHtml::activeDropDownList($model[0], 'entry_reviewer',$arr);
-                        $this->widget('Select2', array(
+                        $this->widget('ESelect2', array(
                             'name' => 'entry_reviewer',
                             'value' => $model[0]->entry_reviewer,
                             'data' => $arr,

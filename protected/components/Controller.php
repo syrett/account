@@ -33,7 +33,7 @@ class Controller extends CController
      */
     public function beforeAction($action){
         //以下controller才执行权限检验
-        $controllers = ['bank','cash','client','department','employee','options','post','project','report','subjects','transition','vendor'];
+        $controllers = ['bank','cash','purchase','product','client','department','employee','options','post','project','report','subjects','transition','vendor'];
         if(!in_array($this->uniqueId, $controllers))
             return true;
         else{
@@ -56,5 +56,12 @@ class Controller extends CController
             else
                 throw new CHttpException(403, '你没有权限操作此账套，请从管理页重新进入账套');
         }
+    }
+
+    /**
+     * 是否VIP
+     */
+    public function checkVIP(){
+        return User2::model()->checkVIP()?true:false;
     }
 }

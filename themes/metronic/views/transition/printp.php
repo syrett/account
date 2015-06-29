@@ -1,7 +1,7 @@
 <!-- 打印凭证 -->
 <?php
 
-Yii::import('ext.select2.Select2');
+Yii::import('ext.select2.ESelect2');
 Yii::app()->clientScript->registerCoreScript('jquery');
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/jquery-ui-1.10.4.custom.js', CClientScript::POS_HEAD);
@@ -56,7 +56,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/print.js', CCli
         $years = Transition::model()->hasTransitionYears();
         $months = array(1=>'1',2=>'2',3=>'3',4=>'4',5=>'5',6=>'6',7=>'7',8=>'8',9=>'9',10=>'10',11=>'11',12=>'12');
 
-        $this->widget('Select2', array(
+        $this->widget('ESelect2', array(
             'name' => 'year',
             'value' => $year,
             'data' => $years,
@@ -64,7 +64,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/print.js', CCli
         ?>
         年
         <?php
-        $this->widget('Select2', array(
+        $this->widget('ESelect2', array(
             'name' => 'fm',
             'value' => $fm,
             'data' => $months,
@@ -75,7 +75,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/print.js', CCli
         ?>
         月 至
         <?php
-        $this->widget('Select2', array(
+        $this->widget('ESelect2', array(
             'name' => 'tm',
             'value' => $tm,
             'data' => $months,

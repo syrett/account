@@ -194,3 +194,11 @@ function convertDate($str)
     } else
         return $str;
 }
+
+function addZero($num)
+{
+    if(strlen($num)>4)
+        return $num;
+    else
+        return substr(strval($num + 10000), 1, 4);
+}

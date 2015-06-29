@@ -10,10 +10,8 @@ $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/bootst
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scripts/checkinput.js', CClientScript::POS_END);
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js', CClientScript::POS_END);
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/pages/scripts/components-pickers.js', CClientScript::POS_END);
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scripts/import.js', CClientScript::POS_END);
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scripts/filechoose.js', CClientScript::POS_END);
 $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.css');
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/select2/select2.min.js', CClientScript::POS_END);
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/datatables/media/js/jquery.dataTables.min.js', CClientScript::POS_END);
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js', CClientScript::POS_END);
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/pages/scripts/table-managed.js', CClientScript::POS_END);
@@ -37,7 +35,7 @@ if ($bank_money == 'cash')
 <div class="portlet light">
 	<div class="portlet-title">
 		<div class="caption">
-		<span class="font-green-sharp">导入<?= Yii::t('import', $type) ?>交易</span>
+		<span class="font-green-sharp">导入<?= Yii::t('import', strtoupper($type)) ?>交易</span>
 		</div>
 		<div class="actions">
 			<?php echo CHtml::link('<i class="glyphicon glyphicon-search"></i> 已导入数据', array('/' . $type), array('class' => 'btn btn-circle btn-default')); ?>
@@ -57,6 +55,10 @@ if ($bank_money == 'cash')
 	}
 	?>
 	<?php
-	$this->renderPartial('_import', array('type'=>$type,'sheetData' => $sheetData)); ?>
+    if($this->checkVIP())
+        $this->renderPartial('_import_vip', array('type'=>$type,'sheetData' => $sheetData));
+    else
+        $this->renderPartial('_import', array('type'=>$type,'sheetData' => $sheetData));
+    ?>
 	</div>
 </div>

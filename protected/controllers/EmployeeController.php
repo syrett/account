@@ -27,17 +27,16 @@ class EmployeeController extends Controller
 	public function accessRules()
 	{
 		return array(
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
-				'users'=>array('@'),
-			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
-				'users'=>array('@'),
-			),
-			array('deny',  // deny all users
-				'users'=>array('*'),
-			),
+            array('allow', // allow authenticated user to perform 'create' and 'update' actions
+                'users' => array('@'),
+            ),
+            array('allow', // allow admin user to perform 'admin' and 'delete' actions
+                'actions' => array('admin', 'delete'),
+                'users' => array('@'),
+            ),
+            array('deny',  // deny all users
+                'users' => array('*'),
+            ),
 		);
 	}
 
@@ -174,4 +173,27 @@ class EmployeeController extends Controller
 			Yii::app()->end();
 		}
 	}
+
+    /*
+     * 保存员工
+     */
+    public function actionCreateemployee()
+    {
+        if (Yii::app()->request->isAjaxRequest ) {
+            $model = new Employee();
+            $data['name'] = $_POST['name'];
+            $data['department_id'] = $_POST['department'];
+            $a = $model->model()->findByAttributes($data);
+            if ($a != null)
+                echo $a->id;
+            else {
+                $model->name = $_POST['name'];
+                $model->department_id = $_POST['department'];
+                if ($model->save())
+                    echo $model->id;
+                else
+                    echo 0;
+            }
+        }
+    }
 }

@@ -201,42 +201,4 @@ class BankController extends Controller
             throw new CHttpException(403,'不允许提交');
     }
 
-    /*
-     * 保存员工
-     */
-    public function actionCreateemployee()
-    {
-        if (Yii::app()->request->isAjaxRequest ) {
-            $model = new Employee();
-            $data['name'] = $_POST['name'];
-            $data['department_id'] = $_POST['department'];
-            $a = $model->model()->findByAttributes($data);
-            if ($a != null)
-                echo $a->id;
-            else {
-                $model->name = $_POST['name'];
-                $model->department_id = $_POST['department'];
-                if ($model->save())
-                    echo $model->id;
-                else
-                    echo 0;
-            }
-        }
-    }
-
-    /*
-     * 新建科目
-     */
-    public function actionCreatesubject()
-    {
-        if (Yii::app()->request->isAjaxRequest) {
-            $name = $_POST['name'];
-            $sbj = $_POST['subject'];
-            $id = Subjects::model()->createSubject($name, $sbj);
-            if ($id)
-                echo $id;
-            else
-                echo 0;
-        }
-    }
 }

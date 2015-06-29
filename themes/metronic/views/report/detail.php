@@ -1,6 +1,6 @@
 <!-- 明细表 -->
 <?php
-Yii::import('ext.select2.Select2');
+Yii::import('ext.select2.ESelect2');
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js', CClientScript::POS_HEAD);
 ?>
@@ -42,7 +42,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
         $years = Transition::model()->hasTransitionYears();
         $months = array(1=>'1',2=>'2',3=>'3',4=>'4',5=>'5',6=>'6',7=>'7',8=>'8',9=>'9',10=>'10',11=>'11',12=>'12');
 
-        $this->widget('Select2', array(
+        $this->widget('ESelect2', array(
             'name' => 'year',
             'value' => $year,
             'data' => $years,
@@ -50,7 +50,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
         ?>
         年
         <?php
-        $this->widget('Select2', array(
+        $this->widget('ESelect2', array(
             'name' => 'fm',
             'value' => $fm,
             'data' => $months,
@@ -58,7 +58,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
         ?>
         月 至
         <?php
-        $this->widget('Select2', array(
+        $this->widget('ESelect2', array(
             'name' => 'tm',
             'value' => $tm,
             'data' => $months,
@@ -67,7 +67,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
 		月
         <label class="control-label" for="date">选择科目</label>
         <?php
-        $this->widget('Select2', array(
+        $this->widget('ESelect2', array(
             'name' => 'subject_id',
             'value' => $subject_id,
             'data' => Transition::model()->listSubjects(),

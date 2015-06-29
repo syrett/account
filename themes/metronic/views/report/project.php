@@ -1,6 +1,6 @@
 <!-- 项目报表 -->
 <?php
-Yii::import('ext.select2.Select2');
+Yii::import('ext.select2.ESelect2');
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js', CClientScript::POS_END);
 $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css');
@@ -40,7 +40,7 @@ function echoData($data)
 		<input type="text" data-date="201210" data-date-format="yyyymm" data-date-viewmode="years" data-date-minviewmode="months" name="date" class="form-control form-control-inline input-small date-picker" value="<?php echo isset($date)?$date:'' ?>" id="date" readonly="">
 		<label class="control-label" for="type">类别：</label>
 <?php
-  $this->widget('Select2', array(
+  $this->widget('ESelect2', array(
                                  'name' => 'type',
                                  'value' => $type,
                                  'data' => array(1=>"收入",2=>"成本"),

@@ -1,7 +1,7 @@
 <?php
 /* @var $this SiteController */
 /* @var $operation string */
-Yii::import('ext.select2.Select2');
+Yii::import('ext.select2.ESelect2');
 
 $this->pageTitle = Yii::app()->name;
 ?>
@@ -47,7 +47,7 @@ $this->pageTitle = Yii::app()->name;
         foreach($months as $month){
             $data[$year.$month] = $month;
         }
-        $this->widget('Select2', array(
+        $this->widget('ESelect2', array(
             'name' => 'date',
             'data' => $data,
             'htmlOptions' => array('class'=>'action')

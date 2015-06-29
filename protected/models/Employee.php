@@ -30,10 +30,9 @@ class Employee extends CActiveRecord
             array('name', 'required'),
             array('department_id', 'required'),
             array('id, department_id', 'numerical', 'integerOnly' => true),
-            array('name', 'length', 'max' => 100),
+            array('name, position', 'length', 'max' => 100),
             array('memo', 'length', 'max' => 200),
             // The following rule is used by search().
-            // @todo Please remove those attributes that should not be searched.
             array('id, name, memo, department_id', 'safe', 'on' => 'search'),
         );
     }
@@ -58,8 +57,9 @@ class Employee extends CActiveRecord
         return array(
             'id' => 'ID',
             'name' => '员工姓名',
-            'memo' => '备注',
             'department_id' => '部门',
+            'position' => '职位',
+            'memo' => '备注',
         );
     }
 
@@ -84,8 +84,9 @@ class Employee extends CActiveRecord
 
         $criteria->compare('id', $this->id);
         $criteria->compare('name', $this->name, true);
-        $criteria->compare('memo', $this->memo, true);
         $criteria->compare('department_id', $this->department_id);
+        $criteria->compare('position', $this->position, true);
+        $criteria->compare('memo', $this->memo, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

@@ -29,14 +29,13 @@ class Vendor extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('company', 'required'),
-			array('phone', 'required'),
+//			array('phone', 'required'),
 			array('id', 'numerical', 'integerOnly'=>true),
 			array('vat', 'length', 'max'=>45),
 			array('phone', 'length', 'max'=>20),
 			array('add', 'length', 'max'=>100),
 			array('memo', 'length', 'max'=>200),
 			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
 			array('id, vat, phone, add, memo', 'safe', 'on'=>'search'),
 		);
 	}
@@ -81,8 +80,6 @@ class Vendor extends CActiveRecord
 	 */
 	public function search()
 	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
-
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
@@ -116,5 +113,22 @@ class Vendor extends CActiveRecord
                        "company"=>$row["company"]);
       }
       return $arr;
+    }
+
+    public function getVendorArray(){
+        $data = self::model()->findAll();
+        foreach($data as $row){
+            $arr[$row['id']] = $row["company"];
+        }
+        return $arr;
+    }
+
+    public function getName($id){
+        if($id=='' || $id == 0)
+            return '无效的id';
+        else{
+            $model = $this->findByPk($id);
+            return $model->company;
+        }
     }
 }
