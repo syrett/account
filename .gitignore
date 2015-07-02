@@ -5,3 +5,5 @@ themes/classic/views/
 /framework/*
 test/*
 cache/*
+.idea/*
+logs/*

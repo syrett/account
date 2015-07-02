@@ -105,7 +105,7 @@ class User2 extends CActiveRecord
     public static function checkVIP($uid=0){
         if($uid==0)
             $uid = Yii::app()->user->id;
-        $user = User2::model()->find($uid);
+        $user = User2::model()->findByPk($uid);
         if(empty($user) || $user->vip==0){
             return false;
         }else{
