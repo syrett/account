@@ -2,7 +2,7 @@
 if (Yii::app()->user->isGuest) {
     // Guest users
     // Redirect to the main website
-//    header("location: http://www.sorcerer.com.cn");
+//    header("location: http://www.laofashigroup.com");
 //    exit;
 }
 Yii::app()->clientScript->scriptMap = array(
@@ -159,7 +159,7 @@ $baseUrl = Yii::app()->theme->baseUrl;
                                 <h3><span class="bold">专业培训</span></h3>
                             </li>
                             <li>
-                                <a href="http://www.sorcerer.com.cn/contact-us/" target="_blank">
+                                <a href="http://www.laofashigroup.com/contact-us/" target="_blank">
                                     <i class="icon-call-out"></i> 服务热线 400-821-0913 </a>
                             </li>
                         </ul>
@@ -448,7 +448,7 @@ $baseUrl = Yii::app()->theme->baseUrl;
 <!-- BEGIN FOOTER -->
 <div class="page-footer">
     <div class="page-footer-inner">
-        2015 &copy; <a href="http://www.sorcerer.com.cn" target="_blank">老法师（上海）财务咨询有限公司 版权所有</a>
+        2015 &copy; <a href="http://www.laofashigroup.com" target="_blank">老法师（上海）财务咨询有限公司 版权所有</a>
     </div>
     <div class="scroll-to-top">
         <i class="icon-arrow-up"></i>
