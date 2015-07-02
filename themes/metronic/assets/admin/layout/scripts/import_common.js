@@ -67,6 +67,7 @@ function setTarget(id) {
 //去除路径，只保留交易方名称abc ，路径格式为 ***/**/abc
 function removePath(path) {
     //正则匹配
+    path = $('<div>'+path+'</div>').text();
     var reg = /[^/]([^\x00-\xff]|\w)+(<i>|$)/;
     if (reg.test(path)) {
         path = path.match(reg)
@@ -135,10 +136,6 @@ function createVendor(data) {
         type: "POST",
         url: url,
         data: data,
-        //{
-        //        name: a.children("input[name=new-name]").val(),
-        //        subject: a.children("input[name=new-subject]").val()
-        //    },
         success: function (data) {
             result = data;
         },
@@ -190,7 +187,7 @@ function lockBank(e) {
 }
 
 function active(e) {
-    $(e).append('<i>已选择</i>')
+    //$(e).append('<i>已选择</i>')
 }
 
 function checkBank() {
