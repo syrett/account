@@ -35,6 +35,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/pages/script
 		<span class="font-green-sharp">交易信息修改</span>
 		</div>
 		<div class="actions">
+            <?php echo CHtml::link('<i class="glyphicon glyphicon-search"></i> 已导入数据', array('/bank'), array('class' => 'btn btn-circle btn-default')); ?>
 		    <a href="<?= $this->createUrl('transition/bank') ?>"  class="btn btn-circle btn-info btn-sm"><i class="fa fa-bank"></i> 导入银行交易</a>
 		    <a href="<?= $this->createUrl('transition/cash') ?>"  class="btn btn-circle btn-info btn-sm"><i class="fa fa-money"></i> 导入现金交易</a>
 		    <a href="<?= $this->createUrl('transition/create') ?>"  class="btn btn-circle btn-default btn-sm"><i class="fa fa-edit"></i> 手动录入凭证</a>

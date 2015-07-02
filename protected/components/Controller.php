@@ -64,4 +64,14 @@ class Controller extends CController
     public function checkVIP(){
         return User2::model()->checkVIP()?true:false;
     }
+
+    /*
+     * 凭证可选日期
+     */
+    public function getTransitionDate(){
+        $sql = 'select date from transitiondate';
+        $connection = Yii::app()->db;
+        $command = $connection->createCommand($sql);
+        return $command->queryRow();
+    }
 }

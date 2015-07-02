@@ -246,7 +246,7 @@ $baseUrl = Yii::app()->theme->baseUrl;
                                             <h4>其它</h4>
                                             <ul class="list-unstyled">
                                                 <li><a href="<?= $this->createUrl('subjects/create') ?>">会计科目</a></li>
-                                                <li><a href="<?= $this->createUrl('project/admin') ?>">Transaction</a>
+<!--                                                <li><a href="--><?//= $this->createUrl('project/create') ?><!--">工程项目</a>-->
                                                 </li>
                                             </ul>
                                         </div>

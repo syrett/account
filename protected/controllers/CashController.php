@@ -56,7 +56,7 @@ class CashController extends Controller
 						Yii::app()->user->setFlash('error', "保存失败!");
                         $model = $this->loadModel($id);
                         $sheetData[0]['status'] = 0;
-                        $sheetData[0]['data'] = Transition::getSheetData($item['data']);
+                        $sheetData[0]['data'] = Transition::getSheetData($item['data'],'cash');
 					}
 					if ($item['status'] == 2) {
 						Yii::app()->user->setFlash('error', "数据保存成功，未生成凭证");
@@ -68,13 +68,13 @@ class CashController extends Controller
 				Yii::app()->user->setFlash('success', "保存成功!");
 				$model = $this->loadModel($id);
                 $tran = Transition::model()->find(['condition' => 'data_id=:data_id', 'params' => [':data_id' => $id]]);
-                $sheetData[0]['data'] = Transition::getSheetData($model->attributes);
+                $sheetData[0]['data'] = Transition::getSheetData($model->attributes,'cash');
                 $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
             }
 		}else {
 			$model = $this->loadModel($id);
 			//收费版需要加载跟此数据相关的，关键字为parent
-			$sheetData[0]['data'] = Transition::getSheetData($model->attributes);
+			$sheetData[0]['data'] = Transition::getSheetData($model->attributes,'cash');
             if($model->status_id==1)
             {
                 $tran = Transition::model()->find(['condition' => 'data_id=:data_id', 'params' => [':data_id' => $id]]);

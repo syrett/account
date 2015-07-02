@@ -199,6 +199,7 @@ class Stock extends CActiveRecord
 
     public function getStockArray(){
         $data = self::model()->findAll(' 1=1 group by name');
+        $arr = [];
         foreach($data as $row){
             $arr[$row['name']] = $row["name"];
         }
@@ -232,5 +233,13 @@ class Stock extends CActiveRecord
         $builder=Yii::app()->db->schema->commandBuilder;
         $command=$builder->createMultipleInsertCommand($this->tableName(), $data);
         $command->execute();
+    }
+
+    public function matchName($name){
+        $stock = $this->findByAttributes([],['condition'=>'name like "%'.$name.'%"']);
+        if($stock!=null)
+            return $stock->name;
+        else
+            return $name;
     }
 }

@@ -131,4 +131,12 @@ class Vendor extends CActiveRecord
             return $model->company;
         }
     }
+
+    public function matchName($company){
+        $vendor = $this->findByAttributes([],['condition'=>'company like "%'.$company.'%"']);
+        if($vendor!=null)
+            return $vendor->id;
+        else
+            return 0;
+    }
 }

@@ -55,7 +55,7 @@ if ($bank_money == 'cash')
 	}
 	?>
 	<?php
-    if($this->checkVIP())
+    if($this->checkVIP()&&!in_array($type,['bank','cash']))
         $this->renderPartial('_import_vip', array('type'=>$type,'sheetData' => $sheetData));
     else
         $this->renderPartial('_import', array('type'=>$type,'sheetData' => $sheetData));

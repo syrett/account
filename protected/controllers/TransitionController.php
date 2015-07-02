@@ -184,7 +184,7 @@ class TransitionController extends Controller
     }
 
     /**
-     * 银行.
+     * 采购交易.
      */
     public function actionPurchase()
     {
@@ -198,14 +198,14 @@ class TransitionController extends Controller
                 if (!isset($_REQUEST['first']))
                     array_shift($list);
                 foreach($list as $item){
-                    $sheetData[] = Transition::getSheetData($item);
+                    $sheetData[] = Transition::getSheetData($item, 'purchase');
                 }
             } elseif($_FILES['attachment']['name']==''){
                 //保存按钮
                 $arr = $this->saveAll('purchase');
                 if (!empty($arr))
                     foreach ($arr as $item) {
-                        $data = Transition::getSheetData($item['data']);
+                        $data = Transition::getSheetData($item['data'], 'purchase');
                         if ($item['status'] == 0) {
                             Yii::app()->user->setFlash('error', "保存失败!");
                             $sheetData[] = $data;
@@ -224,7 +224,55 @@ class TransitionController extends Controller
         }
 
         if (empty($sheetData)){
-            $sheetData[] = Transition::getSheetData();
+            $sheetData[] = Transition::getSheetData([], 'purchase');
+        }
+
+        $model[] = new Transition();
+        return $this->render('head', ['type' => 'purchase', 'sheetData' => $sheetData, 'info' => $info]);
+    }
+
+    /**
+     * 产品销售.
+     */
+    public function actionSale()
+    {
+        $info = [];
+        Yii::import('ext.phpexcel.PHPExcel.PHPExcel_IOFactory');
+        if (Yii::app()->request->isPostRequest) {
+            //上传附件查看
+            if ($_FILES['attachment']!='' && file_exists($_FILES['attachment']['tmp_name'])) {
+                $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
+                $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+                if (!isset($_REQUEST['first']))
+                    array_shift($list);
+                foreach($list as $item){
+                    $sheetData[] = Transition::getSheetData($item, 'purchase');
+                }
+            } elseif($_FILES['attachment']['name']==''){
+                //保存按钮
+                $arr = $this->saveAll('purchase');
+                if (!empty($arr))
+                    foreach ($arr as $item) {
+                        $data = Transition::getSheetData($item['data'], 'purchase');
+                        if ($item['status'] == 0) {
+                            Yii::app()->user->setFlash('error', "保存失败!");
+                            $sheetData[] = $data;
+                        }
+                        if ($item['status'] == 2) {
+                            Yii::app()->user->setFlash('error', "数据保存成功，未生成凭证");
+                            $sheetData[] = $data;
+                        }
+                    }
+                else{
+                    Yii::app()->user->setFlash('success', "保存成功!");
+                    //跳转到历史数据管理页面
+                    $this->redirect(Yii::app()->createUrl('purchase'));
+                }
+            }
+        }
+
+        if (empty($sheetData)){
+            $sheetData[] = Transition::getSheetData([], 'purchase');
         }
 
         $model[] = new Transition();
@@ -246,14 +294,14 @@ class TransitionController extends Controller
                 if (!isset($_REQUEST['first']))
                     array_shift($list);
                 foreach($list as $item){
-                    $sheetData[] = Transition::getSheetData($item);
+                    $sheetData[] = Transition::getSheetData($item,'bank');
                 }
             } elseif($_FILES['attachment']['name']==''){
                 //保存按钮
                 $arr = $this->saveAll('bank');
                 if (!empty($arr))
                     foreach ($arr as $item) {
-                        $data = Transition::getSheetData($item['data']);
+                        $data = Transition::getSheetData($item['data'],'bank');
                         if ($item['status'] == 0) {
                             Yii::app()->user->setFlash('error', "保存失败!");
                             $sheetData[] = $data;
@@ -272,7 +320,7 @@ class TransitionController extends Controller
         }
 
         if (empty($sheetData)){
-            $sheetData[] = Transition::getSheetData();
+            $sheetData[] = Transition::getSheetData([],'bank');
         }
 
         $model[] = new Transition();
@@ -294,14 +342,14 @@ class TransitionController extends Controller
                 if (!isset($_REQUEST['first']))
                     array_shift($list);
                 foreach($list as $item){
-                    $sheetData[] = Transition::getSheetData($item);
+                    $sheetData[] = Transition::getSheetData($item,'cash');
                 }
             } elseif($_FILES['attachment']['name']==''){
                 //保存按钮,
                 $arr = $this->saveAll('cash');
                 if (!empty($arr))
                     foreach ($arr as $item) {
-                        $data = Transition::getSheetData($item['data']);
+                        $data = Transition::getSheetData($item['data'],'cash');
                         if ($item['status'] == 0) {
                             Yii::app()->user->setFlash('error', "保存失败!");
                             $sheetData[] = $data;
@@ -321,7 +369,7 @@ class TransitionController extends Controller
         }
 
         if (empty($sheetData)){
-            $sheetData[] = Transition::getSheetData();
+            $sheetData[] = Transition::getSheetData([],'cash');
         }
 
         $model[] = new Transition();
@@ -1212,12 +1260,12 @@ class TransitionController extends Controller
         $newone = 0;
         foreach ($trans as $key => $item) {
             $arr = $item['Transition'];
-            $subject_2 = $_POST['subject_2'];
-            $arr['subject_2'] = $subject_2;
             $arr['updated_at'] = time();
             $arr['price'] = $arr['entry_amount'];
             $arr['entry_date'] = date('Ymd',strtotime($arr['entry_date']));
             if ($type == 'bank'){
+                $subject_2 = $_POST['subject_2'];
+                $arr['subject_2'] = $subject_2;
                 $model = new Bank;
             }
             if ($type == 'cash'){
@@ -1308,7 +1356,7 @@ class TransitionController extends Controller
                         $data['entry_transaction'] = $tran->entry_transaction == 1 ? 2 : 1;
                     else
                         $tran['entry_amount'] = -$tran['entry_amount'];
-                    $data['entry_subject'] = $subject_2;  // 银行存款（1002），现金
+                    $data['entry_subject'] = $arr['subject_2'];
                     $tran2->attributes = $data;
                     try{
                         if ($model->id != '')

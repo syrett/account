@@ -238,7 +238,7 @@ class Transition extends CActiveRecord
     {
         $sql = 'select date from `transitiondate` ';
         $date = Yii::app()->db->createCommand($sql)->queryRow();
-        if (!empty($date['date']))
+        if ($date['date']!=null)
             return $date['date'];
         else {
             $date = Condom::model()->getStartTime();
@@ -341,7 +341,7 @@ class Transition extends CActiveRecord
     /*
      * 初始数据
      */
-    public static function getSheetData($items = [])
+    public static function getSheetData($items = [], $type)
     {
         $arr = [
             "entry_name" => "",
@@ -377,15 +377,26 @@ class Transition extends CActiveRecord
         ];
         if (is_array($items)) {
             $arr = array_merge($arr, $items);
-            if (isset($items['B']) || isset($items['C'])) {
-                $arr['entry_name'] = trim($items['A']);
-                $arr['entry_date'] = convertDate($items['B']);
-                $arr['entry_memo'] = trim($items['C']);
+            if (isset($items['B'])) { //未严格限制必须某一列必须有数据才可
+                if($type=='bank'||$type=='cash'){   //vip用户还要做区分
+                    $arr['entry_name'] = trim($items['A']);
+                    $arr['entry_date'] = convertDate($items['B']);
+                    $arr['entry_memo'] = trim($items['C']);
 
-                $amount = trim($items['D']) != '' ? $items['D'] : $items['E'];
+                    $amount = trim($items['D']) != '' ? $items['D'] : $items['E'];
+                }else if($type=='purchase'){
+                    $arr['entry_date'] = convertDate($items['A']);
+                    $arr['entry_memo'] = trim($items['B']);
+                    $arr['entry_appendix_id'] = Vendor::model()->matchName(trim($items['C']));
+                    $arr['entry_name'] = Stock::model()->matchName(trim($items['D']));
+                    $amount = trim($items['E']);
+                    $arr['count'] = trim($items['F']);
+
+                }
                 $amount = str_replace(" ", '', $amount);  //英文空格
                 $amount = str_replace(" ", '', $amount);  //可能是中文或英文全角空格
                 $arr['entry_amount'] = str_replace(",", "", trim($amount));
+                $arr['price'] = str_replace(",", "", trim($amount));
             } else {
                 foreach ($items as $key => $item) {
                     if (!is_array($item)) {
@@ -404,8 +415,6 @@ class Transition extends CActiveRecord
             }
         }
         return $arr;
-
-
     }
 
     /**

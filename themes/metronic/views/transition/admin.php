@@ -134,7 +134,7 @@ $cs->registerScript('ComponentsPickersInit','ComponentsPickers.init();', CClient
 					),
 				array(
 					'name'=>'entry_memo',
-					'type'=>'shortText',
+//					'type'=>'shortText',
 					'headerHtmlOptions' => array('class'=>'sorting_disabled'),
 					'sortable' => false,
 					),

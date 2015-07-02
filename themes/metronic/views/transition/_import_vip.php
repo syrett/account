@@ -7,6 +7,7 @@ require_once(dirname(__FILE__) . '/../viewfunctions.php');
 
 $cs = Yii::app()->getClientScript();
 $baseUrl = Yii::app()->theme->baseUrl;
+$cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_common.js');
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_vip.js');
 $this->pageTitle = Yii::app()->name;
 ?>
@@ -32,7 +33,7 @@ $this->pageTitle = Yii::app()->name;
                     </div>
                 </div>
                 <div class="btn-toolbar margin-bottom-10">
-                    <i class="fa fa-file-excel-o"></i> <a href="/download/导入模板.xlsx">模板下载</a>
+                    <i class="fa fa-file-excel-o"></i> <a href="/download/<?=Yii::t('import',strtoupper($type))?>.xlsx">模板下载</a>
                     <input type="checkbox" class="" name="first" id="first"/><label for="first">第一行包含数据</label>
                     <button type="submit" class="btn btn-default btn-file btn-xs purple">导入</button>
                 </div>
@@ -58,12 +59,16 @@ $this->pageTitle = Yii::app()->name;
                 </tr>
                 <?php
                 if (!empty($sheetData)) {
+                    $vendorArray = Vendor::model()->getVendorArray();
+                    $stockArray = Stock::model()->getStockArray();
+                    $taxArray = Transition::getTaxArray('purchase');
+                    $subjectArray = Transition::getSubjectArray('');
                     foreach ($sheetData as $key => $item) {
                         ?>
                         <tr line="<?= $key ?>" <?= $key % 2 == 1 ? 'class="table-tr"' : '' ?>>
                             <td><input type="checkbox" id="item_<?= $key ?>" name="lists[<?= $key ?>]"
                                        value="<?= isset($item['id']) ? $item['id'] : '' ?>"></td>
-                            <td><input class="input_mid date-picker" type="text" id="tran_date_<?= $key ?>"
+                            <td><input class="input_mid" type="text" id="tran_date_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_date]"
                                        value="<?= $item['entry_date'] ?>">
                             </td>
@@ -76,18 +81,21 @@ $this->pageTitle = Yii::app()->name;
                                     'name' => 'lists[' . $key . '][Transition][entry_appendix_id]',
                                     'id' => 'tran_appendix_id_' . $key,
                                     'value' => $item['entry_appendix_id'],
-                                    'data' => Vendor::model()->getVendorArray(),
+                                    'data' => $vendorArray,
                                     'options' => array('formatNoMatches' => 'js:function(term){return Not_Found("vendor",term,' . $key . ')}'),
                                     'htmlOptions' => array('class' => 'select-full',)
                                 ));
                                 ?>
                             </td>
                             <td><?
+                                if(!in_array($item['entry_name'],$stockArray)){
+                                    $stockArray+=[$item['entry_name']=>$item['entry_name']];
+                                }
                                 $this->widget('ext.select2.ESelect2', array(
                                     'name' => 'lists[' . $key . '][Transition][entry_name]',
                                     'id' => 'tran_entry_name_' . $key,
                                     'value' => $item['entry_name'],
-                                    'data' => Stock::model()->getStockArray(),
+                                    'data' => $stockArray,
                                     'options' => array('formatNoMatches' => 'js:function(term){return Not_Found("stock",term,' . $key . ')}'),
                                     'htmlOptions' => array('class' => 'select-full',)
                                 ));
@@ -97,7 +105,7 @@ $this->pageTitle = Yii::app()->name;
                                        name="lists[<?= $key ?>][Transition][price]" onkeyup="checkinput1(this)"
                                        onblur="checkinput1(this)" value="<?= $item['price'] ?>">
                             </td>
-                            <td><input class="input_min" type="text" id="tran_count_<?= $key ?>" placeholder="数量"
+                            <td><input class="input_min" type="number" min="1" id="tran_count_<?= $key ?>" placeholder="数量"
                                        name="lists[<?= $key ?>][Transition][count]" onkeyup="checkinput2(this)"
                                        onblur="checkinput1(this)" value="<?= $item['count'] ?>">
                             </td>
@@ -109,18 +117,17 @@ $this->pageTitle = Yii::app()->name;
                                     'name' => 'lists[' . $key . '][Transition][tax]',
                                     'id' => 'tran_tax_' . $key,
                                     'value' => $item['tax'],
-                                    'data' => Transition::getTaxArray('purchase'),
+                                    'data' => $taxArray,
                                     'htmlOptions' => array('class' => 'select-full')
                                 ));
                                 ?>
                             </td>
                             <td><?
-                                $data = Transition::getSubjectArray('');
                                 //                                $data += ['商品采购' => '商品采购'];
                                 $this->widget('ext.select2.ESelect2', array(
                                     'name' => 'lists[' . $key . '][Transition][subject]',
                                     'id' => 'tran_subject_' . $key,
-                                    'data' => $data,
+                                    'data' => $subjectArray,
                                     'value' => $item['entry_subject'],
                                     'options' => array('formatNoMatches' => 'js:function(term){return Not_Found("subject",term,' . $key . ')}'),
                                     'htmlOptions' => array('class' => 'select-full',)
@@ -169,7 +176,7 @@ $this->pageTitle = Yii::app()->name;
 
                                 <div>
 
-                                    <button type="button" class="hidden btn btn-default"
+                                    <button type="button" id="btn_confirm_<?= $key ?>" class="hidden btn btn-default"
                                             onclick="itemSetDefault(this, '<?= $type ?>')">确认
                                     </button>
 

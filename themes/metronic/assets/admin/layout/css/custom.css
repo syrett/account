@@ -1,7 +1,6 @@
 /* here put own css to customize and override the theme */
 
 .reviewed, .deleted {
-    width: 50px;
     padding: 6px;
     margin-right: 5px;
     display: inline-block;

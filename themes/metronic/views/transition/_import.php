@@ -9,13 +9,11 @@ Yii::import('ext.select2.ESelect2', true);
 //Yii::app()->clientScript->registerCoreScript('jquery');
 $cs = Yii::app()->clientScript;
 $baseUrl = Yii::app()->theme->baseUrl;
+$cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_common.js');
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import.js');
 
 $this->pageTitle = Yii::app()->name;
-$sql = 'select date from transitiondate'; // 一级科目的为1001～9999$SQL="SQL Statemet"
-$connection = Yii::app()->db;
-$command = $connection->createCommand($sql);
-$tranDate = $command->queryRow(); // execute a query SQL
+$tranDate = $this->getTransitionDate();
 /*if(!isset($model)){
   $model = array();
   $model[0]=new Transition();
@@ -45,7 +43,7 @@ $tranDate = $command->queryRow(); // execute a query SQL
                     </div>
                 </div>
                 <div class="btn-toolbar margin-bottom-10">
-                    <i class="fa fa-file-excel-o"></i> <a href="/download/导入模板.xlsx">模板下载</a>
+                    <i class="fa fa-file-excel-o"></i> <a href="/download/<?=Yii::t('import',$type)?>.xlsx">模板下载</a>
                     <input type="checkbox" class="" name="first" id="first"/><label for="first">第一行包含数据</label>
                     <button type="submit" class="btn btn-default btn-file btn-xs purple">导入</button>
                 </div>

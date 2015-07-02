@@ -18,8 +18,8 @@ function checkInputAmount(ob) {
         var b = /-?[1-9]?\d*\.?\d?\d?|-?0\.\d?\d?/;
         ob.value = b.exec(ob.value);
     }
-    if($(ob).nextAll("span[class='info_warning']").length > 0){
-        $(ob).nextAll("span[class='info_warning']").html("");
+    if($(ob).nextAll("span[class='label-warning']").length > 0){
+        $(ob).nextAll("span[class='label-warning']").html("");
     }
 }
 //没有负数
