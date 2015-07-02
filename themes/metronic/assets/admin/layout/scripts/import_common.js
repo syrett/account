@@ -194,7 +194,7 @@ function active(e) {
 }
 
 function checkBank() {
-    if ($("#subject_2").length > 0 && $("#subject_2").attr("readonly") == undefined)
+    if ($("select[id='subject_2']").length > 0 && $("#subject_2").attr("readonly") == undefined)
         alert("请锁定银行")
     else
         return true;

@@ -1286,7 +1286,6 @@ class TransitionController extends Controller
             elseif (!empty($item['Transition']['d_id']))
                 $model = $model::model()->findByPk($item['Transition']['d_id']);
             $newone ++;
-            $model->load($arr);
             if ($arr['price'] == "" || $arr['price'] == 0) {
                 $arr['error'] = ['金额不能为空或为0'];
                 $result[] = ['status' => 0, 'data' => $arr];
@@ -1316,6 +1315,7 @@ class TransitionController extends Controller
                 continue;
             }
 
+            $model->load($arr);
             if ($model->save() && $arr['entry_subject'] != '') {   //有科目编号才能创建凭证
 
                 $tran = new Transition;
@@ -1361,7 +1361,7 @@ class TransitionController extends Controller
                     $tran2->attributes = $data;
                     try{
                         if ($model->id != '')
-                            $this->delTran(1, $model->id);
+                            $this->delTran($type, $model->id);
                         if($arr['status_id']=="1"||$arr['status_id']=="0")  //为2是银行间转账，不需要生成凭证
                             if ($tran->save() && $tran2->save()) {
                                 foreach ($list as $item) {
@@ -1395,16 +1395,12 @@ class TransitionController extends Controller
 
     /*
      * 删除旧的凭证
-     * @type integer
+     * @type String
      * @id integer
      */
     public function delTran($type, $id)
     {
-        switch ($type) {
-            case 1:
-                Transition::model()->deleteAll('data_id=:id', [':id' => $id]);
-                break;
-        }
+        Transition::model()->deleteAll('data_type=:type and data_id=:id ', [':type' => $type,':id' => $id]);
     }
 
     /*

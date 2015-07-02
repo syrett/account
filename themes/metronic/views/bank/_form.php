@@ -7,6 +7,7 @@ Yii::import('ext.select2.ESelect2', true);
 //Yii::app()->clientScript->registerCoreScript('jquery');
 $cs = Yii::app()->clientScript;
 $baseUrl = Yii::app()->theme->baseUrl;
+$cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_common.js');
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import.js');
 
 $this->pageTitle = Yii::app()->name;
