@@ -1,6 +1,6 @@
 <?php
 
-class ReportController extends CController
+class ReportController extends Controller
 {
 
     public function filters()

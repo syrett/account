@@ -33,7 +33,7 @@ $this->pageTitle = Yii::app()->name;
                     </div>
                 </div>
                 <div class="btn-toolbar margin-bottom-10">
-                    <i class="fa fa-file-excel-o"></i> <a href="/download/<?=Yii::t('import',strtoupper($type))?>.xlsx">模板下载</a>
+                    <i class="fa fa-file-excel-o"></i> <a download="" href="/download/<?=Yii::t('import',strtoupper($type))?>.xlsx">模板下载</a>
                     <input type="checkbox" class="" name="first" id="first"/><label for="first">第一行包含数据</label>
                     <button type="submit" class="btn btn-default btn-file btn-xs purple">导入</button>
                 </div>

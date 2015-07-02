@@ -1269,6 +1269,7 @@ class TransitionController extends Controller
                 $model = new Bank;
             }
             if ($type == 'cash'){
+                $arr['subject_2'] = 1001;   //库存现金
                 $model = new Cash;
             }
             if ($type == 'purchase'){

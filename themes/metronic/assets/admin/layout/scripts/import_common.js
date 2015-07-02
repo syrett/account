@@ -68,7 +68,7 @@ function setTarget(id) {
 function removePath(path) {
     //正则匹配
     var reg = /[^/]([^\x00-\xff]|\w)+(<i>|$)/;
-    if (reg.test(path)){
+    if (reg.test(path)) {
         path = path.match(reg)
         reg = /[^<i>]*/;
         return path[0].match(reg);
@@ -81,17 +81,17 @@ function setTransaction(id) {
     var type = $(".options:first > button.active").val();
     if (type == '支出')
         $("#transaction_" + id).val(1)
-    if (type == '收入'){
+    if (type == '收入') {
         $("#transaction_" + id).val(2)
     }
-    if ($("#subject").val()==660302)    //利息费用
+    if ($("#subject").val() == 660302)    //利息费用
         $("#transaction_" + id).val(1)
     //设置是否需要生成凭证，例：银行互转，收入方不需要
     var option = $(".options:nth-of-type(3) > button.active").val();
-    if (option=='银行转账')
-        $("#status_id_"+ id).val("2")   //这种状态不需要生成凭证
+    if (option == '银行转账')
+        $("#status_id_" + id).val("2")   //这种状态不需要生成凭证
     else
-        $("#status_id_"+ id).val("1")
+        $("#status_id_" + id).val("1")
 }
 //消除数据，设置前先消除
 function unset(id) {
@@ -127,7 +127,7 @@ function createSubject(data) {
     })
     return result;
 }
-function createVendor(data){
+function createVendor(data) {
     var url = $("#new-vendor").val();
     var result = 0;
     $.ajax({
@@ -171,9 +171,8 @@ function addBank() {
 /*
  解锁，锁定银行
  */
-function lockBank(e){
-    if(e.value==1)
-    {
+function lockBank(e) {
+    if (e.value == 1) {
         var url = $("#user-bank").val();
         $.ajax({
             type: "POST",
@@ -183,19 +182,19 @@ function lockBank(e){
         $("#subject_2").select2("readonly", true);
         $(e).html("解锁银行");
     }
-    else{
+    else {
         $("#subject_2").select2("readonly", false);
         $(e).html("锁定银行");
     }
-    e.value = e.value==0?1:0;
+    e.value = e.value == 0 ? 1 : 0;
 }
 
-function active(e){
+function active(e) {
     $(e).append('<i>已选择</i>')
 }
 
-function checkBank(){
-    if ($("#subject_2").attr("readonly")==undefined)
+function checkBank() {
+    if ($("#subject_2").length > 0 && $("#subject_2").attr("readonly") == undefined)
         alert("请锁定银行")
     else
         return true;

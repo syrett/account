@@ -305,7 +305,7 @@ table#balance td, table#profit td, table#subjects td, table#project td, table#de
 }
 
 .options > .active > i {
-    background-image: url(../img/check-16-icon.png);
+    /*background-image: url(../img/check-16-icon.png);*/
     position: absolute;
     bottom: 0;
     right: 0;

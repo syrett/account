@@ -216,11 +216,11 @@ $baseUrl = Yii::app()->theme->baseUrl;
                                         <div class="col-md-4">
                                             <h4>组织</h4>
                                             <ul class="list-unstyled">
-                                                <li><a href="<?= $this->createUrl('project/create') ?>">项目</a></li>
-                                                <li><a href="<?= $this->createUrl('client/create') ?>">客户</a></li>
                                                 <li><a href="<?= $this->createUrl('vendor/create') ?>">供应商</a></li>
-                                                <li><a href="<?= $this->createUrl('employee/create') ?>">员工</a></li>
+                                                <li><a href="<?= $this->createUrl('client/create') ?>">客户</a></li>
                                                 <li><a href="<?= $this->createUrl('department/create') ?>">部门</a></li>
+                                                <li><a href="<?= $this->createUrl('employee/create') ?>">员工</a></li>
+                                                <li><a href="<?= $this->createUrl('project/create') ?>">项目</a></li>
                                             </ul>
                                         </div>
                                         <div class="col-md-4">
@@ -230,15 +230,15 @@ $baseUrl = Yii::app()->theme->baseUrl;
                                                     ?>
 
                                                     <li>
-                                                        <a href="<?= $this->createUrl('transition/purchase') ?>">导入采购交易</a>
+                                                        <a href="<?= $this->createUrl('transition/purchase') ?>">采购交易</a>
                                                     </li>
-                                                    <li><a href="<?= $this->createUrl('transition/sale') ?>">导入销售交易</a>
+                                                    <li><a href="<?= $this->createUrl('transition/sale') ?>">产品销售</a>
                                                     </li>
                                                 <?
                                                 }
                                                 ?>
-                                                <li><a href="<?= $this->createUrl('transition/bank') ?>">导入银行交易</a></li>
-                                                <li><a href="<?= $this->createUrl('transition/cash') ?>">导入现金流水</a></li>
+                                                <li><a href="<?= $this->createUrl('transition/bank') ?>">银行交易</a></li>
+                                                <li><a href="<?= $this->createUrl('transition/cash') ?>">现金流水</a></li>
                                                 <li><a href="<?= $this->createUrl('transition/create') ?>">手动输入</a></li>
                                             </ul>
                                         </div>
