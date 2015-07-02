@@ -28,7 +28,7 @@ class BankController extends Controller
 	{
 		return array(
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('index','create','delall','update','type','option','createemployee','createsubject','save'),
+				'actions'=>array('index','create','delete','delall','update','type','option','createemployee','createsubject','save'),
 				'users'=>array('@'),
 			),
 

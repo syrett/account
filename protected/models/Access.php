@@ -30,7 +30,6 @@ class Access extends CActiveRecord
 			array('user_id, condom_id', 'required'),
 			array('user_id, condom_id, role_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
 			array('id, user_id, condom_id, role_id', 'safe', 'on'=>'search'),
 		);
 	}

@@ -9,9 +9,14 @@ defined('LogoutURL') or define('LogoutURL','http://manage.'.$domain.'/frontend/w
 $yii=dirname(__FILE__).'/vendor/yii/framework/yii.php';
 //if (false == strpos('abc.com', $domain)) {
 if ('abc.com' == $domain) {
-    define('SYSDB','account_test');
-    defined('YII_DEBUG') or define('YII_DEBUG',true);
-    defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
+//    define('SYSDB','account_test');
+//    defined('YII_DEBUG') or define('YII_DEBUG',true);
+//    defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
+    $dbprefix='account_';
+    $dbname=str_replace('.'.$_SERVER['SERVER_NAME'],'',$_SERVER['HTTP_HOST']);
+    if(preg_match('/[^\.]*/',$_SERVER['HTTP_HOST'],$match))
+        $dbname = $match[0];
+    define('SYSDB',$dbprefix.$dbname);
     $config=dirname(__FILE__).'/protected/config/development.php';
 } else {
     $dbprefix='account_';
