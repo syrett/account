@@ -50,9 +50,7 @@ class ReportController extends Controller
     }else{
       $model->is_closed=0;
       }*/
-
-    $Options = Options::model()->findAllByPk(1);
-    $company=$Options[0]['name'];
+    $company=Condom::model()->getName();
 
     $this->render("balance",array("data"=>$data,
                                   "date"=>$date,
@@ -76,8 +74,7 @@ class ReportController extends Controller
     }
 //      $this->actionCreateExcel();
 
-    $Options = Options::model()->findAllByPk(1);
-    $company=$Options[0]['name'];
+  $company=Condom::model()->getName();
     $this->render("profit",array("data"=>$data,
                                  "date"=>$date,
                                  "company"=>$company));
@@ -113,8 +110,7 @@ class ReportController extends Controller
     $model = new SubjectBalance();
     $data = $model->genData($year.$fm, $year.$tm);
 
-    $Options = Options::model()->findAllByPk(1);
-    $company=$Options[0]['name'];
+      $company=Condom::model()->getName();
     $this->render("subjects",array("dataProvider"=>$data,
                                    "fm" => $fm,
                                    "fromMonth"=>$year.'年'.$fm.'月',
@@ -158,8 +154,7 @@ class ReportController extends Controller
         $data = array();
     }
 
-    $Options = Options::model()->findAllByPk(1);
-    $company=$Options[0]['name'];
+      $company=Condom::model()->getName();
     $this->render("detail",array("dataProvider"=>$data,
                                  "subject_name"=>$subject_name,
                                  "company"=>$company,
@@ -183,8 +178,7 @@ class ReportController extends Controller
         $date = '';
     }
 
-    $Options = Options::model()->findAllByPk(1);
-    $company=$Options[0]['name'];
+      $company=Condom::model()->getName();
     $this->render("client",array("data"=>$data,
                                  "date"=>$date,
                                  "company"=>$company));
@@ -206,8 +200,7 @@ class ReportController extends Controller
         $date = '';
     }
 
-    $Options = Options::model()->findAllByPk(1);
-    $company=$Options[0]['name'];
+      $company=Condom::model()->getName();
     $this->render("vendor",array("data"=>$data,
                                  "date"=>$date,
                                  "company"=>$company));
@@ -240,8 +233,7 @@ class ReportController extends Controller
       $subject_name = "";
     }
 
-    $Options = Options::model()->findAllByPk(1);
-    $company=$Options[0]['name'];
+      $company=Condom::model()->getName();
     $this->render("project",array("data"=>$data,
                                   "type"=>$type,
                                  "subject_name" => $subject_name,
@@ -268,9 +260,8 @@ class ReportController extends Controller
       $date = '';
       $subject_id = "";
     }
-    
-    $Options = Options::model()->findAllByPk(1);
-    $company=$Options[0]['name'];
+
+      $company=Condom::model()->getName();
     $list = array(6601=>"销售费用", 6602=>"管理费用", 6603=>"财务费用");
     $this->render("depart",array("data"=>$data["data"],
                                   "subjects"=>$data["subjects"],
