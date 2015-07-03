@@ -48,7 +48,7 @@ function echoData($key, $data, $name="default")
         <h3>资产负债表</h3>
         <div class="form-group">
             <label class="control-label" for="date">请选择报表日期：</label>
-			<input type="text" data-date-format="yyyy-mm-dd" name="date" class="form-control form-control-inline input-small date-picker" value="<?php echo isset($date)?$date:'' ?>" id="date" readonly="">
+			<input type="text" data-date-format="yyyymmdd" name="date" class="form-control form-control-inline input-small date-picker" value="<?php echo isset($date)?$date:'' ?>" id="date" readonly="">
             <input type="submit" class="btn btn-primary" value="查看报表" />
         </div>
         <p>&nbsp;</p>
