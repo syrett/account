@@ -24,7 +24,7 @@
 }
 
 .row-reviewed {
-    background-color: rgb(204, 255, 204);
+    background-color: rgb(204, 255, 204) !important;
 }
 
 .transition_title {
