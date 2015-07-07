@@ -138,7 +138,8 @@ $(document).ready(function () {
                 }
             });
         },
-        dateFormat: "yymmdd" ,
+        autoclose: true,
+        format: "yyyymmdd",
         startDate: date
     })
     $("select[id$='_entry_subject']").each(function(){
