@@ -54,7 +54,7 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
     	<div class="form-group">
     		<label class="control-label col-md-4">制单日期：</label>
     		<div class="col-md-3">
-				<div class="input-group input-small date date-picker" data-date-format="dd-mm-yyyy" data-date-start-date="+0d">
+				<div class="input-group input-small date date-picker" data-date-format="yyyymmdd" >
 					<input type="text" name="entry_date" class="form-control" value="<?php
 				        echo isset($model[0]->entry_num_prefix)
         			    ? date('Ymd', strtotime($model[0]->entry_date))

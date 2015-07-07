@@ -139,7 +139,7 @@ $(document).ready(function () {
             });
         },
         dateFormat: "yymmdd" ,
-        minDate: date
+        startDate: date
     })
     $("select[id$='_entry_subject']").each(function(){
         var number = $(this).next().val();

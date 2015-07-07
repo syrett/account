@@ -470,8 +470,7 @@ function addRow() {
     $('body').on('focus', "input[name$='\[entry_date\]']", function () {
         $(this).datepicker({
             dateFormat: "yymmdd",
-            minDate: getDate()
-
+            startDate: getDate()
         });
     });
     $(e).find("[id*='btn_del']").attr("disabled", true);
