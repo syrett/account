@@ -103,7 +103,7 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
                 <?php
 
                 $this->widget('ext.select2.ESelect2', array(
-                    'name' => "[$i]entry_subject",
+                    'name' => "Transition[$i][entry_subject]",
                     'id' => "Transition_$i". "_entry_subject",
                     'value' => $item['entry_subject'],
                     'data' => $subjects,
