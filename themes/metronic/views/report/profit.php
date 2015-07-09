@@ -39,8 +39,8 @@ function echoData($key, $data, $name="default")
         {
           echo "<th>".$name."</th>";
         }
+        echo "<td>" .number_format($arr["sum_year"],2,".",",")."</td>";
       echo "<td>".number_format($arr["sum_month"],2,".",",")." </td>";
-      echo "<td>" .number_format($arr["sum_year"],2,".",",")."</td>";
     }
 }
 
@@ -68,8 +68,8 @@ function echoData($key, $data, $name="default")
 		<thead>
 		 <tr>
 		 <th>项目</th>
-		 <th class="text-right">本期发生额</th>
 		 <th class="text-right">本年累计发生额</th>
+             <th class="text-right">本期发生额</th>
 		 </tr>
 		</thead>
 		 <tr>

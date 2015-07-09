@@ -145,7 +145,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
      echo "<td colspan=3>".$month."月总计 </td>";
      echo '<td class="text-right">'.number_format($month_debit, 2)."</td>";
      echo '<td class="text-right">'.number_format($month_credit, 2)."</td>";
-     echo '<td> class="text-right"'.$month_balance."</td>";
+     echo '<td class="text-right"'.$month_balance."</td>";
      echo "</tr>";
      $month_debit = $debit;
      $month_credit = $credit;
