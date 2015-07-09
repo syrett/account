@@ -114,30 +114,6 @@ $(document).ready(function () {
         date.setMonth(date.getMonth() + 1);
 
     $('#transition_date input').datepicker( {
-        onSelect: function(date) {
-            var date = $('#transition_date input').val();
-
-            var a = /\d{6}/;    //去除日期
-            var prefix = a.exec(date);
-//            var b = /\d{2}$/;   //最后日期 day
-//            var day = b.exec(date)
-            if($("#entry_num_prefix_this").val()!=prefix[0])
-            $.ajax({
-                type: "POST",
-                url: $("#entry_num_pre").val(),
-                data: {"entry_prefix": prefix[0]},
-                success: function (msg) {
-                    if (msg != 0)
-                    {
-                        $("#tranNumber").attr('value', prefix[0] + msg);
-                        $("#tranNumber_lable").html(prefix[0] + msg);
-                    }
-                    $("#entry_num_prefix").attr('value', prefix[0]);
-                    $("#entry_num").attr('value', msg);
-//                    $("#entry_day").attr('value',day);
-                }
-            });
-        },
         autoclose: true,
         format: "yyyymmdd",
         startDate: date
@@ -153,6 +129,30 @@ $(window).load(function() {
     $("input.select2-input").live("keyup-change",function () {
         //$("input.select2-input").on('keyup-change', function(){
         $('.select2-results li').show();
+    })
+    $("div").delegate("#dp1","change",function(){
+        var date = $('#transition_date input').val();
+
+        var a = /\d{6}/;    //去除日期
+        var prefix = a.exec(date);
+//            var b = /\d{2}$/;   //最后日期 day
+//            var day = b.exec(date)
+        if($("#entry_num_prefix_this").val()!=prefix[0])
+            $.ajax({
+                type: "POST",
+                url: $("#entry_num_pre").val(),
+                data: {"entry_prefix": prefix[0]},
+                success: function (msg) {
+                    if (msg != 0)
+                    {
+                        $("#tranNumber").attr('value', prefix[0] + msg);
+                        $("#tranNumber_lable").html(prefix[0] + msg);
+                    }
+                    $("#entry_num_prefix").attr('value', prefix[0]);
+                    $("#entry_num").attr('value', msg);
+//                    $("#entry_day").attr('value',day);
+                }
+            });
     })
     //点击时，更新科目表数据
     $("div").delegate("select[id$='entry_subject']", "select2-open",function () {
