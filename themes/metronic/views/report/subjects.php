@@ -2,7 +2,7 @@
 <?php
 Yii::import('ext.select2.ESelect2');
 $cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js', CClientScript::POS_HEAD);
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scripts/excel_export.js', CClientScript::POS_HEAD);
 
 function echoItmes($items){
    foreach($items as $info) {

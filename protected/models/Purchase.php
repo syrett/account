@@ -6,9 +6,9 @@
  * The followings are the available columns in table 'purchase':
  * @property integer $id
  * @property integer $order_no
- * @property integer $purchase_date
+ * @property integer $entry_date
  * @property integer $vendor_id
- * @property string $commodity
+ * @property string $entry_name
  * @property double $price
  * @property string $unit
  * @property integer $tax
@@ -20,7 +20,7 @@
  * The followings are the available model relations:
  * @property Vendor $vendor
  */
-class Purchase extends CActiveRecord
+class Purchase extends LFSModel
 {
 	/**
 	 * @return string the associated database table name
@@ -38,12 +38,12 @@ class Purchase extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('order_no, purchase_date, vendor_id, commodity, price, tax', 'required'),
+			array('order_no, entry_date, vendor_id, entry_name, price, tax', 'required'),
 			array('vendor_id, tax, count', 'numerical', 'integerOnly'=>true),
 			array('price, paied', 'numerical'),
-			array('commodity', 'length', 'max'=>512),
+			array('entry_name', 'length', 'max'=>512),
 			// The following rule is used by search().
-			array('id, order_no, purchase_date, vendor_id, commodity, price, tax, create_time, update_time, status_id', 'safe', 'on'=>'search'),
+			array('id, order_no, entry_date, vendor_id, entry_name, price, tax, create_time, update_time, status_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -67,9 +67,9 @@ class Purchase extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'order_no' => '订单号',
-			'purchase_date' => '采购日期',
+			'entry_date' => '交易日期',
 			'vendor_id' => '供应商ID',
-			'commodity' => '商品名称',
+			'entry_name' => '商品名称',
             'price' => '价格',
             'count' => '数量',
 			'unit' => '单位',
@@ -100,9 +100,9 @@ class Purchase extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('order_no',$this->order_no);
-		$criteria->compare('purchase_date',$this->purchase_date);
+		$criteria->compare('entry_date',$this->entry_date);
 		$criteria->compare('vendor_id',$this->vendor_id);
-		$criteria->compare('commodity',$this->commodity,true);
+		$criteria->compare('entry_name',$this->entry_name,true);
 		$criteria->compare('price',$this->price);
 		$criteria->compare('unit',$this->unit,true);
 		$criteria->compare('tax',$this->tax);
@@ -132,29 +132,13 @@ class Purchase extends CActiveRecord
      */
     public function load($item){
         $this->setAttributes($item);
-        $this->setAttribute('commodity', $item['entry_name']);
+        $this->setAttribute('entry_name', $item['entry_name']);
         $this->setAttribute('entry_memo', $item['entry_memo']);
-        $this->setAttribute('purchase_date', $item['entry_date']);
+        $this->setAttribute('entry_date', $item['entry_date']);
         $this->setAttribute('subject', $item['entry_subject']);
         $this->setAttribute('subject_2', $item['subject_2']);
         $this->setAttribute('tax',  isset($item['tax'])?$item['tax']:'');
 //        $this->setAttribute('updated_at', isset($item['updated_at'])?$item['updated_at']:'');
     }
 
-    /*
-     * init order no
-     */
-    public function initOrderno(){
-        $table = $this->tableName();
-        $prefix = date('Ym');
-        $sql = "select max(order_no) order_no from $table where order_no like 'PO$prefix%' ";
-        $model = $this->findBySql($sql);
-        if($model!=null){
-            $orderno = substr($model->order_no,8);
-            $orderno = (int) $orderno + 1;
-            $orderno = addZero($orderno);
-            return "PO$prefix$orderno";
-        }else
-            return "PO$prefix"."0001";
-    }
 }

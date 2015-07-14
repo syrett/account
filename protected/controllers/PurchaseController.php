@@ -15,7 +15,6 @@ class PurchaseController extends Controller
 	{
 		return array(
 			'accessControl', // perform access control for CRUD operations
-			'postOnly + delete', // we only allow deletion via POST request
 		);
 	}
 
@@ -28,7 +27,7 @@ class PurchaseController extends Controller
 	{
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions'=>array('index','create','update','save'),
+                'actions'=>array('index','create','update','save','delete'),
                 'users'=>array('@'),
             ),
 
@@ -102,7 +101,8 @@ class PurchaseController extends Controller
                 $model = $this->loadModel($id);
                 $tran = Transition::model()->find(['condition' => 'data_id=:data_id', 'params' => [':data_id' => $id]]);
                 $sheetData[0]['data'] = Transition::getSheetData($model->attributes,'purchase');
-                $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
+                if($tran!=null)
+                    $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
             }
         }else {
             $model = $this->loadModel($id);
@@ -111,7 +111,8 @@ class PurchaseController extends Controller
             if($model->status_id==1)
             {
                 $tran = Transition::model()->find(['condition' => 'data_id=:data_id', 'params' => [':data_id' => $id]]);
-                $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
+                if($tran!=null)
+                    $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
             }
         }
 
@@ -130,6 +131,10 @@ class PurchaseController extends Controller
 	{
 		$this->loadModel($id)->delete();
 
+        $trans = Transition::model()->findAll(['condition'=>'data_id=:data_id','params'=>[':data_id'=>$id]]);
+        foreach($trans as $item){
+            $item->delete();
+        }
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));

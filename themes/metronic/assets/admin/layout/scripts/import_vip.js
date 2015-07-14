@@ -34,8 +34,8 @@ $(document).ready(function () {
     })
 
 })
-$(window).bind("load", function() {
-    $("#subject_2").select2("readonly",true);
+$(window).bind("load", function () {
+    $("#subject_2").select2("readonly", true);
 });
 function itemsplit(e) {
 
@@ -72,7 +72,7 @@ function itemsplit(e) {
 function itemclose(e) {
     var line = $(e.parentNode.parentNode.parentNode).attr("line");
     e.parentNode.parentNode.parentNode.remove();
-    sumAmount($("#data_import").find("tr[line="+line+"]:first"));
+    sumAmount($("#data_import").find("tr[line=" + line + "]:first"));
 }
 function itemsetting(e) {
     //$("#itemSetting").dialog({
@@ -298,39 +298,42 @@ function itemSet() {
     dialogClose();
 }
 //采购销售时的确认按钮
-function itemSetDefault(e, type){
+function itemSetDefault(e, type) {
     var id = $(e.parentNode.parentNode).find("input[id^='id_']")[0].value;
-    if($("#tran_subject_"+id).val()!='商品采购'){
-        var sbj = $("#tran_subject_"+id).val();
-    }else{
-        var name = $("#tran_entry_name_"+id).val();
+    if ($("#tran_subject_" + id).val() != '商品采购') {
+        var sbj = $("#tran_subject_" + id).val();
+    } else {
+        var name = $("#tran_entry_name_" + id).val();
         var data = {
             name: name,
             subject: 1405
         }
         var sbj = createSubject(data);
     }
+    unset(id);
     $("#subject_" + id).val(sbj);
     $("#transaction_" + id).val(1);
     //choose vendor
     //data = {name:name};
     //var vendor = createVendor(data);
-    var vendor = $("#tran_appendix_id_"+id).val();
+    var did = $("#tran_appendix_id_" + id).val();
 
-    $("#vendor_id_" + id).val(vendor);
-    name = $("#tran_appendix_id_"+id).find("option:selected").text();
+    setTransaction(id);
+    $("#vendor_id_" + id).val(did);
+    $("#client_id_" + id).val(did);
+    name = $("#tran_appendix_id_" + id).find("option:selected").text();
     data = {
         name: name,
         subject: 2202
     }
     sbj = createSubject(data);
     $("#subject_2_" + id).val(sbj);
-    if($("#tran_tax_"+id).val()!=0)
-    setTax(id, type);
+    if ($("#tran_tax_" + id).val() != 0)
+        setTax(id, type);
     else
-    removeTax(id, type);
-    $("#info_"+id).html('已确认');
-    $("#info_"+id).attr('class', 'label-success');
+        removeTax(id, type);
+    $("#info_" + id).html('已确认');
+    $("#info_" + id).attr('class', 'label-success');
 }
 //保存凭证，此时再根据选择的科目计算一些数值
 function save() {
@@ -349,7 +352,7 @@ function save() {
         if (sbj.substr(0, 4) == "6001" && $("#withtax_" + item_id).val() == 1)
             setTax(item_id);    //设置税
     })
-    $("#abc table tr:first").nextAll('tr:visible[id!=trSetting]').find("[id*='btn_confirm_']").each(function(key,value){
+    $("#abc table tr:first").nextAll('tr:visible[id!=trSetting]').find("[id*='btn_confirm_']").each(function (key, value) {
         $(value).click();
     })
     $("#form").submit();
@@ -454,30 +457,40 @@ function setTax(item_id, type) {
     //设置相关参数值，现在默认最多2个参数，如果过多要重新写函数
     //设置税费，目前只设置税费
     $("#withtax_" + item_id).val(1);
-    if(type=='purchase'){
-        var sbj = 22210101;
-    }else if(arguments(1)=='sale'){
-        var sbj = 22210102;
-    }else{
-        var sbj = 22210101;
+    var tax = $("#tran_tax_" + item_id).val();
+    var sbj;
+    var name = '';
+    if (tax == 3)
+        name = '销项';   //增值税
+    //  5% 为营业税专有税率，借营业税金及附加/营业税，贷应交税金/营业税，不需要单独再计算税
+    if (tax == 6 || tax == 13 || tax == 17) {
+        if (type == 'product')
+            name = '销项';
+        else if (type == 'purchase')
+            name = '进项';
     }
+    var data = {
+        name: name,
+        subject: 222101
+    }
+    sbj = createSubject(data);
     $("#additional_sbj0_" + item_id).val(sbj);
     var price = 0;
     if ($("#tran_price_" + item_id != ''))
         price = parseFloat($("#tran_price_" + item_id).val());
     price = price * parseFloat($("#tran_count_" + item_id).val())
-    var taxr = $("#tran_tax_"+item_id).val()    //税率
+    var taxr = $("#tran_tax_" + item_id).val()    //税率
     var tax = price - price / (100 + parseFloat(taxr)) * 100;
-    $("#entry_amount_"+ item_id).val(price);
+    $("#entry_amount_" + item_id).val(price);
     $("#additional_amount0_" + item_id).val(tax);
 
     //}
 }
-function removeTax(item_id,type){
+function removeTax(item_id, type) {
     $("#withtax_" + item_id).val(0);
     $("#additional_sbj0_" + item_id).val('');
     var price = parseFloat($("#tran_price_" + item_id).val()) * parseFloat($("#tran_count_" + item_id).val());
-    $("#entry_amount_"+ item_id).val(price);
+    $("#entry_amount_" + item_id).val(price);
 }
 
 function checkInput() {
@@ -505,29 +518,28 @@ function checkInput() {
 }
 
 //插入新行
-function addRow(){
+function addRow() {
     //复制
     itemsplit($("#data_import tr[id!='trSetting']:last td div button")[0]);
     //删除值，去除复制后相关联的信息
     var e = $("#data_import tr[id!='trSetting']:last");
     var item = $("#data_import tr[id!='trSetting']:last input[id^='id_']").val();
-    $(e).attr('line',item);
-    if($(e).attr("class")=="table-tr")
+    $(e).attr('line', item);
+    if ($(e).attr("class") == "table-tr")
         $(e).removeClass();
     else
         $(e).addClass("table-tr");
 
     //去除select div,重新设置select2
-    $("tr[line='"+item+"'] div[class*='select2-container']").remove();
-    $.each($("tr[line='"+item+"'] select"),function(key,value){
-        $(value).select2();
-    });
+    $("tr[line='" + item + "'] div[class*='select2-container']").remove();
+    $("tr[line='" + item + "'] select").show();
+    $("tr[line='" + item + "'] select").select2();
 
-    $("#data_import tr[id!='trSetting']:last input[id!='id_"+item+"']").val("");
+    $("#data_import tr[id!='trSetting']:last input[id!='id_" + item + "']").val("");
     //添加 总金额提示
-    var html = '<span class="tip2">总金额：<label id="amount_'+item+'">'+0+'</label></span>'
+    var html = '<span class="tip2">总金额：<label id="amount_' + item + '">' + 0 + '</label></span>'
     //$(e).find("[id^='tran_amount_']").after(html)
-    $('body').on('focus',"input[name$='\[entry_date\]']", function(){
+    $('body').on('focus', "input[name$='\[entry_date\]']", function () {
         $(this).datepicker({
             dateFormat: "yymmdd",
             minDate: getDate()

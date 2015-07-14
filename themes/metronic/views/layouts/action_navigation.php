@@ -1,7 +1,7 @@
 <?
 echo CHtml::link('<span class="glyphicon glyphicon-plus"></span> 商品采购', array('/transition/purchase'), array('class' => 'btn btn-default'));
 echo "\n";
-echo CHtml::link('<span class="glyphicon glyphicon-plus"></span> 产品销售', array('/transition/product'), array('class' => 'btn btn-default'));
+echo CHtml::link('<span class="glyphicon glyphicon-plus"></span> 产品销售', array('/transition/sale'), array('class' => 'btn btn-default'));
 echo "\n";
 echo CHtml::link('<span class="glyphicon glyphicon-plus"></span> 银行交易', array('/transition/bank'), array('class' => 'btn btn-default'));
 echo "\n";

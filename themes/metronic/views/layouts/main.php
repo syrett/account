@@ -426,6 +426,12 @@ $baseUrl = Yii::app()->theme->baseUrl;
                     </a>
                 </li>
                 <li>
+                    <a href="<?= $this->createUrl('stock/admin') ?>">
+                        <i class="icon-drawer"></i>
+                        <span class="title">库存商品</span>
+                    </a>
+                </li>
+                <li>
                     <a href="<?= $this->createUrl('employee/admin') ?>">
                         <i class="icon-users"></i>
                         <span class="title">员工</span>

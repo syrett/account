@@ -81,8 +81,6 @@ class Transition extends CActiveRecord
      */
     public function search()
     {
-        // @todo Please modify the following code to remove attributes that should not be searched.
-
         $criteria = new CDbCriteria;
         if (isset($_REQUEST['s_day']) && $_REQUEST['s_day'] != "") {
             $a = date('Y-m-d 00:00:01', strtotime($_REQUEST['s_day']));
@@ -119,8 +117,8 @@ class Transition extends CActiveRecord
         $sort = new CSort();
         $sort->attributes = array(
             'entry_number' => array(
-                'asc' => ' entry_num_prefix asc ,entry_num  ASC',
-                'desc' => 'entry_num_prefix desc , entry_num  DESC'
+                'asc' => ' entry_num_prefix asc ,entry_num  ASC, entry_transaction asc',
+                'desc' => 'entry_num_prefix desc , entry_num  DESC,  entry_transaction asc'
             ),
             '*', // this adds all of the other columns as sortable
         );
@@ -353,7 +351,9 @@ class Transition extends CActiveRecord
             "entry_subject" => "",
             "subject_2" => "",
             "entry_appendix_id" => "",
+            "order_no" => "",
             "vendor_id" => "",
+            "client_id" => "",
             "price" => "",
             "count" => "1",
             "unit" => "",
@@ -378,19 +378,31 @@ class Transition extends CActiveRecord
         if (is_array($items)) {
             $arr = array_merge($arr, $items);
             if (isset($items['B'])) { //未严格限制必须某一列必须有数据才可
-                if($type=='bank'||$type=='cash'){   //vip用户还要做区分
-                    $arr['entry_name'] = trim($items['A']);
-                    $arr['entry_date'] = convertDate($items['B']);
-                    $arr['entry_memo'] = trim($items['C']);
+                switch($type){
+                    case 'bank':
+                    case 'cash':
+                        $arr['entry_name'] = trim($items['A']);
+                        $arr['entry_date'] = convertDate($items['B']);
+                        $arr['entry_memo'] = trim($items['C']);
 
-                    $amount = trim($items['D']) != '' ? $items['D'] : $items['E'];
-                }else if($type=='purchase'){
-                    $arr['entry_date'] = convertDate($items['A']);
-                    $arr['entry_memo'] = trim($items['B']);
-                    $arr['entry_appendix_id'] = Vendor::model()->matchName(trim($items['C']));
-                    $arr['entry_name'] = Stock::model()->matchName(trim($items['D']));
-                    $amount = trim($items['E']);
-                    $arr['count'] = trim($items['F']);
+                        $amount = trim($items['D']) != '' ? $items['D'] : $items['E'];
+                        break;
+                    case 'purchase':
+                        $arr['entry_date'] = convertDate($items['A']);
+                        $arr['entry_memo'] = trim($items['B']);
+                        $arr['entry_appendix_id'] = Vendor::model()->matchName(trim($items['C']));
+                        $arr['entry_name'] = Stock::model()->matchName(trim($items['D']));
+                        $amount = trim($items['E']);
+                        $arr['count'] = trim($items['F']);
+                        break;
+                    case 'product':
+                        $arr['entry_date'] = convertDate($items['A']);
+                        $arr['entry_memo'] = trim($items['B']);
+                        $arr['entry_appendix_id'] = Client::model()->matchName(trim($items['C']));
+                        $arr['entry_name'] = Stock::model()->matchName(trim($items['D']));
+                        $amount = trim($items['E']);
+                        $arr['count'] = trim($items['F']);
+                        break;
 
                 }
                 $amount = str_replace(" ", '', $amount);  //英文空格
@@ -949,9 +961,8 @@ class Transition extends CActiveRecord
     /*
      * 税率
      */
-    public static function getSubjectArray($prefix='_'){
+    public static function getSubjectArray($arr, $prefix='_'){
         $subject = new Subjects();
-        $arr = [1601, 1403, 1405, 6602, 6601, 6401, 1701];
         $result = $subject->getitem($arr, '', ['reject' => ['工资', '社保', '公积金', '折旧费', '研发费'],'prefix'=>$prefix]);
         return $result;
     }
@@ -959,19 +970,27 @@ class Transition extends CActiveRecord
     /*
      *
      */
-    public static function getAllMount($sbj,$transaction){
+    public static function getAllMount($sbj,$transaction,$type='',$date=''){
         $arr = Subjects::model()->get_sub($sbj, 2);
         $result = 0;
         foreach($arr as $item){
-            $result += self::getMount($item['sbj_number'],$transaction);
+            $result += self::getMount($item['sbj_number'],$transaction,$type,$date);
         }
         return $result;
     }
     /*
      *
      */
-    public static function getMount($sbj,$transaction){
-        $models = Transition::model()->findAllByAttributes(['entry_subject'=>$sbj,'entry_transaction'=>$transaction]);
+    public static function getMount($sbj,$transaction,$type='',$date=''){
+        $attributes = ['entry_subject'=>$sbj,'entry_transaction'=>$transaction];
+        $where = '1=1';
+        if($date=='')
+            $date = date('Y'). '-01-01 00:00:00';
+        if($type == 'before')
+            $where .= " and entry_date < '$date'";
+        else
+            $where .= " and entry_date >= '$date'";
+        $models = Transition::model()->findAllByAttributes($attributes, $where);
         $mount = 0;
         if(!empty($models)){
             foreach($models as $item){

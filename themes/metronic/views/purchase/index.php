@@ -90,13 +90,13 @@ $('.search-form form').submit(function(){
                     'headerHtmlOptions' => array('class' => 'input-small'),
                 ),
                 array(
-                    'name' => 'purchase_date',
-                    'value' => 'date("Y年m月d日",strtotime($data->purchase_date))',
+                    'name' => 'entry_date',
+                    'value' => 'date("Y年m月d日",strtotime($data->entry_date))',
                     'htmlOptions' => array('class' => 'input-small'),
                     'headerHtmlOptions' => array('class' => 'input-small'),
                 ),
                 array(
-                    'name' => 'commodity',
+                    'name' => 'entry_name',
                     'type' => 'shortText'
                 ),
                 array(

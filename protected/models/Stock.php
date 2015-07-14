@@ -19,7 +19,7 @@
  * The followings are the available model relations:
  * @property Vendor $vendor
  */
-class Stock extends CActiveRecord
+class Stock extends LFSModel
 {
     /**
      * Returns the static model of the specified AR class.
@@ -48,8 +48,8 @@ class Stock extends CActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('no, order_no, name, in_date, in_price, create_time, status', 'required'),
-            array('vendor_id, status', 'numerical', 'integerOnly' => true),
+            array('no, order_no, name, in_date, in_price, create_time', 'required'),
+            array('vendor_id', 'numerical', 'integerOnly' => true),
             array('in_price, out_price', 'numerical'),
             array('no', 'length', 'max' => 64),
             array('order_no', 'length', 'max' => 16),
@@ -93,7 +93,7 @@ class Stock extends CActiveRecord
     }
 
     /*
-     * search by name
+     * search by options
      */
     public function search2($options = [])
     {
@@ -127,15 +127,18 @@ class Stock extends CActiveRecord
                 $where .= " and order_no = '$stock->order_no'";
             else
                 $where .= " and name = '$stock->name'";
-            $sql = "select * from $tablename" . $where;
+            $groupby = " group by order_no";
+            $year = date('Y').'0101';
+            $sql = "select *, count(if(status=1 and in_date<'$year',1,NULL)) `before`, count(if(in_date>='$year',1,NULL)) `count`,count(if(status=2,1,NULL)) `out`,count(if(status=1,1,NULL)) `left` from $tablename $where $groupby";
         } elseif (isset($options['action'])) {
             if($options['action']=='order'){
                 $groupby = " group by order_no";
                 $sql = "select `id`,`order_no`,group_concat(distinct name) name, count(`id`) amount, sum(`in_price`) summary from $tablename $groupby";
             }
         } else {
+            $time = date("Ym").'01';
             $groupby = " group by name";
-            $sql = "select `id`,`no`, name, count(`name`) as mount ,sum(if(`status`=1,1,0)) `left` from $tablename" . $where . $groupby;
+            $sql = "select `id`,`no`, name, sum(if(`in_date`>='$time',1,0)) `month_in` ,sum(if(`status`=1,1,0)) `left` from $tablename $where $groupby";
         }
         return $sql;
     }
@@ -182,16 +185,18 @@ class Stock extends CActiveRecord
         else
             return 0;
         if($model != null){
-            $date = strtotime(date("Y"). '-01-01 00:00:01');
-            $time = date("Y-m-d H:i:s", $date);
             $where = '1=1 and name="'. $model->name. '"';
             if(isset($options['status']))
                 $where .= " and status=".$options['status'];
-            if(isset($options['type'])&&$options['type']=='before'){
-                $models = $this->findAll($where. " and in_date < '$time'");
+            if(isset($options['date']) && $options['date']=='year'){
+                $date = strtotime(date("Y"). '-01-01 00:00:01');
             }
-            else
-                $models = $this->findAll($where. " and in_date > '$time'");
+            else{
+                $date = strtotime(date("Y-m"). '-01 00:00:01');
+            }
+            $action = isset($options['type']) && $options['type'] == 'before'?'<':'>';
+            $time = date("Y-m-d H:i:s", $date);
+            $models = $this->findAll($where. " and in_date $action '$time'");
             return count($models);
         }else
             return 0;
@@ -206,19 +211,41 @@ class Stock extends CActiveRecord
         return $arr;
     }
 
-    public function load($item){
+    public function load($item, $type='purchase'){
 //        $this->setAttribute('no', $item['no']);
-        $this->setAttribute('order_no', $item['order_no']);
-        $this->setAttribute('name', $item['entry_name']);
-        $this->setAttribute('vendor_id', $item['vendor_id']);
-        $this->setAttribute('in_date', $item['entry_date']);
-        $this->setAttribute('in_price', $item['price']);
+        if($type=='purchase'){
+            $this->setAttribute('order_no', $item['order_no']);
+            $this->setAttribute('name', $item['entry_name']);
+            $this->setAttribute('vendor_id', $item['vendor_id']);
+            $this->setAttribute('in_date', $item['entry_date']);
+            $this->setAttribute('in_price', $item['price']);
+        }elseif($type=='product'){
+            $this->setAttribute('order_no', $item['order_no']);
+            $this->setAttribute('order_no_sale', $item['order_no']);
+            $this->setAttribute('name', $item['entry_name']);
+            $this->setAttribute('client_id', $item['client_id']);
+            $this->setAttribute('out_date', $item['entry_date']);
+            $this->setAttribute('out_price', $item['price']);
+        }
     }
 
-    public function delStock(){
-        $this->deleteAll('order_no=:order_no', [':order_no' => $this->order_no]);
+    public function delStock($count=0){
+        $this->delMultiple(['order_no' => $this->order_no, 'status' => 1, 'name' => $this->name], $count);
     }
 
+    public function setStock($count, $status){
+        $c = new CDbCriteria;
+        $c->condition="status<>$status and name='$this->name'";
+        $c->limit = $count;
+        $a = [
+            'client_id'=>$this->client_id,
+            'out_price'=>$this->out_price,
+            'out_date'=>$this->out_date,
+            'order_no_sale'=>$this->order_no_sale,
+            'status'=>$status,
+        ];
+        $rows = $this->updateAll($a,$c);
+    }
     public function saveMultiple($count){
         $stock = [
             'order_no'=>$this->order_no,
@@ -241,5 +268,28 @@ class Stock extends CActiveRecord
             return $stock->name;
         else
             return $name;
+    }
+
+    public function getCount($params){
+        $models = $this->findAllByAttributes($params);
+        return $models!=null?count($models):0;
+    }
+
+    public function form($type){
+        if($type=='purchase')
+        return [
+            'order_no'=>$this->order_no,
+            'vendor_id'=>$this->vendor_id,
+            'name'=>$this->name,
+            'in_price'=>$this->in_price,
+            'in_date'=>$this->in_date,
+        ];
+        if($type=='product')
+            return [
+                'order_no_sale'=>$this->order_no,
+                'client_id'=>$this->client_id,
+                'out_price'=>$this->out_price,
+                'out_date'=>$this->out_date,
+            ];
     }
 }

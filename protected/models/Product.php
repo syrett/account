@@ -8,7 +8,7 @@
  * @property string $no
  * @property string $order_no
  * @property string $name
- * @property integer $vendor_id
+ * @property integer $client_id
  * @property string $in_date
  * @property double $in_price
  * @property string $out_date
@@ -16,7 +16,7 @@
  * @property string $create_time
  * @property integer $status
  */
-class Product extends CActiveRecord
+class Product extends LFSModel
 {
 	/**
 	 * @return string the associated database table name
@@ -34,16 +34,14 @@ class Product extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('no, order_no, name, vendor_id, in_date, in_price, create_time, status', 'required'),
-			array('vendor_id, status', 'numerical', 'integerOnly'=>true),
-			array('in_price, out_price', 'numerical'),
-			array('no, order_no', 'length', 'max'=>16),
-			array('name', 'length', 'max'=>512),
-			array('out_date', 'safe'),
+            array('order_no, entry_date, client_id, entry_name, price, tax', 'required'),
+			array('client_id', 'numerical', 'integerOnly'=>true),
+            array('client_id, tax, count', 'numerical', 'integerOnly'=>true),
+            array('price, paied', 'numerical'),
+            array('entry_name', 'length', 'max'=>512),
 			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, no, order_no, name, vendor_id, in_date, in_price, out_date, out_price, create_time, status', 'safe', 'on'=>'search'),
-		);
+            array('id, order_no, entry_date, client_id, entry_name, price, tax, create_time, update_time, status_id', 'safe', 'on'=>'search'),
+        );
 	}
 
 	/**
@@ -65,15 +63,18 @@ class Product extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'no' => '编号',
-			'order_no' => '订单号',
-			'name' => '名字',
-			'vendor_id' => '供应商',
-			'in_date' => '日期',
-			'in_price' => '价格',
-			'out_date' => 'Out Date',
-			'out_price' => 'Out Price',
-			'create_time' => 'Create Time',
-			'status' => 'Status',
+            'order_no' => '订单号',
+            'entry_date' => '交易日期',
+            'vendor_id' => '客户',
+            'entry_name' => '商品名称',
+            'price' => '价格',
+            'count' => '数量',
+            'unit' => '单位',
+            'tax' => '税率',
+            'paied' => '已付金额',
+            'create_time' => '创建日期',
+            'update_time' => '更新日期',
+            'status_id' => '状态',
 		);
 	}
 
@@ -91,21 +92,20 @@ class Product extends CActiveRecord
 	 */
 	public function search()
 	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
-
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('no',$this->no,true);
-		$criteria->compare('order_no',$this->order_no,true);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('vendor_id',$this->vendor_id);
-		$criteria->compare('in_date',$this->in_date,true);
-		$criteria->compare('in_price',$this->in_price);
-		$criteria->compare('out_date',$this->out_date,true);
-		$criteria->compare('out_price',$this->out_price);
-		$criteria->compare('create_time',$this->create_time,true);
-		$criteria->compare('status',$this->status);
+        $criteria->compare('order_no',$this->order_no);
+        $criteria->compare('entry_date',$this->entry_date);
+        $criteria->compare('client_id',$this->client_id);
+        $criteria->compare('entry_name',$this->entry_name,true);
+        $criteria->compare('price',$this->price);
+        $criteria->compare('unit',$this->unit,true);
+        $criteria->compare('tax',$this->tax);
+        $criteria->compare('paied',$this->paied);
+        $criteria->compare('create_time',$this->create_time,true);
+        $criteria->compare('update_time',$this->update_time);
+        $criteria->compare('status_id',$this->status_id);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -122,4 +122,17 @@ class Product extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+    /*
+     * load 加载数据
+     */
+    public function load($item){
+        $this->setAttributes($item);
+        $this->setAttribute('entry_name', $item['entry_name']);
+        $this->setAttribute('entry_memo', $item['entry_memo']);
+        $this->setAttribute('entry_date', $item['entry_date']);
+        $this->setAttribute('subject', $item['entry_subject']);
+        $this->setAttribute('subject_2', $item['subject_2']);
+        $this->setAttribute('tax',  isset($item['tax'])?$item['tax']:'');
+//        $this->setAttribute('updated_at', isset($item['updated_at'])?$item['updated_at']:'');
+    }
 }

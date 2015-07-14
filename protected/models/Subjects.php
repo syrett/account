@@ -270,11 +270,12 @@ class Subjects extends CActiveRecord
      * 列出子科目
      * @sbj_id Integer 科目编号
      * @key String 关键字
-     * @options Array   参数，$rej=[], $level=2, $level=0 无匹配返回原科目 $type=1 无匹配返回所有 $type=2 无匹配不返回
+     * @options Array   参数，$rej=[], $level=2, $level=0 无匹配返回原科目 $type=1 无匹配返回所有 $type=2 无匹配返回父科目
      */
     public function list_sub($sbj_id, $key = '', $options = [])
     {
         $level = isset($options['level']) ? $options['level'] : 2;
+        $type = isset($options['type']) ? $options['type'] : 1;
         $reject = isset($options['reject']) ? $options['reject'] : [];
         $data = array();
         $sbj_max = $sbj_id * 100 + 99;
@@ -282,28 +283,36 @@ class Subjects extends CActiveRecord
         foreach($reject as $item){  //去除包含需要剔除关键字的科目
             $rejSbj .= " And sbj_name not like '%$item%' ";
         }
-        $sql_1 = "SELECT * FROM subjects where sbj_number REGEXP '^$sbj_id' ";
+        $sql_1 = "SELECT * FROM subjects";
+        $where = " where 1=1 and sbj_number REGEXP '^$sbj_id' ";
         if($level==0)
-            $sql_1.= "AND sbj_number='$sbj_id' ";
+            $sbjwhere = " AND sbj_number='$sbj_id' ";
         elseif($level==1)
-            $sql_1.= "AND sbj_number>='$sbj_id' ";
+            $sbjwhere= " AND sbj_number>='$sbj_id' ";
         else
-            $sql_1.= "AND sbj_number>'$sbj_id' ";
-        $sql_1 .= "AND sbj_number<='$sbj_max' AND sbj_name like '%".$key."%'";
-        $sql_1 .= $rejSbj!=""?$rejSbj:"";
-        $sql_1 .= " order by INSTR(sbj_name,'$key') desc";
-        $data_1 = self::findAllBySql($sql_1, array());
-
-        if (!empty($data_1))
-            foreach ($data_1 as $key => $item) {
-                array_push($data, $item->attributes);
-                if ($item["has_sub"] == 1) {
-                    $data_sub = $this->list_sub($item["sbj_number"], $key, $options);
-                    foreach ($data_sub as $key => $item_sub) {
-                        array_push($data, $item_sub->attributes);
-                    }
+            $sbjwhere = " AND sbj_number>'$sbj_id' ";
+        $where .= " AND sbj_number<='$sbj_max'";
+        $where .= $rejSbj!=""?$rejSbj:"";
+        $keywhere = " AND sbj_name like '%".$key."%'";
+        $orderby = " order by INSTR(sbj_name,'$key') desc";
+        $data_1 = self::findAllBySql($sql_1. $where. $sbjwhere. $keywhere. $orderby, array());
+        if(empty($data_1)){
+            $data_1 = self::findAllBySql($sql_1. $where. $sbjwhere. $orderby, array());
+        }
+        if (empty($data_1) && $type==2){
+            $sbjwhere = "AND sbj_number='$sbj_id' ";
+            $data_1 = self::findAllBySql($sql_1. $where. $sbjwhere. $keywhere. $orderby, array());
+        }
+        foreach ($data_1 as $key => $item) {
+            array_push($data, $item->attributes);
+            if ($item["has_sub"] == 1 && $GLOBALS['level']>0) {
+                $data_sub = $this->list_sub($item["sbj_number"], $key, $options);
+                foreach ($data_sub as $key => $item_sub) {
+                    array_push($data, $item_sub->attributes);
                 }
+                $GLOBALS['level'] -= 1;
             }
+        }
 
         return $data;
     }
@@ -456,6 +465,7 @@ class Subjects extends CActiveRecord
         $result = [];
         $type = isset($options['type']) ? $options['type'] : 1;
         foreach ($arr as $item) {
+            $GLOBALS['level'] = isset($options['level'])?$options['level']:3;
             $arr_subj = $subject->list_sub($item, $key, $options);
             foreach ($arr_subj as $subj) {
                 if($type==0){
@@ -464,8 +474,7 @@ class Subjects extends CActiveRecord
                     $result[$prefix . $subj['sbj_number']] = Subjects::getSbjPath($subj['sbj_number']);
             }
         }
-        if($type==1)
-        if(empty($result))
+        if($type==1 && empty($result))
             foreach ($arr as $item) {
                 $arr_subj = $subject->list_sub($item, '', $options);
                 foreach ($arr_subj as $subj) {
@@ -648,7 +657,7 @@ class Subjects extends CActiveRecord
             return [];
         $model = $this->findByAttributes(['sbj_number'=>$sbj]);
         if($model==null||$model->has_sub==0)
-            return [];
+            return [$model->attributes];
         $table = $this->tableName();
         $sql = "select * from $table where sbj_number like '$sbj%'";
         $sql .= $type==1?"and sbj_number <> '$sbj'":"";

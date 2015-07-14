@@ -478,7 +478,7 @@ class Bank extends CActiveRecord
     {
         $subject = new Subjects();
         $arr = [1601, 1403, 1405, 6602, 6601, 6401, 1701];
-        $result = $subject->getitem($arr, $key, ['reject' => ['工资', '社保', '公积金', '折旧费', '研发费']]);
+        $result = $subject->getitem($arr, $key, ['type'=>2, 'reject' => ['工资', '社保', '公积金', '折旧费', '研发费']]);
         return [
             'data' => $result,
         ];

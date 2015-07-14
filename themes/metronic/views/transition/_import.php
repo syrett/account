@@ -42,13 +42,17 @@ $tranDate = $this->getTransitionDate();
 					</span>
                     </div>
                 </div>
-                <div class="btn-toolbar margin-bottom-10">
-                    <i class="fa fa-file-excel-o"></i> <a download="" href="/download/<?=Yii::t('import',$type)?>.xlsx">模板下载</a>
-                    <input type="checkbox" class="" name="first" id="first"/><label for="first">第一行包含数据</label>
-                    <button type="submit" class="btn btn-default btn-file btn-xs purple">导入</button>
-                </div>
             </div>
-            <div class="col-md-6 col-sm-12">
+            <div class="col-md-4 col-sm-12">
+                <div class="btn-toolbar margin-bottom-10">
+                    <button type="submit" class="btn btn-default btn-file">导入</button>
+                    <button download="" href="/download/<?= Yii::t('import', strtoupper($type)) ?>.xlsx"
+                            class="btn btn-default btn-file" type="button">模板下载
+                    </button>
+                </div>
+
+            </div>
+            <div class="col-md-4 col-sm-12">
                 <div class="form-inline pull-right">
                     <div class="form-group">
                         <?php
@@ -235,25 +239,6 @@ $tranDate = $this->getTransitionDate();
                     <div class="scroller" data-always-visible="1" data-rail-visible1="1" data-initialized="1">
                         <div class="row">
                             <div class="col-xs-12">
-                                <input id="type" type="hidden" value="<?= $this->createUrl(
-                                    '/bank/type'
-                                ) ?>">
-                                <input id="user-bank" type="hidden" value="<?= $this->createUrl(
-                                    '/user/savebank'
-                                ) ?>">
-                                <input id="option" type="hidden" value="<?= $this->createUrl(
-                                    '/bank/option'
-                                ) ?>">
-                                <input id="employee" type="hidden" value="<?= $this->createUrl(
-                                    '/employee/createemployee'
-                                ) ?>">
-                                <input id="new-url" type="hidden" value="<?= $this->createUrl(
-                                    '/subjects/createsubject'
-                                ) ?>">
-                                <input id="data" type="hidden" value="">
-                                <input id="subject" type="hidden" value="">
-                                <input id="item_id" type="hidden" value="">
-
                                 <div id="setting" class="itemsetting">
                                     <div class="options ">
                                         <button class="btn " type="button" onclick="chooseType(this,1)"

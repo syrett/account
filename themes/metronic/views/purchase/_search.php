@@ -22,8 +22,8 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'purchase_date'); ?>
-		<?php echo $form->textField($model,'purchase_date'); ?>
+		<?php echo $form->label($model,'entry_date'); ?>
+		<?php echo $form->textField($model,'entry_date'); ?>
 	</div>
 
 	<div class="row">
@@ -32,8 +32,8 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'commodity'); ?>
-		<?php echo $form->textField($model,'commodity',array('size'=>60,'maxlength'=>512)); ?>
+		<?php echo $form->label($model,'entry_name'); ?>
+		<?php echo $form->textField($model,'entry_name',array('size'=>60,'maxlength'=>512)); ?>
 	</div>
 
 	<div class="row">

@@ -17,36 +17,17 @@ $this->pageTitle = Yii::app()->name;
     $select = '<option value=1 >日期</option><option value=2 >交易说明</option><option value=3 >金额</option>';
     ?>
     <div class="row">
-        <div class="col-xs-12">
-            <div class="col-md-4 col-sm-12">
-                <div class="form-group">
-                    <div class="input-group choose-btn-group">
-                        <div class="input-icon">
-                            <i class="fa fa-file fa-fw"></i>
-                            <input type="text" class="form-control btn-file" id="import_file_name" readonly="">
-                        </div>
-					<span class="input-group-btn">
-						<span class="btn btn-default btn-file">
-							选择文件<input name="attachment" type="file" accept=".xls,.xlsx">
-						</span>
-					</span>
-                    </div>
-                </div>
-                <div class="btn-toolbar margin-bottom-10">
-                    <i class="fa fa-file-excel-o"></i> <a download="" href="/download/<?=Yii::t('import',strtoupper($type))?>.xlsx">模板下载</a>
-                    <input type="checkbox" class="" name="first" id="first"/><label for="first">第一行包含数据</label>
-                    <button type="submit" class="btn btn-default btn-file btn-xs purple">导入</button>
-                </div>
-            </div>
-        </div>
+        <?
+        $this->renderPartial('_import_navigate', array('type' => $type));
+        ?>
     </div>
     <div class="row import-tab" id="abc">
         <div class="box">
             <table id="data_import" class="table table-bordered dataTable">
                 <tr>
                     <th class="input_min"><input type="checkbox"></th>
-                    <th class="input_mid">采购日期</th>
-                    <th class="input-small">采购摘要</th>
+                    <th class="input_mid">交易日期</th>
+                    <th class="input-small">交易摘要</th>
                     <th class="input_mid">供应商名称</th>
                     <th class="input_mid">商品名称</th>
                     <th class="input_mid">单价</th>
@@ -62,7 +43,8 @@ $this->pageTitle = Yii::app()->name;
                     $vendorArray = Vendor::model()->getVendorArray();
                     $stockArray = Stock::model()->getStockArray();
                     $taxArray = Transition::getTaxArray('purchase');
-                    $subjectArray = Transition::getSubjectArray('');
+                    $arr = [1601, 1403, 1405, 6602, 6601, 6401, 1701];
+                    $subjectArray = Transition::getSubjectArray($arr);
                     foreach ($sheetData as $key => $item) {
                         ?>
                         <tr line="<?= $key ?>" <?= $key % 2 == 1 ? 'class="table-tr"' : '' ?>>
@@ -88,8 +70,8 @@ $this->pageTitle = Yii::app()->name;
                                 ?>
                             </td>
                             <td><?
-                                if(!in_array($item['entry_name'],$stockArray)){
-                                    $stockArray+=[$item['entry_name']=>$item['entry_name']];
+                                if ($item['entry_name']!='' && !in_array($item['entry_name'], $stockArray)) {
+                                    $stockArray += [$item['entry_name'] => $item['entry_name']];
                                 }
                                 $this->widget('ext.select2.ESelect2', array(
                                     'name' => 'lists[' . $key . '][Transition][entry_name]',
@@ -105,7 +87,8 @@ $this->pageTitle = Yii::app()->name;
                                        name="lists[<?= $key ?>][Transition][price]" onkeyup="checkinput1(this)"
                                        onblur="checkinput1(this)" value="<?= $item['price'] ?>">
                             </td>
-                            <td><input class="input_min" type="number" min="1" id="tran_count_<?= $key ?>" placeholder="数量"
+                            <td><input class="input_min" type="number" min="1" id="tran_count_<?= $key ?>"
+                                       placeholder="数量"
                                        name="lists[<?= $key ?>][Transition][count]" onkeyup="checkinput2(this)"
                                        onblur="checkinput1(this)" value="<?= $item['count'] ?>">
                             </td>
@@ -137,6 +120,10 @@ $this->pageTitle = Yii::app()->name;
                             <td class="action">
                                 <input type="hidden" id="did_<?= $key ?>" name="lists[<?= $key ?>][Transition][d_id]"
                                        value="<?= isset($item['d_id']) ? $item['d_id'] : '' ?>">
+                                <input type="hidden" id="order_no_<?= $key ?>"
+                                       name="lists[<?= $key ?>][Transition][order_no]"
+                                       value="<?= $item['order_no'] ?>">
+                                <data class="hidden">
                                 <input type="hidden" id="id_<?= $key ?>" value="<?= $key ?>">
                                 <input type="hidden" id="status_id_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][status_id]"
@@ -173,10 +160,11 @@ $this->pageTitle = Yii::app()->name;
                                 <input type="hidden" id="additional_amount1_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][additional][1][amount]"
                                        value="<?= $item['additional'][1]['amount'] ?>">
+                                </data>
 
                                 <div>
 
-                                    <button type="button" id="btn_confirm_<?= $key ?>" class="hidden btn btn-default"
+                                    <button type="button" id="btn_confirm_<?= $key ?>" class=" btn btn-default"
                                             onclick="itemSetDefault(this, '<?= $type ?>')">确认
                                     </button>
 
@@ -208,55 +196,6 @@ $this->pageTitle = Yii::app()->name;
                 <?
                 }
                 ?>
-                <tr id="trSetting" style="display: none">
-                    <td colspan="100">
-                        <div id="itemSetting" title="记账设置" class="box">
-                            <!--    <div class="modal-header bg-light-blue-active" >设置</div>-->
-                            <div>
-                                <input id="type" type="hidden" value="<?= $this->createUrl(
-                                    '/bank/type'
-                                ) ?>">
-                                <input id="user-bank" type="hidden" value="<?= $this->createUrl(
-                                    '/user/savebank'
-                                ) ?>">
-                                <input id="option" type="hidden" value="<?= $this->createUrl(
-                                    '/bank/option'
-                                ) ?>">
-                                <input id="employee" type="hidden" value="<?= $this->createUrl(
-                                    '/employee/createemployee'
-                                ) ?>">
-                                <input id="new-url" type="hidden" value="<?= $this->createUrl(
-                                    '/subjects/createsubject'
-                                ) ?>">
-                                <input id="new-vendor" type="hidden" value="<?= $this->createUrl(
-                                    '/vendor/createvendor'
-                                ) ?>">
-                                <input id="get-vendor" type="hidden" value="<?= $this->createUrl(
-                                    '/vendor/getvendor'
-                                ) ?>">
-                                <input id="data" type="hidden" value="">
-                                <input id="subject" type="hidden" value="">
-                                <input id="item_id" type="hidden" value="">
-                            </div>
-                            <div id="setting">
-                                <div class="options btn-group-xs">
-                                    <button class="btn btn-default" type="button" onclick="chooseType(this,1)"
-                                            value="支出">支出
-                                    </button>
-                                    <br/>
-                                    <button class="btn btn-default" type="button" onclick="chooseType(this,2)"
-                                            value="收入">收入
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="actionSetting" style="margin-top: 20px;text-align: center;">
-                                <button class="btn btn-success " type="button" onclick="itemSet()">确定</button>
-                                <button class="btn btn-default" type="button" onclick="dialogClose()">取消</button>
-                            </div>
-                        </div>
-
-                    </td>
-                </tr>
             </table>
 
             <div class="transition_action">

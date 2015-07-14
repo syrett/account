@@ -15,7 +15,6 @@ class ProductController extends Controller
 	{
 		return array(
 			'accessControl', // perform access control for CRUD operations
-			'postOnly + delete', // we only allow deletion via POST request
 		);
 	}
 
@@ -27,18 +26,10 @@ class ProductController extends Controller
 	public function accessRules()
 	{
 		return array(
-			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
-				'users'=>array('*'),
-			),
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
-				'users'=>array('@'),
-			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
-			),
+            array('allow', // allow authenticated user to perform 'create' and 'update' actions
+                'actions'=>array('index','create','update','save','delete'),
+                'users'=>array('@'),
+            ),
 			array('deny',  // deny all users
 				'users'=>array('*'),
 			),
@@ -86,21 +77,49 @@ class ProductController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		$model=$this->loadModel($id);
+        if (Yii::app()->request->isPostRequest) {
+            $cat = Yii::app()->createController('Transition');
+            $cat = $cat[0];
+            $sheetData = $cat->saveAll('product', $id);
+            if (!empty($sheetData))
+                foreach ($sheetData as $item) {
+                    if ($item['status'] == 0) {
+                        Yii::app()->user->setFlash('error', "保存失败!");
+                        $model = $this->loadModel($id);
+                        $sheetData[0]['status'] = 0;
+                        $sheetData[0]['data'] = Transition::getSheetData($item['data'],'product');
+                    }
+                    if ($item['status'] == 2) {
+                        Yii::app()->user->setFlash('error', "数据保存成功，未生成凭证");
+                        $model = $this->loadModel($id);
+                    }
+                }
+            else
+            {
+                Yii::app()->user->setFlash('success', "保存成功!");
+                $model = $this->loadModel($id);
+                $tran = Transition::model()->find(['condition' => 'data_id=:data_id', 'params' => [':data_id' => $id]]);
+                $sheetData[0]['data'] = Transition::getSheetData($model->attributes,'product');
+                if($tran!=null)
+                    $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
+                $this->redirect(array('update','id'=>$model->id));
+            }
+        }else {
+            $model = $this->loadModel($id);
+            //收费版需要加载跟此数据相关的，关键字为parent
+            $sheetData[0]['data'] = Transition::getSheetData($model->attributes,'product');
+            if($model->status_id==1)
+            {
+                $tran = Transition::model()->find(['condition' => 'data_id=:data_id', 'params' => [':data_id' => $id]]);
+                if($tran!=null)
+                    $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
+            }
+        }
 
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['Product']))
-		{
-			$model->attributes=$_POST['Product'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
-		}
-
-		$this->render('update',array(
-			'model'=>$model,
-		));
+        $this->render('update',array(
+            'model'=>$model,
+            'sheetData'=>$sheetData
+        ));
 	}
 
 	/**
@@ -122,22 +141,19 @@ class ProductController extends Controller
 	 */
 	public function actionIndex()
 	{
-        $this->actionAdmin();
-	}
+        $model=new Product('search');
+        $model->unsetAttributes();  // clear any default values
+        if(isset($_GET['Product']))
+            $model->attributes=$_GET['Product'];
 
-	/**
-	 * Manages all models.
-	 */
-	public function actionAdmin()
-	{
-		$model=new Product('search');
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Product']))
-			$model->attributes=$_GET['Product'];
-
-		$this->render('admin',array(
-			'model'=>$model,
-		));
+        $dataProvider= $model->search();
+        $dataProvider->pagination=array(
+            'pageSize' => 20
+        );
+        $this->render('index',array(
+            'dataProvider'=>$dataProvider,
+            'model'=>$model,
+        ));
 	}
 
 	/**

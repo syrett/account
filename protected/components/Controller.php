@@ -34,7 +34,7 @@ class Controller extends CController
     public function beforeAction($action){
         //以下controller才执行权限检验
         $controllers = ['bank','cash','purchase','product','client','department','employee','options','post','project','report','subjects','transition','vendor'];
-        if(!in_array($this->uniqueId, $controllers))
+        if(!in_array($this->uniqueId, $controllers) || User::model()->superAdmin())
             return true;
         else{
             $dbname = substr(SYSDB, 8);

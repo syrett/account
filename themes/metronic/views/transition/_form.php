@@ -51,24 +51,27 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
         ?>" readonly/>
     </div>
     <div class="col-md-4" id="transition_date">
-    	<div class="form-group">
-    		<label class="control-label col-md-4">制单日期：</label>
-    		<div class="col-md-3">
-				<div class="input-group input-small" >
-					<input type="text" name="entry_date" class="form-control" value="<?php
-				        echo isset($model[0]->entry_num_prefix)
-        			    ? date('Ymd', strtotime($model[0]->entry_date))
-        			    : date('Ymd'); ?>" id="dp1" readonly />
+        <div class="form-group">
+            <label class="control-label col-md-4">制单日期：</label>
+
+            <div class="col-md-3">
+                <div class="input-group input-small">
+                    <input type="text" name="entry_date" class="form-control" value="<?php
+                    echo isset($model[0]->entry_num_prefix)
+                        ? date('Ymd', strtotime($model[0]->entry_date))
+                        : date('Ymd'); ?>" id="dp1" readonly/>
 					<span class="input-group-btn">
 					<button class="btn default" type="button">
-					<span class="md-click-circle md-click-animate" style="height: 47px; width: 47px; top: -7.5px; left: 2.25px;"></span>
-					<i class="fa fa-calendar"></i>
-					</button>
+                        <span class="md-click-circle md-click-animate"
+                              style="height: 47px; width: 47px; top: -7.5px; left: 2.25px;"></span>
+                        <i class="fa fa-calendar"></i>
+                    </button>
 					</span>
-					<input type="hidden" id="entry_num_pre" value="<?php echo Yii::app()->createAbsoluteUrl("transition/GetTranSuffix") ?>"/>
-				</div>
-			</div>
-		</div>
+                    <input type="hidden" id="entry_num_pre"
+                           value="<?php echo Yii::app()->createAbsoluteUrl("transition/GetTranSuffix") ?>"/>
+                </div>
+            </div>
+        </div>
     </div>
     <?php
     //        if(isset($_REQUEST['id'])&&accessReview($_REQUEST['id'])&&accessSettle($_REQUEST['id'])) {
@@ -104,12 +107,12 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
 
                 $this->widget('ext.select2.ESelect2', array(
                     'name' => "Transition[$i][entry_subject]",
-                    'id' => "Transition_$i". "_entry_subject",
+                    'id' => "Transition_$i" . "_entry_subject",
                     'value' => $item['entry_subject'],
                     'data' => $subjects,
                     'htmlOptions' => array('class' => 'form-control v-subject',)
                 ));
-//                CHtml::activeDropDownList($item, "[$i]entry_subject", $subjects, array('class' => 'form-control v-subject'));
+                //                CHtml::activeDropDownList($item, "[$i]entry_subject", $subjects, array('class' => 'form-control v-subject'));
                 ?>
                 <input type="hidden" value="<?= $i ?>"/>
             </td>
@@ -121,7 +124,9 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
             </td>
             <td class="col-md-3">
                 <span id="appendix_<?= $i; ?>"
-                      style="<?php if ($item['entry_appendix_type'] == '' || $item['entry_appendix_type'] == 0) { echo 'display: none;'; } ?>float: left">
+                      style="<?php if ($item['entry_appendix_type'] == '' || $item['entry_appendix_type'] == 0) {
+                          echo 'display: none;';
+                      } ?>float: left">
                                     <?php
                                     $data = $this->appendixList($item['entry_appendix_type']);
                                     $item->entry_appendix_id = $item['entry_appendix_id'];
@@ -183,7 +188,12 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
 
         }
 
-        if (isset($_REQUEST['id']) && $model[0]->entry_memo != '结转凭证' && $model[0]->entry_reviewed != 1 && $model[0]->entry_closing != 1)
+        if (isset($_REQUEST['id'])
+            && $model[0]->entry_memo != '结转凭证'
+            && $model[0]->entry_reviewed != 1
+            && $model[0]->entry_closing != 1
+            && $model[0]->data_type == ''
+        )
             echo CHtml::htmlbutton(($model[0]->entry_deleted == 0) ? '<span class="glyphicon glyphicon-remove"></span> 删除凭证' : '<span class="glyphicon glyphicon-share-alt"></span> 恢复凭证', array(
                     'submit' => array('transition/delete', array('id' => $_REQUEST['id'], 'action' => $model[0]->entry_deleted)),
                     'style' => 'float: left',
@@ -214,9 +224,10 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
             echo CHtml::errorSummary($model[0]);
             echo '</div>';
         }
-        if ($model[0]->entry_reviewed == 0 && $model[0]->entry_settlement == 0) {
+        if ($model[0]->entry_reviewed == 0 && $model[0]->entry_settlement == 0 && $model[0]->data_type == '') {//手动录入的凭证才可以修改
             echo CHtml::tag('button', array('encode' => false, 'class' => 'btn btn-circle btn-primary',), '<span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证');
-        }
+        } else
+            echo '此凭证不可修改';
         echo "&nbsp;&nbsp;";
         echo BtnBack();
         ?>
@@ -233,9 +244,10 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
     <input type="hidden" name="entry_creater" id='entry_creater'
            value="<?php echo isset($_REQUEST['id']) == true ? $model[0]['entry_creater'] : Yii::app()->user->id ?>"/>
     <input type="hidden" id="number" value="<?= $number ?>"/>
-    <input type="hidden" id="startDate" value="<?= Condom::model()->getStartTime();?>"/>
+    <input type="hidden" id="startDate" value="<?= Condom::model()->getStartTime(); ?>"/>
     <input type="hidden" id="transitionDate" value="<?= $tranDate['date'] ?>"/>
-    <input type="hidden" value="<?php echo Yii::app()->createAbsoluteUrl("transition/Appendix") ?>" id="entry_appendix"/>
+    <input type="hidden" value="<?php echo Yii::app()->createAbsoluteUrl("transition/Appendix") ?>"
+           id="entry_appendix"/>
     <input type="hidden" value="<?php echo Yii::app()->createAbsoluteUrl("transition/ajaxlistfirst") ?>"
            id="ajax_listfirst"/>
     <input type="hidden" value="<?= Yii::app()->createAbsoluteUrl("subjects/ajaxgetsubjects") ?>"

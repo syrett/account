@@ -19,7 +19,7 @@
 }
 
 .row-deleted {
-    background-color: #f2dede;
+    background-color: #f2dede !important;
     text-decoration: line-through;
 }
 
@@ -99,7 +99,7 @@ table#balance td, table#profit td, table#subjects td, table#project td, table#de
     height: 74px;
     position: absolute;
     right: 170px;
-    top: 50px;
+    top: 90px;
     color: #f00;
     background: url(../img/audit.png) 0 0 no-repeat;
     text-indent: -9999em;

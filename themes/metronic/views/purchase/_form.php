@@ -7,6 +7,7 @@ require_once(dirname(__FILE__) . '/../viewfunctions.php');
 
 $cs = Yii::app()->getClientScript();
 $baseUrl = Yii::app()->theme->baseUrl;
+$cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_common.js');
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_vip.js');
 $this->pageTitle = Yii::app()->name;
 $type = 'purchase';
@@ -25,7 +26,7 @@ $type = 'purchase';
             <table class="table table-bordered dataTable">
                 <tr>
                     <th class="input_min"><input type="checkbox"></th>
-                    <th class="input_mid">采购日期</th>
+                    <th class="input_mid">交易日期</th>
                     <th class="input_mid">供应商名称</th>
                     <th class="input_mid">商品名称</th>
                     <th class="input_mid">单价</th>
@@ -40,20 +41,25 @@ $type = 'purchase';
                 if (!empty($model)) {
                     $item = $sheetData[0]['data'];
                     $key = 1;
+                    $vendorArray = Vendor::model()->getVendorArray();
+                    $stockArray = Stock::model()->getStockArray();
+                    $taxArray = Transition::getTaxArray('purchase');
+                    $arr = [1601, 1403, 1405, 6602, 6601, 6401, 1701];
+                    $subjectArray = Transition::getSubjectArray($arr);
                     ?>
                     <tr line="<?= $key ?>" <?= $key % 2 == 1 ? 'class="table-tr"' : '' ?>>
                         <td><input type="checkbox" id="item_<?= $key ?>" name="lists[<?= $key ?>]"
                                    value="<?= isset($item['id']) ? $item['id'] : '' ?>"></td>
                         <td><input class="input_mid date-picker" type="text" id="tran_date_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entry_date]"
-                                   value="<?= $item['purchase_date'] ?>">
+                                   value="<?= $item['entry_date'] ?>">
                         </td>
                         <td><?
                             $this->widget('ext.select2.ESelect2', array(
                                 'name' => 'lists[' . $key . '][Transition][entry_appendix_id]',
                                 'id' => 'tran_appendix_id_' . $key,
                                 'value' => $item['vendor_id'],
-                                'data' => Vendor::model()->getVendorArray(),
+                                'data' => $vendorArray,
                                 'options' => array('formatNoMatches' => 'js:function(term){return Not_Found("vendor",term,' . $key . ')}'),
                                 'htmlOptions' => array('class' => 'select-full',)
                             ));
@@ -63,8 +69,8 @@ $type = 'purchase';
                             $this->widget('ext.select2.ESelect2', array(
                                 'name' => 'lists[' . $key . '][Transition][entry_name]',
                                 'id' => 'tran_entry_name_' . $key,
-                                'value' => $item['commodity'],
-                                'data' => Stock::model()->getStockArray(),
+                                'value' => $item['entry_name'],
+                                'data' => $stockArray,
                                 'options' => array('formatNoMatches' => 'js:function(term){return Not_Found("stock",term,' . $key . ')}'),
                                 'htmlOptions' => array('class' => 'select-full',)
                             ));
@@ -83,17 +89,15 @@ $type = 'purchase';
                                 'name' => 'lists[' . $key . '][Transition][tax]',
                                 'id' => 'tran_tax_' . $key,
                                 'value' => $item['tax'],
-                                'data' => Transition::getTaxArray('purchase'),
+                                'data' => $taxArray,
                             ));
                             ?>
                         </td>
                         <td><?
-                            $data = Transition::getSubjectArray('');
-                            $data += ['商品采购' => '商品采购'];
                             $this->widget('ext.select2.ESelect2', array(
                                 'name' => 'lists[' . $key . '][Transition][subject]',
                                 'id' => 'tran_subject_' . $key,
-                                'data' => $data,
+                                'data' => $subjectArray,
                                 'value' => isset($item['subject'])?$item['entry_subject']:'商品采购',
                                 'htmlOptions' => array('class' => 'select-full',)
                             ));
@@ -104,12 +108,13 @@ $type = 'purchase';
                                    value="<?= $item['entry_memo'] ?>">
                         </td>
                         <td class="action">
-                            <input type="hidden" id="did_<?= $key ?>" name="lists[<?= $key ?>][Transition][d_id]"
-                                   value="<?= isset($item['d_id']) ? $item['d_id'] : '' ?>">
+                                <input type="hidden" id="did_<?= $key ?>" name="lists[<?= $key ?>][Transition][d_id]"
+                                       value="<?= isset($item['d_id']) ? $item['d_id'] : '' ?>">
+                                <input type="hidden" id="order_no_<?= $key ?>"
+                                       name="lists[<?= $key ?>][Transition][order_no]"
+                                       value="<?= $item['order_no'] ?>">
+                            <data class="hidden">
                             <input type="hidden" id="id_<?= $key ?>" value="<?= $key ?>">
-                            <input type="hidden" id="order_no_<?= $key ?>"
-                                   name="lists[<?= $key ?>][Transition][order_no]"
-                                   value="<?= $item['order_no'] ?>">
                             <input type="hidden" id="status_id_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][status_id]"
                                    value="<?= $item['status_id'] ?>">
@@ -146,9 +151,10 @@ $type = 'purchase';
                                    name="lists[<?= $key ?>][Transition][additional][1][amount]"
                                    value="<?= $item['additional'][1]['amount'] ?>">
 
+                            </data>
                             <div>
 
-                                <button type="button" class="btn btn-default"
+                                <button type="button" id="btn_confirm_<?= $key ?>" class="btn btn-default hidden"
                                         onclick="itemSetDefault(this, '<?= $type ?>')">确认
                                 </button>
                             </div>
@@ -180,31 +186,6 @@ $type = 'purchase';
                     <td colspan="100">
                         <div id="itemSetting" title="记账设置" class="box">
                             <!--    <div class="modal-header bg-light-blue-active" >设置</div>-->
-                            <div>
-                                <input id="type" type="hidden" value="<?= $this->createUrl(
-                                    '/bank/type'
-                                ) ?>">
-
-                                <input id="option" type="hidden" value="<?= $this->createUrl(
-                                    '/bank/option'
-                                ) ?>">
-                                <input id="employee" type="hidden" value="<?= $this->createUrl(
-                                    '/employee/createemployee'
-                                ) ?>">
-                                <input id="new-url" type="hidden" value="<?= $this->createUrl(
-                                    '/subjects/createsubject'
-                                ) ?>">
-                                <input id="new-vendor" type="hidden" value="<?= $this->createUrl(
-                                    '/vendor/createvendor'
-                                ) ?>">
-                                <input id="get-vendor" type="hidden" value="<?= $this->createUrl(
-                                    '/vendor/getvendor'
-                                ) ?>">
-
-                                <input id="data" type="hidden" value="">
-                                <input id="subject" type="hidden" value="">
-                                <input id="item_id" type="hidden" value="">
-                            </div>
                             <div id="setting">
                                 <div class="options btn-group-xs">
                                     <button class="btn btn-default" type="button" onclick="chooseType(this,1)"

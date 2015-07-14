@@ -56,3 +56,23 @@ $type = 'purchase';
         ?>
     </div>
 </div>
+
+<input id="type" type="hidden" value="<?= $this->createUrl(
+    '/bank/type'
+) ?>">
+<input id="user-bank" type="hidden" value="<?= $this->createUrl(
+    '/user/savebank'
+) ?>">
+<input id="option" type="hidden" value="<?= $this->createUrl(
+    '/bank/option'
+) ?>">
+<input id="employee" type="hidden" value="<?= $this->createUrl(
+    '/employee/createemployee'
+) ?>">
+<input id="new-url" type="hidden" value="<?= $this->createUrl(
+    '/subjects/createsubject'
+) ?>">
+<input id="data" type="hidden" value="">
+<input id="subject" type="hidden" value="">
+<input id="item_id" type="hidden" value="">
+<input id="action" type="hidden" value="<?=$type?>">

@@ -80,11 +80,18 @@ function removePath(path) {
 //设置凭证 借贷
 function setTransaction(id) {
     var type = $(".options:first > button.active").val();
-    if (type == '支出')
-        $("#transaction_" + id).val(1)
-    if (type == '收入') {
-        $("#transaction_" + id).val(2)
+    var action = $("#action").val();
+    switch(action){
+        case 'product': $("#transaction_" + id).val(2);break;
+        case 'purchase': $("#transaction_" + id).val(1);break;
+        default :
+            if (type == '支出')
+                $("#transaction_" + id).val(1)
+            if (type == '收入') {
+                $("#transaction_" + id).val(2)
+            }
     }
+
     if ($("#subject").val() == 660302)    //利息费用
         $("#transaction_" + id).val(1)
     //设置是否需要生成凭证，例：银行互转，收入方不需要
@@ -96,12 +103,12 @@ function setTransaction(id) {
 }
 //消除数据，设置前先消除
 function unset(id) {
-    var sbj = $("input[name^='lists\[" + id + "\]\[Transition\]\[entry_subject\]']").val();
-    var sbja = $("input[name^='lists\[" + id + "\]\[Transition\]\[entry_transaction\]']").val();
-    $("input[name^='lists\[" + id + "\]\[Transition\]'][type='hidden'][id!='did_" + id + "']").val("");
+    var sbj = $("[name^='lists\[" + id + "\]\[Transition\]\[subject\]']").val();
+    var sbja = $("[name^='lists\[" + id + "\]\[Transition\]\[entry_transaction\]']").val();
+    $("data input[name^='lists\[" + id + "\]\[Transition\]'][type='hidden']").val("");
     //如果选择了项目，才消除 已经存在的科目编号
-    $("input[name^='lists\[" + id + "\]\[Transition\]\[entry_subject\]']").val(sbj);
-    $("input[name^='lists\[" + id + "\]\[Transition\]\[entry_transaction\]']").val(sbja);
+    $("[name^='lists\[" + id + "\]\[Transition\]\[entry_subject\]']").val(sbj);
+    $("[name^='lists\[" + id + "\]\[Transition\]\[entry_transaction\]']").val(sbja);
 }
 //清除科目选择里面的数据，否则直接点确定的话，subject里面有上一次的科目编号
 function unsetting() {
@@ -130,6 +137,23 @@ function createSubject(data) {
 }
 function createVendor(data) {
     var url = $("#new-vendor").val();
+    var result = 0;
+    $.ajax({
+        async: false,
+        type: "POST",
+        url: url,
+        data: data,
+        success: function (data) {
+            result = data;
+        },
+        error: function (msg) {
+            result = msg;
+        }
+    })
+    return result;
+}
+function createClient(data) {
+    var url = $("#new-client").val();
     var result = 0;
     $.ajax({
         async: false,

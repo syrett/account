@@ -85,8 +85,6 @@ class Vendor extends CActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('vat',$this->vat,true);
 		$criteria->compare('phone',$this->phone,true);
-		$criteria->compare('add',$this->add,true);
-		$criteria->compare('memo',$this->memo,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -117,6 +115,7 @@ class Vendor extends CActiveRecord
 
     public function getVendorArray(){
         $data = self::model()->findAll();
+        $arr = [];
         foreach($data as $row){
             $arr[$row['id']] = $row["company"];
         }
@@ -138,5 +137,24 @@ class Vendor extends CActiveRecord
             return $vendor->id;
         else
             return 0;
+    }
+
+    public function getAllMount($options){
+        $result = 0;
+        $sbj = Subjects::model()->findByAttributes(['sbj_name'=>$this->company], 'sbj_number like "2202%"');
+        if($sbj==null)
+            $sbj = Subjects::model()->findByAttributes([],"sbj_name like '%$this->company%' and sbj_number like '2202%'");
+        if($sbj==null)
+            return 0;
+        else
+            $sbj = $sbj->sbj_number;
+        if(isset($options['type'])&&$options['type']=='before'){
+            $balance = Subjects::get_balance($sbj);
+            $in = Transition::model()->getAllMount($sbj, 1, $options['type'], $options['date']);
+            $out = Transition::model()->getAllMount($sbj, 2, $options['type'], $options['date']);
+            $result = $balance + $in-$out;
+        }else
+            $result = Transition::model()->getAllMount($sbj, $options['entry_transaction'], 'after', '');
+        return $result;
     }
 }

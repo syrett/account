@@ -195,9 +195,9 @@ class VendorController extends Controller
      */
     public function actionGetvendor(){
         if (Yii::app()->request->isAjaxRequest ) {
-            $vendors = Vendor::model()->findAll();
-            foreach($vendors as $vendor){
-                $result[$vendor->id] = $vendor->company;
+            $models = Vendor::model()->findAll();
+            foreach($models as $model){
+                $result[$model->id] = $model->company;
             }
             echo json_encode($result);
         }

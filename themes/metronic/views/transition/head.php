@@ -56,9 +56,40 @@ if ($bank_money == 'cash')
 	?>
 	<?php
     if($this->checkVIP()&&!in_array($type,['bank','cash']))
-        $this->renderPartial('_import_vip', array('type'=>$type,'sheetData' => $sheetData));
+        $this->renderPartial('_import_'.$type, array('type'=>$type,'sheetData' => $sheetData));
     else
         $this->renderPartial('_import', array('type'=>$type,'sheetData' => $sheetData));
     ?>
 	</div>
 </div>
+<input id="type" type="hidden" value="<?= $this->createUrl(
+    '/bank/type'
+) ?>">
+<input id="user-bank" type="hidden" value="<?= $this->createUrl(
+    '/user/savebank'
+) ?>">
+<input id="option" type="hidden" value="<?= $this->createUrl(
+    '/bank/option'
+) ?>">
+<input id="employee" type="hidden" value="<?= $this->createUrl(
+    '/employee/createemployee'
+) ?>">
+<input id="new-url" type="hidden" value="<?= $this->createUrl(
+    '/subjects/createsubject'
+) ?>">
+<input id="new-vendor" type="hidden" value="<?= $this->createUrl(
+    '/vendor/createvendor'
+) ?>">
+<input id="get-vendor" type="hidden" value="<?= $this->createUrl(
+    '/vendor/getvendor'
+) ?>">
+<input id="new-client" type="hidden" value="<?= $this->createUrl(
+    '/client/createclient'
+) ?>">
+<input id="get-client" type="hidden" value="<?= $this->createUrl(
+    '/client/getclient'
+) ?>">
+<input id="data" type="hidden" value="">
+<input id="subject" type="hidden" value="">
+<input id="item_id" type="hidden" value="">
+<input id="action" type="hidden" value="<?=$type?>">

@@ -3,23 +3,28 @@ $this->pageTitle=Yii::app()->name . ' - 供应商管理';
 $this->breadcrumbs=array(
 	'供应商管理',
 );
-$total = Subjects::get_balance(2202) + Transition::getAllMount(2202,2);
-$paid = Transition::getAllMount(2202,1);
+$balance = Subjects::get_balance(2202);
+$unpaid = Transition::getAllMount(2202,2);
+$unpaid2 = Transition::getAllMount(2202,2,'before');
 
-$unpaid = $total - $paid;
-$unpaid2 = Transition::getAllMount(2202,2);
+$paid = Transition::getAllMount(2202,1);
+$paid2 = Transition::getAllMount(2202,1,'before');
+
+$before = $balance + $unpaid2 - $paid2;
+$left = $before + $unpaid - $paid;
 ?>
-<div class="panel panel-success voucher form">
+<div class="panel panel-default voucher form">
     <!-- Default panel contents -->
     <div class="panel-heading">
         <h2>供应商管理</h2>
     </div>
     <div class="well well-sm">
         <div class="banner" >
-            <div class="banner-balance col-sm-6">应付: ￥<?=$total?>
-                <div class="banner-unpaid col-sm-5">未付: ￥<?=$unpaid?></div>
+            <div class="banner-balance col-sm-8">年初: ￥<?=$before?>
+                <div class="banner-paid col-sm-3">本年减少: ￥<?=$paid?></div>
+                <div class="banner-in col-sm-3">本年增加: ￥<?=$unpaid?></div>
             </div>
-            <div class="banner-paid col-sm-6">已付: ￥<?=$paid?></div>
+            <div class="banner-unpaid col-sm-4">未付: ￥<?=$left?></div>
         </div>
     </div>
     <div class="panel-body">
@@ -33,8 +38,22 @@ $unpaid2 = Transition::getAllMount(2202,2);
                 'company',
                 'vat',
                 'phone',
-                'add',
-                'memo',
+                [
+                    'header' => '年初余额',
+                    'value' => '$GLOBALS["a"] = $data->getAllMount(["type"=>"before","date"=>date("Y")."-01-01 00:00:00"])'
+                ],
+                [
+                    'header' => '本年增加',
+                    'value' => '$GLOBALS["b"] = $data->getAllMount(["entry_transaction"=>2]);',
+                ],
+                [
+                    'header' => '本年减少',
+                    'value' => '$GLOBALS["c"] = $data->getAllMount(["entry_transaction"=>1]);',
+                ],
+                [
+                    'header' => '未付',
+                    'value' => '$GLOBALS["a"]+$GLOBALS["b"]-$GLOBALS["c"]',
+                ],
                 array(
                     'class' => 'CButtonColumn',
                     'buttons' => array(

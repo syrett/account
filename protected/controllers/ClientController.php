@@ -28,7 +28,6 @@ class ClientController extends Controller
 	{
 		return array(
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -169,4 +168,38 @@ class ClientController extends Controller
 			Yii::app()->end();
 		}
 	}
+    /*
+     * 新建供应商
+     */
+    public function actionCreateclient()
+    {
+        if (Yii::app()->request->isAjaxRequest ) {
+            $model = new Client();
+            $data['company'] = $_POST['name'];
+            $a = $model->model()->findByAttributes($data);
+            if ($a != null)
+                echo $a->id;
+            else {
+                $model = new Client;
+                $model->attributes = $data;
+                if ($model->save())
+                    echo $model->id;
+                else
+                    echo 0;
+            }
+        }
+    }
+
+    /*
+     * 获取供应商列表
+     */
+    public function actionGetclient(){
+        if (Yii::app()->request->isAjaxRequest ) {
+            $models = Client::model()->findAll();
+            foreach($models as $model){
+                $result[$model->id] = $model->company;
+            }
+            echo json_encode($result);
+        }
+    }
 }

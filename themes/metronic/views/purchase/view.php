@@ -23,9 +23,9 @@ $this->menu=array(
 	'attributes'=>array(
 		'id',
 		'order_no',
-		'purchase_date',
+		'entry_date',
 		'vendor_id',
-		'commodity',
+		'entry_name',
 		'price',
 		'unit',
 		'tax',

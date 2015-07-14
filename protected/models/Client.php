@@ -31,7 +31,6 @@ class Client extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('company', 'required'),
-			array('phone', 'required'),
 			array('id', 'numerical', 'integerOnly'=>true),
 			array('company', 'length', 'max'=>100),
 			array('vat', 'length', 'max'=>45),
@@ -123,5 +122,38 @@ class Client extends CActiveRecord
       }
       return $arr;
     }
-    
+
+    public function getAllMount($options){
+        $result = 0;
+        $sbj = '1122';
+        $model = Subjects::model()->findByAttributes(['sbj_name'=>$this->company], 'sbj_number like "1122%"');
+        if($model==null)
+            $model = Subjects::model()->findByAttributes([],"sbj_name like '%$this->company%' and sbj_number like '1122%'");
+        if($model!=null)
+            $sbj = $model->sbj_number;
+        if(isset($options['type'])&&$options['type']=='before'){
+            $balance = Subjects::get_balance($sbj);
+            $in = Transition::model()->getAllMount($sbj, 1, $options['type'], $options['date']);
+            $out = Transition::model()->getAllMount($sbj, 2, $options['type'], $options['date']);
+            $result = $balance + $in-$out;
+        }else
+            $result = Transition::model()->getAllMount($sbj, $options['entry_transaction'], 'after', '');
+        return $result;
+    }
+
+    public function getClientArray(){
+        $data = self::model()->findAll();
+        $arr = [];
+        foreach($data as $row){
+            $arr[$row['id']] = $row["company"];
+        }
+        return $arr;
+    }
+    public function matchName($company){
+        $model = $this->findByAttributes([],['condition'=>'company like "%'.$company.'%"']);
+        if($model!=null)
+            return $model->id;
+        else
+            return 0;
+    }
 }

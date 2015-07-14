@@ -46,11 +46,11 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 	'filter'=>$model,
 	'columns'=>array(
 		'id',
-		'no',
-		'order_no',
-		'name',
-		'vendor_id',
-		'in_date',
+        'order_no',
+        'entry_date',
+        'client_id',
+        'entry_name',
+        'price',
 		/*
 		'in_price',
 		'out_date',

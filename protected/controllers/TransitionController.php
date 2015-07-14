@@ -195,8 +195,8 @@ class TransitionController extends Controller
             if ($_FILES['attachment']!='' && file_exists($_FILES['attachment']['tmp_name'])) {
                 $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
                 $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
-                if (!isset($_REQUEST['first']))
-                    array_shift($list);
+                //去除第一行
+                array_shift($list);
                 foreach($list as $item){
                     $sheetData[] = Transition::getSheetData($item, 'purchase');
                 }
@@ -243,17 +243,17 @@ class TransitionController extends Controller
             if ($_FILES['attachment']!='' && file_exists($_FILES['attachment']['tmp_name'])) {
                 $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
                 $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
-                if (!isset($_REQUEST['first']))
-                    array_shift($list);
+                //去除第一行
+                array_shift($list);
                 foreach($list as $item){
-                    $sheetData[] = Transition::getSheetData($item, 'purchase');
+                    $sheetData[] = Transition::getSheetData($item, 'product');
                 }
             } elseif($_FILES['attachment']['name']==''){
                 //保存按钮
-                $arr = $this->saveAll('purchase');
+                $arr = $this->saveAll('product');
                 if (!empty($arr))
                     foreach ($arr as $item) {
-                        $data = Transition::getSheetData($item['data'], 'purchase');
+                        $data = Transition::getSheetData($item['data'], 'product');
                         if ($item['status'] == 0) {
                             Yii::app()->user->setFlash('error', "保存失败!");
                             $sheetData[] = $data;
@@ -266,17 +266,17 @@ class TransitionController extends Controller
                 else{
                     Yii::app()->user->setFlash('success', "保存成功!");
                     //跳转到历史数据管理页面
-                    $this->redirect(Yii::app()->createUrl('purchase'));
+                    $this->redirect(Yii::app()->createUrl('product'));
                 }
             }
         }
 
         if (empty($sheetData)){
-            $sheetData[] = Transition::getSheetData([], 'purchase');
+            $sheetData[] = Transition::getSheetData([], 'product');
         }
 
         $model[] = new Transition();
-        return $this->render('head', ['type' => 'purchase', 'sheetData' => $sheetData, 'info' => $info]);
+        return $this->render('head', ['type' => 'product', 'sheetData' => $sheetData, 'info' => $info]);
     }
 
     /**
@@ -291,8 +291,8 @@ class TransitionController extends Controller
             if ($_FILES['attachment']!='' && file_exists($_FILES['attachment']['tmp_name'])) {
                 $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
                 $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
-                if (!isset($_REQUEST['first']))
-                    array_shift($list);
+                //去除第一行
+                array_shift($list);
                 foreach($list as $item){
                     $sheetData[] = Transition::getSheetData($item,'bank');
                 }
@@ -339,8 +339,8 @@ class TransitionController extends Controller
             if ($_FILES['attachment']!='' && file_exists($_FILES['attachment']['tmp_name'])) {
                 $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
                 $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
-                if (!isset($_REQUEST['first']))
-                    array_shift($list);
+                //去除第一行
+                array_shift($list);
                 foreach($list as $item){
                     $sheetData[] = Transition::getSheetData($item,'cash');
                 }
@@ -1261,7 +1261,11 @@ class TransitionController extends Controller
         foreach ($trans as $key => $item) {
             $arr = $item['Transition'];
             $arr['updated_at'] = time();
-            $arr['price'] = $arr['entry_amount'];
+            if($arr['entry_amount']=='')
+                $arr['entry_amount'] = $arr['price']*$arr['count'];
+            elseif(!isset($arr['price'])||$arr['price']==''){
+                $arr['price'] = $arr['entry_amount'];
+            }
             $arr['entry_date'] = date('Ymd',strtotime($arr['entry_date']));
             if ($type == 'bank'){
                 $subject_2 = $_POST['subject_2'];
@@ -1273,15 +1277,78 @@ class TransitionController extends Controller
                 $model = new Cash;
             }
             if ($type == 'purchase'){
+                $arr['entry_appendix_type'] = 1;
                 $model = new Purchase();
-                $arr['order_no'] = isset($arr['order_no'])?$arr['order_no']:$model->initOrderno();
+                $arr['order_no'] = isset($arr['order_no'])&&$arr['order_no']!=''?$arr['order_no']:$model->initOrderno();
                 $stock = new Stock();
                 $stock->load($arr);
-                $stock->delStock();
-                $stock->saveMultiple($arr['count']);
+                if($id != '' && $arr['entry_name']!='劳务服务' && $arr['entry_name']!='缴纳税款'){
+
+                    $model = $model::model()->findByPk($id);
+                    $count = $model->count - (int)$arr['count'];
+                    $stock->updateAll($stock->form('puchase'),"order_no='$stock->order_no'");
+                    if($count<0){   //数量有增加
+                        $stock->saveMultiple(-$count);
+                    }
+                    else{   //数量减少
+                        $left = $stock->getCount(['name'=>$arr['entry_name'],'status'=>1]);
+                        if($left>=$count && $count!=0)
+                            $stock->delStock($count);
+                        else{
+                            $arr['error'] = ["数量不能小于：". ($count - $left + $arr['count'])];
+                            $result[] = ['status' => 0, 'data' => $arr];
+                            continue;
+                        }
+                    }
+                }else
+                    $stock->saveMultiple($arr['count']);
+                $arr['entry_subject'] = substr($arr['entry_subject'],1);
+
             }
-            if($newone==0)
-            if ($id != '' && $id != '0')
+            if ($type == 'product'){
+                //设置科目，1122应收账款下的子科目
+                $client = Client::model()->findByPk($arr['client_id']);
+                if($client!=null)
+                    $sbj = Subjects::matchSubject($client->company,[1122]);
+                $arr['subject_2'] = $sbj;
+                $arr['entry_subject'] = substr($arr['entry_subject'],1);
+                if($arr['tax']==5){
+                    $arr['entry_subject'] = 640304; //只有营业税为5%
+                    $arr['subject_2'] = 222102;     //应交税金/营业税
+                }
+                $arr['entry_appendix_type'] = 2;
+                $model = new Product();
+                $stock = new Stock();
+                $stock->load($arr,'product');
+                $left = $stock->getCount(['name'=>$arr['entry_name'],'status'=>1]);
+                //劳务服务不管数量
+                //  修改原始数据
+                if($newone==0 && $id != '' && $id != '0' && $arr['entry_name']!='劳务服务'){
+                    $model = $model::model()->findByPk($id);
+                    $count = $model->count- (int)$arr['count'];
+                    $stock->updateAll($stock->form('product'),"order_no_sale='$stock->order_no'");
+                    if($count>0) //修改后 数量减少
+                        $stock->setStock($count, 1);
+                    elseif($left<-$count){    //修改后 数量有新增，判断库存数量是否足够
+                            $arr['error'] = ["数量不能大于：". ($left + $model->count)];
+                            $result[] = ['status' => 0, 'data' => $arr];
+                            continue;
+                        }
+                    else
+                        $stock->setStock(-$count, 2);
+                }else{  //新销售数据
+                    $arr['order_no'] = $model->initOrderno();
+                    $arr['order_no_sale'] = $arr['order_no'];
+                    if($left<$arr['count']){
+                        $arr['error'] = ["数量不能大于：". ($left + $model->count)];
+                        $result[] = ['status' => 0, 'data' => $arr];
+                        continue;
+                    }
+                    $stock->load($arr,'product');
+                    $stock->setStock($arr['count'], 2);
+                }
+            }
+            if($newone==0 && $id != '' && $id != '0')
                 $model = $model::model()->findByPk($id);
             elseif (!empty($item['Transition']['d_id']))
                 $model = $model::model()->findByPk($item['Transition']['d_id']);
@@ -1325,7 +1392,7 @@ class TransitionController extends Controller
                 $prefix = substr($tran->entry_date, 0, 6);
                 //设置一些默认值，如果是利息相关的，都是借，金额为负
                 $data = [
-                    'data_type' => $type,   //银行
+                    'data_type' => $type,
                     'data_id' => $model->id,
                     'entry_num_prefix' => $prefix,
                     'entry_num' => $this->tranSuffix($prefix),

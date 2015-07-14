@@ -10,21 +10,20 @@ $this->breadcrumbs = array(
 if ($action == 'order') {
 
 } elseif ($action == '') {
-    $before = $model->getAmount(['id' => $model->id, 'type' => 'before', 'status' => 1]);
-    $in = $model->getAmount(['id' => $model->id,]);   //入库
-    $out = $model->getAmount(['id' => $model->id, 'status' => 2]);   //出库
-    $return = $model->getAmount(['id' => $model->id, 'status' => 3]);    //退货
+    $before = $model->getAmount(['id' => $model->id, 'date' => 'year', 'type' => 'before', 'status' => 1]);
+    $in = $model->getAmount(['id' => $model->id, 'date' => 'year',]);   //入库
+    $out = $model->getAmount(['id' => $model->id, 'date' => 'year', 'status' => 2]);   //出库
+    $return = $model->getAmount(['id' => $model->id, 'date' => 'year', 'status' => 3]);    //退货
     $total = $before + $in;
     $left = $before + $in - $out - $return;
-    $left2 = $model->getAmount(['id' => $model->id, 'status' => 1]);
+    $left2 = $model->getAmount(['id' => $model->id, 'date' => 'year', 'status' => 1]);
     $out += $return;
-
 }
 ?>
 <div class="panel panel-default voucher form">
     <!-- Default panel contents -->
     <div class="panel-heading">
-        <h2>库存商品查看</h2>
+        <h2>库存商品-<?=$model->name?></h2>
     </div>
 
     <div class="well well-sm">
@@ -35,18 +34,15 @@ if ($action == 'order') {
 
             } elseif ($action == '') {
                 ?>
-                <div class="banner-balance col-sm-9">期初: <?= $before ?>
-                    <div class="banner-out col-sm-2">年内出库: <?= $out ?></div>
-                    <div class="banner-in col-sm-2">本年采购: <?= $in ?></div>
+                <div class="banner-balance col-sm-9">年初: <?= $before ?>
+                    <div class="banner-out col-sm-3">年内出库: <?= $out ?></div>
+                    <div class="banner-in col-sm-3">本年采购: <?= $in ?></div>
                 </div>
                 <div class="banner-paid col-sm-3">剩余: <?= $left ?></div>
             <?php
             }
             ?>
         </div>
-        <?php
-        //        echo CHtml::link('<span class="glyphicon glyphicon-plus"></span> 添加', array('create'), array('class' => 'btn btn-default'));
-        ?>
     </div>
     <div class="panel-body">
         <?php $this->widget('zii.widgets.grid.CGridView', array(
@@ -62,10 +58,6 @@ if ($action == 'order') {
                     'name' => 'order_no',
                 ),
                 array(
-                    'header' => '名称',
-                    'name' => 'name',
-                ),
-                array(
                     'header' => '供应商',
                     'name' => 'vendor_id',
                     'value' => 'Vendor::model()->getName($data["vendor_id"])',
@@ -78,11 +70,22 @@ if ($action == 'order') {
                     'header' => '单价',
                     'name' => 'in_price',
                 ),
-//                array(
-//                    'header' => '状态',
-//                    'name' => 'status',
-////                    'value'=>''
-//                ),
+                array(
+                    'header' => '年初',
+                    'name' => 'before',
+                ),
+                array(
+                    'header' => '本年',
+                    'value' => '$data["in_date"]>=date("Y")."0101"?$data["count"]:0',
+                ),
+                array(
+                    'header' => '出库',
+                    'name' => 'out',
+                ),
+                array(
+                    'header' => '剩余',
+                    'name' => 'left',
+                ),
 //                array(
 //                    'class' => 'CButtonColumn',
 //                    'buttons' => array(

@@ -100,4 +100,13 @@ class User extends UserActiveRecord
         $user->bank = $bank;
         $user->save();
     }
+
+    public function superAdmin(){
+        $me = $this->findByPk(Yii::app()->user->id);
+        if($me!=null && $me->role='superadmin')
+            return true;
+        else
+            return false;
+
+    }
 }

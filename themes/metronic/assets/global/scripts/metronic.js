@@ -1,6 +1,12 @@
 /**
 Core script to handle the entire theme and core functions
 **/
+$(window).bind("load", function () {
+    //原框架没有自动触发全选
+    $(".checker").delegate("input:checkbox[id*='all']", "click",function(){
+        $("input:checkbox[name^='selectall']").click();
+    });
+});
 var Metronic = function() {
 
     // IE mode

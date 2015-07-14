@@ -282,9 +282,9 @@ CREATE TABLE IF NOT EXISTS `project` (
 CREATE TABLE IF NOT EXISTS `purchase` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `order_no` varchar(16) NOT NULL COMMENT '订单号',
-  `purchase_date` varchar(16) NOT NULL COMMENT '采购日期',
+  `entry_date` varchar(16) NOT NULL COMMENT '采购日期',
   `vendor_id` int(11) NOT NULL COMMENT '供应商ID',
-  `commodity` varchar(512) NOT NULL COMMENT '商品名称',
+  `entry_name` varchar(512) NOT NULL COMMENT '商品名称',
   `entry_memo` varchar(1024) DEFAULT NULL,
   `price` float NOT NULL COMMENT '价格',
   `count` int(11) NOT NULL DEFAULT '1',
@@ -306,7 +306,7 @@ CREATE TABLE IF NOT EXISTS `purchase` (
 -- 转存表中的数据 `purchase`
 --
 
-INSERT INTO `purchase` (`id`, `order_no`, `purchase_date`, `vendor_id`, `commodity`, `entry_memo`, `price`, `count`, `unit`, `tax`, `paied`, `subject`, `subject_2`, `create_time`, `update_time`, `status_id`) VALUES
+INSERT INTO `purchase` (`id`, `order_no`, `entry_date`, `vendor_id`, `entry_name`, `entry_memo`, `price`, `count`, `unit`, `tax`, `paied`, `subject`, `subject_2`, `create_time`, `update_time`, `status_id`) VALUES
 (3, 'PO2015060001', '20150601', 1, '电信宽带电信宽带电信宽带电信宽带电信宽带电信宽带', NULL, 15.3, 1, '个', 0, 0, NULL, NULL, '2015-06-20 05:07:10', 0, 1),
 (5, 'PO2015060001', '20150601', 22, '水杯', NULL, 23, 0, NULL, 0, 0, 140503, 220203, '2015-06-24 11:46:31', 0, 0),
 (6, 'PO2015060002', '20150601', 22, '水杯', NULL, 23, 0, NULL, 0, 0, 140503, 220203, '2015-06-24 11:53:03', 0, 0),

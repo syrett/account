@@ -1,6 +1,3 @@
-account.sql     去除employee外键department_id
-models/post.php balance post表，余额必须是数字，不能是100,000.00，不能有逗号
-凭证打印
-1凭证录入借面能否在下边加上借贷方合计，这个合计在录入时自动加总；
- 借贷方合计不用任何文本框，可在网页上直接显示，但要实时，就是录入一行，光标移开，合计数字就要变。
-2审核凭证提交后返回当前凭证界面，不是凭证列表第一页；
+专门作为数据库修改记录，具体数据库结构请看manage项目
+stock 添加销售字段 订单号 order_no_sale
+添加了数据库表 product 销售 purchase 采购 stock 货品，

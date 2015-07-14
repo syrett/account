@@ -2,7 +2,7 @@
 <?php
 Yii::import('ext.select2.ESelect2');
 $cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js', CClientScript::POS_HEAD);
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scripts/excel_export.js', CClientScript::POS_HEAD);
 ?>
 
 <style>
@@ -145,7 +145,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
      echo "<td colspan=3>".$month."月总计 </td>";
      echo '<td class="text-right">'.number_format($month_debit, 2)."</td>";
      echo '<td class="text-right">'.number_format($month_credit, 2)."</td>";
-     echo '<td class="text-right"'.$month_balance."</td>";
+     echo '<td class="text-right">'.number_format($month_balance, 2)."</td>";
      echo "</tr>";
      $month_debit = $debit;
      $month_credit = $credit;
@@ -184,7 +184,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/excel_export.js
      echo "<td colspan=3>".$month."月总计 </td>";
      echo '<td class="text-right">'.number_format($month_debit, 2)."</td>";
      echo '<td class="text-right">'.number_format($month_credit, 2)."</td>";
-     echo '<td class="text-right">'.balance($month_balance, $month_debit, $month_credit, $sbj_cat)."</td>";
+     echo '<td class="text-right">'.number_format(balance($month_balance, $month_debit, $month_credit, $sbj_cat), 2)."</td>";
      echo "</tr>";
  }
 ?>

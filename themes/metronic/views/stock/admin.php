@@ -7,17 +7,12 @@ $this->breadcrumbs = array(
     '库存商品查看',
 );
 ?>
-<div class="panel panel-success voucher form">
+<div class="panel panel-default voucher form">
     <!-- Default panel contents -->
     <div class="panel-heading">
         <h2>库存商品查看</h2>
     </div>
 
-    <div class="well well-sm">
-        <?php
-        //        echo CHtml::link('<span class="glyphicon glyphicon-plus"></span> 添加', array('create'), array('class' => 'btn btn-default'));
-        ?>
-    </div>
     <div class="panel-body">
         <?php
         if($action=='')
@@ -34,8 +29,8 @@ $this->breadcrumbs = array(
                     'name'=>'name',
                 ),
                 array(
-                    'header'=>'总数',
-                    'name'=>'mount',
+                    'header'=>'本月采购量',
+                    'name'=>'month_in',
                 ),
                 array(
                     'header'=>'库存余量',
