@@ -128,7 +128,7 @@ $(window).load(function() {
     //搜索
     $("input.select2-input").live("keyup-change",function () {
         //$("input.select2-input").on('keyup-change', function(){
-        $('.select2-results li').show();
+        $('.select2-results li ul').show();
     })
     $("div").delegate("#dp1","change",function(){
         var date = $('#transition_date input').val();
@@ -154,7 +154,7 @@ $(window).load(function() {
                 }
             });
     })
-    //点击时，更新科目表数据
+    //点击时，更新科目表数据   //由于响应速度问题，点击科目实时更新数据有点问题
     $("div").delegate("select[id$='entry_subject']", "select2-open",function () {
         var url = $("#url_get_subjects").val();
         var select = this;
@@ -166,6 +166,7 @@ $(window).load(function() {
                 if(json!="") {
                     var obj = JSON.parse(json);
 
+                    var sbj = $(select).val();
                     $(select).children().remove();
                     //$(select).empty();
                     $.each(obj, function(key,value){
@@ -176,16 +177,19 @@ $(window).load(function() {
                         })
                     })
                     $(select).select2("updateResults"); //在select2.js里面添加了allowedMethods，不知道怎么在外部修改
-                    $("#select2-drop>.select2-results>li").click(function(){
-                        if($(this).find('li').is(":visible"))
-                            $(this).find('li').hide();
-                        else
-                            $(this).find('li').show();
-                    })
+                    $(select).select2('val', sbj);
                 }
             }
         });
     });
+
+    $(".select2-results").delegate("li","click",function(){
+            if($(this).find('ul').is(":visible"))
+                $(this).find('ul').hide();
+            else
+                $(this).find('ul').show();
+        })
+
 });
 var subjects = function(se,ob){
 //    if($(se).val()>=6000 && $(se).val()<=6399)

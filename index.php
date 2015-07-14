@@ -10,8 +10,8 @@ $yii=dirname(__FILE__).'/vendor/yii/framework/yii.php';
 //if (false == strpos('abc.com', $domain)) {
 if ('abc.com' == $domain) {
 //    define('SYSDB','account_test');
-//    defined('YII_DEBUG') or define('YII_DEBUG',true);
-//    defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
+    defined('YII_DEBUG') or define('YII_DEBUG',true);
+    defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
     $dbprefix='account_';
     $dbname=str_replace('.'.$_SERVER['SERVER_NAME'],'',$_SERVER['HTTP_HOST']);
     if(preg_match('/[^\.]*/',$_SERVER['HTTP_HOST'],$match))

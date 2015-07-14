@@ -40,6 +40,11 @@ $transition_number = (isset($_REQUEST[0]['id']) && $_REQUEST[0]['id'] != "")
     : $this->tranNumber();
 $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime($model[0]->entry_date)) : date('Y-m-d');
 ?>
+<style>
+    #select2-drop>.select2-results>li>ul{
+        display: none;
+    }
+</style>
 <div class="dataTables_wrapper no-footer">
     <div class="transition_title">
         <h2>记 账 凭 证</h2>
@@ -112,7 +117,7 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
                     'data' => $subjects,
                     'htmlOptions' => array('class' => 'form-control v-subject',)
                 ));
-                //                CHtml::activeDropDownList($item, "[$i]entry_subject", $subjects, array('class' => 'form-control v-subject'));
+//                echo CHtml::activeDropDownList($item, "[$i]entry_subject", $subjects, array('class' => 'form-control v-subject'));
                 ?>
                 <input type="hidden" value="<?= $i ?>"/>
             </td>
