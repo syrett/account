@@ -386,6 +386,7 @@ table#balance td, table#profit td, table#subjects td, table#project td, table#de
     color: #fff;
     font-size: 24px;
     margin: 0 10px;
+    line-height: 25px;
 }
 .banner .banner-hover:hover {
     border-bottom: 10px solid #8E8E8E;
