@@ -21,10 +21,10 @@ $left = $before + $unpaid - $paid;
     <div class="well well-sm">
         <div class="banner" >
             <div class="banner-balance col-sm-8">年初: ￥<?=$before?>
-                <div class="banner-paid col-sm-3">本年减少: ￥<?=$paid?></div>
-                <div class="banner-in col-sm-3">本年增加: ￥<?=$unpaid?></div>
+                <div class="banner-paid col-sm-3 banner-hover">本年减少: ￥<?=$paid?></div>
+                <div class="banner-in col-sm-3 banner-hover">本年增加: ￥<?=$unpaid?></div>
             </div>
-            <div class="banner-unpaid col-sm-4">未付: ￥<?=$left?></div>
+            <div class="banner-unpaid col-sm-4 banner-hover">未付: ￥<?=$left?></div>
         </div>
     </div>
     <div class="panel-body">

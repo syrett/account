@@ -456,13 +456,12 @@ function addNew(e) {
 function setTax(item_id, type) {
     //设置相关参数值，现在默认最多2个参数，如果过多要重新写函数
     //设置税费，目前只设置税费
-    $("#withtax_" + item_id).val(1);
     var tax = $("#tran_tax_" + item_id).val();
     var sbj;
     var name = '';
     if (tax == 3)
         name = '销项';   //增值税
-    //  5% 为营业税专有税率，借营业税金及附加/营业税，贷应交税金/营业税，不需要单独再计算税
+
     if (tax == 6 || tax == 13 || tax == 17) {
         if (type == 'product')
             name = '销项';
@@ -473,18 +472,21 @@ function setTax(item_id, type) {
         name: name,
         subject: 222101
     }
-    sbj = createSubject(data);
-    $("#additional_sbj0_" + item_id).val(sbj);
-    var price = 0;
-    if ($("#tran_price_" + item_id != ''))
-        price = parseFloat($("#tran_price_" + item_id).val());
-    price = price * parseFloat($("#tran_count_" + item_id).val())
-    var taxr = $("#tran_tax_" + item_id).val()    //税率
-    var tax = price - price / (100 + parseFloat(taxr)) * 100;
-    $("#entry_amount_" + item_id).val(price);
-    $("#additional_amount0_" + item_id).val(tax);
-
-    //}
+    if (tax == 5) //  5% 为营业税专有税率，借营业税金及附加/营业税，贷应交税金/营业税，不需要单独再计算税
+        $("#withtax_" + item_id).val(0);
+    else{
+        $("#withtax_" + item_id).val(1);
+        sbj = createSubject(data);
+        $("#additional_sbj0_" + item_id).val(sbj);
+        var price = 0;
+        if ($("#tran_price_" + item_id != ''))
+            price = parseFloat($("#tran_price_" + item_id).val());
+        price = price * parseFloat($("#tran_count_" + item_id).val())
+        var taxr = $("#tran_tax_" + item_id).val()    //税率
+        var tax = price - price / (100 + parseFloat(taxr)) * 100;
+        $("#entry_amount_" + item_id).val(price);
+        $("#additional_amount0_" + item_id).val(tax);
+    }
 }
 function removeTax(item_id, type) {
     $("#withtax_" + item_id).val(0);

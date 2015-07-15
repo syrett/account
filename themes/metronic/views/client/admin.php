@@ -7,6 +7,15 @@ $this->breadcrumbs = array(
     '客户管理',
 );
 
+$balance = Subjects::get_balance(1122);
+$unreceived = Transition::getAllMount(1122,1);
+$unreceived2 = Transition::getAllMount(1122,1,'before');
+
+$received = Transition::getAllMount(1122,2);
+$received2 = Transition::getAllMount(1122,2,'before');
+
+$before = $balance + $unreceived2 - $received2;
+$left = $before + $unreceived - $received;
 ?>
 <div class="portlet light">
     <div class="portlet-title">
@@ -19,6 +28,15 @@ $this->breadcrumbs = array(
             ?>
             <a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title=""
                data-original-title title="全屏"></a>
+        </div>
+    </div>
+    <div class="well well-sm">
+        <div class="banner" >
+            <div class="banner-balance col-sm-8">年初: ￥<?=$before?>
+                <div class="banner-paid col-sm-3 banner-hover">本年已收: ￥<?=$received?></div>
+                <div class="banner-in col-sm-3 banner-hover">本年增加: ￥<?=$unreceived?></div>
+            </div>
+            <div class="banner-unpaid col-sm-4 banner-hover">未收: ￥<?=$left?></div>
         </div>
     </div>
     <div class="portlet-body">

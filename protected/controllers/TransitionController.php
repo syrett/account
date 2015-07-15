@@ -1312,10 +1312,6 @@ class TransitionController extends Controller
                     $sbj = Subjects::matchSubject($client->company,[1122]);
                 $arr['subject_2'] = $sbj;
                 $arr['entry_subject'] = substr($arr['entry_subject'],1);
-                if($arr['tax']==5){
-                    $arr['entry_subject'] = 640304; //只有营业税为5%
-                    $arr['subject_2'] = 222102;     //应交税金/营业税
-                }
                 $arr['entry_appendix_type'] = 2;
                 $model = new Product();
                 $stock = new Stock();
@@ -1400,6 +1396,8 @@ class TransitionController extends Controller
                     'entry_editor' => Yii::app()->user->id,
                 ];
                 $tran->attributes = $data;
+                $data['entry_appendix_type'] = null;
+                $data['entry_appendix_id'] = 0;
                 if ($tran->validate()) {
                     //设置同一凭证的其他条目，并修改$tran的金额
                     //@subject
@@ -1433,6 +1431,21 @@ class TransitionController extends Controller
                             if ($tran->save() && $tran2->save()) {
                                 foreach ($list as $item) {
                                     $item->save();
+                                }
+                                if($arr['tax']==5){ //营业税需要生成2个凭证
+                                    $tran3 = new Transition();
+                                    $tran4 = new Transition();
+                                    $data = array_merge($data,[
+                                        'entry_amount' => $arr['entry_amount']*0.05,
+                                        'entry_num' => $this->tranSuffix($prefix),
+                                        'entry_subject' => 640304,   //借 营业税金及附加 营业税
+                                        'entry_transaction' => 1,
+                                    ]);
+                                    $tran3->attributes = $data;
+                                    $data = array_merge($data,['entry_subject'=>222102,'entry_transaction' => 2]);     //贷 应交税费/营业税
+                                    $tran4->attributes = $data;
+                                    $tran3->save();
+                                    $tran4->save();
                                 }
                                 //设置该记录已经生成凭证
                                 $model->status_id = 1;

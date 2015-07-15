@@ -939,15 +939,29 @@ class Transition extends CActiveRecord
      * 税率
      */
     public static function getTaxArray($type='sale'){
-        if($type=='sale'){
-            return [
-                '3'=>'3%增值税发票',
-                '5'=>'5%营业税发票',
-                '6'=>'6%增值税发票',
-                '13'=>'13%增值税发票',
-                '17'=>'17%增值税发票',
-            ];
-        }elseif($type=='purchase'){
+        $dbname = substr(SYSDB, 8);
+        $condom = Condom::model()->findByAttributes(["dbname"=>$dbname]);
+        if($condom->taxpayer_t==2){//小规模纳税人
+            if($type=='sale'){
+                return [
+                    '3'=>'3%增值税发票',
+                ];
+            }elseif($type=='purchase'){
+                return [
+                    '0'=>'其他发票',
+                ];
+            }
+
+        }else{  //一般纳税人
+            if($type=='sale'){
+                return [
+                    '3'=>'3%增值税发票',
+                    '5'=>'5%营业税发票',
+                    '6'=>'6%增值税发票',
+                    '13'=>'13%增值税发票',
+                    '17'=>'17%增值税发票',
+                ];
+            }elseif($type=='purchase'){
                 return [
                     '3'=>'3%增值税专用发票',
                     '6'=>'6%增值税专用发票',
@@ -955,7 +969,9 @@ class Transition extends CActiveRecord
                     '17'=>'17%增值税专用发票',
                     '0'=>'其他发票',
                 ];
+            }
         }
+
     }
 
     /*
