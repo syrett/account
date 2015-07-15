@@ -1,3 +1,179 @@
 专门作为数据库修改记录，具体数据库结构请看manage项目
 stock 添加销售字段 订单号 order_no_sale
-添加了数据库表 product 销售 purchase 采购 stock 货品，
+添加了数据库表 product 销售 purchase 采购 stock 货品 bank 银行 cash 现金，
+
+CREATE TABLE IF NOT EXISTS `bank` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `target` varchar(512) DEFAULT NULL COMMENT '交易对象',
+  `date` varchar(64) DEFAULT NULL COMMENT '日期',
+  `memo` text COMMENT '说明',
+  `amount` float NOT NULL COMMENT '金额',
+  `parent` int(11) DEFAULT NULL COMMENT '父，相关',
+  `order` text COMMENT '订单号',
+  `subject` varchar(16) DEFAULT NULL COMMENT '科目',
+  `subject_2` int(12) DEFAULT NULL,
+  `invoice` tinyint(4) DEFAULT '0' COMMENT '有无发票',
+  `tax` int(8) DEFAULT NULL COMMENT '税率',
+  `status_id` tinyint(4) NOT NULL DEFAULT '0' COMMENT '1:已经生成凭证 ',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `status_id` (`status_id`),
+  KEY `created_at` (`created_at`),
+  KEY `updated_at` (`updated_at`),
+  KEY `parent` (`parent`),
+  KEY `sbj_bank` (`subject_2`),
+  KEY `sbj_bank_2` (`subject_2`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=378 ;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `cash`
+--
+
+CREATE TABLE IF NOT EXISTS `cash` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `target` varchar(512) DEFAULT NULL COMMENT '交易对象',
+  `date` varchar(64) DEFAULT NULL COMMENT '日期',
+  `memo` text COMMENT '说明',
+  `amount` float NOT NULL COMMENT '金额',
+  `parent` int(11) DEFAULT NULL COMMENT '父，相关',
+  `order` text COMMENT '订单号',
+  `subject` varchar(16) DEFAULT NULL COMMENT '科目',
+  `subject_2` int(12) DEFAULT NULL,
+  `invoice` tinyint(4) DEFAULT '0' COMMENT '有无发票',
+  `tax` int(8) DEFAULT NULL COMMENT '税率',
+  `status_id` tinyint(4) NOT NULL DEFAULT '0' COMMENT '1:已经生成凭证 ',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `status_id` (`status_id`),
+  KEY `created_at` (`created_at`),
+  KEY `updated_at` (`updated_at`),
+  KEY `parent` (`parent`),
+  KEY `sbj_bank` (`subject_2`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `product` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_no` int(11) NOT NULL COMMENT '订单号',
+  `saled_date` int(11) NOT NULL COMMENT '销售日期',
+  `client_id` int(11) NOT NULL COMMENT '客户ID',
+  `product` varchar(512) NOT NULL COMMENT '商品名称',
+  `price` float NOT NULL COMMENT '价格',
+  `amount` int(11) NOT NULL,
+  `unit` varchar(32) NOT NULL COMMENT '单位',
+  `tax` int(11) NOT NULL COMMENT '税率',
+  `paied` float NOT NULL COMMENT '已收金额',
+  `subject` int(11) DEFAULT NULL,
+  `subject_2` int(11) DEFAULT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` int(11) NOT NULL,
+  `status_id` tinyint(4) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `client_id` (`client_id`),
+  KEY `subject_2` (`subject_2`),
+  KEY `subject` (`subject`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `purchase`
+--
+
+CREATE TABLE IF NOT EXISTS `purchase` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_no` varchar(16) NOT NULL COMMENT '订单号',
+  `entry_date` varchar(16) NOT NULL COMMENT '采购日期',
+  `vendor_id` int(11) NOT NULL COMMENT '供应商ID',
+  `entry_name` varchar(512) NOT NULL COMMENT '商品名称',
+  `entry_memo` varchar(1024) DEFAULT NULL,
+  `price` float NOT NULL COMMENT '价格',
+  `count` int(11) NOT NULL DEFAULT '1',
+  `unit` varchar(32) DEFAULT NULL COMMENT '单位',
+  `tax` int(11) NOT NULL COMMENT '税率',
+  `paied` float NOT NULL COMMENT '已付金额',
+  `subject` int(11) DEFAULT NULL,
+  `subject_2` int(11) DEFAULT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` int(11) NOT NULL,
+  `status_id` tinyint(4) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `vendor_id` (`vendor_id`),
+  KEY `subject` (`subject`,`subject_2`),
+  KEY `subject_2` (`subject_2`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `stock`
+--
+
+CREATE TABLE IF NOT EXISTS `stock` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `no` varchar(64) NOT NULL COMMENT '编号',
+  `order_no` varchar(16) NOT NULL COMMENT '采购订单',
+  `order_no_sale` varchar(16) NOT NULL COMMENT '销售订单',
+  `name` varchar(512) NOT NULL COMMENT '名字',
+  `vendor_id` int(11) DEFAULT NULL COMMENT '供应商',
+  `client_id` int(11) DEFAULT NULL COMMENT '销售动向，客户ID',
+  `in_date` varchar(16) NOT NULL COMMENT '日期',
+  `in_price` float NOT NULL COMMENT '价格',
+  `out_date` timestamp NULL DEFAULT NULL,
+  `out_price` float DEFAULT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1:正常，2出库，3退货',
+  PRIMARY KEY (`id`),
+  KEY `vendor_id` (`vendor_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=26 ;
+
+-- transition 添加字段
+alter table `transition`
+  ADD COLUMN `data_type` varchar(16) default NULL COMMENT '类型' after `entry_date`,
+  ADD COLUMN `data_id` int(11) NOT NULL COMMENT '原始数据ID' after `entry_date`,
+  ADD COLUMN `entry_name` varchar(512) NOT NULL COMMENT '交易方名称' after `entry_date`;
+
+-- employee 添加职位字段
+alter table `employee`
+    ADD COLUMN `position` varchar(32) default NULL Comment '职位' after department_id;
+
+-- 添加视图
+DROP TABLE IF EXISTS `condomdate`;
+
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `condomdate` AS select max(`transition`.`entry_num_prefix`) AS `date` from `transition` where (`transition`.`entry_closing` = 1);
+
+-- 添加表关系
+
+ALTER TABLE `product`
+  ADD CONSTRAINT `product_ibfk_1` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`),
+  ADD CONSTRAINT `product_ibfk_2` FOREIGN KEY (`subject`) REFERENCES `subjects` (`sbj_number`),
+  ADD CONSTRAINT `product_ibfk_3` FOREIGN KEY (`subject_2`) REFERENCES `subjects` (`sbj_number`);
+
+--
+-- 限制表 `purchase`
+--
+ALTER TABLE `purchase`
+  ADD CONSTRAINT `purchase_ibfk_1` FOREIGN KEY (`vendor_id`) REFERENCES `vendor` (`id`),
+  ADD CONSTRAINT `purchase_ibfk_2` FOREIGN KEY (`subject`) REFERENCES `subjects` (`sbj_number`),
+  ADD CONSTRAINT `purchase_ibfk_3` FOREIGN KEY (`subject_2`) REFERENCES `subjects` (`sbj_number`);
+
+--
+-- 限制表 `stock`
+--
+ALTER TABLE `stock`
+  ADD CONSTRAINT `stock_ibfk_1` FOREIGN KEY (`vendor_id`) REFERENCES `vendor` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `stock_ibfk_2` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE SET NULL;
+--
+-- 限制表 `bank`
+--
+ALTER TABLE `bank`
+  ADD CONSTRAINT `bank_ibfk_1` FOREIGN KEY (`subject_2`) REFERENCES `subjects` (`sbj_number`);
+
+--
+-- 限制表 `cash`
+--
+ALTER TABLE `cash`
+  ADD CONSTRAINT `cash_ibfk_1` FOREIGN KEY (`subject_2`) REFERENCES `subjects` (`sbj_number`);
