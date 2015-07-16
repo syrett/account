@@ -1292,6 +1292,7 @@ class TransitionController extends Controller
                     }
                     else{   //数量减少
                         $left = $stock->getCount(['name'=>$arr['entry_name'],'status'=>1]);
+                        $stock->delStock($count);
                         if($left>=$count && $count!=0)
                             $stock->delStock($count);
                         else{
@@ -1314,7 +1315,8 @@ class TransitionController extends Controller
                 $arr['entry_subject'] = substr($arr['entry_subject'],1);
                 $arr['entry_appendix_type'] = 2;
                 $model = new Product();
-                $stock = new Stock();
+                //销售时，商品名称随意填写，没有数量限制，与stock表无任何关系
+                /*$stock = new Stock();
                 $stock->load($arr,'product');
                 $left = $stock->getCount(['name'=>$arr['entry_name'],'status'=>1]);
                 //劳务服务不管数量
@@ -1342,7 +1344,7 @@ class TransitionController extends Controller
                     }
                     $stock->load($arr,'product');
                     $stock->setStock($arr['count'], 2);
-                }
+                }*/
             }
             if($newone==0 && $id != '' && $id != '0')
                 $model = $model::model()->findByPk($id);

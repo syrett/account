@@ -458,3 +458,6 @@ table#balance td, table#profit td, table#subjects td, table#project td, table#de
 .modal-dialog{
     min-width: 888px;
 }
+.dataTable textarea{
+    height: 24px;
+}

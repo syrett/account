@@ -10,6 +10,7 @@ $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_common.j
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_vip.js');
 $this->pageTitle = Yii::app()->name;
 $type = 'purchase';
+$item = $sheetData[0]['data'];
 ?>
 <div class="panel-body">
     <div class="row" id="abc">
@@ -22,24 +23,24 @@ $type = 'purchase';
 //                'action'=>Laofashi. $this->createUrl('/bank/default/update', array('id'=>$_GET['id'])),
             ));
             ?>
+            订单号：<? echo $item['order_no'] ?>
             <table class="table table-bordered dataTable">
                 <tr>
                     <th class="input_min"><input type="checkbox"></th>
-                    <th class="input_mid">交易日期</th>
+                    <th class="input-xsmall">交易日期</th>
                     <th class="input-small">交易摘要</th>
-                    <th class="input_mid">供应商名称</th>
-                    <th class="input_mid">商品名称</th>
-                    <th class="input_mid">单价</th>
+                    <th class="input_mid">供应商</th>
+                    <th class="input-xsmall">商品名称</th>
+                    <th class="input_min">单价</th>
                     <th class="input_min">数量</th>
                     <th class="input_min">合计</th>
-                    <th class="input-small">税率</th>
+                    <th class="input-xsmall">税率</th>
                     <th class="input-small">采购用途</th>
-                    <th class="input-small">操作</th>
+                    <th class="input-xsmall">操作</th>
                     <th style="width: 10%">提示</th>
                 </tr>
                 <?php
                 if (!empty($model)) {
-                    $item = $sheetData[0]['data'];
                     $key = 1;
                     $clientArray = Client::model()->getClientArray();
                     $stockArray = Stock::model()->getStockArray();
@@ -50,13 +51,13 @@ $type = 'purchase';
                     <tr line="<?= $key ?>" <?= $key % 2 == 1 ? 'class="table-tr"' : '' ?>>
                         <td><input type="checkbox" id="item_<?= $key ?>" name="lists[<?= $key ?>]"
                                    value="<?= isset($item['id']) ? $item['id'] : '' ?>"></td>
-                        <td><input class="input_mid" type="text" id="tran_date_<?= $key ?>"
+                        <td><input class="input-xsmall" type="text" id="tran_date_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entry_date]"
                                    value="<?= $item['entry_date'] ?>">
                         </td>
-                        <td><input class="input-small" type="text" id="tran_memo_<?= $key ?>"
+                        <td><textarea class="input-small" type="text" id="tran_memo_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entry_memo]"
-                                   value="<?= $item['entry_memo'] ?>">
+                                   ><?= $item['entry_memo'] ?></textarea>
                         </td>
                         <td><?
                             $this->widget('ext.select2.ESelect2', array(
@@ -71,18 +72,21 @@ $type = 'purchase';
                         </td>
                         <td><?
 
-                            $stockArray += ['劳务服务' => '劳务服务','缴纳税款' => '缴纳税款'];
-                            $this->widget('ext.select2.ESelect2', array(
-                                'name' => 'lists[' . $key . '][Transition][entry_name]',
-                                'id' => 'tran_entry_name_' . $key,
-                                'value' => $item['entry_name'],
-                                'data' => $stockArray,
-                                'options' => array('formatNoMatches' => 'js:function(term){return Not_Found("stock",term,' . $key . ')}'),
-                                'htmlOptions' => array('class' => 'select-full',)
-                            ));
+//                            $stockArray += ['劳务服务' => '劳务服务','缴纳税款' => '缴纳税款'];
+//                            $this->widget('ext.select2.ESelect2', array(
+//                                'name' => 'lists[' . $key . '][Transition][entry_name]',
+//                                'id' => 'tran_entry_name_' . $key,
+//                                'value' => $item['entry_name'],
+//                                'data' => $stockArray,
+//                                'options' => array('formatNoMatches' => 'js:function(term){return Not_Found("stock",term,' . $key . ')}'),
+//                                'htmlOptions' => array('class' => 'select-full',)
+//                            ));
                             ?>
+                            <input class="input-xsmall" type="text" id="tran_entry_name_<?= $key ?>"
+                                   name="lists[<?= $key ?>][Transition][entry_name]"
+                                   value="<?= $item['entry_name'] ?>">
                         </td>
-                        <td><input class="input_mid" type="text" id="tran_price_<?= $key ?>" placeholder="单价"
+                        <td><input class="input_min" type="text" id="tran_price_<?= $key ?>" placeholder="单价"
                                    name="lists[<?= $key ?>][Transition][price]" onkeyup="checkinput1(this)"
                                    onblur="checkinput1(this)" value="<?= $item['price'] ?>">
                         </td>

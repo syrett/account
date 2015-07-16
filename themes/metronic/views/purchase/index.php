@@ -86,40 +86,35 @@ $('.search-form form').submit(function(){
                 array(
                     'name' => 'order_no',
                     'type' => 'shortText',
-                    'htmlOptions' => array('class' => 'input-small'),
-                    'headerHtmlOptions' => array('class' => 'input-small'),
+                    'filter'=>CHtml::activeTextField($model, 'entry_name',array("class"=>"input_mid")),
                 ),
                 array(
                     'name' => 'entry_date',
                     'value' => 'date("Y年m月d日",strtotime($data->entry_date))',
-                    'htmlOptions' => array('class' => 'input-small'),
-                    'headerHtmlOptions' => array('class' => 'input-small'),
+                    'filter'=>CHtml::activeTextField($model, 'entry_name',array("class"=>"input_mid")),
                 ),
                 array(
                     'name' => 'entry_name',
-                    'type' => 'shortText'
+                    'type' => 'shortText',
+                    'filter'=>CHtml::activeTextField($model, 'entry_name',array("class"=>"input_mid")),
                 ),
                 array(
                     'name' => 'price',
-                    'htmlOptions' => array('class' => 'input_mid'),
-                    'headerHtmlOptions' => array('class' => 'input_mid'),
+                    'filter'=>CHtml::activeTextField($model, 'entry_name',array("class"=>"input_mid")),
                 ),
                 array(
                     'name' => 'count',
-                    'htmlOptions' => array('class' => 'input_mid'),
-                    'headerHtmlOptions' => array('class' => 'input_mid'),
+                    'filter'=>CHtml::activeTextField($model, 'entry_name',array("class"=>"input-xsmall")),
                 ),
                 array(
                     'name' => 'paied',
                     'type' => 'shortText',
-                    'htmlOptions' => array('class' => 'input_mid'),
-                    'headerHtmlOptions' => array('class' => 'input_mid'),
+                    'filter'=>CHtml::activeTextField($model, 'entry_name',array("class"=>"input-xsmall")),
                 ),
                 array(
                     'name' => 'create_time',
                     'value' => 'date("Y年m月d日",strtotime($data->create_time))',
-                    'htmlOptions' => array('class' => 'input-small'),
-                    'headerHtmlOptions' => array('class' => 'input-small'),
+                    'filter'=>CHtml::activeTextField($model, 'entry_name',array("class"=>"input_mid")),
                 ),
                 array(
                     'class' => 'CButtonColumn',

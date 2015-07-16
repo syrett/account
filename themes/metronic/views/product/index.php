@@ -98,24 +98,23 @@ $('.search-form form').submit(function(){
                 ),
                 array(
                     'name' => 'entry_name',
+                    'filter'=>CHtml::activeTextField($model, 'entry_name',array("class"=>"input_mid")),
                     'type' => 'shortText'
                 ),
                 array(
                     'name' => 'price',
-                    'htmlOptions' => array('class' => 'input_mid'),
-                    'headerHtmlOptions' => array('class' => 'input_mid'),
+                    'filter'=>CHtml::activeTextField($model, 'entry_name',array("class"=>"input_mid")),
                 ),
                 array(
                     'name' => 'count',
-                    'htmlOptions' => array('class' => 'input_mid'),
-                    'headerHtmlOptions' => array('class' => 'input_mid'),
+                    'filter'=>CHtml::activeTextField($model, 'entry_name',array("class"=>"input-xsmall")),
                 ),
-                array(
-                    'name' => 'paied',
-                    'type' => 'shortText',
-                    'htmlOptions' => array('class' => 'input_mid'),
-                    'headerHtmlOptions' => array('class' => 'input_mid'),
-                ),
+//                array(
+//                    'name' => 'paied',
+//                    'type' => 'shortText',
+//                    'htmlOptions' => array('class' => 'input_mid'),
+//                    'headerHtmlOptions' => array('class' => 'input_mid'),
+//                ),
                 array(
                     'name' => 'create_time',
                     'value' => 'date("Y年m月d日",strtotime($data->create_time))',

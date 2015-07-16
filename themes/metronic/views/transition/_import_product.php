@@ -71,16 +71,19 @@ $this->pageTitle = Yii::app()->name;
                             </td>
                             <td><?
 
-                                $stockArray += ['劳务服务' => '劳务服务'];
-                                $this->widget('ext.select2.ESelect2', array(
-                                    'name' => 'lists[' . $key . '][Transition][entry_name]',
-                                    'id' => 'tran_entry_name_' . $key,
-                                    'value' => $item['entry_name'],
-                                    'data' => $stockArray,
-                                    'options' => array('formatNoMatches' => 'js:function(term){return Not_Found("stock",term,' . $key . ')}'),
-                                    'htmlOptions' => array('class' => 'select-full',)
-                                ));
+//                                $stockArray += ['劳务服务' => '劳务服务'];
+//                                $this->widget('ext.select2.ESelect2', array(
+//                                    'name' => 'lists[' . $key . '][Transition][entry_name]',
+//                                    'id' => 'tran_entry_name_' . $key,
+//                                    'value' => $item['entry_name'],
+//                                    'data' => $stockArray,
+//                                    'options' => array('formatNoMatches' => 'js:function(term){return Not_Found("stock",term,' . $key . ')}'),
+//                                    'htmlOptions' => array('class' => 'select-full',)
+//                                ));
                                 ?>
+                                <input class="input-small" type="text" id="tran_entry_name_<?= $key ?>"
+                                       name="lists[<?= $key ?>][Transition][entry_name]"
+                                       value="<?= $item['entry_name'] ?>">
                             </td>
                             <td><input class="input_mid" type="text" id="tran_price_<?= $key ?>" placeholder="单价"
                                        name="lists[<?= $key ?>][Transition][price]" onkeyup="checkinput1(this)"
