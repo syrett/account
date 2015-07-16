@@ -13,7 +13,7 @@ $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_common.j
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import.js');
 
 $this->pageTitle = Yii::app()->name;
-$tranDate = $this->getTransitionDate();
+$tranDate = $this->getTransitionDate('post');
 /*if(!isset($model)){
   $model = array();
   $model[0]=new Transition();

@@ -396,19 +396,19 @@ $baseUrl = Yii::app()->theme->baseUrl;
                         <li class="divider">
                         </li>
                         <li>
+                            <a href="<?= $this->createUrl('Site/operation&operation=listPost') ?>">
+                                <i class="glyphicon glyphicon-import"></i>
+                                过账</a>
+                        </li>
+                        <li>
                             <a href="<?= $this->createUrl('Site/operation&operation=listSettlement') ?>">
                                 <i class="glyphicon glyphicon-check"></i>
                                 结账</a>
                         </li>
                         <li>
-                            <a href="<?= $this->createUrl('transition/antisettlement') ?>">
+                            <a href="<?= $this->createUrl('Site/operation&operation=listAntiSettlement') ?>">
                                 <i class="glyphicon glyphicon-repeat"></i>
                                 反结账</a>
-                        </li>
-                        <li>
-                            <a href="<?= $this->createUrl('Site/operation&operation=listPost') ?>">
-                                <i class="glyphicon glyphicon-import"></i>
-                                过账</a>
                         </li>
                     </ul>
                 </li>

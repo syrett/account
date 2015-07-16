@@ -27,6 +27,8 @@ $this->pageTitle = Yii::app()->name;
 	<div class="portlet-body">
     <!-- search-form -->
     <?php
+    $status = $this->getTransitionDate('end');
+    echo "已结账至日期：". $status['date'];
     $list = $this->listMonth($operation);
 
     if(empty($list))

@@ -47,7 +47,7 @@ $type = 'product';
                 <div class="col-md-6">
                     <div class="btn-group pull-right">
                         <? echo CHtml::link('<span class="glyphicon glyphicon-search"></span> 已导入数据', array('/' . $type), array('class' => 'btn btn-default')); ?>
-                        <input type="hidden" id="dp_startdate" value="<?= Transition::getTransitionDate() ?>">
+                        <input type="hidden" id="dp_startdate" value="<?= Transition::getTransitionDate('post') ?>">
                     </div>
                 </div>
             </div>

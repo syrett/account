@@ -66,12 +66,21 @@ class Controller extends CController
     }
 
     /*
-     * 凭证可选日期
+     * 凭证可选日期,视图transitiondate为已过账日期，condomdate为已完全成功结账日期
      */
-    public function getTransitionDate(){
-        $sql = 'select date from transitiondate';
+    public function getTransitionDate($type){
+        if($type=='post')
+            $table = 'transitiondate';
+        if($type=='end')
+            $table = 'condomdate';
+        $sql = "select date from $table";
         $connection = Yii::app()->db;
         $command = $connection->createCommand($sql);
-        return $command->queryRow();
+        $date =  $command->queryRow();
+        if($date['date']==null)
+            return ['date'=>Condom::model()->getStartTime()];
+        else
+            return $date;
     }
+
 }
