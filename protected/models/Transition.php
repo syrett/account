@@ -975,11 +975,14 @@ class Transition extends CActiveRecord
     }
 
     /*
-     * 税率
+     * 科目数组
      */
-    public static function getSubjectArray($arr, $prefix='_'){
+    public static function getSubjectArray($arr, $options=[]){
         $subject = new Subjects();
-        $result = $subject->getitem($arr, '', ['reject' => ['工资', '社保', '公积金', '折旧费', '研发费'],'prefix'=>$prefix]);
+//        ['reject' => ['工资', '社保', '公积金', '折旧费', '研发费'],'prefix'=>'_'
+        if(empty($options))
+            $options = ['reject' => ['工资', '社保', '公积金', '折旧费', '研发费'],'prefix'=>'_'];
+        $result = $subject->getitem($arr, '', $options);
         return $result;
     }
 

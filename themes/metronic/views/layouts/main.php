@@ -111,7 +111,7 @@ $baseUrl = Yii::app()->theme->baseUrl;
                             </li>
                             <li>
                                 <a href="<?= $this->createUrl('options/index') ?>">
-                                    <i class="icon-info"></i> 公司信息</a>
+                                    <i class="icon-info"></i> 账套信息</a>
                             </li>
                             <li>
                                 <a href="<?= $this->createUrl('subjects/balance') ?>">
@@ -129,7 +129,7 @@ $baseUrl = Yii::app()->theme->baseUrl;
                                 <h3><span class="bold">系统选项</span></h3>
                             </li>
                             <li>
-                                <a href="<?= $this->createUrl('site/logout') ?>">
+                                <a href="<?= LogoutURL ?>">
                                     <i class="icon-key"></i> 退出 </a>
                             </li>
                         </ul>
@@ -431,10 +431,26 @@ $baseUrl = Yii::app()->theme->baseUrl;
                     </a>
                 </li>
                 <li>
-                    <a href="<?= $this->createUrl('stock/admin') ?>">
+                    <a href="javascript:;">
                         <i class="icon-drawer"></i>
                         <span class="title">库存商品</span>
+                        <span class="arrow "></span>
                     </a>
+                    <ul class="sub-menu">
+                        <li>
+                            <a href="<?= $this->createUrl('stock/admin') ?>">
+                                <i class="icon-drawer"></i>
+                                <span class="title">库存商品</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= $this->createUrl('product/stock') ?>">
+                                <i class="icon-calculator"></i>
+                                <span class="title">成本结转</span>
+                            </a>
+                        </li>
+                    </ul>
+
                 </li>
                 <li>
                     <a href="<?= $this->createUrl('employee/admin') ?>">

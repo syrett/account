@@ -305,7 +305,7 @@ class Subjects extends CActiveRecord
         }
         foreach ($data_1 as $key => $item) {
             array_push($data, $item->attributes);
-            if ($item["has_sub"] == 1 && $GLOBALS['level']>0) {
+            if ($item["has_sub"] == 1 && isset($GLOBALS['level']) && $GLOBALS['level']>0) {
                 $data_sub = $this->list_sub($item["sbj_number"], $key, $options);
                 foreach ($data_sub as $key => $item_sub) {
                     array_push($data, $item_sub->attributes);

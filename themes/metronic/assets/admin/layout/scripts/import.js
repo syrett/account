@@ -72,11 +72,6 @@ function itemsplit(e) {
     $("#rows").val(id);
 }
 
-function itemclose(e) {
-    var line = $(e.parentNode.parentNode.parentNode).attr("line");
-    e.parentNode.parentNode.parentNode.remove();
-    sumAmount($("#data_import").find("tr[line=" + line + "]:first"));
-}
 function itemsetting(e) {
     //$("#itemSetting").dialog({
     //    autoOpen: true,

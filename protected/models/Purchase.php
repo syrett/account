@@ -138,6 +138,7 @@ class Purchase extends LFSModel
         $this->setAttribute('subject', $item['entry_subject']);
         $this->setAttribute('subject_2', $item['subject_2']);
         $this->setAttribute('tax',  isset($item['tax'])?$item['tax']:'');
+        $this->setAttribute('status_id', $item['status_id']);
 //        $this->setAttribute('updated_at', isset($item['updated_at'])?$item['updated_at']:'');
     }
 

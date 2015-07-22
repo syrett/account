@@ -77,7 +77,7 @@ $cs->registerScript('ChartsFlotchartsInitPie', $js_str, CClientScript::POS_READY
                 <div class="caption">
                     <span class="caption-subject font-green-sharp bold uppercase">营业收入</span>
                 </div>
-                <div class="actions">统计周期：过去365天</div>
+                <div class="actions">统计周期：本年</div>
             </div>
             <div class="portlet-body">
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">

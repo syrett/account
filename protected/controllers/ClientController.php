@@ -90,7 +90,7 @@ class ClientController extends Controller
 		{
 			$model->attributes=$_POST['Client'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('admin'));
 		}
 
         $dataProvider=$model->search();

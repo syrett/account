@@ -48,7 +48,7 @@ $item = $sheetData[0]['data'];
                     $arr = [6001];
                     $subjectArray = Transition::getSubjectArray($arr);
                     ?>
-                    <tr line="<?= $key ?>" <?= $key % 2 == 1 ? 'class="table-tr"' : '' ?>>
+                    <tr line="<?= $key ?>" class="table-tr <?= $item['status_id']==1?'':'label-danger'?>">
                         <td><input type="checkbox" id="item_<?= $key ?>" name="lists[<?= $key ?>]"
                                    value="<?= isset($item['id']) ? $item['id'] : '' ?>"></td>
                         <td><input class="input-xsmall" type="text" id="tran_date_<?= $key ?>"
@@ -126,11 +126,11 @@ $item = $sheetData[0]['data'];
                             <input type="hidden" id="order_no_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][order_no]"
                                    value="<?= $item['order_no'] ?>">
-                            <data class="hidden">
-                            <input type="hidden" id="id_<?= $key ?>" value="<?= $key ?>">
                             <input type="hidden" id="status_id_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][status_id]"
                                    value="<?= $item['status_id'] ?>">
+                            <data class="hidden">
+                            <input type="hidden" id="id_<?= $key ?>" value="<?= $key ?>">
                             <input type="hidden" id="subject_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entry_subject]"
                                    value="<?= $item['entry_subject'] ?>">
@@ -172,7 +172,7 @@ $item = $sheetData[0]['data'];
                                 </button>
 
                                 <button type="button" id="btn_del_<?= $key ?>" class="btn btn-xs"
-                                        onclick="itemclose(this)"><i class="fa fa-times"></i>删除
+                                        onclick="itemInvalid(this)"><i class="fa fa-times"></i>作废
                                 </button>
                             </div>
                         </td>

@@ -25,6 +25,7 @@ $this->pageTitle = Yii::app()->name;
 		</div>
 	</div>
 	<div class="portlet-body">
+        <a href="<?=$this->createUrl('/Stock/excel')?>">excel</a>
     <!-- search-form -->
     <?php
     $status = $this->getTransitionDate('end');

@@ -1286,11 +1286,11 @@ class TransitionController extends Controller
 
                     $model = $model::model()->findByPk($id);
                     $count = $model->count - (int)$arr['count'];
-                    $stock->updateAll($stock->form('puchase'),"order_no='$stock->order_no'");
+                    $stock->updateAll($stock->form('purchase'),"order_no='$stock->order_no'");
                     if($count<0){   //数量有增加
                         $stock->saveMultiple(-$count);
                     }
-                    else{   //数量减少
+                    elseif($count>0){   //数量减少
                         $left = $stock->getCount(['name'=>$arr['entry_name'],'status'=>1]);
                         $stock->delStock($count);
                         if($left>=$count && $count!=0)
@@ -1348,8 +1348,12 @@ class TransitionController extends Controller
             }
             if($newone==0 && $id != '' && $id != '0')
                 $model = $model::model()->findByPk($id);
-            elseif (!empty($item['Transition']['d_id']))
+            elseif (!empty($item['Transition']['d_id'])){
                 $model = $model::model()->findByPk($item['Transition']['d_id']);
+                $arr['order_no'] = $model->initOrderno();
+            }else{
+                $arr['order_no'] = $model->initOrderno();
+            }
             $newone ++;
             if ($arr['price'] == "" || $arr['price'] == 0) {
                 $arr['error'] = ['金额不能为空或为0'];
@@ -1429,36 +1433,37 @@ class TransitionController extends Controller
                     try{
                         if ($model->id != '')
                             $this->delTran($type, $model->id);
-                        if($arr['status_id']=="1"||$arr['status_id']=="0")  //为2是银行间转账，不需要生成凭证
+                        if($arr['status_id']=="1") {  //0：作废；2：银行间转账，都不需要生成凭证，
                             if ($tran->save() && $tran2->save()) {
                                 foreach ($list as $item) {
                                     $item->save();
                                 }
-                                if($arr['tax']==5){ //营业税需要生成2个凭证
+                                if ($arr['tax'] == 5) { //营业税需要生成2个凭证
                                     $tran3 = new Transition();
                                     $tran4 = new Transition();
-                                    $data = array_merge($data,[
-                                        'entry_amount' => $arr['entry_amount']*0.05,
+                                    $data = array_merge($data, [
+                                        'entry_memo' => $arr['entry_memo'],
+                                        'entry_amount' => $arr['entry_amount'] * 0.05,
                                         'entry_num' => $this->tranSuffix($prefix),
                                         'entry_subject' => 640304,   //借 营业税金及附加 营业税
                                         'entry_transaction' => 1,
                                     ]);
                                     $tran3->attributes = $data;
-                                    $data = array_merge($data,['entry_subject'=>222102,'entry_transaction' => 2]);     //贷 应交税费/营业税
+                                    $data = array_merge($data, ['entry_subject' => 222102, 'entry_transaction' => 2]);     //贷 应交税费/营业税
                                     $tran4->attributes = $data;
                                     $tran3->save();
                                     $tran4->save();
                                 }
                                 //设置该记录已经生成凭证
                                 $model->status_id = 1;
-                                $model->save();
-                                //保存成功，不返回数据
 //                        $result[] = ['status'=>2, 'data'=>''];
                             } else {
                                 $arr['d_id'] = $model->id;
                                 $arr['error'] = $tran->getErrors();
                                 $result[] = ['status' => 1, 'data' => $arr];
                             }
+                        }
+                        $model->save();
                     }catch (CDbException $e){
 
                     }

@@ -219,13 +219,14 @@ class Stock extends LFSModel
             $this->setAttribute('vendor_id', $item['vendor_id']);
             $this->setAttribute('in_date', $item['entry_date']);
             $this->setAttribute('in_price', $item['price']);
+            $this->setAttribute('status', $item['status_id']);
         }elseif($type=='product'){
             $this->setAttribute('order_no', $item['order_no']);
             $this->setAttribute('order_no_sale', $item['order_no']);
             $this->setAttribute('name', $item['entry_name']);
             $this->setAttribute('client_id', $item['client_id']);
             $this->setAttribute('out_date', $item['entry_date']);
-            $this->setAttribute('out_price', $item['price']);
+            $this->setAttribute('status', $item['status_id']);
         }
     }
 
@@ -283,6 +284,7 @@ class Stock extends LFSModel
             'name'=>$this->name,
             'in_price'=>$this->in_price,
             'in_date'=>$this->in_date,
+            'status'=>$this->status
         ];
         if($type=='product')
             return [
@@ -290,6 +292,7 @@ class Stock extends LFSModel
                 'client_id'=>$this->client_id,
                 'out_price'=>$this->out_price,
                 'out_date'=>$this->out_date,
+                'status'=>$this->status
             ];
     }
 }

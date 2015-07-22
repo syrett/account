@@ -54,7 +54,7 @@ function echoData($key, $data, $name="default")
         <p>&nbsp;</p>
         <?php echo CHtml::endForm(); ?>
 </div>
-<div <?php if(!$data) echo 'style="display:none"'; ?>" class="panel panel-default">
+<div <?php if(!$data) echo 'style="display:none"'; ?> class="panel panel-default">
         <div class="panel-heading">
                 <h2>资 产 负 债 表</h2>
         </div>

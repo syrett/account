@@ -98,7 +98,7 @@ function setTransaction(id) {
     var option = $(".options:nth-of-type(3) > button.active").val();
     if (option == '银行转账')
         $("#status_id_" + id).val("2")   //这种状态不需要生成凭证
-    else
+    else if($("#status_id_"+id).val()!='0')
         $("#status_id_" + id).val("1")
 }
 //消除数据，设置前先消除
@@ -219,4 +219,24 @@ function checkBank() {
         alert("请锁定银行")
     else
         return true;
+}
+//删除行
+function itemclose(e) {
+    var line = $(e.parentNode.parentNode.parentNode).attr("line");
+    e.parentNode.parentNode.parentNode.remove();
+    sumAmount($("#data_import").find("tr[line=" + line + "]:first"));
+}
+//作废
+var oldStatus = 1;
+function itemInvalid(e) {
+    var id = $(e.parentNode.parentNode).find("input[id^='id_']")[0].value;
+    if($("#status_id_" + id).val()!="0"){
+        oldStatus = $("status_id_"+id).val();
+        $("#status_id_" + id).val("0");
+        $(e.parentNode.parentNode.parentNode).addClass('label-danger');
+    }else{
+        $("#status_id_" + id).val(oldStatus);
+        $(e.parentNode.parentNode.parentNode).removeClass('label-danger');
+    }
+
 }

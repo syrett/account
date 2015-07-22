@@ -27,7 +27,7 @@ class ProductController extends Controller
 	{
 		return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions'=>array('index','create','update','save','delete'),
+                'actions'=>array('index','create','update','save','delete','stock'),
                 'users'=>array('@'),
             ),
 			array('deny',  // deny all users
@@ -183,4 +183,53 @@ class ProductController extends Controller
 			Yii::app()->end();
 		}
 	}
+
+    /*
+     * 成本结转
+     */
+    public function actionStock($id){
+        if (Yii::app()->request->isPostRequest) {
+            $cat = Yii::app()->createController('Transition');
+            $cat = $cat[0];
+            $sheetData = $cat->saveAll('product', $id);
+            if (!empty($sheetData))
+                foreach ($sheetData as $item) {
+                    if ($item['status'] == 0) {
+                        Yii::app()->user->setFlash('error', "保存失败!");
+                        $model = $this->loadModel($id);
+                        $sheetData[0]['status'] = 0;
+                        $sheetData[0]['data'] = Transition::getSheetData($item['data'],'product');
+                    }
+                    if ($item['status'] == 2) {
+                        Yii::app()->user->setFlash('error', "数据保存成功，未生成凭证");
+                        $model = $this->loadModel($id);
+                    }
+                }
+            else
+            {
+                Yii::app()->user->setFlash('success', "保存成功!");
+                $model = $this->loadModel($id);
+                $tran = Transition::model()->find(['condition' => 'data_id=:data_id', 'params' => [':data_id' => $id]]);
+                $sheetData[0]['data'] = Transition::getSheetData($model->attributes,'product');
+                if($tran!=null)
+                    $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
+                $this->redirect(array('update','id'=>$model->id));
+            }
+        }else {
+            $model = $this->loadModel($id);
+            //收费版需要加载跟此数据相关的，关键字为parent
+            $sheetData[0]['data'] = Transition::getSheetData($model->attributes,'product');
+            if($model->status_id==1)
+            {
+                $tran = Transition::model()->find(['condition' => 'data_id=:data_id', 'params' => [':data_id' => $id]]);
+                if($tran!=null)
+                    $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
+            }
+        }
+
+        $this->render('stock',array(
+            'model'=>$model,
+            'sheetData'=>$sheetData
+        ));
+    }
 }

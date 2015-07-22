@@ -164,11 +164,11 @@ $this->pageTitle = Yii::app()->name;
 
                                 <div>
 
-                                    <button type="button" id="btn_confirm_<?= $key ?>" class=" btn btn-default"
+                                    <button type="button" id="btn_confirm_<?= $key ?>" class="hidden btn btn-default"
                                             onclick="itemSetDefault(this, '<?= $type ?>')">确认
                                     </button>
 
-                                    <button type="button" id="btn_del_<?= $key ?>" class="btn btn-xs"
+                                    <button type="button" id="btn_del_<?= $key ?>" class="btn btn-xs" disabled
                                             onclick="itemclose(this)"><i class="fa fa-times"></i>删除
                                     </button>
                                 </div>

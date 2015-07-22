@@ -4,13 +4,16 @@ class OptionsController extends Controller
 {
 	public function actionIndex()
 	{
-        $company = Options::model()->findAllByPk(1);
-
-        if(isset($_REQUEST['Options']['name'])){
-            $this->actionSave($company);
-        }
-		$this->render('index',array(
-            'model' => $company));
+//        $company = Options::model()->findAllByPk(1);
+//
+//        if(isset($_REQUEST['Options']['name'])){
+//            $this->actionSave($company);
+//        }
+//		$this->render('index',array(
+//            'model' => $company));
+        $condom = Condom::model()->findByAttributes(['dbname'=>substr(SYSDB,8)]);
+        $id = $condom->id;
+        $this->redirect("http://manage.".DOMAIN."/backend/web/index.php?r=blogs%2Fdefault%2Fupdate&id=$id");
 	}
 
     public function filters()

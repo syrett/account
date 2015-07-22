@@ -69,11 +69,6 @@ function itemsplit(e) {
     $("#rows").val(id);
 }
 
-function itemclose(e) {
-    var line = $(e.parentNode.parentNode.parentNode).attr("line");
-    e.parentNode.parentNode.parentNode.remove();
-    sumAmount($("#data_import").find("tr[line=" + line + "]:first"));
-}
 function itemsetting(e) {
     //$("#itemSetting").dialog({
     //    autoOpen: true,
@@ -348,9 +343,6 @@ function save() {
         $("#invoice_" + item_id).val($("#new-invoice").val() == 2 ? 1 : 0);
         //$("#tax_" + item_id).val($("#withtax_" + item_id).val() == 1 ? 3 : 0);
 
-        //主营业务收入才计算税率
-        if (sbj.substr(0, 4) == "6001" && $("#withtax_" + item_id).val() == 1)
-            setTax(item_id);    //设置税
     })
     $("#abc table tr:first").nextAll('tr:visible[id!=trSetting]').find("[id*='btn_confirm_']").each(function (key, value) {
         $(value).click();
@@ -459,15 +451,10 @@ function setTax(item_id, type) {
     var tax = $("#tran_tax_" + item_id).val();
     var sbj;
     var name = '';
-    if (tax == 3)
-        name = '销项';   //增值税
-
-    if (tax == 6 || tax == 13 || tax == 17) {
-        if (type == 'product')
-            name = '销项';
-        else if (type == 'purchase')
-            name = '进项';
-    }
+    if (type == 'product')
+        name = '销项';
+    else if (type == 'purchase')
+        name = '进项';
     var data = {
         name: name,
         subject: 222101
@@ -548,6 +535,6 @@ function addRow() {
 
         });
     });
-    //$(e).find("[id*='btn_del']").attr("disabled",true);
+    $(e).find("[id*='btn_del']").attr("disabled",false);
     $(e).children(':last-child').find("span").html('');
 }

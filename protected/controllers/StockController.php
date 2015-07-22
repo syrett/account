@@ -162,4 +162,82 @@ class StockController extends Controller
 			Yii::app()->end();
 		}
 	}
+
+    /*
+     * excel导出模板，测试
+     */
+    public function actionExcel(){
+        Yii::import('ext.phpexcel.PHPExcel');
+        $products = Product::model()->listOrder();
+        $stocks = Stock::model()->getStockArray();
+        $stockName = '"';
+        if(!empty($stocks)){
+            foreach ($stocks as $key => $stock) {
+                if($stockName!='"')
+                $stockName .= ",$key";
+                else
+                    $stockName .= "$key";
+            }
+            $stockName .= '"';
+        }
+        $objExcel = new PHPExcel();
+        $objWriter = new PHPExcel_Writer_Excel5($objExcel);
+        $objExcel->setActiveSheetIndex(0);
+        $objActSheet = $objExcel->getActiveSheet();
+        $objActSheet->getCell('A1')->setValue('单号');
+        $objActSheet->getCell('B1')->setValue('日期');
+        $objActSheet->getCell('C1')->setValue('名称');
+        $objActSheet->getCell('D1')->setValue('物品');
+        $objActSheet->getCell('E1')->setValue('数量');
+        $objActSheet->getCell('F1')->setValue('物品');
+        $objActSheet->getCell('G1')->setValue('数量(添加更多物品列，请复制“物品，数量”两列');
+        if(!empty($products)){
+//                $objActSheet->protectCells("A$row:C$row");
+            $objActSheet->getStyle("D:Z")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+            $objActSheet->getProtection()->setSheet(true);
+            foreach ($products as $key => $item) {
+                $row = $key + 2;
+                $objActSheet->getCell("A$row")->setValue($item['order_no']);
+                $objActSheet->getCell("B$row")->setValue($item['entry_date']);
+                $objActSheet->getCell("C$row")->setValue($item['entry_name']);
+                $objValidation = $objActSheet->getCell("D$row")->getDataValidation(); //这一句为要设置数据有效性的单元格
+                $objValidation -> setType(PHPExcel_Cell_DataValidation::TYPE_LIST)
+                    -> setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION)
+                    -> setAllowBlank(false)
+                    -> setShowInputMessage(true)
+                    -> setShowErrorMessage(true)
+                    -> setShowDropDown(true)
+                    -> setErrorTitle('输入的值有误')
+                    -> setError('您输入的值不在物品列表内，请重新选择')
+                    -> setPromptTitle('物品名称')
+                    -> setFormula1($stockName); //'"列表项1,列表项2,列表项3"'
+                $objValidation = $objActSheet->getCell("F$row")->getDataValidation(); //这一句为要设置数据有效性的单元格
+                $objValidation -> setType(PHPExcel_Cell_DataValidation::TYPE_LIST)
+                    -> setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION)
+                    -> setAllowBlank(false)
+                    -> setShowInputMessage(true)
+                    -> setShowErrorMessage(true)
+                    -> setShowDropDown(true)
+                    -> setErrorTitle('输入的值有误')
+                    -> setError('您输入的值不在下拉框列表内.')
+                    -> setPromptTitle('物品名称')
+                    -> setFormula1($stockName); //'"列表项1,列表项2,列表项3"'
+            }
+            foreach(range('A','B') as $column){
+                $objActSheet->getColumnDimension($column)->setAutoSize(true);
+            }
+
+        }
+        header("Pragma: public");
+        header("Expires: 0");
+        header("Cache-Control:must-revalidate, post-check=0, pre-check=0");
+        header("Content-Type:application/force-download");
+        header("Content-Type:application/vnd.ms-execl");
+        header("Content-Type:application/octet-stream");
+        header("Content-Type:application/download");
+        header('Content-Disposition:attachment;filename="excel.xls"');
+        header("Content-Transfer-Encoding:binary");
+        $objWriter->save('php://output');
+
+    }
 }

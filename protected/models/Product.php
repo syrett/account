@@ -133,6 +133,21 @@ class Product extends LFSModel
         $this->setAttribute('subject', $item['entry_subject']);
         $this->setAttribute('subject_2', $item['subject_2']);
         $this->setAttribute('tax',  isset($item['tax'])?$item['tax']:'');
+        $this->setAttribute('status_id', $item['status_id']);
 //        $this->setAttribute('updated_at', isset($item['updated_at'])?$item['updated_at']:'');
+    }
+
+    public function listOrder($order_no='',$date='',$name='',$status=1){
+        $con = ['status_id'=>$status];
+        $where = ' 1=1 ';
+        if(!empty($order_no))
+            $con += ['order_no'=>$order_no];
+        if(!empty($name))
+            $con += ['entry_name'=>$name];
+        if(empty($date))
+            $date = date('Y0101');
+        $where .= " and entry_date >= $date";
+        $models = $this->findAllByAttributes($con,$where);
+        return $models;
     }
 }

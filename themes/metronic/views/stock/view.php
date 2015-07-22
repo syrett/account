@@ -35,7 +35,7 @@ if ($action == 'order') {
             } elseif ($action == '') {
                 ?>
                 <div class="banner-balance col-sm-9">年初: <?= $before ?>
-                    <div class="banner-out col-sm-3">年内出库: <?= $out ?></div>
+                    <div class="banner-out col-sm-3">本年出库: <?= $out ?></div>
                     <div class="banner-in col-sm-3">本年采购: <?= $in ?></div>
                 </div>
                 <div class="banner-paid col-sm-3">剩余: <?= $left ?></div>
@@ -75,11 +75,11 @@ if ($action == 'order') {
                     'name' => 'before',
                 ),
                 array(
-                    'header' => '本年',
+                    'header' => '本年入库',
                     'value' => '$data["in_date"]>=date("Y")."0101"?$data["count"]:0',
                 ),
                 array(
-                    'header' => '出库',
+                    'header' => '本年出库',
                     'name' => 'out',
                 ),
                 array(

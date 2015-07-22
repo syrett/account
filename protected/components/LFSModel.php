@@ -13,8 +13,8 @@ class LFSModel extends CActiveRecord
         switch($table){
             case 'bank': $prefix = 'BA';break;
             case 'cash': $prefix = 'CA';break;
-            case 'purchase': $prefix = 'PU';break;
-            case 'product': $prefix = 'PR';break;
+            case 'purchase': $prefix = 'PO';break;
+            case 'product': $prefix = 'SO';break;
         }
         $prefix .= date('Ym');
         $sql = "select max(order_no) order_no from $table where order_no like '$prefix%' ";

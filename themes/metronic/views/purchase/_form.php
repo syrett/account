@@ -47,7 +47,7 @@ $type = 'purchase';
                     $arr = [1601, 1403, 1405, 6602, 6601, 6401, 1701];
                     $subjectArray = Transition::getSubjectArray($arr);
                     ?>
-                    <tr line="<?= $key ?>" <?= $key % 2 == 1 ? 'class="table-tr"' : '' ?>>
+                    <tr line="<?= $key ?>" class="table-tr <?= $item['status_id']==1?'':'label-danger'?>">
                         <td><input type="checkbox" id="item_<?= $key ?>" name="lists[<?= $key ?>]"
                                    value="<?= isset($item['id']) ? $item['id'] : '' ?>"></td>
                         <td><input class="input_mid date-picker" type="text" id="tran_date_<?= $key ?>"
@@ -113,11 +113,11 @@ $type = 'purchase';
                                 <input type="hidden" id="order_no_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][order_no]"
                                        value="<?= $item['order_no'] ?>">
+                                <input type="hidden" id="status_id_<?= $key ?>"
+                                       name="lists[<?= $key ?>][Transition][status_id]"
+                                       value="<?= $item['status_id'] ?>">
                             <data class="hidden">
                             <input type="hidden" id="id_<?= $key ?>" value="<?= $key ?>">
-                            <input type="hidden" id="status_id_<?= $key ?>"
-                                   name="lists[<?= $key ?>][Transition][status_id]"
-                                   value="<?= $item['status_id'] ?>">
                             <input type="hidden" id="subject_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entry_subject]"
                                    value="<?= $item['entry_subject'] ?>">
@@ -156,6 +156,9 @@ $type = 'purchase';
 
                                 <button type="button" id="btn_confirm_<?= $key ?>" class="btn btn-default hidden"
                                         onclick="itemSetDefault(this, '<?= $type ?>')">确认
+                                </button>
+                                <button type="button" id="btn_del_<?= $key ?>" class="btn btn-xs"
+                                        onclick="itemInvalid(this)"><i class="fa fa-times"></i>作废
                                 </button>
                             </div>
                         </td>
