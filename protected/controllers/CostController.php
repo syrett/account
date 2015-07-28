@@ -1,6 +1,6 @@
 <?php
 
-class ProductController extends Controller
+class CostController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -15,6 +15,7 @@ class ProductController extends Controller
 	{
 		return array(
 			'accessControl', // perform access control for CRUD operations
+			'postOnly + delete', // we only allow deletion via POST request
 		);
 	}
 
@@ -25,15 +26,50 @@ class ProductController extends Controller
 	 */
 	public function accessRules()
 	{
-		return array(
+        return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions'=>array('index','update','save','delete','stock'),
+                'actions'=>array('index','create','update','save','delete'),
                 'users'=>array('@'),
             ),
-			array('deny',  // deny all users
-				'users'=>array('*'),
-			),
-		);
+
+            array('deny',  // deny all users
+                'users'=>array('*'),
+            ),
+        );
+	}
+
+	/**
+	 * Displays a particular model.
+	 * @param integer $id the ID of the model to be displayed
+	 */
+	public function actionView($id)
+	{
+		$this->render('view',array(
+			'model'=>$this->loadModel($id),
+		));
+	}
+
+	/**
+	 * Creates a new model.
+	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 */
+	public function actionCreate()
+	{
+		$model=new Cost;
+
+		// Uncomment the following line if AJAX validation is needed
+		// $this->performAjaxValidation($model);
+
+		if(isset($_POST['Cost']))
+		{
+			$model->attributes=$_POST['Cost'];
+			if($model->save())
+				$this->redirect(array('view','id'=>$model->id));
+		}
+
+		$this->render('create',array(
+			'model'=>$model,
+		));
 	}
 
 	/**
@@ -46,14 +82,14 @@ class ProductController extends Controller
         if (Yii::app()->request->isPostRequest) {
             $cat = Yii::app()->createController('Transition');
             $cat = $cat[0];
-            $sheetData = $cat->saveAll('product', $id);
+            $sheetData = $cat->saveAll('stock', $id);
             if (!empty($sheetData))
                 foreach ($sheetData as $item) {
                     if ($item['status'] == 0) {
                         Yii::app()->user->setFlash('error', "保存失败!");
                         $model = $this->loadModel($id);
                         $sheetData[0]['status'] = 0;
-                        $sheetData[0]['data'] = Transition::getSheetData($item['data'],'product');
+                        $sheetData[0]['data'] = Transition::getSheetData($item['data'],'stock');
                     }
                     if ($item['status'] == 2) {
                         Yii::app()->user->setFlash('error', "数据保存成功，未生成凭证");
@@ -65,7 +101,7 @@ class ProductController extends Controller
                 Yii::app()->user->setFlash('success', "保存成功!");
                 $model = $this->loadModel($id);
                 $tran = Transition::model()->find(['condition' => 'data_id=:data_id', 'params' => [':data_id' => $id]]);
-                $sheetData[0]['data'] = Transition::getSheetData($model->attributes,'product');
+                $sheetData[0]['data'] = Transition::getSheetData($model->attributes,'stock');
                 if($tran!=null)
                     $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
                 $this->redirect(array('update','id'=>$model->id));
@@ -73,7 +109,7 @@ class ProductController extends Controller
         }else {
             $model = $this->loadModel($id);
             //收费版需要加载跟此数据相关的，关键字为parent
-            $sheetData[0]['data'] = Transition::getSheetData($model->attributes,'product');
+            $sheetData[0]['data'] = Transition::getSheetData($model->attributes,'stock');
             if($model->status_id==1)
             {
                 $tran = Transition::model()->find(['condition' => 'data_id=:data_id', 'params' => [':data_id' => $id]]);
@@ -107,10 +143,10 @@ class ProductController extends Controller
 	 */
 	public function actionIndex()
 	{
-        $model=new Product('search');
+        $model=new Cost('search');
         $model->unsetAttributes();  // clear any default values
-        if(isset($_GET['Product']))
-            $model->attributes=$_GET['Product'];
+        if(isset($_GET['Cost']))
+            $model->attributes=$_GET['Cost'];
 
         $dataProvider= $model->search();
         $dataProvider->pagination=array(
@@ -126,12 +162,12 @@ class ProductController extends Controller
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
 	 * @param integer $id the ID of the model to be loaded
-	 * @return Product the loaded model
+	 * @return Cost the loaded model
 	 * @throws CHttpException
 	 */
 	public function loadModel($id)
 	{
-		$model=Product::model()->findByPk($id);
+		$model=Cost::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -139,63 +175,14 @@ class ProductController extends Controller
 
 	/**
 	 * Performs the AJAX validation.
-	 * @param Product $model the model to be validated
+	 * @param Cost $model the model to be validated
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='product-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='cost-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
 	}
-
-    /*
-     * 成本结转
-     */
-    public function actionStock($id=''){
-        $info = [];
-        Yii::import('ext.phpexcel.PHPExcel.PHPExcel_IOFactory');
-        if (Yii::app()->request->isPostRequest) {
-            //上传附件查看
-            if ($_FILES['attachment']!='' && file_exists($_FILES['attachment']['tmp_name'])) {
-                $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
-                $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
-                //去除第一行
-                array_shift($list);
-                foreach($list as $item){
-                    $sheetData[] = Transition::getSheetData($item,'cost');
-                }
-            } elseif($_FILES['attachment']['name']==''){
-                //保存按钮
-                $cat = Yii::app()->createController('Transition');
-                $cat = $cat[0];
-                $arr = $cat->saveAll('stock', $id);
-                if (!empty($arr))
-                    foreach ($arr as $item) {
-                        $data = Transition::getSheetData($item['data'],'cost');
-                        if ($item['status'] == 0) {
-                            Yii::app()->user->setFlash('error', "保存失败!");
-                            $sheetData[] = $data;
-                        }
-                        if ($item['status'] == 2) {
-                            Yii::app()->user->setFlash('error', "数据保存成功，未生成凭证");
-                            $sheetData[] = $data;
-                        }
-                    }
-                else{
-                    Yii::app()->user->setFlash('success', "保存成功!");
-                    //跳转到历史数据管理页面
-                    $this->redirect(Yii::app()->createUrl('product/stock'));
-                }
-            }
-        }
-
-        if (empty($sheetData)){
-            $sheetData[] = Transition::getSheetData([],'cost');
-        }
-
-        $model[] = new Transition();
-        return $this->render('stock', ['type' => 'cost', 'sheetData' => $sheetData, 'info' => $info]);
-    }
 }

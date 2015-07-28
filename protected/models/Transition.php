@@ -361,6 +361,9 @@ class Transition extends CActiveRecord
             "invoice" => "0",
             "tax" => "0",
             "parent" => "",
+            'stocks' => '',
+            'stocks_count' => '',
+            'stocks_price' => '',
             "additional" => [
                 "0" => [
                     "subject" => "",
@@ -403,6 +406,45 @@ class Transition extends CActiveRecord
                         $amount = trim($items['E']);
                         $arr['count'] = trim($items['F']);
                         break;
+                    case 'cost':    //成本结转
+                        $arr['order_no'] = trim($items['A']);
+                        $arr['entry_date'] = convertDate($items['B']);
+                        $arr['entry_name'] = trim($items['C']);
+                        $order = Product::model()->findByAttributes(['order_no'=>$arr['order_no']]);
+                        if($order!=null){
+                            $arr['entry_subject'] = Subjects::model()->matchSubject('材料',[6401]);
+                            $arr['subject_2'] = Subjects::model()->matchSubject('材料',[1405]);
+                            $arr['client_id'] = $order->client_id;
+                        }
+                        $arr['entry_transaction'] = 1;
+                        $arr['stocks'] = '';
+                        $arr['stocks_count'] = '';
+                        $arr['stocks_price'] = '';
+                        $count = 1;
+                        $amount = 0;
+                        $stocks = [];
+                        foreach($items as $key => $item){
+                            if($key<'D')
+                                continue;
+                            if($item==null)
+                                break;
+                            if($count/2==(int)($count/2)){
+                                $stocks_count[] = $item;
+                                $amount += end($stocks_price)*$item;
+                            }
+                            else{
+                                $stocks[] = $item;
+                                $stocks_price[] = Stock::model()->getPrice($item);
+                            }
+                            $count++;
+                        }
+//                        $arr['stocks'] = implode(',',$stocks);
+//                        $arr['stocks_count'] = implode(',',$stocks_count);
+//                        $arr['stocks_price'] = implode(',',$stocks_price);
+                        $arr['stocks'] = implode("\r\n",$stocks);
+                        $arr['stocks_count'] = implode("\r\n",$stocks_count);
+                        $arr['stocks_price'] = implode("\r\n",$stocks_price);
+                        break;
 
                 }
                 $amount = str_replace(" ", '', $amount);  //英文空格
@@ -424,6 +466,10 @@ class Transition extends CActiveRecord
                 $arr['entry_memo'] = isset($items['memo']) ? $items['memo'] : $arr['entry_memo'];
                 $arr['entry_amount'] = str_replace(",", "", trim(isset($items['amount']) ? $items['amount'] : $arr['entry_amount']));
                 $arr['entry_subject'] = isset($items['subject']) ? $items['subject'] : $arr['entry_subject'];
+                if(!empty($items['client_id']))
+                    $arr['entry_appendix_id'] = $items['client_id'];
+                if(!empty($items['vendor_id']))
+                    $arr['entry_appendix_id'] = $items['vendor_id'];
             }
         }
         return $arr;

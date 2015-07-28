@@ -145,8 +145,9 @@ $tranDate = $this->getTransitionDate('post');
         <?
         } else {
             ?>
-            <div class="text-center"><input class="btn btn-circle btn-success" type="button" onclick="save()"
-                                            value="保存凭证"></div>
+            <div class="text-center">
+                <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证</button>
+            </div>
         <?php
         }
         $this->endWidget(); ?>

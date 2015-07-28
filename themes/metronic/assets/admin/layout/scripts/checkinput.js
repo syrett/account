@@ -50,14 +50,3 @@ function sumAmount(ob){
         $($(ob).parent().parent().find("[id*='tran_amount_']")[0]).html(toAmount(price*count));
     }
 }
-
-function toAmount(price){
-    if(price>0){
-        price = price + 0.000001;
-    }else if(price < 0)
-        price = price - 0.000001;
-
-    price = price * 100;
-    price = parseInt(price);
-    return price / 100;
-}

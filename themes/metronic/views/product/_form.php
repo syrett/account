@@ -30,7 +30,7 @@ $item = $sheetData[0]['data'];
                     <th class="input-xsmall">交易日期</th>
                     <th class="input-small">交易摘要</th>
                     <th class="input_mid">供应商</th>
-                    <th class="input-xsmall">商品名称</th>
+                    <th class="input-xsmall">商品/服务名称</th>
                     <th class="input_min">单价</th>
                     <th class="input_min">数量</th>
                     <th class="input_min">合计</th>
@@ -45,8 +45,8 @@ $item = $sheetData[0]['data'];
                     $clientArray = Client::model()->getClientArray();
                     $stockArray = Stock::model()->getStockArray();
                     $taxArray = Transition::getTaxArray('sale');
-                    $arr = [6001];
-                    $subjectArray = Transition::getSubjectArray($arr);
+                    $arr = [6001,6301];
+                    $subjectArray = Transition::getSubjectArray($arr,['type'=>2]);
                     ?>
                     <tr line="<?= $key ?>" class="table-tr <?= $item['status_id']==1?'':'label-danger'?>">
                         <td><input type="checkbox" id="item_<?= $key ?>" name="lists[<?= $key ?>]"
@@ -109,12 +109,11 @@ $item = $sheetData[0]['data'];
                             ?>
                         </td>
                         <td><?
-                            //                                $data += ['商品采购' => '商品采购'];
                             $this->widget('ext.select2.ESelect2', array(
                                 'name' => 'lists[' . $key . '][Transition][subject]',
                                 'id' => 'tran_subject_' . $key,
                                 'data' => $subjectArray,
-                                'value' => $item['entry_subject'],
+                                'value' => '_'.$item['entry_subject'],
 //                                    'options' => array('formatNoMatches' => 'js:function(term){return Not_Found("subject",term,' . $key . ')}'),
                                 'htmlOptions' => array('class' => 'select-full',)
                             ));
@@ -230,9 +229,8 @@ $item = $sheetData[0]['data'];
             <?
             } else {
                 ?><div class="panel-footer">
-                    <div class="form-group buttons text-center">
-                        <input class="btn btn-primary btn-success" type="button" onclick="save()" value="保存凭证">
-
+                    <div class="text-center">
+                        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证</button>
                     </div>
                 </div>
             <?php

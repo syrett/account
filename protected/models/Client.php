@@ -30,7 +30,8 @@ class Client extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('company', 'required'),
+            array('company', 'required'),
+            array('company', 'unique', 'message'=>'公司名称不可重复'),
 			array('id', 'numerical', 'integerOnly'=>true),
 			array('company', 'length', 'max'=>100),
 			array('vat', 'length', 'max'=>45),
@@ -38,7 +39,7 @@ class Client extends CActiveRecord
 			array('add', 'length', 'max'=>100),
 			array('memo', 'length', 'max'=>200),
 			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
+
 			array('id, vat, phone, add, memo', 'safe', 'on'=>'search'),
 		);
 	}

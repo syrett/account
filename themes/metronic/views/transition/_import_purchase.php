@@ -29,7 +29,7 @@ $this->pageTitle = Yii::app()->name;
                     <th class="input_mid">交易日期</th>
                     <th class="input-small">交易摘要</th>
                     <th class="input_mid">供应商名称</th>
-                    <th class="input_mid">商品名称</th>
+                    <th class="input_mid">商品/服务名称</th>
                     <th class="input_mid">单价</th>
                     <th class="input_min">数量</th>
                     <th class="input_min">合计</th>
@@ -43,7 +43,7 @@ $this->pageTitle = Yii::app()->name;
                     $vendorArray = Vendor::model()->getVendorArray();
                     $stockArray = Stock::model()->getStockArray();
                     $taxArray = Transition::getTaxArray('purchase');
-                    $arr = [1601, 1403, 1405, 6602, 6601, 6401, 1701];
+                    $arr = [1601, 1403, 1405, 6602, 6601, 6401, 1701, 1604, 1801];
                     $subjectArray = Transition::getSubjectArray($arr);
                     foreach ($sheetData as $key => $item) {
                         ?>
@@ -212,9 +212,8 @@ $this->pageTitle = Yii::app()->name;
     <?php echo CHtml::endForm(); ?>
 </div>
 <div class="panel-footer">
-    <div class="form-group buttons text-center">
-        <input class="btn btn-primary btn-success" type="button" onclick="save()" value="保存凭证">
-
+    <div class="text-center">
+        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证</button>
     </div>
 </div>
 <script>

@@ -10,6 +10,7 @@ $this->breadcrumbs = array(
 $balance = Subjects::get_balance(1122);
 $unreceived = Transition::getAllMount(1122,1);
 $unreceived2 = Transition::getAllMount(1122,1,'before');
+$year = Transition::getAllMount(1122,1,'after',date('Y0101'));
 
 $received = Transition::getAllMount(1122,2);
 $received2 = Transition::getAllMount(1122,2,'before');
@@ -80,6 +81,7 @@ $left = $before + $unreceived - $received;
                     ),
                     'template' => '<div class="btn-group">{update} {delete}</div>',
                     'deleteConfirmation' => '确定要删除该条记录？',
+                    'afterDelete' => 'function(link,success,data){if(success) alert(data);}'
                 ),
             ),
             'pager' => array('class' => 'CLinkPager', 'header' => '', 'firstPageLabel' => '首页', 'lastPageLabel' => '末页', 'nextPageLabel' => '下一页', 'prevPageLabel' => '上一页'),

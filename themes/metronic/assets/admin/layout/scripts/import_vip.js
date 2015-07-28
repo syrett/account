@@ -20,7 +20,7 @@ $(document).ready(function () {
         chooseOption(this)
     });
     $("input[name$='\[entry_date\]']").attr('readonly', true);
-    $('body').on('focus', "input[name$='\[entry_date\]']", function () {
+    $('body').on('focus', "input[name$='\[entry_date\]']:not([class*='no-dp'])", function () {
         $(this).datepicker({
             autoclose: true,
             format: "yyyymmdd",
@@ -528,7 +528,7 @@ function addRow() {
     //添加 总金额提示
     var html = '<span class="tip2">总金额：<label id="amount_' + item + '">' + 0 + '</label></span>'
     //$(e).find("[id^='tran_amount_']").after(html)
-    $('body').on('focus', "input[name$='\[entry_date\]']", function () {
+    $('body').on('focus', "input[name$='\[entry_date\]']:not([class*='no-dp'])", function () {
         $(this).datepicker({
             dateFormat: "yymmdd",
             minDate: getDate()

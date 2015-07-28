@@ -238,5 +238,28 @@ function itemInvalid(e) {
         $("#status_id_" + id).val(oldStatus);
         $(e.parentNode.parentNode.parentNode).removeClass('label-danger');
     }
+}
 
+function sumAmount2(ob){
+    var counts = $(ob).parent().parent().find("[name*='[Transition][stocks_count]']").val();
+    var prices = $(ob).parent().parent().find("[name*='[Transition][stocks_price]']").val();
+    counts = counts.split(",");
+    prices = prices.split(",");
+    var amount = 0;
+    for(var index = counts.length-1; index >= 0; --index){
+        amount += counts[index]*prices[index];
+    }
+    $(ob).parent().parent().find("[id*='tran_amount_']").html(toAmount(amount));
+    $(ob).parent().parent().find("[id*='entry_amount_']").val(toAmount(amount));
+}
+
+function toAmount(price){
+    if(price>0){
+        price = price + 0.000001;
+    }else if(price < 0)
+        price = price - 0.000001;
+
+    price = price * 100;
+    price = parseInt(price);
+    return price / 100;
 }

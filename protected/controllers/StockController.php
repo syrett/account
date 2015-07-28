@@ -190,38 +190,45 @@ class StockController extends Controller
         $objActSheet->getCell('D1')->setValue('物品');
         $objActSheet->getCell('E1')->setValue('数量');
         $objActSheet->getCell('F1')->setValue('物品');
-        $objActSheet->getCell('G1')->setValue('数量(添加更多物品列，请复制“物品，数量”两列');
-        if(!empty($products)){
+        $objActSheet->getCell('G1')->setValue('数量');
+        $objActSheet->getCell('H1')->setValue('物品');
+        $objActSheet->getCell('I1')->setValue('数量');
+        $objActSheet->getCell('J1')->setValue('物品');
+        $objActSheet->getCell('K1')->setValue('数量');
+        $objActSheet->getCell('L1')->setValue('物品');
+        $objActSheet->getCell('M1')->setValue('数量');
+        $objActSheet->getCell('N1')->setValue('物品');
+        $objActSheet->getCell('O1')->setValue('数量');
+        $objActSheet->getCell('P1')->setValue('物品');
+        $objActSheet->getCell('Q1')->setValue('数量');
+        $objActSheet->getCell('R1')->setValue('物品');
+        $objActSheet->getCell('S1')->setValue('数量');
+        $objActSheet->getCell('T1')->setValue('物品');
+        $objActSheet->getCell('U1')->setValue('数量(添加更多物品列，请复制“物品，数量”两列');
+        if($products!=null&&!empty($products)){
 //                $objActSheet->protectCells("A$row:C$row");
-            $objActSheet->getStyle("D:Z")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+            $objActSheet->getStyle("D:AZ")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
             $objActSheet->getProtection()->setSheet(true);
             foreach ($products as $key => $item) {
                 $row = $key + 2;
                 $objActSheet->getCell("A$row")->setValue($item['order_no']);
                 $objActSheet->getCell("B$row")->setValue($item['entry_date']);
                 $objActSheet->getCell("C$row")->setValue($item['entry_name']);
-                $objValidation = $objActSheet->getCell("D$row")->getDataValidation(); //这一句为要设置数据有效性的单元格
-                $objValidation -> setType(PHPExcel_Cell_DataValidation::TYPE_LIST)
-                    -> setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION)
-                    -> setAllowBlank(false)
-                    -> setShowInputMessage(true)
-                    -> setShowErrorMessage(true)
-                    -> setShowDropDown(true)
-                    -> setErrorTitle('输入的值有误')
-                    -> setError('您输入的值不在物品列表内，请重新选择')
-                    -> setPromptTitle('物品名称')
-                    -> setFormula1($stockName); //'"列表项1,列表项2,列表项3"'
-                $objValidation = $objActSheet->getCell("F$row")->getDataValidation(); //这一句为要设置数据有效性的单元格
-                $objValidation -> setType(PHPExcel_Cell_DataValidation::TYPE_LIST)
-                    -> setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION)
-                    -> setAllowBlank(false)
-                    -> setShowInputMessage(true)
-                    -> setShowErrorMessage(true)
-                    -> setShowDropDown(true)
-                    -> setErrorTitle('输入的值有误')
-                    -> setError('您输入的值不在下拉框列表内.')
-                    -> setPromptTitle('物品名称')
-                    -> setFormula1($stockName); //'"列表项1,列表项2,列表项3"'
+                $arr = range('D','U',2);
+                foreach($arr as $item){
+                    $objValidation = $objActSheet->getCell("$item$row")->getDataValidation(); //这一句为要设置数据有效性的单元格
+                    $objValidation -> setType(PHPExcel_Cell_DataValidation::TYPE_LIST)
+                        -> setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION)
+                        -> setAllowBlank(false)
+                        -> setShowInputMessage(true)
+                        -> setShowErrorMessage(true)
+                        -> setShowDropDown(true)
+                        -> setErrorTitle('输入的值有误')
+                        -> setError('您输入的值不在物品列表内，请重新选择')
+                        -> setPromptTitle('物品名称')
+                        -> setFormula1($stockName); //'"列表项1,列表项2,列表项3"'
+
+                }
             }
             foreach(range('A','B') as $column){
                 $objActSheet->getColumnDimension($column)->setAutoSize(true);

@@ -362,7 +362,7 @@ table#balance td, table#profit td, table#subjects td, table#project td, table#de
 }
 
 .input_min {
-    width: 50px;
+    width: 65px;
 }
 
 .input_mid {
@@ -386,7 +386,7 @@ table#balance td, table#profit td, table#subjects td, table#project td, table#de
     color: #fff;
     font-size: 24px;
     margin: 0 10px;
-    line-height: 25px;
+    line-height: 29px;
 }
 .banner .banner-hover:hover {
     border-bottom: 10px solid #8E8E8E;
@@ -459,5 +459,47 @@ table#balance td, table#profit td, table#subjects td, table#project td, table#de
     min-width: 888px;
 }
 .dataTable textarea{
-    height: 24px;
+    height: auto;
+}
+div.flash-error, div.flash-notice, div.flash-success
+{
+    padding:.8em;
+    margin-bottom:1em;
+    border:2px solid #ddd;
+}
+
+div.flash-error
+{
+    background:#FBE3E4;
+    color:#8a1f11;
+    border-color:#FBC2C4;
+}
+
+div.flash-notice
+{
+    background:#FFF6BF;
+    color:#514721;
+    border-color:#FFD324;
+}
+
+div.flash-success
+{
+    background:#E6EFC2;
+    color:#264409;
+    border-color:#C6D880;
+}
+
+div.flash-error a
+{
+    color:#8a1f11;
+}
+
+div.flash-notice a
+{
+    color:#514721;
+}
+
+div.flash-success a
+{
+    color:#264409;
 }

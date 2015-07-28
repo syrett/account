@@ -18,7 +18,7 @@
  * @property string $created_at
  * @property integer $updated_at
  */
-class Bank extends CActiveRecord
+class Bank extends LFSModel
 {
 	/**
 	 * @return string the associated database table name

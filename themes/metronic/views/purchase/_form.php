@@ -28,7 +28,7 @@ $type = 'purchase';
                     <th class="input_min"><input type="checkbox"></th>
                     <th class="input_mid">交易日期</th>
                     <th class="input_mid">供应商名称</th>
-                    <th class="input_mid">商品名称</th>
+                    <th class="input_mid">商品/服务名称</th>
                     <th class="input_mid">单价</th>
                     <th class="input_min">数量</th>
                     <th class="input_mid">税率</th>
@@ -94,11 +94,12 @@ $type = 'purchase';
                             ?>
                         </td>
                         <td><?
+                            $sbj = isset($item['subject'])?$item['entry_subject']:'商品采购';
                             $this->widget('ext.select2.ESelect2', array(
                                 'name' => 'lists[' . $key . '][Transition][subject]',
                                 'id' => 'tran_subject_' . $key,
                                 'data' => $subjectArray,
-                                'value' => isset($item['subject'])?$item['entry_subject']:'商品采购',
+                                'value' => '_'. $sbj,
                                 'htmlOptions' => array('class' => 'select-full',)
                             ));
                             ?>
@@ -216,9 +217,8 @@ $type = 'purchase';
             <?
             } else {
                 ?><div class="panel-footer">
-                    <div class="form-group buttons text-center">
-                        <input class="btn btn-primary btn-success" type="button" onclick="save()" value="保存凭证">
-
+                    <div class="text-center">
+                        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证</button>
                     </div>
                 </div>
             <?php

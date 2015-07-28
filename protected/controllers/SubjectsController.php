@@ -147,9 +147,12 @@ class SubjectsController extends Controller
      * If deletion is successful, the browser will be redirected to the 'admin' page.
      * @param integer $id the ID of the model to be deleted
      */
-    public function actionDelete($id)
+    public function actionDelete($id, $sbj_number = '')
     {
-        $sbj = $this->loadModel($id);
+        if($id!='')
+            $sbj = $this->loadModel($id);
+        else
+            $sbj = Subjects::model()->findByAttributes(['sbj_number'=>$sbj_number]);
         //有子科目，无法删除
         if($sbj->has_sub==1)
             echo "有子科目不能删除！";

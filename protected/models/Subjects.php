@@ -58,7 +58,7 @@ class Subjects extends CActiveRecord
             // The following rule is used by search().
             array('id, sbj_number, sbj_name, sbj_cat, sbj_table, has_sub', 'safe', 'on' => 'search'),
 
-            array('sbj_name','checkSbjName', 'on' => 'create,update'), //借贷相等
+            array('sbj_name','checkSbjName', 'on' => 'create,update'),
         );
     }
 
@@ -103,7 +103,6 @@ class Subjects extends CActiveRecord
      */
     public function search()
     {
-        // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
 
@@ -298,19 +297,29 @@ class Subjects extends CActiveRecord
         $data_1 = self::findAllBySql($sql_1. $where. $sbjwhere. $keywhere. $orderby, array());
         if(empty($data_1)){
             $data_1 = self::findAllBySql($sql_1. $where. $sbjwhere. $orderby, array());
+            if(empty($data_1)){
+                $sbjwhere = " AND sbj_number='$sbj_id'";
+                $data_1 = self::findAllBySql($sql_1. $where. $sbjwhere. $orderby, array());
+            }
         }
-        if (empty($data_1) && $type==2){
-            $sbjwhere = "AND sbj_number='$sbj_id' ";
-            $data_1 = self::findAllBySql($sql_1. $where. $sbjwhere. $keywhere. $orderby, array());
+//        if (empty($data_1) && $type==2){
+//            $sbjwhere = "AND sbj_number='$sbj_id' ";
+//            $data_1 = self::findAllBySql($sql_1. $where. $sbjwhere. $keywhere. $orderby, array());
+        //去除关键字，仍然为空，返回空数组；
+        if (empty($data_1)){
+            return [];
+        }elseif($data_1[0]->sbj_number==$sbj_id && $data_1[0]["has_sub"] == 1){
+            return [];
         }
         foreach ($data_1 as $key => $item) {
             array_push($data, $item->attributes);
-            if ($item["has_sub"] == 1 && isset($GLOBALS['level']) && $GLOBALS['level']>0) {
+//            if ($item["has_sub"] == 1 && isset($GLOBALS['level']) && $GLOBALS['level']>0) {
+            if ($item["has_sub"] == 1) {
                 $data_sub = $this->list_sub($item["sbj_number"], $key, $options);
                 foreach ($data_sub as $key => $item_sub) {
                     array_push($data, $item_sub->attributes);
                 }
-                $GLOBALS['level'] -= 1;
+//                $GLOBALS['level'] -= 1;
             }
         }
 
@@ -459,13 +468,13 @@ class Subjects extends CActiveRecord
      */
     public function getitem($arr, $key = '', $options = [])
     {
-        //有前缀，顺序不会随科目编号影响，在前台需要去除第一个字符"_"，没有前缀，json数据会自动从新排序
+        //有前缀，顺序不会随科目编号影响，在前台需要去除第一个字符"_"，如果没有前缀，json数据会自动重新排序
         $prefix = isset($options['prefix'])?$options['prefix']:'_';
         $subject = new Subjects();
         $result = [];
-        $type = isset($options['type']) ? $options['type'] : 1;
+        $type = isset($options['type']) ? $options['type'] : 2;
         foreach ($arr as $item) {
-            $GLOBALS['level'] = isset($options['level'])?$options['level']:3;
+//            $GLOBALS['level'] = isset($options['level'])?$options['level']:3;
             $arr_subj = $subject->list_sub($item, $key, $options);
             foreach ($arr_subj as $subj) {
                 if($type==0){
@@ -578,16 +587,19 @@ class Subjects extends CActiveRecord
      * 自定义验证规则
      */
     public function checkSbjName($attribute, $params){
-        $sbj_name = $_POST['Subjects']['sbj_name'];
-        $sbj_number = $_POST['Subjects']['sbj_number'];
-        $sbj_num = strlen($sbj_number)>4?substr($sbj_number,0,4):$sbj_number;
-        $criteria = new CDbCriteria;
-        $criteria->addCondition('sbj_name=:sbj_name');
-        $criteria->addCondition('sbj_number like :sbj_num');
-        $criteria->params = ['sbj_name'=>$sbj_name, 'sbj_num'=>$sbj_num.'%'];
-        $sub = Subjects::model()->find($criteria);
-        if($sub!=null && $sub->sbj_number != $sbj_number)
-            $this->addError($attribute, '科目名已经存在');
+        $model = $this->findByPk($this->id);
+        if($this->sbj_name!= $model->sbj_name){
+            $sbj_name = $_POST['Subjects']['sbj_name'];
+            $sbj_number = $_POST['Subjects']['sbj_number'];
+            $sbj_num = strlen($sbj_number)>4?substr($sbj_number,0,4):$sbj_number;
+            $criteria = new CDbCriteria;
+            $criteria->addCondition('sbj_name=:sbj_name');
+            $criteria->addCondition('sbj_number like :sbj_num');
+            $criteria->params = ['sbj_name'=>$sbj_name, 'sbj_num'=>$sbj_num.'%'];
+            $sub = Subjects::model()->find($criteria);
+            if($sub!=null && $sub->sbj_number != $sbj_number)
+                $this->addError($attribute, '科目名已经存在');
+        }
 
     }
 
@@ -665,4 +677,19 @@ class Subjects extends CActiveRecord
         return $subs;
     }
 
+    /*
+     * 修改科目表名称，如果客户或供应商名字同一级科目相同，暂时不考虑。比如客户名字叫 银行存款，这时候修改名字会将一级科目 银行存款 的名称也改掉
+     * @oldname String 原名称
+     * @name String 新名称
+     * @sbj Integer 科目编号
+     */
+    public function updateName($oldname, $name, $sbj=''){
+        $params = ['name'=>$oldname];
+        $where = '';
+        if($sbj!=''){
+            $where = " and sbj_number like ':sbj%' ";
+            $params += ['sbj'=>$sbj];
+        }
+        $this->updateAll(['sbj_name'=>$name], "sbj_name=:name and length(sbj_number) > 4 $where", $params);
+    }
 }

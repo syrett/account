@@ -138,7 +138,12 @@ class Stock extends LFSModel
         } else {
             $time = date("Ym").'01';
             $groupby = " group by name";
-            $sql = "select `id`,`no`, name, sum(if(`in_date`>='$time',1,0)) `month_in` ,sum(if(`status`=1,1,0)) `left` from $tablename $where $groupby";
+            $month_in = " sum(if(`in_date`>='$time',1,0)) `month_in`";
+            $month_out = "sum(if(`status`=2 and `out_date` >= '$time',1,0)) `month_out`";
+            $left = "sum(if(`status`=1,1,0)) `left`";
+            $year = date('Y').'0101';
+            $year_before = "sum(if(`status`=1 and `in_date` < '$year',1,0)) `year_before`";
+            $sql = "select `id`,`no`, name, $year_before, $month_in, $month_out, $left from $tablename $where $groupby";
         }
         return $sql;
     }
@@ -179,7 +184,7 @@ class Stock extends LFSModel
      * get number of stock
      *
      */
-    public function getAmount($options){
+    public function getNumber($options){
         if(isset($options['id'])&&$options['id']!='')
             $model = $this->findByPk($options['id']);
         else
@@ -234,9 +239,14 @@ class Stock extends LFSModel
         $this->delMultiple(['order_no' => $this->order_no, 'status' => 1, 'name' => $this->name], $count);
     }
 
-    public function setStock($count, $status){
+    public function setStock($count, $status, $options=[]){
         $c = new CDbCriteria;
         $c->condition="status<>$status and name='$this->name'";
+        if(!empty($options)){
+            foreach($options as $key => $item){
+                $c->condition .= " and $key='$item'";
+            }
+        }
         $c->limit = $count;
         $a = [
             'client_id'=>$this->client_id,
@@ -294,5 +304,48 @@ class Stock extends LFSModel
                 'out_date'=>$this->out_date,
                 'status'=>$this->status
             ];
+    }
+
+    /*
+     * 会计 成本核算方法
+     * 加权平均单价＝（期初结存商品金额＋本期收入商品金额－本期非销售付出商品金额）／（期初结存商品数量＋本期收入商品数量－本期非销售付出商品数量）
+     * 商品销售成本＝本期商品销售数量×加权平均单价
+     */
+    public function getPrice($name){
+        $amount1 = $this->getAmount([
+            'name'=>$name,
+            'status'=>1,
+//            'type'=>'between',
+            'sdate'=> date("Ym01",strtotime("-1 month")),
+            'edate'=> date("Ym01")]);
+//        $amount2 = $this->getAmount([
+//            'name'=>$name,
+//            'status'=>1,
+//            'type'=>'after',
+//            'sdate'=> date("Ym01",strtotime("-1 month")),
+//            'edate'=> date("Ym01")]);
+        return sprintf("%.2f", $amount1);
+
+    }
+
+
+    protected function getAmount($options){
+        $sql = 'select sum(in_price) amount, count(*) `count` from '. $this->tableName();
+        $where = ' where 1=1';
+        if(!empty($options['status']))
+            $where .= " and status=". $options['status'];
+        if(!empty($options['type'])){
+            if($options['type']=='between'){
+                $where .= " and in_date >= ".$options['sdate'];
+                $where .= " and in_date < ".$options['edate'];
+            }
+        }
+        $where .= " and name = '". $options['name']. "'";
+        $sql .= $where;
+        $amount = Yii::app()->db->createCommand($sql)->queryAll();
+        if(!empty($amount))
+            return (int)$amount[0]['amount']/(int)$amount[0]['count'];
+        else
+            return 0;
     }
 }

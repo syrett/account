@@ -224,8 +224,8 @@ $tranDate = $this->getTransitionDate('post');
     <?php echo CHtml::endForm(); ?>
 </div>
 <div class="dataTables_wrapper no-footer">
-    <div class="form-group buttons text-center">
-        <input class="btn btn-primary btn-circle btn-success" type="button" onclick="save()" value="保存凭证">
+    <div class="text-center">
+        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证</button>
     </div>
 </div>
 

@@ -29,8 +29,16 @@ $this->breadcrumbs = array(
                     'name'=>'name',
                 ),
                 array(
+                    'header'=>'年初余量',
+                    'name'=>'year_before',
+                ),
+                array(
                     'header'=>'本月采购量',
                     'name'=>'month_in',
+                ),
+                array(
+                    'header'=>'本月出库',
+                    'name'=>'month_out',
                 ),
                 array(
                     'header'=>'库存余量',

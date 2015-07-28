@@ -1346,12 +1346,17 @@ class TransitionController extends Controller
                     $stock->setStock($arr['count'], 2);
                 }*/
             }
-            if($newone==0 && $id != '' && $id != '0')
+            if($type=='stock'){
+                $product = Product::model()->findByAttributes(['order_no'=>$arr['order_no']]);
+                $arr['entry_memo'] = '产品销售-'. $product->entry_name;
+                $model = new Cost();
+            }
+            if($newone==0 && $id != '' && $id != '0' )
                 $model = $model::model()->findByPk($id);
             elseif (!empty($item['Transition']['d_id'])){
                 $model = $model::model()->findByPk($item['Transition']['d_id']);
                 $arr['order_no'] = $model->initOrderno();
-            }else{
+            }elseif(empty($arr['order_no'])){
                 $arr['order_no'] = $model->initOrderno();
             }
             $newone ++;
@@ -1385,7 +1390,44 @@ class TransitionController extends Controller
             }
 
             $model->load($arr);
-            if ($model->save() && $arr['entry_subject'] != '') {   //有科目编号才能创建凭证
+            if($model->validate()&&$type=='stock'){//成本结转
+                mb_internal_encoding( 'UTF-8');
+                mb_regex_encoding( 'UTF-8');
+//                $stocks = mbsplit(',',$arr['stocks']);
+//                $stocks_price = mbsplit(',',$arr['stocks_price']);
+//                $stocks_count = mbsplit(',',$arr['stocks_count']);
+                $stocks = mbsplit("\r\n",$arr['stocks']);
+                $stocks_price = mbsplit("\r\n",$arr['stocks_price']);
+                $stocks_count = mbsplit("\r\n",$arr['stocks_count']);
+                $stock = new Stock();
+//                $old_count = mbsplit(',',$model->oldAttributes['stocks_count']);
+                foreach($stocks as $key => $item){
+                    $stock->name = $item;
+                    $order = Product::model()->findByAttributes(['order_no'=>$arr['order_no']]);
+                    $stock->order_no_sale = $order->order_no;
+                    $stock->client_id = $order->client_id;
+                    $stock->out_price = $stocks_price[$key];
+                    $stock->out_date = $arr['entry_date'];
+//                    $count = $old_count[$key] - $stocks_count[$key];
+                    $count = 1;
+                    if($count == 0) //数量不变
+                        $stock->setStock($stocks_count[$key],2,['order_no_sale'=>$order->order_no]);
+                    elseif($count < 0){ //数量增加，增加数量不能大于库存
+                        $left = $stock->getCount(['name'=>$item,'status'=>1]);
+                        $stock->setStock($stocks_count[$key],2,['order_no_sale'=>$order->order_no]);
+                        if($left<-$count){    //修改后 数量有新增，判断库存数量是否足够
+                            $arr['error'] = ["$item 数量不能大于：". ($left + $old_count[$key])];
+                            $result[] = ['status' => 0, 'data' => $arr];
+                            continue;
+                        }else{
+                            $stock->setStock($count, 2);    //新增加的
+                        }
+                    }else{  //数量减少
+
+                    }
+                }
+            }
+            if ($model->save()) {
 
                 $tran = new Transition;
                 $tran2 = new Transition;
@@ -1438,7 +1480,7 @@ class TransitionController extends Controller
                                 foreach ($list as $item) {
                                     $item->save();
                                 }
-                                if ($arr['tax'] == 5) { //营业税需要生成2个凭证
+                                if (isset($arr['tax'])&&$arr['tax'] == 5) { //营业税需要生成2个凭证
                                     $tran3 = new Transition();
                                     $tran4 = new Transition();
                                     $data = array_merge($data, [

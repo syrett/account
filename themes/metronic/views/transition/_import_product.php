@@ -29,7 +29,7 @@ $this->pageTitle = Yii::app()->name;
                     <th class="input_mid">交易日期</th>
                     <th class="input-small">交易摘要</th>
                     <th class="input_mid">客户名称</th>
-                    <th class="input_mid">商品名称</th>
+                    <th class="input_mid">商品/服务名称</th>
                     <th class="input_mid">单价</th>
                     <th class="input_min">数量</th>
                     <th class="input_min">合计</th>
@@ -215,9 +215,8 @@ $this->pageTitle = Yii::app()->name;
     <?php echo CHtml::endForm(); ?>
 </div>
 <div class="panel-footer">
-    <div class="form-group buttons text-center">
-        <input class="btn btn-primary btn-success" type="button" onclick="save()" value="保存凭证">
-
+    <div class="text-center">
+        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证</button>
     </div>
 </div>
 <script>

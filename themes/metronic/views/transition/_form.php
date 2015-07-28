@@ -46,6 +46,12 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
     }
 </style>
 <div class="dataTables_wrapper no-footer">
+    <?
+    if ($model[0]->data_type != ''){
+    ?>
+    <div class="alert alert-info">提示：导入凭证不可修改
+    </div>
+    <? } ?>
     <div class="transition_title">
         <h2>记 账 凭 证</h2>
     </div>
@@ -232,7 +238,8 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
         if ($model[0]->entry_reviewed == 0 && $model[0]->entry_settlement == 0 && $model[0]->data_type == '') {//手动录入的凭证才可以修改
             echo CHtml::tag('button', array('encode' => false, 'class' => 'btn btn-circle btn-primary',), '<span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证');
         } else
-            echo '此凭证不可修改';
+            echo '';
+//            echo '此凭证不可修改';
         echo "&nbsp;&nbsp;";
         echo BtnBack();
         ?>

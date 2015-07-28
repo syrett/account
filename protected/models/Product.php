@@ -146,7 +146,7 @@ class Product extends LFSModel
             $con += ['entry_name'=>$name];
         if(empty($date))
             $date = date('Y0101');
-        $where .= " and entry_date >= $date";
+        $where .= " and entry_date >= $date and subject='600101'";   //成本核算，只列出销售产品的订单
         $models = $this->findAllByAttributes($con,$where);
         return $models;
     }

@@ -88,9 +88,13 @@ class ClientController extends Controller
 
 		if(isset($_POST['Client']))
 		{
+            $oldName = $model->company;
 			$model->attributes=$_POST['Client'];
-			if($model->save())
-				$this->redirect(array('admin'));
+			if($model->save()){
+                //更新科目表
+                Subjects::model()->updateName($oldName,$model->company);
+                $this->redirect(array('admin'));
+            }
 		}
 
         $dataProvider=$model->search();
@@ -108,7 +112,22 @@ class ClientController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+//        $cat = Yii::app()->createController('Subjects');
+//        $cat = $cat[0];
+//        $model = $this->loadModel($id);
+//        $sbjs = Subjects::model()->findAllByAttributes(['sbj_name'=>$model->company], 'length(sbj_number) > 4');
+//        foreach($sbjs as $item){
+//            $cat->actionDelete($item->id);
+//        }
+//        //再次查看，以确认是否删除
+//        $sbj = Subjects::model()->findByAttributes(['sbj_name'=>$model->company], 'length(sbj_number) > 4');
+        $model = $this->loadModel($id);
+        $sbj = Subjects::model()->findByAttributes(['sbj_name'=>$model->company]);
+        //如果科目表有以该客户名称为名的科目，则不能删除，
+        if($sbj==null)
+		    $this->loadModel($id)->delete();
+        else
+            echo '该客户不能删除';
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))

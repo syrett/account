@@ -4,6 +4,7 @@ $domain=str_replace('.'.$_SERVER['SERVER_NAME'],'',$_SERVER['HTTP_HOST']);
 if(preg_match('/\..*/',$_SERVER['HTTP_HOST'],$match))
     $domain = $match[0];
 $domain = substr($domain,1);
+defined('DOMAIN') or define('DOMAIN',"$domain");
 defined('LoginURL') or define('LoginURL','http://manage.'.$domain.'/frontend/web/index.php?r=users/guest/login');
 defined('LogoutURL') or define('LogoutURL','http://manage.'.$domain.'/frontend/web/index.php?r=users/user/logout');
 $yii=dirname(__FILE__).'/vendor/yii/framework/yii.php';

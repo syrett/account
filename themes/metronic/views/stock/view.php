@@ -10,13 +10,13 @@ $this->breadcrumbs = array(
 if ($action == 'order') {
 
 } elseif ($action == '') {
-    $before = $model->getAmount(['id' => $model->id, 'date' => 'year', 'type' => 'before', 'status' => 1]);
-    $in = $model->getAmount(['id' => $model->id, 'date' => 'year',]);   //入库
-    $out = $model->getAmount(['id' => $model->id, 'date' => 'year', 'status' => 2]);   //出库
-    $return = $model->getAmount(['id' => $model->id, 'date' => 'year', 'status' => 3]);    //退货
+    $before = $model->getNumber(['id' => $model->id, 'date' => 'year', 'type' => 'before', 'status' => 1]);
+    $in = $model->getNumber(['id' => $model->id, 'date' => 'year',]);   //入库
+    $out = $model->getNumber(['id' => $model->id, 'date' => 'year', 'status' => 2]);   //出库
+    $return = $model->getNumber(['id' => $model->id, 'date' => 'year', 'status' => 3]);    //退货
     $total = $before + $in;
     $left = $before + $in - $out - $return;
-    $left2 = $model->getAmount(['id' => $model->id, 'date' => 'year', 'status' => 1]);
+    $left2 = $model->getNumber(['id' => $model->id, 'date' => 'year', 'status' => 1]);
     $out += $return;
 }
 ?>
