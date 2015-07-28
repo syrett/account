@@ -1,6 +1,6 @@
-专门作为数据库修改记录，具体数据库结构请看manage项目
-stock 添加销售字段 订单号 order_no_sale
-添加了数据库表 product 销售 purchase 采购 stock 货品 bank 银行 cash 现金，
+-- 专门作为数据库修改记录，具体数据库结构请看manage项目
+-- stock 添加销售字段 订单号 order_no_sale
+-- 添加了数据库表 product 销售 purchase 采购 stock 货品 bank 银行 cash 现金，
 
 CREATE TABLE IF NOT EXISTS `bank` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -177,3 +177,40 @@ ALTER TABLE `bank`
 --
 ALTER TABLE `cash`
   ADD CONSTRAINT `cash_ibfk_1` FOREIGN KEY (`subject_2`) REFERENCES `subjects` (`sbj_number`);
+
+-- 2015年7月22日19:44:15
+-- stock 添加entry_subject cost_role成本计算方法
+ALTER TABLE `stock` ADD `entry_subject` INT NULL AFTER `name`;
+ALTER TABLE `stock` ADD `cost_role` INT NULL COMMENT '成本计算方法' AFTER `create_time`;
+ALTER TABLE `stock` ADD FOREIGN KEY (`entry_subject`) REFERENCES `subjects`(`sbj_number`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- 新建表cost，成本结转
+
+CREATE TABLE IF NOT EXISTS `stock` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `no` varchar(64) NOT NULL COMMENT '编号',
+  `order_no` varchar(16) NOT NULL COMMENT '采购订单',
+  `order_no_sale` varchar(16) DEFAULT NULL COMMENT '销售订单',
+  `name` varchar(512) NOT NULL COMMENT '名字',
+  `vendor_id` int(11) DEFAULT NULL COMMENT '供应商',
+  `client_id` int(11) DEFAULT NULL COMMENT '销售动向，客户ID',
+  `in_date` varchar(16) NOT NULL COMMENT '日期',
+  `in_price` float NOT NULL COMMENT '价格',
+  `out_date` timestamp NULL DEFAULT NULL,
+  `out_price` float DEFAULT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1:正常，2出库，3退货',
+  PRIMARY KEY (`id`),
+  KEY `vendor_id` (`vendor_id`),
+  KEY `client_id` (`client_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- 限制表 `cost`
+--
+ALTER TABLE `cost`
+  ADD CONSTRAINT `cost_ibfk_2` FOREIGN KEY (`subject`) REFERENCES `subjects` (`sbj_number`) ON DELETE NO ACTION,
+  ADD CONSTRAINT `cost_ibfk_3` FOREIGN KEY (`subject_2`) REFERENCES `subjects` (`sbj_number`) ON DELETE SET NULL;
+-- bank cash 添加 订单号字段
+ALTER TABLE `bank` ADD `order_no` VARCHAR(16) NULL after id;
+ALTER TABLE `cash` ADD `order_no` VARCHAR(16) NULL after id;
