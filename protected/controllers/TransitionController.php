@@ -1072,10 +1072,10 @@ class TransitionController extends Controller
         $cs = Yii::app()->clientScript;
         if ($_REQUEST['style'] == '2') {
 
-            $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . Yii::app()->theme->baseUrl . '/assets/css/print_2.css');
+            $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . Yii::app()->theme->baseUrl . '/assets/admin/layout/css/print_2.css');
             $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/css/print_2.css');
         } else {
-            $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . Yii::app()->theme->baseUrl . '/assets/css/print.css');
+            $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . Yii::app()->theme->baseUrl . '/assets/admin/layout/css/print.css');
             $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/css/print.css');
         }
         $mPDF1->WriteHTML($stylesheet, 1);
