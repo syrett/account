@@ -393,6 +393,11 @@ $baseUrl = Yii::app()->theme->baseUrl;
                                 <i class="glyphicon glyphicon-list"></i>
                                 整理凭证</a>
                         </li>
+                        <li>
+                            <a href="<?= $this->createUrl('transition/printp') ?>">
+                                <i class="glyphicon glyphicon-print"></i>
+                                打印凭证</a>
+                        </li>
                         <li class="divider">
                         </li>
                         <li>
