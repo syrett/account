@@ -1,0 +1,72 @@
+body, html{
+    line-height: 0px;
+    margin-top:0;
+    padding:0;
+    text-align: center;
+}
+@page {
+    margin-bottom: 1mm;
+}
+.header td{
+    text-align: center;
+}
+.h1{
+    font-size: 32px;
+    font-weight:bold;
+    display:inline;
+    text-align: center;
+    margin: 0px;
+}
+.h2{
+    font-size: 16px;
+    line-height: 0px;
+    font-weight: normal;
+}
+.right {
+    float: right;
+    text-align: right;
+}
+.left {
+    float: left;
+    text-align: left;
+}
+.clear {
+    clear: both;
+    height: 0;
+}
+.table{
+    height: 200mm;
+    border: 2px solid #000;
+    border-collapse:collapse;
+}
+.hr {
+    border: 1 dashed #000011;
+    margin: 1px auto;
+    width: 20%;
+}
+.title td{
+    font-size: 16px;
+    border-collapse:collapse;
+    /*height: 25mm;*/
+}
+
+.rowTop td{
+    border: 1px solid #000011;
+    border-left: 1px solid #000011;
+}
+.rowBottom td{
+    border-bottom: 1px solid #000011;
+    border-left: 1px solid #000011;
+}
+.headerTH th{
+    border: 1px solid #000011;
+}
+.page_top{
+    height: 15mm;
+}
+.rowNormal td{
+    border-left: 1px solid #000011;
+}
+.row td{
+    border-left: 1px solid #000011;
+}
