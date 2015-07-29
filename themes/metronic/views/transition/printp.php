@@ -89,13 +89,13 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/print.js', CCli
     <div class="row row-fluid">
 		<div class="col-md-index">
 			<div class="thumbnail">
-				<img src="<?php echo Yii::app()->theme->baseUrl.'/assets/img/in1.jpg' ?>" alt="横向" /><br />
+				<img src="<?php echo Yii::app()->theme->baseUrl.'/assets/admin/layout/img/in1.jpg' ?>" alt="横向" /><br />
 				<input type="radio" name="style" value="1" checked="true" /> 横向
 			</div>
 		</div>
 		<div class="col-md-index">
 			<div class="thumbnail">
-				<img src="<?php echo Yii::app()->theme->baseUrl.'/assets/img/in2.jpg' ?>" alt="纵向" /><br />
+				<img src="<?php echo Yii::app()->theme->baseUrl.'/assets/admin/layout/img/in2.jpg' ?>" alt="纵向" /><br />
 				<input type="radio" name="style" value="2" /> 纵向
 			</div>
 		</div>
