@@ -214,3 +214,23 @@ ALTER TABLE `cost`
 -- bank cash 添加 订单号字段
 ALTER TABLE `bank` ADD `order_no` VARCHAR(16) NULL after id;
 ALTER TABLE `cash` ADD `order_no` VARCHAR(16) NULL after id;
+
+
+
+-- 2015年7月28日13:55:16
+ALTER TABLE `purchase` ADD `department_id` INT NULL COMMENT '如果是公司自己使用，比如固定资产，需要填写部门' AFTER `entry_memo`;
+ALTER TABLE `purchase` ADD INDEX(`department_id`);
+ALTER TABLE `purchase` ADD FOREIGN KEY (`department_id`) REFERENCES `department`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+-- 修改stock表 字段，固定资产编码
+ALTER TABLE `stock` CHANGE `no` `hs_no` VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '编号';
+
+ALTER TABLE `cost` CHANGE `subject_2` `subject_2` VARCHAR(11) NULL DEFAULT NULL;
+ALTER TABLE `cost` DROP FOREIGN KEY `cost_ibfk_3`;
+ALTER TABLE `options` CHANGE `entrynum` `value` FLOAT NOT NULL DEFAULT '0';
+ALTER TABLE `options` CHANGE `id` `id` INT(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `options` ADD `entry_subject` INT(16) NOT NULL AFTER `id`;
+ALTER TABLE `options` ADD FOREIGN KEY (`entry_subject`) REFERENCES `subjects`(`sbj_number`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `options` CHANGE `url` `year` INT(16) NOT NULL DEFAULT 0 COMMENT '折旧或摊销年限';
+ALTER TABLE `stock` ADD `worth` FLOAT NULL COMMENT '净值' AFTER `out_price`;
+ALTER TABLE `options` ADD PRIMARY KEY(`entry_subject`);
+ALTER TABLE `stock` CHANGE `in_price` `in_price` DECIMAL(12,2) NOT NULL COMMENT '价格', CHANGE `out_price` `out_price` DECIMAL(12,2) NULL DEFAULT NULL, CHANGE `worth` `worth` DECIMAL(12,2) NULL DEFAULT NULL COMMENT '净值';
