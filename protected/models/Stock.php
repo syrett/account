@@ -305,7 +305,7 @@ class Stock extends LFSModel
     public function form($type){
         if($type=='purchase')
         return [
-            'hs_no'=>$this->hs_no,
+//            'hs_no'=>$this->hs_no,
             'order_no'=>$this->order_no,
             'vendor_id'=>$this->vendor_id,
             'entry_subject'=>$this->entry_subject,

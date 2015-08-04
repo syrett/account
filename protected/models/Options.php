@@ -97,4 +97,12 @@ class Options extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+    public static function getValue($name, $sbj){
+        $model = Options::model()->findByPk($sbj);
+        if($name=='value')
+            return $model->value;
+        if($name=='year')
+            return $model->year;
+    }
 }

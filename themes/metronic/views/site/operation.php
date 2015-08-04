@@ -31,7 +31,7 @@ $this->pageTitle = Yii::app()->name;
                     $title = '整理凭证';
                     break;
                 case 'listAssets' :
-                    $title = '计提折旧';
+                    $title = '固定资产';
                     break;
             }
             echo $title;
@@ -53,7 +53,7 @@ $this->pageTitle = Yii::app()->name;
                 没有数据需要处理
             </div>
         <?php
-        }else
+        }elseif($operation != 'listAssets')
         foreach ($list as $year => $months) {
 
             echo CHtml::beginForm($this->createUrl('/Transition/' . $operation), 'post');
@@ -97,19 +97,19 @@ $this->pageTitle = Yii::app()->name;
                         'in_price',
                         [
                             'header' => '残值率',
-                            'value' => "5"
+                            'value' => 'Options::getValue("value",$data->entry_subject)'
                         ],
                         [
                             'header' => '折旧或摊销年限',
-                            'value' => "5"
+                            'value' => 'Options::getValue("year",$data->entry_subject)'
                         ],
                         [
                             'header' => '折旧',
-                            'value' => '$data->in_price*5/100'
+                            'value' => '$data->in_price - $data->getWorth()'
                         ],
                         [
                             'header' => '净值',
-                            'value' => '$data->in_price-$data->in_price*5/100*2'
+                            'value' => '$data->getWorth()'
                         ],
                         [
                             'header' => '部门',
