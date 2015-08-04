@@ -4,17 +4,29 @@ class OptionsController extends Controller
 {
 	public function actionIndex()
 	{
-//        $company = Options::model()->findAllByPk(1);
-//
-//        if(isset($_REQUEST['Options']['name'])){
-//            $this->actionSave($company);
-//        }
-//		$this->render('index',array(
-//            'model' => $company));
         $condom = Condom::model()->findByAttributes(['dbname'=>substr(SYSDB,8)]);
         $id = $condom->id;
         $this->redirect("http://manage.".DOMAIN."/backend/web/index.php?r=blogs%2Fdefault%2Fupdate&id=$id");
 	}
+
+    public function actionSetting()
+    {
+        $company = Options::model()->findAll();
+
+        if(isset($_REQUEST['Options'])){
+            $options = $_REQUEST['Options'];
+            foreach($options as $key=>$item){
+                $option = Options::model()->findByPk($key);
+                if($option==null)
+                    $option = new Options();
+                $option->attributes = $item;
+                $option->save();
+            }
+            $this->refresh();
+        }
+		$this->render('index',array(
+            'model' => $company));
+    }
 
     public function filters()
     {
@@ -39,13 +51,4 @@ class OptionsController extends Controller
             ),
         );
     }
-
-    /*
-     * 保存公司信息
-     */
-    public function actionSave($company){
-        $company[0]['name'] = $_REQUEST['Options']['name'];
-        $company[0]->save();
-    }
-
 }

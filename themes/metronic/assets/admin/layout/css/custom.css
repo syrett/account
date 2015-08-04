@@ -136,6 +136,22 @@ table#balance td, table#profit td, table#subjects td, table#project td, table#de
 
 .logo-default {
     margin: 10px 0 0 0 !important;
+    width: 80px;
+}
+.page-boxed .page-header.navbar .page-logo{
+    width: 150px;
+}
+.page-header.navbar .menu-toggler.sidebar-toggler{
+    margin-top: 14px;
+}
+.page-content-wrapper .page-content{
+    margin-left: 150px;
+}
+.page-sidebar{
+    width: 150px;
+}
+.page-sidebar-menu.page-sidebar-menu-hover-submenu > li:hover > .sub-menu{
+    margin-left: 150px;
 }
 
 .page-sidebar .page-sidebar-menu > li > a > i,

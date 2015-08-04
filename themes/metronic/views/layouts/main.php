@@ -114,6 +114,10 @@ $baseUrl = Yii::app()->theme->baseUrl;
                                     <i class="icon-info"></i> 账套信息</a>
                             </li>
                             <li>
+                                <a href="<?= $this->createUrl('options/setting') ?>">
+                                    <i class="icon-equalizer"></i> 参数设置</a>
+                            </li>
+                            <li>
                                 <a href="<?= $this->createUrl('subjects/balance') ?>">
                                     <i class="icon-grid"></i> 期初余额 </a>
                             </li>
@@ -458,7 +462,7 @@ $baseUrl = Yii::app()->theme->baseUrl;
 
                 </li>
                 <li>
-                    <a href="<?= $this->createUrl('stock/assets') ?>">
+                    <a href="<?= $this->createUrl('Site/operation&operation=listAssets') ?>">
                         <i class="icon-diamond"></i>
                         <span class="title">固定资产</span>
                     </a>

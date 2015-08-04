@@ -166,7 +166,7 @@ class ProductController extends Controller
                 foreach($list as $item){
                     $sheetData[] = Transition::getSheetData($item,'cost');
                 }
-            } elseif($_FILES['attachment']['name']==''){
+            } elseif($_FILES['attachment']['name']=='' && isset($_POST['lists'])){
                 //保存按钮
                 $cat = Yii::app()->createController('Transition');
                 $cat = $cat[0];
@@ -192,7 +192,8 @@ class ProductController extends Controller
         }
 
         if (empty($sheetData)){
-            $sheetData[] = Transition::getSheetData([],'cost');
+//            $sheetData[] = Transition::getSheetData([],'cost');
+            $sheetData = [];
         }
 
         $model[] = new Transition();

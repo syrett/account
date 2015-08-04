@@ -18,33 +18,44 @@ $this->pageTitle = Yii::app()->name;
     $select = '<option value=1 >日期</option><option value=2 >交易说明</option><option value=3 >金额</option>';
     ?>
     <div class="row">
-        <div class="col-xs-12">
-            <div class="col-md-4 col-sm-12">
-                <div class="form-group">
-                    <div class="input-group choose-btn-group">
-                        <div class="input-icon">
-                            <i class="fa fa-file fa-fw"></i>
-                            <input type="text" class="form-control btn-file" id="import_file_name" readonly="">
-                        </div>
+        <?
+        $list = Product::model()->listOrder();
+        if(empty($list)){
+        ?>
+        <div class="alert alert-info">提示：未产生销售记录，无需结转成本</div>
+        <?
+        }else{
+            ?>
+            <div class="col-xs-12">
+                <div class="col-md-4 col-sm-12">
+                    <div class="form-group">
+                        <div class="input-group choose-btn-group">
+                            <div class="input-icon">
+                                <i class="fa fa-file fa-fw"></i>
+                                <input type="text" class="form-control btn-file" id="import_file_name" readonly="">
+                            </div>
 					<span class="input-group-btn">
 						<span class="btn btn-default btn-file">
 							选择文件<input name="attachment" type="file" accept=".xls,.xlsx">
 						</span>
 					</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4 col-sm-12">
-                <div class="btn-toolbar margin-bottom-10">
-                    <button type="submit" class="btn btn-default btn-file">导入</button>
-                    <a href="<?=$this->createUrl('/Stock/excel')?>">
-                        <button class="btn btn-default btn-file" type="button"><strong>已生成的成本结转表下载</strong>
-                        </button>
-                    </a>
-                </div>
+                <div class="col-md-4 col-sm-12">
+                    <div class="btn-toolbar margin-bottom-10">
+                        <button type="submit" class="btn btn-default btn-file">导入</button>
+                        <a href="<?= $this->createUrl('/Stock/excel') ?>">
+                            <button class="btn btn-default btn-file" type="button"><strong>尚未结转成本的订单下载</strong>
+                            </button>
+                        </a>
+                    </div>
 
+                </div>
             </div>
-        </div>
+        <?
+        }
+        ?>
     </div>
     <div class="row import-tab" id="abc">
         <div class="box">
@@ -58,7 +69,7 @@ $this->pageTitle = Yii::app()->name;
                     <th class="input_min">对应数量</th>
                     <th class="input_mid">对应单价</th>
                     <th class="input_min">合计</th>
-                    <th class="input-small">操作</th>
+<!--                    <th class="input-small">操作</th>-->
                     <th style="width: 10%">提示</th>
                 </tr>
                 <?php
@@ -92,7 +103,7 @@ $this->pageTitle = Yii::app()->name;
                             <td>
                                 <label id="tran_amount_<?= $key ?>"><?= $item['entry_amount'] ?></label>
                             </td>
-                            <td class="action">
+                            <td class="action hidden">
                                 <input type="hidden" id="did_<?= $key ?>" name="lists[<?= $key ?>][Transition][d_id]"
                                        value="<?= isset($item['d_id']) ? $item['d_id'] : '' ?>">
                                 <input type="hidden" id="order_no_<?= $key ?>"
@@ -112,6 +123,9 @@ $this->pageTitle = Yii::app()->name;
                                     <input type="hidden" id="subject_2_<?= $key ?>"
                                            name="lists[<?= $key ?>][Transition][subject_2]"
                                            value="<?= $item['subject_2'] ?>">
+                                    <input type="hidden" id="subject_2_price_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][subject_2_price]"
+                                           value="<?= $item['subject_2_price'] ?>">
                                     <input type="hidden" id="client_id_<?= $key ?>"
                                            name="lists[<?= $key ?>][Transition][client_id]"
                                            value="<?= $item['client_id'] ?>">

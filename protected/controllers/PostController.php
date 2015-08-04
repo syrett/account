@@ -137,6 +137,10 @@ class PostController extends Controller
       if ($transition->isAllReviewed($date)) {
 		Post::model()->postTransition($date);
         Yii::app()->user->setFlash('success', $date."过账成功!");
+          //过账成功后，要计提固定资产折旧
+          Yii::import('application.controllers.StockController');
+          $con = new StockController('');
+          $con->actionDepreciation($date);
         $this->render('/site/success');
       } else
         throw new CHttpException(400,$date. "还有凭证未审核");

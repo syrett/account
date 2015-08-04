@@ -27,7 +27,7 @@ $this->pageTitle = Yii::app()->name;
                 <tr>
                     <th class="input_min"><input type="checkbox"></th>
                     <th class="input_mid">交易日期</th>
-                    <th class="input-small">交易摘要</th>
+                    <th class="input_mid">交易摘要</th>
                     <th class="input_mid">供应商名称</th>
                     <th class="input_mid">商品/服务名称</th>
                     <th class="input_mid">单价</th>
@@ -35,6 +35,7 @@ $this->pageTitle = Yii::app()->name;
                     <th class="input_min">合计</th>
                     <th class="input-small">税率</th>
                     <th class="input-small">采购用途</th>
+                    <th class="input_mid hidden" id="department_id_th" >部门</th>
                     <th class="input-small">操作</th>
                     <th style="width: 10%">提示</th>
                 </tr>
@@ -45,6 +46,7 @@ $this->pageTitle = Yii::app()->name;
                     $taxArray = Transition::getTaxArray('purchase');
                     $arr = [1601, 1403, 1405, 6602, 6601, 6401, 1701, 1604, 1801];
                     $subjectArray = Transition::getSubjectArray($arr);
+                    $departmentArray = Department::model()->getDepartmentArray();
                     foreach ($sheetData as $key => $item) {
                         ?>
                         <tr line="<?= $key ?>" <?= $key % 2 == 1 ? 'class="table-tr"' : '' ?>>
@@ -54,7 +56,7 @@ $this->pageTitle = Yii::app()->name;
                                        name="lists[<?= $key ?>][Transition][entry_date]"
                                        value="<?= $item['entry_date'] ?>">
                             </td>
-                            <td><input class="input-small" type="text" id="tran_memo_<?= $key ?>"
+                            <td><input class="input_mid" type="text" id="tran_memo_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_memo]"
                                        value="<?= $item['entry_memo'] ?>">
                             </td>
@@ -106,13 +108,22 @@ $this->pageTitle = Yii::app()->name;
                                 ?>
                             </td>
                             <td><?
-                                //                                $data += ['商品采购' => '商品采购'];
                                 $this->widget('ext.select2.ESelect2', array(
                                     'name' => 'lists[' . $key . '][Transition][subject]',
                                     'id' => 'tran_subject_' . $key,
                                     'data' => $subjectArray,
                                     'value' => $item['entry_subject'],
                                     'options' => array('formatNoMatches' => 'js:function(term){return Not_Found("subject",term,' . $key . ')}'),
+                                    'htmlOptions' => array('class' => 'select-full',)
+                                ));
+                                ?>
+                            </td>
+                            <td class="hidden" id="department_id_td"><?
+                                $this->widget('ext.select2.ESelect2', array(
+                                    'name' => 'lists[' . $key . '][Transition][department_id]',
+                                    'id' => 'department_id_' . $key,
+                                    'data' => $departmentArray,
+                                    'value' => $item['department_id'],
                                     'htmlOptions' => array('class' => 'select-full',)
                                 ));
                                 ?>
@@ -253,4 +264,34 @@ $this->pageTitle = Yii::app()->name;
 
         }
     }
+    var arr = Array('1601', '1801', '1701');
+    $(window).load(function() {
+        //如果是固定资产，需要选择使用部门
+        $("div").delegate("select[id*='tran_subject_']","change",function(){
+            var department_id_show = false;
+            $.each($("select[id*='tran_subject_']"),function(key,obj){
+                var sbj = $(obj).val();
+                var row = key;
+                if(in_array(sbj.substr(1,4), arr)){
+                    department_id_show = true;
+                    $("select[id='department_id_"+row+"']").select2();
+                }else
+                    $("select[id='department_id_"+row+"']").select2("destroy").hide();
+            })
+            if(department_id_show){
+                $("[id*='department_id_']").removeClass("hidden");
+            }else
+                $("[id*='department_id_']").addClass("hidden");
+        });
+
+        $.each($("select[id*='tran_subject_']"), function (key, obj) {
+            var sbj = $(obj).val();
+            var row = key;
+            if (in_array(sbj.substr(1, 4), arr)) {
+                $("[id*='department_id_']").removeClass("hidden");
+                $("select[id='department_id_" + row + "']").select2();
+            } else
+                $("select[id='department_id_" + row + "']").select2("destroy").hide();
+        })
+    })
 </script>

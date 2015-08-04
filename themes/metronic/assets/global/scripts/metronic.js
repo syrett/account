@@ -979,3 +979,7 @@ var Metronic = function() {
     };
 
 }();
+function in_array(str, arr){
+    for(i=0;i<arr.length && arr[i]!=str;i++);
+    return !(i==arr.length);
+}

@@ -75,8 +75,6 @@ class Department extends CActiveRecord
 	 */
 	public function search()
 	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
-
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
@@ -124,6 +122,23 @@ class Department extends CActiveRecord
                        "name"=>$row["name"]);
       }
       return $arr;
+    }
+
+    public function getDepartmentArray(){
+        $data = $this->findAll();
+        $arr = [];
+        foreach($data as $row){
+            $arr[$row['id']] = $row["name"];
+        }
+        return $arr;
+    }
+
+    public function matchName($name){
+        $model = $this->findByAttributes([],['condition'=>'name like "%'.$name.'%"']);
+        if($model!=null)
+            return $model->id;
+        else
+            return 0;
     }
 
 }

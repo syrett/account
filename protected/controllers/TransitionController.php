@@ -94,7 +94,7 @@ class TransitionController extends Controller
 
                 header('refresh:2;url=index.php');
                 Yii::app()->user->setFlash('success', "添加成功!");
-                $this->render('success');
+                $this->render('/site/success');
             } else {
                 for ($i = 0; $i < 5; $i++)
                     $model[] = new Transition;
@@ -915,9 +915,12 @@ class TransitionController extends Controller
 
         if (!Transition::model()->checkSettlement($entry_prefix))
             throw new CHttpException(400, $entry_prefix . "结账失败");
+        if(Transition::model()->isAllClosing($entry_prefix))
+            throw new CHttpException(400, $entry_prefix . "已经结账");
         Transition::model()->settlement($entry_prefix);
+        Stock::model()->saveWorth();    //过账时的计提折旧操作，在结账时保存净值
         Yii::app()->user->setFlash('success', $entry_prefix . "结账成功!");
-        $this->render('success');
+        $this->render('/site/success');
     }
 
     /*
@@ -943,7 +946,8 @@ class TransitionController extends Controller
         }
 
         if ($result) {
-            $this->render('success');
+            Yii::app()->user->setFlash('success', $date."反结账成功!");
+            $this->render('/site/success');
         } else
             throw new CHttpException(400, $date . " 反结账失败");
     }
@@ -1033,6 +1037,14 @@ class TransitionController extends Controller
     {     //run settlement
         if (isset($_REQUEST['date'])) {
             $this->actionAntiSettlement($_REQUEST['date']);
+        }
+    }
+
+    public function actionListAssets()
+    {
+    //run settlement
+        if (isset($_REQUEST['date'])) {
+            $this->actionDepreciation($_REQUEST['date']);
         }
     }
 
@@ -1281,7 +1293,7 @@ class TransitionController extends Controller
                 $model = new Purchase();
                 $arr['order_no'] = isset($arr['order_no'])&&$arr['order_no']!=''?$arr['order_no']:$model->initOrderno();
                 $stock = new Stock();
-                $stock->load($arr);
+                $stock->load($arr, 'purchase');
                 if($id != '' && $arr['entry_name']!='劳务服务' && $arr['entry_name']!='缴纳税款'){
 
                     $model = $model::model()->findByPk($id);
@@ -1348,7 +1360,7 @@ class TransitionController extends Controller
             }
             if($type=='stock'){
                 $product = Product::model()->findByAttributes(['order_no'=>$arr['order_no']]);
-                $arr['entry_memo'] = '产品销售-'. $product->entry_name;
+                $arr['entry_memo'] = '成本结转-'. $product->entry_name;
                 $model = new Cost();
             }
             if($newone==0 && $id != '' && $id != '0' )
@@ -1388,42 +1400,43 @@ class TransitionController extends Controller
                 $result[] = ['status' => 0, 'data' => $arr];
                 continue;
             }
-
             $model->load($arr);
             if($model->validate()&&$type=='stock'){//成本结转
                 mb_internal_encoding( 'UTF-8');
                 mb_regex_encoding( 'UTF-8');
-//                $stocks = mbsplit(',',$arr['stocks']);
-//                $stocks_price = mbsplit(',',$arr['stocks_price']);
-//                $stocks_count = mbsplit(',',$arr['stocks_count']);
                 $stocks = mbsplit("\r\n",$arr['stocks']);
                 $stocks_price = mbsplit("\r\n",$arr['stocks_price']);
                 $stocks_count = mbsplit("\r\n",$arr['stocks_count']);
                 $stock = new Stock();
-//                $old_count = mbsplit(',',$model->oldAttributes['stocks_count']);
+                $order = Product::model()->findByAttributes(['order_no'=>$arr['order_no']]);
+                $stock->order_no_sale = $order->order_no;
+                $stock->client_id = $order->client_id;
                 foreach($stocks as $key => $item){
                     $stock->name = $item;
-                    $order = Product::model()->findByAttributes(['order_no'=>$arr['order_no']]);
-                    $stock->order_no_sale = $order->order_no;
-                    $stock->client_id = $order->client_id;
                     $stock->out_price = $stocks_price[$key];
                     $stock->out_date = $arr['entry_date'];
-//                    $count = $old_count[$key] - $stocks_count[$key];
-                    $count = 1;
+                    $old_count = $stock->getCount(['order_no_sale'=>$stock->order_no_sale]);
+                    if($model->isNewRecord)
+                        $old_count = 0;
+                    $count = $old_count - $stocks_count[$key];
                     if($count == 0) //数量不变
                         $stock->setStock($stocks_count[$key],2,['order_no_sale'=>$order->order_no]);
                     elseif($count < 0){ //数量增加，增加数量不能大于库存
                         $left = $stock->getCount(['name'=>$item,'status'=>1]);
-                        $stock->setStock($stocks_count[$key],2,['order_no_sale'=>$order->order_no]);
                         if($left<-$count){    //修改后 数量有新增，判断库存数量是否足够
-                            $arr['error'] = ["$item 数量不能大于：". ($left + $old_count[$key])];
-                            $result[] = ['status' => 0, 'data' => $arr];
+                            if($key == 0 || !isset($arr['error'])){
+                                $arr['error'] = ["$item 数量不能大于：". ($left + $old_count)];
+                                $result[] = ['status' => 0, 'data' => $arr];
+                            }else
+                                end($result)['data']['error'] += ["$item 数量不能大于：". ($left + $old_count)];
                             continue;
                         }else{
-                            $stock->setStock($count, 2);    //新增加的
+                            $stock->setStock($stocks_count[$key],2,['order_no_sale'=>$order->order_no]);
+                            $stock->setStock(-$count, 2);    //新增加的
                         }
                     }else{  //数量减少
-
+                        $stock->setStock($stocks_count[$key],2,['order_no_sale'=>$order->order_no]);
+                        $stock->setStock($count, 1);    //新增加的
                     }
                 }
             }
@@ -1439,6 +1452,7 @@ class TransitionController extends Controller
                     'data_type' => $type,
                     'data_id' => $model->id,
                     'entry_num_prefix' => $prefix,
+                    'entry_memo' => $arr['entry_memo'],
                     'entry_num' => $this->tranSuffix($prefix),
                     'entry_creater' => Yii::app()->user->id,
                     'entry_editor' => Yii::app()->user->id,
@@ -1471,12 +1485,30 @@ class TransitionController extends Controller
                     else
                         $tran['entry_amount'] = -$tran['entry_amount'];
                     $data['entry_subject'] = $arr['subject_2'];
-                    $tran2->attributes = $data;
+                    $subject_2_arr = explode(',', $arr['subject_2']);
+
+                    if(count($subject_2_arr)>1){
+                        $subject_2_price = explode(',', $arr['subject_2_price']);
+                        foreach($subject_2_arr as $key => $item){
+                            $data['entry_amount'] = $subject_2_price[$key];
+                            $data['entry_subject'] = $item;
+                            $tran_tmp = new Transition();
+                            $tran_tmp->attributes = $data;
+                            $tran_temp[] = $tran_tmp;
+                        }
+                    }else
+                        $tran2->attributes = $data;
                     try{
                         if ($model->id != '')
                             $this->delTran($type, $model->id);
                         if($arr['status_id']=="1") {  //0：作废；2：银行间转账，都不需要生成凭证，
-                            if ($tran->save() && $tran2->save()) {
+                            if ($tran->save()) {
+                                if(!empty($tran_temp))
+                                    foreach($tran_temp as $item){
+                                        $item->save();
+                                    }
+                                else
+                                    $tran2->save();
                                 foreach ($list as $item) {
                                     $item->save();
                                 }

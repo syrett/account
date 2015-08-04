@@ -31,7 +31,7 @@ class StockController extends Controller
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete'),
+                'actions' => array('admin', 'delete', 'assets'),
                 'users' => array('@'),
             ),
             array('deny',  // deny all users
@@ -245,6 +245,84 @@ class StockController extends Controller
         header('Content-Disposition:attachment;filename="excel.xls"');
         header("Content-Transfer-Encoding:binary");
         $objWriter->save('php://output');
+    }
 
+
+    public function actionDepreciation($date){
+        $this->saveDepreciation(1601, $date);   //固定资产等;
+        $this->saveDepreciation(1701, $date);
+        $this->saveDepreciation(1801, $date);
+    }
+
+    /*
+     * 计提折旧
+     */
+    public function saveDepreciation($sbj, $date){
+        $cdb = new CDbCriteria();
+        $type = "";
+        switch($sbj){
+            case '1601': $type = '固定资产';$sbj_2 = '1602';$sbj_name = '折旧费';$x_name = '残值率';break;
+            case '1701': $type = '无形资产';$sbj_2 = '1701';$sbj_name = '摊销费';$x_name = '摊销率';break;
+            case '1801': $type = '长期待摊费用';$sbj_2 = '1801';$sbj_name = '摊销费';$x_name = '摊销率';break;
+        }
+        $list = Subjects::model()->list_sub($sbj);
+        $amount = 0;
+        foreach ($list as $key => $item) {
+            $sbj = $item['sbj_number'];
+            $cdb->condition = "entry_subject like '$sbj%'"; //固定资产等
+            $stocks = Stock::model()->findAllByAttributes([], $cdb);
+            $option = Options::model()->findByAttributes([], "entry_subject like '$sbj%'");
+            foreach ($stocks as $item) {
+//                if (!$item->overPeriod()) {
+                $price = $item->getWorth();
+                $price = $price * (100 - $option->value) / 100 / ($option->year * 12);
+                $amount += $price;
+                if (isset($list[$key]['entry_amount']))
+                    $list[$key]['entry_amount'] += $price;
+                else
+                    $list[$key]['entry_amount'] = $price;
+                if (!isset($list[$key]['sbj_2_name']))
+                    $list[$key]['sbj_2_name'] = Subjects::model()->getName($item->entry_subject);
+//                }
+            }
+        }
+        if ($amount > 0) {
+            $tran = new Transition();
+            $tran->entry_num_prefix = $date;
+            $tran->entry_num = $tran->tranSuffix($date);
+            $tran->entry_date = date('Y-m-d 00:00:00', strtotime($date . '01'));
+            $memo = "计提折旧-$date-$type";
+            //删除当月已经生成的计提折旧凭证
+
+            //假如本月之前有过过账操作，生成了计提折旧的凭证，现在的计提金额如果和以前一样则没有变化，如果有变化说明更改过年限或残值率
+            $old = Transition::model()->findByAttributes(['entry_memo'=>$memo, 'entry_name' => $memo, 'entry_transaction' => 1]);
+            if($old!=null && $old->entry_amount != sprintf("%.2f", $amount))
+                Transition::model()->deleteAllByAttributes(['entry_memo' => $memo, 'entry_name' => $memo]);
+            if($old==null || ($old->entry_amount != sprintf("%.2f", $amount))) {
+                $tran->entry_name = $memo;
+                $tran->data_type = "assets";
+                $tran->entry_memo = $memo;
+                $tran->entry_transaction = 1;
+                $tran->entry_subject = Subjects::model()->matchSubject($sbj_name, ['6602']);
+                $tran->entry_amount = $amount; //折旧率从账套参数获得
+                $tran->entry_creater = Yii::app()->user->id;
+                $tran->entry_editor = Yii::app()->user->id;
+                $tran->save();
+                foreach ($list as $key => $item) {
+                    if (isset($item['sbj_2_name'])) {
+                        $tran2 = new Transition();
+                        $tran2->attributes = $tran->attributes;
+                        $tran2->attributes = $item;
+                        $tran2->entry_transaction = 2;
+                        if ($sbj != '1801')
+                            $tran2->entry_subject = Subjects::model()->matchSubject($item['sbj_2_name'], [$sbj_2]);
+                        else
+                            $tran2->entry_subject = '1801'; //长期待摊费用不需要子科目
+                        $tran2->save();
+                    }
+                }
+                //结账的时候再保存净值，因为当月多次过账的时候，需要使用数据：上月净值，
+            }
+        }
     }
 }

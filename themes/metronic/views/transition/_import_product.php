@@ -43,7 +43,7 @@ $this->pageTitle = Yii::app()->name;
                     $clientArray = Client::model()->getClientArray();
                     $stockArray = Stock::model()->getStockArray();
                     $taxArray = Transition::getTaxArray('sale');
-                    $arr = [6001,6301];
+                    $arr = [6001,6301,6051];
                     $subjectArray = Transition::getSubjectArray($arr,['type'=>2]);
                     foreach ($sheetData as $key => $item) {
                         ?>

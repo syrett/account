@@ -70,6 +70,7 @@ class Purchase extends LFSModel
 			'entry_date' => '交易日期',
 			'vendor_id' => '供应商ID',
 			'entry_name' => '商品名称',
+            'department_id' => '部门',
             'price' => '价格',
             'count' => '数量',
 			'unit' => '单位',
@@ -135,6 +136,7 @@ class Purchase extends LFSModel
         $this->setAttribute('entry_name', $item['entry_name']);
         $this->setAttribute('entry_memo', $item['entry_memo']);
         $this->setAttribute('entry_date', $item['entry_date']);
+        $this->setAttribute('department_id', $item['department_id']);
         $this->setAttribute('subject', $item['entry_subject']);
         $this->setAttribute('subject_2', $item['subject_2']);
         $this->setAttribute('tax',  isset($item['tax'])?$item['tax']:'');

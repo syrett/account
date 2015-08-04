@@ -195,10 +195,12 @@ function convertDate($str)
         return $str;
 }
 
-function addZero($num)
+function addZero($num, $count=4)
 {
-    if(strlen($num)>4)
+    //默认为4位数，
+    $base = pow(10, $count);
+    if(strlen($num)>=$count)
         return $num;
     else
-        return substr(strval($num + 10000), 1, 4);
+        return substr(strval($num + $base), 1, $count);
 }

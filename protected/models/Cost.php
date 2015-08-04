@@ -42,7 +42,7 @@ class Cost extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('order_no, entry_date, stocks, stocks_count, stocks_price, entry_amount, ', 'required'),
-			array('subject, subject_2, update_time, status_id', 'numerical', 'integerOnly'=>true),
+			array('subject, update_time, status_id', 'numerical', 'integerOnly'=>true),
 			array('entry_amount', 'numerical'),
             array('order_no', 'unique', 'message' => '该订单号已经结转，无法再次导入'),
 			array('order_no, entry_date', 'length', 'max'=>16),

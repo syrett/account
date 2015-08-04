@@ -7,8 +7,7 @@
  * @property integer $id
  * @property string $name
  * @property string $support
- * @property string $url
- * @property string $entrynum
+ * @property string $value
  */
 class Options extends CActiveRecord
 {
@@ -28,13 +27,12 @@ class Options extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id', 'required'),
 			array('id', 'numerical', 'integerOnly'=>true),
-			array('name, support, url', 'length', 'max'=>100),
-			array('entrynum', 'length', 'max'=>50),
+			array('name, support', 'length', 'max'=>100),
+			array('value', 'length', 'max'=>512),
+            array('entry_subject, year', 'safe'),
 			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, name, support, url, entrynum', 'safe', 'on'=>'search'),
+			array('id, name, support, value', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -56,10 +54,10 @@ class Options extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'name' => 'Name',
+            'name' => '参数名称',
+            'entry_subject' => '科目编号',
 			'support' => 'Support',
-			'url' => 'Url',
-			'entrynum' => 'Entrynum',
+			'value' => '值',
 		);
 	}
 
@@ -77,15 +75,12 @@ class Options extends CActiveRecord
 	 */
 	public function search()
 	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
-
-		$criteria=new CDbCriteria;
+        $criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('support',$this->support,true);
-		$criteria->compare('url',$this->url,true);
-		$criteria->compare('entrynum',$this->entrynum,true);
+		$criteria->compare('value',$this->value,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

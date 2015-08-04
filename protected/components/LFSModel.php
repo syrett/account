@@ -41,4 +41,29 @@ class LFSModel extends CActiveRecord
         $sql = "delete from $table $where $limit";
         Yii::app()->db->createCommand($sql)->execute();
     }
+
+    /*
+     * 采购固定资产生成的编码
+     *
+     * 1601固定资产编码以F000001，1701无形资产I000001，1801长期待摊费用D000001
+     */
+    public function initHSno($sbj){
+        $sbj = substr($sbj, 0, 4);
+        switch($sbj){
+            case '1601': $prefix = 'F';break;
+            case '1701': $prefix = 'I';break;
+            case '1801': $prefix = 'D';break;
+            default: $prefix = '';
+        }
+        $sql = "select max(hs_no) hs_no from stock where hs_no like '$prefix%' ";
+        $model = Stock::model()->findBySql($sql);
+        if($model!=null){
+            $hs_no = substr($model->hs_no,1);
+            $hs_no = (int) $hs_no + 1;
+            $hs_no = addZero($hs_no, 6);
+            return "$prefix$hs_no";
+        }else
+            return "$prefix"."000001";
+
+    }
 }

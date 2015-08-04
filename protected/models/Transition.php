@@ -66,6 +66,16 @@ class Transition extends CActiveRecord
         $transition = $dataProvider->getData();
         return empty($transition);
     }
+    public function isAllClosing($date)
+    {
+        $this->unsetAttributes();
+        $this->entry_closing = 0;
+        $this->entry_num_prefix = $date;
+        $this->select = "entry_num_prefix,entry_num,entry_closing";
+        $dataProvider = $this->search();
+        $transition = $dataProvider->getData();
+        return empty($transition);
+    }
 
     /**
      * Retrieves a list of models based on the current search/filter conditions.
@@ -167,6 +177,34 @@ class Transition extends CActiveRecord
         }
         return $arr;
     }
+    public static function listDate2($arr=array(), $sbj_arr=[])
+    {
+        $criteria = new CDbCriteria(array('group' => 'entry_num_prefix'));
+        if(!empty($sbj_arr)){
+            foreach($sbj_arr as $key => $item){
+                $sbj_arr[$key] = "entry_subject like '$item%'";
+            }
+            $sbj = implode(' OR ', $sbj_arr);
+            $criteria->condition .= "($sbj)";
+        }
+        $arr['entry_transaction'] = 1;
+        $list = Transition::model()->findAllByAttributes(
+            $arr,
+            $criteria
+        );
+        $arr = array();
+        if ($list) {
+            foreach ($list as $model) {
+                $year = substr($model->entry_num_prefix, 0, 4);
+                $month = substr($model->entry_num_prefix, 4, 6);
+                if (empty($arr[$year])) {
+                    $arr += array($year => array($month));
+                } else
+                    array_push($arr[$year], $month);
+            }
+        }
+        return $arr;
+    }
 
     /**
      * Returns the static model of the specified AR class.
@@ -216,6 +254,15 @@ class Transition extends CActiveRecord
     {
         $tran = new Transition();
         return $tran->listDate(array('entry_posting' => 1));
+    }
+
+    /*
+     * 可反结账日期
+     */
+    public static function listAssets()
+    {
+        $tran = new Transition();
+        return $tran->listDate2([],['1601','1701','1801']);
     }
 
     /*
@@ -351,9 +398,11 @@ class Transition extends CActiveRecord
             "entry_subject" => "",
             "subject_2" => "",
             "entry_appendix_id" => "",
+            "hs_no" => "",
             "order_no" => "",
             "vendor_id" => "",
             "client_id" => "",
+            "department_id" => "",
             "price" => "",
             "count" => "1",
             "unit" => "",
@@ -397,6 +446,7 @@ class Transition extends CActiveRecord
                         $arr['entry_name'] = Stock::model()->matchName(trim($items['D']));
                         $amount = trim($items['E']);
                         $arr['count'] = trim($items['F']);
+                        $arr['department_id'] = Department::model()->matchName(trim($items['G']));
                         break;
                     case 'product':
                         $arr['entry_date'] = convertDate($items['A']);
@@ -413,34 +463,35 @@ class Transition extends CActiveRecord
                         $order = Product::model()->findByAttributes(['order_no'=>$arr['order_no']]);
                         if($order!=null){
                             $arr['entry_subject'] = Subjects::model()->matchSubject('材料',[6401]);
-                            $arr['subject_2'] = Subjects::model()->matchSubject('材料',[1405]);
+//                            $arr['subject_2'] = Subjects::model()->matchSubject('材料',[1405]);
                             $arr['client_id'] = $order->client_id;
                         }
                         $arr['entry_transaction'] = 1;
                         $arr['stocks'] = '';
                         $arr['stocks_count'] = '';
                         $arr['stocks_price'] = '';
-                        $count = 1;
                         $amount = 0;
                         $stocks = [];
-                        foreach($items as $key => $item){
-                            if($key<'D')
-                                continue;
-                            if($item==null)
+                        $subject_2 = [];
+                        $stocks_count = [];
+                        $stocks_price = [];
+                        foreach(range('D', 'Z', 2) as $key){
+                            if($items[$key]==null)
                                 break;
-                            if($count/2==(int)($count/2)){
-                                $stocks_count[] = $item;
-                                $amount += end($stocks_price)*$item;
-                            }
-                            else{
-                                $stocks[] = $item;
-                                $stocks_price[] = Stock::model()->getPrice($item);
-                            }
-                            $count++;
+                            $item = $items[$key];
+                            $stocks[] = $item;
+                            $price = Stock::model()->getPrice($item);
+                            $stocks_price[] = $price;
+                            //根据商品，判断购买时的采购用途，库存商品/材料、库存商品/耐用等，对subject_2和金额进行赋值
+                            $stock = Stock::model()->matchStock($item, 1405);
+                            $sbj = $stock->entry_subject;
+                            $item = $items[++$key];
+                            $stocks_count[] = $item;
+                            $amount += $price*$item;
+                            $subject_2[$sbj] = isset($subject_2[$sbj])?$subject_2[$sbj]+$price*$item:$price*$item;
                         }
-//                        $arr['stocks'] = implode(',',$stocks);
-//                        $arr['stocks_count'] = implode(',',$stocks_count);
-//                        $arr['stocks_price'] = implode(',',$stocks_price);
+                        $arr['subject_2'] = implode(',', array_keys($subject_2));
+                        $arr['subject_2_price'] = implode(',',$subject_2);
                         $arr['stocks'] = implode("\r\n",$stocks);
                         $arr['stocks_count'] = implode("\r\n",$stocks_count);
                         $arr['stocks_price'] = implode("\r\n",$stocks_price);
@@ -803,6 +854,9 @@ class Transition extends CActiveRecord
         }
     }
 
+    /*
+     * 生成科目编号后缀编号
+     */
     public function tranSuffix($prefix = "")
     {
         if ($prefix == "")

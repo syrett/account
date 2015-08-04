@@ -33,6 +33,7 @@ $type = 'purchase';
                     <th class="input_min">数量</th>
                     <th class="input_mid">税率</th>
                     <th class="input-small">采购用途</th>
+                    <th class="input_mid hidden" id="department_id_th" >部门</th>
                     <th class="input-small">采购说明</th>
                     <th style="width: 150px">操作</th>
                     <th style="width: 10%">&nbsp;</th>
@@ -44,8 +45,9 @@ $type = 'purchase';
                     $vendorArray = Vendor::model()->getVendorArray();
                     $stockArray = Stock::model()->getStockArray();
                     $taxArray = Transition::getTaxArray('purchase');
-                    $arr = [1601, 1403, 1405, 6602, 6601, 6401, 1701];
+                    $arr = [1601, 1403, 1405, 6602, 6601, 6401, 1701, 1604, 1801];
                     $subjectArray = Transition::getSubjectArray($arr);
+                    $departmentArray = Department::model()->getDepartmentArray();
                     ?>
                     <tr line="<?= $key ?>" class="table-tr <?= $item['status_id']==1?'':'label-danger'?>">
                         <td><input type="checkbox" id="item_<?= $key ?>" name="lists[<?= $key ?>]"
@@ -104,6 +106,16 @@ $type = 'purchase';
                             ));
                             ?>
                         </td>
+                        <td class="hidden" id="department_id_td"><?
+                            $this->widget('ext.select2.ESelect2', array(
+                                'name' => 'lists[' . $key . '][Transition][department_id]',
+                                'id' => 'department_id_' . $key,
+                                'data' => $departmentArray,
+                                'value' => $item['department_id'],
+                                'htmlOptions' => array('class' => 'select-full',)
+                            ));
+                            ?>
+                        </td>
                         <td><input class="input-small" type="text" id="tran_memo_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entry_memo]"
                                    value="<?= $item['entry_memo'] ?>">
@@ -114,6 +126,9 @@ $type = 'purchase';
                                 <input type="hidden" id="order_no_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][order_no]"
                                        value="<?= $item['order_no'] ?>">
+                            <input type="hidden" id="hs_no_<?= $key ?>"
+                                   name="lists[<?= $key ?>][Transition][hs_no]"
+                                   value="<?= $item['hs_no'] ?>">
                                 <input type="hidden" id="status_id_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][status_id]"
                                        value="<?= $item['status_id'] ?>">
@@ -230,3 +245,32 @@ $type = 'purchase';
     </div>
 
 </div>
+<script>
+    $(window).load(function () {
+//如果是固定资产，需要选择使用部门
+        var arr = Array('1601', '1801', '1701');
+        $("div").delegate("select[id*='tran_subject_']", "change", function () {
+            var department_id_show = false;
+            $.each($("select[id*='tran_subject_']"), function (key, obj) {
+                var sbj = $(obj).val();
+                var row = key;
+                if (in_array(sbj.substr(1, 4), arr)) {
+                    department_id_show = true;
+                    $("select[id='department_id_" + row + "']").select2();
+                } else
+                    $("select[id='department_id_" + row + "']").select2("destroy").hide();
+            })
+            if (department_id_show) {
+                $("[id*='department_id_']").removeClass("hidden");
+            } else
+                $("[id*='department_id_']").addClass("hidden");
+        })
+        var sbj = $("select[id*='tran_subject_']").val();
+        if (in_array(sbj.substr(1, 4), arr)) {
+            $("select[id='department_id_0']").select2();
+            $("[id*='department_id_']").removeClass("hidden");
+        }
+
+
+    })
+</script>

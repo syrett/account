@@ -33,11 +33,11 @@ $left = $before + $unreceived - $received;
     </div>
     <div class="well well-sm">
         <div class="banner" >
-            <div class="banner-balance col-sm-8">年初: ￥<?=$before?>
-                <div class="banner-paid col-sm-3 banner-hover">本年已收: ￥<?=$received?></div>
-                <div class="banner-in col-sm-3 banner-hover">本年增加: ￥<?=$unreceived?></div>
+            <div class="banner-balance col-sm-9">年初: ￥<?=$before?>
+                <div class="banner-paid col-sm-4 banner-hover">本年已收: ￥<?=$received?></div>
+                <div class="banner-in col-sm-4 banner-hover">本年增加: ￥<?=$unreceived?></div>
             </div>
-            <div class="banner-unpaid col-sm-4 banner-hover">未收: ￥<?=$left?></div>
+            <div class="banner-unpaid col-sm-3 banner-hover">未收: ￥<?=$left?></div>
         </div>
     </div>
     <div class="portlet-body">
@@ -79,7 +79,7 @@ $left = $before + $unreceived - $received;
                             'imageUrl' => false,
                         ),
                     ),
-                    'template' => '<div class="btn-group">{update} {delete}</div>',
+                    'template' => '<div class="btn-group">{update}</div>',
                     'deleteConfirmation' => '确定要删除该条记录？',
                     'afterDelete' => 'function(link,success,data){if(success) alert(data);}'
                 ),

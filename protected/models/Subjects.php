@@ -270,6 +270,7 @@ class Subjects extends CActiveRecord
      * @sbj_id Integer 科目编号
      * @key String 关键字
      * @options Array   参数，$rej=[], $level=2, $level=0 无匹配返回原科目 $type=1 无匹配返回所有 $type=2 无匹配返回父科目
+     * @return Array 子科目数组
      */
     public function list_sub($sbj_id, $key = '', $options = [])
     {
