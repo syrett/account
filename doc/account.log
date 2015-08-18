@@ -186,31 +186,31 @@ ALTER TABLE `stock` ADD FOREIGN KEY (`entry_subject`) REFERENCES `subjects`(`sbj
 
 -- 新建表cost，成本结转
 
-CREATE TABLE IF NOT EXISTS `stock` (
+
+CREATE TABLE IF NOT EXISTS `cost` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `no` varchar(64) NOT NULL COMMENT '编号',
-  `order_no` varchar(16) NOT NULL COMMENT '采购订单',
-  `order_no_sale` varchar(16) DEFAULT NULL COMMENT '销售订单',
-  `name` varchar(512) NOT NULL COMMENT '名字',
-  `vendor_id` int(11) DEFAULT NULL COMMENT '供应商',
-  `client_id` int(11) DEFAULT NULL COMMENT '销售动向，客户ID',
-  `in_date` varchar(16) NOT NULL COMMENT '日期',
-  `in_price` float NOT NULL COMMENT '价格',
-  `out_date` timestamp NULL DEFAULT NULL,
-  `out_price` float DEFAULT NULL,
+  `order_no` varchar(16) NOT NULL COMMENT '订单号',
+  `entry_date` varchar(16) NOT NULL COMMENT '销售日期',
+  `entry_name` varchar(512) NOT NULL COMMENT '商品名称',
+  `stocks` varchar(512) NOT NULL COMMENT '商品清单',
+  `stocks_count` varchar(512) NOT NULL COMMENT '对应数量',
+  `stocks_price` varchar(512) NOT NULL COMMENT '对应当时计算价格',
+  `entry_amount` float NOT NULL COMMENT '成本',
+  `subject` int(11) DEFAULT NULL,
+  `subject_2` varchar(11) DEFAULT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1:正常，2出库，3退货',
+  `update_time` int(11) NOT NULL,
+  `status_id` tinyint(4) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `vendor_id` (`vendor_id`),
-  KEY `client_id` (`client_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  KEY `subject_2` (`subject_2`),
+  KEY `subject` (`subject`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 --
 -- 限制表 `cost`
 --
 ALTER TABLE `cost`
-  ADD CONSTRAINT `cost_ibfk_2` FOREIGN KEY (`subject`) REFERENCES `subjects` (`sbj_number`) ON DELETE NO ACTION,
-  ADD CONSTRAINT `cost_ibfk_3` FOREIGN KEY (`subject_2`) REFERENCES `subjects` (`sbj_number`) ON DELETE SET NULL;
+  ADD CONSTRAINT `cost_ibfk_2` FOREIGN KEY (`subject`) REFERENCES `subjects` (`sbj_number`) ON DELETE NO ACTION;
 -- bank cash 添加 订单号字段
 ALTER TABLE `bank` ADD `order_no` VARCHAR(16) NULL after id;
 ALTER TABLE `cash` ADD `order_no` VARCHAR(16) NULL after id;
@@ -225,12 +225,33 @@ ALTER TABLE `purchase` ADD FOREIGN KEY (`department_id`) REFERENCES `department`
 ALTER TABLE `stock` CHANGE `no` `hs_no` VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '编号';
 
 ALTER TABLE `cost` CHANGE `subject_2` `subject_2` VARCHAR(11) NULL DEFAULT NULL;
-ALTER TABLE `cost` DROP FOREIGN KEY `cost_ibfk_3`;
 ALTER TABLE `options` CHANGE `entrynum` `value` FLOAT NOT NULL DEFAULT '0';
 ALTER TABLE `options` CHANGE `id` `id` INT(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `options` ADD `entry_subject` INT(16) NOT NULL AFTER `id`;
+DELETE FROM `options` WHERE 1;
+ALTER TABLE `options` ADD INDEX(`entry_subject`);
 ALTER TABLE `options` ADD FOREIGN KEY (`entry_subject`) REFERENCES `subjects`(`sbj_number`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `options` CHANGE `url` `year` INT(16) NOT NULL DEFAULT 0 COMMENT '折旧或摊销年限';
 ALTER TABLE `stock` ADD `worth` FLOAT NULL COMMENT '净值' AFTER `out_price`;
+alter table options drop primary key;
 ALTER TABLE `options` ADD PRIMARY KEY(`entry_subject`);
 ALTER TABLE `stock` CHANGE `in_price` `in_price` DECIMAL(12,2) NOT NULL COMMENT '价格', CHANGE `out_price` `out_price` DECIMAL(12,2) NULL DEFAULT NULL, CHANGE `worth` `worth` DECIMAL(12,2) NULL DEFAULT NULL COMMENT '净值';
+
+
+--2015年8月4日14:58:22
+ALTER TABLE `employee` ADD `base` FLOAT NULL COMMENT '社保基数' AFTER `position`;
+ALTER TABLE `stock` ADD `enable_date` DATE NULL COMMENT '固定资产等折旧起始日期,即物品开始使用的日期' AFTER `out_price`;
+ALTER TABLE `salary`
+ADD `social_personal` DECIMAL(12,2) NULL COMMENT '社保个人部分' AFTER `benefit_amount`,
+ADD `provident_personal` DECIMAL(12,2) NULL COMMENT '公积金个人部分' AFTER `social_personal`,
+ADD `personal_tax` DECIMAL(12,2) NULL COMMENT '个人所得税' AFTER `provident_personal`,
+ADD `social_company` DECIMAL(12,2) NULL COMMENT '社保公司部分' AFTER `personal_tax`,
+ADD `provident_company` DECIMAL(12,2) NULL COMMENT '公积金公司部分' AFTER `social_company`;
+ALTER TABLE `salary` ADD `base_amount` DECIMAL(12,2) NULL COMMENT '当时社保基数' AFTER `benefit_amount`;
+ALTER TABLE `salary` CHANGE `subject_2` `subject_2` VARCHAR(512) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+ALTER TABLE `reimburse` CHANGE `subject_2` `subject_2` VARCHAR(512) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+ALTER TABLE `cost` CHANGE `subject_2` `subject_2` VARCHAR(512) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+ALTER TABLE `purchase` DROP FOREIGN KEY `purchase_ibfk_3`;
+ALTER TABLE `purchase` CHANGE `subject_2` `subject_2` VARCHAR(512) NULL DEFAULT NULL;
+ALTER TABLE `product` DROP FOREIGN KEY `product_ibfk_3`;
+ALTER TABLE `product` CHANGE `subject_2` `subject_2` VARCHAR(512) NULL DEFAULT NULL;
