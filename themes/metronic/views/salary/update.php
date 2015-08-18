@@ -1,20 +1,20 @@
 <?php
-/* @var $this CostController */
-/* @var $model Cost */
+/* @var $this SalaryController */
+/* @var $model Salary */
 
 $this->breadcrumbs=array(
-	'Costs'=>array('index'),
+	'Salaries'=>array('index'),
 	$model->id=>array('view','id'=>$model->id),
 	'Update',
 );
 
 $cs = Yii::app()->clientScript;
 
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js', CClientScript::POS_END);
 $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css');
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js', CClientScript::POS_END);
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/pages/scripts/components-pickers.js', CClientScript::POS_END);
 $cs->registerScript('ComponentsPickersInit', 'ComponentsPickers.init();', CClientScript::POS_READY);
-$type = 'cost';
+$type = 'salary';
 ?>
 
 <div class="portlet box blue">

@@ -653,20 +653,7 @@ eof;
                     if (isset($options[3])) {
                         if (isset($options[4])) {
                             $department = Employee::getDepartType($options[4]);
-                            switch ($department) {
-                                case 1:
-                                    $result = Subjects::matchSubject($options[3], array(6401));
-                                    break;
-                                case 2:
-                                    $result = Subjects::matchSubject($options[3], array(6602), 1);
-                                    break;
-                                case 3:
-                                    $result = Subjects::matchSubject($options[3], array(6601));
-                                    break;
-                                case 4:
-                                    $result = Subjects::matchSubject($options[3], array(660202));
-                                    break;
-                            }
+                            $result = Department::matchSubject($department, $options[3]);
                             return self::endOption($result);
                         }
                         //304 若付款金额小于上期预提的金额，则将应付职工薪酬2211或其他应付款2241作为一级科目形成分录

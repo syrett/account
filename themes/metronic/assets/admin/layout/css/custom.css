@@ -380,10 +380,17 @@ table#balance td, table#profit td, table#subjects td, table#project td, table#de
 .input_min {
     width: 65px;
 }
+.input_mmin{
+    width: 55px;
+}
 
 .input_mid {
     width: 100px;
 }
+/*
+input[type="text"]:read-only{
+    background-color: #eeeeee;
+}*/
 
 .select-full {
     width: 100%;

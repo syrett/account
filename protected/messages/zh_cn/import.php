@@ -31,4 +31,6 @@ return [
     'bank' => '银行交易',
     'cash' => '现金交易',
     'COST' => '成本结转',
+    'SALARY' => '员工工资',
+    'REIMBURSE' => '员工报销',
 ];

@@ -50,13 +50,13 @@ $baseUrl = Yii::app()->theme->baseUrl;
     <link href="<?php echo $baseUrl; ?>/assets/admin/layout/css/custom.css" rel="stylesheet" type="text/css"/>
     <!-- END THEME STYLES -->
     <!-- Fav and Touch and touch icons -->
-    <link rel="shortcut icon" href="<?php echo $baseUrl; ?>/assets/img/icons/favicon.png">
+    <link rel="shortcut icon" href="<?php echo $baseUrl; ?>/assets/admin/layout/img/favicon.png">
     <link rel="apple-touch-icon-precomposed" sizes="144x144"
-          href="<?php echo $baseUrl; ?>/assets/img/icons/apple-touch-icon-144-precomposed.png">
+          href="<?php echo $baseUrl; ?>/assets/admin/layout/img/apple-touch-icon-144-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72"
-          href="<?php echo $baseUrl; ?>/assets/img/icons/apple-touch-icon-72-precomposed.png">
+          href="<?php echo $baseUrl; ?>/assets/admin/layout/img/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed"
-          href="<?php echo $baseUrl; ?>/assets/img/icons/apple-touch-icon-57-precomposed.png">
+          href="<?php echo $baseUrl; ?>/assets/admin/layout/img/apple-touch-icon-57-precomposed.png">
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
@@ -472,6 +472,32 @@ $baseUrl = Yii::app()->theme->baseUrl;
                         <i class="icon-users"></i>
                         <span class="title">员工</span>
                     </a>
+                    <ul class="sub-menu">
+                        <li>
+                            <a href="<?= $this->createUrl('employee/admin') ?>">
+                                <i class="icon-users"></i>
+                                <span class="title">员工列表</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= $this->createUrl('transition/salary') ?>">
+                                <i class="icon-calculator"></i>
+                                <span class="title">员工工资</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= $this->createUrl('transition/reimburse') ?>">
+                                <i class="icon-calculator"></i>
+                                <span class="title">员工报销</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= $this->createUrl('department/admin') ?>">
+                                <i class="icon-drawer"></i>
+                                <span class="title">部门管理</span>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
             </ul>
             <!-- END SIDEBAR MENU -->

@@ -169,8 +169,9 @@ class StockController extends Controller
     public function actionExcel(){
         Yii::import('ext.phpexcel.PHPExcel');
         $products = Product::model()->listOrder();
-        $stocks = Stock::model()->getStockArray();
+        $stocks = Stock::model()->getStockArray('1405');    //采购的商品才显示，固定资产类的名称不显示
         $stockName = '"';
+        $filename = '结转成本销售单';
         if(!empty($stocks)){
             foreach ($stocks as $key => $stock) {
                 if($stockName!='"')
@@ -242,7 +243,7 @@ class StockController extends Controller
         header("Content-Type:application/vnd.ms-execl");
         header("Content-Type:application/octet-stream");
         header("Content-Type:application/download");
-        header('Content-Disposition:attachment;filename="excel.xls"');
+        header("Content-Disposition:attachment;filename='$filename.xls'");
         header("Content-Transfer-Encoding:binary");
         $objWriter->save('php://output');
     }

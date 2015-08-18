@@ -79,6 +79,7 @@ function removePath(path) {
 }
 //设置凭证 借贷
 function setTransaction(id) {
+    $("#transaction_" + id).val(1);
     var type = $(".options:first > button.active").val();
     var action = $("#action").val();
     switch(action){
@@ -100,6 +101,7 @@ function setTransaction(id) {
         $("#status_id_" + id).val("2")   //这种状态不需要生成凭证
     else if($("#status_id_"+id).val()!='0')
         $("#status_id_" + id).val("1")
+
 }
 //消除数据，设置前先消除
 function unset(id) {

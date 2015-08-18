@@ -1,9 +1,9 @@
 <?php
-/* @var $this CostController */
+/* @var $this SalaryController */
 /* @var $dataProvider CActiveDataProvider */
 
 $this->breadcrumbs=array(
-    Yii::t('import', 'Costs') => array('index')
+    Yii::t('import', 'Salary') => array('index')
 );
 
 Yii::app()->clientScript->registerScript('search', "
@@ -23,7 +23,7 @@ $('.search-form form').submit(function(){
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/main.css"/>
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h2>成本结转原始数据管理</h2>
+        <h2>员工工资原始数据管理</h2>
     </div>
     <div class="panel-body">
         <?php
@@ -41,28 +41,6 @@ $('.search-form form').submit(function(){
         </div>
         <!-- search-form -->
 
-        <script type="text/javascript">
-            /*<![CDATA[*/
-            var GetCheckbox = function () {
-                var data = new Array();
-                $("input:checkbox[name='selectdel[]']").each(function () {
-                    if ($(this).attr("checked") == "checked") {
-                        data.push($(this).val());
-                    }
-                });
-                if (data.length > 0) {
-                    $.post('<?php echo CHtml::normalizeUrl(array('/purchase/delall/'));?>', {'selectdel[]': data}, function (data) {
-                        var ret = $.parseJSON(data);
-                        if (ret != null && ret.success != null && ret.success) {
-                            $.fn.yiiGridView.update("subjects-grid");
-                        }
-                    });
-                } else {
-                    alert("请选择要删除的行!");
-                }
-            }
-            /*]]>*/
-        </script>
         <?php
         $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'transition-grid',
@@ -89,22 +67,9 @@ $('.search-form form').submit(function(){
                     'value' => 'date("Y年m月d日",strtotime($data->entry_date))',
                     'filter'=>CHtml::activeTextField($model, 'entry_date',array("class"=>"input_mid")),
                 ),
-                'stocks',
-                array(
-                    'name' => 'stocks_count',
-                    'filter'=>CHtml::activeTextField($model, 'stocks_count',array("class"=>"input_mid")),
-                ),
-                'stocks_price',
-                array(
-                    'name' => 'entry_amount',
-                    'filter'=>CHtml::activeTextField($model, 'entry_amount',array("class"=>"input_mid")),
-                ),
-//                array(
-//                    'name' => 'create_time',
-//                    'value' => 'date("Y年m月d日",strtotime($data->create_time))',
-//                    'htmlOptions' => array('class' => 'input-small'),
-//                    'headerHtmlOptions' => array('class' => 'input-small'),
-//                ),
+                'salary_amount',
+                'bonus_amount',
+                'benefit_amount',
                 array(
                     'class' => 'CButtonColumn',
                     'buttons' => array(

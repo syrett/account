@@ -35,7 +35,8 @@ $(document).ready(function () {
 
 })
 $(window).bind("load", function () {
-    $("#subject_2").select2("readonly", true);
+    if($("#subject_2").length>0)
+        $("#subject_2").select2("readonly", true);
 });
 function itemsplit(e) {
 

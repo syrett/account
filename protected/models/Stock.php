@@ -215,8 +215,9 @@ class Stock extends LFSModel
             return 0;
     }
 
-    public function getStockArray(){
-        $data = self::model()->findAll(' 1=1 group by name');
+    public function getStockArray($sbj = ''){
+        $where = $sbj!=''?"and entry_subject like '$sbj%'":"";
+        $data = self::model()->findAll(" 1=1 $where group by name");
         $arr = [];
         foreach($data as $row){
             $arr[$row['name']] = $row["name"];
@@ -258,7 +259,8 @@ class Stock extends LFSModel
         }
         $c->limit = $count;
         $c->order = $status==1?'id desc':'id asc';
-        $a = [
+        $a = $this->entry_subject?['entry_subject'=>$this->entry_subject]:[];
+        $a += [
             'client_id'=>$this->client_id,
             'out_price'=>$this->out_price,
             'out_date'=>$this->out_date,
@@ -304,7 +306,7 @@ class Stock extends LFSModel
 
     public function form($type){
         if($type=='purchase')
-        return [
+        $result = [
 //            'hs_no'=>$this->hs_no,
             'order_no'=>$this->order_no,
             'vendor_id'=>$this->vendor_id,
@@ -315,13 +317,14 @@ class Stock extends LFSModel
             'status'=>$this->status
         ];
         if($type=='product')
-            return [
+            $result = [
                 'order_no_sale'=>$this->order_no,
                 'client_id'=>$this->client_id,
                 'out_price'=>$this->out_price,
                 'out_date'=>$this->out_date,
                 'status'=>$this->status
             ];
+        return $result;
     }
 
     /*
@@ -435,5 +438,12 @@ class Stock extends LFSModel
                 }
             }
         }
+    }
+
+    /*
+     * 物品起始使用日期
+     */
+    public function getEnableDate(){
+
     }
 }

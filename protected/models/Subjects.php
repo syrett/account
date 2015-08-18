@@ -318,7 +318,7 @@ class Subjects extends CActiveRecord
             if ($item["has_sub"] == 1) {
                 $data_sub = $this->list_sub($item["sbj_number"], $key, $options);
                 foreach ($data_sub as $key => $item_sub) {
-                    array_push($data, $item_sub->attributes);
+                    array_push($data, $item_sub);
                 }
 //                $GLOBALS['level'] -= 1;
             }
@@ -504,6 +504,8 @@ class Subjects extends CActiveRecord
      */
     public static function matchSubject($key, $subjects, $level = 0)
     {
+        if(!is_array($subjects))
+            $subjects = [$subjects];
         //似乎应该完成匹配
         $data = Yii::app()->db->createCommand("select * from ". self::model()->tableSchema->name. " where sbj_name like '%$key%'")->queryAll();
         $sbj = 0;

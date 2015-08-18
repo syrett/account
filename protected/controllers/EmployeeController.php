@@ -196,4 +196,11 @@ class EmployeeController extends Controller
             }
         }
     }
+
+    /*
+     * 员工工资
+     */
+    public function actionSalary(){
+
+    }
 }

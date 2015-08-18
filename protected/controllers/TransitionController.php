@@ -280,6 +280,124 @@ class TransitionController extends Controller
     }
 
     /**
+     * 员工工资
+     */
+    public function actionSalary()
+    {
+        $info = [];
+        Yii::import('ext.phpexcel.PHPExcel.PHPExcel_IOFactory');
+        if (Yii::app()->request->isPostRequest) {
+            //上传附件查看
+            if ($_FILES['attachment']!='' && file_exists($_FILES['attachment']['tmp_name'])) {
+                $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
+                $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+                //去除第一行
+                array_shift($list);
+                foreach($list as $item){
+                    $sheetData[] = Transition::getSheetData($item, 'salary');
+                }
+            }
+            elseif(isset($_POST['type']) && $_POST['type'] =='load') {    //加载上月工资
+                $employees = Employee::model()->findAll();
+                foreach($employees as $item){
+                    $cri = new CDbCriteria(['order'=>'entry_date desc']);
+                    $salary = Salary::model()->findByAttributes(['employee_id'=>$item->id], $cri);
+                    $sheetData[] = Transition::getSheetData($salary?$salary->attributes:['employee_id'=>$item->id], 'salary');
+                }
+            }elseif($_FILES['attachment']['name']==''){
+                //保存工资数据，生成并保存凭证
+                $arr = $this->saveAll('salary');
+                if (!empty($arr))
+                    foreach ($arr as $item) {
+                        $data = Transition::getSheetData($item['data'], 'purchase');
+                        if ($item['status'] == 0) {
+                            Yii::app()->user->setFlash('error', "保存失败!");
+                            $sheetData[] = $data;
+                        }
+                        if ($item['status'] == 2) {
+                            Yii::app()->user->setFlash('error', "数据保存成功，未生成凭证");
+                            $sheetData[] = $data;
+                        }
+                    }
+                else{
+                    Yii::app()->user->setFlash('success', "保存成功!");
+                    //跳转到历史数据管理页面
+                    $this->redirect(Yii::app()->createUrl('salary'));
+                }
+            }
+        }
+
+        if (empty($sheetData)){
+            $objPHPExcel = PHPExcel_IOFactory::load(Yii::app()->basePath.'\..\download\test2.xlsx');
+            $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+            //去除第一行
+            array_shift($list);
+            foreach($list as $item){
+                $sheetData[] = Transition::getSheetData($item, 'salary');
+            }
+//            $sheetData[] = Transition::getSheetData([], 'salary');
+        }
+
+        $model[] = new Transition();
+        return $this->render('head', ['type' => 'salary', 'sheetData' => $sheetData, 'info' => $info]);
+    }
+
+    /**
+     * 员工报销
+     */
+    public function actionReimburse()
+    {
+        $info = [];
+        Yii::import('ext.phpexcel.PHPExcel.PHPExcel_IOFactory');
+        if (Yii::app()->request->isPostRequest) {
+            //上传附件查看
+            if ($_FILES['attachment']!='' && file_exists($_FILES['attachment']['tmp_name'])) {
+                $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
+                $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+                //去除第一行
+                array_shift($list);
+                foreach($list as $item){
+                    $sheetData[] = Transition::getSheetData($item, 'reimburse');
+                }
+            } elseif($_FILES['attachment']['name']==''){
+                //保存按钮
+                $arr = $this->saveAll('reimburse');
+                if (!empty($arr))
+                    foreach ($arr as $item) {
+                        $data = Transition::getSheetData($item['data'], 'purchase');
+                        if ($item['status'] == 0) {
+                            Yii::app()->user->setFlash('error', "保存失败!");
+                            $sheetData[] = $data;
+                        }
+                        if ($item['status'] == 2) {
+                            Yii::app()->user->setFlash('error', "数据保存成功，未生成凭证");
+                            $sheetData[] = $data;
+                        }
+                    }
+                else{
+                    Yii::app()->user->setFlash('success', "保存成功!");
+                    //跳转到历史数据管理页面
+                    $this->redirect(Yii::app()->createUrl('reimburse'));
+                }
+            }
+        }
+
+        if (empty($sheetData)){
+            $objPHPExcel = PHPExcel_IOFactory::load(Yii::app()->basePath.'\..\download\test.xlsx');
+            $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+            //去除第一行
+            array_shift($list);
+            foreach($list as $item){
+                $sheetData[] = Transition::getSheetData($item, 'reimburse');
+            }
+//            $sheetData[] = Transition::getSheetData([], 'reimburse');
+        }
+
+        $model[] = new Transition();
+        return $this->render('head', ['type' => 'reimburse', 'sheetData' => $sheetData, 'info' => $info]);
+    }
+
+    /**
      * 银行.
      */
     public function actionBank()
@@ -1279,89 +1397,131 @@ class TransitionController extends Controller
                 $arr['price'] = $arr['entry_amount'];
             }
             $arr['entry_date'] = date('Ymd',strtotime($arr['entry_date']));
-            if ($type == 'bank'){
-                $subject_2 = $_POST['subject_2'];
-                $arr['subject_2'] = $subject_2;
-                $model = new Bank;
-            }
-            if ($type == 'cash'){
-                $arr['subject_2'] = 1001;   //库存现金
-                $model = new Cash;
-            }
-            if ($type == 'purchase'){
-                $arr['entry_appendix_type'] = 1;
-                $model = new Purchase();
-                $arr['order_no'] = isset($arr['order_no'])&&$arr['order_no']!=''?$arr['order_no']:$model->initOrderno();
-                $stock = new Stock();
-                $stock->load($arr, 'purchase');
-                if($id != '' && $arr['entry_name']!='劳务服务' && $arr['entry_name']!='缴纳税款'){
+            switch($type){
+                case 'bank':
+                    $subject_2 = $_POST['subject_2'];
+                    $arr['subject_2'] = $subject_2;
+                    $model = new Bank;
+                    break;
+                case 'cash':
+                    $arr['subject_2'] = 1001;   //库存现金
+                    $model = new Cash;
+                    break;
+                case 'purchase':
+                    $arr['entry_appendix_type'] = 1;
+                    $model = new Purchase();
+                    $arr['order_no'] = isset($arr['order_no'])&&$arr['order_no']!=''?$arr['order_no']:$model->initOrderno();
+                    $stock = new Stock();
+                    $stock->load($arr, 'purchase');
+                    if($id != '' && $arr['entry_name']!='劳务服务' && $arr['entry_name']!='缴纳税款'){
 
-                    $model = $model::model()->findByPk($id);
-                    $count = $model->count - (int)$arr['count'];
-                    $stock->updateAll($stock->form('purchase'),"order_no='$stock->order_no'");
-                    if($count<0){   //数量有增加
-                        $stock->saveMultiple(-$count);
-                    }
-                    elseif($count>0){   //数量减少
-                        $left = $stock->getCount(['name'=>$arr['entry_name'],'status'=>1]);
-                        $stock->delStock($count);
-                        if($left>=$count && $count!=0)
+                        $model = $model::model()->findByPk($id);
+                        $old_count = count(Stock::model()->findByAttributes(['order_no'=>$stock->order_no]));
+
+                        $count = $old_count - (int)$arr['count'];
+                        $stock->updateAll($stock->form('purchase'),"order_no='$stock->order_no'");
+                        if($count<0){   //数量有增加
+                            $stock->saveMultiple(-$count);
+                        }
+                        elseif($count>0){   //数量减少
+                            $left = $stock->getCount(['name'=>$arr['entry_name'],'status'=>1]);
                             $stock->delStock($count);
-                        else{
-                            $arr['error'] = ["数量不能小于：". ($count - $left + $arr['count'])];
-                            $result[] = ['status' => 0, 'data' => $arr];
-                            continue;
+                            if($left>=$count && $count!=0)
+                                $stock->delStock($count);
+                            else{
+                                $arr['error'] = ["数量不能小于：". ($count - $left + $arr['count'])];
+                                $result[] = ['status' => 0, 'data' => $arr];
+                                continue;
+                            }
                         }
+                    }else
+                        $stock->saveMultiple($arr['count']);
+                    $arr['entry_subject'] = substr($arr['entry_subject'],1);
+                    break;
+                case 'product':
+                    //设置科目，1122应收账款下的子科目
+                    $client = Client::model()->findByPk($arr['client_id']);
+                    if($client!=null)
+                        $sbj = Subjects::matchSubject($client->company,[1122]);
+                    $arr['subject_2'] = $sbj;
+                    $arr['entry_subject'] = substr($arr['entry_subject'],1);
+                    $arr['entry_appendix_type'] = 2;
+                    $model = new Product();
+                    break;
+                case 'stock':
+                    $product = Product::model()->findByAttributes(['order_no'=>$arr['order_no']]);
+                    $arr['entry_memo'] = '成本结转-'. $product->entry_name;
+                    $model = new Cost();
+                    break;
+                case 'salary':
+                    $employee = Employee::model()->findByAttributes(['name'=>$arr['employee_name']]);
+                    $arr['entry_memo'] = '个人工资-'. $arr['employee_name']. '-'. convertDate($arr['entry_date'],'Y年m月');
+                    $model = new Salary();
+                    $sbj_arr = [];
+                    $sbj_arr[] = Subjects::matchSubject('应付工资', '2211');    //税后工资
+                    $sbj_arr[] = Subjects::matchSubject('个人所得税', '2221');   //个税
+                    $sbj_arr[] = Subjects::matchSubject('应付社保', '2211');    //社保个人部分
+                    $sbj_arr[] = Subjects::matchSubject('应付福利', '2211');    //其他
+                    $sbj_arr[] = Subjects::matchSubject('应付公积金', '2211');   //公积金个人
+                    $amount_arr = [];
+                    $amount_arr[] = $arr['after_tax'] - $arr['benefit_amount']; //去除其他收入部分
+                    $amount_arr[] = $arr['personal_tax'];
+                    $amount_arr[] = $arr['social_personal'];
+                    $amount_arr[] = $arr['benefit_amount'];
+                    $amount_arr[] = $arr['provident_personal'];
+                    $arr['subject_2'] = implode(',', $sbj_arr);
+                    $arr['subject_2_price'] = implode(',', $amount_arr);
+                    //删除旧的工资数据和凭证
+                    $salary = Salary::model()->findByAttributes(['employee_id'=>$employee->id,'entry_date'=>$arr['entry_date']]);
+                    if($salary!=null){
+                        Transition::model()->deleteAllByAttributes(['data_type'=>'salary','data_id'=>$salary->id]);
+                        $model = $salary;
+                        $model->load($arr);
                     }
-                }else
-                    $stock->saveMultiple($arr['count']);
-                $arr['entry_subject'] = substr($arr['entry_subject'],1);
+                    break;
+                case 'reimburse':
+                    $lists = [
+                        'travel_amount' => '差旅费',
+                        'benefit_amount' => '福利费',
+                        'traffic_amount' => '交通费',
+                        'phone_amount' => '通讯费',
+                        'entertainment_amount' => '招待费',
+                        'office_amount' => '办公费',
+                        'rent_amount' => '租金',
+                        'watere_amount' => '水电费',
+                        'train_amount' => '培训费',
+                        'service_amount' => '服务费',
+                        'stamping_amount' => '印花税'
+                    ];
+                    $employee = Employee::model()->findByAttributes(['name'=>$arr['employee_name']]);
 
-            }
-            if ($type == 'product'){
-                //设置科目，1122应收账款下的子科目
-                $client = Client::model()->findByPk($arr['client_id']);
-                if($client!=null)
-                    $sbj = Subjects::matchSubject($client->company,[1122]);
-                $arr['subject_2'] = $sbj;
-                $arr['entry_subject'] = substr($arr['entry_subject'],1);
-                $arr['entry_appendix_type'] = 2;
-                $model = new Product();
-                //销售时，商品名称随意填写，没有数量限制，与stock表无任何关系
-                /*$stock = new Stock();
-                $stock->load($arr,'product');
-                $left = $stock->getCount(['name'=>$arr['entry_name'],'status'=>1]);
-                //劳务服务不管数量
-                //  修改原始数据
-                if($newone==0 && $id != '' && $id != '0' && $arr['entry_name']!='劳务服务'){
-                    $model = $model::model()->findByPk($id);
-                    $count = $model->count- (int)$arr['count'];
-                    $stock->updateAll($stock->form('product'),"order_no_sale='$stock->order_no'");
-                    if($count>0) //修改后 数量减少
-                        $stock->setStock($count, 1);
-                    elseif($left<-$count){    //修改后 数量有新增，判断库存数量是否足够
-                            $arr['error'] = ["数量不能大于：". ($left + $model->count)];
-                            $result[] = ['status' => 0, 'data' => $arr];
-                            continue;
+                    $model = new Reimburse();
+                    $tran_arr = [];
+                    foreach ($lists as $key => $item) {
+                        if($arr[$key] > 0){
+                            $reim = new Transition();
+                            //每一项费用都单独保存一张凭证，所以得分开
+                            $tmp = Department::matchSubject($employee->department_id, '工资');
+                            $arr['entry_subject'] = Subjects::matchSubject($item, $tmp);
+                            $reim->attributes = $arr;
+                            $reim->entry_amount = $arr[$key];
+                            $sbj = Subjects::matchSubject($arr['employee_name'], 1221);
+                            $flag = Transition::model()->checkAmount($sbj);
+                            //与其他应收的金额做比较
+                            if($flag[0]==0){
+                                $sbj2['subject_2'] = Subjects::matchSubject($arr['employee_name'], 2241);
+                                $sbj2['subject_2_price'] = $arr[$key];
+                            }elseif($flag[1] >= $arr[$key]){
+                                $sbj2['subject_2'] = Subjects::matchSubject($arr['employee_name'], 1221);
+                                $sbj2['subject_2_price'] = $arr[$key];
+                            }else{
+                                $sbj2['subject_2'] = Subjects::matchSubject($arr['employee_name'], 1221). ','.Subjects::matchSubject($arr['employee_name'], 2241);
+                                $sbj2['subject_2_price'] = $flag[1]. ','. ($arr[$key] - $flag[1]);
+                            }
+                            $tran_arr[] = [$reim, $sbj2];
                         }
-                    else
-                        $stock->setStock(-$count, 2);
-                }else{  //新销售数据
-                    $arr['order_no'] = $model->initOrderno();
-                    $arr['order_no_sale'] = $arr['order_no'];
-                    if($left<$arr['count']){
-                        $arr['error'] = ["数量不能大于：". ($left + $model->count)];
-                        $result[] = ['status' => 0, 'data' => $arr];
-                        continue;
                     }
-                    $stock->load($arr,'product');
-                    $stock->setStock($arr['count'], 2);
-                }*/
-            }
-            if($type=='stock'){
-                $product = Product::model()->findByAttributes(['order_no'=>$arr['order_no']]);
-                $arr['entry_memo'] = '成本结转-'. $product->entry_name;
-                $model = new Cost();
+                    break;
             }
             if($newone==0 && $id != '' && $id != '0' )
                 $model = $model::model()->findByPk($id);
@@ -1441,7 +1601,8 @@ class TransitionController extends Controller
                 }
             }
             if ($model->save()) {
-
+                if($arr['entry_transaction']=='')
+                    $arr['entry_transaction'] = 1;
                 $tran = new Transition;
                 $tran2 = new Transition;
                 $tran->attributes = $arr;
@@ -1453,6 +1614,7 @@ class TransitionController extends Controller
                     'data_id' => $model->id,
                     'entry_num_prefix' => $prefix,
                     'entry_memo' => $arr['entry_memo'],
+                    'entry_date' => $arr['entry_date'],
                     'entry_num' => $this->tranSuffix($prefix),
                     'entry_creater' => Yii::app()->user->id,
                     'entry_editor' => Yii::app()->user->id,
@@ -1460,7 +1622,26 @@ class TransitionController extends Controller
                 $tran->attributes = $data;
                 $data['entry_appendix_type'] = null;
                 $data['entry_appendix_id'] = 0;
-                if ($tran->validate()) {
+                //如果有手动生成的数组凭证，则表明不只一条凭证
+                if(!empty($tran_arr)){
+                    foreach ($tran_arr as $item) {
+                        $data['entry_num'] = $this->tranSuffix($prefix);
+                        $data['entry_transaction'] = 1;
+                        $item[0]->attributes = $data;
+                        $item[0]->save();
+                        $subject_2_arr = explode(',', $item[1]['subject_2']);
+                        $subject_2_price = explode(',', $item[1]['subject_2_price']);
+                        foreach($subject_2_arr as $key => $item2){
+                            $tmp = new Transition();
+                            $tmp->attributes = $item[0]->attributes;
+                            $tmp->entry_transaction = 2;
+                            $tmp->entry_subject = $item2;
+                            $tmp->entry_amount = $subject_2_price[$key];
+                            $tmp->save();
+                        }
+                    }
+                }
+                elseif ($tran->validate()) {
                     //设置同一凭证的其他条目，并修改$tran的金额
                     //@subject
                     //@amount

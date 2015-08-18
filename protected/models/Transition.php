@@ -413,6 +413,29 @@ class Transition extends CActiveRecord
             'stocks' => '',
             'stocks_count' => '',
             'stocks_price' => '',
+            'employee_name' => '',
+            'department_name' => '',
+            'salary_amount' => '',
+            'bonus_amount' => '',
+            'benefit_amount' => '',
+            'social_personal' => '',
+            'provident_personal' => '',
+            'before_tax' => '',
+            'personal_tax' => '',
+            'after_tax' => '',
+            'social_company' => '',
+            'provident_company' => '',
+            'base_amount' => '',
+            'travel_amount' => '',
+            'traffic_amount' => '',
+            'phone_amount' => '',
+            'entertainment_amount' => '',
+            'office_amount' => '',
+            'rent_amount' => '',
+            'watere_amount' => '',
+            'train_amount' => '',
+            'service_amount' => '',
+            'stamping_amount' => '',
             "additional" => [
                 "0" => [
                     "subject" => "",
@@ -463,7 +486,6 @@ class Transition extends CActiveRecord
                         $order = Product::model()->findByAttributes(['order_no'=>$arr['order_no']]);
                         if($order!=null){
                             $arr['entry_subject'] = Subjects::model()->matchSubject('材料',[6401]);
-//                            $arr['subject_2'] = Subjects::model()->matchSubject('材料',[1405]);
                             $arr['client_id'] = $order->client_id;
                         }
                         $arr['entry_transaction'] = 1;
@@ -496,6 +518,57 @@ class Transition extends CActiveRecord
                         $arr['stocks_count'] = implode("\r\n",$stocks_count);
                         $arr['stocks_price'] = implode("\r\n",$stocks_price);
                         break;
+                    case 'salary':
+                        $date = trim($items['D']);
+                        $arr['entry_date'] = strlen($date)>6?$date:$date.'01';
+                        $arr['employee_name'] = trim($items['B']);
+                        $employee = Employee::model()->findByAttributes(['name'=>$arr['employee_name']]);
+                        $employee_id = $employee?$employee->id:0;
+                        $arr['department_name'] = Department::model()->getName(Employee::model()->getDepart($employee_id));
+                        $arr['salary_amount'] = round2(str_replace(",", "", trim($items['E'])));
+                        $arr['bonus_amount'] = round2(str_replace(",", "", trim($items['F'])));
+                        $arr['benefit_amount'] = round2(str_replace(",", "", trim($items['G'])));
+                        $payment = $arr['salary_amount'] + $arr['bonus_amount'] + $arr['benefit_amount'];
+                        $arr['base_amount'] = round2($employee->base);
+                        $arr['social_personal'] = round2(ceil($employee->base*10.5/10)/10); //有分，直接进角
+                        $arr['provident_personal'] = round2(ceil($employee->base*7/100));   //有角，直接进分
+                        $arr['before_tax'] = round2($payment - $arr['social_personal'] - $arr['provident_personal']);
+                        $arr['personal_tax'] = round2(Employee::getPersonalTax($arr['before_tax']));
+                        $arr['after_tax'] = round2($arr['before_tax'] - $arr['personal_tax']);
+                        $arr['social_company'] = round2(ceil($employee->base*35/10)/10);
+                        $arr['provident_company'] = round2(ceil($employee->base*7/100));
+                        //根据员工部门判断属于什么费用
+                        $arr['entry_subject'] = Department::matchSubject($employee->department_id, '工资');
+                        $amount = $payment;
+                        break;
+                    case 'reimburse':
+                        $date = trim($items['B']);
+                        $arr['entry_date'] = strlen($date)>6?$date:$date.'01';
+                        $arr['entry_memo'] = trim($items['C']);
+                        $arr['employee_name'] = trim($items['A']);
+                        $employee = Employee::model()->findByAttributes(['name'=>$arr['employee_name']]);
+                        $employee_id = $employee?$employee->id:0;
+                        $arr['department_name'] = Department::model()->getName(Employee::model()->getDepart($employee_id));
+                        $arr['travel_amount'] = str_replace(",", "", trim($items['D']));
+                        $arr['benefit_amount'] = str_replace(",", "", trim($items['E']));
+                        $arr['traffic_amount'] = str_replace(",", "", trim($items['F']));
+                        $arr['phone_amount'] = str_replace(",", "", trim($items['G']));
+                        $arr['entertainment_amount'] = str_replace(",", "", trim($items['H']));
+                        $arr['office_amount'] = str_replace(",", "", trim($items['I']));
+                        $arr['rent_amount'] = str_replace(",", "", trim($items['J']));
+                        $arr['watere_amount'] = str_replace(",", "", trim($items['K']));
+                        $arr['train_amount'] = str_replace(",", "", trim($items['L']));
+                        $arr['service_amount'] = str_replace(",", "", trim($items['M']));
+                        $arr['stamping_amount'] = str_replace(",", "", trim($items['N']));
+                        $total = 0;
+                        foreach($arr as $key => $item){
+                            if(substr($key,-7)=='_amount')
+                                $total += $item;
+                        }
+                        //根据员工部门判断属于什么费用
+                        $arr['entry_subject'] = Department::matchSubject($employee->department_id, '工资');
+                        $amount = $total;
+                        break;
 
                 }
                 $amount = str_replace(" ", '', $amount);  //英文空格
@@ -521,6 +594,12 @@ class Transition extends CActiveRecord
                     $arr['entry_appendix_id'] = $items['client_id'];
                 if(!empty($items['vendor_id']))
                     $arr['entry_appendix_id'] = $items['vendor_id'];
+                if(!empty($items['employee_id'])){
+                    $employee = Employee::model()->findByPk($items['employee_id']);
+                    $arr['employee_name'] = Employee::getName($items['employee_id']);
+                    $arr['department_name'] = Employee::model()->getDepart($items['employee_id'], 'name');
+                    $arr['base_amount'] = $employee->base;
+                }
             }
         }
         return $arr;
@@ -1119,5 +1198,34 @@ class Transition extends CActiveRecord
         }
         else
             return 0;
+    }
+
+    /*
+     * 快速生成model，
+     */
+    public function copyModel($sbj, $amount=[]){
+        foreach($sbj as $key => $item){
+            $model = new Transition();
+            $model->attributes = $this->attributes;
+            $model->entry_subject = $item;
+            if(isset($amount[$key]))
+            $model->entry_amount = $amount[$key];
+            $temp[] = $model;
+        }
+        return $temp;
+    }
+
+    /*
+     * 检查凭证里某科目的金额总和是否为0
+     */
+    public function checkAmount($sbj){
+        $trans = $this->findAllByAttributes(['entry_subject'=>$sbj]);
+        $amount = 0;
+        $atatus = 0;
+        foreach ($trans as $item) {
+            $status = 1;
+            $amount = $item->entry_transaction==1?+$item->entry_amount:-$item->entry_amount;
+        }
+        return [$atatus, $amount];
     }
 }

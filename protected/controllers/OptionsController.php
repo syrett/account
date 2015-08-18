@@ -19,6 +19,7 @@ class OptionsController extends Controller
                 $option = Options::model()->findByPk($key);
                 if($option==null)
                     $option = new Options();
+                $option->entry_subject = $key;
                 $option->attributes = $item;
                 $option->save();
             }

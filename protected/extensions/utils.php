@@ -186,21 +186,27 @@ function checkAmount($amount)
 /*
  * 将日期转换为yyyymd的格式
  */
-function convertDate($str)
+function convertDate($date, $format='')
 {
-    if (strlen($str) > 8) {
-        $str = str_replace(".", "-", $str);
-        return date('Ymd', strtotime($str));
-    } else
-        return $str;
+    if($format=='')
+        $format = 'Ymd';
+    $length = strlen($date);
+    if ($length < 5)   //2015
+        return $date;
+    $d = new DateTime($date);
+    return $d->format($format);
 }
 
-function addZero($num, $count=4)
+function addZero($num, $count = 4)
 {
     //默认为4位数，
     $base = pow(10, $count);
-    if(strlen($num)>=$count)
+    if (strlen($num) >= $count)
         return $num;
     else
         return substr(strval($num + $base), 1, $count);
+}
+
+function round2($val){
+    return sprintf("%.2f", $val);
 }

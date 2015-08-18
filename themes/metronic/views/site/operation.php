@@ -46,7 +46,7 @@ $this->pageTitle = Yii::app()->name;
         echo "已结账至日期：" . $status['date'];
         $list = $this->listMonth($operation);
 
-        if (empty($list)) {
+        if (empty($list) && $operation != 'listAssets') {
             ?>
 
             <div class="unit-group">

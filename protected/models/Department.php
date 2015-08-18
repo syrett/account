@@ -31,7 +31,6 @@ class Department extends CActiveRecord
 			array('name', 'length', 'max'=>100),
 			array('memo', 'length', 'max'=>200),
 			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
 			array('name, memo', 'safe', 'on'=>'search'),
 		);
 	}
@@ -55,7 +54,7 @@ class Department extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'name' => '部门',
+			'name' => '部门名称',
 			'type' => '部门属性',
 			'memo' => '部门描述',
 		);
@@ -103,11 +102,11 @@ class Department extends CActiveRecord
      */
     public function getName($depart_id)
     {
-      $sql = "SELECT name FROM department WHERE id=:depart_id";
-      $data = Department::model()->findBySql($sql, array(':depart_id'=>$depart_id));
-      foreach($data as $s){
-        return $s;
-      }
+        $model = $this->model()->findByPk($depart_id);
+        if($model)
+            return $model->name;
+        else
+            return '无法查询部门';
     }
 
     /**
@@ -141,4 +140,25 @@ class Department extends CActiveRecord
             return 0;
     }
 
+    /*
+     * 根据部门判断，工资或资金应该返回什么科目
+     */
+    public static function matchSubject($department_id, $sbj_name){
+
+        switch ($department_id) {
+            case 1:
+                $result = Subjects::matchSubject($sbj_name, array(6401));
+                break;
+            case 2:
+                $result = Subjects::matchSubject($sbj_name, array(6602), 1);
+                break;
+            case 3:
+                $result = Subjects::matchSubject($sbj_name, array(6601));
+                break;
+            case 4:
+                $result = Subjects::matchSubject($sbj_name, array(660202));
+                break;
+        }
+        return $result;
+    }
 }

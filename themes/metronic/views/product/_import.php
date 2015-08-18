@@ -20,9 +20,10 @@ $this->pageTitle = Yii::app()->name;
     <div class="row">
         <?
         $list = Product::model()->listOrder();
-        if(empty($list)){
+        $stocks = Stock::model()->getStockArray('1405');
+        if(empty($list)||empty($stocks)){
         ?>
-        <div class="alert alert-info">提示：未产生销售记录，无需结转成本</div>
+        <div class="alert alert-info">提示：未产生销售记录，或未采购任何商品</div>
         <?
         }else{
             ?>

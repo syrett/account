@@ -7,6 +7,8 @@
  * @property integer $id
  * @property string $name
  * @property string $memo
+ * @property string $position
+ * @property string $base
  * @property integer $department_id
  */
 class Employee extends CActiveRecord
@@ -32,6 +34,8 @@ class Employee extends CActiveRecord
             array('id, department_id', 'numerical', 'integerOnly' => true),
             array('name, position', 'length', 'max' => 100),
             array('memo', 'length', 'max' => 200),
+            array('name', 'unique', 'message'=>'员工姓名不可重复'),
+            array('base', 'safe'),
             // The following rule is used by search().
             array('id, name, memo, department_id', 'safe', 'on' => 'search'),
         );
@@ -59,6 +63,7 @@ class Employee extends CActiveRecord
             'name' => '员工姓名',
             'department_id' => '部门',
             'position' => '职位',
+            'base' => '社保基数',
             'memo' => '备注',
         );
     }
@@ -78,8 +83,6 @@ class Employee extends CActiveRecord
      */
     public function search()
     {
-        // @todo Please modify the following code to remove attributes that should not be searched.
-
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id);
@@ -87,6 +90,7 @@ class Employee extends CActiveRecord
         $criteria->compare('department_id', $this->department_id);
         $criteria->compare('position', $this->position, true);
         $criteria->compare('memo', $this->memo, true);
+        $criteria->compare('base', $this->base, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -115,13 +119,24 @@ class Employee extends CActiveRecord
         return $arr;
     }
 
-    public function getDepart($employee_id)
+    public static function getName($employee_id){
+        $model = Employee::model()->findByPk($employee_id);
+        if($model)
+            return $model->name;
+        else
+            return '无法查询的ID';
+    }
+    public function getDepart($employee_id, $type = '')
     {
-        $sql = "SELECT department_id FROM employee WHERE id=:em_id";
-        $data = Employee::model()->findBySql($sql, array(':em_id' => $employee_id));
-        foreach ($data as $s) {
-            return $s;
+        $model = $this->model()->findByPk($employee_id);
+        if($model){
+            if($type=='name')
+                return Department::model()->getName($model->department_id);
+            elseif($type=='')
+                return $model->department_id;
         }
+        else
+            return 0;
     }
 
     /*
@@ -132,5 +147,20 @@ class Employee extends CActiveRecord
         $model = self::model()->findByPk($id);
         $model = Department::model()->findByPk($model->department_id);
         return $model->type;
+    }
+
+    public static function getPersonalTax($amount){
+        switch($amount){
+            case $amount <= 1500 : $tax = 3; $base = 0;break;
+            case $amount > 1500 && $amount <= 4500 : $tax = 3; $base = 105;break;
+            case $amount > 4500 && $amount <= 9000 : $tax = 10; $base = 555;break;
+            case $amount > 9000 && $amount <= 35000 : $tax = 20; $base = 1005;break;
+            case $amount > 35000 && $amount <= 55000 : $tax = 30; $base = 2755;break;
+            case $amount > 55000 && $amount <= 80000 : $tax = 35; $base = 5505;break;
+            case $amount > 80000 : $tax = 45; $base = 13505;break;
+            default:
+                return 0;
+        }
+        return $amount*$tax/100 - $base;
     }
 }
