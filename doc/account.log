@@ -239,17 +239,69 @@ ALTER TABLE `stock` CHANGE `in_price` `in_price` DECIMAL(12,2) NOT NULL COMMENT 
 
 
 --2015年8月4日14:58:22
+CREATE TABLE IF NOT EXISTS `salary` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_no` varchar(16) NOT NULL COMMENT '订单号',
+  `entry_date` varchar(16) NOT NULL COMMENT '销售日期',
+  `employee_id` int(11) NOT NULL COMMENT '员工ID',
+  `salary_amount` decimal(12,2) NOT NULL COMMENT '工资',
+  `bonus_amount` decimal(12,2) NOT NULL COMMENT '奖金',
+  `benefit_amount` decimal(12,2) NOT NULL COMMENT '其他福利',
+  `base_amount` decimal(12,2) DEFAULT NULL COMMENT '当时社保基数',
+  `social_personal` decimal(12,2) DEFAULT NULL COMMENT '社保个人部分',
+  `provident_personal` decimal(12,2) DEFAULT NULL COMMENT '公积金个人部分',
+  `personal_tax` decimal(12,2) DEFAULT NULL COMMENT '个人所得税',
+  `social_company` decimal(12,2) DEFAULT NULL COMMENT '社保公司部分',
+  `provident_company` decimal(12,2) DEFAULT NULL COMMENT '公积金公司部分',
+  `subject` int(11) DEFAULT NULL,
+  `subject_2` varchar(512) DEFAULT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` int(11) NOT NULL,
+  `status_id` tinyint(4) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `subject_2` (`subject_2`(255)),
+  KEY `subject` (`subject`),
+  KEY `employee_id` (`employee_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `reimburse` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_no` varchar(16) NOT NULL COMMENT '订单号',
+  `entry_date` varchar(16) NOT NULL COMMENT '销售日期',
+  `entry_memo` varchar(1024) DEFAULT NULL COMMENT '摘要',
+  `employee_id` int(11) NOT NULL COMMENT '员工ID',
+  `travel_amount` decimal(12,2) DEFAULT NULL COMMENT '差旅费',
+  `benefit_amount` decimal(12,2) DEFAULT NULL COMMENT '福利费（餐费等）',
+  `traffic_amount` decimal(12,2) DEFAULT NULL COMMENT '交通费',
+  `phone_amount` decimal(12,2) DEFAULT NULL COMMENT '通讯费',
+  `entertainment_amount` decimal(12,2) DEFAULT NULL COMMENT '招待费',
+  `office_amount` decimal(12,2) DEFAULT NULL COMMENT '办公费',
+  `rent_amount` decimal(12,2) DEFAULT NULL COMMENT '租金',
+  `watere_amount` decimal(12,2) DEFAULT NULL COMMENT '水电费',
+  `train_amount` decimal(12,2) DEFAULT NULL COMMENT '培训费',
+  `service_amount` decimal(12,2) DEFAULT NULL COMMENT '服务费',
+  `stamping_amount` decimal(12,2) DEFAULT NULL COMMENT '印花税',
+  `subject` int(11) DEFAULT NULL,
+  `subject_2` varchar(11) DEFAULT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` int(11) NOT NULL,
+  `status_id` tinyint(4) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `subject_2` (`subject_2`),
+  KEY `subject` (`subject`),
+  KEY `employee_id` (`employee_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+ALTER TABLE `reimburse`
+  ADD CONSTRAINT `reimburse_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`),
+  ADD CONSTRAINT `reimburse_ibfk_2` FOREIGN KEY (`subject`) REFERENCES `subjects` (`sbj_number`);
+
+ALTER TABLE `salary`
+  ADD CONSTRAINT `salary_ibfk_1` FOREIGN KEY (`subject`) REFERENCES `subjects` (`sbj_number`),
+  ADD CONSTRAINT `salary_ibfk_2` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`);
+
 ALTER TABLE `employee` ADD `base` FLOAT NULL COMMENT '社保基数' AFTER `position`;
 ALTER TABLE `stock` ADD `enable_date` DATE NULL COMMENT '固定资产等折旧起始日期,即物品开始使用的日期' AFTER `out_price`;
-ALTER TABLE `salary`
-ADD `social_personal` DECIMAL(12,2) NULL COMMENT '社保个人部分' AFTER `benefit_amount`,
-ADD `provident_personal` DECIMAL(12,2) NULL COMMENT '公积金个人部分' AFTER `social_personal`,
-ADD `personal_tax` DECIMAL(12,2) NULL COMMENT '个人所得税' AFTER `provident_personal`,
-ADD `social_company` DECIMAL(12,2) NULL COMMENT '社保公司部分' AFTER `personal_tax`,
-ADD `provident_company` DECIMAL(12,2) NULL COMMENT '公积金公司部分' AFTER `social_company`;
-ALTER TABLE `salary` ADD `base_amount` DECIMAL(12,2) NULL COMMENT '当时社保基数' AFTER `benefit_amount`;
-ALTER TABLE `salary` CHANGE `subject_2` `subject_2` VARCHAR(512) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
-ALTER TABLE `reimburse` CHANGE `subject_2` `subject_2` VARCHAR(512) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
 ALTER TABLE `cost` CHANGE `subject_2` `subject_2` VARCHAR(512) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
 ALTER TABLE `purchase` DROP FOREIGN KEY `purchase_ibfk_3`;
 ALTER TABLE `purchase` CHANGE `subject_2` `subject_2` VARCHAR(512) NULL DEFAULT NULL;
