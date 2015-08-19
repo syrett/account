@@ -313,7 +313,7 @@ var_dump($tranDataArray);exit(1);
 
     }
 
-    // 得到离$date最近的某个一级科目的及其子科目的余额和,若$date没有会寻找上个月的数据,若一条数据都没有则为0
+    // 得到离$date最近的某个一级科目的及其子科目的余额和,若$date没有会寻找上个月的数据,若一条数据都没有则为期初余额
     public function getLastBalanceNum($subject_id, $date) {
       $year = getYear($date);
       $month = getMon($date);
@@ -321,7 +321,14 @@ var_dump($tranDataArray);exit(1);
       $data = Post::model()->findBySql($sql, array(':year'=>$year,
                                                    ':month'=>$month));
       if ($data == null){
-        return 0;
+          $result = 0;
+          $balance = Subjects::model()->findAllByAttributes([],"sbj_number regexp '^".$subject_id."'");
+          if($balance){
+              foreach($balance as $item){
+                  $result += $item->start_balance;
+              }
+          }
+        return $result;
       }else{
         $lastdate=$data["year"].$data["month"];
         return self::getBalanceNum($subject_id, $lastdate);

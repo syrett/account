@@ -66,14 +66,14 @@ class Balance extends CModel
       }
       switch ($item["function"]) {
           case "minus":
-            $data[$key]["start"] -= $start;
-            $data[$key]["end"] -= $end;
-            return $data;
-        default:
-            $data[$key]["start"] += $start;
-            $data[$key]["end"] += $end;
-            return $data;
-        }
+              $data[$key]["start"] -= $start;
+              $data[$key]["end"] -= $end;
+              return $data;
+          default:
+              $data[$key]["start"] += $start;
+              $data[$key]["end"] += $end;
+              return $data;
+      }
     }
     
   }
