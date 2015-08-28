@@ -1058,16 +1058,19 @@ class TransitionController extends Controller
         $date= date('Ym', time());
 //        $date = '201509';
         $result = false;
-        while ($date > Condom::model()->getStartTime() && $date >= $edate) {
+        while ($date >= Condom::model()->getStartTime() && $date >= $edate) {
             $result = $this->antiSettlement($date);
+            $lastdate = $date;
             $date = date('Ym', strtotime('-1 months', strtotime($date . '01')));
         }
 
         if ($result) {
-            Yii::app()->user->setFlash('success', $date."反结账成功!");
+            Yii::app()->user->setFlash('success', $lastdate."反结账成功!");
             $this->render('/site/success');
-        } else
-            throw new CHttpException(400, $date . " 反结账失败");
+        } elseif($date<Condom::model()->getStartTime())
+            throw new CHttpException(400, "已经反结账至账套起始日期");
+        else
+            throw new CHttpException(400, $lastdate . " 反结账失败");
     }
 
     public function antiSettlement($date){
