@@ -238,7 +238,7 @@ ALTER TABLE `options` ADD PRIMARY KEY(`entry_subject`);
 ALTER TABLE `stock` CHANGE `in_price` `in_price` DECIMAL(12,2) NOT NULL COMMENT '价格', CHANGE `out_price` `out_price` DECIMAL(12,2) NULL DEFAULT NULL, CHANGE `worth` `worth` DECIMAL(12,2) NULL DEFAULT NULL COMMENT '净值';
 
 
---2015年8月4日14:58:22
+-- 2015年8月4日14:58:22
 CREATE TABLE IF NOT EXISTS `salary` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `order_no` varchar(16) NOT NULL COMMENT '订单号',
@@ -307,3 +307,65 @@ ALTER TABLE `purchase` DROP FOREIGN KEY `purchase_ibfk_3`;
 ALTER TABLE `purchase` CHANGE `subject_2` `subject_2` VARCHAR(512) NULL DEFAULT NULL;
 ALTER TABLE `product` DROP FOREIGN KEY `product_ibfk_3`;
 ALTER TABLE `product` CHANGE `subject_2` `subject_2` VARCHAR(512) NULL DEFAULT NULL;
+
+-- 2015年8月19日15:09:11
+ALTER TABLE `employee` ADD `departure_date` DATETIME NULL COMMENT '离职日期' AFTER `department_id`;
+ALTER TABLE `employee` ADD `status` INT NOT NULL DEFAULT '1' COMMENT '0离职，1正常，2停职，3兼职' ;
+ALTER TABLE `reimburse` DROP FOREIGN KEY `reimburse_ibfk_2`;
+ALTER TABLE `reimburse` CHANGE `subject` `subject` VARCHAR(512) NULL DEFAULT NULL;
+ALTER TABLE `reimburse` CHANGE `subject_2` `subject_2` VARCHAR(512) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+ALTER TABLE `product` CHANGE `saled_date` `entry_date` INT(11) NOT NULL COMMENT '销售日期';
+ALTER TABLE `product` CHANGE `product` `entry_name` VARCHAR(512) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商品名称';
+ALTER TABLE `product` ADD `entry_memo` VARCHAR(1024) NULL AFTER `entry_name`;
+ALTER TABLE `product` CHANGE `amount` `count` INT(11) NOT NULL;
+ALTER TABLE `product`
+CHANGE `order_no` `order_no` VARCHAR(16) NOT NULL COMMENT '订单号',
+CHANGE `entry_date` `entry_date` VARCHAR(16) NOT NULL COMMENT '销售日期',
+CHANGE `count` `count` INT(11) NOT NULL DEFAULT '1';
+
+ALTER TABLE `cash`
+ADD `type` VARCHAR(16) NULL DEFAULT NULL COMMENT '类型：采购、销售、工资、报销等' AFTER `order_no`,
+ADD `pid` INT NOT NULL COMMENT '采购、销售、报销、工资等' AFTER `type`;
+ALTER TABLE `cash` DROP `order`;
+ALTER TABLE `cash` ADD `path` VARCHAR(1024) NOT NULL COMMENT '路径' AFTER `tax`;
+
+ALTER TABLE `bank`
+ADD `type` VARCHAR(16) NULL DEFAULT NULL COMMENT '类型：采购、销售、工资、报销等' AFTER `order_no`,
+ADD `pid` INT NOT NULL COMMENT '采购、销售、报销、工资等' AFTER `type`;
+ALTER TABLE `bank` DROP `order`;
+ALTER TABLE `bank` ADD `path` VARCHAR(1024) NOT NULL COMMENT '路径' AFTER `tax`;
+
+ALTER TABLE `reimburse` ADD `paid` VARCHAR(1024) NULL COMMENT '已经报销的项目' AFTER `update_time`;
+
+INSERT INTO `subjects` (`sbj_number`, `sbj_name`, `sbj_cat`, `sbj_table`, `has_sub`, `balance_set`, `start_balance`) VALUES
+(160101, '电子设备', '1', NULL, 0, 0, 0),
+(160102, '办公设备', '1', NULL, 0, 0, 0),
+(160103, '运输设备', '1', NULL, 0, 0, 0),
+(160104, '生产设备', '1', NULL, 0, 0, 0),
+(160105, '房屋建筑物', '1', NULL, 0, 0, 0);
+TRUNCATE options;
+INSERT INTO `options` (`id`, `entry_subject`, `name`, `support`, `year`, `value`) VALUES
+(1, 1701, NULL, NULL, 10, 5),
+(2, 1801, NULL, NULL, 5, 5),
+(3, 160101, NULL, NULL, 3, 5),
+(4, 160102, NULL, NULL, 5, 5),
+(5, 160103, NULL, NULL, 4, 5),
+(6, 160104, NULL, NULL, 10, 5),
+(7, 160105, NULL, NULL, 20, 5);
+
+CREATE TABLE IF NOT EXISTS `preparation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_no` varchar(64) NOT NULL,
+  `real_order`  VARCHAR(64) NOT NULL,
+  `pid` int(11) NOT NULL COMMENT '现金或银行的id',
+  `type` varchar(16) NOT NULL COMMENT '现金或银行',
+  `memo` text,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+ALTER TABLE `stock` ADD `value_year` INT NULL COMMENT '报销年限' AFTER `create_time`,
+ADD `value_rate` INT NULL COMMENT '残值率' AFTER `value_year`;
+ALTER TABLE `preparation` ADD `entry_amount` FLOAT NOT NULL AFTER `type`;
+ALTER TABLE `stock` CHANGE `worth` `worth` TEXT NULL DEFAULT NULL COMMENT '净值';
