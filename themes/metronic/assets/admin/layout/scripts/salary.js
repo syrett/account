@@ -35,6 +35,9 @@ $(document).ready(function () {
 });
 function getPersonalTax(amount){
     var tax = 100;
+    amount -= 3500;
+    if(amount<=0)
+        return 0;
     switch(true){
         case amount <= 1500 : tax = 3; $base = 0;break;
         case amount > 1500 && amount <= 4500 : tax = 3; $base = 105;break;
@@ -46,5 +49,6 @@ function getPersonalTax(amount){
         default:
             return 0;
     }
+
     return Math.round((amount*tax/100 - $base)*100)/100;
 }

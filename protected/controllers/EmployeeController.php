@@ -57,7 +57,7 @@ class EmployeeController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new Employee;
+		$model = new Employee;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
@@ -75,6 +75,47 @@ class EmployeeController extends Controller
             'department_array' => $department_array,
 		));
 	}
+
+    /**
+     * Creates a new model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     */
+    public function actionCreatemultiple()
+    {
+        Yii::import('ext.phpexcel.PHPExcel.PHPExcel_IOFactory');
+        if (Yii::app()->request->isPostRequest) {
+            //上传附件查看
+            if ($_FILES['attachment']!='' && file_exists($_FILES['attachment']['tmp_name'])) {
+                $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
+                $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+                //去除第一行
+                array_shift($list);
+                foreach($list as $item){
+                    $sheetData[] = Employee::getSheetData($item);
+                }
+            } elseif($_FILES['attachment']['name']==''){
+                $lists = $_POST['Employee'];
+                foreach ($lists as $item) {
+                    $employee = new Employee();
+                    $employee->attributes = $item;
+                    $employee->base = str_replace(',', '', $employee->base);
+                    if(!$employee->save())
+                        $sheetData[] = $employee;
+                }
+                if(empty($sheetData)){
+                    Yii::app()->user->setFlash('success', "添加成功!");
+                }else
+                    Yii::app()->user->setFlash('error', "添加失败!");
+
+            }
+        }
+
+        if (empty($sheetData)){
+            $sheetData[] = Employee::getSheetData('');
+        }
+
+        $this->render('import', ['sheetData' => $sheetData]);
+    }
 
 	/**
 	 * Updates a particular model.

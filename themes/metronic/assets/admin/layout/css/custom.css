@@ -383,6 +383,9 @@ table#balance td, table#profit td, table#subjects td, table#project td, table#de
 .input_mmin{
     width: 55px;
 }
+.input_mmmin{
+    width: 45px;
+}
 
 .input_mid {
     width: 100px;
@@ -525,4 +528,15 @@ div.flash-notice a
 div.flash-success a
 {
     color:#264409;
+}
+
+.left-info{
+    float: left;
+    color: #31708f;
+}
+
+.fa-lg:not(.fa-stack),.custom-i{
+    vertical-align: top;
+    margin-top: 3px;
+    font-size: 13px !important;
 }

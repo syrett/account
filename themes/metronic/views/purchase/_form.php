@@ -11,6 +11,10 @@ $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_common.j
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_vip.js');
 $this->pageTitle = Yii::app()->name;
 $type = 'purchase';
+$item = $sheetData[0]['data'];
+$preOrder = Preparation::getOrderArray($type);
+$item['preorder'] = Preparation::getOrderArray($type, $item['id']);
+$preOrder = $item['preorder'] + $preOrder;
 ?>
 <div class="panel-body">
     <div class="row" id="abc">
@@ -35,12 +39,16 @@ $type = 'purchase';
                     <th class="input-small">采购用途</th>
                     <th class="input_mid hidden" id="department_id_th" >部门</th>
                     <th class="input-small">采购说明</th>
+                    <?
+                    if (!empty($preOrder)) {
+                        echo '<th class="input-small">预付款</th>';
+                    }
+                    ?>
                     <th style="width: 150px">操作</th>
                     <th style="width: 10%">&nbsp;</th>
                 </tr>
                 <?php
                 if (!empty($model)) {
-                    $item = $sheetData[0]['data'];
                     $key = 1;
                     $vendorArray = Vendor::model()->getVendorArray();
                     $stockArray = Stock::model()->getStockArray();
@@ -120,6 +128,34 @@ $type = 'purchase';
                                    name="lists[<?= $key ?>][Transition][entry_memo]"
                                    value="<?= $item['entry_memo'] ?>">
                         </td>
+                        <?
+                        if (!empty($preOrder)) {
+                            //添加一项 不含预付款的选项
+//                            $preOrder = ['非预付款' => '{"amount":0,"memo":"非预付款"}'] + $preOrder;
+                            ?>
+                            <td><?
+                                $this->widget('ext.select2.ESelect2', array(
+                                    'name' => 'lists[' . $key . '][Transition][preOrder]',
+                                    'id' => 'preOrder_' . $key,
+                                    'data' => $preOrder,
+                                    'value' => array_keys($item['preorder']),
+                                    'options' => array(
+                                        'formatResult' => 'js:function(data){
+                                            var order = JSON.parse(data.text);
+                                            var markup = "<div title=\"金额:" + order.amount + " \n摘要:" + order.memo + "\">" + data.id + "</div>";
+                                            return markup;
+                                        }',
+                                        'formatSelection' => 'js: function(order) {
+                                            return order.id;
+                                        }',
+                                    ),
+                                    'htmlOptions' => array('class' => 'select-full','multiple'=>'multiple',)
+                                ));
+                                ?>
+                            </td>
+                        <?
+                        }
+                        ?>
                         <td class="action">
                                 <input type="hidden" id="did_<?= $key ?>" name="lists[<?= $key ?>][Transition][d_id]"
                                        value="<?= isset($item['d_id']) ? $item['d_id'] : '' ?>">

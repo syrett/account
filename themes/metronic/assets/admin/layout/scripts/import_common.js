@@ -51,11 +51,13 @@ function chooseSubject(e) {
 }
 //设置按钮宽度
 function setWidth(e) {
+    /*
     var width = Math.max.apply(Math, $(e.parentNode.nextSibling.nextSibling).find('button[class*="btn-"]').map(function () {
         return $(this).width();
     }).get());
     $(e.parentNode.nextSibling.nextSibling).find('button[class*="btn-"]').width(width);
     $(e.parentNode.nextSibling.nextSibling).find('input[class*="new-"]:visible').width(width);
+    */
 }
 
 //设置交易方名称
@@ -67,7 +69,7 @@ function setTarget(id) {
 //去除路径，只保留交易方名称abc ，路径格式为 ***/**/abc
 function removePath(path) {
     //正则匹配
-    path = $('<div>'+path+'</div>').text();
+    path = $('<div>'+path+'</div>').text().trim();
     var reg = /[^/]([^\x00-\xff]|\w)+(<i>|$)/;
     if (reg.test(path)) {
         path = path.match(reg)
@@ -264,4 +266,8 @@ function toAmount(price){
     price = price * 100;
     price = parseInt(price);
     return price / 100;
+}
+
+function genPOrder(type){
+
 }

@@ -5,15 +5,16 @@
  *
  * The followings are the available columns in table 'lfs_bank':
  * @property integer $id
+ * @property string $order_no
  * @property string $target
  * @property string $date
  * @property string $memo
  * @property double $amount
  * @property integer $parent
- * @property string $order
  * @property string $subject
  * @property integer $invoice
  * @property integer $tax
+ * @property string $path
  * @property integer $status_id
  * @property string $created_at
  * @property integer $updated_at
@@ -42,9 +43,10 @@ class Bank extends LFSModel
 			array('target', 'length', 'max'=>512),
 			array('date', 'length', 'max'=>64),
 			array('subject', 'length', 'max'=>16),
-			array('memo, order, created_at, tax', 'safe'),
+			array('memo, type, pid, order_no, created_at, tax, path', 'safe'),
+            array('amount', 'checkAmount'),
 			// The following rule is used by search().
-			array('id, target, date, memo, amount, parent, order, invoice, tax, status_id, created_at, updated_at', 'safe', 'on'=>'search'),
+			array('id, target, date, memo, amount, parent, order_no, invoice, tax, status_id, created_at, updated_at', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -66,12 +68,12 @@ class Bank extends LFSModel
 	{
 		return array(
 			'id' => 'ID',
+            'order_no' => '订单号',
 			'target' => '交易对象',
 			'date' => '日期',
 			'memo' => '说明',
 			'amount' => '金额',
 			'parent' => '父ID',
-			'order' => '订单号',
 			'subject' => '科目',
 			'invoice' => '有无发票',
 			'tax' => '税率',
@@ -104,7 +106,7 @@ class Bank extends LFSModel
 		$criteria->compare('memo',$this->memo,true);
 		$criteria->compare('amount',$this->amount);
 		$criteria->compare('parent',$this->parent);
-		$criteria->compare('order',$this->order,true);
+		$criteria->compare('order_no',$this->order_no,true);
 		$criteria->compare('subject',$this->subject,true);
 		$criteria->compare('invoice',$this->invoice);
 		$criteria->compare('tax',$this->tax);
@@ -158,6 +160,7 @@ class Bank extends LFSModel
 	 */
 	public function load($item){
 		$this->setAttribute('target', $item['entry_name']);
+        $this->setAttribute('order_no', $item['order_no']);
 		$this->setAttribute('date', $item['entry_date']);
 		$this->setAttribute('memo', $item['entry_memo']);
 		$this->setAttribute('amount', $item['entry_amount']);
@@ -165,7 +168,8 @@ class Bank extends LFSModel
         $this->setAttribute('subject_2', $item['subject_2']);
 		$this->setAttribute('parent', isset($item['parent'])?$item['parent']:'');
 		$this->setAttribute('invoice', isset($item['invoice'])?$item['invoice']:'');
-		$this->setAttribute('tax',  isset($item['tax'])?$item['tax']:'');
+        $this->setAttribute('tax',  isset($item['tax'])?$item['tax']:'');
+        $this->setAttribute('path',  isset($item['path'])?$item['path']:'');
 		$this->setAttribute('updated_at', isset($item['updated_at'])?$item['updated_at']:'');
 	}
 	public function loadOld($item){
@@ -278,6 +282,7 @@ class Bank extends LFSModel
             'option' => [['text', '本金']],
         ];
     }
+
     /*
      * 含税或不含税
      */
@@ -285,10 +290,21 @@ class Bank extends LFSModel
     {
         return [
             'data' => [],
-            'option' => [['checkbox', '是否含税']],
+            'option' => [['checkbox', 'withtax', '是否含税']],
         ];
     }
 
+    /*
+     * $list Array 根据数组生成返回数据
+     */
+    private static function genData($list){
+        $data = [];
+        foreach($list as $item){
+            $sbj2 = explode(',', $item['subject_2']);
+            array_push($data, ['_' . $sbj2[0] => $item['order_no']]);
+        }
+        return ['data' => $data];
+    }
     /*
      * 投资种类
      * 选择项的值不能为0
@@ -416,17 +432,24 @@ class Bank extends LFSModel
     private static function getDeposit($type, $key = '')
     {
         $subject = new Subjects();
-        if ($type == 1) {
+        if ($type == 1) {   //支付押金
             $arr = [2202, 1123, 2241, 1221];
             $new = 'allow';
             $result = $subject->getitem($arr, $key);
             $target = true;
-        } elseif ($type == 2) {
-            $arr = [2202, 1123, 2241, 1221];
+        } elseif ($type == 2) { //借出款项，跟员工有关的去除，
+            $arr = [2202, 2241, 1221];
             $new = 'allow';
-            $result = $subject->getitem($arr, $key);
+            $options['reject'] = [];
+            $employees = Employee::model()->findAll();
+            if(!empty($employees)){
+                foreach ($employees as $item) {
+                    $options['reject'][] = $item['name'];
+                }
+            }
+            $result = $subject->getitem($arr, $key, $options);
             $target = true;
-        } elseif ($type == 3) {
+        } elseif ($type == 3) { //归还借款
 //            $arr = [2001, 2501];
             $result = ['金融机构', '非金融机构'];
             $new = 'no';
@@ -452,15 +475,35 @@ class Bank extends LFSModel
      * 金额为原金额x%，3%、6%、13%、17%），形成会计分录
      * 税费=总金额/(1+*%)**%
      * 金额=总金额-税费
+     * @type Integer 没有凭证就不显示
+     * @version Integer version为2，为1表示普通用户版，表示vip版
      */
-    private static function getSupplier($key)
+    private static function getSupplier($key, $type=1, $version=1)
     {
         $subject = new Subjects();
         $arr = [2202, 2241];
-        $result = $subject->getitem($arr, $key, ['type' => 0]);
+        $list = [];
+        if($version == 1)
+            $list = $subject->getitem($arr, $key, ['type' => 0]);
+        else{
+            $list = Vendor::model()->list_vendors();
+//            foreach($vendors as $vendor){
+//                $list += $subject->getitem($arr, $vendor['company'], ['type' => 0]);
+//            }
+        }
 //        $arr = [1601, 1403, 1405, 6602, 6601, 6401, 1701];
 //        $result = $subject->getitem($arr,$key,['工资','社保','公积金','折旧费','研发费']);
 //        $tax = self::getTax();
+        $result = [];
+        if($type==2)
+            foreach ($list as $key => $item) {
+                $model = Transition::model()->findByAttributes(['entry_subject' => substr($key,1)]);
+                if($model)
+                    $result[$item] = $item;
+            }
+        else
+            $result = $list;
+
         return [
             'data' => $result,
             'target' => true,
@@ -640,8 +683,9 @@ eof;
      * @options String 选项参数
      * @data string 表格数据 0checkbox|1name|2date|3description|4amount
      */
-    public static function chooseOption($type, $options, $data)
+    public static function chooseOption($type, $options, $data, $version=1)
     {
+        $result = [];
         $options = explode(",", $options);
         $data = explode("|", $data);
 //        $option = end($options);
@@ -650,23 +694,28 @@ eof;
         if ($type == 1) { //支出
             switch ($options[2]) {
                 case '工资社保'  :
-                    if (isset($options[3])) {
-                        if (isset($options[4])) {
-                            $department = Employee::getDepartType($options[4]);
-                            $result = Department::matchSubject($department, $options[3]);
-                            return self::endOption($result);
-                        }
-                        //304 若付款金额小于上期预提的金额，则将应付职工薪酬2211或其他应付款2241作为一级科目形成分录
-                        /*if ($data[4] < $a->prospect()) {   //$data[3] 为金额  假设为30000
-                            if ($options[3] == '工资与资金')
-                                return self::endOption(2211);
-                            else
-                                return self::endOption(2241);
-                        } else {*/
-                        $result = self::getEmployee($data[1]);//员工列表
+                    if($version==1){
+                        if (isset($options[3])) {
+                            if (isset($options[4])) {
+                                $department = Employee::getDepart($options[4]);
+                                $result = Department::matchSubject($department, $options[3]);
+                                return self::endOption($result);
+                            }
+                            //304 若付款金额小于上期预提的金额，则将应付职工薪酬2211或其他应付款2241作为一级科目形成分录
+                            /*if ($data[4] < $a->prospect()) {   //$data[3] 为金额  假设为30000
+                                if ($options[3] == '工资与资金')
+                                    return self::endOption(2211);
+                                else
+                                    return self::endOption(2241);
+                            } else {*/
+                            $result = self::getEmployee($data[1]);//员工列表
 //                        }
-                    } else
-                        $result = self::getSalary();
+                        } else
+                            $result = self::getSalary();
+                    } else{
+                        $result = Subjects::matchSubject($options[3], 2211);
+                        return self::endOption($result);
+                    }
                     break;
                 case '支付押金'  :
                 case '借出款项'  :
@@ -697,67 +746,76 @@ eof;
                         $result = self::getDeposit($type, $data[1]);
                     break;
                 case '供应商采购'  :
-                    if (isset($options[3]))
-                        return self::endOption($options[3]);
-//                        if (isset($options[3])) {
-//                            return self::endOption($options[3]);
-//                        } else
-//                            $result = self::afterSupplier($data[3]);
-
-                    $result = self::afterSupplier($data[1]);
-                    $result['type'] = 'droplist';
-//                        $result = self::getSupplier($data[1]);
+                    if($version==1){
+                        if (isset($options[3]))
+                            return self::endOption($options[3]);
+                        $result = self::afterSupplier($data[1]);
+                        $result['type'] = 'droplist';
+                    }
+                    else{
+                        if (isset($options[3])) {
+                            if (isset($options[4])) {
+                                return self::endOption($options[4]);
+                            }else{
+                                $order = Vendor::listOrders($options[3]);
+                                if(!empty($order))
+                                    $result = self::genData($order);
+                            }
+                        }else{
+                            $vendors = Vendor::getVendors($data[1], 1, 2);
+                            $result = ['data' => $vendors];
+                        }
+                    }
                     break;
                 case '员工报销'  :
                     //若付款金额小于上期预提的金额，则将其他应付款2241作为一级科目，该员工名称作为二级科目形成分录；
-                    if (isset($options[3]))
-//                        if (isset($options[4])) {
-//                            return self::endOption($options[4]);
-//                        } else
-//                            $result = self::afterEmployee($data[3]);
-
-                        //简单版，不考虑预提
-                        /*if ($data[4] < $a->prospect()) {
-                            $sbj = Subjects::matchSubject(Employee::getName($options[3]), array(2241));
-                            return self::endOption($sbj);
-                        } else {
+                    if($version==1){
+                        if (isset($options[3]))
+                            return self::endOption($options[3]);
+                        $result = self::afterEmployee($data[1]);
+                        $result['type'] = 'droplist';
+                    }else{
+                        if (isset($options[3])) {
                             if (isset($options[4])) {
-                                if (isset($options[5]))
-                                    return self::endOption($options[5]);
-                                if ($options[4] == 1) {  //如果未收到发票，货币收支模块将员工名称作为其他应收款1221的二级科目
-                                    $sbj = Subjects::matchSubject(Employee::getName($options[3]), array(1221));
+                                if($options[4]=='预支款'){
+                                    $sbj = Subjects::matchSubject($options[3],['1221']);
                                     return self::endOption($sbj);
-                                } else {
-                                    //如果已经收到发票，则提示用户选择所该员工采购商品名称（添加科目）或服务的性质，形成二级科目；
-                                    //银行收支模块进一步确定该员工所属部门为管理部门还是销售部门，
-                                    //4研发部门为管理费用二级科目研发费，
-                                    //1生产部门为主营业务成本6401，
-                                    //如属于2管理部门，则将管理费用6602作为一级科目；
-                                    //如属于3销售部门，则将营业 销售费用6601作为一级科目，形成会计分录
-                                    $department = Employee::getDepartType($options[3]);
-                                    $sbj_id = '';
+                                }else {
+                                    //员工报销需要把报销的项目列出来供选择 多选
+                                    $rem = Reimburse::model()->findByAttributes(['order_no' => $options[4]]);
+                                    $sbj = 0;
+                                    if ($rem) {
+                                        $tmp3 = explode(',', $rem['subject_2']);
+                                        if(count($tmp3) > 1){   //报销的贷方科目只有其他应付和其他应收这2项
+                                            $sbj = $tmp3[0];
+                                        }else
+                                        $sbj = $rem['subject_2'];
+                                        $pro_arr = ['travel', 'benefit', 'traffic', 'phone', 'entertainment', 'office', 'rent', 'watere', 'train', 'service', 'stamping'];
+                                        foreach ($pro_arr as $item) {
+                                            $paid = explode(',', $rem['paid']);
+                                            if ($rem[$item . '_amount'] > 0 && !in_array($item . '_amount', $paid))
+                                                $checkbox[] = ['checkbox', $item . '_amount', Reimburse::model()->getAttributeLabel($item . '_amount'), $rem[$item . '_amount']];
+                                        }
 
-                                    if ($department == 1) {
-                                        $sbj_id = 6401;
-                                    } elseif ($department == 2) {
-                                        $sbj_id = 6602;
-                                    } elseif ($department == 3) {
-                                        $sbj_id = 6601;
-                                    } elseif ($department == 4) {
-                                        $sbj_id = 660202;
+                                        $option = ['option' => $checkbox];
                                     }
-
-                                    $model = new Subjects();
-                                    $reject = ['工资','社保','公积金'];
-                                    $list = $model->getitem([$sbj_id],$data[1],$reject);
-                                    $result = ['data' => $list, 'new' => 'allow', 'newsbj' => $sbj_id, 'newsbjname' => Subjects::getName($sbj_id)];
+                                    return self::endOption($sbj, $option);
                                 }
-                            } else
-                                $result = self::getInvoice();
-                        }*/
-                        return self::endOption($options[3]);
-                    $result = self::afterEmployee($data[1]);
-                    $result['type'] = 'droplist';
+                            }else{
+                                $orders = Reimburse::listOrders($options[3]);
+                                if(!empty($orders)){
+                                    foreach($orders as $item){
+                                        $tmp[$item['order_no']] = $item['order_no'];
+                                    }
+                                }
+                                $tmp[] = ['预支款' =>'预支款'];
+                                $result =  ['data' => $tmp];
+                            }
+                        }else{
+                            $order = Reimburse::getEmployee($data[1]);
+                            $result = ['data' => $order];
+                        }
+                    }
 
                     break;
                 case '投资支出'  :
@@ -911,15 +969,35 @@ eof;
                         $result = self::getIncomeItem($type, $data[1]);
                     break;
                 case '销售收入'  :
-                    if (isset($options[3])) {
-                        //如果选择的科目，其一级科目是6001，可以是接返回，否则根据名字，在6001下新建子科目再返回
-                        $result = self::withVat();//是否含税
-                        if (substr($options[3], 0, 4) != '6001') {
-                            $options[3] = Subjects::createSubject(Subjects::getName($options[3]), 6001);
+                    if($version==1){
+                        if (isset($options[3])) {
+                            //如果选择的科目，其一级科目是6001，可以是接返回，否则根据名字，在6001下新建子科目再返回
+                            $result = self::withVat();//是否含税
+                            if (substr($options[3], 0, 4) != '6001') {
+                                $options[3] = Subjects::createSubject(Subjects::getName($options[3]), 6001);
+                            }
+                            return self::endOption($options[3], $result);
+                        } else
+                            $result = self::getSale($data[1]);
+                    }else{
+                        if (isset($options[3])) {
+                            if (isset($options[4])) {
+//                                if($options[4] == '2203'){  //预收款，生成一个订单号
+//                                    $order = new Preparation();
+//                                    $order->order_no = $order->initOrder('product');
+//                                    $order->save();
+//                                }
+                                return self::endOption($options[4]);
+                            }else{
+                                $order = Client::listOrders($options[3]);
+                                if($order)
+                                    $result = self::genData($order);
+                            }
+                        }else{
+                            $clients = Client::getClient($data[1]);
+                            $result = ['data' => $clients];
                         }
-                        return self::endOption($options[3], $result);
-                    } else
-                        $result = self::getSale($data[1]);
+                    }
                     break;
                 case '投资收益'  :
                     if (isset($options[3])) {//如果选择的科目，其一级科目是6001，可以是接返回，否则根据名字，在6001下新建子科目再返回
@@ -1005,5 +1083,22 @@ eof;
         $criteria = new CDbCriteria();
         $criteria->compare('subject_2', $sbj, true);
         $rows = Bank::model()->updateAll(['subject_2' => substr($sbj,0,-2)], $criteria);
+    }
+
+    /*
+     * 如果是采购或销售或报销，金额不能大于未支付部分
+     */
+    public function checkAmount($attribute, $params){
+        $type = $this->type;
+        if($type=='purchase' || $type=='product'){
+            if($type=='purchase')
+                $order = Purchase::model()->findByPk($this->pid);
+            else
+                $order = Product::model()->findByPk($this->pid);
+            $unpaid = floatval($order->price)*$order->count - $order->getPaid();
+            $unpaid = round($unpaid, 2);
+            if($this->amount > $unpaid)
+                $this->addError($attribute, "金额不能大于$unpaid");
+        }
     }
 }

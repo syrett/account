@@ -28,6 +28,8 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/print.js', CCli
     <div class="panel-body">
     <!-- search-form -->
 	<?php echo CHtml::beginForm($this->createUrl('transition/print'),'POST',array('class'=>'form-inline')); ?>
+        <div class="alert alert-info">提示：如果凭证比较多，生成的时间比较长，请耐心等待
+        </div>
 	<div class="form-group">
         <label class="control-label" for="date">请选择报表日期：</label>
         <?php

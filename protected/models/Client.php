@@ -157,4 +157,34 @@ class Client extends CActiveRecord
         else
             return 0;
     }
+
+    /*
+     *
+     */
+    public static function getClient($name){
+        $clients = Client::model()->findAllByAttributes([], "company like '%$name%'");
+        if(!$clients)
+            $clients = Client::model()->findAll();
+        foreach ($clients as $key => $item) {
+//            $tran = Product::model()->findByAttributes(['client_id'=>$item['id']]);
+//            if($tran)
+                $result[$item['company']] = $item['company'];
+        }
+        return $result;
+    }
+
+    public static function listOrders($name){
+        $client = Client::model()->findByAttributes(['company'=>$name]);
+        $orders = Product::model()->findAllByAttributes(['client_id'=>$client['id']]);
+        //检查订单是否已经支付完成
+        foreach ($orders as $item) {
+            if(!$item->checkPaid())
+                $result[] = $item;
+        }
+
+        //添加一个预收的预收订单
+        $sbj2 = Subjects::matchSubject($name,['2203']);
+        $result[] = ['subject_2' => $sbj2, 'order_no' => '预收款'];
+        return $result;
+    }
 }

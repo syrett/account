@@ -122,6 +122,18 @@ class Vendor extends CActiveRecord
         return $arr;
     }
 
+    public static function getVendors($name){
+        $models = self::model()->findAllByAttributes([], "company like '%$name%'");
+        if(!$models)
+            $models = self::model()->findAll();
+        foreach ($models as $key => $item) {
+//            $tran = Product::model()->findByAttributes(['client_id'=>$item['id']]);
+//            if($tran)
+            $result[$item['company']] = $item['company'];
+        }
+        return $result;
+    }
+
     public function getName($id){
         if($id=='' || $id == 0)
             return '无效的id';
@@ -155,6 +167,20 @@ class Vendor extends CActiveRecord
             $result = $balance + $in-$out;
         }else
             $result = Transition::model()->getAllMount($sbj, $options['entry_transaction'], 'after', '');
+        return $result;
+    }
+
+    public static function listOrders($name){
+        $sbj = Subjects::matchSubject($name,[],3,0);
+        $orders = Purchase::model()->findAllByAttributes(['subject_2'=>$sbj]);
+        //检查订单是否已经支付完成
+        foreach ($orders as $item) {
+            if(floatval($item['price'])*$item['count']>$item->getPaid())
+                $result[] = $item;
+        }
+        //添加一个预付的预付订单
+        $sbj2 = Subjects::matchSubject($name,['1123']);
+        $result[] = ['subject_2' => $sbj2, 'order_no' => '预付款'];
         return $result;
     }
 }

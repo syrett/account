@@ -296,7 +296,7 @@ class Subjects extends CActiveRecord
         $keywhere = " AND sbj_name like '%".$key."%'";
         $orderby = " order by INSTR(sbj_name,'$key') desc";
         $data_1 = self::findAllBySql($sql_1. $where. $sbjwhere. $keywhere. $orderby, array());
-        if(empty($data_1)){
+        if(empty($data_1) && $type== 1){
             $data_1 = self::findAllBySql($sql_1. $where. $sbjwhere. $orderby, array());
             if(empty($data_1)){
                 $sbjwhere = " AND sbj_number='$sbj_id'";
@@ -475,7 +475,6 @@ class Subjects extends CActiveRecord
         $result = [];
         $type = isset($options['type']) ? $options['type'] : 2;
         foreach ($arr as $item) {
-//            $GLOBALS['level'] = isset($options['level'])?$options['level']:3;
             $arr_subj = $subject->list_sub($item, $key, $options);
             foreach ($arr_subj as $subj) {
                 if($type==0){
@@ -501,25 +500,35 @@ class Subjects extends CActiveRecord
      * @key Integer 关键字
      * @subject Array   科目编号数组
      * @level Integer 层数，0代表科目编号下所有子科目，1代表当前科目编号的子科目，子科目的子科目不包含
+     * @option Integer 如果没有则自动添加，此时的subjects必须为单一数组
      */
-    public static function matchSubject($key, $subjects, $level = 0)
+    public static function matchSubject($key, $subjects, $level = 0, $option = 1, $return = 'str')
     {
         if(!is_array($subjects))
             $subjects = [$subjects];
+        if(empty($subjects)){
+            $all = Yii::app()->db->createCommand("select sbj_number from ". self::model()->tableSchema->name. " where length(sbj_number) < 5 ")->queryAll();
+            foreach($all as $item){
+                $subjects[] = $item['sbj_number'];
+            }
+        }
         //似乎应该完成匹配
         $data = Yii::app()->db->createCommand("select * from ". self::model()->tableSchema->name. " where sbj_name like '%$key%'")->queryAll();
+        if($return == 'str')
         $sbj = 0;
+        else
+            $sbj = [];
         $percent = 100;
         foreach ($data as $item) {
             $per = levenshtein($key, $item['sbj_name']);
             if ($percent > $per && in_array(substr($item['sbj_number'], 0, 4), $subjects)) {
                 if ($level != 0 && strlen($item['sbj_number']) <= (4 + $level * 2)) {
-                    $sbj = $item['sbj_number'];
+                    $sbj += $item['sbj_number'];
                     $percent = $per;
                 }
             }
         }
-        if ($sbj == 0)
+        if (($sbj == 0 || empty($sbj)) && $option == 1)
             $sbj = Subjects::createSubject($key, $subjects[0]);
         return $sbj;
     }

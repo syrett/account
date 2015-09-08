@@ -50,9 +50,9 @@ class Reimburse extends LFSModel
 			array('order_no, entry_date, employee_id, status_id', 'required'),
 			array('employee_id, subject, update_time, status_id', 'numerical', 'integerOnly'=>true),
 			array('order_no, entry_date', 'length', 'max'=>16),
-			array('entry_memo', 'length', 'max'=>1024),
+			array('entry_memo, paid', 'length', 'max'=>1024),
 			array('travel_amount, benefit_amount, traffic_amount, phone_amount, entertainment_amount, office_amount, rent_amount, watere_amount, train_amount, service_amount, stamping_amount', 'length', 'max'=>12),
-			array('subject_2', 'length', 'max'=>11),
+			array('subject_2', 'length', 'max'=>512),
 			// The following rule is used by search().
 			array('id, order_no, entry_date, entry_memo, employee_id, travel_amount, benefit_amount, traffic_amount, phone_amount, entertainment_amount, office_amount, rent_amount, train_amount, service_amount, stamping_amount, subject, subject_2, create_time, update_time, status_id', 'safe', 'on'=>'search'),
 		);
@@ -89,6 +89,7 @@ class Reimburse extends LFSModel
 			'entertainment_amount' => '招待费',
 			'office_amount' => '办公费',
 			'rent_amount' => '租金',
+            'watere_amount' => '水电费',
 			'train_amount' => '培训费',
 			'service_amount' => '服务费',
 			'stamping_amount' => '印花税',
@@ -161,6 +162,7 @@ class Reimburse extends LFSModel
         $this->setAttribute('order_no', $item['order_no']);
         $this->setAttribute('entry_date', $item['entry_date']);
         $this->setAttribute('subject', $item['entry_subject']);
+        $this->setAttribute('subject_2', $item['subject_2']);
         $this->setAttribute('status_id', $item['status_id']);
 
         $employee = Employee::model()->findByAttributes(['name'=>$item['employee_name']]);
@@ -184,5 +186,58 @@ class Reimburse extends LFSModel
                 $total += $item;
         }
         return $total;
+    }
+
+    /*
+     * 已经报销的金额
+     */
+    public function mountPaid(){
+        $arr = explode(',', $this->paid);
+        $total = 0;
+        if(count($arr) > 1)
+            foreach ($arr as $item) {
+                $total += $this[$item];
+            }
+        return $total;
+    }
+
+    /*
+     * 获取报销中，所有员工的名字，报销有临时预支借款，所以不论员工是否有报销每个员工都要列出
+     */
+    public static function getEmployee($name, $type=1, $version=1){
+        $employees = Employee::model()->findAllByAttributes(['name'=>$name],'status>=1');
+        if(!$employees)
+            $employees = Employee::model()->findAll('status>=1');
+
+        $result = [];
+        foreach ($employees as $item) {
+            $result[$item['name']] = $item['name'];
+        }
+        return $result;
+    }
+
+    public static function listOrders($name){
+        $employee = Employee::model()->findByAttributes(['name'=>$name],'status>=1');
+        $orders = Reimburse::model()->findAllByAttributes(['employee_id'=>$employee['id']]);
+        $result = [];
+        if(!empty($orders)) {
+            foreach ($orders as $tran) {
+                if ($tran) {  //检查已经报销的项目，如果全部都已经报销，则不显示
+                    $tmp = array_filter(explode(',', $tran['paid']));
+                    $pro_arr = ['travel_amount', 'benefit_amount', 'traffic_amount', 'phone_amount', 'entertainment_amount', 'office_amount', 'rent_amount', 'watere_amount', 'train_amount', 'service_amount', 'stamping_amount'];
+                    $tmp2 = [];
+                    foreach ($pro_arr as $pro) {
+                        if ($tran[$pro] > 0)
+                            $tmp2[] = $pro;
+                    }
+                    sort($tmp2);
+                    sort($tmp);
+                    if ($tmp2 != $tmp)
+                        $result[] = $tran;
+
+                }
+            }
+        }
+        return $result;
     }
 }

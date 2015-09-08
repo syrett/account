@@ -22,9 +22,10 @@
                 </button>
             </a>
             <?
-            if($type=='salary'){
-                echo "<button type='submit' class='btn btn-default btn-file' name='type' value='load'>提取上月工资数据";
+            if ($type == 'salary') {
+                echo "<button type='submit' class='btn btn-default btn-file' name='type' value='load'>提取工资数据</button>";
             }
+
             ?>
         </div>
     </div>

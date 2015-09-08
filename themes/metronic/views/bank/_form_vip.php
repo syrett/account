@@ -58,15 +58,16 @@ $tranDate = $this->getTransitionDate('post');
                                 id="amount_<?= $key ?>"><?= $item['entry_amount'] ?></label>
                         </span></td>
                     <td class="action">
-                        <input type="hidden" id="did_<?= $key ?>" name="lists[<?= $key ?>][Transition][d_id]"
-                               value="<?= isset($item['d_id']) ? $item['d_id'] : '' ?>">
                         <input type="hidden" id="id_<?= $key ?>" value="<?= $key ?>">
+                        <input id="subject_2" name="subject_2" type="hidden" readonly
+                               value="<?= $model['subject_2'] ?>">
+                        <input type="hidden" id="status_id_<?= $key ?>"
+                               name="lists[<?= $key ?>][Transition][status_id]"
+                               value="<?= $item['status_id'] ?>">
+                        <input type="hidden" id="order_no_<?= $key ?>"
+                               name="lists[<?= $key ?>][Transition][order_no]"
+                               value="<?= $item['order_no'] ?>">
                         <data>
-                            <input id="subject_2" name="subject_2" type="hidden" readonly
-                                   value="<?= $model['subject_2'] ?>">
-                            <input type="hidden" id="status_id_<?= $key ?>"
-                                   name="lists[<?= $key ?>][Transition][status_id]"
-                                   value="<?= $item['status_id'] ?>">
                             <input type="hidden" id="subject_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entry_subject]"
                                    value="<?= $item['entry_subject'] ?>">
@@ -93,6 +94,11 @@ $tranDate = $this->getTransitionDate('post');
                             <input type="hidden" id="additional_amount1_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][additional][1][amount]"
                                    value="<?= $item['additional'][1]['amount'] ?>">
+                            <input type="hidden" id="last_<?= $key ?>" name="lists[<?= $key ?>][Transition][last]"
+                                   value = "<?isset($item['last'])?$item['last']:''?>">
+                            <input type="hidden" id="path_<?= $key ?>"
+                                   name="lists[<?= $key ?>][Transition][path]"
+                                   value="<?= $item['path'] ?>">
 
                         </data>
 

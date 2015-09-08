@@ -9,6 +9,7 @@ $form = $this->beginWidget('CActiveForm', array(
     'enableAjaxValidation' => false,
     'htmlOptions' => array('class' => 'form-horizontal',),
 ));
+$statusArray = ['离职','正常','兼职'];
 ?>
 <div class="form-group">
     <?php echo $form->labelEx($model, 'name', array('class' => 'col-sm-2 control-label')); ?>
@@ -48,6 +49,14 @@ $form = $this->beginWidget('CActiveForm', array(
         <?php echo $form->textArea($model, 'memo', array('class' => 'form-control')); ?>
     </div>
     <?php echo $form->error($model, 'memo'); ?>
+</div>
+
+<div class="form-group">
+    <?php echo $form->labelEx($model, 'status', array('class' => 'col-sm-2 control-label')); ?>
+    <div class="col-sm-10">
+        <?php echo $form->dropDownList($model, 'status', $statusArray, array('class' => 'form-control')); ?>
+    </div>
+    <?php echo $form->error($model, 'status'); ?>
 </div>
 
 <div class="form-group">

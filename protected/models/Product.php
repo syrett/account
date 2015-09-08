@@ -5,16 +5,20 @@
  *
  * The followings are the available columns in table 'product':
  * @property integer $id
- * @property string $no
  * @property string $order_no
- * @property string $name
+ * @property string $entry_date
  * @property integer $client_id
- * @property string $in_date
- * @property double $in_price
- * @property string $out_date
- * @property double $out_price
+ * @property string $entry_name
+ * @property string $entry_memo
+ * @property double $price
+ * @property string $unit
+ * @property integer $tax
+ * @property double $paid
+ * @property integer $subject
+ * @property sting $subject_2
  * @property string $create_time
- * @property integer $status
+ * @property integer $update_time
+ * @property integer $status_id
  */
 class Product extends LFSModel
 {
@@ -149,5 +153,48 @@ class Product extends LFSModel
         $where .= " and entry_date >= $date and subject='600101'";   //成本核算，只列出销售产品的订单
         $models = $this->findAllByAttributes($con,$where);
         return $models;
+    }
+
+    /*
+     * 订单已收入金额; 检查预收 银行和现金
+     */
+    public function checkPaid(){
+        $total = floatval($this->price)*intval($this->count);
+        $amount = $this->getPaid();
+        if($amount>=$total)
+            return true;
+        else
+            return false;
+
+    }
+
+    public function getPaid(){
+        $amount = 0;
+        //预收
+        $porder = Preparation::model()->findAllByAttributes(['real_order'=>$this->order_no,'status'=>2]);
+        if($porder)
+            foreach ($porder as $item) {
+                if($item['type'] == 'bank')
+                    $order = Bank::model()->findByPk($item['pid']);
+                else
+                    $order = Cash::model()->findByPk($item['pid']);
+                if($order){
+                    $amount += floatval($order->amount);
+                }
+            }
+
+        //银行
+        $porder = Bank::model()->findAllByAttributes(['type'=>'product','pid'=>$this->id]);
+        if($porder)
+            foreach($porder as $item){
+                $amount += floatval($item->amount);
+            }
+        //现金
+        $porder = Cash::model()->findAllByAttributes(['type'=>'product','pid'=>$this->id]);
+        if($porder)
+            foreach($porder as $item){
+                $amount += floatval($item->amount);
+            }
+        return round($amount, 2);
     }
 }

@@ -70,9 +70,9 @@ class Salary extends LFSModel
 	{
 		return array(
 			'id' => 'ID',
-			'order_no' => '订单号',
-			'entry_date' => '销售日期',
-			'employee_id' => '员工ID',
+			'order_no' => '工资单号',
+			'entry_date' => '工资日期',
+			'employee_id' => '员工姓名',
 			'salary_amount' => '工资',
 			'bonus_amount' => '奖金',
 			'benefit_amount' => '其他福利',

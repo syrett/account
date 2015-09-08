@@ -67,6 +67,9 @@ $('.search-form form').submit(function(){
                     'value' => 'date("Y年m月d日",strtotime($data->entry_date))',
                     'filter'=>CHtml::activeTextField($model, 'entry_date',array("class"=>"input_mid")),
                 ),
+                array(
+                    'name' => 'employee.name'
+                ),
                 'salary_amount',
                 'bonus_amount',
                 'benefit_amount',

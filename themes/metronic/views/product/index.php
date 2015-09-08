@@ -109,12 +109,12 @@ $('.search-form form').submit(function(){
                     'name' => 'count',
                     'filter'=>CHtml::activeTextField($model, 'entry_name',array("class"=>"input-xsmall")),
                 ),
-//                array(
-//                    'name' => 'paied',
-//                    'type' => 'shortText',
-//                    'htmlOptions' => array('class' => 'input_mid'),
-//                    'headerHtmlOptions' => array('class' => 'input_mid'),
-//                ),
+                array(
+                    'name' => 'paied',
+                    'value' => '$data->getPaid()',
+                    'htmlOptions' => array('class' => 'input_mid'),
+                    'headerHtmlOptions' => array('class' => 'input_mid'),
+                ),
                 array(
                     'name' => 'create_time',
                     'value' => 'date("Y年m月d日",strtotime($data->create_time))',

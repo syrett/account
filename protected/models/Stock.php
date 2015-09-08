@@ -50,10 +50,10 @@ class Stock extends LFSModel
         return array(
             array('order_no, name, in_date, in_price', 'required'),
             array('vendor_id', 'numerical', 'integerOnly' => true),
-            array('in_price, out_price', 'numerical'),
+            array('in_price, out_price, value_year, value_rate', 'numerical'),
             array('order_no', 'length', 'max' => 16),
             array('name', 'length', 'max' => 512),
-            array('out_date, entry_subject', 'safe'),
+            array('out_date, entry_subject, value_year, value_rate', 'safe'),
             // The following rule is used by search().
             array('id, hs_no, order_no, name, vendor_id, in_date, in_price, out_date, out_price, create_time, status', 'safe', 'on' => 'search'),
         );
@@ -230,10 +230,22 @@ class Stock extends LFSModel
             $this->setAttribute('order_no', $item['order_no']);
             $this->setAttribute('name', $item['entry_name']);
             $this->setAttribute('vendor_id', $item['vendor_id']);
-            $this->setAttribute('entry_subject', substr($item['entry_subject'], 1));
+            $this->setAttribute('entry_subject', $item['entry_subject']);
             $this->setAttribute('in_date', $item['entry_date']);
             $this->setAttribute('in_price', $item['price']);
             $this->setAttribute('status', $item['status_id']);
+            //采购固定资产，无形资产，长期待摊费用，需要保存残值率和摊销年限
+            $sbj = $item['entry_subject'];
+            while(strlen($sbj)>=4){
+                $option = Options::model()->findByAttributes(['entry_subject'=>$sbj]);
+                if($option){
+                    $this->value_year = $option['year'];
+                    $this->value_rate = $option['value'];
+                    break;
+                }
+
+                $sbj = substr($sbj,0,-2);
+            }
         }elseif($type=='product'){
             $this->setAttribute('order_no', $item['order_no']);
             $this->setAttribute('order_no_sale', $item['order_no']);
@@ -278,6 +290,8 @@ class Stock extends LFSModel
             'vendor_id'  =>  $this->vendor_id,
             'in_date'  =>  $this->in_date,
             'in_price'  =>  $this->in_price,
+            'value_year'  =>  $this->value_year,
+            'value_rate'  =>  $this->value_rate,
         ];
         while($count-->0){
             $model = new Stock();
@@ -393,8 +407,10 @@ class Stock extends LFSModel
         if($model->overPeriod())
             return 0;
         if($model){
-            if($model->worth!='')
-                return $model->worth;
+            if($model->worth!=''){
+                $arr = explode(',', $model['worth']);
+                return end($arr);
+            }
             else
                 return $model->in_price;
         }else
@@ -419,7 +435,7 @@ class Stock extends LFSModel
     }
 
     /*
-     * 结账时，保存净值。如果反结账，目前没有办法解决
+     * 结账时，保存净值。如果反结账，删除计提折旧
      */
     public function saveWorth(){
         $arr = ['1601', '1701', '1801'];
@@ -433,7 +449,10 @@ class Stock extends LFSModel
                 $option = Options::model()->findByAttributes([], "entry_subject like '$subject%'");
                 foreach ($stocks as $item) {
                     $price = $item->getWorth();
-                    $item->worth = $price - $price * (100 - $option->value) / 100 / ($option->year * 12);
+                    $worth = $price - $price * (100 - $option->value) / 100 / ($option->year * 12);
+                    $arr = explode(',', $item->worth);
+                    $arr[] = round2($worth);
+                    $item->worth = implode(',', $arr);
                     $item->save();
                 }
             }

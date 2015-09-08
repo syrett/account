@@ -144,4 +144,35 @@ class Purchase extends LFSModel
 //        $this->setAttribute('updated_at', isset($item['updated_at'])?$item['updated_at']:'');
     }
 
+    /*
+     * 已支付金额；预付、银行和现金
+     */
+    public function getPaid(){
+        $amount = 0;
+        $porders = Preparation::model()->findAllByAttributes(['real_order'=>$this->order_no]);
+        if($porders){
+            foreach ($porders as $item) {
+                if($item['type'] == 'bank')
+                    $order = Bank::model()->findByPk($item['pid']);
+                else
+                    $order = Cash::model()->findByPk($item['pid']);
+
+                $amount += $order['amount'];
+            }
+        }
+
+        $porders = Bank::model()->findAllByAttributes(['pid'=>$this->id,'type'=>'purchase']);
+        if($porders){
+            foreach ($porders as $item) {
+                $amount += $item['amount'];
+            }
+        }
+        $porders = Cash::model()->findAllByAttributes(['pid'=>$this->id,'type'=>'purchase']);
+        if($porders){
+            foreach ($porders as $item) {
+                $amount += $item['amount'];
+            }
+        }
+        return $amount;
+    }
 }

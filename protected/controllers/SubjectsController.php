@@ -307,4 +307,26 @@ class SubjectsController extends Controller
                 echo 0;
         }
     }
+
+    /*
+     * 商品采购，获取采购用途
+     */
+    public function actionGetusefor()
+    {
+        if (Yii::app()->request->isAjaxRequest) {
+            $name = $_REQUEST['name'];
+            //因为只涉及库存商品，所以只是1405下的子科目
+            $stock = Stock::model()->findByAttributes(['name'=>$name], "entry_subject like '1405%'");
+            if($stock){
+                $arr = [1601, 1403, $stock->entry_subject, 6602, 6601, 6401, 1701, 1604, 1801];    //其他科目正常，库存商品1405只显示一条
+            }else
+                $arr = [1601, 1403, 1405, 6602, 6601, 6401, 1701, 1604, 1801];
+            $subjectArray = Transition::getSubjectArray($arr);
+//                $subjectArray['_'. $stock->entry_subject] = Subjects::getSbjPath($stock->entry_subject);
+            $result = json_encode($subjectArray);
+            echo $result;
+
+        }else
+            throw new CHttpException(403, "无效的请求");
+    }
 }

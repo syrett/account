@@ -49,6 +49,15 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/pages/script
 		echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
 	}
 
-	$this->renderPartial('_form', array('model' => $model, 'sheetData'=> $sheetData)); ?>
+    $vip = 1;
+    if($this->checkVIP()){
+        $this->renderPartial('_form_vip', array('model'=>$model,'sheetData' => $sheetData));
+        $vip = 2;
+    }
+    else{
+        $this->renderPartial('_form', array('model'=>$model,'sheetData' => $sheetData));
+    }
+    ?>
 	</div>
+    <input id="vip" type="hidden" value="<?= $vip?>" >
 </div>

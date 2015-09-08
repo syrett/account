@@ -144,20 +144,25 @@ class Department extends CActiveRecord
      * 根据部门判断，工资或资金应该返回什么科目
      */
     public static function matchSubject($department_id, $sbj_name){
-
-        switch ($department_id) {
-            case 1:
-                $result = Subjects::matchSubject($sbj_name, array(6401));
-                break;
-            case 2:
-                $result = Subjects::matchSubject($sbj_name, array(6602), 1);
-                break;
-            case 3:
-                $result = Subjects::matchSubject($sbj_name, array(6601));
-                break;
-            case 4:
-                $result = Subjects::matchSubject($sbj_name, array(660202));
-                break;
+        $exception = ['办公费','印花税']; //此数组里的项目，都是管理费用的子科目
+        if(in_array($sbj_name, $exception))
+            $result = Subjects::matchSubject($sbj_name, 6602);
+        else{
+            $depart = Department::model()->findByPk($department_id);
+            switch ($depart->type) {
+                case 1:
+                    $result = Subjects::matchSubject($sbj_name, array(6401));
+                    break;
+                case 2:
+                    $result = Subjects::matchSubject($sbj_name, array(6602), 1);
+                    break;
+                case 3:
+                    $result = Subjects::matchSubject($sbj_name, array(6601));
+                    break;
+                case 4:
+                    $result = Subjects::matchSubject($sbj_name, array(660202));
+                    break;
+            }
         }
         return $result;
     }

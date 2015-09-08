@@ -37,6 +37,11 @@ $('.search-form form').submit(function(){
 		</div>
 	</div>
 	<div class="portlet-body">
+        <?
+        foreach(Yii::app()->user->getFlashes() as $key => $message) {
+            echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
+        }
+        ?>
 		<div class="alert alert-info">
 			提示：可以通过比较符号 (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>或者 <b>=</b>) 来进行搜索
 		</div>

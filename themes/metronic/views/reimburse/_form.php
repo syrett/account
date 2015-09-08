@@ -11,6 +11,9 @@ $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_vip.js')
 $this->pageTitle = Yii::app()->name;
 $type = 'reimburse';
 $item = $sheetData[0]['data'];
+$preOrder = Preparation::getOrderArray($type);
+$item['preorder'] = Preparation::getOrderArray($type, $item['id']);
+$preOrder = $item['preorder'] + $preOrder;
 ?>
 <div class="panel-body">
     <div class="row" id="abc">
@@ -22,27 +25,35 @@ $item = $sheetData[0]['data'];
                 'htmlOptions' => array('class' => 'form-horizontal',),
 //                'action'=>Laofashi. $this->createUrl('/bank/default/update', array('id'=>$_GET['id'])),
             ));
-            $employee = Employee::model()->findByPk($item['employee_id']);
+
+            if(isset($item['employee_name']))
+                $employee = Employee::model()->findByAttributes(['name'=> $item['employee_name']]);
+            elseif(isset($item['employee_id']))
+                $employee = Employee::model()->findByPk($item['employee_id']);
             ?>
             姓名：<?= $employee->name ?>&nbsp;&nbsp;&nbsp;月份：<?= convertDate($item['entry_date'], 'Y年m月')?>&nbsp;&nbsp;&nbsp;部门：<?= Department::model()->getName($employee->department_id) ?>
             <table class="table table-bordered dataTable">
                 <tr>
                     <!--                    <th class="input_min"   ><input type="checkbox"></th>-->
-                    <th class="input_mmin"  >姓名</th>
-                    <th class="input_mmin"  >部门</th>
+
                     <th class="input_min"   >摘要</th>
                     <th class="input_min"   >时间</th>
-                    <th class="input_min"   >差旅费</th>
-                    <th class="input_mmin"  >福利费(餐费等)</th>
-                    <th class="input_mmin"  >交通费</th>
-                    <th class="input_min"   >通讯费</th>
-                    <th class="input_mmin"  >招待费</th>
-                    <th class="input_mmin"  >办公费</th>
-                    <th class="input_min"   >租金</th>
-                    <th class="input_min"   >水电费</th>
-                    <th class="input_mmin"  >培训费</th>
-                    <th class="input_min"   >服务费</th>
-                    <th class="input_mmin"  >印花税</th>
+                    <th class="input_mmmin"  >差旅费</th>
+                    <th class="input_mmmin"  >福利费<br >餐费等</th>
+                    <th class="input_mmmin"  >交通费</th>
+                    <th class="input_mmmin"  >通讯费</th>
+                    <th class="input_mmmin"  >招待费</th>
+                    <th class="input_mmmin"  >办公费</th>
+                    <th class="input_mmmin"  >租金</th>
+                    <th class="input_mmmin"  >水电费</th>
+                    <th class="input_mmmin"  >培训费</th>
+                    <th class="input_mmmin"  >服务费</th>
+                    <th class="input_mmmin"  >印花税</th>
+                    <?
+                    if (!empty($preOrder)) {
+                        echo '<th class="input-small">预付款</th>';
+                    }
+                    ?>
                     <!--                    <th class="input_min">操作</th>-->
                     <th style="width: 10%">提示</th>
                 </tr>
@@ -59,14 +70,7 @@ $item = $sheetData[0]['data'];
                     <tr line="<?= $key ?>" <?= $key % 2 == 1 ? 'class="table-tr"' : '' ?>>
                         <!--                            <td><input class="" type="checkbox" id="item_--><?//= $key ?><!--" name="lists[--><?//= $key ?><!--]"-->
                         <!--                                       value="--><?//= isset($item['id']) ? $item['id'] : '' ?><!--"></td>-->
-                        <td><input readonly="readonly" class="input_mmin" type="text" id="tran_employee_id_<?= $key ?>"
-                                   name="lists[<?= $key ?>][Transition][employee_name]"
-                                   value="<?= $item['employee_name'] ?>">
-                        </td>
-                        <td><input readonly="readonly" class="input_mmin" type="text" id="tran_department_id_<?= $key ?>"
-                                   name="lists[<?= $key ?>][Transition][department_name]"
-                                   value="<?= $item['department_name'] ?>">
-                        </td>
+
                         <td><input class="input_min" type="text" id="tran_memo_id_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entry_memo]"
                                    value="<?= $item['entry_memo'] ?>">
@@ -75,50 +79,76 @@ $item = $sheetData[0]['data'];
                                    name="lists[<?= $key ?>][Transition][entry_date]"
                                    value="<?= $item['entry_date'] ?>">
                         </td>
-                        <td><input class="input_min" type="text" id="tran_travel_amount_<?= $key ?>"
+                        <td><input class="input_mmmin" type="text" id="tran_travel_amount_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][travel_amount]"
                                    value="<?= $item['travel_amount'] ?>">
                         </td>
-                        <td><input class="input_mmin" type="text" id="tran_benefit_amount_<?= $key ?>"
+                        <td><input class="input_mmmin" type="text" id="tran_benefit_amount_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][benefit_amount]"
                                    value="<?= $item['benefit_amount'] ?>">
                         </td>
-                        <td><input class="input_mmin" type="text" id="tran_traffic_amount_<?= $key ?>"
+                        <td><input class="input_mmmin" type="text" id="tran_traffic_amount_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][traffic_amount]"
                                    value="<?= $item['traffic_amount'] ?>">
                         </td>
-                        <td><input class="input_mmin" type="text" id="tran_phone_amount_<?= $key ?>"
+                        <td><input class="input_mmmin" type="text" id="tran_phone_amount_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][phone_amount]"
                                    value="<?= $item['phone_amount'] ?>">
                         </td>
-                        <td><input class="input_mmin" type="text" id="tran_entertainment_amount_<?= $key ?>"
+                        <td><input class="input_mmmin" type="text" id="tran_entertainment_amount_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entertainment_amount]"
                                    value="<?= $item['entertainment_amount'] ?>">
                         </td>
-                        <td><input class="input_mmin" type="text" id="tran_office_amount_<?= $key ?>"
+                        <td><input class="input_mmmin" type="text" id="tran_office_amount_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][office_amount]"
                                    value="<?= $item['office_amount'] ?>">
                         </td>
-                        <td><input class="input_mmin" type="text" id="tran_rent_amount_<?= $key ?>"
+                        <td><input class="input_mmmin" type="text" id="tran_rent_amount_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][rent_amount]"
                                    value="<?= $item['rent_amount'] ?>">
                         </td>
-                        <td><input class="input_mmin" type="text" id="tran_watere_amount_<?= $key ?>"
+                        <td><input class="input_mmmin" type="text" id="tran_watere_amount_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][watere_amount]"
                                    value="<?= $item['watere_amount'] ?>">
                         </td>
-                        <td><input class="input_mmin" type="text" id="tran_train_amount_<?= $key ?>"
+                        <td><input class="input_mmmin" type="text" id="tran_train_amount_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][train_amount]"
                                    value="<?= $item['train_amount'] ?>">
                         </td>
-                        <td><input class="input_mmin" type="text" id="tran_service_amount_<?= $key ?>"
+                        <td><input class="input_mmmin" type="text" id="tran_service_amount_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][service_amount]"
                                    value="<?= $item['service_amount'] ?>">
                         </td>
-                        <td><input class="input_mmin" type="text" id="tran_stamping_amount_<?= $key ?>"
+                        <td><input class="input_mmmin" type="text" id="tran_stamping_amount_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][stamping_amount]"
                                    value="<?= $item['stamping_amount'] ?>">
                         </td>
+                        <?
+                        if (!empty($preOrder)) {
+                            ?>
+                            <td><?
+                                $this->widget('ext.select2.ESelect2', array(
+                                    'name' => 'lists[' . $key . '][Transition][preOrder]',
+                                    'id' => 'preOrder_' . $key,
+                                    'data' => $preOrder,
+                                    'value' => array_keys($item['preorder']),
+                                    'options' => array(
+                                        'formatResult' => 'js:function(data){
+                                            var order = JSON.parse(data.text);
+                                            var markup = "<div title=\"金额:" + order.amount + " \n摘要:" + order.memo + "\">" + data.id + "</div>";
+                                            return markup;
+                                        }',
+                                        'formatSelection' => 'js: function(order) {
+                                            return order.id;
+                                        }',
+                                    ),
+                                    'htmlOptions' => array('class' => 'select-full','multiple'=>'multiple')
+                                ));
+                                ?>
+                            </td>
+                        <?
+                        }
+                        ?>
                         <td class="action hidden">
                             <input type="hidden" id="did_<?= $key ?>" name="lists[<?= $key ?>][Transition][d_id]"
                                    value="<?= isset($item['d_id']) ? $item['d_id'] : '' ?>">
@@ -128,6 +158,12 @@ $item = $sheetData[0]['data'];
                             <input type="hidden" id="base_amount_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][base_amount]"
                                    value="<?= $item['base_amount'] ?>">
+                            <input type="hidden" id="tran_employee_id_<?= $key ?>"
+                                   name="lists[<?= $key ?>][Transition][employee_name]"
+                                   value="<?= $item['employee_name'] ?>">
+                            <input type="hidden" id="tran_department_id_<?= $key ?>"
+                                   name="lists[<?= $key ?>][Transition][department_name]"
+                                   value="<?= $item['department_name'] ?>">
                             <data class="hidden">
                                 <input type="hidden" id="id_<?= $key ?>" value="<?= $key ?>">
                                 <input type="hidden" id="status_id_<?= $key ?>"

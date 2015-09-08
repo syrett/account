@@ -186,10 +186,8 @@ return array(
     // using Yii::app()->params['paramName']
     'params'=>array(
         // this is used in contact page
-        'businessAccounting' =>'某某某某有限公司',
         'adminEmail'=>'webmaster@example.com',
         'sbj_cat'=>array(1 =>  '资产类 ' ,2 =>  '负债类 ' ,3 =>  '权益类 ' ,4 =>  '收入类 ' ,5 =>  '费用类'),
-        'startDate'=>'201501',
         'profitReport_sum' => array(
             array("id"=>"trading_profit", "name"=>"二、营业利润", "to"=>"profit_sum", "function"=>"sum"),
             array("id"=>"profit_sum", "name"=>"三‘利润总额", "to"=>"net_profit", "function"=>"sum"),

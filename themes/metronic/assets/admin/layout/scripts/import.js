@@ -86,7 +86,6 @@ function itemsetting(e) {
     var id = $(e.parentNode.parentNode).find("input[id^='id_']")[0].value;
     $("#item_id").val(id);
     $("#data").val(getInfo(e.parentNode));
-    unsetting();
 }
 function chooseType(e, a) {
     $.ajax({
@@ -111,6 +110,7 @@ function chooseType(e, a) {
             //alert(e);
         }
     });
+    unsetting();
 }
 //按钮激活状态
 function choosed(e) {
@@ -128,10 +128,16 @@ function chooseOption(e) {
         options += "," + $(value).find("button[class*='active']").val()
     })
     options += "," + e.value;
+    var version = $("#vip").val();
+    if(e.value == '借出款项'){
+        $("#setting-info").html('<i class="fa fa-bell-o"></i>&nbsp;&nbsp;&nbsp;预支给员工的款项请在员工报销模块录入');
+    }else{
+        $("#setting-info").html('');
+    }
     $.ajax({
         type: 'POST',
         url: $("#option").val(),
-        data: {"type": getType(), "option": options, "data": $("#data").first().val()},
+        data: {"type": getType(), "option": options, "data": $("#data").first().val(), "version": version},
         success: function (msg) {
             var data = JSON.parse(msg);
             if (data.rule == 'end') {
@@ -139,16 +145,18 @@ function chooseOption(e) {
                 $(e).parent().nextAll().remove();
                 //var str = '<div class="options-div"><span class="fa fa-angle-right flow-arrow"></span></div><div class="options alert alert-success alert-dismissable">';
                 var str = '<div class="options alert alert-success alert-dismissable">';
-                str += '<i class="fa fa-check"></i> 已选择 => <span id="sub_name">"' + data.sbj_name + '"</span>';
+                str += '<i class="fa fa-check"></i> 已选择 => <span id="sub_name">"' + data.sbj_name + '"</span><br >';
                 if (data.option != 0) {
                     $.each(data.option, function (key, value) {
+                        if(key / 7 == Math.round(key/7))
+                            str += '<br >';
                         if (value[0] == 'text')
                             str += '<br ><input type="text" name="new-option" id="new-option" placeholder="' + value[1] + '" >'
                         if (value[0] == 'select') {
 
                         }
                         if (value[0] == 'checkbox') {
-                            str += '<br ><input type="checkbox" name="new-option" id="new-option" >' + value[1] + '<br >'
+                            str += '<input type="checkbox" checked name="new-option" id="'+ value[1] + '" >' + value[2] + '&nbsp;'+ value[3] + '&nbsp;&nbsp;&nbsp;&nbsp;'
                         }
                     })
                 }
@@ -170,6 +178,10 @@ function chooseOption(e) {
                     str += '</select>'
                 } else
                     $.each(data.data, function (key, value) {
+                        if(typeof(value)=='object'){
+                            key = Object.keys(value)[0]
+                            value = value[key];
+                        }
                         if (IsNum(key.toString().substring(1))) //json.parse会把数组重新排序，所以key为数字数组，key前面都添加了下划线'_'
                             key = key.toString().substring(1)
                         str += '<button class="btn " type="button" onclick="chooseOption(this)" value="' + key + '">' + value + '</button>'
@@ -239,6 +251,7 @@ function chooseOption(e) {
                     $("div.options").removeClass("target");
                     $("div.options").last().addClass("target");
                 }
+                unsetting();
             }
             setWidth(e);
         },
@@ -254,16 +267,18 @@ function itemSet() {
     //addNew();
     $sbj = $("#subject").val();
     var item_id = $("#item_id").val()
-    unset(item_id);
-    e = $("#info_" + item_id);
-    e.removeClass();
-    setTransaction(item_id);
     if ($sbj != "") {
+        unset(item_id);
+        e = $("#info_" + item_id);
+        e.removeClass();
+        setTransaction(item_id);
         $("#subject_" + item_id).val($sbj);
         e.attr('title', $sbj);
         //显示选择路径
         var str = "";
         $.each($(".options").find("button[class*='active']"), function (key, value) {
+            //if (str != "")
+            //    str += "=>";
             if ($(value).html() == '选择') {
                 str += "=>" + $(value).val();
             }
@@ -276,12 +291,24 @@ function itemSet() {
                 str += "=>" + removePath($(value).html());
         })
         //设置含税，简单版可以这样设置，复杂版要重新设计
-        if ($("#new-option").is(":checked") == true)
+        if ($("#withtax").is(":checked") == true)
             $("#withtax_" + item_id).val(1);
         else
             $("#withtax_" + item_id).val(0);
+        $("#path_" + item_id).val(str);
         e.html(str);
         e.addClass("path-success");
+        //设置checkbox的选项
+        $.each($("#setting").find("input[type='checkbox']:checked"), function(key, element){
+            var id = $(element).attr('id') + "_" + item_id;
+            if($("#"+ id).length > 0)
+                $("#" + id).val(1);
+            else{
+                $("data").append('<input type="hidden" id="'+ id +'" name="lists['+item_id + '][Transition][' + $(element).attr('id') + ']" value="1" >');
+            }
+        });
+        var last = $(".options button[class*='active']:last").val()
+        $("#last_"+ item_id).val(last);
     }
     else {
         e.addClass("path-fail");

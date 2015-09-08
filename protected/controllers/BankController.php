@@ -67,8 +67,10 @@ class BankController extends Controller
 				Yii::app()->user->setFlash('success', "保存成功!");
 				$model = $this->loadModel($id);
                 $tran = Transition::model()->find(['condition' => 'data_id=:data_id', 'params' => [':data_id' => $id]]);
-                $sheetData[0]['data'] = Transition::getSheetData($model->attributes,'bank');
-                $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
+                if($tran){
+                    $sheetData[0]['data'] = Transition::getSheetData($model->attributes,'bank');
+                    $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
+                }
             }
 		}else {
 			$model = $this->loadModel($id);
@@ -195,7 +197,7 @@ class BankController extends Controller
     public function actionOption()
     {
         if (Yii::app()->request->isAjaxRequest) {
-            echo json_encode(Bank::chooseOption($_POST['type'], $_POST['option'], $_POST['data']));
+            echo json_encode(Bank::chooseOption($_POST['type'], $_POST['option'], $_POST['data'], $_POST['version']));
         } else
             throw new CHttpException(403,'不允许提交');
     }

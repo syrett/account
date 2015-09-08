@@ -35,6 +35,72 @@ class Transition extends CActiveRecord
     public $entry_time;
     public $select; // search的时候，定义返回字段
 
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules()
+    {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return array(
+            array('entry_num, entry_subject, entry_amount,entry_creater, entry_editor', 'required'),
+            array('entry_num, entry_transaction, entry_subject,entry_creater, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing', 'numerical', 'integerOnly' => true),
+            array('entry_amount', 'type', 'type' => 'float'),
+            array('entry_num_prefix', 'length', 'max' => 10),
+            array('entry_memo, entry_appendix', 'length', 'max' => 100),
+            array('entry_appendix_id, entry_appendix_type, entry_name, data_type, data_id, entry_date, entry_time', 'safe'),
+            // The following rule is used by search().
+
+            array('id, entry_number, entry_num_prefix, entry_num, entry_date, entry_time, entry_memo, entry_transaction,
+            entry_subject, entry_amount, entry_appendix, entry_appendix_id, entry_appendix_type,entry_creater, entry_editor, entry_reviewer,
+            entry_deleted, entry_reviewed, entry_posting, entry_closing, entry_settlement', 'safe', 'on' => 'search'),
+            //自定义验证规则
+            array('entry_amount', 'check_entry_amount', 'on' => 'create,update'), //借贷相等
+        );
+    }
+
+    /**
+     * @return array relational rules.
+     */
+    public function relations()
+    {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array();
+    }
+
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels()
+    {
+        return array(
+            'id' => 'ID',
+            'entry_num_prefix' => '凭证前缀',
+            'entry_num' => '凭证号',
+            'entry_time' => '录入时间',
+            'entry_date' => '凭证日期',
+            'entry_name' => '交易对象名称',
+            'data_type' => '交易类型',
+            'data_id' => '原数据ID',
+            'entry_memo' => '凭证摘要',
+            'entry_transaction' => '借贷',
+            'entry_subject' => '借贷科目',
+            'entry_amount' => '交易金额',
+            'entry_appendix' => '附加信息',
+            'entry_appendix_id' => '客户、供应商、员工、项目',
+            'entry_creater' => '制单人员',
+            'entry_editor' => '录入人员',
+            'entry_reviewer' => '审核人员',
+            'entry_deleted' => '凭证删除',
+            'entry_reviewed' => '凭证审核',
+            'entry_posting' => '过账',
+            'entry_closing' => '结转',
+            'entry_settlement' => '结转凭证',
+            'entry_number' => '凭证编号',
+        );
+    }
+
     public static function getSbjPath($id)
     {
         return Subjects::getSbjPath($id);
@@ -388,9 +454,10 @@ class Transition extends CActiveRecord
      */
     public static function getSheetData($items = [], $type)
     {
+        $starttime = Condom::model()->getStartTime();
         $arr = [
             "entry_name" => "",
-            "entry_date" => "",
+            "entry_date" => $starttime,
             "entry_memo" => "",
             "entry_amount" => "",
             "entry_transaction" => "",
@@ -407,6 +474,7 @@ class Transition extends CActiveRecord
             "count" => "1",
             "unit" => "",
             "paid" => "",
+            "preorder" => [],
             "invoice" => "0",
             "tax" => "0",
             "parent" => "",
@@ -447,6 +515,7 @@ class Transition extends CActiveRecord
                 ],
 
             ],
+            'path' => '',
             "entry_reviewed" => "0",
             "status_id" => "1",
         ];
@@ -539,6 +608,10 @@ class Transition extends CActiveRecord
                         $arr['provident_company'] = round2(ceil($employee->base*7/100));
                         //根据员工部门判断属于什么费用
                         $arr['entry_subject'] = Department::matchSubject($employee->department_id, '工资');
+                        //查看是否已经导入过该月工资
+                        $salary = Salary::model()->findByAttributes(['employee_id'=>$employee->id,'entry_date'=>$arr['entry_date']]);
+                        if($salary)
+                            $arr['error'][] = '已经导入过该月工资';
                         $amount = $payment;
                         break;
                     case 'reimburse':
@@ -599,76 +672,11 @@ class Transition extends CActiveRecord
                     $arr['employee_name'] = Employee::getName($items['employee_id']);
                     $arr['department_name'] = Employee::model()->getDepart($items['employee_id'], 'name');
                     $arr['base_amount'] = $employee->base;
+                    $arr['entry_subject'] = Department::matchSubject($employee->department_id, '工资');
                 }
             }
         }
         return $arr;
-    }
-
-    /**
-     * @return array validation rules for model attributes.
-     */
-    public function rules()
-    {
-        // NOTE: you should only define rules for those attributes that
-        // will receive user inputs.
-        return array(
-            array('entry_num, entry_subject, entry_amount,entry_creater, entry_editor', 'required'),
-            array('entry_num, entry_transaction, entry_subject,entry_creater, entry_editor, entry_reviewer, entry_deleted, entry_reviewed, entry_posting, entry_closing', 'numerical', 'integerOnly' => true),
-            array('entry_amount', 'type', 'type' => 'float'),
-            array('entry_num_prefix', 'length', 'max' => 10),
-            array('entry_memo, entry_appendix', 'length', 'max' => 100),
-            array('entry_appendix_id, entry_appendix_type, entry_name, data_type, data_id, entry_date, entry_time', 'safe'),
-            // The following rule is used by search().
-
-            array('id, entry_number, entry_num_prefix, entry_num, entry_date, entry_time, entry_memo, entry_transaction,
-            entry_subject, entry_amount, entry_appendix, entry_appendix_id, entry_appendix_type,entry_creater, entry_editor, entry_reviewer,
-            entry_deleted, entry_reviewed, entry_posting, entry_closing, entry_settlement', 'safe', 'on' => 'search'),
-            //自定义验证规则
-            array('entry_amount', 'check_entry_amount', 'on' => 'create,update'), //借贷相等
-        );
-    }
-
-    /**
-     * @return array relational rules.
-     */
-    public function relations()
-    {
-        // NOTE: you may need to adjust the relation name and the related
-        // class name for the relations automatically generated below.
-        return array();
-    }
-
-    /**
-     * @return array customized attribute labels (name=>label)
-     */
-    public function attributeLabels()
-    {
-        return array(
-            'id' => 'ID',
-            'entry_num_prefix' => '凭证前缀',
-            'entry_num' => '凭证号',
-            'entry_time' => '录入时间',
-            'entry_date' => '凭证日期',
-            'entry_name' => '交易对象名称',
-            'data_type' => '交易类型',
-            'data_id' => '原数据ID',
-            'entry_memo' => '凭证摘要',
-            'entry_transaction' => '借贷',
-            'entry_subject' => '借贷科目',
-            'entry_amount' => '交易金额',
-            'entry_appendix' => '附加信息',
-            'entry_appendix_id' => '客户、供应商、员工、项目',
-            'entry_creater' => '制单人员',
-            'entry_editor' => '录入人员',
-            'entry_reviewer' => '审核人员',
-            'entry_deleted' => '凭证删除',
-            'entry_reviewed' => '凭证审核',
-            'entry_posting' => '过账',
-            'entry_closing' => '结转',
-            'entry_settlement' => '结转凭证',
-            'entry_number' => '凭证编号',
-        );
     }
 
     public function listByPrefix($prefix, $select)
@@ -1161,7 +1169,7 @@ class Transition extends CActiveRecord
 //        ['reject' => ['工资', '社保', '公积金', '折旧费', '研发费'],'prefix'=>'_'
         if(empty($options))
             $options = ['reject' => ['工资', '社保', '公积金', '折旧费', '研发费'],'prefix'=>'_'];
-        $result = $subject->getitem($arr, '', $options);
+        $result = $subject->getitem($arr, '_', $options);
         return $result;
     }
 
@@ -1213,19 +1221,5 @@ class Transition extends CActiveRecord
             $temp[] = $model;
         }
         return $temp;
-    }
-
-    /*
-     * 检查凭证里某科目的金额总和是否为0
-     */
-    public function checkAmount($sbj){
-        $trans = $this->findAllByAttributes(['entry_subject'=>$sbj]);
-        $amount = 0;
-        $atatus = 0;
-        foreach ($trans as $item) {
-            $status = 1;
-            $amount = $item->entry_transaction==1?+$item->entry_amount:-$item->entry_amount;
-        }
-        return [$atatus, $amount];
     }
 }

@@ -9,7 +9,9 @@ $cs = Yii::app()->getClientScript();
 $baseUrl = Yii::app()->theme->baseUrl;
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_common.js');
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_vip.js');
+$cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/purchase.js');
 $this->pageTitle = Yii::app()->name;
+$preOrder = Preparation::getOrderArray($type);
 ?>
 <div class="dataTables_wrapper no-footer">
     <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form']); ?>
@@ -36,6 +38,11 @@ $this->pageTitle = Yii::app()->name;
                     <th class="input-small">税率</th>
                     <th class="input-small">采购用途</th>
                     <th class="input_mid hidden" id="department_id_th" >部门</th>
+                    <?
+                    if (!empty($preOrder)) {
+                        echo '<th class="input-small">预付款</th>';
+                    }
+                    ?>
                     <th class="input-small">操作</th>
                     <th style="width: 10%">提示</th>
                 </tr>
@@ -128,6 +135,34 @@ $this->pageTitle = Yii::app()->name;
                                 ));
                                 ?>
                             </td>
+                            <?
+                            if (!empty($preOrder)) {
+                                //添加一项 不含预付的选项
+//                                $preOrder = ['非预付款' => '{"amount":0,"memo":"非预付款"}'] + $preOrder;
+                                ?>
+                                <td><?
+                                    $this->widget('ext.select2.ESelect2', array(
+                                        'name' => 'lists[' . $key . '][Transition][preOrder]',
+                                        'id' => 'preOrder_' . $key,
+                                        'data' => $preOrder,
+                                        'value' => $item['preOrder'],
+                                        'options' => array(
+                                            'formatResult' => 'js:function(data){
+                                            var order = JSON.parse(data.text);
+                                            var markup = "<div title=\"金额:" + order.amount + " \n摘要:" + order.memo + "\">" + data.id + "</div>";
+                                            return markup;
+                                        }',
+                                            'formatSelection' => 'js: function(order) {
+                                            return order.id;
+                                        }',
+                                        ),
+                                        'htmlOptions' => array('class' => 'select-full','multiple'=>'multiple',)
+                                    ));
+                                    ?>
+                                </td>
+                            <?
+                            }
+                            ?>
                             <td class="action">
                                 <input type="hidden" id="did_<?= $key ?>" name="lists[<?= $key ?>][Transition][d_id]"
                                        value="<?= isset($item['d_id']) ? $item['d_id'] : '' ?>">
@@ -212,7 +247,7 @@ $this->pageTitle = Yii::app()->name;
             <div class="transition_action">
                 <p>
                     <button class="btn btn-default btn-sm" id="btnAdd" name="btnAdd" type="button"
-                            onclick="addRow()"><span
+                            onclick="addPurchase()"><span
                             class="glyphicon glyphicon-add"></span> 插入新行
                     </button>
                 </p>
@@ -227,71 +262,3 @@ $this->pageTitle = Yii::app()->name;
         <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证</button>
     </div>
 </div>
-<script>
-    function Not_Found(type, term, line) {
-        var $not_found = '<div class="nomatch"><a href="#" onclick="return create(\'' + type + '\',\'' + term + '\', \'' + line + '\')">' + term + '  <span>新建</span></a></div>';
-        return $not_found;
-    }
-    function create(type, term, line) {
-        if (type == "vendor") {
-            var data = {
-                name: term
-            }
-            var vendor = createVendor(data);
-            if (vendor != '0' && $("select[id*='tran_appendix_id_'] option[value='" + vendor + "']").length == 0) {
-                $("select[id*='tran_appendix_id_']").append($("<option></option>").attr("value", vendor).text(term));
-                $("select[id*='tran_appendix_id_']").select2("updateResults");
-            }
-            $("select[id*='tran_appendix_id_']").select2("close");
-            $("select[id*='tran_appendix_id_" + line + "']").select2("val", vendor);
-        } else if (type == "stock") {
-            $("select[id*='tran_entry_name_']").append($("<option></option>").attr("value", term).text(term));
-            $("select[id*='tran_entry_name_']").select2("updateResults");
-            $("select[id*='tran_entry_name_']").select2("close");
-            $("select[id*='tran_entry_name_" + line + "']").select2("val", term);
-        } else if (type == "subject") {
-            var data = {
-                name: term,
-                subject: 1405
-            }
-            var subject = createSubject(data);
-            if (subject != '0' && $("select[id*='tran_subject_'] option[value='" + subject + "']").length == 0) {
-                $("select[id*='tran_subject_']").append($("<option></option>").attr("value", subject).text(term));
-                $("select[id*='tran_subject_']").select2("updateResults");
-            }
-            $("select[id*='tran_appendix_id_']").select2("close");
-            $("select[id*='tran_appendix_id_" + line + "']").select2("val", subject);
-
-        }
-    }
-    var arr = Array('1601', '1801', '1701');
-    $(window).load(function() {
-        //如果是固定资产，需要选择使用部门
-        $("div").delegate("select[id*='tran_subject_']","change",function(){
-            var department_id_show = false;
-            $.each($("select[id*='tran_subject_']"),function(key,obj){
-                var sbj = $(obj).val();
-                var row = key;
-                if(in_array(sbj.substr(1,4), arr)){
-                    department_id_show = true;
-                    $("select[id='department_id_"+row+"']").select2();
-                }else
-                    $("select[id='department_id_"+row+"']").select2("destroy").hide();
-            })
-            if(department_id_show){
-                $("[id*='department_id_']").removeClass("hidden");
-            }else
-                $("[id*='department_id_']").addClass("hidden");
-        });
-
-        $.each($("select[id*='tran_subject_']"), function (key, obj) {
-            var sbj = $(obj).val();
-            var row = key;
-            if (in_array(sbj.substr(1, 4), arr)) {
-                $("[id*='department_id_']").removeClass("hidden");
-                $("select[id='department_id_" + row + "']").select2();
-            } else
-                $("select[id='department_id_" + row + "']").select2("destroy").hide();
-        })
-    })
-</script>

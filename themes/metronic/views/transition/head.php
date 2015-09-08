@@ -48,20 +48,26 @@ if ($bank_money == 'cash')
 			<a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title="" data-original-title title="全屏"></a>
 		</div>
 	</div>
+    <div id="portlet-info" class="portlet-info">
+
+    </div>
 	<div class="portlet-body">
 	<?php
 	foreach(Yii::app()->user->getFlashes() as $key => $message) {
 		echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
 	}
-	?>
-	<?php
-    if($this->checkVIP()&&!in_array($type,['bank','cash']))
+    $vip = 1;
+    if($this->checkVIP()){
         $this->renderPartial('_import_'.$type, array('type'=>$type,'sheetData' => $sheetData));
-    else
+        $vip = 2;
+    }
+    else{
         $this->renderPartial('_import', array('type'=>$type,'sheetData' => $sheetData));
+    }
     ?>
 	</div>
 </div>
+<input id="vip" type="hidden" value="<?= $vip?>" >
 <input id="type" type="hidden" value="<?= $this->createUrl(
     '/bank/type'
 ) ?>">
@@ -88,6 +94,12 @@ if ($bank_money == 'cash')
 ) ?>">
 <input id="get-client" type="hidden" value="<?= $this->createUrl(
     '/client/getclient'
+) ?>">
+<input id="get-usefor" type="hidden" value="<?= $this->createUrl(
+    '/subjects/getusefor'
+) ?>">
+<input id="gen-porder" type="hidden" value="<?= $this->createUrl(
+    '/preparation/create'
 ) ?>">
 <input id="data" type="hidden" value="">
 <input id="subject" type="hidden" value="">

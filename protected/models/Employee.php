@@ -29,13 +29,12 @@ class Employee extends CActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('name', 'required'),
-            array('department_id', 'required'),
+            array('name, department_id', 'required'),
             array('id, department_id', 'numerical', 'integerOnly' => true),
             array('name, position', 'length', 'max' => 100),
             array('memo', 'length', 'max' => 200),
             array('name', 'unique', 'message'=>'员工姓名不可重复'),
-            array('base', 'safe'),
+            array('base, departure_date, status', 'safe'),
             // The following rule is used by search().
             array('id, name, memo, department_id', 'safe', 'on' => 'search'),
         );
@@ -65,6 +64,8 @@ class Employee extends CActiveRecord
             'position' => '职位',
             'base' => '社保基数',
             'memo' => '备注',
+            'departure_date' => '离职日期',
+            'status' => '状态'
         );
     }
 
@@ -150,6 +151,9 @@ class Employee extends CActiveRecord
     }
 
     public static function getPersonalTax($amount){
+        $amount -= 3500;
+        if($amount<=0)
+            return 0;
         switch($amount){
             case $amount <= 1500 : $tax = 3; $base = 0;break;
             case $amount > 1500 && $amount <= 4500 : $tax = 3; $base = 105;break;
@@ -161,6 +165,33 @@ class Employee extends CActiveRecord
             default:
                 return 0;
         }
-        return $amount*$tax/100 - $base;
+        return abs($amount)*$tax/100 - $base;
+    }
+
+    public function getStatus(){
+        switch($this->status){
+            case 0: $status = '离职';break;
+            case 1: $status = '正常';break;
+            case 2: $status = '兼职';break;   //停职
+//            case 3: $status = '兼职';break;
+            default:
+                $status = '正常';
+        }
+        return $status;
+    }
+
+    public static function getSheetData($items){
+        $model = new Employee();
+        if(!empty($items['B'])!=''&&$items['C']!=''&&$items['D']!=''){
+            $model->name = $items['B'];
+            $depart = Department::model()->matchName($items['C']);
+            $model->department_id = $depart;
+            $model->base = $items['D'];
+            $model->position = $items['E'];
+            $model->memo = $items['F'];
+            $model->validate();
+        }
+        return $model;
+
     }
 }

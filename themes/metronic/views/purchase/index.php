@@ -109,6 +109,7 @@ $('.search-form form').submit(function(){
                 array(
                     'name' => 'paied',
                     'type' => 'shortText',
+                    'value' => '$data->getPaid()',
                     'filter'=>CHtml::activeTextField($model, 'entry_name',array("class"=>"input-xsmall")),
                 ),
                 array(

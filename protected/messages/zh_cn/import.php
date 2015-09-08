@@ -33,4 +33,6 @@ return [
     'COST' => '成本结转',
     'SALARY' => '员工工资',
     'REIMBURSE' => '员工报销',
+    'PREPRODUCT' => '预收',
+    'PREPURCHASE' => '预付',
 ];

@@ -10,6 +10,8 @@ $baseUrl = Yii::app()->theme->baseUrl;
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_common.js');
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_vip.js');
 $this->pageTitle = Yii::app()->name;
+
+$preOrder = Preparation::getOrderArray($type);
 ?>
 <div class="dataTables_wrapper no-footer">
     <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form']); ?>
@@ -35,6 +37,11 @@ $this->pageTitle = Yii::app()->name;
                     <th class="input_min">合计</th>
                     <th class="input-small">税率</th>
                     <th class="input-small">销售类型</th>
+                    <?
+                    if (!empty($preOrder)) {
+                        echo '<th class="input-small">预收款</th>';
+                    }
+                    ?>
                     <th class="input-small">操作</th>
                     <th style="width: 10%">提示</th>
                 </tr>
@@ -43,8 +50,9 @@ $this->pageTitle = Yii::app()->name;
                     $clientArray = Client::model()->getClientArray();
                     $stockArray = Stock::model()->getStockArray();
                     $taxArray = Transition::getTaxArray('sale');
-                    $arr = [6001,6301,6051];
-                    $subjectArray = Transition::getSubjectArray($arr,['type'=>2]);
+                    $arr = [6001, 6301, 6051];
+                    $subjectArray = Transition::getSubjectArray($arr, ['type' => 2]);
+//                    $preOrder = ['PSO201501' => '{"amount":200,"memo":"说明1"}', 'PSO201502' => '{"amount":400,"memo":"说明2"}'];
                     foreach ($sheetData as $key => $item) {
                         ?>
                         <tr line="<?= $key ?>" <?= $key % 2 == 1 ? 'class="table-tr"' : '' ?>>
@@ -71,15 +79,15 @@ $this->pageTitle = Yii::app()->name;
                             </td>
                             <td><?
 
-//                                $stockArray += ['劳务服务' => '劳务服务'];
-//                                $this->widget('ext.select2.ESelect2', array(
-//                                    'name' => 'lists[' . $key . '][Transition][entry_name]',
-//                                    'id' => 'tran_entry_name_' . $key,
-//                                    'value' => $item['entry_name'],
-//                                    'data' => $stockArray,
-//                                    'options' => array('formatNoMatches' => 'js:function(term){return Not_Found("stock",term,' . $key . ')}'),
-//                                    'htmlOptions' => array('class' => 'select-full',)
-//                                ));
+                                //                                $stockArray += ['劳务服务' => '劳务服务'];
+                                //                                $this->widget('ext.select2.ESelect2', array(
+                                //                                    'name' => 'lists[' . $key . '][Transition][entry_name]',
+                                //                                    'id' => 'tran_entry_name_' . $key,
+                                //                                    'value' => $item['entry_name'],
+                                //                                    'data' => $stockArray,
+                                //                                    'options' => array('formatNoMatches' => 'js:function(term){return Not_Found("stock",term,' . $key . ')}'),
+                                //                                    'htmlOptions' => array('class' => 'select-full',)
+                                //                                ));
                                 ?>
                                 <input class="input-small" type="text" id="tran_entry_name_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_name]"
@@ -108,17 +116,44 @@ $this->pageTitle = Yii::app()->name;
                                 ?>
                             </td>
                             <td><?
-//                                $data += ['商品采购' => '商品采购'];
                                 $this->widget('ext.select2.ESelect2', array(
                                     'name' => 'lists[' . $key . '][Transition][subject]',
                                     'id' => 'tran_subject_' . $key,
                                     'data' => $subjectArray,
                                     'value' => $item['entry_subject'],
-//                                    'options' => array('formatNoMatches' => 'js:function(term){return Not_Found("subject",term,' . $key . ')}'),
                                     'htmlOptions' => array('class' => 'select-full',)
                                 ));
                                 ?>
                             </td>
+
+                            <?
+                            if (!empty($preOrder)) {
+                                //添加一项 不含预付的选项
+//                                $preOrder = ['非预收款' => '{"amount":0,"memo":"非预收款"}'] + $preOrder;
+                                ?>
+                                <td><?
+                                    $this->widget('ext.select2.ESelect2', array(
+                                        'name' => 'lists[' . $key . '][Transition][preOrder]',
+                                        'id' => 'preOrder_' . $key,
+                                        'data' => $preOrder,
+                                        'value' => $item['preOrder'],
+                                        'options' => array(
+                                            'formatResult' => 'js:function(data){
+                                            var order = JSON.parse(data.text);
+                                            var markup = "<div title=\"金额:" + order.amount + " \n摘要:" + order.memo + "\">" + data.id + "</div>";
+                                            return markup;
+                                        }',
+                                            'formatSelection' => 'js: function(order) {
+                                            return order.id;
+                                        }',
+                                        ),
+                                        'htmlOptions' => array('class' => 'select-full','multiple'=>'multiple')
+                                    ));
+                                    ?>
+                                </td>
+                            <?
+                            }
+                            ?>
                             <td class="action">
                                 <input type="hidden" id="did_<?= $key ?>" name="lists[<?= $key ?>][Transition][d_id]"
                                        value="<?= isset($item['d_id']) ? $item['d_id'] : '' ?>">
@@ -126,42 +161,44 @@ $this->pageTitle = Yii::app()->name;
                                        name="lists[<?= $key ?>][Transition][order_no]"
                                        value="<?= $item['order_no'] ?>">
                                 <data class="hidden">
-                                <input type="hidden" id="id_<?= $key ?>" value="<?= $key ?>">
-                                <input type="hidden" id="status_id_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][status_id]"
-                                       value="<?= $item['status_id'] ?>">
-                                <input type="hidden" id="subject_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][entry_subject]"
-                                       value="<?= $item['entry_subject'] ?>">
-                                <input type="hidden" id="entry_amount_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][entry_amount]"
-                                       value="<?= $item['entry_amount'] ?>">
-                                <input type="hidden" id="subject_2_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][subject_2]"
-                                       value="<?= $item['subject_2'] ?>">
-                                <input type="hidden" id="client_id_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][client_id]"
-                                       value="<?= $item['client_id'] ?>">
-                                <input type="hidden" id="transaction_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][entry_transaction]"
-                                       value="<?= $item['entry_transaction'] ?>">
-                                <input type="hidden" id="invoice_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][invoice]" value="<?= $item['invoice'] ?>">
-                                <input type="hidden" id="withtax_<?= $key ?>" value="<?= $item['tax'] > 0 ? 1 : 0 ?>">
-                                <input type="hidden" id="parent_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][parent]" value="<?= $item['parent'] ?>">
-                                <input type="hidden" id="additional_sbj0_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][additional][0][subject]"
-                                       value="<?= $item['additional'][0]['subject'] ?>">
-                                <input type="hidden" id="additional_amount0_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][additional][0][amount]"
-                                       value="<?= $item['additional'][0]['amount'] ?>">
-                                <input type="hidden" id="additional_sbj1_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][additional][1][subject]"
-                                       value="<?= $item['additional'][1]['subject'] ?>">
-                                <input type="hidden" id="additional_amount1_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][additional][1][amount]"
-                                       value="<?= $item['additional'][1]['amount'] ?>">
+                                    <input type="hidden" id="id_<?= $key ?>" value="<?= $key ?>">
+                                    <input type="hidden" id="status_id_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][status_id]"
+                                           value="<?= $item['status_id'] ?>">
+                                    <input type="hidden" id="subject_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][entry_subject]"
+                                           value="<?= $item['entry_subject'] ?>">
+                                    <input type="hidden" id="entry_amount_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][entry_amount]"
+                                           value="<?= $item['entry_amount'] ?>">
+                                    <input type="hidden" id="subject_2_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][subject_2]"
+                                           value="<?= $item['subject_2'] ?>">
+                                    <input type="hidden" id="client_id_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][client_id]"
+                                           value="<?= $item['client_id'] ?>">
+                                    <input type="hidden" id="transaction_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][entry_transaction]"
+                                           value="<?= $item['entry_transaction'] ?>">
+                                    <input type="hidden" id="invoice_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][invoice]"
+                                           value="<?= $item['invoice'] ?>">
+                                    <input type="hidden" id="withtax_<?= $key ?>"
+                                           value="<?= $item['tax'] > 0 ? 1 : 0 ?>">
+                                    <input type="hidden" id="parent_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][parent]" value="<?= $item['parent'] ?>">
+                                    <input type="hidden" id="additional_sbj0_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][additional][0][subject]"
+                                           value="<?= $item['additional'][0]['subject'] ?>">
+                                    <input type="hidden" id="additional_amount0_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][additional][0][amount]"
+                                           value="<?= $item['additional'][0]['amount'] ?>">
+                                    <input type="hidden" id="additional_sbj1_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][additional][1][subject]"
+                                           value="<?= $item['additional'][1]['subject'] ?>">
+                                    <input type="hidden" id="additional_amount1_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][additional][1][amount]"
+                                           value="<?= $item['additional'][1]['amount'] ?>">
                                 </data>
 
                                 <div>
@@ -216,7 +253,8 @@ $this->pageTitle = Yii::app()->name;
 </div>
 <div class="panel-footer">
     <div class="text-center">
-        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证</button>
+        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证
+        </button>
     </div>
 </div>
 <script>

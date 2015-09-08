@@ -5,12 +5,12 @@
  *
  * The followings are the available columns in table 'lfs_cash':
  * @property integer $id
+ * @property string $order_no
  * @property string $target
  * @property string $date
  * @property string $memo
  * @property double $amount
  * @property integer $parent
- * @property string $order
  * @property string $subject
  * @property integer $invoice
  * @property integer $tax
@@ -18,7 +18,7 @@
  * @property string $created_at
  * @property integer $updated_at
  */
-class Cash extends CActiveRecord
+class Cash extends LFSModel
 {
 	/**
 	 * @return string the associated database table name
@@ -42,9 +42,9 @@ class Cash extends CActiveRecord
 			array('target', 'length', 'max'=>512),
 			array('date', 'length', 'max'=>64),
 			array('subject', 'length', 'max'=>16),
-			array('memo, order, created_at, tax', 'safe'),
+			array('memo, type, pid, order_no, created_at, tax', 'safe'),
 			// The following rule is used by search().
-			array('id, target, date, memo, amount, parent, order, invoice, tax, status_id, created_at, updated_at', 'safe', 'on'=>'search'),
+			array('id, target, date, memo, amount, parent, order_no, invoice, tax, status_id, created_at, updated_at', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -66,12 +66,12 @@ class Cash extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
+            'order_no' => '订单号',
 			'target' => '交易对象',
 			'date' => '日期',
 			'memo' => '说明',
 			'amount' => '金额',
 			'parent' => '父ID',
-			'order' => '订单号',
 			'subject' => '科目',
 			'invoice' => '有无发票',
 			'tax' => '税率',
@@ -95,8 +95,6 @@ class Cash extends CActiveRecord
 	 */
 	public function search()
 	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
-
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
@@ -105,7 +103,7 @@ class Cash extends CActiveRecord
 		$criteria->compare('memo',$this->memo,true);
 		$criteria->compare('amount',$this->amount);
 		$criteria->compare('parent',$this->parent);
-		$criteria->compare('order',$this->order,true);
+		$criteria->compare('order_no',$this->order_no,true);
 		$criteria->compare('subject',$this->subject,true);
 		$criteria->compare('invoice',$this->invoice);
 		$criteria->compare('tax',$this->tax);
@@ -167,6 +165,7 @@ class Cash extends CActiveRecord
 		$this->setAttribute('parent', isset($item['parent'])?$item['parent']:'');
 		$this->setAttribute('invoice', isset($item['invoice'])?$item['invoice']:'');
 		$this->setAttribute('tax',  isset($item['tax'])?$item['tax']:'');
+        $this->setAttribute('path',  isset($item['path'])?$item['path']:'');
 		$this->setAttribute('updated_at', isset($item['updated_at'])?$item['updated_at']:'');
 	}
 	public function loadOld($item){
