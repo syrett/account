@@ -387,14 +387,14 @@ class TransitionController extends Controller
         }
 
         if (empty($sheetData)){
-            $objPHPExcel = PHPExcel_IOFactory::load(Yii::app()->basePath.'\..\download\test.xlsx');
-            $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
-            //去除第一行
-            array_shift($list);
-            foreach($list as $item){
-                $sheetData[] = Transition::getSheetData($item, 'reimburse');
-            }
-//            $sheetData[] = Transition::getSheetData([], 'reimburse');
+//            $objPHPExcel = PHPExcel_IOFactory::load(Yii::app()->basePath.'\..\download\test.xlsx');
+//            $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+//            //去除第一行
+//            array_shift($list);
+//            foreach($list as $item){
+//                $sheetData[] = Transition::getSheetData($item, 'reimburse');
+//            }
+            $sheetData[] = Transition::getSheetData([], 'reimburse');
         }
 
         $model[] = new Transition();
