@@ -369,3 +369,19 @@ ALTER TABLE `stock` ADD `value_year` INT NULL COMMENT '报销年限' AFTER `crea
 ADD `value_rate` INT NULL COMMENT '残值率' AFTER `value_year`;
 ALTER TABLE `preparation` ADD `entry_amount` FLOAT NOT NULL AFTER `type`;
 ALTER TABLE `stock` CHANGE `worth` `worth` TEXT NULL DEFAULT NULL COMMENT '净值';
+
+
+-- 2015年9月8日16:57:49
+
+INSERT INTO `subjects` (`sbj_number`, `sbj_name`, `sbj_cat`, `sbj_table`, `has_sub`, `balance_set`, `start_balance`) VALUES
+(222103, '城建税', '2', NULL, 0, 0, 0),
+(222104, '教育附加税', '2', NULL, 0, 0, 0),
+(222105, '地方教育费附加', '2', NULL, 0, 0, 0),
+(224105, '河道管理费', '2', NULL, 0, 0, 0);
+
+ALTER TABLE `bank` ADD `relation` TEXT NOT NULL AFTER `tax`;
+ALTER TABLE `cash` ADD `relation` TEXT NOT NULL AFTER `tax`;
+ALTER TABLE `purchase` ADD `relation` TEXT NOT NULL AFTER `subject_2`;
+ALTER TABLE `product` ADD `relation` TEXT NOT NULL AFTER `subject_2`;
+ALTER TABLE `reimburse` ADD `relation` TEXT NOT NULL AFTER `subject_2`;
+
