@@ -141,6 +141,8 @@ class PostController extends Controller
           Yii::import('application.controllers.StockController');
           $con = new StockController('');
           $con->actionDepreciation($date);
+          //生成附加税凭证
+          Transition::createSurtax($date);
         $this->render('/site/success');
       } else
         throw new CHttpException(400,$date. "还有凭证未审核");

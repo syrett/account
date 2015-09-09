@@ -49,7 +49,7 @@ class BankController extends Controller
 			$cat = Yii::app()->createController('Transition');
 			$cat = $cat[0];
 			$sheetData = $cat->saveAll('bank', $id);
-			if (!empty($sheetData))
+			if (!empty($sheetData) && count($sheetData) != 0)
 				foreach ($sheetData as $item) {
 					if ($item['status'] == 0) {
 						Yii::app()->user->setFlash('error', "保存失败!");

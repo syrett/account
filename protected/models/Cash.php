@@ -166,6 +166,7 @@ class Cash extends LFSModel
 		$this->setAttribute('invoice', isset($item['invoice'])?$item['invoice']:'');
 		$this->setAttribute('tax',  isset($item['tax'])?$item['tax']:'');
         $this->setAttribute('path',  isset($item['path'])?$item['path']:'');
+        $this->setAttribute('relation',  isset($item['relation'])?$item['relation']:'');
 		$this->setAttribute('updated_at', isset($item['updated_at'])?$item['updated_at']:'');
 	}
 	public function loadOld($item){

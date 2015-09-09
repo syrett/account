@@ -1080,6 +1080,7 @@ class TransitionController extends Controller
     public function antiSettlement($date){
 
         $model = Transition::model()->deleteAllByAttributes(array('entry_num_prefix' => $date, 'entry_settlement' => 1,));
+        Transition::model()->deleteAllByAttributes(['entry_num_prefix' => $date], 'entry_memo like "附加税-'.$date. '%"');
         $rows = Transition::model()->deleteAllByAttributes(['entry_num_prefix' => $date], 'entry_memo like "计提折旧-'.$date. '%"');
         if($rows > 0)
         {
@@ -1429,18 +1430,21 @@ class TransitionController extends Controller
                         if($order){
                             $model['type'] = 'product';
                             $model['pid'] = $order['id'];
+                            $arr['relation'] = json_encode(['product'=>$order['id']]);
                         }
                     }elseif($path[2] == '供应商采购'){
                         $order = Purchase::model()->findByAttributes(['order_no'=>$path[4]]);
                         if($order){
                             $model['type'] = 'purchase';
                             $model['pid'] = $order['id'];
+                            $arr['relation'] = json_encode(['purchase'=>$order['id']]);
                         }
                     }elseif($path[2] == '员工报销' && $path[4] != '预支款'){
                         $order = Reimburse::model()->findByAttributes(['order_no'=>$path[4]]);
                         if($order){
                             $model['type'] = 'reimburse';
                             $model['pid'] = $order['id'];
+                            $arr['relation'] = json_encode(['reimburse'=>$order['id']]);
                         }
                         $arr['entry_subject'] = $subject_2;
                         $arr['entry_transaction'] = 2;
@@ -1486,7 +1490,7 @@ class TransitionController extends Controller
                                 elseif ($porder['type'] == 'cash')
                                     $ordertmp = Cash::model()->findByPk($porder['pid']);
                                 if ($ordertmp['date'] > $arr['entry_date']) {
-                                    $arr['error'] = ['日期必须在预付订单日期之后'];
+                                    $arr['error'] = ['采购日期必须大于预付款日期'];
                                     $arr['id'] = isset($id) ? $id : '';
                                     $result[] = ['status' => 0, 'data' => $arr];
                                     continue 3;
@@ -1530,7 +1534,7 @@ class TransitionController extends Controller
                                 elseif($porder['type'] == 'cash')
                                     $ordertmp = Cash::model()->findByPk($porder['pid']);
                                 if($ordertmp['date'] > $arr['entry_date']){
-                                    $arr['error'] = ['日期必须在预付订单日期之后'];
+                                    $arr['error'] = ['销售日期必须大于预收款日期'];
                                     $arr['id'] = isset($id)?$id:'';
                                     $result[] = ['status' => 0, 'data' => $arr];
                                     continue 3;
@@ -1619,7 +1623,7 @@ class TransitionController extends Controller
                             //与预支款金额比较
                             if(isset($arr['preOrder']) && ($arr['preOrder']!='0'||$arr['preOrder']!='')) {
                                 $amountpre = 0;
-                                foreach ($arr['preOrder'] as $item) {
+                                foreach ($arr['preOrder'] as $a => $item) {
                                     $porder = Preparation::model()->findByAttributes(['order_no' => $item]);
                                     if ($porder) {
                                         if ($porder['type'] == 'bank')
@@ -1627,14 +1631,14 @@ class TransitionController extends Controller
                                         elseif ($porder['type'] == 'cash')
                                             $ordertmp = Cash::model()->findByPk($porder['pid']);
                                         if ($ordertmp['date'] > $arr['entry_date']) {
-                                            $arr['error'] = ['日期必须在预支款日期后'];
+                                            $arr['error'] = ['报销日期必须大于预支款日期'];
                                             $arr['id'] = isset($id) ? $id : '';
                                             $result[] = ['status' => 0, 'data' => $arr];
                                             continue 3;
                                         }
                                         $amountpre += $porder->entry_amount;
                                         $porder->status = 2;
-                                        $porders[] = $porder;
+                                        $porders[$a] = $porder;
                                     }
                                 }
                                     $amounttmp = $reim_amount_2 + $arr[$key] - $amountpre;
@@ -1741,17 +1745,20 @@ class TransitionController extends Controller
 
                 //修改原来以此为预收或预付的订单的状态为正常，再将新的订单状态更新为已使用
                 Preparation::model()->updateAll(['status'=>1,'real_order'=>''], 'real_order="'. $model->order_no. '"');
-                if(isset($preOrder)){
+                if(isset($preOrder)){   //生成预支预付预收订单
                     Preparation::model()->deleteAllByAttributes(['pid'=>$model->id, 'type'=>$type]);
                     $preOrder->pid = $model->id;
                     $preOrder->save();
                 }
-                if(isset($porders) && count($porders)>0){
+                if(isset($porders) && count($porders)>0){   //修改预支预付预收订单的状态和真实关联订单
+                    $relation = [];
                     foreach ($porders as $porder) {
                         $porder->real_order = $model->order_no;
                         $porder->save();
+                        $relation[] = [$porder->type=>$porder->pid];
                     }
-
+                    $model->relation = json_encode($relation);
+                    $model->save();
                 }
                 if($type == 'bank' || $type == 'cash'){
                     if($path[4]=='预支款' || $path[4]=='预付款'|| $path[4]=='预收款'){  //预收

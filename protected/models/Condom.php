@@ -63,15 +63,21 @@ class Condom extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'dbname' => 'Dbname',
-			'company' => 'Company',
-			'starttime' => 'Starttime',
-			'address' => 'Address',
+			'company' => '公司',
+            'currency_t' => '本位币',
+            'business_t' => '企业类型',
+            'industry_t' => '行业性质',
+            'taxpayer_t' => '纳税性质',
+            'accounting_t' => '会计制度',
+            'companysize_t' => '企业规模',
+			'starttime' => '账套起始时间',
+			'address' => '地址',
 			'cuser' => '联系人姓名',
 			'cphone' => '联系人电话',
-			'note' => 'Note',
+			'note' => '备注',
 			'created_at' => 'Created At',
 			'updated_at' => 'Updated At',
-			'status' => 'Status',
+			'status' => '状态',
 		);
 	}
 

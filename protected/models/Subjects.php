@@ -544,12 +544,16 @@ class Subjects extends CActiveRecord
             return $check;
         }
         $subj = $model->model()->init_new_sbj_number($sbj, 2);
+        $psbj = Subjects::model()->findByAttributes(['sbj_number'=>substr($subj[0],0, -2)]);
+        $model->start_balance = $psbj['start_balance'];
         $model->sbj_number = $subj[0];
         $model->sbj_name = $key;
         $model->sbj_cat = $subj[1];
 
         if ($model->save()) {
-            //如果是新的子科目，将post中科目表id修改为新id
+            //如果是新的子科目，将post中科目表id修改为新id，把期初余额过度到新科目
+            $psbj['start_balance'] = 0;
+            $psbj->save();
             if (strlen($subj[0]) > 4 && substr($subj[0], -2) == '01')  ////1为同级科目，2为子科目
             {
                 Post::tranPost($subj[0]);

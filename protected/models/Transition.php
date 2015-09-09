@@ -475,6 +475,7 @@ class Transition extends CActiveRecord
             "unit" => "",
             "paid" => "",
             "preorder" => [],
+            "preOrder" => [],
             "invoice" => "0",
             "tax" => "0",
             "parent" => "",
@@ -1221,5 +1222,100 @@ class Transition extends CActiveRecord
             $temp[] = $model;
         }
         return $temp;
+    }
+
+    /*
+     * 生成附加税凭证
+     */
+    public static function createSurtax($date){
+        $tran1 = new Transition();
+        $tran1->entry_num_prefix = $date;
+        $tran1->entry_num = Transition::model()->tranSuffix($date);
+        $tran1->entry_date = date('Y-m-d 00:00:00', strtotime($date . '01'));
+        $date2 = substr($date,0,4). '-'. substr($date,4);
+        $memo = "附加税-$date";
+        $tran1->entry_name = $memo;
+        $tran1->entry_memo = $memo;
+        $tran1->entry_transaction = 1;
+        $tran1->entry_subject = 6403;
+        //根据企业类型，小规模纳税人或一般纳税人
+        $old = Transition::model()->findByAttributes(['entry_memo'=>$memo, 'entry_name' => $memo, 'entry_transaction' => 1]);
+        $con = Condom::model()->findByAttributes(['dbname'=>substr(SYSDB,8)]);
+        if($con==null)
+            throw new CException(404, '当前账套已不存在');
+        $sbj2221 = Subjects::matchSubject('营业税', '2221');
+        $command=Yii::app()->db->createCommand();
+        $command->select('SUM(entry_amount) AS amount');
+        $command->from($tran1->tableName());
+        $command->where("entry_subject like '$sbj2221%' and entry_transaction = 2 and entry_date like '$date2%'");
+        $amount2221 = $command->queryRow();
+        $amount2221 = isset($amount2221['amount'])?$amount2221['amount']:0;
+
+        if($con->taxpayer_t == 1){  //一般纳税人
+            //应交税费/营业税 贷方 + a(应交税费/增值税/销项-进项)，a<=0不计算，
+            $sbjVat = Subjects::matchSubject('增值税', 2221);
+            $sbjSal = Subjects::matchSubject('销项', $sbjVat);
+            $sbjPur = Subjects::matchSubject('进项', $sbjVat);
+            $command=Yii::app()->db->createCommand();
+            $command->select('SUM(entry_amount) AS amount');
+            $command->from($tran1->tableName());
+            $command->where("entry_subject like '$sbjSal%' and entry_transaction = 2 and entry_date like '$date2%'");
+            $amountSal = $command->queryRow();
+            $amountSal = isset($amountSal['amount'])?$amountSal['amount']:0;
+
+            $command=Yii::app()->db->createCommand();
+            $command->select('SUM(entry_amount) AS amount');
+            $command->from($tran1->tableName());
+            $command->where("entry_subject like '$sbjPur%' and entry_transaction = 1 and entry_date like '$date2%'");
+            $amountPur = $command->queryRow();
+            $amountPur = isset($amountPur['amount'])?$amountPur['amount']:0;
+
+            $amountVat = $amountSal - $amountPur;
+            $base = $amountVat>0?round2($amount2221 + $amountVat):round2($amount2221);
+        }elseif($con->taxpayer_t ==2 ){ //小规模纳税人
+            //应交税费/营业税 贷方 + a(应交税费/增值税 贷方)
+            $sbjVat = Subjects::matchSubject('增值税', $sbj2221);
+            $command=Yii::app()->db->createCommand();
+            $command->select('SUM(entry_amount) AS amount');
+            $command->from($tran1->tableName());
+            $command->where("entry_subject like '$sbjVat%' and entry_transaction = 2 and entry_date like '$date2%'");
+            $amountVat = $command->queryRow();
+            $amountVat = isset($amountVat['amount'])?$amountVat['amount']:0;
+
+            $base = round2($amount2221 + $amountVat);
+        }
+        $sbjs[] = Subjects::matchSubject('城建税', 2221);
+        $sbjs[] = Subjects::matchSubject('教育费附加', 2221);
+        $sbjs[] = Subjects::matchSubject('地方教育费附加', 2221);
+        $sbjs[] = Subjects::matchSubject('河道管理费', 2241);
+        $taxAll = 0;
+        foreach ($sbjs as $item) {
+            $option = Options::model()->findByAttributes([], "entry_subject like '$item%'");
+            $tax[] = $option;
+            $taxAll += $option['value'];
+        }
+        $amount = round2($base * $taxAll/100);
+        //如果之前有附加税，且借方金额和现在的凭证相等，则不再重新计算附加税
+        if($old==null || $old['entry_amount'] != $amount){
+            Transition::model()->deleteAllByAttributes(['entry_memo' => $memo, 'entry_name' => $memo]);
+            if($amount > 0){
+                $tran1->entry_creater = Yii::app()->user->id;
+                $tran1->entry_editor = Yii::app()->user->id;
+                $amount = 0;
+                foreach($tax as $item){
+                    $tran = new Transition();
+                    $tran->attributes = $tran1->attributes;
+                    $tran->entry_transaction = 2;
+                    $tran->entry_subject = $item['entry_subject'];
+                    $tran->entry_amount = round2($base * $item['value']/100);
+                    if($tran->entry_amount > 0){
+                        $tran->save();
+                        $amount += $tran->entry_amount;
+                    }
+                }
+                $tran1->entry_amount = $amount;
+                $tran1->save();
+            }
+        }
     }
 }

@@ -43,7 +43,7 @@ class Bank extends LFSModel
 			array('target', 'length', 'max'=>512),
 			array('date', 'length', 'max'=>64),
 			array('subject', 'length', 'max'=>16),
-			array('memo, type, pid, order_no, created_at, tax, path', 'safe'),
+			array('memo, type, pid, order_no, created_at, tax, path, relation', 'safe'),
             array('amount', 'checkAmount'),
 			// The following rule is used by search().
 			array('id, target, date, memo, amount, parent, order_no, invoice, tax, status_id, created_at, updated_at', 'safe', 'on'=>'search'),
@@ -170,6 +170,7 @@ class Bank extends LFSModel
 		$this->setAttribute('invoice', isset($item['invoice'])?$item['invoice']:'');
         $this->setAttribute('tax',  isset($item['tax'])?$item['tax']:'');
         $this->setAttribute('path',  isset($item['path'])?$item['path']:'');
+        $this->setAttribute('relation',  isset($item['relation'])?$item['relation']:'');
 		$this->setAttribute('updated_at', isset($item['updated_at'])?$item['updated_at']:'');
 	}
 	public function loadOld($item){
