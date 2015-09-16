@@ -137,8 +137,6 @@ $preOrder = Preparation::getOrderArray($type);
                             </td>
                             <?
                             if (!empty($preOrder)) {
-                                //添加一项 不含预付的选项
-//                                $preOrder = ['非预付款' => '{"amount":0,"memo":"非预付款"}'] + $preOrder;
                                 ?>
                                 <td><?
                                     $this->widget('ext.select2.ESelect2', array(

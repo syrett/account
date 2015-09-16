@@ -133,6 +133,12 @@ $('.search-form form').submit(function(){
                     ),
                     'template' => '<div class="btn-group">{update}{delete}</div>',
                     'deleteConfirmation' => '确定要删除该条记录？',
+                    'afterDelete' => 'function(link, success, data){
+                        if(success){
+                            var data = JSON.parse(data);
+                            alert(data.message);
+                        }
+                    }'
                 ),
 
             ),

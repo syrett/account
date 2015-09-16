@@ -131,7 +131,19 @@ class ReimburseController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+        $relation = Reimburse::model()->getRelation('reimburse', $id);
+        if($relation==null) {
+            $this->loadModel($id)->delete();
+
+            $trans = Transition::model()->findAll(['condition'=>'data_type = "reimburse" and data_id=:data_id','params'=>[':data_id'=>$id]]);
+            foreach($trans as $item){
+                $item->delete();
+            }
+        }else{
+            $result['status'] = 'failed';
+            $result['message'] = '其他数据与此交易有关联，无法删除';
+            echo json_encode($result);
+        }
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))

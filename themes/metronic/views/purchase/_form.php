@@ -15,6 +15,8 @@ $item = $sheetData[0]['data'];
 $preOrder = Preparation::getOrderArray($type);
 $item['preorder'] = Preparation::getOrderArray($type, $item['id']);
 $preOrder = $item['preorder'] + $preOrder;
+//{"purchase":"1"}
+$relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$model->id\"%'");
 ?>
 <div class="panel-body">
     <div class="row" id="abc">
@@ -142,10 +144,12 @@ $preOrder = $item['preorder'] + $preOrder;
                                     'options' => array(
                                         'formatResult' => 'js:function(data){
                                             var order = JSON.parse(data.text);
-                                            var markup = "<div title=\"金额:" + order.amount + " \n摘要:" + order.memo + "\">" + data.id + "</div>";
+                                            var markup = \'<div class="popovers" data-placement="left" data-container="body" data-trigger="hover" data-html="true"  data-original-title="\' + data.id +\'"\'
+                                            + \'data-content="金额:\' + order.amount + \'<br>摘要:\' + order.memo + \'">\' + data.id + \'</div><script>$(".popovers").popover();<\/script>\';
                                             return markup;
                                         }',
                                         'formatSelection' => 'js: function(order) {
+                                            $("[id*=\'popover\']").remove()
                                             return order.id;
                                         }',
                                     ),
@@ -262,9 +266,9 @@ $preOrder = $item['preorder'] + $preOrder;
                 </tr>
             </table>
             <?
-            if ($model->status_id == 1 && $item['entry_reviewed'] == 1) {
+            if (($model->status_id == 1 && $item['entry_reviewed'] == 1 )|| $relation != null) {
                 ?>
-                <span class="info-">该数据生成凭证已经审核，无法修改</span>
+                <span class="info-">该数据生成凭证已经审核，或和其他数据有关联，无法修改</span>
             <?
             } else {
                 ?><div class="panel-footer">

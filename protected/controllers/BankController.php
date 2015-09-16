@@ -96,15 +96,24 @@ class BankController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
 
-		$trans = Transition::model()->findAll(['condition'=>'data_id=:data_id','params'=>[':data_id'=>$id]]);
-		foreach($trans as $item){
-			$item->delete();
-		}
+        $relation = Bank::model()->getRelation('bank', $id);
+        if($relation==null){
+            $this->loadModel($id)->delete();
+
+            $trans = Transition::model()->findAll(['condition'=>'data_type = "bank" and data_id=:data_id','params'=>[':data_id'=>$id]]);
+            foreach($trans as $item){
+                $item->delete();
+            }
+
+        }else{
+            $result['status'] = 'failed';
+            $result['message'] = '其他数据与此交易有关联，无法删除';
+            echo json_encode($result);
+        }
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
 	}
 
     /*
@@ -113,16 +122,27 @@ class BankController extends Controller
     public function actionDelall(){
         if (Yii::app()->request->isPostRequest)
         {
+            $in = [];
+            foreach($_POST['selectdel'] as $item){
+                $relation = Bank::model()->getRelation($item);
+                if($relation==null)
+                    $in += $item;
+            }
             $criteria= new CDbCriteria;
-            $criteria->addInCondition('id', $_POST['selectdel']);
+            $criteria->addInCondition('id', $in);
             $cri = new CDbCriteria;
-            $cri->addInCondition('data_id', $_POST['selectdel']);
+            $cri->addInCondition('data_id', $in);
             Bank::model()->deleteAll($criteria);
             Transition::model()->deleteAll($cri);
-
+            if(count($in) == count($_POST['selectdel']))
+                $status = 'success';
+            elseif(empty($in))
+                $status = 'failed';
+            else
+                $status = 'few';
 
             if(isset(Yii::app()->request->isAjaxRequest)) {
-                echo CJSON::encode(array('success' => true));
+                echo CJSON::encode(array('status' => $status));
             } else
                 $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
         }

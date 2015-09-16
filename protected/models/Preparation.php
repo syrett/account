@@ -138,6 +138,9 @@ class Preparation extends CActiveRecord
             return "$prefix"."0001";
     }
 
+    /*
+     * 返回可用预支付的订单
+     */
     public static function getOrderArray($type, $id=''){
         if($id!=''){
             if($type == 'product')
@@ -148,7 +151,7 @@ class Preparation extends CActiveRecord
                 $pro = Reimburse::model()->findByPk($id);
 
             if($pro)
-                $orders = self::model()->findAllByAttributes(['real_order'=>$pro['order_no'], 'status'=>2]);
+                $orders = self::model()->findAllByAttributes([],"real_order like '%$pro->order_no%' ");
 
         }else
             $orders = self::model()->getOrder($type);
@@ -167,7 +170,6 @@ class Preparation extends CActiveRecord
     }
 
     public function getOrder($type){
-        $table = $this->tableName();
         switch($type){
             case 'bank': $prefix = 'PBA';break;
             case 'cash': $prefix = 'PCA';break;
@@ -179,11 +181,7 @@ class Preparation extends CActiveRecord
             default :
                 $prefix = '';break;
         }
-        $sql = "select * from $table where order_no like '$prefix%' and status=1";
-        $model = $this->findAllBySql($sql);
-        if($model!=null){
-            return $model;
-        }else
-            return [];
+        $model = self::findAllByAttributes([], "order_no like '$prefix%' and amount_used < entry_amount ");
+        return !empty($model)?$model:[];
     }
 }

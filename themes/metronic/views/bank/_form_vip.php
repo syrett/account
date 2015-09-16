@@ -10,8 +10,10 @@ $baseUrl = Yii::app()->theme->baseUrl;
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_common.js');
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import.js');
 
+$type = 'bank';
 $this->pageTitle = Yii::app()->name;
 $tranDate = $this->getTransitionDate('post');
+$relation = Bank::model()->getRelation('bank',$model->id);
 
 ?>
 <div class="row" id="abc">
@@ -61,13 +63,13 @@ $tranDate = $this->getTransitionDate('post');
                         <input type="hidden" id="id_<?= $key ?>" value="<?= $key ?>">
                         <input id="subject_2" name="subject_2" type="hidden" readonly
                                value="<?= $model['subject_2'] ?>">
-                        <input type="hidden" id="status_id_<?= $key ?>"
-                               name="lists[<?= $key ?>][Transition][status_id]"
-                               value="<?= $item['status_id'] ?>">
                         <input type="hidden" id="order_no_<?= $key ?>"
                                name="lists[<?= $key ?>][Transition][order_no]"
                                value="<?= $item['order_no'] ?>">
                         <data>
+                            <input type="hidden" id="status_id_<?= $key ?>"
+                                   name="lists[<?= $key ?>][Transition][status_id]"
+                                   value="<?= $item['status_id'] ?>">
                             <input type="hidden" id="subject_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entry_subject]"
                                    value="<?= $item['entry_subject'] ?>">
@@ -132,7 +134,7 @@ $tranDate = $this->getTransitionDate('post');
                             }
                             if (isset($sheetData[0]['status']) && $sheetData[0]['status'] != 1) {
                                 foreach ($item['error'] as $err) {
-                                    echo $err;
+                                    echo is_array($err)?$err[0]:$err;
                                 }
                             }
                             ?>
@@ -149,9 +151,9 @@ $tranDate = $this->getTransitionDate('post');
             ?>
         </table>
         <?
-        if ($model->status_id == 1 && $item['entry_reviewed'] == 1) {
+        if (($model->status_id == 1 && $item['entry_reviewed'] == 1 )|| $relation != null) {
             ?>
-            <span class="info-">该数据生成凭证已经审核，无法修改</span>
+            <span class="info-">该数据生成凭证已经审核，或和其他数据有关联，无法修改</span>
         <?
         } else {
             ?>

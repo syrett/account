@@ -13,16 +13,16 @@
 	<?php echo CHtml::encode($data->order_no); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('entry_date')); ?>:</b>
-	<?php echo CHtml::encode($data->entry_date); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('purchase_date')); ?>:</b>
+	<?php echo CHtml::encode($data->purchase_date); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('vendor_id')); ?>:</b>
 	<?php echo CHtml::encode($data->vendor_id); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('entry_name')); ?>:</b>
-	<?php echo CHtml::encode($data->entry_name); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('commodity')); ?>:</b>
+	<?php echo CHtml::encode($data->commodity); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('price')); ?>:</b>

@@ -129,11 +129,31 @@ class PurchaseController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+        $relation = Purchase::model()->getRelation('purchase', $id);
+        if($relation==null) {
+            $model = $this->loadModel($id);
+            $order_no = $model->order_no;
+            $model->delete();
 
-        $trans = Transition::model()->findAll(['condition'=>'data_id=:data_id','params'=>[':data_id'=>$id]]);
-        foreach($trans as $item){
-            $item->delete();
+            $trans = Transition::model()->findAll(['condition'=>'data_type = "purchase" and data_id=:data_id','params'=>[':data_id'=>$id]]);
+            foreach($trans as $item){
+                $item->delete();
+            }
+            //删除预订单里和此项目有关联的金额
+            $porders = Preparation::model()->findAllByAttributes([], "real_order like '%$order_no%'");
+            if(!empty($porders)){
+                foreach ($porders as $item) {
+                    $real_order = json_decode($item['real_order'], true);
+                    $item['amount_used'] -= $real_order[$order_no];
+                    unset($real_order[$order_no]);
+                    $item['real_order'] = json_encode($real_order);
+                    $item->save();
+                }
+            }
+        }else{
+            $result['status'] = 'failed';
+            $result['message'] = '其他数据与此交易有关联，无法删除';
+            echo json_encode($result);
         }
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))

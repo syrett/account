@@ -202,10 +202,7 @@ $tranDate = $this->getTransitionDate('post');
                                <?
                                if (!empty($item['error'])) {
                                    foreach ($item['error'] as $err) {
-                                       if (is_array($err))
-                                           echo $err[0];
-                                       else
-                                           echo $err;
+                                       echo is_array($err)?$err[0]:$err;
                                    }
                                }
                                ?>

@@ -1098,8 +1098,22 @@ eof;
                 $order = Product::model()->findByPk($this->pid);
             $unpaid = floatval($order->price)*$order->count - $order->getPaid();
             $unpaid = round($unpaid, 2);
-            if($this->amount > $unpaid)
-                $this->addError($attribute, "金额不能大于$unpaid");
+            if($unpaid > 0){
+                $old = $this->findByPk($this->id);
+                $unpaid += $this->isNewRecord?0:$old->amount;
+                if($this->amount > $unpaid)
+                    $this->addError($attribute, "金额不能大于$unpaid");
+            }
         }
+    }
+
+    /*
+     * 有关联的数据
+     */
+    public function getRelation($type,$id){
+        $relation = Purchase::model()->findAllByAttributes([],"relation like '%\"bank\":\"$id\"%'");
+        $relation += Product::model()->findAllByAttributes([],"relation like '%\"bank\":\"$id\"%'");
+        $relation += Reimburse::model()->findAllByAttributes([],"relation like '%\"bank\":\"$id\"%'");
+        return $relation;
     }
 }

@@ -14,6 +14,7 @@ $item = $sheetData[0]['data'];
 $preOrder = Preparation::getOrderArray($type);
 $item['preorder'] = Preparation::getOrderArray($type, $item['id']);
 $preOrder = $item['preorder'] + $preOrder;
+$relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$model->id\"%'");
 ?>
 <div class="panel-body">
     <div class="row" id="abc">
@@ -257,9 +258,9 @@ $preOrder = $item['preorder'] + $preOrder;
                 </tr>
             </table>
             <?
-            if ($model->status_id == 1 && $item['entry_reviewed'] == 1) {
+            if (($model->status_id == 1 && $item['entry_reviewed'] == 1 )|| $relation != null) {
                 ?>
-                <span class="info-">该数据生成凭证已经审核，无法修改</span>
+                <span class="info-">该数据生成凭证已经审核，或和其他数据有关联，无法修改</span>
             <?
             } else {
                 ?><div class="panel-footer">

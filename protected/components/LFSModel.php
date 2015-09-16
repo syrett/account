@@ -71,4 +71,12 @@ class LFSModel extends CActiveRecord
             return "$prefix"."000001";
 
     }
+
+    public function getRelation($type,$id){
+        $relation = [];
+        $relation += Bank::model()->findAllByAttributes([],"relation like '%\"$type\":\"$id\"%'");
+        $relation += Cash::model()->findAllByAttributes([],"relation like '%\"$type\":\"$id\"%'");
+        return $relation;
+    }
+
 }

@@ -96,12 +96,20 @@ class CashController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+        $relation = Cash::model()->getRelation('cash',$id);
+        if($relation==null){
+            $this->loadModel($id)->delete();
 
-		$trans = Transition::model()->findAll(['condition'=>'data_id=:data_id','params'=>[':data_id'=>$id]]);
-		foreach($trans as $item){
-			$item->delete();
-		}
+            $trans = Transition::model()->findAll(['condition'=>'data_type = "cash" and data_id=:data_id','params'=>[':data_id'=>$id]]);
+            foreach($trans as $item){
+                $item->delete();
+            }
+
+        }else{
+            $result['status'] = 'failed';
+            $result['message'] = '其他数据与此交易有关联，无法删除';
+            echo json_encode($result);
+        }
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));

@@ -909,4 +909,14 @@ eof;
     {
         return 3000;
     }
+
+    /*
+     * 有关联的数据
+     */
+    public function getRelation($type,$id){
+        $relation = Purchase::model()->findAllByAttributes([],"relation like '%\"cash\":\"$id\"%'");
+        $relation += Product::model()->findAllByAttributes([],"relation like '%\"cash\":\"$id\"%'");
+        $relation += Reimburse::model()->findAllByAttributes([],"relation like '%\"cash\":\"$id\"%'");
+        return $relation;
+    }
 }

@@ -59,8 +59,15 @@ $('.search-form form').submit(function(){
                 if(data.length > 0){
                     $.post('<?php echo CHtml::normalizeUrl(array('/bank/delall/'));?>',{'selectdel[]':data}, function (data) {
                         var ret = $.parseJSON(data);
-                        if (ret != null && ret.success != null && ret.success) {
-                            $.fn.yiiGridView.update("subjects-grid");
+                        if (ret != null ) {
+                            if (ret.status == 'success') {
+                                $.fn.yiiGridView.update("subjects-grid");
+                            }else if(ret.status == 'failed')
+                                alert('删除失败');
+                            else if(ret.status == 'few'){
+                                alert('部分与其他数据有关联记录无法删除');
+                                $.fn.yiiGridView.update("subjects-grid");
+                            }
                         }
                     });
                 }else{
@@ -112,6 +119,11 @@ $('.search-form form').submit(function(){
 					),
 					'template' => '<div class="btn-group">{update}{delete}</div>',
 					'deleteConfirmation' => '确定要删除该条记录？',
+                    'afterDelete' => 'function(link, success, data){
+                    if(success){
+                        var data = JSON.parse(data);
+                        alert(data.message);
+                    }}'
 				),
 			),
 			'pager' => array('class'=>'CLinkPager', 'header' => '','firstPageLabel'=>'首页','lastPageLabel'=>'末页','nextPageLabel'=>'下一页','prevPageLabel'=>'上一页'),
