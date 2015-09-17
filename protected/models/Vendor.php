@@ -171,7 +171,7 @@ class Vendor extends CActiveRecord
     }
 
     public static function listOrders($name){
-        $sbj = Subjects::matchSubject($name,[],3,0);
+        $sbj = Subjects::matchSubject($name,[2202],3,0);
         $orders = Purchase::model()->findAllByAttributes(['subject_2'=>$sbj]);
         //检查订单是否已经支付完成
         foreach ($orders as $item) {

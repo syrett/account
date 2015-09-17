@@ -192,7 +192,6 @@ class Reimburse extends LFSModel
      * 已经报销的金额
      */
     public function mountPaid(){
-        $arr = explode(',', $this->paid);
         $arr = json_decode($this->paid, true);
         $total = 0;
         if(count($arr) > 1){
@@ -232,7 +231,14 @@ class Reimburse extends LFSModel
         if(!empty($orders)) {
             foreach ($orders as $tran) {
                 if ($tran) {  //检查已经报销的项目，如果全部都已经报销，则不显示
-                    $tmp = array_filter(explode(',', $tran['paid']));
+                    $tmp = '';
+
+                    $real_order = json_decode($tran['paid'], true);
+                    foreach ($real_order as $item) {
+                        $tmp .= ",$item";
+                    }
+                    $tmp = array_filter(explode(',', $tmp));
+
                     $pro_arr = ['travel_amount', 'benefit_amount', 'traffic_amount', 'phone_amount', 'entertainment_amount', 'office_amount', 'rent_amount', 'watere_amount', 'train_amount', 'service_amount', 'stamping_amount'];
                     $tmp2 = [];
                     foreach ($pro_arr as $pro) {

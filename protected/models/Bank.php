@@ -819,7 +819,6 @@ eof;
                                     return self::endOption($sbj, $option);
                                 }
                             }else{
-                                //todo 报销订单支付完成判断
                                 $orders = Reimburse::listOrders($options[3]);
                                 if(!empty($orders)){
                                     foreach($orders as $item){
