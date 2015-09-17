@@ -101,6 +101,9 @@ if ($bank_money == 'cash')
 <input id="gen-porder" type="hidden" value="<?= $this->createUrl(
     '/preparation/create'
 ) ?>">
+<input id="get-subject" type="hidden" value="<?= $this->createUrl(
+    '/subjects/matchsubject'
+) ?>">
 <input id="data" type="hidden" value="">
 <input id="subject" type="hidden" value="">
 <input id="item_id" type="hidden" value="">

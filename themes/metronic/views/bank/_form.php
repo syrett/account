@@ -183,6 +183,9 @@ $tranDate = $this->getTransitionDate('post');
                                 <input id="new-url" type="hidden" value="<?= $this->createUrl(
                                     '/subjects/createsubject'
                                 ) ?>">
+                                <input id="get-subject" type="hidden" value="<?= $this->createUrl(
+                                    '/subjects/matchsubject'
+                                ) ?>">
                                 <input id="data" type="hidden" value="">
                                 <input id="subject" type="hidden" value="">
                                 <input id="item_id" type="hidden" value="">

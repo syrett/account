@@ -291,7 +291,7 @@ class Bank extends LFSModel
     {
         return [
             'data' => [],
-            'option' => [['checkbox', 'withtax', '是否含税']],
+            'option' => [['checkbox', 'withtax', '是否含税', '3%', '1']],
         ];
     }
 
@@ -522,7 +522,7 @@ class Bank extends LFSModel
     {
         $subject = new Subjects();
         $arr = [1601, 1403, 1405, 6602, 6601, 6401, 1701];
-        $result = $subject->getitem($arr, $key, ['type'=>2, 'reject' => ['工资', '社保', '公积金', '折旧费', '研发费']]);
+        $result = $subject->getitem($arr, $key, ['type'=>1, 'reject' => ['工资', '社保', '公积金', '折旧费', '研发费']]);
         return [
             'data' => $result,
         ];
@@ -626,7 +626,7 @@ eof;
     {
         $subject = new Subjects();
         $arr = [ 6001];
-        $result = $subject->getitem($arr, $key, ['type' => 0, 'sbj_number' => 6001]);
+        $result = $subject->getitem($arr, '', ['type' => 0, 'sbj_number' => 6001]);
         return [
             'data' => array_flip(array_flip($result)),
             'new' => 'no',
@@ -684,8 +684,9 @@ eof;
      * @options String 选项参数
      * @data string 表格数据 0checkbox|1name|2date|3description|4amount
      */
-    public static function chooseOption($type, $options, $data, $version=1)
+    public static function chooseOption($type, $options, $data)
     {
+        $version = User2::model()->checkVIP()?2:1;
         $result = [];
         $options = explode(",", $options);
         $data = explode("|", $data);
@@ -790,12 +791,27 @@ eof;
                                         if(count($tmp3) > 1){   //报销的贷方科目只有其他应付和其他应收这2项
                                             $sbj = $tmp3[0];
                                         }else
-                                        $sbj = $rem['subject_2'];
+                                            $sbj = $rem['subject_2'];
                                         $pro_arr = ['travel', 'benefit', 'traffic', 'phone', 'entertainment', 'office', 'rent', 'watere', 'train', 'service', 'stamping'];
                                         foreach ($pro_arr as $item) {
-                                            $paid = explode(',', $rem['paid']);
+                                            $real_orders = json_decode($rem['paid'], true);
+                                            $paid = '';
+                                            $checked = 0;
+                                            if($real_orders){
+                                                foreach ($real_orders as $a) {
+                                                    $paid .= ','. $a;
+                                                }
+
+                                                if($options[0]!='0' && isset($real_orders[$options[0]])){
+                                                    if(strpos($real_orders[$options[0]], $item) !== false)
+                                                        $checkbox[] = ['checkbox', $item . '_amount', Reimburse::model()->getAttributeLabel($item . '_amount'), $rem[$item . '_amount'], "1"];
+                                                }
+
+                                            }else
+                                                $checked = 1;
+                                            $paid = array_filter(explode(',', $paid));
                                             if ($rem[$item . '_amount'] > 0 && !in_array($item . '_amount', $paid))
-                                                $checkbox[] = ['checkbox', $item . '_amount', Reimburse::model()->getAttributeLabel($item . '_amount'), $rem[$item . '_amount']];
+                                                $checkbox[] = ['checkbox', $item . '_amount', Reimburse::model()->getAttributeLabel($item . '_amount'), $rem[$item . '_amount'], "$checked"];
                                         }
 
                                         $option = ['option' => $checkbox];
@@ -803,6 +819,7 @@ eof;
                                     return self::endOption($sbj, $option);
                                 }
                             }else{
+                                //todo 报销订单支付完成判断
                                 $orders = Reimburse::listOrders($options[3]);
                                 if(!empty($orders)){
                                     foreach($orders as $item){

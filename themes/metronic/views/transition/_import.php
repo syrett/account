@@ -141,7 +141,7 @@ $tranDate = $this->getTransitionDate('post');
                                 <input type="hidden" id="id_<?= $key ?>" value="<?= $key ?>">
                                 <input type="hidden" id="status_id_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][status_id]"
-                                       value="0">
+                                       value="<?= $item['status_id'] ?>">
                                 <input type="hidden" id="subject_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_subject]"
                                        value="<?= $item['entry_subject'] ?>">
@@ -167,8 +167,11 @@ $tranDate = $this->getTransitionDate('post');
                                 <input type="hidden" id="additional_amount1_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][additional][1][amount]"
                                        value="<?= $item['additional'][1]['amount'] ?>">
-
-                                <!--                                <div class="btn-group-vertical" role="group">-->
+                                <input type="hidden" id="last_<?= $key ?>" name="lists[<?= $key ?>][Transition][last]"
+                                       value = "<?isset($item['last'])?$item['last']:''?>">
+                                <input type="hidden" id="path_<?= $key ?>"
+                                       name="lists[<?= $key ?>][Transition][path]"
+                                       value="<?= $item['path'] ?>">
                                 <div class="btn-group">
                                     <a class="btn btn-xs blue dropdown-toggle" data-toggle="modal" onclick="itemsetting(this)"
                                        href="#category-box">

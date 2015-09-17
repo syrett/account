@@ -150,8 +150,15 @@ class Preparation extends CActiveRecord
             elseif($type == 'reimburse')
                 $pro = Reimburse::model()->findByPk($id);
 
-            if($pro)
+            if($pro){
                 $orders = self::model()->findAllByAttributes([],"real_order like '%$pro->order_no%' ");
+                foreach ($orders as $key => $order) {
+                    $real_order = json_decode($order->real_order, true);
+                    if($real_order[$pro->order_no] <= 0)
+                        unset($orders[$key]);
+                }
+
+            }
 
         }else
             $orders = self::model()->getOrder($type);
@@ -162,8 +169,12 @@ class Preparation extends CActiveRecord
                     $order = Bank::model()->findByPk($item['pid']);
                 elseif($item['type'] == 'cash')
                     $order = Cash::model()->findByPk($item['pid']);
+                $left = $item->entry_amount - $item->amount_used;
                 if($order)
-                $result[$item['order_no']] = "{\"amount\":\"". $order->amount. "\",\"memo\":\"". $order->memo. "\"}";
+                $result[$item['order_no']] = "{\"date\":\"". convertDate($order->date, "Y年m月d日")
+                    . "\",\"amount\":\"". $left
+                    . "\",\"memo\":\"". $order->memo. "\"}";
+
             }
         }
         return $result;
@@ -183,5 +194,27 @@ class Preparation extends CActiveRecord
         }
         $model = self::findAllByAttributes([], "order_no like '$prefix%' and amount_used < entry_amount ");
         return !empty($model)?$model:[];
+    }
+
+    /*
+     * 去除$order_no对应的金额
+     */
+    public function removeAmount($order_no){
+        $orders = $this->findAllByAttributes([], "real_order like '%$order_no%'");
+        if(!empty($orders))
+            foreach ($orders as $item) {
+                $real_order = json_decode($item['real_order']);
+                unset($real_order[$order_no]);
+                $item['real_order'] = json_encode($real_order);
+                $item->save();
+            }
+    }
+
+    /*
+     * 根据$order_no，获得对应的金额
+     */
+    public function getAmount($order_no){
+        $real_order = json_decode($this->real_order, true );
+        return isset($real_order[$order_no])?$real_order[$order_no]:0;
     }
 }

@@ -121,16 +121,28 @@ class CashController extends Controller
     public function actionDelall(){
         if (Yii::app()->request->isPostRequest)
         {
+            $in = [];
+            foreach($_POST['selectdel'] as $item){
+                $relation = Bank::model()->getRelation('ban', $item);
+                if($relation==null)
+                    $in += $item;
+            }
             $criteria= new CDbCriteria;
-            $criteria->addInCondition('id', $_POST['selectdel']);
+            $criteria->addInCondition('id', $in);
             $cri = new CDbCriteria;
-            $cri->addInCondition('data_id', $_POST['selectdel']);
+            $cri->addInCondition('data_id', $in);
             Cash::model()->deleteAll($criteria);
             Transition::model()->deleteAll($cri);
 
+            if(count($in) == count($_POST['selectdel']))
+                $status = 'success';
+            elseif(empty($in))
+                $status = 'failed';
+            else
+                $status = 'few';
 
             if(isset(Yii::app()->request->isAjaxRequest)) {
-                echo CJSON::encode(array('success' => true));
+                echo CJSON::encode(array('status' => $status));
             } else
                 $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
         }
@@ -205,7 +217,7 @@ class CashController extends Controller
     public function actionOption()
     {
         if (Yii::app()->request->isAjaxRequest) {
-            echo json_encode(Cash::chooseOption($_POST['type'], $_POST['option'], $_POST['data']));
+            echo json_encode(Bank::chooseOption($_POST['type'], $_POST['option'], $_POST['data']));
         } else
             throw new CHttpException(403,'不允许提交');
     }

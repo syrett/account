@@ -19,6 +19,7 @@ $(document).ready(function () {
     $("div").delegate("#droplist", "change", function () {
         chooseOption(this)
     });
+
     $("input[name$='\[entry_date\]']").attr('readonly', true);
     $('body').on('focus', "input[name$='\[entry_date\]']:not([class*='no-dp'])", function () {
         $(this).datepicker({
@@ -33,7 +34,8 @@ $(document).ready(function () {
         $(this).nextAll("span[class*='label-warning']").html("");
     })
 
-})
+});
+
 $(window).bind("load", function () {
     if($("#subject_2").length>0)
         $("#subject_2").select2("readonly", true);
@@ -100,10 +102,10 @@ function chooseType(e, a) {
         data: {"type": a},
         success: function (data) {
             var data = JSON.parse(data);
-            var str = '<div class="options-div"><span class="fa fa-angle-right flow-arrow"></span></div>' +
-                '<div class="options btn-group-xs" >';
+            //var str = '<div class="options-div"><span class="fa fa-angle-right flow-arrow"></span></div>' +
+            var str = '<div class="options btn-group-xs" >';
             $.each(data, function (key, value) {
-                str += '<button class="btn btn-default" type="button" onclick="chooseOption(this)" value="' + key + '">' + value + '</button><br />'
+                str += '<button class="btn " type="button" onclick="chooseOption(this)" value="' + key + '">' + value + '</button>'
             });
             str += '</div>';
             choosed(e);
@@ -115,6 +117,7 @@ function chooseType(e, a) {
             //alert(e);
         }
     });
+    unsetting();
 }
 //按钮激活状态
 function choosed(e) {
@@ -127,11 +130,18 @@ function choosed(e) {
 function chooseOption(e) {
     id = $("#item_id").val()
     choosed(e);
-    var options = "1";
+    var options = "0";
+    if($("#order_no_"+id).length > 0)
+        options = $("#order_no_"+id).val();
     $.each(Array.prototype.reverse.call($(e).parent().prevAll('.options')), function (key, value) {
         options += "," + $(value).find("button[class*='active']").val()
     })
     options += "," + e.value;
+    if(e.value == '借出款项'){
+        $("#setting-info").html('<i class="fa fa-bell-o"></i>&nbsp;&nbsp;&nbsp;预支给员工的款项请在员工报销模块录入');
+    }else{
+        $("#setting-info").html('');
+    }
     $.ajax({
         type: 'POST',
         url: $("#option").val(),
@@ -141,17 +151,24 @@ function chooseOption(e) {
             if (data.rule == 'end') {
                 $("#subject").val(data.subject);
                 $(e).parent().nextAll().remove();
-                var str = '<div class="options-div"><span class="fa fa-angle-right flow-arrow"></span></div><div class="options alert alert-success alert-dismissable">';
-                str += '<i class="icon fa fa-check"></i> 已选择 => <span id="sub_name">"' + data.sbj_name + '"</span>';
+                //var str = '<div class="options-div"><span class="fa fa-angle-right flow-arrow"></span></div><div class="options alert alert-success alert-dismissable">';
+                var str = '<div class="options alert alert-success alert-dismissable">';
+                str += '<i class="fa fa-check"></i> 已选择 => <span id="sub_name">"' + data.sbj_name + '"</span><br >';
                 if (data.option != 0) {
                     $.each(data.option, function (key, value) {
+                        if(key / 7 == Math.round(key/7))
+                            str += '<br >';
                         if (value[0] == 'text')
                             str += '<br ><input type="text" name="new-option" id="new-option" placeholder="' + value[1] + '" >'
                         if (value[0] == 'select') {
 
                         }
                         if (value[0] == 'checkbox') {
-                            str += '<br ><input type="checkbox" name="new-option" id="new-option" >' + value[1] + '<br >'
+                            if (value[4] == "1")
+                                var checked = "checked";
+                            else
+                                var checked = "";
+                            str += '<input type="checkbox" '+ checked + ' name="new-option" id="'+ value[1] + '" >' + value[2] + '&nbsp;'+ value[3] + '&nbsp;&nbsp;&nbsp;&nbsp;'
                         }
                     })
                 }
@@ -160,8 +177,8 @@ function chooseOption(e) {
 
             }
             else if (data.rule == 'goon') {
-                var str = '<div class="options-div"><span class="fa fa-angle-right flow-arrow"></span></div>' +
-                    '<div class="options btn-group-xs" >';
+                //var str = '<div class="options-div"><span class="fa fa-angle-right flow-arrow"></span></div>' +
+                var str = '<div class="options btn-group-xs" >';
                 if (data.type == 'droplist') {
                     str += '<select id="droplist" class="selectSetting" ><option>请选择</option>';
 
@@ -173,14 +190,18 @@ function chooseOption(e) {
                     str += '</select>'
                 } else
                     $.each(data.data, function (key, value) {
+                        if(typeof(value)=='object'){
+                            key = Object.keys(value)[0]
+                            value = value[key];
+                        }
                         if (IsNum(key.toString().substring(1))) //json.parse会把数组重新排序，所以key为数字数组，key前面都添加了下划线'_'
                             key = key.toString().substring(1)
-                        str += '<button class="btn btn-default" type="button" onclick="chooseOption(this)" value="' + key + '">' + value + '</button><br />'
+                        str += '<button class="btn " type="button" onclick="chooseOption(this)" value="' + key + '">' + value + '</button>'
                     });
                 if (data.option != 0) {
                     $.each(data.option, function (key, value) {
                         if (value[0] == 'text')
-                            str += '<input type="text" name="option-' + key + '" id="option-' + key + '" placeholder="' + value[1] + '" ><br >'
+                            str += '<input type="text" name="option-' + key + '" id="option-' + key + '" placeholder="' + value[1] + '" ><br />'
                         if (value[0] == 'select') {
                             str += '<select name="option-' + key + '" id="option-' + key + '">';
                             $.each(value[1], function (key, value) {
@@ -199,7 +220,7 @@ function chooseOption(e) {
                     str += '<input type="hidden" name="new-type" id="new-type" value="1">' +
                     '<input type="hidden" id="new-subject" name="new-subject" value="' + newsbj + '" > ' +
                     '<input type="hidden" id="new-sbjname" value="' + newsbjname + '" > ' +
-                    '<input type="text" class="new-item" placeholder="手动填写" id="new-name" name="new-name" value="' + $("#tran_name_" + id).val() + '" >';
+                    '<br ><input type="text" class="new-item" placeholder="手动填写" id="new-name" name="new-name" value="' + $("#tran_name_" + id).val() + '" >';
 
                     if (data.list != '') {
                         str += '<select id="new-invoice" name="new-invoice" data-placeholder="请选择">';
@@ -219,16 +240,16 @@ function chooseOption(e) {
                             str += '</select>';
                         });
                     }
-                    str += '<br ><button value="" type="button" id="button" onclick="chooseSubject(this)">新建</button>'
+                    str += '<br ><button value="" class="btn" id="button" onclick="chooseSubject(this)">新建</button>'
                 }
                 else if (data.new == 'employee') {
                     str += '<input type="hidden" name="new-type" id="new-type" value="2">' +
-                    '<input type="text" class="new-item" placeholder="新员工姓名" id="new-name" name="new-name"  value="' + $("#tran_name_" + id).val() + '" >' +
+                    '<br ><input type="text" class="new-item" placeholder="新员工姓名" id="new-name" name="new-name"  value="' + $("#tran_name_" + id).val() + '" >' +
                     '<br ><select id="new-department" name="new-department" data-placeholder="新员工所属部门">';
                     $.each(data.list, function (key, value) {
                         str += '<option value="' + value['id'] + '">' + value['name'] + '</option>';
                     })
-                    str += '</select><br ><input type="button" value="添加新员工" onclick="addNew(this)"> ';
+                    str += '</select><br ><input type="button" class="btn" value="添加新员工" onclick="addNew(this)"> ';
                 }
                 str += '</div>';
 
@@ -242,6 +263,7 @@ function chooseOption(e) {
                     $("div.options").removeClass("target");
                     $("div.options").last().addClass("target");
                 }
+                unsetting();
             }
             setWidth(e);
         },
@@ -283,8 +305,20 @@ function itemSet() {
             $("#withtax_" + item_id).val(1);
         else
             $("#withtax_" + item_id).val(0);
+        $("#path_" + item_id).val(str);
         e.html(str);
         e.addClass("path-success");
+        //设置checkbox的选项
+        $.each($("#setting").find("input[type='checkbox']:checked"), function(key, element){
+            var id = $(element).attr('id') + "_" + item_id;
+            if($("#"+ id).length > 0)
+                $("#" + id).val(1);
+            else{
+                $("data").append('<input type="hidden" id="'+ id +'" name="lists['+item_id + '][Transition][' + $(element).attr('id') + ']" value="1" >');
+            }
+        });
+        var last = $(".options button[class*='active']:last").val()
+        $("#last_"+ item_id).val(last);
     }
     else {
         e.addClass("path-fail");

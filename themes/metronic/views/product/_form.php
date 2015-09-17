@@ -140,7 +140,8 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                                     'options' => array(
                                         'formatResult' => 'js:function(data){
                                             var order = JSON.parse(data.text);
-                                            var markup = "<div title=\"金额:" + order.amount + " \n摘要:" + order.memo + "\">" + data.id + "</div>";
+                                            var markup = \'<div class="popovers" data-placement="left" data-container="body" data-trigger="hover" data-html="true"  data-original-title="\' + order.date +\'"\'
+                                            + \'data-content="余额:\' + order.amount + \'<br>摘要:\' + order.memo + \'">\' + data.id + \'</div><script>$(".popovers").popover();<\/script>\';
                                             return markup;
                                         }',
                                         'formatSelection' => 'js: function(order) {

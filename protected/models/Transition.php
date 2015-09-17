@@ -1301,6 +1301,8 @@ class Transition extends CActiveRecord
             if($amount > 0){
                 $tran1->entry_creater = Yii::app()->user->id;
                 $tran1->entry_editor = Yii::app()->user->id;
+                $tran1->entry_reviewed = 1;
+                $tran1->entry_reviewer = 1;
                 $amount = 0;
                 foreach($tax as $item){
                     $tran = new Transition();

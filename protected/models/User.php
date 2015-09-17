@@ -103,10 +103,9 @@ class User extends UserActiveRecord
 
     public function superAdmin(){
         $me = $this->findByPk(Yii::app()->user->id);
-        if($me!=null && $me->role='superadmin')
+        if($me!=null && $me->role=='superadmin')
             return true;
         else
             return false;
-
     }
 }

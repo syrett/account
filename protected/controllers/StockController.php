@@ -308,6 +308,8 @@ class StockController extends Controller
                 $tran->entry_amount = $amount; //折旧率从账套参数获得
                 $tran->entry_creater = Yii::app()->user->id;
                 $tran->entry_editor = Yii::app()->user->id;
+                $tran->entry_reviewed = 1;
+                $tran->entry_reviewer = 1;
                 $tran->save();
                 foreach ($list as $key => $item) {
                     if (isset($item['sbj_2_name'])) {

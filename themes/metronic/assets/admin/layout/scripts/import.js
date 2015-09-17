@@ -128,7 +128,6 @@ function chooseOption(e) {
         options += "," + $(value).find("button[class*='active']").val()
     })
     options += "," + e.value;
-    var version = $("#vip").val();
     if(e.value == '借出款项'){
         $("#setting-info").html('<i class="fa fa-bell-o"></i>&nbsp;&nbsp;&nbsp;预支给员工的款项请在员工报销模块录入');
     }else{
@@ -137,7 +136,7 @@ function chooseOption(e) {
     $.ajax({
         type: 'POST',
         url: $("#option").val(),
-        data: {"type": getType(), "option": options, "data": $("#data").first().val(), "version": version},
+        data: {"type": getType(), "option": options, "data": $("#data").first().val()},
         success: function (msg) {
             var data = JSON.parse(msg);
             if (data.rule == 'end') {
@@ -156,7 +155,11 @@ function chooseOption(e) {
 
                         }
                         if (value[0] == 'checkbox') {
-                            str += '<input type="checkbox" checked name="new-option" id="'+ value[1] + '" >' + value[2] + '&nbsp;'+ value[3] + '&nbsp;&nbsp;&nbsp;&nbsp;'
+                            if (value[4] == "1")
+                                var checked = "checked";
+                            else
+                                var checked = "";
+                            str += '<input type="checkbox" '+ checked + ' name="new-option" id="'+ value[1] + '" >' + value[2] + '&nbsp;'+ value[3] + '&nbsp;&nbsp;&nbsp;&nbsp;'
                         }
                     })
                 }
@@ -265,15 +268,17 @@ function chooseOption(e) {
 function itemSet() {
     //如果有需要添加新元素，比如新员工 新的公司名字 新供应商等
     //addNew();
-    $sbj = $("#subject").val();
+    var sbj = $("#subject").val();
     var item_id = $("#item_id").val()
-    if ($sbj != "") {
+    if (sbj.substr(0, 4) == "6001" && $("#withtax_" + item_id).val() == 1)
+        setTaxSubject(item_id);
+    if (sbj != "") {
         unset(item_id);
         e = $("#info_" + item_id);
         e.removeClass();
         setTransaction(item_id);
-        $("#subject_" + item_id).val($sbj);
-        e.attr('title', $sbj);
+        $("#subject_" + item_id).val(sbj);
+        e.attr('title', sbj);
         //显示选择路径
         var str = "";
         $.each($(".options").find("button[class*='active']"), function (key, value) {
@@ -331,7 +336,7 @@ function save() {
 
         //主营业务收入才计算税率
         if (sbj.substr(0, 4) == "6001" && $("#withtax_" + item_id).val() == 1)
-            setTax(item_id);    //设置税
+            setTaxAmount(item_id);    //设置税
     })
     $("#form").submit();
 }
@@ -431,12 +436,34 @@ function addNew(e) {
     }
 }
 
-function setTax(item_id) {
+function setTaxSubject(item_id){
+
+    $.ajax({
+        type: 'POST',
+        url: $("#get-subject").val(),
+        data: {"name":"增值税","subject":2221},
+        sync: false,
+        success: function (msg) {
+            if(msg != 0){
+                $.ajax({
+                    type: 'POST',
+                    url: $("#get-subject").val(),
+                    data: {"name": "销项", "subject": msg},
+                    sync: false,
+                    success: function (msg) {
+                        $("#additional_sbj0_" + item_id).val(msg);//科目编号,应交税费2221的二级科目 进项（采购默认）参考gbl数据库
+                    }
+                });
+            }
+        }
+    });
+}
+function setTaxAmount(item_id) {
     //设置相关参数值，现在默认最多2个参数，如果过多要重新写函数
     //设置税费，目前只设置税费
     //简单版，统一税率为3%
     //if($("#new-category-3").is(":visible")){
-    $("#additional_sbj0_" + item_id).val(222102);//科目编号,应交税费2221的二级科目 进项（采购默认）参考gbl数据库
+
     var amount = 0;
     if ($("#tran_amount_" + item_id != ''))
         amount = parseFloat($("#tran_amount_" + item_id).val());

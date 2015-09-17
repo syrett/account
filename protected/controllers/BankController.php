@@ -99,11 +99,22 @@ class BankController extends Controller
 
         $relation = Bank::model()->getRelation('bank', $id);
         if($relation==null){
-            $this->loadModel($id)->delete();
-
+            $model = $this->loadModel($id);
+            $order_no = $model->order_no;
+            $model->delete();
+            $porder = Preparation::model()->findByAttributes(['pid'=>$id, 'type'=>'bank']);
+            if($porder)
+                $porder->delete();
             $trans = Transition::model()->findAll(['condition'=>'data_type = "bank" and data_id=:data_id','params'=>[':data_id'=>$id]]);
             foreach($trans as $item){
                 $item->delete();
+            }
+            $reim = Reimburse::model()->findByAttributes([],"paid like '%$order_no%'");
+            if($reim){
+                $paid = json_decode($reim['paid'], true);
+                unset($paid[$order_no]);
+                $reim['paid'] = json_encode($paid);
+                $reim->save();
             }
 
         }else{
@@ -124,7 +135,7 @@ class BankController extends Controller
         {
             $in = [];
             foreach($_POST['selectdel'] as $item){
-                $relation = Bank::model()->getRelation($item);
+                $relation = Bank::model()->getRelation('ban', $item);
                 if($relation==null)
                     $in += $item;
             }
@@ -134,6 +145,7 @@ class BankController extends Controller
             $cri->addInCondition('data_id', $in);
             Bank::model()->deleteAll($criteria);
             Transition::model()->deleteAll($cri);
+
             if(count($in) == count($_POST['selectdel']))
                 $status = 'success';
             elseif(empty($in))
@@ -217,7 +229,7 @@ class BankController extends Controller
     public function actionOption()
     {
         if (Yii::app()->request->isAjaxRequest) {
-            echo json_encode(Bank::chooseOption($_POST['type'], $_POST['option'], $_POST['data'], $_POST['version']));
+            echo json_encode(Bank::chooseOption($_POST['type'], $_POST['option'], $_POST['data']));
         } else
             throw new CHttpException(403,'不允许提交');
     }

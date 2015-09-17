@@ -149,15 +149,11 @@ class Purchase extends LFSModel
      */
     public function getPaid(){
         $amount = 0;
-        $porders = Preparation::model()->findAllByAttributes(['real_order'=>$this->order_no]);
+        $porders = Preparation::model()->findAllByAttributes([],"real_order like '%$this->order_no%'");
         if($porders){
             foreach ($porders as $item) {
-                if($item['type'] == 'bank')
-                    $order = Bank::model()->findByPk($item['pid']);
-                else
-                    $order = Cash::model()->findByPk($item['pid']);
-
-                $amount += $order['amount'];
+                $real_order = json_decode($item->real_order, true);
+                $amount += $real_order[$this->order_no];
             }
         }
 

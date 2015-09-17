@@ -91,6 +91,12 @@ $tranDate = $this->getTransitionDate('post');
                         <input type="hidden" id="additional_amount1_<?= $key ?>"
                                name="lists[<?= $key ?>][Transition][additional][1][amount]"
                                value="<?= $item['additional'][1]['amount'] ?>">
+                        <input id="get-subject" type="hidden" value="<?= $this->createUrl(
+                            '/subjects/matchsubject'
+                        ) ?>">
+                        <input id="data" type="hidden" value="">
+                        <input id="subject" type="hidden" value="">
+                        <input id="item_id" type="hidden" value="">
 
                         <div class="btn-group">
                             <a class="btn btn-xs blue dropdown-toggle" data-toggle="modal" onclick="itemsetting(this)"

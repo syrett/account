@@ -387,14 +387,14 @@ class TransitionController extends Controller
         }
 
         if (empty($sheetData)){
-//            $objPHPExcel = PHPExcel_IOFactory::load(Yii::app()->basePath.'\..\download\test.xlsx');
-//            $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
-//            //去除第一行
-//            array_shift($list);
-//            foreach($list as $item){
-//                $sheetData[] = Transition::getSheetData($item, 'reimburse');
-//            }
-            $sheetData[] = Transition::getSheetData([], 'reimburse');
+            $objPHPExcel = PHPExcel_IOFactory::load(Yii::app()->basePath.'\..\download\test.xlsx');
+            $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+            //去除第一行
+            array_shift($list);
+            foreach($list as $item){
+                $sheetData[] = Transition::getSheetData($item, 'reimburse');
+            }
+//            $sheetData[] = Transition::getSheetData([], 'reimburse');
         }
 
         $model[] = new Transition();
@@ -1424,6 +1424,8 @@ class TransitionController extends Controller
                     $subject_2 = $_POST['subject_2'];
                     $arr['subject_2'] = $subject_2;
                     $model = new Bank;
+                    if(!$this->checkVIP())
+                        break;
                     $path = explode('=>', $arr['path']);
                     if($path[2]=='销售收入'){
                         $order = Product::model()->findByAttributes(['order_no'=>$path[4]]);
@@ -1439,7 +1441,7 @@ class TransitionController extends Controller
                             $model['pid'] = $order['id'];
                             $arr['relation'] = json_encode(['purchase'=>$order['id']]);
                         }
-                    }elseif($path[2] == '员工报销' && $path[4] != '预支款'){
+                    }elseif($path[2] == '员工报销' && isset($path[4]) && $path[4] != '预支款'){
                         $order = Reimburse::model()->findByAttributes(['order_no'=>$path[4]]);
                         if($order){
                             $model['type'] = 'reimburse';
@@ -1467,6 +1469,46 @@ class TransitionController extends Controller
                     $arr['subject_2'] = 1001;   //库存现金
                     $model = new Cash;
                     break;
+                    if(!$this->checkVIP())
+                        break;
+                    $path = explode('=>', $arr['path']);
+                    if($path[2]=='销售收入'){
+                        $order = Product::model()->findByAttributes(['order_no'=>$path[4]]);
+                        if($order){
+                            $model['type'] = 'product';
+                            $model['pid'] = $order['id'];
+                            $arr['relation'] = json_encode(['product'=>$order['id']]);
+                        }
+                    }elseif($path[2] == '供应商采购'){
+                        $order = Purchase::model()->findByAttributes(['order_no'=>$path[4]]);
+                        if($order){
+                            $model['type'] = 'purchase';
+                            $model['pid'] = $order['id'];
+                            $arr['relation'] = json_encode(['purchase'=>$order['id']]);
+                        }
+                    }elseif($path[2] == '员工报销' && isset($path[4]) && $path[4] != '预支款'){
+                        $order = Reimburse::model()->findByAttributes(['order_no'=>$path[4]]);
+                        if($order){
+                            $model['type'] = 'reimburse';
+                            $model['pid'] = $order['id'];
+                            $arr['relation'] = json_encode(['reimburse'=>$order['id']]);
+                        }
+                        $arr['entry_subject'] = $subject_2;
+                        $arr['entry_transaction'] = 2;
+                        $sbj2241 = Subjects::matchSubject($path[3],['2241']);
+                        $sbj1221 = Subjects::matchSubject($path[3], ['1221']);
+                        $amounttmp = $order->mountTotal() - $order->mountPaid();
+                        if($amounttmp >= $arr['entry_amount'])
+                            $arr['subject_2'] = $sbj2241;
+                        else{   //金额超出原报销订单的部分，生成预支订单
+                            $preOrder = new Preparation();
+                            $preOrder->order_no = $preOrder->initOrder('reimburse');
+                            $preOrder->type = $type;
+                            $preOrder->entry_amount = $arr['entry_amount'] - $amounttmp;
+                            $arr['subject_2'] = $sbj2241. ','. $sbj1221;
+                            $arr['subject_2_price'] = $amounttmp. ','. ($arr['entry_amount'] - $amounttmp);
+                        }
+                    }
                 case 'purchase':
                     $arr['entry_appendix_type'] = 1;
                     $model = new Purchase();
@@ -1644,9 +1686,13 @@ class TransitionController extends Controller
                                             $arr['error'] = ['报销日期必须大于预支款日期'];
                                             $arr['id'] = isset($id) ? $id : '';
                                             $result[] = ['status' => 0, 'data' => $arr];
-                                            continue 3;
+                                            continue 4;
                                         }
-                                        $amountpre += $porder->entry_amount;
+                                        if($id != ''){
+                                            $b = $model->findByPk($id);
+                                            $amountpre += $porder->entry_amount - $porder->amount_used + $porder->getAmount($b->order_no);
+                                        }else
+                                            $amountpre += $porder->entry_amount - $porder->amount_used;
                                         $porder->status = 2;
                                         $porders[$a] = $porder;
                                     }
@@ -1669,7 +1715,9 @@ class TransitionController extends Controller
                             $reim_amount_2 += round(floatval($arr[$key]), 2);
                             $tran_arr[] = [$reim, $sbj2];
                             $arr['subject_2'] = $sbj2['subject_2'];
+                            $arr['subject_2_price'] = $sbj2['subject_2_price'];
                         }
+                        $arr['entry_amount'] = $reim_amount_2;
                     }
                     break;
             }
@@ -1799,109 +1847,130 @@ class TransitionController extends Controller
                     $model->relation = json_encode($relation);
                     $model->save();
                 }
-                if($type == 'bank' || $type == 'cash'){
-                    if($path[4]=='预支款' || $path[4]=='预付款'|| $path[4]=='预收款'){  //预收
-                        Preparation::model()->deleteAllByAttributes(['pid'=>$model->id, 'type'=>$type]);
-                        $order = new Preparation();
-                        if(substr($arr['entry_subject'],0,4)=='2203')
-                            $order->order_no = $order->initOrder('product');
-                        elseif(substr($arr['entry_subject'],0,4)=='1123')
-                            $order->order_no = $order->initOrder('purchase');
-                        elseif(substr($arr['entry_subject'],0,4)=='1221')
-                            $order->order_no = $order->initOrder('reimburse');
-                        $order->entry_amount = $arr['entry_amount'];
-                        $order->type = $type;
-                        $order->pid = $model->id;
-                        $order->save();
-                    }
-                    if($path[2] == '员工报销') {
-                        //银行如果保存的是员工报销的话，需要把报销的项目保存起来
-                        $pro_arr = ['travel', 'benefit', 'traffic', 'phone', 'entertainment', 'office', 'rent', 'watere', 'train', 'service', 'stamping'];
-                        $tmp_arr = [];
-                        foreach ($pro_arr as $item) {
-                            if (isset($arr[$item . '_amount']) && $arr[$item . '_amount'] > 0)
-                                $tmp_arr[] = $item . '_amount';
+                if($this->checkVIP()){
+                    if($type == 'bank' || $type == 'cash'){
+                        if(isset($path[4]) && ($path[4]=='预支款' || $path[4]=='预付款'|| $path[4]=='预收款')){  //预收
+                            Preparation::model()->deleteAllByAttributes(['pid'=>$model->id, 'type'=>$type]);
+                            $order = new Preparation();
+                            if(substr($arr['entry_subject'],0,4)=='2203')
+                                $order->order_no = $order->initOrder('product');
+                            elseif(substr($arr['entry_subject'],0,4)=='1123')
+                                $order->order_no = $order->initOrder('purchase');
+                            elseif(substr($arr['entry_subject'],0,4)=='1221')
+                                $order->order_no = $order->initOrder('reimburse');
+                            $order->entry_amount = $arr['entry_amount'];
+                            $order->type = $type;
+                            $order->pid = $model->id;
+                            $order->save();
                         }
-                        if (!empty($tmp_arr)) {
-                            //查询出报销的订单，然后保存报销的项目
-                            $order = $arr['last'];
-                            $reim = Reimburse::model()->findByAttributes(['order_no' => $order]);
-                            if ($reim) {
-                                if ($new) {
-                                    $tmp_arr2 = array_filter(explode(',', $reim->paid));
-                                    $tmp_arr = array_unique(array_merge($tmp_arr, $tmp_arr2));
+                        if($path[2] == '员工报销') {
+                            //银行如果保存的是员工报销的话，需要把报销的项目保存起来
+                            $pro_arr = ['travel', 'benefit', 'traffic', 'phone', 'entertainment', 'office', 'rent', 'watere', 'train', 'service', 'stamping'];
+                            $tmp_arr = [];
+                            foreach ($pro_arr as $item) {
+                                if (isset($arr[$item . '_amount']) && $arr[$item . '_amount'] > 0)
+                                    $tmp_arr[] = $item . '_amount';
+                            }
+                            if (!empty($tmp_arr)) {
+                                //查询出报销的订单，然后保存报销的项目
+                                $order = $arr['last'];
+                                $reim = Reimburse::model()->findByAttributes(['order_no' => $order]);
+                                if ($reim) {
+    //                                $tmp_arr2 = array_filter(explode(',', $reim->paid));
+    //                                $tmp_arr = array_unique(array_merge($tmp_arr, $tmp_arr2));
+
+                                    $paid = json_decode($reim['paid'], true);
+                                    $paid[$model->order_no] = implode(',', $tmp_arr);
+
+
+                                    $reim->paid = json_encode($paid);
+                                    $reim->save();
                                 }
-                                $str = implode(',', $tmp_arr);
-                                $reim->paid = $str;
-                                $reim->save();
                             }
                         }
                     }
-                }
-                //采购的如果是固定资产，无形资产，长期待摊，需要把当时的
-                if($type == 'purchase'){
-                    if(isset($amount_2)){
-                        $subject_2 = explode(',', $arr['subject_2']);
-                        $subject_2_price = explode(',', $arr['subject_2_price']);
-                        if(count($subject_2)>1){
-                            $entry_amount = array_sum($subject_2_price);
-                            foreach ($subject_2 as $akey => $a) {
-                                if(strpos($a, '1123') !== false)
-                                    $subject_2_price[$akey] = $amount_2;
-                                else
-                                    $subject_2_price[$akey] = $entry_amount - $amount_2;
+                    //采购的如果是固定资产，无形资产，长期待摊，需要把当时的
+                    if($type == 'purchase'){
+                        if(isset($amount_2)){
+                            $subject_2 = explode(',', $arr['subject_2']);
+                            $subject_2_price = explode(',', $arr['subject_2_price']);
+                            if(count($subject_2)>1){
+                                $entry_amount = array_sum($subject_2_price);
+                                foreach ($subject_2 as $akey => $a) {
+                                    if(strpos($a, '1123') !== false)
+                                        $subject_2_price[$akey] = $amount_2;
+                                    else
+                                        $subject_2_price[$akey] = $entry_amount - $amount_2;
+                                }
                             }
+                            $arr['subject_2'] = implode(',', $subject_2);
+                            $arr['subject_2_price'] = implode(',', $subject_2_price);
                         }
-                        $arr['subject_2'] = implode(',', $subject_2);
-                        $arr['subject_2_price'] = implode(',', $subject_2_price);
-                    }
-                    $stock = new Stock();
-                    $stock->load($arr, 'purchase');
-                    if($id != '' && $arr['entry_name']!='劳务服务' && $arr['entry_name']!='缴纳税款'){
+                        $stock = new Stock();
+                        $stock->load($arr, 'purchase');
+                        if($id != '' && $arr['entry_name']!='劳务服务' && $arr['entry_name']!='缴纳税款'){
 
-                        $model = $model::model()->findByPk($id);
-                        $old_count = count(Stock::model()->findAllByAttributes(['order_no'=>$stock->order_no]));
+                            $model = $model::model()->findByPk($id);
+                            $old_count = count(Stock::model()->findAllByAttributes(['order_no'=>$stock->order_no]));
 
-                        $count = $old_count - (int)$arr['count'];
-                        $stock->updateAll($stock->form('purchase'),"order_no='$stock->order_no'");
-                        $one = $stock->findByAttributes(['order_no'=>$stock->order_no]);
-                        if($one){
-                            $stock->value_year = $one['value_year'];
-                            $stock->value_rate = $one['value_rate'];
-                        }
-                        if($count<0){   //数量有增加
-                            $stock->saveMultiple(-$count);
-                        }
-                        elseif($count>0){   //数量减少
-                            $left = $stock->getCount(['name'=>$arr['entry_name'],'status'=>1]);
-                            $stock->delStock($count);
-                            if($left>=$count && $count!=0)
+                            $count = $old_count - (int)$arr['count'];
+                            $stock->updateAll($stock->form('purchase'),"order_no='$stock->order_no'");
+                            $one = $stock->findByAttributes(['order_no'=>$stock->order_no]);
+                            if($one){
+                                $stock->value_year = $one['value_year'];
+                                $stock->value_rate = $one['value_rate'];
+                            }
+                            if($count<0){   //数量有增加
+                                $stock->saveMultiple(-$count);
+                            }
+                            elseif($count>0){   //数量减少
+                                $left = $stock->getCount(['name'=>$arr['entry_name'],'status'=>1]);
                                 $stock->delStock($count);
-                            else{
-                                $arr['error'] = ["数量不能小于：". ($count - $left + $arr['count'])];
-                                $result[] = ['status' => 0, 'data' => $arr];
-                                continue;
+                                if($left>=$count && $count!=0)
+                                    $stock->delStock($count);
+                                else{
+                                    $arr['error'] = ["数量不能小于：". ($count - $left + $arr['count'])];
+                                    $result[] = ['status' => 0, 'data' => $arr];
+                                    continue;
+                                }
                             }
+                        }else{
+                            $stock->saveMultiple($arr['count']);
                         }
-                    }else{
-                        $stock->saveMultiple($arr['count']);
                     }
-                }
-                if($type == 'product'){
-                    if($amount_2){
-                        $subject_2 = explode(',', $arr['subject_2']);
-                        $subject_2_price = explode(',', $arr['subject_2_price']);
-                        if(count($subject_2)>1){
-                            $entry_amount = array_sum($subject_2_price);
-                            foreach ($subject_2 as $akey => $a) {
-                                if(strpos($a, '2203') !== false)
-                                    $subject_2_price[$akey] = $amount_2;
-                                else
-                                    $subject_2_price[$akey] = $entry_amount - $amount_2;
+                    if($type == 'product'){
+                        if($amount_2){
+                            $subject_2 = explode(',', $arr['subject_2']);
+                            $subject_2_price = explode(',', $arr['subject_2_price']);
+                            if(count($subject_2)>1){
+                                $entry_amount = array_sum($subject_2_price);
+                                foreach ($subject_2 as $akey => $a) {
+                                    if(strpos($a, '2203') !== false)
+                                        $subject_2_price[$akey] = $amount_2;
+                                    else
+                                        $subject_2_price[$akey] = $entry_amount - $amount_2;
+                                }
                             }
+                            $arr['subject_2'] = implode(',', $subject_2);
+                            $arr['subject_2_price'] = implode(',', $subject_2_price);
                         }
-                        $arr['subject_2'] = implode(',', $subject_2);
-                        $arr['subject_2_price'] = implode(',', $subject_2_price);
+                    }
+                    if($type == 'reimburse'){
+                        if($amount_2){
+                            $subject_2 = explode(',', $arr['subject_2']);
+                            $subject_2_price = explode(',', $arr['subject_2_price']);
+                            if(count($subject_2)>0){
+                                $entry_amount = array_sum($subject_2_price);
+                                foreach ($subject_2 as $akey => $a) {
+                                    if(strpos($a, '1221') !== false)
+                                        $subject_2_price[$akey] = $amount_2;
+                                    else
+                                        $subject_2_price[$akey] = $entry_amount - $amount_2;
+                                }
+                            }
+                            $arr['subject_2'] = implode(',', $subject_2);
+                            $arr['subject_2_price'] = implode(',', $subject_2_price);
+                        }
                     }
                 }
                 if($arr['entry_transaction']=='')

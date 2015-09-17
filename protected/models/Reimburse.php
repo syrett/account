@@ -193,11 +193,20 @@ class Reimburse extends LFSModel
      */
     public function mountPaid(){
         $arr = explode(',', $this->paid);
+        $arr = json_decode($this->paid, true);
         $total = 0;
-        if(count($arr) > 1)
+        if(count($arr) > 1){
+            $paid = '';
             foreach ($arr as $item) {
+                $paid .= explode(',', $item);
+            }
+            $paid = array_filter(implode(',', $paid));
+            foreach ($paid as $item) {
                 $total += $this[$item];
             }
+        }
+
+
         return $total;
     }
 

@@ -133,11 +133,23 @@ class ReimburseController extends Controller
 	{
         $relation = Reimburse::model()->getRelation('reimburse', $id);
         if($relation==null) {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $order_no = $model->order_no;
+            $model->delete();
 
             $trans = Transition::model()->findAll(['condition'=>'data_type = "reimburse" and data_id=:data_id','params'=>[':data_id'=>$id]]);
             foreach($trans as $item){
                 $item->delete();
+            }
+            $porders = Preparation::model()->findAllByAttributes([], "real_order like '%$order_no%'");
+            if(!empty($porders)){
+                foreach ($porders as $item) {
+                    $real_order = json_decode($item['real_order'], true);
+                    $item['amount_used'] -= $real_order[$order_no];
+                    unset($real_order[$order_no]);
+                    $item['real_order'] = json_encode($real_order);
+                    $item->save();
+                }
             }
         }else{
             $result['status'] = 'failed';

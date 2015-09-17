@@ -136,10 +136,12 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                                     'options' => array(
                                         'formatResult' => 'js:function(data){
                                             var order = JSON.parse(data.text);
-                                            var markup = "<div title=\"金额:" + order.amount + " \n摘要:" + order.memo + "\">" + data.id + "</div>";
+                                            var markup = \'<div class="popovers" data-placement="left" data-container="body" data-trigger="hover" data-html="true"  data-original-title="\' + order.date +\'"\'
+                                            + \'data-content="余额:\' + order.amount + \'<br>摘要:\' + order.memo + \'">\' + data.id + \'</div><script>$(".popovers").popover();<\/script>\';
                                             return markup;
                                         }',
                                         'formatSelection' => 'js: function(order) {
+                                            $("[id*=\'popover\']").remove()
                                             return order.id;
                                         }',
                                     ),
@@ -175,7 +177,7 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                                        value="<?= $item['entry_subject'] ?>">
                                 <input type="hidden" id="entry_amount_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_amount]"
-                                       value="111"> <!--此处金额无实际用途 -->
+                                       value="<?= 11 ?>"> <!--此处金额无实际用途 -->
                                 <input type="hidden" id="subject_2_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][subject_2]"
                                        value="<?= $item['subject_2'] ?>">

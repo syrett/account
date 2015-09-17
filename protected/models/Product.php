@@ -75,7 +75,7 @@ class Product extends LFSModel
             'count' => '数量',
             'unit' => '单位',
             'tax' => '税率',
-            'paied' => '已付金额',
+            'paied' => '已收金额',
             'create_time' => '创建日期',
             'update_time' => '更新日期',
             'status_id' => '状态',
@@ -174,13 +174,8 @@ class Product extends LFSModel
         $porder = Preparation::model()->findAllByAttributes(['real_order'=>$this->order_no,'status'=>2]);
         if($porder)
             foreach ($porder as $item) {
-                if($item['type'] == 'bank')
-                    $order = Bank::model()->findByPk($item['pid']);
-                else
-                    $order = Cash::model()->findByPk($item['pid']);
-                if($order){
-                    $amount += floatval($order->amount);
-                }
+                $real_order = json_decode($item->real_order, true);
+                $amount += $real_order[$this->order_no];
             }
 
         //银行

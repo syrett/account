@@ -329,4 +329,15 @@ class SubjectsController extends Controller
         }else
             throw new CHttpException(403, "无效的请求");
     }
+
+    /*
+     * 匹配subject
+     */
+    public function actionMatchsubject(){
+        if (Yii::app()->request->isAjaxRequest) {
+            $sbj = Subjects::matchSubject($_POST['name'], [$_POST['subject']]);
+            echo $sbj;
+        }else
+            throw new CHttpException(403, "无效的请求");
+    }
 }

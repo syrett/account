@@ -578,7 +578,7 @@ eof;
     {
         $subject = new Subjects();
         $arr = [ 6001];
-        $result = $subject->getitem($arr, $key, ['type' => 0, 'sbj_number' => 6001]);
+        $result = $subject->getitem($arr, $key, ['type' => 1, 'sbj_number' => 6001]);
         return [
             'data' => array_flip(array_flip($result)),
             'new' => 'no',
@@ -618,13 +618,38 @@ eof;
      */
     public static function chooseOption($type, $options, $data)
     {
+        $result = [];
         $options = explode(",", $options);
         $data = explode("|", $data);
 //        $option = end($options);
 //        if ((int)$option === 0) {   //字符串转换为int，如果不是数值，最后就为0，代表最后一位 没有 选择最终值
-//        $a = new Cash();
+        $a = new Bank();
         if ($type == 1) { //支出
             switch ($options[2]) {
+                case '工资社保'  :
+                    if($version==1){
+                        if (isset($options[3])) {
+                            if (isset($options[4])) {
+                                $department = Employee::getDepart($options[4]);
+                                $result = Department::matchSubject($department, $options[3]);
+                                return self::endOption($result);
+                            }
+                            //304 若付款金额小于上期预提的金额，则将应付职工薪酬2211或其他应付款2241作为一级科目形成分录
+                            /*if ($data[4] < $a->prospect()) {   //$data[3] 为金额  假设为30000
+                                if ($options[3] == '工资与资金')
+                                    return self::endOption(2211);
+                                else
+                                    return self::endOption(2241);
+                            } else {*/
+                            $result = self::getEmployee($data[1]);//员工列表
+//                        }
+                        } else
+                            $result = self::getSalary();
+                    } else{
+                        $result = Subjects::matchSubject($options[3], 2211);
+                        return self::endOption($result);
+                    }
+                    break;
                 case '支付押金'  :
                 case '借出款项'  :
                 case '归还借款'  :
@@ -654,67 +679,92 @@ eof;
                         $result = self::getDeposit($type, $data[1]);
                     break;
                 case '供应商采购'  :
-                    if (isset($options[3]))
-                        return self::endOption($options[3]);
-//                        if (isset($options[3])) {
-//                            return self::endOption($options[3]);
-//                        } else
-//                            $result = self::afterSupplier($data[3]);
-
-                    $result = self::afterSupplier($data[1]);
-                    $result['type'] = 'droplist';
-//                        $result = self::getSupplier($data[1]);
+                    if($version==1){
+                        if (isset($options[3]))
+                            return self::endOption($options[3]);
+                        $result = self::afterSupplier($data[1]);
+                        $result['type'] = 'droplist';
+                    }
+                    else{
+                        if (isset($options[3])) {
+                            if (isset($options[4])) {
+                                return self::endOption($options[4]);
+                            }else{
+                                $order = Vendor::listOrders($options[3]);
+                                if(!empty($order))
+                                    $result = self::genData($order);
+                            }
+                        }else{
+                            $vendors = Vendor::getVendors($data[1], 1, 2);
+                            $result = ['data' => $vendors];
+                        }
+                    }
                     break;
                 case '员工报销'  :
                     //若付款金额小于上期预提的金额，则将其他应付款2241作为一级科目，该员工名称作为二级科目形成分录；
-                    if (isset($options[3]))
-//                        if (isset($options[4])) {
-//                            return self::endOption($options[4]);
-//                        } else
-//                            $result = self::afterEmployee($data[3]);
-
-                        //简单版，不考虑预提
-                        /*if ($data[4] < $a->prospect()) {
-                            $sbj = Subjects::matchSubject(Employee::getName($options[3]), array(2241));
-                            return self::endOption($sbj);
-                        } else {
+                    if($version==1){
+                        if (isset($options[3]))
+                            return self::endOption($options[3]);
+                        $result = self::afterEmployee($data[1]);
+                        $result['type'] = 'droplist';
+                    }else{
+                        if (isset($options[3])) {
                             if (isset($options[4])) {
-                                if (isset($options[5]))
-                                    return self::endOption($options[5]);
-                                if ($options[4] == 1) {  //如果未收到发票，货币收支模块将员工名称作为其他应收款1221的二级科目
-                                    $sbj = Subjects::matchSubject(Employee::getName($options[3]), array(1221));
+                                if($options[4]=='预支款'){
+                                    $sbj = Subjects::matchSubject($options[3],['1221']);
                                     return self::endOption($sbj);
-                                } else {
-                                    //如果已经收到发票，则提示用户选择所该员工采购商品名称（添加科目）或服务的性质，形成二级科目；
-                                    //银行收支模块进一步确定该员工所属部门为管理部门还是销售部门，
-                                    //4研发部门为管理费用二级科目研发费，
-                                    //1生产部门为主营业务成本6401，
-                                    //如属于2管理部门，则将管理费用6602作为一级科目；
-                                    //如属于3销售部门，则将营业 销售费用6601作为一级科目，形成会计分录
-                                    $department = Employee::getDepartType($options[3]);
-                                    $sbj_id = '';
+                                }else {
+                                    //员工报销需要把报销的项目列出来供选择 多选
+                                    $rem = Reimburse::model()->findByAttributes(['order_no' => $options[4]]);
+                                    $sbj = 0;
+                                    if ($rem) {
+                                        $tmp3 = explode(',', $rem['subject_2']);
+                                        if(count($tmp3) > 1){   //报销的贷方科目只有其他应付和其他应收这2项
+                                            $sbj = $tmp3[0];
+                                        }else
+                                            $sbj = $rem['subject_2'];
+                                        $pro_arr = ['travel', 'benefit', 'traffic', 'phone', 'entertainment', 'office', 'rent', 'watere', 'train', 'service', 'stamping'];
+                                        foreach ($pro_arr as $item) {
+                                            $real_orders = json_decode($rem['paid'], true);
+                                            $paid = '';
+                                            $checked = 0;
+                                            if($real_orders){
+                                                foreach ($real_orders as $a) {
+                                                    $paid .= ','. $a;
+                                                }
 
-                                    if ($department == 1) {
-                                        $sbj_id = 6401;
-                                    } elseif ($department == 2) {
-                                        $sbj_id = 6602;
-                                    } elseif ($department == 3) {
-                                        $sbj_id = 6601;
-                                    } elseif ($department == 4) {
-                                        $sbj_id = 660202;
+                                                if($options[0]!='0' && isset($real_orders[$options[0]])){
+                                                    if(strpos($real_orders[$options[0]], $item) !== false)
+                                                        $checkbox[] = ['checkbox', $item . '_amount', Reimburse::model()->getAttributeLabel($item . '_amount'), $rem[$item . '_amount'], "1"];
+                                                }
+
+                                            }else
+                                                $checked = 1;
+                                            $paid = array_filter(explode(',', $paid));
+                                            if ($rem[$item . '_amount'] > 0 && !in_array($item . '_amount', $paid))
+                                                $checkbox[] = ['checkbox', $item . '_amount', Reimburse::model()->getAttributeLabel($item . '_amount'), $rem[$item . '_amount'], "$checked"];
+                                        }
+
+                                        $option = ['option' => $checkbox];
                                     }
-
-                                    $model = new Subjects();
-                                    $reject = ['工资','社保','公积金'];
-                                    $list = $model->getitem([$sbj_id],$data[1],$reject);
-                                    $result = ['data' => $list, 'new' => 'allow', 'newsbj' => $sbj_id, 'newsbjname' => Subjects::getName($sbj_id)];
+                                    return self::endOption($sbj, $option);
                                 }
-                            } else
-                                $result = self::getInvoice();
-                        }*/
-                        return self::endOption($options[3]);
-                    $result = self::afterEmployee($data[1]);
-                    $result['type'] = 'droplist';
+                            }else{
+                                //todo 报销订单支付完成判断
+                                $orders = Reimburse::listOrders($options[3]);
+                                if(!empty($orders)){
+                                    foreach($orders as $item){
+                                        $tmp[$item['order_no']] = $item['order_no'];
+                                    }
+                                }
+                                $tmp[] = ['预支款' =>'预支款'];
+                                $result =  ['data' => $tmp];
+                            }
+                        }else{
+                            $order = Reimburse::getEmployee($data[1]);
+                            $result = ['data' => $order];
+                        }
+                    }
 
                     break;
                 case '投资支出'  :
@@ -769,9 +819,47 @@ eof;
                     break;
                 case '支付税金'  :  //将应交税费2221子科目列出
                     if (isset($options[3])) {
-                        return self::endOption($options[3]);
+                        if($options[3]=='个人所得税费用')
+                        {
+                            if(isset($options[4])) {
+                                $department = Employee::getDepartType($options[4]);
+                                switch ($department) {
+                                    case 1:
+                                        $result = Subjects::matchSubject('工资与奖金', array(6401));
+                                        break;
+                                    case 2:
+                                        $result = Subjects::matchSubject('工资与奖金', array(6602), 1);
+                                        break;
+                                    case 3:
+                                        $result = Subjects::matchSubject('工资与奖金', array(6601));
+                                        break;
+                                    case 4:
+                                        $result = Subjects::matchSubject('工资与奖金', array(660202));
+                                        break;
+                                }
+                                return self::endOption($result);
+                            }
+                            else
+                                $result = self::getEmployee($data[1]);
+                        }elseif($options[3]=='营业税金及附加'){
+                            if(isset($options[4]))
+                                return self::endOption($options[4]);
+                            else
+                                $result = self::getTaxFee2($data[1]);
+                        }
+                        else
+                            return self::endOption($options[3]);
                     } else
                         $result = self::getTaxFee($data[1]);
+                    break;
+                case '银行转账'  :  //银行资金互转
+                    if (isset($options[3])) {
+                        return self::endOption($options[3]);
+                    } else
+                        $result = self::getBank($data[1]);
+                    break;
+                case '现金提取'  :  //将营业外支出6711作为借方科目，形成会计分录
+                    return self::endOption(1001);
                     break;
                 case '其他支出'  :
                     return self::endOption(6711);
@@ -830,15 +918,35 @@ eof;
                         $result = self::getIncomeItem($type, $data[1]);
                     break;
                 case '销售收入'  :
-                    if (isset($options[3])) {
-                        //如果选择的科目，其一级科目是6001，可以是接返回，否则根据名字，在6001下新建子科目再返回
-                        $result = self::withVat();//是否含税
-                        if (substr($options[3], 0, 4) != '6001') {
-                            $options[3] = Subjects::createSubject(Subjects::getName($options[3]), 6001);
+                    if($version==1){
+                        if (isset($options[3])) {
+                            //如果选择的科目，其一级科目是6001，可以是接返回，否则根据名字，在6001下新建子科目再返回
+                            $result = self::withVat();//是否含税
+                            if (substr($options[3], 0, 4) != '6001') {
+                                $options[3] = Subjects::createSubject(Subjects::getName($options[3]), 6001);
+                            }
+                            return self::endOption($options[3], $result);
+                        } else
+                            $result = self::getSale($data[1]);
+                    }else{
+                        if (isset($options[3])) {
+                            if (isset($options[4])) {
+//                                if($options[4] == '2203'){  //预收款，生成一个订单号
+//                                    $order = new Preparation();
+//                                    $order->order_no = $order->initOrder('product');
+//                                    $order->save();
+//                                }
+                                return self::endOption($options[4]);
+                            }else{
+                                $order = Client::listOrders($options[3]);
+                                if($order)
+                                    $result = self::genData($order);
+                            }
+                        }else{
+                            $clients = Client::getClient($data[1]);
+                            $result = ['data' => $clients];
                         }
-                        return self::endOption($options[3], $result);
-                    } else
-                        $result = self::getSale($data[1]);
+                    }
                     break;
                 case '投资收益'  :
                     if (isset($options[3])) {//如果选择的科目，其一级科目是6001，可以是接返回，否则根据名字，在6001下新建子科目再返回
@@ -864,11 +972,15 @@ eof;
                 case '资产租赁'  :
                     return self::endOption(605103);
                     break;
-//                    if (isset($options[3])) {
-//                        return self::endOption($options[3]);
-//                    } else
-//                        $result = self::getBorrow($data[1]);
-//                    break;
+                case '银行转账'  :  //银行资金互转
+                    if (isset($options[3])) {
+                        return self::endOption($options[3]);
+                    } else
+                        $result = self::getBank($data[1]);
+                    break;
+                case '存入现金'  :
+                    return self::endOption(1001);
+                    break;
                 case '其他收入'  :
                     return self::endOption(6301);
                     break;

@@ -10,7 +10,7 @@ Yii::import('ext.select2.ESelect2', true);
 $cs = Yii::app()->clientScript;
 $baseUrl = Yii::app()->theme->baseUrl;
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_common.js');
-$cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import.js');
+$cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_vip.js');
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/bank.js');
 
 $this->pageTitle = Yii::app()->name;
