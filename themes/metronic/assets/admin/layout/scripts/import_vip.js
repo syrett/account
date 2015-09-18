@@ -6,7 +6,7 @@ $(document).ready(function () {
     $("#selectItem3").val(3);
     $("#dialog").hide();
     $("div").on('blur', "input[id*='tran_amount']", function (e) {
-        sumAmount(this.parentNode.parentNode)
+        sumAmount1(this.parentNode.parentNode)
     })
     $("div").delegate("#new-invoice", "change", function () {
         $("select[name='new-category']").hide();
@@ -407,7 +407,7 @@ function getListTitle() {
 }
 
 //总金额
-function sumAmount(e) {
+function sumAmount1(e) {
     var l = $(e).attr("line");
     var amount = 0;
     $.each($("tr[line='" + l + "']"), function (key, value) {
