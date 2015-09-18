@@ -234,9 +234,10 @@ class Reimburse extends LFSModel
                     $tmp = '';
 
                     $real_order = json_decode($tran['paid'], true);
-                    foreach ($real_order as $item) {
-                        $tmp .= ",$item";
-                    }
+                    if($real_order)
+                        foreach ($real_order as $item) {
+                            $tmp .= ",$item";
+                        }
                     $tmp = array_filter(explode(',', $tmp));
 
                     $pro_arr = ['travel_amount', 'benefit_amount', 'traffic_amount', 'phone_amount', 'entertainment_amount', 'office_amount', 'rent_amount', 'watere_amount', 'train_amount', 'service_amount', 'stamping_amount'];
