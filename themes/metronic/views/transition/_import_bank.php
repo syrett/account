@@ -45,7 +45,7 @@ $tranDate = $this->getTransitionDate('post');
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 col-sm-12">
+            <div class="col-md-3 col-sm-12">
                 <div class="btn-toolbar margin-bottom-10">
                     <button type="submit" class="btn btn-default btn-file">导入</button>
                     <button download="" href="/download/<?= Yii::t('import', strtoupper($type)) ?>.xlsx"
@@ -54,7 +54,7 @@ $tranDate = $this->getTransitionDate('post');
                 </div>
 
             </div>
-            <div class="col-md-4 col-sm-12">
+            <div class="col-md-5 col-sm-12">
                 <div class="form-inline pull-right">
                     <div class="form-group">
                         <?php
