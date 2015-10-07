@@ -95,14 +95,8 @@ $this->pageTitle = Yii::app()->name;
                         ],
                         'name',
                         'in_price',
-                        [
-                            'header' => '残值率',
-                            'value' => 'Options::getValue("value",$data->entry_subject)'
-                        ],
-                        [
-                            'header' => '折旧或摊销年限',
-                            'value' => 'Options::getValue("year",$data->entry_subject)'
-                        ],
+                        'value_month',
+                        'value_rate',
                         [
                             'header' => '折旧',
                             'value' => '$data->in_price - $data->getWorth()'
@@ -113,7 +107,7 @@ $this->pageTitle = Yii::app()->name;
                         ],
                         [
                             'header' => '部门',
-                            'value' => 'Department::model()->getName(Purchase::model()->findByAttributes(["order_no"=>$data->order_no])->department_id)'
+                            'value' => 'Department::model()->getNameByOrderNo($data->order_no)'
                         ]
 
                     ))

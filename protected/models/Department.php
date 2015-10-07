@@ -108,6 +108,20 @@ class Department extends CActiveRecord
         else
             return '无法查询部门';
     }
+    /*
+     * 得到名字
+     */
+    public function getNameByOrderNo($order_no)
+    {
+        $order = Purchase::model()->findByAttributes(["order_no" => $order_no]);
+        if ($order){
+            $model = $this->model()->findByPk($order['department_id']);
+            if ($model)
+                return $model->name;
+        }
+
+        return '无法查询部门';
+    }
 
     /**
      * 列出部门

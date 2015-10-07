@@ -8,10 +8,11 @@ $cs = Yii::app()->getClientScript();
 $baseUrl = Yii::app()->theme->baseUrl;
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_common.js');
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_vip.js');
+$cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/product.js');
 $this->pageTitle = Yii::app()->name;
 $type = 'product';
 $item = $sheetData[0]['data'];
-$preOrder = Preparation::getOrderArray($type);
+$preOrder = Preparation::getPreOrder('client', $item['client_id']);
 $item['preorder'] = Preparation::getOrderArray($type, $item['id']);
 $preOrder = $item['preorder'] + $preOrder;
 $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$model->id\"%'");
@@ -33,7 +34,7 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                     <th class="input_min"><input type="checkbox"></th>
                     <th class="input-xsmall">交易日期</th>
                     <th class="input-small">交易摘要</th>
-                    <th class="input_mid">供应商</th>
+                    <th class="input_mid">客户</th>
                     <th class="input-xsmall">商品/服务名称</th>
                     <th class="input_min">单价</th>
                     <th class="input_min">数量</th>
@@ -145,8 +146,10 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                                             return markup;
                                         }',
                                         'formatSelection' => 'js: function(order) {
+                                            $("[id*=\'popover\']").remove()
                                             return order.id;
                                         }',
+                                        'formatNoMatches' => ''
                                     ),
                                     'htmlOptions' => array('class' => 'select-full','multiple'=>'multiple')
                                 ));

@@ -8,9 +8,9 @@ $cs = Yii::app()->getClientScript();
 $baseUrl = Yii::app()->theme->baseUrl;
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_common.js');
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_vip.js');
+$cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/reimburse.js');
 $this->pageTitle = Yii::app()->name;
 
-$preOrder = Preparation::getOrderArray($type);
 ?>
 <div class="dataTables_wrapper no-footer">
     <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form']); ?>
@@ -42,11 +42,7 @@ $preOrder = Preparation::getOrderArray($type);
                     <th class="input_mmmin" >培训费</th>
                     <th class="input_mmmin" >服务费</th>
                     <th class="input_mmmin" >印花税</th>
-                    <?
-                    if (!empty($preOrder)) {
-                        echo '<th class="input-small">预支款</th>';
-                    }
-                    ?>
+                    <th class="input-small porder">预支款</th>
 <!--                    <th class="input_min">操作</th>-->
                     <th style="width: 10%">提示</th>
                 </tr>
@@ -129,10 +125,12 @@ $preOrder = Preparation::getOrderArray($type);
                                        name="lists[<?= $key ?>][Transition][stamping_amount]"
                                        value="<?= $item['stamping_amount'] ?>">
                             </td>
+                            <td class="porder">
                             <?
+                            $preOrder = Preparation::getPreOrder('employee', Employee::model()->findByAttributes(['name'=>$item['employee_name']])->id);
                             if (!empty($preOrder)) {
-                                ?>
-                                <td><?
+                                $hasPreOrder = true;
+                                ?><?
                                     $this->widget('ext.select2.ESelect2', array(
                                         'name' => 'lists[' . $key . '][Transition][preOrder]',
                                         'id' => 'preOrder_' . $key,
@@ -154,10 +152,10 @@ $preOrder = Preparation::getOrderArray($type);
                                         'htmlOptions' => array('class' => 'select-full','multiple'=>'multiple')
                                     ));
                                     ?>
-                                </td>
                             <?
                             }
                             ?>
+                            </td>
                             <td class="action hidden">
                                 <input type="hidden" id="did_<?= $key ?>" name="lists[<?= $key ?>][Transition][d_id]"
                                        value="<?= isset($item['d_id']) ? $item['d_id'] : '' ?>">
@@ -239,6 +237,10 @@ $preOrder = Preparation::getOrderArray($type);
                 ?>
 
             </table>
+            <?
+            if(isset($hasPreOrder))
+                echo "<input type='hidden' id='hasPreOrder' value='1'>";
+            ?>
 
             <div class="transition_action">
             </div>

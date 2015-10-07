@@ -11,7 +11,7 @@ $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_vip.js')
 $this->pageTitle = Yii::app()->name;
 $type = 'reimburse';
 $item = $sheetData[0]['data'];
-$preOrder = Preparation::getOrderArray($type);
+$preOrder = Preparation::getPreOrder('employee', $item['employee_id']);
 $item['preorder'] = Preparation::getOrderArray($type, $item['id']);
 $preOrder = $item['preorder'] + $preOrder;
 $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$model->id\"%'");
@@ -52,7 +52,7 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                     <th class="input_mmmin"  >印花税</th>
                     <?
                     if (!empty($preOrder)) {
-                        echo '<th class="input-small">预付款</th>';
+                        echo '<th class="input-small">预支款</th>';
                     }
                     ?>
                     <!--                    <th class="input_min">操作</th>-->

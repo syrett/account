@@ -180,6 +180,50 @@ class Preparation extends CActiveRecord
         return $result;
     }
 
+    public static function getPreOrder($type, $id){
+
+        $result = [];
+        switch($type){
+            case 'vendor':
+                $model = Vendor::model()->findByPk($id);
+                $name = $model?$model->company:'';
+                break;
+            case 'client':
+                $model = Client::model()->findByPk($id);
+                $name = $model?$model->company:'';
+                break;
+            case 'employee':
+                $model = Employee::model()->findByPk($id);
+                $name = $model?$model->name:'';
+                break;
+        }
+        $bank = Bank::model()->findAllByAttributes([],"path like '%=>$name=>%' and (path like '%预收款%' or path like '%预付款%' or path like '%预支款%')");
+        $cash = Cash::model()->findAllByAttributes([],"path like '%=>$name=>%' and (path like '%预收款%' or path like '%预付款%' or path like '%预支款%')");
+        foreach ($bank as $item) {
+            $porder = Preparation::model()->findByAttributes(['type'=>'bank','pid'=>$item->id]);
+            if($porder){
+                $left = $porder->entry_amount - $porder->amount_used;
+                if($left > 0)
+                    $result[$porder['order_no']] = "{\"date\":\"". convertDate($item->date, "Y年m月d日")
+                        . "\",\"amount\":\"". $left
+                        . "\",\"memo\":\"". $item->memo. "\"}";
+
+            }
+        }
+        foreach ($cash as $item) {
+            $porder = Preparation::model()->findByAttributes(['type'=>'bank','pid'=>$item->id]);
+            if($porder){
+                $left = $porder->entry_amount - $porder->amount_used;
+                if($left > 0)
+                    $result[$porder['order_no']] = "{\"date\":\"". convertDate($item->date, "Y年m月d日")
+                        . "\",\"amount\":\"". $left
+                        . "\",\"memo\":\"". $item->memo. "\"}";
+
+            }
+        }
+        return $result;
+    }
+
     public function getOrder($type){
         switch($type){
             case 'bank': $prefix = 'PBA';break;

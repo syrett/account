@@ -433,10 +433,11 @@ class Bank extends LFSModel
     private static function getDeposit($type, $key = '')
     {
         $subject = new Subjects();
+        $options['type'] = 2;
         if ($type == 1) {   //支付押金
-            $arr = [2202, 1123, 2241, 1221];
+            $arr = [2202, 2241, 1221];      //1123
             $new = 'allow';
-            $result = $subject->getitem($arr, $key);
+            $result = $subject->getitem($arr, $key, $options);
             $target = true;
         } elseif ($type == 2) { //借出款项，跟员工有关的去除，
             $arr = [2202, 2241, 1221];
@@ -531,7 +532,7 @@ class Bank extends LFSModel
     /*
      *  列出所有员工
      */
-    private static function getEmployee($key = '')
+    private static function getEmployee($key = '', $new)
 
     {
         $model = new Employee();
@@ -555,12 +556,15 @@ eof;
             $result['_' . $item['id']] = $item['department']['name'] . '/' . $item['name'];
         }
         $list = Yii::app()->db->createCommand('select id,name from '.Department::model()->tableSchema->name )->queryAll();
-        return [
-            'data' => $result,
-            'new' => 'employee',
-            'list' => $list,
-            'target' => true,
-        ];
+        if($new)
+            return [
+                'data' => $result,
+                'new' => 'employee',
+                'list' => $list,
+                'target' => true,
+            ];
+        else
+            return ['data' => $result];
     }
 
     /*
@@ -584,10 +588,11 @@ eof;
     private static function getIncomeItem($type, $key = '')
     {
         $subject = new Subjects();
+        $options['type'] = 2;
         if ($type == 1) {//押金
             $arr = [1122, 1221, 2203, 1123, 2241];
             $new = 'allow';
-            $result = $subject->getitem($arr, $key);
+            $result = $subject->getitem($arr, $key, $options);
             $target = true;
         } elseif ($type == 2) {//借款
 //            $arr = [1122, 1221, 2203, 1123, 2001, 2501];
@@ -715,7 +720,7 @@ eof;
                         } else
                             $result = self::getSalary();
                     } else{
-                        $result = Subjects::matchSubject($options[3], 2211);
+                        $result = Subjects::matchSubject('应付工资', 2211);
                         return self::endOption($result);
                     }
                     break;

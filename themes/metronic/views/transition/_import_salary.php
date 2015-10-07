@@ -123,6 +123,9 @@ $this->pageTitle = Yii::app()->name;
                                 <input type="hidden" id="base_amount_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][base_amount]"
                                        value="<?= $item['base_amount'] ?>">
+                                <input type="hidden" id="base_2_amount_<?= $key ?>"
+                                       name="lists[<?= $key ?>][Transition][base_2_amount]"
+                                       value="<?= $item['base_2_amount'] ?>">
                                 <data class="hidden">
                                     <input type="hidden" id="id_<?= $key ?>" value="<?= $key ?>">
                                     <input type="hidden" id="status_id_<?= $key ?>"

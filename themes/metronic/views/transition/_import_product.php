@@ -9,6 +9,7 @@ $cs = Yii::app()->getClientScript();
 $baseUrl = Yii::app()->theme->baseUrl;
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_common.js');
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_vip.js');
+$cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/product.js');
 $this->pageTitle = Yii::app()->name;
 
 $preOrder = Preparation::getOrderArray($type);
@@ -37,18 +38,14 @@ $preOrder = Preparation::getOrderArray($type);
                     <th class="input_min">合计</th>
                     <th class="input-small">税率</th>
                     <th class="input-small">销售类型</th>
-                    <?
-                    if (!empty($preOrder)) {
-                        echo '<th class="input-small">预收款</th>';
-                    }
-                    ?>
+                    <th class="input-small porder">预收款</th>
                     <th class="input-small">操作</th>
                     <th style="width: 10%">提示</th>
                 </tr>
                 <?php
                 if (!empty($sheetData)) {
-                    $clientArray = Client::model()->getClientArray();
-                    $stockArray = Stock::model()->getStockArray();
+                    $clientArray = ['客户选择'] + Client::model()->getClientArray();
+                    $stockArray = ['商品选择'] + Stock::model()->getStockArray();
                     $taxArray = Transition::getTaxArray('sale');
                     $arr = [6001, 6301, 6051];
                     $subjectArray = Transition::getSubjectArray($arr, ['type' => 2]);
@@ -126,37 +123,10 @@ $preOrder = Preparation::getOrderArray($type);
                                 ?>
                             </td>
 
-                            <?
-                            if (!empty($preOrder)) {
-                                //添加一项 不含预付的选项
-//                                $preOrder = ['非预收款' => '{"amount":0,"memo":"非预收款"}'] + $preOrder;
-                                ?>
-                                <td><?
-                                    $this->widget('ext.select2.ESelect2', array(
-                                        'name' => 'lists[' . $key . '][Transition][preOrder]',
-                                        'id' => 'preOrder_' . $key,
-                                        'data' => $preOrder,
-                                        'value' => $item['preOrder'],
-                                        'options' => array(
-                                            'formatResult' => 'js:function(data){
-                                            var order = JSON.parse(data.text);
-                                            var markup = \'<div class="popovers" data-placement="left" data-container="body" data-trigger="hover" data-html="true"  data-original-title="\' + order.date +\'"\'
-                                            + \'data-content="余额:\' + order.amount + \'<br>摘要:\' + order.memo + \'">\' + data.id + \'</div><script>$(".popovers").popover();<\/script>\';
-                                            return markup;
-                                        }',
-                                            'formatSelection' => 'js: function(order) {
-                                            $("[id*=\'popover\']").remove()
-                                            return order.id;
-                                        }',
-                                            'formatNoMatches' => ''
-                                        ),
-                                        'htmlOptions' => array('class' => 'select-full','multiple'=>'multiple')
-                                    ));
-                                    ?>
-                                </td>
-                            <?
-                            }
-                            ?>
+                            <td class="porder">
+                                <select id="preOrder_<?=$key?>" name = 'lists[<?= $key ?>][Transition][preOrder][]' multiple="multiple"
+                                        class="select-full psorder" ></select>
+                            </td>
                             <td class="action">
                                 <input type="hidden" id="did_<?= $key ?>" name="lists[<?= $key ?>][Transition][d_id]"
                                        value="<?= isset($item['d_id']) ? $item['d_id'] : '' ?>">
@@ -244,7 +214,7 @@ $preOrder = Preparation::getOrderArray($type);
             <div class="transition_action">
                 <p>
                     <button class="btn btn-default btn-sm" id="btnAdd" name="btnAdd" type="button"
-                            onclick="addRow()"><span
+                            onclick="addProduct()"><span
                             class="glyphicon glyphicon-add"></span> 插入新行
                     </button>
                 </p>

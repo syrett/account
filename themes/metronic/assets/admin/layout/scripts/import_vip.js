@@ -438,7 +438,7 @@ function addNew(e) {
                         if (a.children("button[value=" + data + "]").length != 0) { //检测是否已经存在
                             a.children("button[value=" + data + "]")[0].click();
                         } else {
-                            var str = '<button class="btn btn-default" type="button" onclick="chooseOption(this)" value="' +
+                            var str = '<button class="btn " type="button" onclick="chooseOption(this)" value="' +
                                 data + '">' + a.children("select[name*=new-depart]")[0].selectedOptions[0].innerHTML + '/' + a.children("input[name=new-name]").val() + '</button><br />'
                             a.prepend(str);
                             a.children(":first-child").click();
@@ -465,7 +465,7 @@ function addNew(e) {
                         if (a.children("button[value=" + msg + "]").length != 0) { //检测是否已经存在
                             a.children("button[value=" + msg + "]")[0].click();
                         } else {
-                            var str = '<button class="btn btn-default" type="button" onclick="chooseOption(this)" value="' +
+                            var str = '<button class="btn" type="button" onclick="chooseOption(this)" value="' +
                                 msg + '">' + a.children("#new-sbjname").val() + '/' + a.children("input[name=new-name]").val() + '</button><br />'
                             a.prepend(str);
                             a.children(":first-child").click();

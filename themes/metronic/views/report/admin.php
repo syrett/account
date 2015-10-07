@@ -45,6 +45,26 @@ var chart = AmCharts.makeChart("chartdiv-report", {
     "income": 30.6,
     "expenses": 28.2,
   }, {
+    "month": "五月",
+    "income": 30.6,
+    "expenses": 28.2,
+  }, {
+    "month": "五月",
+    "income": 30.6,
+    "expenses": 28.2,
+  }, {
+    "month": "五月",
+    "income": 30.6,
+    "expenses": 28.2,
+  }, {
+    "month": "五月",
+    "income": 30.6,
+    "expenses": 28.2,
+  }, {
+    "month": "五月",
+    "income": 30.6,
+    "expenses": 28.2,
+  }, {
     "month": "六月",
     "income": 34.1,
     "expenses": 30.9,

@@ -135,6 +135,26 @@ class StockController extends Controller
 		));
 	}
 
+    /*
+     * 导入的期初数据可以修改删除
+     */
+    public function actionBalance($type){
+
+        $model = new Stock('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Stock']))
+            $model->attributes = $_GET['Stock'];
+        $dataProvider = $model->search3($type);
+        $dataProvider->pagination = array(
+            'pageSize' => 30
+        );
+        $this->render('balance', array(
+            'dataProvider' => $dataProvider,
+            'model' => $model,
+            'type' => $type
+        ));
+    }
+
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
@@ -272,11 +292,10 @@ class StockController extends Controller
             $sbj = $item['sbj_number'];
             $cdb->condition = "entry_subject like '$sbj%'"; //固定资产等
             $stocks = Stock::model()->findAllByAttributes([], $cdb);
-            $option = Options::model()->findByAttributes([], "entry_subject like '$sbj%'");
             foreach ($stocks as $item) {
 //                if (!$item->overPeriod()) {
                 $price = $item->getWorth();
-                $price = $price * (100 - $option->value) / 100 / ($option->year * 12);
+                $price = $price * (100 - $item->value_rate) / 100 / $item->value_month;
                 $amount += $price;
                 if (isset($list[$key]['entry_amount']))
                     $list[$key]['entry_amount'] += $price;
@@ -305,7 +324,7 @@ class StockController extends Controller
                 $tran->entry_memo = $memo;
                 $tran->entry_transaction = 1;
                 $tran->entry_subject = Subjects::model()->matchSubject($sbj_name, ['6602']);
-                $tran->entry_amount = $amount; //折旧率从账套参数获得
+                $tran->entry_amount = $amount;
                 $tran->entry_creater = Yii::app()->user->id;
                 $tran->entry_editor = Yii::app()->user->id;
                 $tran->entry_reviewed = 1;
@@ -327,5 +346,82 @@ class StockController extends Controller
                 //结账的时候再保存净值，因为当月多次过账的时候，需要使用数据：上月净值，
             }
         }
+    }
+
+    /*
+     * 库存商品期初余额
+     */
+    public function actionBalance_1405(){
+
+        Yii::import('ext.phpexcel.PHPExcel.PHPExcel_IOFactory');
+        if (Yii::app()->request->isPostRequest) {
+            //上传附件查看
+            if ($_FILES['attachment']!='' && file_exists($_FILES['attachment']['tmp_name'])) {
+                $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
+                $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+                //去除第一行
+                array_shift($list);
+                foreach($list as $item){
+                    $sheetData[] = Stock::getSheetData('库存商品', $item);
+                }
+            } elseif($_FILES['attachment']['name']==''){
+                $lists = $_POST['Stock'];
+                foreach ($lists as $item) {
+                    $stock = new Stock();
+                    $stock->attributes = $item;
+                    $stock->entry_subject = '1405';
+                    if(!$stock->saveMultiple($item['count']))
+                        $sheetData[] = ['count'=>$item['count'], $stock];
+                }
+                if(empty($sheetData)){
+                    Yii::app()->user->setFlash('success', "添加成功!");
+                }else
+                    Yii::app()->user->setFlash('error', "添加失败!");
+
+            }
+        }
+
+        if (empty($sheetData)){
+            $sheetData[] = Stock::getSheetData('库存商品','');
+        }
+        $this->render('balance_1405',['sheetData' => $sheetData]);
+    }
+
+    /*
+     * 固定资产期初余额
+     */
+    public function actionBalance_1601(){
+
+        Yii::import('ext.phpexcel.PHPExcel.PHPExcel_IOFactory');
+        if (Yii::app()->request->isPostRequest) {
+            //上传附件查看
+            if ($_FILES['attachment']!='' && file_exists($_FILES['attachment']['tmp_name'])) {
+                $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
+                $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+                //去除第一行
+                array_shift($list);
+                foreach($list as $item){
+                    $sheetData[] = Stock::getSheetData('固定资产', $item);
+                }
+            } elseif($_FILES['attachment']['name']==''){
+                $lists = $_POST['Stock'];
+                foreach ($lists as $item) {
+                    $stock = new Stock();
+                    $stock->attributes = $item;
+                    if(!$stock->saveMultiple($item['count']))
+                        $sheetData[] = ['count'=>$item['count'], $stock];
+                }
+                if(empty($sheetData)){
+                    Yii::app()->user->setFlash('success', "添加成功!");
+                }else
+                    Yii::app()->user->setFlash('error', "添加失败!");
+
+            }
+        }
+
+        if (empty($sheetData)){
+            $sheetData[] = Stock::getSheetData('固定资产','');
+        }
+        $this->render('balance_1601',['sheetData' => $sheetData]);
     }
 }

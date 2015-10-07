@@ -9,6 +9,7 @@
  * @property string $memo
  * @property string $position
  * @property string $base
+ * @property string $base_2
  * @property integer $department_id
  */
 class Employee extends CActiveRecord
@@ -34,7 +35,7 @@ class Employee extends CActiveRecord
             array('name, position', 'length', 'max' => 100),
             array('memo', 'length', 'max' => 200),
             array('name', 'unique', 'message'=>'员工姓名不可重复'),
-            array('base, departure_date, status', 'safe'),
+            array('base, base_2, departure_date, status', 'safe'),
             // The following rule is used by search().
             array('id, name, memo, department_id', 'safe', 'on' => 'search'),
         );
@@ -63,6 +64,7 @@ class Employee extends CActiveRecord
             'department_id' => '部门',
             'position' => '职位',
             'base' => '社保基数',
+            'base_2' => '公积金基数',
             'memo' => '备注',
             'departure_date' => '离职日期',
             'status' => '状态'
@@ -92,6 +94,7 @@ class Employee extends CActiveRecord
         $criteria->compare('position', $this->position, true);
         $criteria->compare('memo', $this->memo, true);
         $criteria->compare('base', $this->base, true);
+        $criteria->compare('base_2', $this->base_2, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -187,8 +190,9 @@ class Employee extends CActiveRecord
             $depart = Department::model()->matchName($items['C']);
             $model->department_id = $depart;
             $model->base = $items['D'];
-            $model->position = $items['E'];
-            $model->memo = $items['F'];
+            $model->base_2 = isset($items['E'])?$items['E']:'';
+            $model->position = isset($items['F'])?$items['F']:'';
+            $model->memo = isset($items['G'])?$items['G']:'';
             $model->validate();
         }
         return $model;

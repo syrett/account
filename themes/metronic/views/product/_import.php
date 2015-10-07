@@ -87,17 +87,17 @@ $this->pageTitle = Yii::app()->name;
                             <td><input class="input_mid" type="text" name="lists[<?= $key ?>][Transition][entry_name]"
                                        value="<?= $item['entry_name'] ?>" readonly></td>
                             <td>
-                                <textarea class="input_min" name="lists[<?= $key ?>][Transition][stocks]" readonly><?= $item['stocks'] ?></textarea>
+                                <textarea rows="1" class="input_min" name="lists[<?= $key ?>][Transition][stocks]" readonly><?= $item['stocks'] ?></textarea>
 <!--                                <input class="input_min" type="text" name="lists[--><?//= $key ?><!--][Transition][stocks]"-->
 <!--                                       value="--><?//= $item['stocks'] ?><!--">-->
                             </td>
                             <td>
-                                <textarea class="input_min" name="lists[<?= $key ?>][Transition][stocks_count]" readonly><?= $item['stocks_count'] ?></textarea>
+                                <textarea rows="1" class="input_min" name="lists[<?= $key ?>][Transition][stocks_count]" readonly><?= $item['stocks_count'] ?></textarea>
 <!--                                <input class="input_min" type="text"name="lists[--><?//= $key ?><!--][Transition][stocks_count]"-->
 <!--                                       value="--><?//= $item['stocks_count'] ?><!--" >-->
                             </td>
                             <td>
-                                <textarea class="input_mid" name="lists[<?= $key ?>][Transition][stocks_price]" readonly><?= $item['stocks_price'] ?></textarea>
+                                <textarea rows="1" class="input_mid" name="lists[<?= $key ?>][Transition][stocks_price]" readonly><?= $item['stocks_price'] ?></textarea>
 <!--                                <input class="input_min" type="text"name="lists[--><?//= $key ?><!--][Transition][stocks_price]"-->
 <!--                                       value="--><?//= $item['stocks_price'] ?><!--">-->
                             </td>

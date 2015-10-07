@@ -457,6 +457,7 @@ class Transition extends CActiveRecord
         $starttime = Condom::model()->getStartTime();
         $arr = [
             "entry_name" => "",
+            "model" => "",
             "entry_date" => $starttime,
             "entry_memo" => "",
             "entry_amount" => "",
@@ -495,6 +496,7 @@ class Transition extends CActiveRecord
             'social_company' => '',
             'provident_company' => '',
             'base_amount' => '',
+            'base_2_amount' => '',
             'travel_amount' => '',
             'traffic_amount' => '',
             'phone_amount' => '',
@@ -537,9 +539,10 @@ class Transition extends CActiveRecord
                         $arr['entry_memo'] = trim($items['B']);
                         $arr['entry_appendix_id'] = Vendor::model()->matchName(trim($items['C']));
                         $arr['entry_name'] = Stock::model()->matchName(trim($items['D']));
-                        $amount = trim($items['E']);
-                        $arr['count'] = trim($items['F']);
-                        $arr['department_id'] = Department::model()->matchName(trim($items['G']));
+                        $arr['model'] = trim($items['E']);
+                        $amount = trim($items['F']);
+                        $arr['count'] = trim($items['G']);
+                        $arr['department_id'] = Department::model()->matchName(trim($items['H']));
                         break;
                     case 'product':
                         $arr['entry_date'] = convertDate($items['A']);
@@ -600,13 +603,14 @@ class Transition extends CActiveRecord
                         $arr['benefit_amount'] = round2(str_replace(",", "", trim($items['G'])));
                         $payment = $arr['salary_amount'] + $arr['bonus_amount'] + $arr['benefit_amount'];
                         $arr['base_amount'] = round2($employee->base);
+                        $arr['base_2_amount'] = round2($employee->base_2);
                         $arr['social_personal'] = round2(ceil($employee->base*10.5/10)/10); //有分，直接进角
-                        $arr['provident_personal'] = round2(ceil($employee->base*7/100));   //有角，直接进分
+                        $arr['provident_personal'] = round2(ceil($employee->base_2*7/100));   //有角，直接进分
                         $arr['before_tax'] = round2($payment - $arr['social_personal'] - $arr['provident_personal']);
                         $arr['personal_tax'] = round2(Employee::getPersonalTax($arr['before_tax']));
                         $arr['after_tax'] = round2($arr['before_tax'] - $arr['personal_tax']);
                         $arr['social_company'] = round2(ceil($employee->base*35/10)/10);
-                        $arr['provident_company'] = round2(ceil($employee->base*7/100));
+                        $arr['provident_company'] = round2(ceil($employee->base_2*7/100));
                         //根据员工部门判断属于什么费用
                         $arr['entry_subject'] = Department::matchSubject($employee->department_id, '工资');
                         //查看是否已经导入过该月工资
@@ -673,6 +677,7 @@ class Transition extends CActiveRecord
                     $arr['employee_name'] = Employee::getName($items['employee_id']);
                     $arr['department_name'] = Employee::model()->getDepart($items['employee_id'], 'name');
                     $arr['base_amount'] = $employee->base;
+                    $arr['base_2_amount'] = $employee->base_2;
                     $arr['entry_subject'] = Department::matchSubject($employee->department_id, '工资');
                 }
             }

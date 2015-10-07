@@ -9,10 +9,11 @@ $cs = Yii::app()->getClientScript();
 $baseUrl = Yii::app()->theme->baseUrl;
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_common.js');
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_vip.js');
+$cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/purchase.js');
 $this->pageTitle = Yii::app()->name;
 $type = 'purchase';
 $item = $sheetData[0]['data'];
-$preOrder = Preparation::getOrderArray($type);
+$preOrder = Preparation::getPreOrder('vendor', $item['vendor_id']);
 $item['preorder'] = Preparation::getOrderArray($type, $item['id']);
 $preOrder = $item['preorder'] + $preOrder;
 //{"purchase":"1"}
@@ -35,7 +36,8 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                     <th class="input_mid">交易日期</th>
                     <th class="input_mid">供应商名称</th>
                     <th class="input_mid">商品/服务名称</th>
-                    <th class="input_mid">单价</th>
+                    <th class="input_mid">型号</th>
+                    <th class="input_min">单价</th>
                     <th class="input_min">数量</th>
                     <th class="input_mid">税率</th>
                     <th class="input-small">采购用途</th>
@@ -88,7 +90,11 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                             ));
                             ?>
                         </td>
-                        <td><input class="input_full" type="text" id="tran_price_<?= $key ?>" placeholder="单价"
+                        <td><input class="input_full" type="text" id="tran_model_<?= $key ?>" placeholder="单价"
+                                   name="lists[<?= $key ?>][Transition][model]"
+                                   value="<?= $item['model'] ?>">
+                        </td>
+                        <td><input class="input_full" type="text" id="tran_price_<?= $key ?>" placeholder="型号"
                                    name="lists[<?= $key ?>][Transition][price]"
                                    value="<?= $item['price'] ?>">
                         </td>
@@ -152,6 +158,7 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                                             $("[id*=\'popover\']").remove()
                                             return order.id;
                                         }',
+                                        'formatNoMatches' => ''
                                     ),
                                     'htmlOptions' => array('class' => 'select-full','multiple'=>'multiple',)
                                 ));

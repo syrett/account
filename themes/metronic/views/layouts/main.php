@@ -458,14 +458,35 @@ $baseUrl = Yii::app()->theme->baseUrl;
                                 <span class="title">成本结转</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="<?= $this->createUrl('stock/balance_1405') ?>">
+                                <i class="icon-calculator"></i>
+                                <span class="title">库存期初</span>
+                            </a>
+                        </li>
                     </ul>
 
                 </li>
                 <li>
-                    <a href="<?= $this->createUrl('Site/operation&operation=listAssets') ?>">
-                        <i class="icon-diamond"></i>
+                    <a href="javascript:;">
+                        <i class="icon-drawer"></i>
                         <span class="title">固定资产</span>
+                        <span class="arrow "></span>
                     </a>
+                    <ul class="sub-menu">
+                        <li>
+                            <a href="<?= $this->createUrl('Site/operation&operation=listAssets') ?>">
+                                <i class="icon-diamond"></i>
+                                <span class="title">固定资产</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= $this->createUrl('stock/balance_1601') ?>">
+                                <i class="icon-calculator"></i>
+                                <span class="title">期初余额</span>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li>
                     <a href="<?= $this->createUrl('employee/admin') ?>">

@@ -10,7 +10,7 @@ Yii::import('ext.select2.ESelect2', true);
 $cs = Yii::app()->clientScript;
 $baseUrl = Yii::app()->theme->baseUrl;
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_common.js');
-$cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import.js');
+$cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_vip.js');
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/bank.js');
 
 $this->pageTitle = Yii::app()->name;
@@ -23,7 +23,8 @@ $tranDate = $this->getTransitionDate('post');
 
 
 <div class="dataTables_wrapper no-footer">
-    <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form', 'class' => 'form-horizontal']); ?>
+    <?
+    echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form', 'class' => 'form-horizontal']); ?>
     <?
     $select = '<option value=1 >日期</option><option value=2 >交易说明</option><option value=3 >金额</option>';
     ?>
@@ -44,7 +45,7 @@ $tranDate = $this->getTransitionDate('post');
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 col-sm-12">
+            <div class="col-md-3 col-sm-12">
                 <div class="btn-toolbar margin-bottom-10">
                     <button type="submit" class="btn btn-default btn-file">导入</button>
                     <a download="" href="/download/<?= Yii::t('import', strtoupper($type)) ?>.xlsx">
@@ -53,42 +54,6 @@ $tranDate = $this->getTransitionDate('post');
                     </a>
                 </div>
 
-            </div>
-            <div class="col-md-4 col-sm-12">
-                <div class="form-inline pull-right">
-                    <div class="form-group">
-                        <?php
-                        if ($type == 'bank')
-                            $sbj = 1002;
-                        if ($type == 'cash')
-                            $sbj = 1001;
-                        $banks = Subjects::model()->list_sub($sbj);
-                        $data = [];
-                        $class = 'form-control';
-                        if (empty($banks)) {
-                            echo '<input type="hidden" name="subject_2" value="1001" /></div>';
-                        } else {
-                        foreach ($banks as $item) {
-                            $data[$item['sbj_number']] = $item['sbj_name'];
-                        }
-                        $user = User::model()->find(Yii::app()->user->id);
-                        $this->widget('ESelect2', array(
-                            'name' => 'subject_2',
-                            'id' => 'subject_2',
-                            'value' => $user->bank,
-                            'htmlOptions' => ['class' => $class,],
-                            'data' => $data,
-                        ));
-                        ?>
-                        <input id="bank_name" placeholder="银行名称" type="text" class="form-control"/>
-                        <button class="btn btn-default btn-file" type="button" onclick="addBank()">添加</button>
-                        <button class="btn btn-default btn-file" type="button" onclick="lockBank(this)" value="0">解锁银行
-                        </button>
-                    </div>
-                </div>
-                <?
-                }
-                ?>
             </div>
         </div>
     </div>
@@ -141,34 +106,41 @@ $tranDate = $this->getTransitionDate('post');
                                 <input type="hidden" id="did_<?= $key ?>" name="lists[<?= $key ?>][Transition][d_id]"
                                        value="<?= isset($item['d_id']) ? $item['d_id'] : '' ?>">
                                 <input type="hidden" id="id_<?= $key ?>" value="<?= $key ?>">
-                                <input type="hidden" id="status_id_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][status_id]"
-                                       value="<?= $item['status_id'] ?>">
-                                <input type="hidden" id="subject_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][entry_subject]"
-                                       value="<?= $item['entry_subject'] ?>">
-                                <input type="hidden" id="transaction_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][entry_transaction]"
-                                       value="<?= $item['entry_transaction'] ?>">
-                                <input type="hidden" id="invoice_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][invoice]" value="<?= $item['invoice'] ?>">
-                                <input type="hidden" id="withtax_<?= $key ?>" value="<?= $item['tax'] > 0 ? 1 : 0 ?>">
-                                <input type="hidden" id="tax_<?= $key ?>" name="lists[<?= $key ?>][Transition][tax]"
-                                       value="<?= $item['tax'] ?>">
-                                <input type="hidden" id="parent_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][parent]" value="<?= $item['parent'] ?>">
-                                <input type="hidden" id="additional_sbj0_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][additional][0][subject]"
-                                       value="<?= $item['additional'][0]['subject'] ?>">
-                                <input type="hidden" id="additional_amount0_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][additional][0][amount]"
-                                       value="<?= $item['additional'][0]['amount'] ?>">
-                                <input type="hidden" id="additional_sbj1_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][additional][1][subject]"
-                                       value="<?= $item['additional'][1]['subject'] ?>">
-                                <input type="hidden" id="additional_amount1_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][additional][1][amount]"
-                                       value="<?= $item['additional'][1]['amount'] ?>">
+                                <data>
+                                    <input type="hidden" id="status_id_<?= $key ?>"
+                                             name="lists[<?= $key ?>][Transition][status_id]"
+                                             value="<?= $item['status_id'] ?>">
+                                    <input type="hidden" id="subject_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][entry_subject]"
+                                           value="<?= $item['entry_subject'] ?>">
+                                    <input type="hidden" id="transaction_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][entry_transaction]"
+                                           value="<?= $item['entry_transaction'] ?>">
+                                    <input type="hidden" id="invoice_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][invoice]" value="<?= $item['invoice'] ?>">
+                                    <input type="hidden" id="withtax_<?= $key ?>" value="<?= $item['tax'] > 0 ? 1 : 0 ?>">
+                                    <input type="hidden" id="tax_<?= $key ?>" name="lists[<?= $key ?>][Transition][tax]"
+                                           value="<?= $item['tax'] ?>">
+                                    <input type="hidden" id="parent_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][parent]" value="<?= $item['parent'] ?>">
+                                    <input type="hidden" id="additional_sbj0_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][additional][0][subject]"
+                                           value="<?= $item['additional'][0]['subject'] ?>">
+                                    <input type="hidden" id="additional_amount0_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][additional][0][amount]"
+                                           value="<?= $item['additional'][0]['amount'] ?>">
+                                    <input type="hidden" id="additional_sbj1_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][additional][1][subject]"
+                                           value="<?= $item['additional'][1]['subject'] ?>">
+                                    <input type="hidden" id="additional_amount1_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][additional][1][amount]"
+                                           value="<?= $item['additional'][1]['amount'] ?>">
+                                    <input type="hidden" id="last_<?= $key ?>" name="lists[<?= $key ?>][Transition][last]"
+                                        value = "<?isset($item['last'])?$item['last']:''?>">
+                                    <input type="hidden" id="path_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][path]"
+                                           value="<?= $item['path'] ?>">
+                                </data>
 
                                 <!--                                <div class="btn-group-vertical" role="group">-->
                                 <div class="btn-group">
@@ -195,7 +167,7 @@ $tranDate = $this->getTransitionDate('post');
                                <?
                                if (!empty($item['error'])) {
                                    foreach ($item['error'] as $err) {
-                                       echo $err;
+                                       echo is_array($err)?$err[0]:$err;
                                    }
                                }
                                ?>
@@ -261,6 +233,7 @@ $tranDate = $this->getTransitionDate('post');
             </div>
             <!-- .modal-body -->
             <div class="modal-footer">
+                <span class="left-info" id="setting-info" ></span>
                 <button class="btn btn-circle green" data-dismiss="modal" type="button" onclick="itemSet()">确定</button>
                 <button class="btn btn-circle default" data-dismiss="modal" type="button"">取消
                 </button>

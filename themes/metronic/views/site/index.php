@@ -12,25 +12,164 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/amc
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/amcharts/amcharts/pie.js', CClientScript::POS_END);
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/amcharts/amcharts/themes/light.js', CClientScript::POS_END);
 
+$bank_amount = 0;
+$cash_amount = 0;
+$amount_1 = 0;
+$amount_2 = 0;
+$amount_3 = 0;
+
+$bank = Bank::model()->findAllByAttributes([],"path like '%>收入=%'");
+foreach ($bank as $item) {
+    $bank_amount += $item['amount'];
+}
+$cash = Cash::model()->findAllByAttributes([],"path like '%>收入=%'");
+foreach ($cash as $item) {
+    $cash_amount += $item['amount'];
+}
+$amount_in = Transition::model()->findAllByAttributes(['entry_transaction'=>1], "entry_subject like '1122%'");
+$amount_out = Transition::model()->findAllByAttributes(['entry_transaction'=>2], "entry_subject like '1122%'");
+foreach($amount_out as $item){
+    $amount_1 += $item['entry_amount'];
+}
+foreach($amount_in as $item){
+    $amount_2 += $item['entry_amount'];
+}
+$amount_0 = $amount_2 - $amount_1;
+$amount_out = Transition::model()->findAllByAttributes(['entry_transaction'=>2], "entry_subject like '1001%' or entry_subject like '1002%'");
+foreach ($amount_out as $item) {
+    $amount_3 += $item['entry_amount'];
+}
+//饼图
+$data = [];
+//银行
+$bank_out = Bank::model()->findAllByAttributes([], "path like '%>支出=%'");
+foreach ($bank_out as $item) {
+    $path = explode('=>', $item['path']);
+    if(count($path)>1){
+        if($path[2] == '供应商采购'){
+            if(end($path)!='预付款'){
+                $purchase = Purchase::model()->findByAttributes(['order_no'=>end($path)]);
+                if($purchase){
+                    switch(substr($purchase['subject'],0,4)){
+                        case 1601:
+                            $data['固定资产'] = isset($data['固定资产'])?$data['固定资产']+$item['amount']:$item['amount'];
+                            break;
+                        case 1701:
+                            $data['无形资产'] = isset($data['无形资产'])?$data['无形资产']+$item['amount']:$item['amount'];
+                            break;
+                        case 1801:
+                            $data['长期待摊'] = isset($data['长期待摊'])?$data['长期待摊']+$item['amount']:$item['amount'];
+                            break;
+                        case 1403:
+                        case 1405:
+                            $data['存货采购'] = isset($data['存货采购'])?$data['存货采购']+$item['amount']:$item['amount'];
+                            break;
+                        default :
+                            $data['其他采购'] = isset($data['其他采购'])?$data['其他采购']+$item['amount']:$item['amount'];
+                    }
+                }
+            }else{
+                $preorder = Preparation::model()->findByAttributes(['type'=>'bank', 'pid'=>$item->id]);
+                if(isset($preorder['real_order'])){
+                    $real_order = json_decode($preorder['real_order'], true);
+                    foreach ($real_order as $order => $amount) {
+                        $purchase = Purchase::model()->findByAttributes(['order_no'=>$order]);
+                        if($purchase){
+                            switch(substr($purchase['subject'],0,4)){
+                                case 1601:
+                                    $data['固定资产'] = isset($data['固定资产'])?$data['固定资产']+$amount:$amount;
+                                    break;
+                                case 1701:
+                                    $data['无形资产'] = isset($data['无形资产'])?$data['无形资产']+$amount:$amount;
+                                    break;
+                                case 1801:
+                                    $data['长期待摊'] = isset($data['长期待摊'])?$data['长期待摊']+$amount:$amount;
+                                    break;
+                                case 1403:
+                                case 1405:
+                                    $data['存货采购'] = isset($data['存货采购'])?$data['存货采购']+$amount:$amount;
+                                    break;
+                                default :
+                                    $data['其他采购'] = isset($data['其他采购'])?$data['其他采购']+$amount:$amount;
+                            }
+                        }
+                    }
+
+                }
+            }
+        }else
+            $data[$path[2]] = isset($data[$path[2]])?$data[$path[2]]+$item['amount']:$item['amount'];
+    }
+}
+//现金
+$cash_out = Cash::model()->findAllByAttributes([], "path like '%>支出=%'");
+foreach ($cash_out as $item) {
+    $path = explode('=>', $item['path']);
+    if(count($path)>1){
+        if($path[2] == '供应商采购'){
+            if(end($path)!='预付款'){
+                $purchase = Purchase::model()->findByAttributes(['order_no'=>end($path)]);
+                if($purchase){
+                    switch(substr($purchase['subject'],0,4)){
+                        case 1601:
+                            $data['固定资产'] = isset($data['固定资产'])?$data['固定资产']+$item['amount']:$item['amount'];
+                            break;
+                        case 1701:
+                            $data['无形资产'] = isset($data['无形资产'])?$data['无形资产']+$item['amount']:$item['amount'];
+                            break;
+                        case 1801:
+                            $data['长期待摊'] = isset($data['长期待摊'])?$data['长期待摊']+$item['amount']:$item['amount'];
+                            break;
+                        case 1403:
+                        case 1405:
+                            $data['存货采购'] = isset($data['存货采购'])?$data['存货采购']+$item['amount']:$item['amount'];
+                            break;
+                        default :
+                            $data['其他采购'] = isset($data['其他采购'])?$data['其他采购']+$item['amount']:$item['amount'];
+                    }
+                }
+            }else{
+                $preorder = Preparation::model()->findByAttributes(['type'=>'cash', 'pid'=>$item->id]);
+                if($preorder){
+                    $real_order = json_decode($preorder['real_order'], true);
+                    foreach ($real_order as $order => $amount) {
+                        $purchase = Purchase::model()->findByAttributes(['order_no'=>$order]);
+                        if($purchase){
+                            switch(substr($purchase['subject'],0,4)){
+                                case 1601:
+                                    $data['固定资产'] = isset($data['固定资产'])?$data['固定资产']+$amount:$amount;
+                                    break;
+                                case 1701:
+                                    $data['无形资产'] = isset($data['无形资产'])?$data['无形资产']+$amount:$amount;
+                                    break;
+                                case 1801:
+                                    $data['长期待摊'] = isset($data['长期待摊'])?$data['长期待摊']+$amount:$amount;
+                                    break;
+                                case 1403:
+                                case 1405:
+                                    $data['存货采购'] = isset($data['存货采购'])?$data['存货采购']+$amount:$amount;
+                                    break;
+                                default :
+                                    $data['其他采购'] = isset($data['其他采购'])?$data['其他采购']+$amount:$amount;
+                            }
+                        }
+                    }
+
+                }
+            }
+        }else
+            $data[$path[2]] = isset($data[$path[2]])?$data[$path[2]]+$item['amount']:$item['amount'];
+    }
+}
+$data_chart = [];
+foreach($data as $cat => $value){
+    $data_chart[] = ['category'=>$cat,'value'=>$value];
+}
+$data_str = json_encode($data_chart);
 $js_str = 'var chart = AmCharts.makeChart( "chartdiv-homepage-3d-pie", {
   "type": "pie",
   "theme": "light",
-  "dataProvider": [ {
-    "category": "人员工资",
-    "value": 17000
-  }, {
-    "category": "固定资产",
-    "value": 800
-  }, {
-    "category": "原材料采购",
-    "value": 3000
-  }, {
-    "category": "租金",
-    "value": 5000
-  }, {
-    "category": "差旅费",
-    "value": 2000
-  } ],
+  "dataProvider": '. $data_str. ',
   "valueField": "value",
   "titleField": "category",
   "startEffect": "elastic",
@@ -75,9 +214,9 @@ $cs->registerScript('ChartsFlotchartsInitPie', $js_str, CClientScript::POS_READY
         <div class="portlet light">
             <div class="portlet-title">
                 <div class="caption">
-                    <span class="caption-subject font-green-sharp bold uppercase">营业收入</span>
+                    <span class="caption-subject font-green-sharp bold uppercase">流动资产</span>
                 </div>
-                <div class="actions">统计周期：本年</div>
+                <div class="actions"></div>
             </div>
             <div class="portlet-body">
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
@@ -87,10 +226,10 @@ $cs->registerScript('ChartsFlotchartsInitPie', $js_str, CClientScript::POS_READY
                         </div>
                         <div class="details">
                             <div class="number">
-                                549.30
+                                <?= round2($cash_amount) ?>
                             </div>
                             <div class="desc">
-                                现金
+                                库存现金
                             </div>
                         </div>
                     </a>
@@ -102,7 +241,7 @@ $cs->registerScript('ChartsFlotchartsInitPie', $js_str, CClientScript::POS_READY
                         </div>
                         <div class="details">
                             <div class="number">
-                                150,603.04
+                                <?= round2($bank_amount) ?>
                             </div>
                             <div class="desc">
                                 银行存款
@@ -117,7 +256,7 @@ $cs->registerScript('ChartsFlotchartsInitPie', $js_str, CClientScript::POS_READY
                         </div>
                         <div class="details">
                             <div class="number">
-                                13,490.00
+                                <?= round2($amount_0>0?$amount_0:0) ?>
                             </div>
                             <div class="desc">
                                 应收账款
@@ -139,48 +278,48 @@ $cs->registerScript('ChartsFlotchartsInitPie', $js_str, CClientScript::POS_READY
                 </div>
                 <div class="actions">
                     <div class="btn-group">
-                        <a class="btn btn-sm green dropdown-toggle" href="javascript:;" data-toggle="dropdown"
-                           aria-expanded="false"><span class="md-click-circle md-click-animate"
-                                                       style="height: 95px; width: 95px; top: -38.5px; left: 23px;"></span>
-                            本月 <i class="fa fa-angle-down"></i>
-                        </a>
-                        <ul class="dropdown-menu pull-right">
-                            <li>
-                                <a href="javascript:;">
-                                    过去30天</a>
-                            </li>
-                            <li>
-                                <a href="javascript:;">
-                                    本月</a>
-                            </li>
-                            <li>
-                                <a href="javascript:;">
-                                    本季度</a>
-                            </li>
-                            <li>
-                                <a href="javascript:;">
-                                    今年</a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="javascript:;">
-                                    上月</a>
-                            </li>
-                            <li>
-                                <a href="javascript:;">
-                                    上季度</a>
-                            </li>
-                            <li>
-                                <a href="javascript:;">
-                                    去年</a>
-                            </li>
-                        </ul>
+<!--                        <a class="btn btn-sm green dropdown-toggle" href="javascript:;" data-toggle="dropdown"-->
+<!--                           aria-expanded="false"><span class="md-click-circle md-click-animate"-->
+<!--                                                       style="height: 95px; width: 95px; top: -38.5px; left: 23px;"></span>-->
+<!--                            本月 <i class="fa fa-angle-down"></i>-->
+<!--                        </a>-->
+<!--                        <ul class="dropdown-menu pull-right">-->
+<!--                            <li>-->
+<!--                                <a href="javascript:;">-->
+<!--                                    过去30天</a>-->
+<!--                            </li>-->
+<!--                            <li>-->
+<!--                                <a href="javascript:;">-->
+<!--                                    本月</a>-->
+<!--                            </li>-->
+<!--                            <li>-->
+<!--                                <a href="javascript:;">-->
+<!--                                    本季度</a>-->
+<!--                            </li>-->
+<!--                            <li>-->
+<!--                                <a href="javascript:;">-->
+<!--                                    今年</a>-->
+<!--                            </li>-->
+<!--                            <li class="divider"></li>-->
+<!--                            <li>-->
+<!--                                <a href="javascript:;">-->
+<!--                                    上月</a>-->
+<!--                            </li>-->
+<!--                            <li>-->
+<!--                                <a href="javascript:;">-->
+<!--                                    上季度</a>-->
+<!--                            </li>-->
+<!--                            <li>-->
+<!--                                <a href="javascript:;">-->
+<!--                                    去年</a>-->
+<!--                            </li>-->
+<!--                        </ul>-->
                     </div>
                 </div>
             </div>
             <div class="portlet-body">
                 <div class="col-md-3">
-                    <h1>27,800.00</h1>本月
+                    <h1><?= $amount_3 ?></h1>
                 </div>
                 <div class="col-md-9">
                     <div id="chartdiv-homepage-3d-pie">

@@ -168,12 +168,17 @@ class Subjects extends CActiveRecord
     public function listSubjects($sbj='')
     {
         if($sbj=='')
-        $sql = "select * from subjects order by concat(`sbj_number`) asc"; //
+            $sql = "select * from subjects order by concat(`sbj_number`) asc"; //
         else
-            $sql = "select * from subjects where sbj_number like '$sbj%' order by concat(`sbj_number`) asc";
+            $sql = "select * from subjects where sbj_number like '$sbj%' and sbj_number <> '$sbj' order by concat(`sbj_number`) asc";
         $First = Subjects::model()->findAllBySql($sql);
+        if(!$First){
+            $sql = "select * from subjects where sbj_number = '$sbj' ";
+            $First = Subjects::model()->findAllBySql($sql);
+        }
         $arr = array();
         foreach ($First as $row) {
+
             $arr += array($row['sbj_number'] => $row['sbj_number'] . Subjects::getSbjPath($row['sbj_number']));
         };
         return $arr;

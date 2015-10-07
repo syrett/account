@@ -7,6 +7,7 @@ $(document).ready(function () {
         var id = $(this.parentNode.parentNode).find("input[id^='id_']")[0].value;
         checkInputAmount(this);
         var base = parseFloat($("#base_amount_"+id).val());
+        var base_2 = parseFloat($("#base_2_amount_"+id).val());
         var salary = parseFloat($("#tran_salary_amount_"+id).val());
         var bonus = parseFloat($("#tran_bonus_amount_"+id).val());
         var benefit = parseFloat($("#tran_benefit_amount_"+id).val());
@@ -15,9 +16,9 @@ $(document).ready(function () {
         if(isNaN(total))
             total = '0.00';
         var social_personal = Math.ceil(base*10.5/10)/10;
-        var provident_personal = Math.ceil(base*7/100);
+        var provident_personal = Math.ceil(base_2*7/100);
         var social_company = Math.ceil(base*35/10)/10;
-        var provident_company = Math.ceil(base*7/100);
+        var provident_company = Math.ceil(base_2*7/100);
         var before_tax = Math.round((payment - social_personal - provident_personal)*100)/100;
         var personal_tax = getPersonalTax(before_tax);
         var after_tax =  Math.round((before_tax - personal_tax)*100)/100;

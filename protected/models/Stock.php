@@ -21,6 +21,7 @@
  */
 class Stock extends LFSModel
 {
+    public $total;
     /**
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
@@ -48,12 +49,12 @@ class Stock extends LFSModel
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('order_no, name, in_date, in_price', 'required'),
+            array('name, in_date, in_price', 'required'),
             array('vendor_id', 'numerical', 'integerOnly' => true),
-            array('in_price, out_price, value_year, value_rate', 'numerical'),
+            array('in_price, out_price, value_month, value_rate', 'numerical'),
             array('order_no', 'length', 'max' => 16),
             array('name', 'length', 'max' => 512),
-            array('out_date, entry_subject, value_year, value_rate', 'safe'),
+            array('out_date, model, entry_subject, value_month, value_rate', 'safe'),
             // The following rule is used by search().
             array('id, hs_no, order_no, name, vendor_id, in_date, in_price, out_date, out_price, create_time, status', 'safe', 'on' => 'search'),
         );
@@ -80,14 +81,17 @@ class Stock extends LFSModel
             'id' => 'ID',
             'hs_no' => '资产编号',
             'order_no' => '订单号',
-            'name' => '名字',
+            'name' => '名称',
+            'model' => '型号',
             'entry_subject' => '种类',
             'vendor_id' => '供应商',
             'in_date' => '采购日期',
-            'in_price' => '价格',
+            'in_price' => '单价',
             'out_date' => '出库日期',
             'out_price' => '出库价格',
             'create_time' => '添加时间',
+            'value_month' => '折旧月份',
+            'value_rate' => '残值率(%)',
             'status' => '状态',
         );
     }
@@ -165,7 +169,7 @@ class Stock extends LFSModel
      * @return CActiveDataProvider the data provider that can return the models
      * based on the search/filter conditions.
      */
-    public function search()
+    public function search($type='')
     {
         $criteria = new CDbCriteria;
 
@@ -173,11 +177,34 @@ class Stock extends LFSModel
         $criteria->compare('hs_no', $this->hs_no, true);
         $criteria->compare('order_no', $this->order_no, true);
         $criteria->compare('name', $this->name, true);
+        $criteria->compare('model', $this->model, true);
         $criteria->compare('vendor_id', $this->vendor_id);
         $criteria->compare('in_date', $this->in_date, true);
         $criteria->compare('in_price', $this->in_price);
         $criteria->compare('out_date', $this->out_date, true);
         $criteria->compare('out_price', $this->out_price);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
+
+    public function search3($type='')
+    {
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('hs_no', $this->hs_no, true);
+        $criteria->compare('name', $this->name, true);
+        $criteria->compare('model', $this->model, true);
+        $criteria->compare('vendor_id', $this->vendor_id);
+        $criteria->compare('in_date', $this->in_date, true);
+        $criteria->compare('in_price', $this->in_price);
+        $criteria->compare('out_date', $this->out_date, true);
+        $criteria->compare('out_price', $this->out_price);
+        if($type!='')
+            $criteria->addCondition("entry_subject like '$type%' ");
+        $criteria->addCondition("order_no is NULL");
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -229,6 +256,7 @@ class Stock extends LFSModel
         if($type=='purchase'){
             $this->setAttribute('order_no', $item['order_no']);
             $this->setAttribute('name', $item['entry_name']);
+            $this->setAttribute('model', $item['model']);
             $this->setAttribute('vendor_id', $item['vendor_id']);
             $this->setAttribute('entry_subject', $item['entry_subject']);
             $this->setAttribute('in_date', $item['entry_date']);
@@ -239,7 +267,7 @@ class Stock extends LFSModel
             while(strlen($sbj)>=4){
                 $option = Options::model()->findByAttributes(['entry_subject'=>$sbj]);
                 if($option){
-                    $this->value_year = $option['year'];
+                    $this->value_month = $option['year']*12;
                     $this->value_rate = $option['value'];
                     break;
                 }
@@ -279,7 +307,7 @@ class Stock extends LFSModel
             'order_no_sale'=>$this->order_no_sale,
             'status'=>$status,
         ];
-        $rows = $this->updateAll($a,$c);
+        return $this->updateAll($a,$c);
     }
     public function saveMultiple($count){
 
@@ -287,18 +315,23 @@ class Stock extends LFSModel
             'entry_subject'=>$this->entry_subject,
             'order_no'=>$this->order_no,
             'name'  =>  $this->name,
+            'model'  =>  $this->model,
             'vendor_id'  =>  $this->vendor_id,
-            'in_date'  =>  $this->in_date,
-            'in_price'  =>  $this->in_price,
-            'value_year'  =>  $this->value_year,
+            'in_date'  =>  $this->in_date?$this->in_date:Condom::model()->getStartTime().'01',
+            'in_price'  =>  str_replace(',','',$this->in_price),
+            'value_month'  =>  $this->value_month,
             'value_rate'  =>  $this->value_rate,
         ];
         while($count-->0){
             $model = new Stock();
             $model->attributes = $stock;
             $model->hs_no = $this->initHSno($this->entry_subject);
-            $model->save();
+            if($model->save())
+                $result = true;
+            else
+                $result = false;
         }
+        return $result;
 //            array_push($data, $stock);
 //        $builder=Yii::app()->db->schema->commandBuilder;
 //        $command=$builder->createMultipleInsertCommand($this->tableName(), $data);
@@ -326,6 +359,7 @@ class Stock extends LFSModel
             'vendor_id'=>$this->vendor_id,
             'entry_subject'=>$this->entry_subject,
             'name'=>$this->name,
+            'model'=>$this->model,
             'in_price'=>$this->in_price,
             'in_date'=>$this->in_date,
             'status'=>$this->status
@@ -463,6 +497,35 @@ class Stock extends LFSModel
      * 物品起始使用日期
      */
     public function getEnableDate(){
+
+    }
+
+    public static function getSheetData($type, $items){
+        $model = new Stock();
+        $count = 0 ;
+        switch($type){
+            case '固定资产':    //1601
+                if(!empty($items['B'])!=''&&$items['C']!=''&&$items['D']!=''&&$items['E']!=''){
+                    $model->name = $items['B'];
+                    $model->model = $items['C'];
+                    $count = intval($items['D']);
+                    $model->in_price = $items['E'];
+                    $model->value_month = $items['F'];
+                    $model->value_rate = $items['G'];
+                    $model->entry_subject = Subjects::matchSubject($items['H'], '1601');
+                }
+            break;
+            case '库存商品':    //1601
+                if(!empty($items['B'])!=''&&$items['C']!=''&&$items['D']!=''&&$items['E']!=''){
+                    $model->name = $items['B'];
+                    $model->model = $items['C'];
+                    $count = intval($items['D']);
+                    $model->in_price = $items['E'];
+                }
+                break;
+
+        }
+        return ['count'=>$count, $model];
 
     }
 }

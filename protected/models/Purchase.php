@@ -134,6 +134,7 @@ class Purchase extends LFSModel
     public function load($item){
         $this->setAttributes($item);
         $this->setAttribute('entry_name', $item['entry_name']);
+        $this->setAttribute('model', $item['model']);
         $this->setAttribute('entry_memo', $item['entry_memo']);
         $this->setAttribute('entry_date', $item['entry_date']);
         $this->setAttribute('department_id', $item['department_id']);

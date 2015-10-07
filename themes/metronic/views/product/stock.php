@@ -17,7 +17,6 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/dat
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/pages/scripts/table-managed.js', CClientScript::POS_END);
 
 $cs->registerScript('ComponentsPickersInit','ComponentsPickers.init();', CClientScript::POS_READY);
-$cs->registerScript('ChartsFlotchartsInitPie','TableManaged.init();', CClientScript::POS_READY);
 
 $bank_money = '';
 $bank_money_icon = 'bank';

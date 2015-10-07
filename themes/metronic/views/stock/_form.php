@@ -16,19 +16,23 @@ $form = $this->beginWidget('CActiveForm', array(
 
 ?>
 <div class="well well-sm">
-    <?php
-
-    ?>
 </div>
 
 <div class="panel-body">
+    <?
+    $sbj = substr($model->entry_subject, 0, 4);
+    if($sbj=='1601'||$sbj=='1701'||$sbj=='1801'){
+    ?>
     <div class="form-group">
-        <?php echo $form->labelEx($model, 'no', array('class' => 'col-sm-2 control-label')); ?>
+        <?php echo $form->labelEx($model, 'hs_no', array('class' => 'col-sm-2 control-label')); ?>
         <div class="col-sm-10">
-            <?php echo $form->textField($model, 'no', array('size' => 60, 'maxlength' => 64, 'class' => 'form-control')); ?>
+            <?php echo $form->textField($model, 'hs_no', array('size' => 60, 'maxlength' => 64, 'class' => 'form-control')); ?>
         </div>
-        <?php echo $form->error($model, 'no'); ?>
+        <?php echo $form->error($model, 'hs_no'); ?>
     </div>
+    <?
+    }
+    ?>
 
     <div class="form-group">
         <?php echo $form->labelEx($model, 'order_no', array('class' => 'col-sm-2 control-label')); ?>
@@ -44,6 +48,14 @@ $form = $this->beginWidget('CActiveForm', array(
             <?php echo $form->textField($model, 'name', array('size' => 60, 'maxlength' => 64, 'class' => 'form-control')); ?>
         </div>
         <?php echo $form->error($model, 'name'); ?>
+    </div>
+
+    <div class="form-group">
+        <?php echo $form->labelEx($model, 'model', array('class' => 'col-sm-2 control-label')); ?>
+        <div class="col-sm-10">
+            <?php echo $form->textField($model, 'model', array('size' => 60, 'maxlength' => 64, 'class' => 'form-control')); ?>
+        </div>
+        <?php echo $form->error($model, 'model'); ?>
     </div>
 
     <div class="form-group">
@@ -78,13 +90,13 @@ $form = $this->beginWidget('CActiveForm', array(
         <?php echo $form->error($model, 'out_date'); ?>
     </div>
 
-    <div class="form-group">
-        <?php echo $form->labelEx($model, 'out_price', array('class' => 'col-sm-2 control-label')); ?>
-        <div class="col-sm-10">
-            <?php echo $form->textField($model, 'out_price', array('size' => 60, 'maxlength' => 64, 'class' => 'form-control')); ?>
-        </div>
-        <?php echo $form->error($model, 'out_price'); ?>
-    </div>
+<!--    <div class="form-group">-->
+<!--        --><?php //echo $form->labelEx($model, 'out_price', array('class' => 'col-sm-2 control-label')); ?>
+<!--        <div class="col-sm-10">-->
+<!--            --><?php //echo $form->textField($model, 'out_price', array('size' => 60, 'maxlength' => 64, 'class' => 'form-control')); ?>
+<!--        </div>-->
+<!--        --><?php //echo $form->error($model, 'out_price'); ?>
+<!--    </div>-->
 
     <div class="form-group">
         <?php echo $form->labelEx($model, 'create_time', array('class' => 'col-sm-2 control-label')); ?>
