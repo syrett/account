@@ -13,24 +13,20 @@ $this->menu=array(
 		  ),
 );
 ?>
-<div class="panel panel-success voucher form">
-    <!-- Default panel contents -->
-    <div class="panel-heading">
-		<h2>部门管理</h2>
-	</div>
-	<div class="well well-sm">
-	<?php
-	echo CHtml::link('<span class="glyphicon glyphicon-plus"></span> 添加',array('create'),array('class' => 'btn btn-default'));
-	/*
-	 $this->widget('zii.widgets.CMenu', array(
-		'encodeLabel'=>false,
-		'items'=>$this->menu,
-		'htmlOptions'=>array('class'=>'nav nav-pills'),
-		));
-	*/
-	?>
-	</div>
-    <div class="panel-body">
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="font-green-sharp">部门管理</span>
+        </div>
+        <div class="actions">
+            <?php
+            echo CHtml::link('<i class="fa fa-plus"></i> 添加部门', array('create'), array('class' => 'btn btn-circle btn-primary btn-sm'));
+            ?>
+            <a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title=""
+               data-original-title title="全屏"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
 
 <?php
 $this->widget('zii.widgets.grid.CGridView', array(
