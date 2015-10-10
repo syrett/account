@@ -17,8 +17,7 @@
     <div>
         <table class="title" >
             <tr>
-                <td style="text-align: left">核算单位：<?php $Options = Options::model()->findAllByPk(1);
-                    echo $Options[0]['name'];?></td>
+                <td style="text-align: left">核算单位：<?= Condom::model()->getName()?></td>
                 <td style="text-align: right">第<?php echo $this->addZero($model[0][entry_num]) ?>号 &#45;<?php echo '&nbsp;'.$this->addZero($page).'/'.$this->addZero($count); ?></td>
             </tr>
         </table>
@@ -73,11 +72,11 @@
                 <td width="52mm"  >审核：<?php
                     if($model[0]->entry_reviewed==1)
                     {
-                        $user = User::model()->findByPk(array('id'=>$model[0]->entry_reviewer));
-                        echo $user->email;
+                        $user = User::model()->with('profile')->findByPk(array('id'=>$model[0]->entry_reviewer));
+                        echo $user->profile->name;
                     } ?></td>
                 <td width="52mm"  >出纳：</td>
-                <td  width="52mm" >制单：<?php echo User::model()->findByPk(array('id'=>$model[0]->entry_creater))->email; ?></td>
+                <td  width="52mm" >制单：<?php echo User::model()->with('profile')->findByPk(array('id'=>$model[0]->entry_creater))->profile->name; ?></td>
             </tr>
         </table>
 

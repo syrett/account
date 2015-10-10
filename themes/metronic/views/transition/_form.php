@@ -161,7 +161,7 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
 
         if ($model[0]->entry_reviewed == 1) {
             $user = User::model()->with('profile')->findByPk(array('id' => $model[0]->entry_reviewer));
-            echo $user->profile->surname;
+            echo $user->profile->name;
         }
         ?>
     </div>
@@ -172,7 +172,7 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
         <?php
         $user = User::model()->with('profile')->findByPk($model[0]->entry_creater);
         if ($user)
-            echo $user->profile->surname;
+            echo $user->profile->name;
         else
             echo '无此用户';
         ?>
