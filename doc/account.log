@@ -388,3 +388,11 @@ ALTER TABLE `reimburse` ADD `relation` TEXT NOT NULL AFTER `subject_2`;
 -- 2015年9月11日15:30:19
 ALTER TABLE `preparation` ADD `amount_used` FLOAT NOT NULL COMMENT '已使用金额' AFTER `entry_amount`;
 ALTER TABLE `preparation` CHANGE `real_order` `real_order` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+
+-- 2015年9月26日16:06:59
+ALTER TABLE `employee` ADD `base_2` FLOAT NOT NULL COMMENT '公积金基数' AFTER `base`;
+ALTER TABLE `stock` ADD `model` VARCHAR(64) NULL COMMENT '型号' AFTER `name`;
+ALTER TABLE `purchase` ADD `model` VARCHAR(64) NULL COMMENT '型号' AFTER `entry_name`;
+ALTER TABLE `stock` CHANGE `value_year` `value_month` INT(11) NULL DEFAULT NULL COMMENT '报销年限';
+ALTER TABLE `stock` CHANGE `value_rate` `value_rate` INT(11) NOT NULL DEFAULT '0' COMMENT '残值率';
+ALTER TABLE `stock` CHANGE `order_no` `order_no` VARCHAR(16) CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '采购订单';
