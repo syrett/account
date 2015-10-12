@@ -396,3 +396,9 @@ ALTER TABLE `purchase` ADD `model` VARCHAR(64) NULL COMMENT '型号' AFTER `entr
 ALTER TABLE `stock` CHANGE `value_year` `value_month` INT(11) NULL DEFAULT NULL COMMENT '报销年限';
 ALTER TABLE `stock` CHANGE `value_rate` `value_rate` INT(11) NOT NULL DEFAULT '0' COMMENT '残值率';
 ALTER TABLE `stock` CHANGE `order_no` `order_no` VARCHAR(16) CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '采购订单';
+
+-- 2015年10月10日15:22:04
+ALTER TABLE `stock` ADD `cost_date` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '成本结转日期' AFTER `cost_role`;
+ALTER TABLE `cost` ADD `model` VARCHAR(64) NOT NULL DEFAULT '' AFTER `entry_name`;
+ALTER TABLE `cost` ADD `count` FLOAT NOT NULL AFTER `model`;
+ALTER TABLE `stock` ADD `department_id` INT NOT NULL COMMENT '所属部门' AFTER `client_id`;
