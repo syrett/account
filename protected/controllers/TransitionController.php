@@ -1078,6 +1078,9 @@ class TransitionController extends Controller
             throw new CHttpException(400, $lastdate . " 反结账失败");
     }
 
+    /*
+     * 反结账
+     */
     public function antiSettlement($date){
 
         $model = Transition::model()->deleteAllByAttributes(array('entry_num_prefix' => $date, 'entry_settlement' => 1,));
@@ -1157,28 +1160,32 @@ class TransitionController extends Controller
             Yii::import('application.controllers.PostController');
             $postctrl = new PostController();
             $postctrl->actionPost($_REQUEST['date']);
-        }
+        }else
+            $this->redirect('/');
     }
 
     public function actionListReorganise()
     {     //run Reorganise
         if (isset($_REQUEST['date'])) {
             $this->actionReorganise($_REQUEST['date']);
-        }
+        }else
+            $this->redirect('/');
     }
 
     public function actionListSettlement()
     {     //run settlement
         if (isset($_REQUEST['date'])) {
             $this->actionSettlement($_REQUEST['date']);
-        }
+        }else
+            $this->redirect('/');
     }
 
     public function actionListAntiSettlement()
     {     //run settlement
         if (isset($_REQUEST['date'])) {
             $this->actionAntiSettlement($_REQUEST['date']);
-        }
+        }else
+            $this->redirect('/');
     }
 
     public function actionListAssets()
@@ -1186,12 +1193,12 @@ class TransitionController extends Controller
     //run settlement
         if (isset($_REQUEST['date'])) {
             $this->actionDepreciation($_REQUEST['date']);
-        }
+        }else
+            $this->redirect('/');
     }
 
     public function actionPrintP()
     {
-
         $this->render("printp");
     }
 
@@ -1495,7 +1502,7 @@ class TransitionController extends Controller
                             $model['pid'] = $order['id'];
                             $arr['relation'] = json_encode(['reimburse'=>$order['id']]);
                         }
-                        $arr['entry_subject'] = $subject_2;
+                        $arr['entry_subject'] = $arr['subject_2'];
                         $arr['entry_transaction'] = 2;
                         $sbj2241 = Subjects::matchSubject($path[3],['2241']);
                         $sbj1221 = Subjects::matchSubject($path[3], ['1221']);
@@ -1614,8 +1621,8 @@ class TransitionController extends Controller
                     $model = new Product();
                     break;
                 case 'stock':
-                    $product = Product::model()->findByAttributes(['order_no'=>$arr['order_no']]);
-                    $arr['entry_memo'] = '成本结转-'. $product->entry_name;
+                    $stock = Stock::model()->findByAttributes(['name'=>$arr['entry_name'],'model'=>$arr['model']]);
+                    $arr['entry_memo'] = '成本结转-'. $stock->name. '_'. $arr['model'];
                     $model = new Cost();
                     break;
                 case 'salary':
@@ -1763,43 +1770,72 @@ class TransitionController extends Controller
             }
             $model->load($arr);
             if($model->validate()&&$type=='stock'){
-                mb_internal_encoding( 'UTF-8');
-                mb_regex_encoding( 'UTF-8');
-                $stocks = mbsplit("\r\n",$arr['stocks']);
-                $stocks_price = mbsplit("\r\n",$arr['stocks_price']);
-                $stocks_count = mbsplit("\r\n",$arr['stocks_count']);
-                $stock = new Stock();
-                $order = Product::model()->findByAttributes(['order_no'=>$arr['order_no']]);
-                $stock->order_no_sale = $order->order_no;
-                $stock->client_id = $order->client_id;
-                foreach($stocks as $key => $item){
-                    $stock->name = $item;
-                    $stock->out_price = $stocks_price[$key];
-                    $stock->out_date = $arr['entry_date'];
-                    $old_count = $stock->getCount(['order_no_sale'=>$stock->order_no_sale]);
-                    if($model->isNewRecord)
-                        $old_count = 0;
-                    $count = $old_count - $stocks_count[$key];
-                    if($count == 0) //数量不变
-                        $stock->setStock($stocks_count[$key],2,['order_no_sale'=>$order->order_no]);
-                    elseif($count < 0){ //数量增加，增加数量不能大于库存
-                        $left = $stock->getCount(['name'=>$item,'status'=>1]);
-                        if($left<-$count){    //修改后 数量有新增，判断库存数量是否足够
-                            if($key == 0 || !isset($arr['error'])){
-                                $arr['error'] = ["$item 数量不能大于：". ($left + $old_count)];
-                                $result[] = ['status' => 0, 'data' => $arr];
-                            }else
-                                end($result)['data']['error'] += ["$item 数量不能大于：". ($left + $old_count)];
-                            continue;
-                        }else{
-                            $stock->setStock($stocks_count[$key],2,['order_no_sale'=>$order->order_no]);
-                            $stock->setStock(-$count, 2);    //新增加的
-                        }
-                    }else{  //数量减少
-                        $stock->setStock($stocks_count[$key],2,['order_no_sale'=>$order->order_no]);
-                        $stock->setStock($count, 1);    //新增加的
+                //此商品此型号，之前已经导入的当前日期的数据删除
+                Cost::model()->deleteAllByAttributes([
+                    'entry_date'=>$arr['entry_date'],
+                    'entry_name'=>$arr['entry_name'],
+                    'model'=>$arr['model']],"id <> '$model->id'");
+                //设置stock成本结转日期为空
+                Stock::model()->updateAll(['cost_date'=>'','status'=>1], "name='". $arr['entry_name']."' and model='". $arr['model']. "' and cost_date like '". $arr['entry_date']. "%'");
+
+                $stock = Stock::model()->findAllByAttributes(['name'=>$arr['entry_name'],'model'=>$arr['model']],
+                    ['condition'=>'cost_date = ""','order'=>'in_date']);
+                if(empty($stock))
+                    break;
+                $total = count($stock);
+                if($arr['count'] >= $total){
+                    $arr['error'] = ['盘点数量不能大于等于'. $total];
+                    $result[] = ['status' => 0, 'data' => $arr];
+                    continue;
+                }else
+                    $count = $total - $arr['count'];
+
+                $amount = 0;
+                foreach($stock as $sto){
+                    if($count>0){   //设置stock为成本结转的日期，
+                        $amount += $sto['in_price'];
+                        $sto['cost_date'] = $arr['entry_date'];
+                        $sto['status'] = 2;
+                        $sto->save();
                     }
+                    $count--;
                 }
+                $arr['entry_amount'] = $amount;
+//                $stocks = mbsplit("\r\n",$arr['stocks']);
+//                $stocks_price = mbsplit("\r\n",$arr['stocks_price']);
+//                $stocks_count = mbsplit("\r\n",$arr['stocks_count']);
+//                $stock = new Stock();
+//                $order = Product::model()->findByAttributes(['order_no'=>$arr['order_no']]);
+//                $stock->order_no_sale = $order->order_no;
+//                $stock->client_id = $order->client_id;
+//                foreach($stocks as $key => $item){
+//                    $stock->name = $item;
+//                    $stock->out_price = $stocks_price[$key];
+//                    $stock->out_date = $arr['entry_date'];
+//                    $old_count = $stock->getCount(['order_no_sale'=>$stock->order_no_sale]);
+//                    if($model->isNewRecord)
+//                        $old_count = 0;
+//                    $count = $old_count - $stocks_count[$key];
+//                    if($count == 0) //数量不变
+//                        $stock->setStock($stocks_count[$key],2,['order_no_sale'=>$order->order_no]);
+//                    elseif($count < 0){ //数量增加，增加数量不能大于库存
+//                        $left = $stock->getCount(['name'=>$item,'status'=>1]);
+//                        if($left<-$count){    //修改后 数量有新增，判断库存数量是否足够
+//                            if($key == 0 || !isset($arr['error'])){
+//                                $arr['error'] = ["$item 数量不能大于：". ($left + $old_count)];
+//                                $result[] = ['status' => 0, 'data' => $arr];
+//                            }else
+//                                end($result)['data']['error'] += ["$item 数量不能大于：". ($left + $old_count)];
+//                            continue;
+//                        }else{
+//                            $stock->setStock($stocks_count[$key],2,['order_no_sale'=>$order->order_no]);
+//                            $stock->setStock(-$count, 2);    //新增加的
+//                        }
+//                    }else{  //数量减少
+//                        $stock->setStock($stocks_count[$key],2,['order_no_sale'=>$order->order_no]);
+//                        $stock->setStock($count, 1);    //新增加的
+//                    }
+//                }
             }
             $new = $model->isNewRecord?true:false;
             if(isset($result[$row]['status']) && $result[$row]['status'] == 0)

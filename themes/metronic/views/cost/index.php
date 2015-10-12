@@ -86,25 +86,12 @@ $('.search-form form').submit(function(){
                 ),
                 array(
                     'name' => 'entry_date',
-                    'value' => 'date("Y年m月d日",strtotime($data->entry_date))',
+                    'value' => 'date("Y年m月",strtotime($data->entry_date))',
                     'filter'=>CHtml::activeTextField($model, 'entry_date',array("class"=>"input_mid")),
                 ),
-                'stocks',
-                array(
-                    'name' => 'stocks_count',
-                    'filter'=>CHtml::activeTextField($model, 'stocks_count',array("class"=>"input_mid")),
-                ),
-                'stocks_price',
-                array(
-                    'name' => 'entry_amount',
-                    'filter'=>CHtml::activeTextField($model, 'entry_amount',array("class"=>"input_mid")),
-                ),
-//                array(
-//                    'name' => 'create_time',
-//                    'value' => 'date("Y年m月d日",strtotime($data->create_time))',
-//                    'htmlOptions' => array('class' => 'input-small'),
-//                    'headerHtmlOptions' => array('class' => 'input-small'),
-//                ),
+                'entry_name',
+                'model',
+                'count',
                 array(
                     'class' => 'CButtonColumn',
                     'buttons' => array(

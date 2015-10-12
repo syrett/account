@@ -122,6 +122,18 @@ class PostController extends Controller
     public function actionPost($date)
     {
 
+        //过账检测总账期初余额和期初余额明细金额是否相等
+        $post = Transition::model()->findByAttributes(['entry_posting'=>1]);
+        if(!$post){
+            $arr = ['1403', '1405', '1601', '1701', '1801'];
+            foreach ($arr as $sbj) {
+                if(!Stock::model()->check_balance($sbj)){
+                    throw new CHttpException(400, '总账期初余额与期初明细不相等，请重新核对。   科目：'. Subjects::getName($sbj) );
+                    return;
+                }
+            }
+
+        }
       $transition = new Transition;
 
       if($transition->isAllPosted($date))

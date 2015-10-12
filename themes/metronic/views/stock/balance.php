@@ -4,6 +4,9 @@ $this->breadcrumbs=array(
 	'期初明细',
 );
 
+$baseUrl = Yii::app()->theme->baseUrl;
+$cs = Yii::app()->clientScript;
+$cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/balance_cost.js');
 $columns = [];
 switch($type){
     case '1601':
@@ -30,16 +33,57 @@ switch($type){
 
 $balance = Subjects::get_balance($type);
 $cdb = clone $dataProvider->getCriteria();
-$cdb->select = 'sum(in_price) AS total';
+$cdb->select = 'sum(worth) AS total';
 $total =  Stock::model()->find($cdb);
 ?>
-<div class="panel panel-default voucher form">
+<div class="portlet light">
     <!-- Default panel contents -->
-    <div class="panel-heading">
-        <h2><?= Subjects::getName($type) ?>期初明细</h2>
-        <span class="caption-helper">期初余额:<?= round2($balance)?>&nbsp;&nbsp;&nbsp;明细合计:<?= round2($total->total) ?></span>
+    <div class="portlet-title">
+        <?php
+        foreach (Yii::app()->user->getFlashes() as $key => $message) {
+            echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
+        }
+        ?>
+        <div class="caption">
+            <h2><?= Subjects::getName($type) ?>期初明细</h2>
+            <span class="caption-helper">总账期初余额:<?= round2($balance)?>&nbsp;&nbsp;&nbsp;明细合计:<?= round2($total->total) ?></span>
+        </div>
+
+        <div class="actions">
+            <div class="actions">
+                <?php echo CHtml::link('清空期初余额', "#truncate", array('class' => 'btn btn-circle btn-default', 'data-toggle'=>'modal')); ?>
+
+                <input id="url_truncate" type="hidden" value="<?= $this->createUrl('stock/truncate') ?>" >
+            </div>
+        </div>
     </div>
-    <div class="panel-body">
+    <div class="portlet-body">
+        <div id="truncate" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="truncatelabel" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title">确认要清空期初明细？</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            以下科目期初余额明细将清空！！！
+                        </p>
+                        <?
+                        if($type=='1601'){
+                            $msg = Subjects::getName('1601').','.Subjects::getName('1701').','.Subjects::getName('1801');
+                        }elseif($type== '1405')
+                            $msg = Subjects::getName('1403').','.Subjects::getName('1405');
+                        echo "包含 $msg ";
+                        ?>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn default" data-dismiss="modal" aria-hidden="true">取消</button>
+                        <a onclick="javascript:truncate('<?=$type?>');" ><button data-dismiss="modal" class="btn blue" >确认</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
         <?php
         array_push($columns ,
             array(

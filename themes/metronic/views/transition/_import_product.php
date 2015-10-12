@@ -48,7 +48,7 @@ $preOrder = Preparation::getOrderArray($type);
                     $stockArray = ['商品选择'] + Stock::model()->getStockArray();
                     $taxArray = Transition::getTaxArray('sale');
                     $arr = [6001, 6301, 6051];
-                    $subjectArray = Transition::getSubjectArray($arr, ['type' => 2]);
+                    $subjectArray = Transition::getSubjectArray($arr);
 //                    $preOrder = ['PSO201501' => '{"amount":200,"memo":"说明1"}', 'PSO201502' => '{"amount":400,"memo":"说明2"}'];
                     foreach ($sheetData as $key => $item) {
                         ?>

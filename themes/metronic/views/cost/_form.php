@@ -23,17 +23,14 @@ $item = $sheetData[0]['data'];
 //                'action'=>Laofashi. $this->createUrl('/bank/default/update', array('id'=>$_GET['id'])),
             ));
             ?>
-            订单号：<?= $item['order_no'] ?> 日期：<?= $item['entry_date'] ?> <?= $item['entry_name'] ?>
+            成本结转单号：<?= $item['order_no'] ?>
             <table class="table table-bordered dataTable">
                 <tr>
                     <th class="input_min"><input type="checkbox"></th>
                     <th class="input_mid">交易日期</th>
                     <th class="input_mid">名称</th>
-                    <th class="input_mid">包含物品</th>
-                    <th class="input_mid">对应数量</th>
-                    <th class="input_mid">对应单价</th>
-                    <th class="input_min">合计</th>
-                    <th class="input-small">操作</th>
+                    <th class="input_mid">型号</th>
+                    <th class="input_mid">盘点数量</th>
                     <th style="width: 10%">提示</th>
                 </tr>
                 <?php
@@ -51,23 +48,15 @@ $item = $sheetData[0]['data'];
                                    value="<?= isset($item['id']) ? $item['id'] : '' ?>" readonly></td>
                         <td><input class="input_mid no-dp" type="text" name="lists[<?= $key ?>][Transition][entry_date]"
                                    value="<?= $item['entry_date'] ?>" readonly></td>
-                        <td><input class="input_mid" type="text" value="<?= $item['entry_name'] ?>" readonly></td>
+                        <td><input class="input_mid" type="text" name="lists[<?= $key ?>][Transition][entry_name]"
+                                   value="<?= $item['entry_name'] ?>" readonly></td>
+                        <td><input class="input_mid" type="text" name="lists[<?= $key ?>][Transition][model]"
+                                   value="<?= $item['model'] ?>" readonly></td>
                         <td>
-                            <input class="input_mid" type="text" name="lists[<?= $key ?>][Transition][stocks]"
-                                   value="<?= $item['stocks'] ?>">
+                            <input class="input_mid" type="text" name="lists[<?= $key ?>][Transition][count]"
+                                   value="<?= $item['count'] ?>">
                         </td>
-                        <td>
-                            <input class="input_mid" type="text" name="lists[<?= $key ?>][Transition][stocks_count]"
-                                   value="<?= $item['stocks_count'] ?>">
-                        </td>
-                        <td>
-                            <input class="input_mid" type="text" name="lists[<?= $key ?>][Transition][stocks_price]"
-                                   value="<?= $item['stocks_price'] ?>">
-                        </td>
-                        <td>
-                            <label id="tran_amount_<?= $key ?>"><?= $item['entry_amount'] ?></label>
-                        </td>
-                        <td class="action">
+                        <td class="action hidden">
                             <input type="hidden" id="did_<?= $key ?>" name="lists[<?= $key ?>][Transition][d_id]"
                                    value="<?= isset($item['d_id']) ? $item['d_id'] : '' ?>">
                             <input type="hidden" id="order_no_<?= $key ?>"

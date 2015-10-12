@@ -185,10 +185,11 @@ class ProductController extends Controller
             if ($_FILES['attachment']!='' && file_exists($_FILES['attachment']['tmp_name'])) {
                 $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
                 $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
-                //去除第一行
                 array_shift($list);
                 foreach($list as $item){
-                    $sheetData[] = Transition::getSheetData($item,'cost');
+                    $arr = Transition::getSheetData($item,'cost');
+                    if(!empty($arr))
+                        $sheetData[] = $arr;
                 }
             } elseif($_FILES['attachment']['name']=='' && isset($_POST['lists'])){
                 //保存按钮

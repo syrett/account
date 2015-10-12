@@ -107,7 +107,7 @@ $this->pageTitle = Yii::app()->name;
                         ],
                         [
                             'header' => '部门',
-                            'value' => 'Department::model()->getNameByOrderNo($data->order_no)'
+                            'value' => 'Department::model()->getNameByOrderNo($data->order_no,$data->department_id)'
                         ]
 
                     ))

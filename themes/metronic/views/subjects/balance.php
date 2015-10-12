@@ -25,7 +25,11 @@ $this->breadcrumbs=array(
 	</div>
 	<div class="portlet-body">
         <div class="errorMessage" style="color: red;">
-            <?php echo $error; ?>
+            <?php
+            foreach (Yii::app()->user->getFlashes() as $key => $message) {
+                echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
+            }
+            ?>
         </div>
 		<div class="alert alert-info">注意:改变期初余额将会影响报表的准确性，所以每次改变期初余额后都请反结账！</div>
 		<form action="?r=subjects/balance" method="POST">
@@ -74,7 +78,6 @@ $this->breadcrumbs=array(
 		?>
 		</table>
 		<div class="form-group" >
-		  <?php echo $error; ?>
 			<div class="text-center">
 			<?php echo CHtml::submitButton('保存', array('class'=>'btn btn-circle btn-primary',)); ?>
 			<?php echo BtnBack(); ?>

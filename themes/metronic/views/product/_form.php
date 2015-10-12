@@ -55,8 +55,8 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                     $clientArray = Client::model()->getClientArray();
                     $stockArray = Stock::model()->getStockArray();
                     $taxArray = Transition::getTaxArray('sale');
-                    $arr = [6001,6301];
-                    $subjectArray = Transition::getSubjectArray($arr,['type'=>2]);
+                    $arr = [6001, 6301, 6051];
+                    $subjectArray = Transition::getSubjectArray($arr);
                     ?>
                     <tr line="<?= $key ?>" class="table-tr <?= $item['status_id']==1?'':'label-danger'?>">
                         <td><input type="checkbox" id="item_<?= $key ?>" name="lists[<?= $key ?>]"

@@ -18,58 +18,43 @@ $this->pageTitle = Yii::app()->name;
     $select = '<option value=1 >日期</option><option value=2 >交易说明</option><option value=3 >金额</option>';
     ?>
     <div class="row">
-        <?
-        $list = Product::model()->listOrder();
-        $stocks = Stock::model()->getStockArray('1405');
-        if(empty($list)||empty($stocks)){
-        ?>
-        <div class="alert alert-info">提示：未产生销售记录，或未采购任何商品</div>
-        <?
-        }else{
-            ?>
-            <div class="col-xs-12">
-                <div class="col-md-4 col-sm-12">
-                    <div class="form-group">
-                        <div class="input-group choose-btn-group">
-                            <div class="input-icon">
-                                <i class="fa fa-file fa-fw"></i>
-                                <input type="text" class="form-control btn-file" id="import_file_name" readonly="">
-                            </div>
-					<span class="input-group-btn">
-						<span class="btn btn-default btn-file">
-							选择文件<input name="attachment" type="file" accept=".xls,.xlsx">
-						</span>
-					</span>
+        <div class="col-xs-12">
+            <div class="col-md-4 col-sm-12">
+                <div class="form-group">
+                    <div class="input-group choose-btn-group">
+                        <div class="input-icon">
+                            <i class="fa fa-file fa-fw"></i>
+                            <input type="text" class="form-control btn-file" id="import_file_name" readonly="">
                         </div>
+                <span class="input-group-btn">
+                    <span class="btn btn-default btn-file">
+                        选择文件<input name="attachment" type="file" accept=".xls,.xlsx">
+                    </span>
+                </span>
                     </div>
-                </div>
-                <div class="col-md-4 col-sm-12">
-                    <div class="btn-toolbar margin-bottom-10">
-                        <button type="submit" class="btn btn-default btn-file">导入</button>
-                        <a href="<?= $this->createUrl('/Stock/excel') ?>">
-                            <button class="btn btn-default btn-file" type="button"><strong>尚未结转成本的订单下载</strong>
-                            </button>
-                        </a>
-                    </div>
-
                 </div>
             </div>
-        <?
-        }
-        ?>
+            <div class="col-md-4 col-sm-12">
+                <div class="btn-toolbar margin-bottom-10">
+                    <button type="submit" class="btn btn-default btn-file">导入</button>
+                    <a href="<?= $this->createUrl('/Stock/excel') ?>">
+                        <button class="btn btn-default btn-file" type="button"><strong>库存下载</strong>
+                        </button>
+                    </a>
+                </div>
+
+            </div>
+        </div>
     </div>
     <div class="row import-tab" id="abc">
         <div class="box">
             <table id="data_import" class="table table-bordered dataTable">
                 <tr>
                     <th class="input_min"><input type="checkbox"></th>
-                    <th class="input_mid">订单号</th>
-                    <th class="input_mid">交易日期</th>
+                    <th class="input_mid">日期</th>
                     <th class="input_mid">名称</th>
-                    <th class="input_min">包含物品</th>
-                    <th class="input_min">对应数量</th>
-                    <th class="input_mid">对应单价</th>
-                    <th class="input_min">合计</th>
+                    <th class="input_mid">型号</th>
+                    <th class="input_mid">盘点数量</th>
 <!--                    <th class="input-small">操作</th>-->
                     <th style="width: 10%">提示</th>
                 </tr>
@@ -81,35 +66,17 @@ $this->pageTitle = Yii::app()->name;
                         <tr line="<?= $key ?>" <?= $key % 2 == 1 ? 'class="table-tr"' : '' ?>>
                             <td><input type="checkbox" id="item_<?= $key ?>" name="lists[<?= $key ?>]"
                                        value="<?= isset($item['id']) ? $item['id'] : '' ?>" readonly></td>
-                            <td><input class="input_mid" type="text" value="<?= $item['order_no'] ?>" readonly></td>
                             <td><input class="input_mid no-dp" type="text" name="lists[<?= $key ?>][Transition][entry_date]"
                                        value="<?= $item['entry_date'] ?>" readonly></td>
                             <td><input class="input_mid" type="text" name="lists[<?= $key ?>][Transition][entry_name]"
                                        value="<?= $item['entry_name'] ?>" readonly></td>
-                            <td>
-                                <textarea rows="1" class="input_min" name="lists[<?= $key ?>][Transition][stocks]" readonly><?= $item['stocks'] ?></textarea>
-<!--                                <input class="input_min" type="text" name="lists[--><?//= $key ?><!--][Transition][stocks]"-->
-<!--                                       value="--><?//= $item['stocks'] ?><!--">-->
-                            </td>
-                            <td>
-                                <textarea rows="1" class="input_min" name="lists[<?= $key ?>][Transition][stocks_count]" readonly><?= $item['stocks_count'] ?></textarea>
-<!--                                <input class="input_min" type="text"name="lists[--><?//= $key ?><!--][Transition][stocks_count]"-->
-<!--                                       value="--><?//= $item['stocks_count'] ?><!--" >-->
-                            </td>
-                            <td>
-                                <textarea rows="1" class="input_mid" name="lists[<?= $key ?>][Transition][stocks_price]" readonly><?= $item['stocks_price'] ?></textarea>
-<!--                                <input class="input_min" type="text"name="lists[--><?//= $key ?><!--][Transition][stocks_price]"-->
-<!--                                       value="--><?//= $item['stocks_price'] ?><!--">-->
-                            </td>
-                            <td>
-                                <label id="tran_amount_<?= $key ?>"><?= $item['entry_amount'] ?></label>
-                            </td>
+                            <td><input class="input_mid" type="text" name="lists[<?= $key ?>][Transition][model]"
+                                       value="<?= $item['model'] ?>" readonly></td>
+                            <td><input class="input_mid" type="text" name="lists[<?= $key ?>][Transition][count]"
+                                       value="<?= $item['count'] ?>" readonly></td>
                             <td class="action hidden">
                                 <input type="hidden" id="did_<?= $key ?>" name="lists[<?= $key ?>][Transition][d_id]"
                                        value="<?= isset($item['d_id']) ? $item['d_id'] : '' ?>">
-                                <input type="hidden" id="order_no_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][order_no]"
-                                       value="<?= $item['order_no'] ?>">
                                 <data class="hidden">
                                     <input type="hidden" id="id_<?= $key ?>" value="<?= $key ?>">
                                     <input type="hidden" id="status_id_<?= $key ?>"
@@ -124,12 +91,6 @@ $this->pageTitle = Yii::app()->name;
                                     <input type="hidden" id="subject_2_<?= $key ?>"
                                            name="lists[<?= $key ?>][Transition][subject_2]"
                                            value="<?= $item['subject_2'] ?>">
-                                    <input type="hidden" id="subject_2_price_<?= $key ?>"
-                                           name="lists[<?= $key ?>][Transition][subject_2_price]"
-                                           value="<?= $item['subject_2_price'] ?>">
-                                    <input type="hidden" id="client_id_<?= $key ?>"
-                                           name="lists[<?= $key ?>][Transition][client_id]"
-                                           value="<?= $item['client_id'] ?>">
                                     <input type="hidden" id="transaction_<?= $key ?>"
                                            name="lists[<?= $key ?>][Transition][entry_transaction]"
                                            value="<?= $item['entry_transaction'] ?>">

@@ -23,7 +23,7 @@
  * @property Subjects $subject0
  * @property Subjects $subject2
  */
-class Cost extends CActiveRecord
+class Cost extends LFSModel
 {
 	/**
 	 * @return string the associated database table name
@@ -41,12 +41,12 @@ class Cost extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('order_no, entry_date, stocks, stocks_count, stocks_price, entry_amount, ', 'required'),
+			array('entry_date, entry_amount, ', 'required'),
 			array('subject, update_time, status_id', 'numerical', 'integerOnly'=>true),
 			array('entry_amount', 'numerical'),
-            array('order_no', 'unique', 'message' => '该订单号已经结转，无法再次导入'),
 			array('order_no, entry_date', 'length', 'max'=>16),
 			array('entry_name, stocks, stocks_count, stocks_price', 'length', 'max'=>512),
+            array('model, count', 'safe'),
 			// The following rule is used by search().
 			array('id, order_no, entry_date, entry_name, stocks, stocks_count, stocks_price, entry_amount, subject, subject_2, create_time, update_time, status_id', 'safe', 'on'=>'search'),
 		);
@@ -72,10 +72,12 @@ class Cost extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'order_no' => '订单号',
-			'entry_date' => '销售日期',
+			'order_no' => '成本结转单号',
+			'entry_date' => '成本结转日期',
 			'entry_name' => '商品名称',
-			'stocks' => '商品清单',
+            'model' => '型号',
+            'count' => '盘点数量',
+            'stocks' => '商品清单',
 			'stocks_count' => '对应数量',
 			'stocks_price' => '对应当时计算价格',
 			'entry_amount' => '成本',

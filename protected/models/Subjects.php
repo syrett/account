@@ -539,6 +539,31 @@ class Subjects extends CActiveRecord
     }
 
     /*
+     * 查询匹配科目
+     */
+    public static function findSubject($key, $sbj, $force=false){
+        $list = [];
+        $result = [];
+        if(is_array($sbj)){
+            $list = $sbj;
+        }else
+            $list[] = $sbj;
+        if(!empty($list))
+            foreach ($sbj as $item) {
+                if(!$force){
+                    $a = Subjects::model()->find([
+                        'condition'=>'sbj_name like :key and sbj_number like :sbj',
+                        'params'=>[':key'=>$key.'%',':sbj'=>$item.'%']]);
+
+                    $result[] = $a;
+                }
+                else
+                    $result[] = Subjects::model()->findByAttributes(['sbj_name'=>$key],'sbj_number like ":sbj%"');
+            }
+        return array_values(array_filter($result));
+    }
+
+    /*
      * 如果没有就新建科目
      */
     public static function createSubject($key, $sbj)

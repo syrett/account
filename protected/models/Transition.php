@@ -553,43 +553,62 @@ class Transition extends CActiveRecord
                         $arr['count'] = trim($items['F']);
                         break;
                     case 'cost':    //成本结转
-                        $arr['order_no'] = trim($items['A']);
-                        $arr['entry_date'] = convertDate($items['B']);
-                        $arr['entry_name'] = trim($items['C']);
-                        $order = Product::model()->findByAttributes(['order_no'=>$arr['order_no']]);
-                        if($order!=null){
-                            $arr['entry_subject'] = Subjects::model()->matchSubject('材料',[6401]);
-                            $arr['client_id'] = $order->client_id;
-                        }
-                        $arr['entry_transaction'] = 1;
-                        $arr['stocks'] = '';
-                        $arr['stocks_count'] = '';
-                        $arr['stocks_price'] = '';
+                        $arr['entry_date'] = convertDate($items['A'],'Ym');
+                        $arr['entry_name'] = trim($items['B']);
+                        $arr['model'] = trim($items['C']);
+                        $arr['count'] = trim($items['D']);
+                        $stock = Stock::model()->findAllByAttributes(['name'=>$arr['entry_name'],'model'=>$arr['model']],
+                            ['condition'=>'cost_date = "" or cost_date like "'.$arr['entry_date'].'%"','order'=>'in_date']);
                         $amount = 0;
-                        $stocks = [];
-                        $subject_2 = [];
-                        $stocks_count = [];
-                        $stocks_price = [];
-                        foreach(range('D', 'Z', 2) as $key){
-                            if($items[$key]==null)
-                                break;
-                            $item = $items[$key];
-                            $stocks[] = $item;
-                            $price = Stock::model()->getPrice($item);
-                            $stocks_price[] = $price;
-                            //根据商品，判断购买时的采购用途，库存商品/材料、库存商品/耐用等，对subject_2和金额进行赋值
-                            $stock = Stock::model()->matchStock($item, 1405);
-                            $sbj = $stock->entry_subject;
-                            $item = $items[++$key];
-                            $stocks_count[] = $item;
-                            $amount += $price*$item;
-                            $subject_2[$sbj] = isset($subject_2[$sbj])?$subject_2[$sbj]+$price*$item:$price*$item;
+                        if(empty($stock))
+                            return;
+                        $count = $arr['count']>=count($stock)?count($stock):count($stock)-$arr['count'];
+                        foreach($stock as $sto){
+                            if($count>0)
+                                $amount += $sto['in_price'];
+                            $count--;
                         }
-                        $arr['subject_2'] = implode(',', array_keys($subject_2));
-                        $arr['subject_2_price'] = implode(',',$subject_2);
-                        $arr['stocks'] = implode("\r\n",$stocks);
-                        $arr['stocks_count'] = implode("\r\n",$stocks_count);
-                        $arr['stocks_price'] = implode("\r\n",$stocks_price);
+                        $sbjname = Subjects::getName($sto['entry_subject']);
+                        $arr['entry_subject'] = Subjects::model()->matchSubject($sbjname,[6401]);
+                        $arr['entry_transaction'] = 1;
+                        $arr['subject_2'] = $sto['entry_subject'];
+//                        $arr['order_no'] = trim($items['A']);
+//                        $arr['entry_date'] = convertDate($items['B']);
+//                        $arr['entry_name'] = trim($items['C']);
+//                        $order = Product::model()->findByAttributes(['order_no'=>$arr['order_no']]);
+//                        if($order!=null){
+//                            $arr['entry_subject'] = Subjects::model()->matchSubject('材料',[6401]);
+//                            $arr['client_id'] = $order->client_id;
+//                        }
+//                        $arr['entry_transaction'] = 1;
+//                        $arr['stocks'] = '';
+//                        $arr['stocks_count'] = '';
+//                        $arr['stocks_price'] = '';
+//                        $amount = 0;
+//                        $stocks = [];
+//                        $subject_2 = [];
+//                        $stocks_count = [];
+//                        $stocks_price = [];
+//                        foreach(range('D', 'Z', 2) as $key){
+//                            if($items[$key]==null)
+//                                break;
+//                            $item = $items[$key];
+//                            $stocks[] = $item;
+//                            $price = Stock::model()->getPrice($item);
+//                            $stocks_price[] = $price;
+//                            //根据商品，判断购买时的采购用途，库存商品/材料、库存商品/耐用等，对subject_2和金额进行赋值
+//                            $stock = Stock::model()->matchStock($item, 1405);
+//                            $sbj = $stock->entry_subject;
+//                            $item = $items[++$key];
+//                            $stocks_count[] = $item;
+//                            $amount += $price*$item;
+//                            $subject_2[$sbj] = isset($subject_2[$sbj])?$subject_2[$sbj]+$price*$item:$price*$item;
+//                        }
+//                        $arr['subject_2'] = implode(',', array_keys($subject_2));
+//                        $arr['subject_2_price'] = implode(',',$subject_2);
+//                        $arr['stocks'] = implode("\r\n",$stocks);
+//                        $arr['stocks_count'] = implode("\r\n",$stocks_count);
+//                        $arr['stocks_price'] = implode("\r\n",$stocks_price);
                         break;
                     case 'salary':
                         $date = trim($items['D']);
@@ -1175,7 +1194,7 @@ class Transition extends CActiveRecord
 //        ['reject' => ['工资', '社保', '公积金', '折旧费', '研发费'],'prefix'=>'_'
         if(empty($options))
             $options = ['reject' => ['工资', '社保', '公积金', '折旧费', '研发费'],'prefix'=>'_'];
-        $result = $subject->getitem($arr, '_', $options);
+        $result = $subject->getitem($arr, '', $options);
         return $result;
     }
 

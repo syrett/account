@@ -50,11 +50,11 @@ class Stock extends LFSModel
         // will receive user inputs.
         return array(
             array('name, in_date, in_price', 'required'),
-            array('vendor_id', 'numerical', 'integerOnly' => true),
+            array('vendor_id, department_id, client_id', 'numerical', 'integerOnly' => true),
             array('in_price, out_price, value_month, value_rate', 'numerical'),
             array('order_no', 'length', 'max' => 16),
             array('name', 'length', 'max' => 512),
-            array('out_date, model, entry_subject, value_month, value_rate', 'safe'),
+            array('out_date, model, entry_subject, value_month, value_rate, cost_date, worth', 'safe'),
             // The following rule is used by search().
             array('id, hs_no, order_no, name, vendor_id, in_date, in_price, out_date, out_price, create_time, status', 'safe', 'on' => 'search'),
         );
@@ -85,6 +85,8 @@ class Stock extends LFSModel
             'model' => '型号',
             'entry_subject' => '种类',
             'vendor_id' => '供应商',
+            'client_id' => '客户',
+            'department_id' => '部门',
             'in_date' => '采购日期',
             'in_price' => '单价',
             'out_date' => '出库日期',
@@ -252,12 +254,32 @@ class Stock extends LFSModel
         return $arr;
     }
 
+    /*
+     * 成本结转
+     */
+    public function getStockArray2($sbj=''){
+        if(is_array($sbj)){
+            foreach ($sbj as $item) {
+                if(isset($where))
+                    $where .= " or entry_subject like '$item%'";
+                else
+                    $where = " entry_subject like '$item%'";
+            }
+
+        }elseif($sbj!=''){
+            $where = " 1=1 and entry_subject like '$sbj%'";
+        }
+        $data = self::model()->findAll(" ($where) and cost_date = '' group by concat(name, model)");
+        return $data;
+    }
+
     public function load($item, $type='purchase'){
         if($type=='purchase'){
             $this->setAttribute('order_no', $item['order_no']);
             $this->setAttribute('name', $item['entry_name']);
             $this->setAttribute('model', $item['model']);
             $this->setAttribute('vendor_id', $item['vendor_id']);
+            $this->setAttribute('department_id', $item['department_id']);
             $this->setAttribute('entry_subject', $item['entry_subject']);
             $this->setAttribute('in_date', $item['entry_date']);
             $this->setAttribute('in_price', $item['price']);
@@ -317,8 +339,11 @@ class Stock extends LFSModel
             'name'  =>  $this->name,
             'model'  =>  $this->model,
             'vendor_id'  =>  $this->vendor_id,
+            'client_id'  =>  $this->client_id,
+            'department_id'  =>  $this->department_id,
             'in_date'  =>  $this->in_date?$this->in_date:Condom::model()->getStartTime().'01',
             'in_price'  =>  str_replace(',','',$this->in_price),
+            'worth' => str_replace(',','',$this->worth),
             'value_month'  =>  $this->value_month,
             'value_rate'  =>  $this->value_rate,
         ];
@@ -504,28 +529,67 @@ class Stock extends LFSModel
         $model = new Stock();
         $count = 0 ;
         switch($type){
-            case '固定资产':    //1601
+            case '固定资产':    //1601 1701 1801
                 if(!empty($items['B'])!=''&&$items['C']!=''&&$items['D']!=''&&$items['E']!=''){
                     $model->name = $items['B'];
                     $model->model = $items['C'];
                     $count = intval($items['D']);
                     $model->in_price = $items['E'];
-                    $model->value_month = $items['F'];
-                    $model->value_rate = $items['G'];
-                    $model->entry_subject = Subjects::matchSubject($items['H'], '1601');
+                    $model->worth = $items['E'] - $items['F'];
+                    $model->value_month = $items['G'];
+                    $model->value_rate = $items['H'];
+                    $sbj = Subjects::findSubject(preg_replace('/.*\//','',$items['I']), ['1601','1701','1801']);
+                    $model->entry_subject = $sbj?$sbj[0]['sbj_number']:'';
+                    $model->department_id = Department::model()->findByAttributes(['name'=>$items['J']]);
+                }elseif(isset($items['name'])){
+                    $model->attributes = $items;
+                    $count = $items['count'];
                 }
-            break;
-            case '库存商品':    //1601
+                break;
+            case '库存商品':    //1405 1403
                 if(!empty($items['B'])!=''&&$items['C']!=''&&$items['D']!=''&&$items['E']!=''){
                     $model->name = $items['B'];
                     $model->model = $items['C'];
                     $count = intval($items['D']);
                     $model->in_price = $items['E'];
+                    $sbj = Subjects::findSubject(preg_replace('/.*\//','',$items['F']), ['1403','1405']);
+                    $model->entry_subject = $sbj?$sbj[0]['sbj_number']:'';
+                }elseif(isset($items['name'])){
+                    $model->attributes = $items;
+                    $count = $items['count'];
                 }
+                break;
+            default:
                 break;
 
         }
         return ['count'=>$count, $model];
+    }
 
+    /*
+     * 科目的期初净值
+     */
+    public function get_balance($sbj){
+        $stocks = $this->findAllByAttributes([],"order_no is null and entry_subject like '$sbj%'");
+        $balance = 0;
+        if(!empty($stocks)){
+            foreach ($stocks as $item) {
+                $worth = explode(',', $item['worth']);
+                $balance += $worth[0]>0?$worth[0]:$item['in_price'];
+            }
+        }
+        return $balance;
+    }
+
+    /*
+     * 科目期初余额是否相等
+     */
+    public function check_balance($sbj){
+        $sbalance = $this->get_balance($sbj);
+        $tbalance = Subjects::get_balance($sbj);
+        if($sbalance==$tbalance)
+            return true;
+        else
+            return false;
     }
 }

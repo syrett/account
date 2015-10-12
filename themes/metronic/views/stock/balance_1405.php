@@ -24,7 +24,8 @@ $form = $this->beginWidget('CActiveForm', array(
 
 $subject_array = Subjects::model()->listSubjects('1403');
 $subject_array += Subjects::model()->listSubjects('1405');
-$balance = Subjects::get_balance('1405');
+$balance_1403 = Subjects::get_balance('1403');
+$balance_1405 = Subjects::get_balance('1405');
 ?>
     <div class="portlet light">
 
@@ -44,7 +45,7 @@ $balance = Subjects::get_balance('1405');
             </div>
         </div>
         <div class="row">
-            <div class="alert alert-info">提示：录入本模块前，请先完成总账期初余额设置</div>
+            <div class="alert alert-info">提示：录入本模块前，请先完成总账期初余额设置。本模块必须一次性全部导入。</div>
         </div>
         <div class="portlet-body">
             <div class="col-md-4 col-sm-12">
@@ -65,7 +66,7 @@ $balance = Subjects::get_balance('1405');
             <div class="col-md-4 col-sm-12">
                 <div class="btn-toolbar margin-bottom-10">
                     <button type="submit" class="btn btn-default btn-file">导入</button>
-                    <a download="" href="/download/库存商品期初数据.xlsx">
+                    <a download="" href="<?=$this->createUrl('/Stock/excel1405') ?>">
                         <button class="btn btn-default btn-file" type="button">模板下载
                         </button>
                     </a>
@@ -105,7 +106,7 @@ $balance = Subjects::get_balance('1405');
 
     <div class="form-group">
         <div class="col-sm-2">
-            <span class="">期初余额:<label id="balance"><?= $balance ?></label></span>
+            <span class="">库存商品期初余额:<label id="balance"><?= $balance_1405 ?></label></span>
             <span class="">当前合计:<label id="total"></label></span>
         </div>
     </div>

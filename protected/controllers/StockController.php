@@ -184,9 +184,9 @@ class StockController extends Controller
 	}
 
     /*
-     * excel导出模板，测试
+     * excel导出库存模板
      */
-    public function actionExcel(){
+    public function actionExcel1(){
         Yii::import('ext.phpexcel.PHPExcel');
         $products = Product::model()->listOrder();
         $stocks = Stock::model()->getStockArray('1405');    //采购的商品才显示，固定资产类的名称不显示
@@ -195,7 +195,7 @@ class StockController extends Controller
         if(!empty($stocks)){
             foreach ($stocks as $key => $stock) {
                 if($stockName!='"')
-                $stockName .= ",$key";
+                    $stockName .= ",$key";
                 else
                     $stockName .= "$key";
             }
@@ -256,6 +256,191 @@ class StockController extends Controller
             }
 
         }
+        header("Pragma: public");
+        header("Expires: 0");
+        header("Cache-Control:must-revalidate, post-check=0, pre-check=0");
+        header("Content-Type:application/force-download");
+        header("Content-Type:application/vnd.ms-execl");
+        header("Content-Type:application/octet-stream");
+        header("Content-Type:application/download");
+        header("Content-Disposition:attachment;filename='$filename.xls'");
+        header("Content-Transfer-Encoding:binary");
+        $objWriter->save('php://output');
+    }
+
+    public function actionExcel(){
+        Yii::import('ext.phpexcel.PHPExcel');
+        $stocks = Stock::model()->getStockArray2(['1403','1405']);    //采购的商品才显示，固定资产类的名称不显示
+        $filename = '结转成本盘点库存';
+        $objExcel = new PHPExcel();
+        $objWriter = new PHPExcel_Writer_Excel5($objExcel);
+        $objExcel->setActiveSheetIndex(0);
+        $objActSheet = $objExcel->getActiveSheet();
+        $objActSheet->getCell('A1')->setValue('日期('.date('Ym').')');
+        $objActSheet->getCell('B1')->setValue('名称');
+        $objActSheet->getCell('C1')->setValue('型号');
+        $objActSheet->getCell('D1')->setValue('库存盘点数量');
+        if($stocks!=null&&!empty($stocks)){
+            foreach ($stocks as $key => $item) {
+                $row = $key + 2;
+                $objActSheet->getCell("B$row")->setValue($item['name']);
+                $objActSheet->getCell("C$row")->setValue($item['model']);
+            }
+        }
+
+        $objActSheet->getColumnDimension('A')->setWidth(14);
+        foreach(range('B','D') as $column){
+            $objActSheet->getColumnDimension($column)->setWidth(15);
+        }
+        header("Pragma: public");
+        header("Expires: 0");
+        header("Cache-Control:must-revalidate, post-check=0, pre-check=0");
+        header("Content-Type:application/force-download");
+        header("Content-Type:application/vnd.ms-execl");
+        header("Content-Type:application/octet-stream");
+        header("Content-Type:application/download");
+        header("Content-Disposition:attachment;filename='$filename.xls'");
+        header("Content-Transfer-Encoding:binary");
+        $objWriter->save('php://output');
+    }
+
+    public function actionExcel1601(){
+        Yii::import('ext.phpexcel.PHPExcel');
+        $subject_array = Subjects::model()->listSubjects('1601');
+        $subject_array += Subjects::model()->listSubjects('1701');
+        $subject_array += Subjects::model()->listSubjects('1801');
+        $filename = '固定资产期初余额';
+        $subjectName = '"';
+        if(!empty($subject_array)){
+            foreach ($subject_array as $key => $stock) {
+                if($subjectName!='"')
+                    $subjectName .= ",$stock";
+                else
+                    $subjectName .= "$stock";
+            }
+            $subjectName .= '"';
+        }
+        //部门
+        $depart = Department::model()->findAll();
+        $departName = '"';
+        if(!empty($depart)){
+            foreach ($depart as $item) {
+                if($departName != '"')
+                    $departName .= ",$item->name";
+                else
+                    $departName .= "$item->name";
+            }
+            $departName .= '"';
+        }
+        //要把数字去掉，否则无法生成excel,
+        $subjectName = preg_replace('/\d/', '', $subjectName);
+        $objExcel = new PHPExcel();
+        $objWriter = new PHPExcel_Writer_Excel5($objExcel);
+        $objExcel->setActiveSheetIndex(0);
+        $objActSheet = $objExcel->getActiveSheet();
+        $objActSheet->getCell('A1')->setValue('编号');
+        $objActSheet->getCell('B1')->setValue('名称');
+        $objActSheet->getCell('C1')->setValue('型号');
+        $objActSheet->getCell('D1')->setValue('数量');
+        $objActSheet->getCell('E1')->setValue('单位原值');
+        $objActSheet->getCell('F1')->setValue('已计提折旧金额');
+        $objActSheet->getCell('G1')->setValue('剩余折旧摊销月份');
+        $objActSheet->getCell('H1')->setValue('残值率%');
+        $objActSheet->getCell('I1')->setValue('分类');
+        $objActSheet->getCell('J1')->setValue('部门');
+        $i = 1;
+        while($i<=50){
+            if($subjectName!='""'){
+                $objValidation = $objActSheet->getCell("I$i")->getDataValidation(); //这一句为要设置数据有效性的单元格
+                $objValidation -> setType(PHPExcel_Cell_DataValidation::TYPE_LIST)
+                    -> setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION)
+                    -> setAllowBlank(false)
+                    -> setShowInputMessage(true)
+                    -> setShowErrorMessage(true)
+                    -> setShowDropDown(true)
+                    -> setErrorTitle('输入的值有误')
+                    -> setError('您输入的值不在物品列表内，请重新选择')
+                    -> setPromptTitle('物品名称')
+                    -> setFormula1($subjectName); //'"列表项1,列表项2,列表项3"'
+            }
+            if($departName!='""'){
+                $objValidation = $objActSheet->getCell("J$i")->getDataValidation(); //这一句为要设置数据有效性的单元格
+                $objValidation -> setType(PHPExcel_Cell_DataValidation::TYPE_LIST)
+                    -> setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION)
+                    -> setAllowBlank(false)
+                    -> setShowInputMessage(true)
+                    -> setShowErrorMessage(true)
+                    -> setShowDropDown(true)
+                    -> setErrorTitle('输入的值有误')
+                    -> setError('您输入的值不在物品列表内，请重新选择')
+                    -> setPromptTitle('部门名称')
+                    -> setFormula1($departName); //'"列表项1,列表项2,列表项3"'
+            }
+            $i++;
+
+        }
+        //设置自动宽度，中文不起作用
+        $objActSheet->getColumnDimension('F')->setWidth(17);
+        $objActSheet->getColumnDimension('G')->setWidth(20);
+        $objActSheet->getColumnDimension('I')->setWidth(24);
+        $objActSheet->getColumnDimension('J')->setWidth(17);
+        header("Pragma: public");
+        header("Expires: 0");
+        header("Cache-Control:must-revalidate, post-check=0, pre-check=0");
+        header("Content-Type:application/force-download");
+        header("Content-Type:application/vnd.ms-execl");
+        header("Content-Type:application/octet-stream");
+        header("Content-Type:application/download");
+        header("Content-Disposition:attachment;filename='$filename.xls'");
+        header("Content-Transfer-Encoding:binary");
+        $objWriter->save('php://output');
+    }
+
+    public function actionExcel1405(){
+        Yii::import('ext.phpexcel.PHPExcel');
+        $subject_array = Subjects::model()->listSubjects('1405');
+        $subject_array += Subjects::model()->listSubjects('1403');
+        $filename = '库存商品期初余额';
+        $subjectName = '"';
+        if(!empty($subject_array)){
+            foreach ($subject_array as $key => $stock) {
+                if($subjectName!='"')
+                    $subjectName .= ",$stock";
+                else
+                    $subjectName .= "$stock";
+            }
+            $subjectName .= '"';
+        }
+        //要把数字去掉，否则无法生成excel,
+        $subjectName = preg_replace('/\d/', '', $subjectName);
+        $objExcel = new PHPExcel();
+        $objWriter = new PHPExcel_Writer_Excel5($objExcel);
+        $objExcel->setActiveSheetIndex(0);
+        $objActSheet = $objExcel->getActiveSheet();
+        $objActSheet->getCell('A1')->setValue('编号');
+        $objActSheet->getCell('B1')->setValue('名称');
+        $objActSheet->getCell('C1')->setValue('型号');
+        $objActSheet->getCell('D1')->setValue('数量');
+        $objActSheet->getCell('E1')->setValue('单位原值');
+        $objActSheet->getCell('F1')->setValue('分类');
+        $i = 1;
+        while($i<=50){
+            $objValidation = $objActSheet->getCell("F$i")->getDataValidation(); //这一句为要设置数据有效性的单元格
+            $objValidation -> setType(PHPExcel_Cell_DataValidation::TYPE_LIST)
+                -> setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION)
+                -> setAllowBlank(false)
+                -> setShowInputMessage(true)
+                -> setShowErrorMessage(true)
+                -> setShowDropDown(true)
+                -> setErrorTitle('输入的值有误')
+                -> setError('您输入的值不在物品列表内，请重新选择')
+                -> setPromptTitle('物品名称')
+                -> setFormula1($subjectName); //'"列表项1,列表项2,列表项3"'
+            $i++;
+
+        }
+        //设置自动宽度，中文不起作用
+        $objActSheet->getColumnDimension('F')->setWidth(24);
         header("Pragma: public");
         header("Expires: 0");
         header("Cache-Control:must-revalidate, post-check=0, pre-check=0");
@@ -353,6 +538,9 @@ class StockController extends Controller
      */
     public function actionBalance_1405(){
 
+        $stocks = Stock::model()->find(['condition'=>'order_no is null and (entry_subject like "1403%" or entry_subject like "1405%")']);
+        if($stocks)
+            $this->redirect(['balance','type'=>1405]);
         Yii::import('ext.phpexcel.PHPExcel.PHPExcel_IOFactory');
         if (Yii::app()->request->isPostRequest) {
             //上传附件查看
@@ -362,22 +550,47 @@ class StockController extends Controller
                 //去除第一行
                 array_shift($list);
                 foreach($list as $item){
-                    $sheetData[] = Stock::getSheetData('库存商品', $item);
+                    $arr = Stock::getSheetData('库存商品', $item);
+                    if($arr['count'] != 0)
+                        $sheetData[] = $arr;
                 }
+
             } elseif($_FILES['attachment']['name']==''){
                 $lists = $_POST['Stock'];
-                foreach ($lists as $item) {
-                    $stock = new Stock();
-                    $stock->attributes = $item;
-                    $stock->entry_subject = '1405';
-                    if(!$stock->saveMultiple($item['count']))
-                        $sheetData[] = ['count'=>$item['count'], $stock];
+                //先判断每类科目金额是否和总账期初余额相等
+
+                $subject_array = Subjects::model()->listSubjects('1403');
+                $subject_array += Subjects::model()->listSubjects('1405');
+                foreach ($subject_array as $item => $subject) {
+                    //筛选分类和$item相同科目的行，然后计算金额是否与总账相等
+                    $rows = array_filter($lists, function ($v) use ($item) {
+                        return $v['entry_subject'] == $item;
+                    });
+                    $amount = 0;
+                    foreach ($rows as $row) {
+                        $amount += $row['in_price'] * $row['count'];
+                    }
+                    //计算科目期初余额
+                    $balance = Subjects::get_balance($item);
+                    if($balance != $amount){
+                        Yii::app()->user->setFlash('error', Subjects::getSbjPath($item).' 金额与总账期初余额不相等');
+                        foreach ($lists as $row) {
+                            $sheetData[] = Stock::getSheetData('库存商品', $row);
+                        }
+                        break;
+                    }
                 }
+                if(!isset($sheetData))
+                    foreach ($lists as $item) {
+                        $stock = new Stock();
+                        $stock->attributes = $item;
+                        if(!$stock->saveMultiple($item['count']))
+                            $sheetData[] = ['count'=>$item['count'], $stock];
+                    }
                 if(empty($sheetData)){
                     Yii::app()->user->setFlash('success', "添加成功!");
-                }else
-                    Yii::app()->user->setFlash('error', "添加失败!");
-
+                    $this->redirect(['balance','type'=>1405]);
+                }
             }
         }
 
@@ -391,7 +604,10 @@ class StockController extends Controller
      * 固定资产期初余额
      */
     public function actionBalance_1601(){
-
+        //检查是否导入过固定资产的期初，已经导入过就直接跳转到查看页面
+        $stocks = Stock::model()->find(['condition'=>'order_no is null and (entry_subject like "1601%" or entry_subject like "1701%" or entry_subject like "1801%")']);
+        if($stocks)
+            $this->redirect(['balance','type'=>1601]);
         Yii::import('ext.phpexcel.PHPExcel.PHPExcel_IOFactory');
         if (Yii::app()->request->isPostRequest) {
             //上传附件查看
@@ -401,20 +617,47 @@ class StockController extends Controller
                 //去除第一行
                 array_shift($list);
                 foreach($list as $item){
-                    $sheetData[] = Stock::getSheetData('固定资产', $item);
+                    $arr = Stock::getSheetData('固定资产', $item);
+                    if($arr['count'] != 0)
+                        $sheetData[] = $arr;
                 }
             } elseif($_FILES['attachment']['name']==''){
                 $lists = $_POST['Stock'];
-                foreach ($lists as $item) {
-                    $stock = new Stock();
-                    $stock->attributes = $item;
-                    if(!$stock->saveMultiple($item['count']))
-                        $sheetData[] = ['count'=>$item['count'], $stock];
+                //先判断每类科目金额是否和总账期初余额相等
+
+                $subject_array = Subjects::model()->listSubjects('1601');
+                $subject_array += Subjects::model()->listSubjects('1701');
+                $subject_array += Subjects::model()->listSubjects('1801');
+                foreach ($subject_array as $item => $subject) {
+                    //筛选分类和$item相同科目的行，然后计算金额是否与总账相等
+                    $rows = array_filter($lists,function($v) use ($item){
+                        return $v['entry_subject']==$item;
+                    });
+                    $amount = 0;
+                    foreach ($rows as $row) {
+                        $amount += $row['worth']*$row['count'];
+                    }
+                    //计算科目期初余额
+                    $balance = Subjects::get_balance($item);
+                    if($balance != $amount){
+                        Yii::app()->user->setFlash('error', Subjects::getSbjPath($item).' 金额与总账期初余额不相等');
+                        foreach ($lists as $row) {
+                            $sheetData[] = Stock::getSheetData('固定资产', $row);
+                        }
+                        break;
+                    }
                 }
+                if(!isset($sheetData))
+                    foreach ($lists as $item) {
+                        $stock = new Stock();
+                        $stock->attributes = $item;
+                        if(!$stock->saveMultiple($item['count']))
+                            $sheetData[] = ['count'=>$item['count'], $stock];
+                    }
                 if(empty($sheetData)){
                     Yii::app()->user->setFlash('success', "添加成功!");
-                }else
-                    Yii::app()->user->setFlash('error', "添加失败!");
+                    $this->redirect(['balance','type'=>1601]);
+                }
 
             }
         }
@@ -423,5 +666,32 @@ class StockController extends Controller
             $sheetData[] = Stock::getSheetData('固定资产','');
         }
         $this->render('balance_1601',['sheetData' => $sheetData]);
+    }
+
+    public function actionTruncate(){
+
+        if(isset(Yii::app()->request->isAjaxRequest)) {
+
+            $post = Transition::model()->findByAttributes(['entry_posting'=>1]);
+            if($post)
+                $result = ['status'=>'failed','msg'=>'有商品已经成本结转或出库，或已经过账，无法清空'];
+            else{
+                $type = $_POST['type'];
+                if($type=='1601'){
+                    $condition = 'order_no is null and (entry_subject like "1601%" or entry_subject like "1701%" or entry_subject like "1801%") ';
+                }elseif($type=='1405'){
+                    $condition = 'order_no is null and (entry_subject like "1403%" or entry_subject like "1405%")';
+                }
+                //已经成本结转或出库或已经过账，无法清空
+                $cost = Stock::model()->findByAttributes([],$condition. " and (cost_date != '' or status != 1)");
+                if(!$cost){
+                    Stock::model()->deleteAllByAttributes(['status'=>1, 'cost_date'=>''],$condition);
+                    $result = ['status'=>'success','msg'=>'成功清空期初余额'];
+                }
+                else
+                    $result = ['status'=>'failed','msg'=>'有商品已经成本结转或出库，或已经过账，无法清空'];
+            }
+            echo json_encode($result);
+        }
     }
 }
