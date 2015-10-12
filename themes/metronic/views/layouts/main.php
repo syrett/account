@@ -28,35 +28,25 @@ $baseUrl = Yii::app()->theme->baseUrl;
     <meta content="适合小微企业的在线财务管理系统" name="description"/>
     <meta content="老法师（上海）财务咨询有限公司" name="author"/>
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
-    <link href="http://fonts.useso.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet"
-          type="text/css"/>
-    <link href="<?php echo $baseUrl; ?>/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet"
-          type="text/css"/>
-    <link href="<?php echo $baseUrl; ?>/assets/global/plugins/simple-line-icons/simple-line-icons.min.css"
-          rel="stylesheet" type="text/css"/>
-    <link href="<?php echo $baseUrl; ?>/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet"
-          type="text/css"/>
-    <link href="<?php echo $baseUrl; ?>/assets/global/plugins/uniform/css/uniform.default.css" rel="stylesheet"
-          type="text/css"/>
-    <link href="<?php echo $baseUrl; ?>/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css"
-          rel="stylesheet" type="text/css"/>
+    <link href="http://fonts.useso.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"/>
+    <link href="<?php echo $baseUrl; ?>/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="<?php echo $baseUrl; ?>/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css"/>
+    <link href="<?php echo $baseUrl; ?>/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="<?php echo $baseUrl; ?>/assets/global/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
+    <link href="<?php echo $baseUrl; ?>/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css"/>
     <!-- END GLOBAL MANDATORY STYLES -->
     <!-- BEGIN THEME STYLES -->
     <link href="<?php echo $baseUrl; ?>/assets/global/css/components.css" rel="stylesheet" type="text/css"/>
     <link href="<?php echo $baseUrl; ?>/assets/global/css/plugins.css" rel="stylesheet" type="text/css"/>
     <link href="<?php echo $baseUrl; ?>/assets/admin/layout/css/layout.css" rel="stylesheet" type="text/css"/>
-    <link href="<?php echo $baseUrl; ?>/assets/admin/layout/css/themes/blue.css" rel="stylesheet" type="text/css"
-          id="style_color"/>
+    <link href="<?php echo $baseUrl; ?>/assets/admin/layout/css/themes/blue.css" rel="stylesheet" type="text/css" id="style_color"/>
     <link href="<?php echo $baseUrl; ?>/assets/admin/layout/css/custom.css" rel="stylesheet" type="text/css"/>
     <!-- END THEME STYLES -->
     <!-- Fav and Touch and touch icons -->
     <link rel="shortcut icon" href="<?php echo $baseUrl; ?>/assets/admin/layout/img/favicon.png">
-    <link rel="apple-touch-icon-precomposed" sizes="144x144"
-          href="<?php echo $baseUrl; ?>/assets/admin/layout/img/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72"
-          href="<?php echo $baseUrl; ?>/assets/admin/layout/img/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed"
-          href="<?php echo $baseUrl; ?>/assets/admin/layout/img/apple-touch-icon-57-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="<?php echo $baseUrl; ?>/assets/admin/layout/img/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="<?php echo $baseUrl; ?>/assets/admin/layout/img/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="<?php echo $baseUrl; ?>/assets/admin/layout/img/apple-touch-icon-57-precomposed.png">
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
@@ -69,8 +59,7 @@ $baseUrl = Yii::app()->theme->baseUrl;
 <!-- DOC: Apply "page-footer-fixed" class to the body element to have fixed footer -->
 <!-- DOC: Apply "page-sidebar-reversed" class to put the sidebar on the right side -->
 <!-- DOC: Apply "page-full-width" class to the body element to have full width page without the sidebar menu -->
-<body
-    class="page-md page-boxed page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed-hide-logo">
+<body class="page-md page-boxed page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed-hide-logo">
 <!-- BEGIN HEADER -->
 <div class="page-header md-shadow-z-1-i navbar navbar-fixed-top">
     <!-- BEGIN HEADER INNER -->
@@ -114,7 +103,8 @@ $baseUrl = Yii::app()->theme->baseUrl;
                                     <i class="icon-info"></i> 账套信息</a>
                             </li>
                             <li>
-                                <a href="<?= $this->createUrl('options/setting') ?>">
+                                <!-- <?= $this->createUrl('options/setting') ?> -->
+                                <a href="" data-target="#static" data-toggle="modal">
                                     <i class="icon-equalizer"></i> 参数设置</a>
                             </li>
                             <li>
@@ -349,6 +339,148 @@ $baseUrl = Yii::app()->theme->baseUrl;
     <!-- END HEADER INNER -->
 </div>
 <!-- END HEADER -->
+
+<!-- BEGIN SYSTEM CONFIGURATION BOX -->
+<div class="modal fade" id="static" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+				<h4 class="modal-title">参数设置</h4>
+			</div>
+			<div class="modal-body">
+				<?php echo CHtml::beginForm(); ?>
+				<div class="scroller" style="height:80%" data-always-visible="1" data-rail-visible1="1">
+				<div class="tabbable tabs-right">
+					<ul class="nav nav-tabs">
+						<li class="active">
+							<a href="#tab_15_1" data-toggle="tab" aria-expanded="true">
+									<i class="fa fa-cogs"></i> 折旧或摊销年限(年)
+							</a>
+						</li>
+						<li>
+							<a href="#tab_15_2" data-toggle="tab" aria-expanded="true">
+									<i class="fa fa-cogs"></i> 残值率(%)
+							</a>
+						</li>
+						<li>
+							<a href="#tab_15_3" data-toggle="tab" aria-expanded="true">
+									<i class="fa fa-cogs"></i> 附加税税率(%)
+							</a>
+						</li>
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane active" id="tab_15_1">
+							<?
+							$arr = ['1601', '1701', '1801'];
+
+							foreach ($arr as $item) {
+								$sbj = Subjects::model()->findByAttributes(['sbj_number' => $item]);
+								if ($sbj->has_sub == 1) {
+									$lists = Subjects::model()->list_sub($item);
+								} else
+									$lists = [$sbj->attributes];
+								foreach ($lists as $list) {
+									$option = Options::model()->findByAttributes(['entry_subject' => $list['sbj_number']]);
+									$value = $option == null ? 0 : $option->year;
+									?>
+									<div class="form-group form-horizontal">
+
+										<label class="col-sm-3 control-label"><?= $list['sbj_name'] ?></label>
+
+										<div class="input-group col-sm-4">
+											<input type="text" class="form-control"
+												   name="Options[<?= $list['sbj_number'] ?>][year]"
+												   value="<?= $value ?>">
+										</div>
+									</div>
+								<?
+
+								}
+							}
+							?>
+						</div>
+						<div class="tab-pane" id="tab_15_2">
+							<?
+							$arr = ['1601'];
+
+							foreach ($arr as $item) {
+								$sbj = Subjects::model()->findByAttributes(['sbj_number' => $item]);
+								if ($sbj->has_sub == 1) {
+									$lists = Subjects::model()->list_sub($item);
+								} else
+									$lists = [$sbj->attributes];
+								foreach ($lists as $list) {
+									$option = Options::model()->findByAttributes(['entry_subject' => $list['sbj_number']]);
+									$value = $option == null ? 0 : $option->value;
+									?>
+									<div class="form-group form-horizontal">
+										<label class="col-sm-3 control-label"><?= $list['sbj_name'] ?></label>
+										<div class="input-group col-sm-4">
+											<input type="text" class="form-control"
+												   name="Options[<?= $list['sbj_number'] ?>][value]"
+												   value="<?= $value ?>">
+										</div>
+									</div>
+								<?
+
+								}
+							}
+							?>
+						</div>
+						<div class="tab-pane" id="tab_15_3">
+							<?
+							$arr = [];
+							//应交税费/城建税，教育费附加，地方教育费附加；其他应付款/河道管理费
+							$list = ['2221'=>'城建税,教育费附加,地方教育费附加','2241'=>'河道管理费'];
+							foreach($list as $key => $item){
+								$keys = explode(',', $item);
+								foreach($keys as $name){
+									$sbj = Subjects::matchSubject($name, $key);
+									if($sbj)
+										$arr[] = $sbj;
+								}
+							}
+
+							foreach ($arr as $item) {
+								$sbj = Subjects::model()->findByAttributes(['sbj_number' => $item]);
+								if ($sbj->has_sub == 1) {
+									$lists = Subjects::model()->list_sub($item);
+								} else
+									$lists = [$sbj->attributes];
+								foreach ($lists as $list) {
+									$option = Options::model()->findByAttributes(['entry_subject' => $list['sbj_number']]);
+									$value = $option == null ? 0 : $option->value;
+									?>
+									<div class="form-group form-horizontal">
+										<label class="col-sm-3 control-label"><?= $list['sbj_name'] ?></label>
+										<div class="input-group col-sm-4">
+											<input type="text" class="form-control"
+												   name="Options[<?= $list['sbj_number'] ?>][value]"
+												   value="<?= $value ?>">
+										</div>
+									</div>
+								<?
+
+								}
+							}
+							?>
+						</div>
+					</div>
+				</div>
+				</div><!-- .scroller -->
+				<div class="modal-footer">
+					<?php
+					echo CHtml::tag('button', array('encode' => false, 'class' => 'btn btn-primary',), '<span class="glyphicon glyphicon-floppy-disk"></span> 保存');
+					?>
+				</div>
+				<?php echo CHtml::endForm(); ?>
+			</div><!-- .modal-body -->
+		</div>
+	</div>
+</div>
+<!-- END SYSTEM CONFIGURATION BOX -->
+
 <div class="clearfix">
 </div>
 
@@ -550,21 +682,17 @@ $baseUrl = Yii::app()->theme->baseUrl;
 <script src="<?php echo $baseUrl;?>/assets/global/plugins/respond.min.js"></script>
 <script src="<?php echo $baseUrl;?>/assets/global/plugins/excanvas.min.js"></script>
 <![endif]-->
+<script src="<?php echo $baseUrl; ?>/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
 <script src="<?php echo $baseUrl; ?>/assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
 <!-- IMPORTANT! Load jquery-ui.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
 <script src="<?php echo $baseUrl; ?>/assets/global/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
-<script src="<?php echo $baseUrl; ?>/assets/global/plugins/bootstrap/js/bootstrap.min.js"
-        type="text/javascript"></script>
-<script src="<?php echo $baseUrl; ?>/assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js"
-        type="text/javascript"></script>
-<script src="<?php echo $baseUrl; ?>/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js"
-        type="text/javascript"></script>
+<script src="<?php echo $baseUrl; ?>/assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="<?php echo $baseUrl; ?>/assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
+<script src="<?php echo $baseUrl; ?>/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
 <script src="<?php echo $baseUrl; ?>/assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
 <script src="<?php echo $baseUrl; ?>/assets/global/plugins/jquery.cokie.min.js" type="text/javascript"></script>
-<script src="<?php echo $baseUrl; ?>/assets/global/plugins/uniform/jquery.uniform.min.js"
-        type="text/javascript"></script>
-<script src="<?php echo $baseUrl; ?>/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js"
-        type="text/javascript"></script>
+<script src="<?php echo $baseUrl; ?>/assets/global/plugins/uniform/jquery.uniform.min.js" type="text/javascript"></script>
+<script src="<?php echo $baseUrl; ?>/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
 <!-- END CORE PLUGINS -->
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <script src="<?php echo $baseUrl; ?>/assets/global/scripts/metronic.js" type="text/javascript"></script>
