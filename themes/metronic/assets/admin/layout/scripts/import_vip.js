@@ -490,9 +490,10 @@ function setTax(item_id, type) {
         name = '销项';
     else if (type == 'purchase')
         name = '进项';
+    var sbj2221 = createSubject({name:'增值税',subject:2221});
     var data = {
         name: name,
-        subject: 222101
+        subject: sbj2221
     }
     if (tax == 5) //  5% 为营业税专有税率，借营业税金及附加/营业税，贷应交税金/营业税，不需要单独再计算税
         $("#withtax_" + item_id).val(0);

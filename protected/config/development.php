@@ -264,8 +264,6 @@ return array(
             array("id" => 52, "name" => "盈余公积", "subjects" => array(4101, 4102), "to" => "parent_owner", "function" => "sum"),
             array("id" => 53, "name" => "未分配利润", "subjects" => array(4103, 4104), "to" => "parent_owner", "function" => "sum"),
             array("id" => 54, "name" => "减:库存股", "subjects" => array(4201), "to" => "parent_owner", "function" => "sum"),
-
-
         ),
     ),
 );
