@@ -682,7 +682,6 @@ $baseUrl = Yii::app()->theme->baseUrl;
 <script src="<?php echo $baseUrl;?>/assets/global/plugins/respond.min.js"></script>
 <script src="<?php echo $baseUrl;?>/assets/global/plugins/excanvas.min.js"></script>
 <![endif]-->
-<script src="<?php echo $baseUrl; ?>/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
 <script src="<?php echo $baseUrl; ?>/assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
 <!-- IMPORTANT! Load jquery-ui.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
 <script src="<?php echo $baseUrl; ?>/assets/global/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
