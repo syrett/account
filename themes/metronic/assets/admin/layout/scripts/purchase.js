@@ -18,7 +18,7 @@ $(window).load(function () {
             var row = key;
             if (in_array(sbj.substr(1, 4), arr)) {
                 department_id_show = true;
-                $("select[id='department_id_" + row + "']").select2();
+                $("select[id='department_id_" + row + "']").show().select2();
             } else
                 $("select[id='department_id_" + row + "']").select2("destroy").hide();
         })

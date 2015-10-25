@@ -164,6 +164,8 @@ class Department extends CActiveRecord
      * 根据部门判断，工资或资金应该返回什么科目
      */
     public static function matchSubject($department_id, $sbj_name){
+        if($department_id==''||$department_id==0)
+            return 0;
         $exception = ['办公费','印花税']; //此数组里的项目，都是管理费用的子科目
         if(in_array($sbj_name, $exception))
             $result = Subjects::matchSubject($sbj_name, 6602);

@@ -162,7 +162,9 @@ $cs->registerScript('ChartsFlotchartsInitPie',$expense_income_data, CClientScrip
 						<div class="row">
 							<div class="col-md-6">
 								<div class="col-md-3 col-xs-3">
-									<img src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/balance_report.jpg'; ?>" class="img-responsive img-thumbnail" />
+                                    <a href="<?= $this->createUrl('report/balance') ?>">
+                                        <img src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/balance_report.jpg'; ?>" class="img-responsive img-thumbnail" />
+                                    </a>
 								</div>
 								<div class="col-md-9">
 									<h4 class="media-heading"><a href="<?= $this->createUrl('report/balance') ?>">资产负债表</a></h4>
@@ -171,7 +173,9 @@ $cs->registerScript('ChartsFlotchartsInitPie',$expense_income_data, CClientScrip
 							</div>
 							<div class="col-md-6">
 								<div class="col-md-3 col-xs-3">
-									<img src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/profit_report.jpg'; ?>" class="img-thumbnail" />
+                                    <a href="<?= $this->createUrl('report/profit') ?>">
+                                        <img src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/profit_report.jpg'; ?>" class="img-thumbnail" />
+                                    </a>
 								</div>
 								<div class="col-md-9">
 									<h4 class="media-heading"><a href="<?= $this->createUrl('report/profit') ?>">损益表</a></h4>
@@ -179,34 +183,54 @@ $cs->registerScript('ChartsFlotchartsInitPie',$expense_income_data, CClientScrip
 							 	</div>
 							</div>
 						</div>
-						<p>&nbsp;</p>
-						<div class="row">
-							<div class="col-md-6">
-								<div class="col-md-3 col-xs-3">
-									<img src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/subjects_report.jpg'; ?>" class="img-thumbnail" />								
-								</div>
-								<div class="col-md-8">
-									<h4 class="media-heading"><a href="<?= $this->createUrl('report/subjects') ?>">科目余额表</a></h4>
-									<p>按照总账科目余额编制的。<br />资产类科目：期末借方余额=期初借方余额+本期借方发生额-本期贷方发生额；<br />负债及所有者权益类科目：期末贷方余额=期初贷方余额+本期贷方发生额-本期借方发生额。</p>
-							 	</div>
-							</div>
-							<div class="col-md-6">
-								<div class="col-md-3 col-xs-3">
-									<img src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/detail_report.jpg'; ?>" class="img-thumbnail" />								
-								</div>
-								<div class="col-md-8">
-									<h4 class="media-heading"><a href="<?= $this->createUrl('report/detail') ?>">明细表</a></h4>
-									<p>损益表反映企业在一定会计期的经营成果及其分配情况的会计报表，是一段时间内公司经营业绩的财务记录，反映了这段时间的销售收入、销售成本、经营费用及税收状况，报表结果为公司实现的利润或亏损。</p>
-							 	</div>
-							</div>
-						</div>
+                        <p>&nbsp;</p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="col-md-3 col-xs-3">
+                                    <a href="<?= $this->createUrl('report/subjects') ?>">
+                                        <img src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/subjects_report.jpg'; ?>" class="img-thumbnail" />
+                                    </a>
+                                </div>
+                                <div class="col-md-8">
+                                    <h4 class="media-heading"><a href="<?= $this->createUrl('report/subjects') ?>">科目余额表</a></h4>
+                                    <p>按照总账科目余额编制的。<br />资产类科目：期末借方余额=期初借方余额+本期借方发生额-本期贷方发生额；<br />负债及所有者权益类科目：期末贷方余额=期初贷方余额+本期贷方发生额-本期借方发生额。</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-md-3 col-xs-3">
+                                    <a href="<?= $this->createUrl('report/detail') ?>">
+                                        <img src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/detail_report.jpg'; ?>" class="img-thumbnail" />
+                                    </a>
+                                </div>
+                                <div class="col-md-8">
+                                    <h4 class="media-heading"><a href="<?= $this->createUrl('report/detail') ?>">明细表</a></h4>
+                                    <p>损益表反映企业在一定会计期的经营成果及其分配情况的会计报表，是一段时间内公司经营业绩的财务记录，反映了这段时间的销售收入、销售成本、经营费用及税收状况，报表结果为公司实现的利润或亏损。</p>
+                                </div>
+                            </div>
+                        </div>
+                        <p>&nbsp;</p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="col-md-3 col-xs-3">
+                                    <a href="<?= $this->createUrl('report/money') ?>">
+                                        <img src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/money_report.jpg'; ?>" class="img-thumbnail" />
+                                    </a>
+                                </div>
+                                <div class="col-md-8">
+                                    <h4 class="media-heading"><a href="<?= $this->createUrl('report/money') ?>">现金流量表</a></h4>
+                                    <p></p>
+                                </div>
+                            </div>
+                        </div>
 					</div>
 					<div class="tab-pane" id="tab_15_2">
 						<h3>行政报表</h3>
 						<div class="row">
 							<div class="col-md-6">
 								<div class="col-md-3 col-xs-3">
-									<img src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/balance_report.jpg'; ?>" class="img-responsive img-thumbnail" />
+                                    <a href="<?= $this->createUrl('report/vendor') ?>">
+                                        <img src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/balance_report.jpg'; ?>" class="img-responsive img-thumbnail" />
+                                    </a>
 								</div>
 								<div class="col-md-9">
 									<h4 class="media-heading"><a href="<?= $this->createUrl('report/vendor') ?>">供应商表</a></h4>
@@ -215,7 +239,9 @@ $cs->registerScript('ChartsFlotchartsInitPie',$expense_income_data, CClientScrip
 							</div>
 							<div class="col-md-6">
 								<div class="col-md-3 col-xs-3">
-									<img src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/profit_report.jpg'; ?>" class="img-thumbnail" />
+                                    <a href="<?= $this->createUrl('report/client') ?>">
+                                        <img src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/profit_report.jpg'; ?>" class="img-thumbnail" />
+                                    </a>
 								</div>
 								<div class="col-md-9">
 									<h4 class="media-heading"><a href="<?= $this->createUrl('report/client') ?>">客户表</a></h4>
@@ -227,7 +253,9 @@ $cs->registerScript('ChartsFlotchartsInitPie',$expense_income_data, CClientScrip
 						<div class="row">
 							<div class="col-md-6">
 								<div class="col-md-3 col-xs-3">
-									<img src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/subjects_report.jpg'; ?>" class="img-thumbnail" />								
+                                    <a href="<?= $this->createUrl('report/project') ?>">
+                                        <img src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/subjects_report.jpg'; ?>" class="img-thumbnail" />
+                                    </a>
 								</div>
 								<div class="col-md-8">
 									<h4 class="media-heading"><a href="<?= $this->createUrl('report/project') ?>">项目表</a></h4>
@@ -236,7 +264,9 @@ $cs->registerScript('ChartsFlotchartsInitPie',$expense_income_data, CClientScrip
 							</div>
 							<div class="col-md-6">
 								<div class="col-md-3 col-xs-3">
-									<img src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/detail_report.jpg'; ?>" class="img-thumbnail" />								
+                                    <a href="<?= $this->createUrl('report/department') ?>">
+                                        <img src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/detail_report.jpg'; ?>" class="img-thumbnail" />
+                                    </a>
 								</div>
 								<div class="col-md-8">
 									<h4 class="media-heading"><a href="<?= $this->createUrl('report/department') ?>">部门表</a></h4>

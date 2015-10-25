@@ -80,8 +80,6 @@ class ReportController extends Controller
                                  "company"=>$company));
   }
 
-
-
   /**
    * 科目余额表
    */
@@ -162,6 +160,27 @@ class ReportController extends Controller
                                    "toMonth"=>$year.'年'.$tm.'月'));
     
   }
+
+    /**
+     * 现金流量表
+     */
+    public function actionMoney() //fm:fromMonth; tm: toMonth
+    {
+        if(isset($_REQUEST['date'])&&$_REQUEST['date']!=''&&$_POST['type'] != ''){
+            $type = $_POST['type'];
+            $date=$_REQUEST['date'];
+            $model = new Money();
+            $model->is_closed=1;
+            $model->date = $date;
+            $data = $model->genMoneyData('',$type);
+        }else{
+            $data = '';
+            $date = '';
+        }
+
+        $this->render("money",array("data"=>$data,
+            "date"=>$date));
+    }
 
   /**
    * 客户表

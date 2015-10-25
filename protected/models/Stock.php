@@ -91,6 +91,7 @@ class Stock extends LFSModel
             'in_price' => '单价',
             'out_date' => '出库日期',
             'out_price' => '出库价格',
+            'worth' => '净值',
             'create_time' => '添加时间',
             'value_month' => '折旧月份',
             'value_rate' => '残值率(%)',
@@ -204,8 +205,16 @@ class Stock extends LFSModel
         $criteria->compare('in_price', $this->in_price);
         $criteria->compare('out_date', $this->out_date, true);
         $criteria->compare('out_price', $this->out_price);
-        if($type!='')
-            $criteria->addCondition("entry_subject like '$type%' ");
+        switch($type){
+            case '1601' :
+                $criteria->addCondition("entry_subject like '1601%' or entry_subject like '1701%' or entry_subject like '1801%'");
+                break;
+            case '1405' :
+                $criteria->addCondition("entry_subject like '1403%' or entry_subject like '1405%' ");
+                break;
+            default:
+                break;
+        }
         $criteria->addCondition("order_no is NULL");
 
         return new CActiveDataProvider($this, array(
@@ -496,7 +505,7 @@ class Stock extends LFSModel
     /*
      * 结账时，保存净值。如果反结账，删除计提折旧
      */
-    public function saveWorth(){
+    public function saveWorth($entry_prefix=''){
         $arr = ['1601', '1701', '1801'];
         foreach ($arr as $sbj) {
             $list = Subjects::model()->list_sub($sbj);
@@ -507,12 +516,19 @@ class Stock extends LFSModel
                 $stocks = Stock::model()->findAllByAttributes([], $cdb);
                 $option = Options::model()->findByAttributes([], "entry_subject like '$subject%'");
                 foreach ($stocks as $item) {
-                    $price = $item->getWorth();
-                    $worth = $price - $price * (100 - $option->value) / 100 / ($option->year * 12);
-                    $arr = explode(',', $item->worth);
-                    $arr[] = round2($worth);
-                    $item->worth = implode(',', $arr);
-                    $item->save();
+                    //当月采购不计提，
+                    $year = getYear($entry_prefix);
+                    $month = getMon($entry_prefix);
+                    $date = mktime(0,0,0,$month+1,1,$year);
+                    $date = date('Ymd', $date);
+                    if($date>=$item['in_date']){
+                        $price = $item->getWorth();
+                        $worth = $price - $price * (100 - $option->value) / 100 / ($option->year * 12);
+                        $arr = explode(',', $item->worth);
+                        $arr[] = round2($worth);
+                        $item->worth = implode(',', $arr);
+                        $item->save();
+                                            }
                 }
             }
         }

@@ -191,7 +191,7 @@ function echoData($key, $data, $name="default")
                  </tr>
                  <tr>
                  <?php echoData(28, $data,  "商誉") ?>
-                 <?php echoData(53, $data) ?>
+                 <?php echoData("undistributed_profit", $data, "未分配利润") ?>
                  </tr>
                  <tr>
                  <?php echoData(29, $data,  "长期待摊费用") ?>

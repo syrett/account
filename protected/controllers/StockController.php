@@ -464,11 +464,15 @@ class StockController extends Controller
      * 计提折旧
      */
     public function saveDepreciation($sbj, $date){
+        $tran = Transition::model()->findByAttributes(['entry_num_prefix'=>$date], 'entry_settlement=1 or entry_closing=1');
+        if($tran){ //如果已经结账，就不需要重新计提折旧
+           return true;
+        }
         $cdb = new CDbCriteria();
         $type = "";
         switch($sbj){
             case '1601': $type = '固定资产';$sbj_2 = '1602';$sbj_name = '折旧费';$x_name = '残值率';break;
-            case '1701': $type = '无形资产';$sbj_2 = '1701';$sbj_name = '摊销费';$x_name = '摊销率';break;
+            case '1701': $type = '无形资产';$sbj_2 = '1702';$sbj_name = '摊销费';$x_name = '摊销率';break;
             case '1801': $type = '长期待摊费用';$sbj_2 = '1801';$sbj_name = '摊销费';$x_name = '摊销率';break;
         }
         $list = Subjects::model()->list_sub($sbj);

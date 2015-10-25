@@ -12,29 +12,26 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/amc
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/amcharts/amcharts/pie.js', CClientScript::POS_END);
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/amcharts/amcharts/themes/light.js', CClientScript::POS_END);
 
-$bank_amount = 0;
-$cash_amount = 0;
+$bank_amount = Subjects::get_balance('1002');
+$cash_amount = Subjects::get_balance('1001');
+$should_amount = Subjects::get_balance('1122');
 $amount_1 = 0;
 $amount_2 = 0;
 $amount_3 = 0;
 
-$bank = Bank::model()->findAllByAttributes([],"path like '%>收入=%'");
+$bank = Transition::model()->findAllByAttributes([], 'entry_subject like "1002%"');
 foreach ($bank as $item) {
-    $bank_amount += $item['amount'];
+    $bank_amount = $item['entry_transaction']==1?$bank_amount+$item['entry_amount']:$bank_amount-$item['entry_amount'];
 }
-$cash = Cash::model()->findAllByAttributes([],"path like '%>收入=%'");
+$cash = Transition::model()->findAllByAttributes([], 'entry_subject like "1001%"');
 foreach ($cash as $item) {
-    $cash_amount += $item['amount'];
+    $cash_amount = $item['entry_transaction']==1?$cash_amount+$item['entry_amount']:$cash_amount-$item['entry_amount'];
 }
-$amount_in = Transition::model()->findAllByAttributes(['entry_transaction'=>1], "entry_subject like '1122%'");
-$amount_out = Transition::model()->findAllByAttributes(['entry_transaction'=>2], "entry_subject like '1122%'");
-foreach($amount_out as $item){
-    $amount_1 += $item['entry_amount'];
+$amount_should = Transition::model()->findAllByAttributes([], "entry_subject like '1122%'");
+foreach($amount_should as $item){
+    $should_amount = $item['entry_transaction']==1?$should_amount+$item['entry_amount']:$should_amount-$item['entry_amount'];
 }
-foreach($amount_in as $item){
-    $amount_2 += $item['entry_amount'];
-}
-$amount_0 = $amount_2 - $amount_1;
+$amount_0 = $should_amount;
 $amount_out = Transition::model()->findAllByAttributes(['entry_transaction'=>2], "entry_subject like '1001%' or entry_subject like '1002%'");
 foreach ($amount_out as $item) {
     $amount_3 += $item['entry_amount'];
@@ -72,27 +69,28 @@ foreach ($bank_out as $item) {
                 $preorder = Preparation::model()->findByAttributes(['type'=>'bank', 'pid'=>$item->id]);
                 if(isset($preorder['real_order'])){
                     $real_order = json_decode($preorder['real_order'], true);
-                    foreach ($real_order as $order => $amount) {
-                        $purchase = Purchase::model()->findByAttributes(['order_no'=>$order]);
-                        if($purchase){
-                            switch(substr($purchase['subject'],0,4)){
-                                case 1601:
-                                    $data['固定资产'] = isset($data['固定资产'])?$data['固定资产']+$amount:$amount;
-                                    break;
-                                case 1701:
-                                    $data['无形资产'] = isset($data['无形资产'])?$data['无形资产']+$amount:$amount;
-                                    break;
-                                case 1801:
-                                    $data['长期待摊'] = isset($data['长期待摊'])?$data['长期待摊']+$amount:$amount;
-                                    break;
-                                case 1403:
-                                case 1405:
-                                    $data['存货采购'] = isset($data['存货采购'])?$data['存货采购']+$amount:$amount;
-                                    break;
-                                default :
-                                    $data['其他采购'] = isset($data['其他采购'])?$data['其他采购']+$amount:$amount;
+                    if($real_order)
+                        foreach ($real_order as $order => $amount) {
+                            $purchase = Purchase::model()->findByAttributes(['order_no'=>$order]);
+                            if($purchase){
+                                switch(substr($purchase['subject'],0,4)){
+                                    case 1601:
+                                        $data['固定资产'] = isset($data['固定资产'])?$data['固定资产']+$amount:$amount;
+                                        break;
+                                    case 1701:
+                                        $data['无形资产'] = isset($data['无形资产'])?$data['无形资产']+$amount:$amount;
+                                        break;
+                                    case 1801:
+                                        $data['长期待摊'] = isset($data['长期待摊'])?$data['长期待摊']+$amount:$amount;
+                                        break;
+                                    case 1403:
+                                    case 1405:
+                                        $data['存货采购'] = isset($data['存货采购'])?$data['存货采购']+$amount:$amount;
+                                        break;
+                                    default :
+                                        $data['其他采购'] = isset($data['其他采购'])?$data['其他采购']+$amount:$amount;
+                                }
                             }
-                        }
                     }
 
                 }

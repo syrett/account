@@ -68,8 +68,12 @@ table.transition > thead > tr > th, table.transition > tbody > tr > td {
     border: 1px dotted #ccc;
 }
 
-table#balance td, table#profit td, table#subjects td, table#project td, table#depart td {
+table#balance td, table#profit td, table#subjects td, table#project td, table#depart td, table#money td {
     text-align: right;
+}
+
+table#money .left{
+    text-align: left;
 }
 
 .thumbnail {

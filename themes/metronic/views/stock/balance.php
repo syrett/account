@@ -14,6 +14,7 @@ switch($type){
             'name',
             'model',
             'in_price',
+            'worth',
             'value_month',
             'value_rate',
             [
@@ -30,11 +31,16 @@ switch($type){
         ];
         break;
 }
-
+$total = 0;
 $balance = Subjects::get_balance($type);
 $cdb = clone $dataProvider->getCriteria();
-$cdb->select = 'sum(worth) AS total';
-$total =  Stock::model()->find($cdb);
+$stocks =  Stock::model()->findAll($cdb);
+if($stocks)
+    foreach ($stocks as $item) {
+        $temp = explode(',', $item['worth']);
+        $total += $temp[0]!=''?$temp[0]:$item['in_price'];
+    }
+
 ?>
 <div class="portlet light">
     <!-- Default panel contents -->
@@ -46,7 +52,7 @@ $total =  Stock::model()->find($cdb);
         ?>
         <div class="caption">
             <h2><?= Subjects::getName($type) ?>期初明细</h2>
-            <span class="caption-helper">总账期初余额:<?= round2($balance)?>&nbsp;&nbsp;&nbsp;明细合计:<?= round2($total->total) ?></span>
+            <span class="caption-helper">总账期初余额:<?= round2($balance)?>&nbsp;&nbsp;&nbsp;明细合计:<?= round2($total) ?></span>
         </div>
 
         <div class="actions">

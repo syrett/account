@@ -289,16 +289,16 @@ function itemSet() {
         //显示选择路径
         var str = "";
         $.each($(".options").find("button[class*='active']"), function (key, value) {
-            if ($(value).html() == '选择') {
+            if ($(value).text() == '选择') {
                 str += "=>" + $(value).val();
             }
-            else if ($(value).html() == '有溢价') {
+            else if ($(value).text() == '有溢价') {
                 $("#additional_sbj0_" + item_id).val(4002);//溢价金额作为资本公积4002贷方
                 amount = parseFloat($("#tran_amount_" + item_id).val())
                 $("#additional_amount0_" + item_id).val(amount - parseFloat($("#new-option").val()));
             }
             else
-                str += "=>" + removePath($(value).html());
+                str += "=>" + removePath($(value).text());
         })
         //设置含税，简单版可以这样设置，复杂版要重新设计
         if ($("#new-option").is(":checked") == true)
@@ -325,7 +325,6 @@ function itemSet() {
         e.html("未选择");
     }
     setTarget(item_id);
-    dialogClose();
 }
 //采购销售时的确认按钮
 function itemSetDefault(e, type) {

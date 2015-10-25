@@ -106,8 +106,8 @@ class Profit extends CModel
     $sum_month = 0;//当月期数额
     foreach($subjects as $k=>$sbj_id){
       $lastDate=date("Ym",strtotime("last month",mktime(0,0,0,$month,01,$year)));
-      echo $sbj_id;
-      echo $lastDate;
+//      echo $sbj_id;
+//      echo $lastDate;
       $sum_month += Post::model()->getDebitCredit($sbj_id, $lastDate);
     }
     return array("sum_year"=>$sum_year,

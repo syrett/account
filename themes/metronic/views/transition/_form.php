@@ -19,7 +19,6 @@ $subjects = Transition::model()->listSubjectsGrouped();
 
 <?php echo CHtml::beginForm(); ?>
 <?php $form = $this->beginWidget('CActiveForm', array(
-    'id' => 'transition-form',
     // Please note: When you enable ajax validation, make sure the corresponding
     // controller action is handling ajax validation correctly.
     // There is a call to performAjaxValidation() commented in generated controller code.
@@ -111,7 +110,7 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
         <tr id="row_<?php echo $i; ?>">
             <td class="col-md-3">
                 <?php echo CHtml::activeTextField($item, "[$i]entry_memo", array('class' => 'form-control')); ?>
-                <?php echo $form->error($item, '[$i]_entry_memo'); ?>
+                <?php echo $form->error($item, "[$i]_entry_memo"); ?>
             </td>
             <td class="col-md-3">
                 <?php

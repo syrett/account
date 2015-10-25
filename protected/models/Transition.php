@@ -136,7 +136,7 @@ class Transition extends CActiveRecord
     {
         $this->unsetAttributes();
         $this->entry_closing = 0;
-        $this->entry_num_prefix = $date;
+        $this->entry_num_prefix = substr($date,0,6);
         $this->select = "entry_num_prefix,entry_num,entry_closing";
         $dataProvider = $this->search();
         $transition = $dataProvider->getData();
@@ -663,7 +663,7 @@ class Transition extends CActiveRecord
                                 $total += $item;
                         }
                         //根据员工部门判断属于什么费用
-                        $arr['entry_subject'] = Department::matchSubject($employee->department_id, '工资');
+                        $arr['entry_subject'] = Department::matchSubject($employee_id, '工资');
                         $amount = $total;
                         break;
 

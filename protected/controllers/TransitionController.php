@@ -1041,7 +1041,7 @@ class TransitionController extends Controller
         if(Transition::model()->isAllClosing($entry_prefix))
             throw new CHttpException(400, $entry_prefix . "已经结账");
         Transition::model()->settlement($entry_prefix);
-        Stock::model()->saveWorth();    //过账时的计提折旧操作，在结账时保存净值
+        Stock::model()->saveWorth($entry_prefix);    //过账时的计提折旧操作，在结账时保存净值
         Yii::app()->user->setFlash('success', $entry_prefix . "结账成功!");
         $this->render('/site/success');
     }
@@ -1085,17 +1085,19 @@ class TransitionController extends Controller
 
         $model = Transition::model()->deleteAllByAttributes(array('entry_num_prefix' => $date, 'entry_settlement' => 1,));
         Transition::model()->deleteAllByAttributes(['entry_num_prefix' => $date], 'entry_memo like "附加税-'.$date. '%"');
-        $rows = Transition::model()->deleteAllByAttributes(['entry_num_prefix' => $date], 'entry_memo like "计提折旧-'.$date. '%"');
-        if($rows > 0)
+        if(Transition::model()->findByAttributes(['entry_num_prefix'=>$date],'entry_closing=1') || $model)
         {
-            $cdb = new CDbCriteria();
-            $cdb->addCondition('entry_subject like "1601%" or entry_subject like "1701%" or entry_subject like "1801%"');
-            $stocks = Stock::model()->findAll($cdb);
-            foreach($stocks as $item){
-                $arr = explode(',', $item['worth']);
-                array_pop($arr);
-                $item->worth = implode(',', $arr);
-                $item->save();
+            $rows = Transition::model()->deleteAllByAttributes(['entry_num_prefix' => $date], 'entry_memo like "计提折旧-'.$date. '%"');
+            if($rows > 0) {
+                $cdb = new CDbCriteria();
+                $cdb->addCondition('entry_subject like "1601%" or entry_subject like "1701%" or entry_subject like "1801%"');
+                $stocks = Stock::model()->findAll($cdb);
+                foreach($stocks as $item){
+                    $arr = explode(',', $item['worth']);
+                    array_pop($arr);
+                    $item->worth = implode(',', $arr);
+                    $item->save();
+                }
             }
         }
         $timeold =

@@ -94,7 +94,7 @@ return array(
 
         'errorHandler' => array(
             // use 'site/error' action to display errors
-            'errorAction' => 'site/error',
+//            'errorAction' => 'site/error',
         ),
 //        'log'=>array(
 //            'class'=>'CLogRouter',
@@ -171,9 +171,9 @@ return array(
         'sbj_cat' => array(1 => '资产类 ', 2 => '负债类 ', 3 => '权益类 ', 4 => '收入类 ', 5 => '费用类'),
         'profitReport_sum' => array(
             array("id" => "trading_profit", "name" => "二、营业利润", "to" => "profit_sum", "function" => "sum"),
-            array("id" => "profit_sum", "name" => "三‘利润总额", "to" => "net_profit", "function" => "sum"),
-            array("id" => "net_profit", "name" => "四’净利润", "to" => "undistributed_profit", "function" => "sum"),
-            array("id" => "undistributed_profit", "name" => "五‘未分配利润"),
+            array("id" => "profit_sum", "name" => "三、利润总额", "to" => "net_profit", "function" => "sum"),
+            array("id" => "net_profit", "name" => "四、净利润", "to" => "undistributed_profit", "function" => "sum"),
+            array("id" => "undistributed_profit", "name" => "五、未分配利润"),
         ),
         'profitReport' => array(
 
@@ -205,6 +205,7 @@ return array(
             array("id" => "debt", "name" => "负债合计", "to" => "debt_owner", "function" => "sum"),
             array("id" => "parent_owner", "name" => "归属于母公司股东权益(所有者权益)合计", "to" => "owner", "function" => "sum"),
             array("id" => "owner", "name" => "股东权益(所有者权益)合计", "to" => "debt_owner", "function" => "sum"),
+            array("id" => "undistributed_profit", "name" => "未分配利润", "to" => "debt_owner", "function" => "sum"),
             array("id" => "debt_owner", "name" => "负债及股东权益(所有者权益)合计"),
         ),
         'balanceReport' => array(
@@ -264,6 +265,11 @@ return array(
             array("id" => 52, "name" => "盈余公积", "subjects" => array(4101, 4102), "to" => "parent_owner", "function" => "sum"),
             array("id" => 53, "name" => "未分配利润", "subjects" => array(4103, 4104), "to" => "parent_owner", "function" => "sum"),
             array("id" => 54, "name" => "减:库存股", "subjects" => array(4201), "to" => "parent_owner", "function" => "sum"),
+
+            //现金流量表会用到
+            array("id" => 71, "name" => "无形资产摊销", "subjects" => [1702], "to" => "money_detail", "function" => "sum"),
+            array("id" => 70, "name" => "加:年(期)初未分配利润", "subjects" => array(4103, 4104, 6001, 6011, 6021, 6031, 6041, 6051,6101,6111,6301), "to" => "undistributed_profit", "function" => "sum"),
+            array("id" => 68, "name" => "减:所得税费用", "subjects" => array(6061,6201, 6202, 6203,6401, 6411, 6421, 6501, 6502, 6511, 6521, 6531, 6541, 6542, 6601,6602,6603,6604,6701,6711,6801), "to" => "undistributed_profit", "function" => "minus"),
         ),
     ),
 );

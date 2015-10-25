@@ -127,7 +127,9 @@ $this->pageTitle = Yii::app()->name;
                             </td>
                             <td class="porder">
                             <?
-                            $preOrder = Preparation::getPreOrder('employee', Employee::model()->findByAttributes(['name'=>$item['employee_name']])->id);
+                            $employee = Employee::model()->findByAttributes(['name'=>$item['employee_name']]);
+                            if($employee)
+                                $preOrder = Preparation::getPreOrder('employee', $employee->id);
                             if (!empty($preOrder)) {
                                 $hasPreOrder = true;
                                 ?><?

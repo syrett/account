@@ -195,6 +195,7 @@ class Bank extends LFSModel
             '支付税金' => '支付税金',
             '现金提取' => '现金提取',
             '银行转账' => '银行转账',
+            '汇兑损益' => '汇兑损益',
             '其他支出' => '其他支出',     //  9
         ];
     }
@@ -214,6 +215,7 @@ class Bank extends LFSModel
             '资产租赁' => '资产租赁',
             '银行转账' => '银行转账',
             '存入现金' => '存入现金',
+            '汇兑收益' => '汇兑收益',
             '其他收入' => '其他收入',           //  7
         ];
     }
@@ -333,7 +335,7 @@ class Bank extends LFSModel
     {
         $subject = new Subjects();
         $arr = [6111, 1511, 1101];
-        $result = $subject->getitem($arr, $key, ['type' => 0]);
+        $result = $subject->getitem($arr, $key);
         return [
             'data' => array_flip(array_flip($result)),
             'new' => 'no',
@@ -532,7 +534,7 @@ class Bank extends LFSModel
     /*
      *  列出所有员工
      */
-    private static function getEmployee($key = '', $new)
+    private static function getEmployee($key = '', $new=false)
 
     {
         $model = new Employee();
@@ -600,10 +602,12 @@ eof;
             $result = ['银行借款', '其他借款'];
             $target = false;
         } elseif ($type == 3) {//还款
-            $arr = [1122, 1221, 2203, 1123, 2501];
+//            $arr = [1122, 1221, 2203, 1123, 2501];
             $new = 'no';
-            $result = $subject->getitem($arr, $key);
-            $target = true;
+            $result = ['收回投资', '收回借款'];
+            $target = false;
+//            $result = $subject->getitem($arr, $key);
+//            $target = true;
         }
 //        $arr = [1122, 1221, 2203, 1123, 2001, 2501];
         $list = ['_2001' => '短期借款', '_2501' => '长期借款'];
@@ -668,6 +672,16 @@ eof;
         $result = $subject->getitem($arr, $key);
         return [
             'data' => $result,
+        ];
+    }
+    private static function getOtherOutcome($key = ''){
+        return [
+            'data' => ['处置长期资产','罚款','捐赠','税务罚款','补贴','其他'],
+        ];
+    }
+    private static function getOtherIncome($key = ''){
+        return [
+            'data' => ['处置长期资产','罚款','捐赠','税收返还','补贴','其他'],
         ];
     }
     /*
@@ -871,13 +885,16 @@ eof;
                         $result = self::getInterest($data[1]);
                     break;
                 case '材料销售'  :
-                    return self::endOption(640201);
+                    $sbj = Subjects::matchSubject($options[2],'6402');
+                    return self::endOption($sbj);
                     break;
                 case '技术转让'  :
-                    return self::endOption(640202);
+                    $sbj = Subjects::matchSubject($options[2],'6402');
+                    return self::endOption($sbj);
                     break;
                 case '资产租赁'  :
-                    return self::endOption(640203);
+                    $sbj = Subjects::matchSubject($options[2],'6402');
+                    return self::endOption($sbj);
                     break;
 //                    if (isset($options[3])) {
 //                        return self::endOption($options[3]);
@@ -913,7 +930,7 @@ eof;
                                 return self::endOption($result);
                             }
                             else
-                            $result = self::getEmployee($data[1]);
+                                $result = self::getEmployee($data[1]);
                         }elseif($options[3]=='营业税金及附加'){
                             if(isset($options[4]))
                                 return self::endOption($options[4]);
@@ -934,8 +951,15 @@ eof;
                 case '现金提取'  :  //将营业外支出6711作为借方科目，形成会计分录
                     return self::endOption(1001);
                     break;
+                case '汇兑损益'  :
+                    $sbj = Subjects::matchSubject('汇兑损益',6603);
+                    return self::endOption($sbj);
+                    break;
                 case '其他支出'  :
-                    return self::endOption(6711);
+                    if (isset($options[3])) {
+                        return self::endOption(6711);
+                    } else
+                        $result = self::getOtherOutcome($data[1]);
                     break;
                 default:
                     $result = [];
@@ -957,7 +981,6 @@ eof;
                     break;
                 case '收到押金'  :
                 case '收到借款'  :
-                case '收到还款'  :
                     if ($options[2] == '收到押金')
                         $type = 1;
                     elseif ($options[2] == '收到借款')
@@ -984,6 +1007,39 @@ eof;
                                 $result['new'] = 'allow';
                                 $result['newsbj'] = 2241;
                                 $result['data'] = $subject->getitem([2241], $data[1]);
+                                $result['target'] = true;
+                            }
+                        }
+                    } else
+                        $result = self::getIncomeItem($type, $data[1]);
+                    break;
+                case '收到还款'  :
+                    $type = 3;
+                    if (isset($options[3])) {
+                        if (strlen($options[3]) >= 4)
+                            return self::endOption($options[3]);
+                        $subject = new Subjects();
+                        if ($options[3] == 0) { //收回投资
+                            if (isset($options[4])) {
+                                if (isset($options[5])){
+                                    return self::endOption($options[5]);
+                                }else{
+                                    if($options[4]==0){
+                                        $result = ['data' => ['_1101'=>'交易性金融资产']];
+                                    }else
+                                        $result = ['data' => ['_1511'=>'长期股权投资']];
+                                }
+                            } else {
+                                $list = ['0' => '小于一年', '1' => '大于一年'];
+                                $result =  ['data' => $list,];
+                            }
+                        } else {  //收回借款
+                            if (isset($options[4])) {
+                                return self::endOption($options[4]);
+                            } else {
+                                $result['new'] = 'allow';
+                                $result['newsbj'] = 2241;
+                                $result['data'] = $subject->getitem([1122, 1221, 2203, 1123, 2501], $data[1]);
                                 $result['target'] = true;
                             }
                         }
@@ -1023,7 +1079,7 @@ eof;
                     break;
                 case '投资收益'  :
                     if (isset($options[3])) {//如果选择的科目，其一级科目是6001，可以是接返回，否则根据名字，在6001下新建子科目再返回
-                        if (substr($options[3], 0, 4) != '6111') {
+                        if (!in_array(substr($options[3], 0, 4), ['6111', '1101', '1511'])) {
                             $options[3] = Subjects::createSubject(Subjects::getName($options[3]), 6111);
                         }
                         return self::endOption($options[3]);
@@ -1037,13 +1093,16 @@ eof;
                         $result = self::getInterest();
                     break;
                 case '材料销售'  :
-                    return self::endOption(605101);
+                    $sbj = Subjects::matchSubject($options[2],'6051');
+                    return self::endOption($sbj);
                     break;
                 case '技术转让'  :
-                    return self::endOption(605102);
+                    $sbj = Subjects::matchSubject($options[2],'6051');
+                    return self::endOption($sbj);
                     break;
                 case '资产租赁'  :
-                    return self::endOption(605103);
+                    $sbj = Subjects::matchSubject($options[2],'6051');
+                    return self::endOption($sbj);
                     break;
                 case '银行转账'  :  //银行资金互转
                     if (isset($options[3])) {
@@ -1054,8 +1113,15 @@ eof;
                 case '存入现金'  :
                     return self::endOption(1001);
                     break;
+                case '汇兑收益'  :
+                    $sbj = Subjects::matchSubject('汇兑损益',6603);
+                    return self::endOption($sbj);
+                    break;
                 case '其他收入'  :
-                    return self::endOption(6301);
+                    if (isset($options[3])) {
+                        return self::endOption(6301);
+                    } else
+                        $result = self::getOtherIncome($data[1]);
                     break;
             }
         }
