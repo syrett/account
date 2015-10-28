@@ -289,7 +289,7 @@ class TransitionController extends Controller
         Yii::import('ext.phpexcel.PHPExcel.PHPExcel_IOFactory');
         if (Yii::app()->request->isPostRequest) {
             //上传附件查看
-            if ($_FILES['attachment']!='' && file_exists($_FILES['attachment']['tmp_name'])) {
+            if ($_FILES['attachment']!='' && file_exists($_FILES['attachment']['tmp_name']) && $_POST['submit_type'] != 'save') {
                 $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
                 $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
                 //去除第一行
@@ -307,7 +307,7 @@ class TransitionController extends Controller
                     $salary = Salary::model()->findByAttributes(['employee_id'=>$item->id], $cri);
                     $sheetData[] = Transition::getSheetData($salary?$salary->attributes:['employee_id'=>$item->id], 'salary');
                 }
-            }elseif($_FILES['attachment']['name']==''){
+            }elseif($_POST['submit_type'] == 'save'){
                 //保存工资数据，生成并保存凭证
                 $arr = $this->saveAll('salary');
                 if (!empty($arr))
@@ -354,7 +354,7 @@ class TransitionController extends Controller
         Yii::import('ext.phpexcel.PHPExcel.PHPExcel_IOFactory');
         if (Yii::app()->request->isPostRequest) {
             //上传附件查看
-            if ($_FILES['attachment']!='' && file_exists($_FILES['attachment']['tmp_name'])) {
+            if ($_FILES['attachment']!='' && file_exists($_FILES['attachment']['tmp_name']) && $_POST['submit_type'] != 'save') {
                 $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
                 $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
                 //去除第一行
@@ -364,7 +364,7 @@ class TransitionController extends Controller
                     if($employee)
                     $sheetData[] = Transition::getSheetData($item, 'reimburse');
                 }
-            } elseif($_FILES['attachment']['name']==''){
+            }elseif($_POST['submit_type'] == 'save'){
                 //保存按钮
                 $arr = $this->saveAll('reimburse');
                 if (!empty($arr))
@@ -417,7 +417,8 @@ class TransitionController extends Controller
                 //去除第一行
                 array_shift($list);
                 foreach($list as $item){
-                    $sheetData[] = Transition::getSheetData($item,'bank');
+                    if(trim($item['C'])!='')
+                        $sheetData[] = Transition::getSheetData($item,'bank');
                 }
             } elseif($_FILES['attachment']['name']==''){
                 //保存按钮
