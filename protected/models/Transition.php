@@ -663,7 +663,7 @@ class Transition extends CActiveRecord
                                 $total += $item;
                         }
                         //根据员工部门判断属于什么费用
-                        $arr['entry_subject'] = Department::matchSubject($employee_id, '工资');
+                        $arr['entry_subject'] = Department::matchSubject($employee->department_id, '工资');
                         $amount = $total;
                         break;
 
