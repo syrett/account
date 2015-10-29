@@ -148,16 +148,16 @@ $cs->registerScript('ChartsFlotchartsInitPie',$expense_income_data, CClientScrip
 			<div class="tabbable-line">
 				<ul class="nav nav-tabs ">
 					<li class="active">
-						<a href="#tab_15_1" data-toggle="tab" aria-expanded="true">
+						<a href="#tab_15_finance" data-toggle="tab" aria-expanded="true">
 						财务类 </a>
 					</li>
 					<li class="">
-						<a href="#tab_15_2" data-toggle="tab" aria-expanded="false">
+						<a href="#tab_common" data-toggle="tab" aria-expanded="false">
 						行政类</a>
 					</li>
 				</ul>
 				<div class="tab-content">
-					<div class="tab-pane active" id="tab_15_1">
+					<div class="tab-pane active" id="tab_15_finance">
 						<h3>财务报表</h3>
 						<div class="row">
 							<div class="col-md-6">
@@ -218,12 +218,12 @@ $cs->registerScript('ChartsFlotchartsInitPie',$expense_income_data, CClientScrip
                                 </div>
                                 <div class="col-md-8">
                                     <h4 class="media-heading"><a href="<?= $this->createUrl('report/money') ?>">现金流量表</a></h4>
-                                    <p></p>
+                                    <p>现金流量表的出现，主要是要反映出资产负债表中各个项目对现金流量的影响，并根据其用途划分为经营、投资及融资三个活动分类。</p>
                                 </div>
                             </div>
                         </div>
 					</div>
-					<div class="tab-pane" id="tab_15_2">
+					<div class="tab-pane" id="tab_common">
 						<h3>行政报表</h3>
 						<div class="row">
 							<div class="col-md-6">
@@ -234,7 +234,7 @@ $cs->registerScript('ChartsFlotchartsInitPie',$expense_income_data, CClientScrip
 								</div>
 								<div class="col-md-9">
 									<h4 class="media-heading"><a href="<?= $this->createUrl('report/vendor') ?>">供应商表</a></h4>
-									<p>&nbsp;</p>
+									<p>分供应商列示本期采购交易的发生额，已付款项和未付款项。</p>
 							 	</div>
 							</div>
 							<div class="col-md-6">
@@ -245,23 +245,23 @@ $cs->registerScript('ChartsFlotchartsInitPie',$expense_income_data, CClientScrip
 								</div>
 								<div class="col-md-9">
 									<h4 class="media-heading"><a href="<?= $this->createUrl('report/client') ?>">客户表</a></h4>
-									<p>&nbsp;</p>
+									<p>分客户列示本期交易的发生额，已收款项和未收入款项。</p>
 							 	</div>
 							</div>
 						</div>
 						<p>&nbsp;</p>
 						<div class="row">
-							<div class="col-md-6">
-								<div class="col-md-3 col-xs-3">
-                                    <a href="<?= $this->createUrl('report/project') ?>">
-                                        <img src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/subjects_report.jpg'; ?>" class="img-thumbnail" />
-                                    </a>
-								</div>
-								<div class="col-md-8">
-									<h4 class="media-heading"><a href="<?= $this->createUrl('report/project') ?>">项目表</a></h4>
-									<p>&nbsp;</p>
-							 	</div>
-							</div>
+<!--							<div class="col-md-6">-->
+<!--								<div class="col-md-3 col-xs-3">-->
+<!--                                    <a href="--><?//= $this->createUrl('report/project') ?><!--">-->
+<!--                                        <img src="--><?php //echo Yii::app()->theme->baseUrl . '/assets/custom/subjects_report.jpg'; ?><!--" class="img-thumbnail" />-->
+<!--                                    </a>-->
+<!--								</div>-->
+<!--								<div class="col-md-8">-->
+<!--									<h4 class="media-heading"><a href="--><?//= $this->createUrl('report/project') ?><!--">项目表</a></h4>-->
+<!--									<p>&nbsp;</p>-->
+<!--							 	</div>-->
+<!--							</div>-->
 							<div class="col-md-6">
 								<div class="col-md-3 col-xs-3">
                                     <a href="<?= $this->createUrl('report/department') ?>">
@@ -270,7 +270,7 @@ $cs->registerScript('ChartsFlotchartsInitPie',$expense_income_data, CClientScrip
 								</div>
 								<div class="col-md-8">
 									<h4 class="media-heading"><a href="<?= $this->createUrl('report/department') ?>">部门表</a></h4>
-									<p>&nbsp;</p>
+									<p>分部门列示本期交易的发生各项费用，让您对部门的收支一目了然。</p>
 							 	</div>
 							</div>
 						</div>

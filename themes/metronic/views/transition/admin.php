@@ -12,7 +12,7 @@ $('.search-button').click(function(){
 	return false;
 });
 $('.search-form form').submit(function(){
-	$('#transition-grid').yiiGridView('update', {
+	$('#subjects-grid').yiiGridView('update', {
 		data: $(this).serialize()
 	});
 	return false;
@@ -110,7 +110,7 @@ $cs->registerScript('ComponentsPickersInit','ComponentsPickers.init();', CClient
         <?php
 
         $this->widget('zii.widgets.grid.CGridView', array(
-            'id' => 'transition-grid',
+            'id' => 'subjects-grid',
             'emptyText' => '对不起，暂无相关数据',
             'dataProvider' => $model->search(),
             'rowCssClass'=>array('row-odd','row-even'),
@@ -206,7 +206,8 @@ $cs->registerScript('ComponentsPickersInit','ComponentsPickers.init();', CClient
                 if (ret != null && ret.success != null){
                     if(!ret.success)
                         alert('部分凭证必须由他人审核');
-                    $.fn.yiiGridView.update("transition-grid");
+					$.fn.yiiGridView.update("subjects-grid",{async:false});
+					Metronic.initUniform('input:checkbox')
                 }
             });
         }else{
@@ -227,7 +228,8 @@ $cs->registerScript('ComponentsPickersInit','ComponentsPickers.init();', CClient
             $.post('<?php echo CHtml::normalizeUrl(array('/transition/unreviewedall/'));?>',{'selectall[]':data}, function (data) {
                 var ret = $.parseJSON(data);
                 if (ret != null && ret.success != null && ret.success) {
-                    $.fn.yiiGridView.update("transition-grid");
+					$.fn.yiiGridView.update("subjects-grid",{async:false});
+                    Metronic.initUniform('input:checkbox')
                 }
             });
         }else{

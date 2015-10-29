@@ -126,6 +126,42 @@ class ProductController extends Controller
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 	}
 
+    /*
+     * delete all
+     */
+    public function actionDelall(){
+        if (Yii::app()->request->isPostRequest)
+        {
+            $in = [];
+            foreach($_POST['selectdel'] as $item){
+                $relation = Product::model()->getRelation('product', $item);
+                if(empty($relation))
+                    $in[] = $item;
+            }
+            $criteria= new CDbCriteria;
+            $criteria->addInCondition('id', $in);
+            $models = Product::model()->findAll($criteria);
+            if(!empty($models))
+                foreach ($models as $item) {
+                    $this->actionDelete($item->id);
+                }
+
+            if(count($in) == count($_POST['selectdel']))
+                $status = 'success';
+            elseif(empty($in))
+                $status = 'failed';
+            else
+                $status = 'few';
+
+            if(isset(Yii::app()->request->isAjaxRequest)) {
+                echo CJSON::encode(array('status' => $status));
+            } else
+                $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
+        }
+        else
+            throw new CHttpException(400,'不合法的请求，请稍后重试');
+    }
+
 	/**
 	 * Lists all models.
 	 */

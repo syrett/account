@@ -94,7 +94,7 @@ class BankController extends Controller
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
 	 * @param integer $id the ID of the model to be deleted
 	 */
-	public function actionDelete($id)
+	public function actionDelete($id, $type=1)
 	{
 
         $relation = Bank::model()->getRelation('bank', $id);
@@ -123,7 +123,7 @@ class BankController extends Controller
             echo json_encode($result);
         }
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
+		if(!isset($_GET['ajax']) && $type==1)
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
 	}
 
@@ -135,16 +135,17 @@ class BankController extends Controller
         {
             $in = [];
             foreach($_POST['selectdel'] as $item){
-                $relation = Bank::model()->getRelation('ban', $item);
-                if($relation==null)
-                    $in += $item;
+                $relation = Bank::model()->getRelation('bank', $item);
+                if(empty($relation))
+                    $in[] = $item;
             }
             $criteria= new CDbCriteria;
             $criteria->addInCondition('id', $in);
-            $cri = new CDbCriteria;
-            $cri->addInCondition('data_id', $in);
-            Bank::model()->deleteAll($criteria);
-            Transition::model()->deleteAll($cri);
+            $bank = Bank::model()->findAll($criteria);
+            if(!empty($bank))
+                foreach ($bank as $item) {
+                    $this->actionDelete($item->id, 2);
+                }
 
             if(count($in) == count($_POST['selectdel']))
                 $status = 'success';

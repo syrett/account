@@ -65,9 +65,9 @@ function itemsplit(e) {
             item_id = item_id.replace(/_\d+/, "_" + id);
             $(value).attr("id", item_id);
         }
-        //if (item_id.substr(0, 7) == "btn_del") {
-        //    $(value).removeAttr("disabled");
-        //}
+        if (item_id.substr(0, 7) == "btn_del") {
+            $(value).removeAttr("disabled");
+        }
     })
     $("#rows").val(id);
 }
@@ -381,7 +381,9 @@ function save() {
     $("#abc table tr:first").nextAll('tr:visible[id!=trSetting]').find("[id*='btn_confirm_']").each(function (key, value) {
         $(value).click();
     })
+    $("#submit_type").val('save');
     $("#form").submit();
+
 }
 
 //获取当前交易行的信息，1、日期 2、说明 3、金额，值的顺序根据getListTitle有所不同
@@ -544,7 +546,7 @@ function checkInput() {
 //插入新行
 function addRow() {
     //复制
-    itemsplit($("#data_import tr[id!='trSetting']:last td div button")[0]);
+    itemsplit($("#data_import tr[id!='trSetting']:last td div button")[1]);
     //删除值，去除复制后相关联的信息
     var e = $("#data_import tr[id!='trSetting']:last");
     var item = $("#data_import tr[id!='trSetting']:last input[id^='id_']").val();

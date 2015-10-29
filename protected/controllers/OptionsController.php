@@ -25,8 +25,7 @@ class OptionsController extends Controller
             }
             $this->refresh();
         }
-		$this->render('index',array(
-            'model' => $company));
+        $this->redirect(Yii::app()->request->urlReferrer);
     }
 
     public function filters()

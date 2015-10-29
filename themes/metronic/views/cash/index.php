@@ -30,6 +30,7 @@ $this->breadcrumbs=array(
 			?>
 		</div>
 		<!-- search-form -->
+        <input type="hidden" id="delall" value="<?= CHtml::normalizeUrl(array('/cash/delall/'))?>"
 		<?php
 		$this->widget('zii.widgets.grid.CGridView', array(
 			'id' => 'subjects-grid',
@@ -40,6 +41,13 @@ $this->breadcrumbs=array(
 			'rowCssClassExpression' =>'$data->getClass($row,$data->status_id)',
 			'itemsCssClass' => 'table table-bordered',
 			'columns' => array(
+                array(
+                    'selectableRows' => 2,
+                    'footer' => '<span class="glyphicon glyphicon-trash" onclick="GetCheckbox();" ></span>',
+                    'class' => 'CCheckBoxColumn',
+                    'headerHtmlOptions' => array('width'=>'33px',),
+                    'checkBoxHtmlOptions' => array('name' => 'selectdel[]'),
+                ),
 				'target',
 				'date',
 				'memo',
@@ -65,6 +73,11 @@ $this->breadcrumbs=array(
 					),
 					'template' => '<div class="btn-group">{update}{delete}</div>',
 					'deleteConfirmation' => '确定要删除该条记录？',
+                    'afterDelete' => 'function(link, success, data){
+                    if(success){
+                        var data = JSON.parse(data);
+                        alert(data.message);
+                    }}'
 				),
 			),
 			'pager' => array('class'=>'CLinkPager', 'header' => '','firstPageLabel'=>'首页','lastPageLabel'=>'末页','nextPageLabel'=>'下一页','prevPageLabel'=>'上一页'),

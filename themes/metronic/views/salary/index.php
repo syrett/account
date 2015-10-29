@@ -41,9 +41,10 @@ $('.search-form form').submit(function(){
         </div>
         <!-- search-form -->
 
+        <input type="hidden" id="delall" value="<?= CHtml::normalizeUrl(array('/salary/delall/'))?>"
         <?php
         $this->widget('zii.widgets.grid.CGridView', array(
-            'id' => 'transition-grid',
+            'id' => 'subjects-grid',
             'dataProvider' => $model->search(),
             'itemsCssClass' => 'table table-bordered',
             'rowCssClass' => array('row-odd', 'row-even'),
@@ -52,9 +53,10 @@ $('.search-form form').submit(function(){
             'columns' => array(
                 array(
                     'selectableRows' => 2,
-//                    'footer' => '<span class="glyphicon glyphicon-trash" onclick="GetCheckbox();" ></span>',
+                    'footer' => '<span class="glyphicon glyphicon-trash" onclick="GetCheckbox();" ></span>',
                     'class' => 'CCheckBoxColumn',
                     'headerHtmlOptions' => array('width' => '33px'),
+                    'headerTemplate'=> CHtml::checkBox($this->id.'_all',false,array('class'=>'select-on-check-all', 'onclick'=>"checkAll()")),
                     'checkBoxHtmlOptions' => array('name' => 'selectdel[]'),
                 ),
                 array(
@@ -89,6 +91,11 @@ $('.search-form form').submit(function(){
                     ),
                     'template' => '<div class="btn-group">{update}{delete}</div>',
                     'deleteConfirmation' => '确定要删除该条记录？',
+                    'afterDelete' => 'function(link, success, data){
+                    if(success){
+                        var data = JSON.parse(data);
+                        alert(data.message);
+                    }}'
                 ),
 
             ),

@@ -16,7 +16,7 @@ $('.search-button').click(function(){
 	return false;
 });
 $('.search-form form').submit(function(){
-	$('#bank-grid').yiiGridView('update', {
+	$('#subjects-grid').yiiGridView('update', {
 		data: $(this).serialize()
 	});
 	return false;
@@ -46,36 +46,8 @@ $('.search-form form').submit(function(){
 			提示：可以通过比较符号 (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>或者 <b>=</b>) 来进行搜索
 		</div>
 		<!-- search-form -->
+        <input type="hidden" id="delall" value="<?= CHtml::normalizeUrl(array('/bank/delall/'))?>" >
 
-        <script type="text/javascript">
-            /*<![CDATA[*/
-            var GetCheckbox = function (){
-                var data=new Array();
-                $("input:checkbox[name='selectdel[]']").each(function (){
-                    if($(this).attr("checked")=="checked"){
-                        data.push($(this).val());
-                    }
-                });
-                if(data.length > 0){
-                    $.post('<?php echo CHtml::normalizeUrl(array('/bank/delall/'));?>',{'selectdel[]':data}, function (data) {
-                        var ret = $.parseJSON(data);
-                        if (ret != null ) {
-                            if (ret.status == 'success') {
-                                $.fn.yiiGridView.update("subjects-grid");
-                            }else if(ret.status == 'failed')
-                                alert('删除失败');
-                            else if(ret.status == 'few'){
-                                alert('部分与其他数据有关联记录无法删除');
-                                $.fn.yiiGridView.update("subjects-grid");
-                            }
-                        }
-                    });
-                }else{
-                    alert("请选择要删除的行!");
-                }
-            }
-            /*]]>*/
-        </script>
 		<?php
 		$this->widget('zii.widgets.grid.CGridView', array(
 			'id' => 'subjects-grid',
@@ -85,13 +57,13 @@ $('.search-form form').submit(function(){
 			'filterCssClass'=>'filter',
 			'rowCssClassExpression' =>'$data->getClass($row,$data->status_id)',
 			'itemsCssClass' => 'table table-bordered',
+            'htmlOptions' => array('role'=>'grid'),
 			'columns' => array(
                 array(
                     'selectableRows' => 2,
                     'footer' => '<span class="glyphicon glyphicon-trash" onclick="GetCheckbox();" ></span>',
                     'class' => 'CCheckBoxColumn',
                     'headerHtmlOptions' => array('width'=>'33px',),
-                    'headerTemplate'=> CHtml::checkBox($this->id.'_all',false,array('class'=>'select-on-check-all', 'onclick'=>"checkAll()")),
                     'checkBoxHtmlOptions' => array('name' => 'selectdel[]'),
                 ),
 				'target',

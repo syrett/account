@@ -43,7 +43,7 @@ $('.search-form form').submit(function(){
 
         <?php
         $this->widget('zii.widgets.grid.CGridView', array(
-            'id' => 'transition-grid',
+            'id' => 'subjects-grid',
             'dataProvider' => $model->search(),
             'itemsCssClass' => 'table table-bordered',
             'rowCssClass' => array('row-odd', 'row-even'),
@@ -52,9 +52,10 @@ $('.search-form form').submit(function(){
             'columns' => array(
                 array(
                     'selectableRows' => 2,
-//                    'footer' => '<span class="glyphicon glyphicon-trash" onclick="GetCheckbox();" ></span>',
+                    'footer' => '<span class="glyphicon glyphicon-trash" onclick="GetCheckbox();" ></span>',
                     'class' => 'CCheckBoxColumn',
                     'headerHtmlOptions' => array('width' => '33px'),
+                    'headerTemplate'=> CHtml::checkBox($this->id.'_all',false,array('class'=>'select-on-check-all', 'onclick'=>"checkAll()")),
                     'checkBoxHtmlOptions' => array('name' => 'selectdel[]'),
                 ),
                 array(

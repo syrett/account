@@ -41,31 +41,10 @@ $('.search-form form').submit(function(){
         </div>
         <!-- search-form -->
 
-        <script type="text/javascript">
-            /*<![CDATA[*/
-            var GetCheckbox = function () {
-                var data = new Array();
-                $("input:checkbox[name='selectdel[]']").each(function () {
-                    if ($(this).attr("checked") == "checked") {
-                        data.push($(this).val());
-                    }
-                });
-                if (data.length > 0) {
-                    $.post('<?php echo CHtml::normalizeUrl(array('/purchase/delall/'));?>', {'selectdel[]': data}, function (data) {
-                        var ret = $.parseJSON(data);
-                        if (ret != null && ret.success != null && ret.success) {
-                            $.fn.yiiGridView.update("subjects-grid");
-                        }
-                    });
-                } else {
-                    alert("请选择要删除的行!");
-                }
-            }
-            /*]]>*/
-        </script>
+        <input type="hidden" id="delall" value="<?= CHtml::normalizeUrl(array('/cost/delall/'))?>"
         <?php
         $this->widget('zii.widgets.grid.CGridView', array(
-            'id' => 'transition-grid',
+            'id' => 'subjects-grid',
             'dataProvider' => $model->search(),
             'itemsCssClass' => 'table table-bordered',
             'rowCssClass' => array('row-odd', 'row-even'),

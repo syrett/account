@@ -349,7 +349,7 @@ $baseUrl = Yii::app()->theme->baseUrl;
 				<h4 class="modal-title">参数设置</h4>
 			</div>
 			<div class="modal-body">
-				<?php echo CHtml::beginForm(); ?>
+				<?php echo CHtml::beginForm($this->createUrl('options/setting')); ?>
 				<div class="scroller" style="height:80%" data-always-visible="1" data-rail-visible1="1">
 				<div class="tabbable tabs-right">
 					<ul class="nav nav-tabs">

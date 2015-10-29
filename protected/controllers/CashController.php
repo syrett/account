@@ -123,16 +123,17 @@ class CashController extends Controller
         {
             $in = [];
             foreach($_POST['selectdel'] as $item){
-                $relation = Bank::model()->getRelation('ban', $item);
-                if($relation==null)
-                    $in += $item;
+                $relation = Cash::model()->getRelation('cash', $item);
+                if(empty($relation))
+                    $in[] = $item;
             }
             $criteria= new CDbCriteria;
             $criteria->addInCondition('id', $in);
-            $cri = new CDbCriteria;
-            $cri->addInCondition('data_id', $in);
-            Cash::model()->deleteAll($criteria);
-            Transition::model()->deleteAll($cri);
+            $models = Cash::model()->deleteAll($criteria);
+            if(!empty($models))
+                foreach ($models as $item) {
+                    $this->actionDelete($item->id);
+                }
 
             if(count($in) == count($_POST['selectdel']))
                 $status = 'success';

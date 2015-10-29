@@ -579,3 +579,34 @@ var Layout = function() {
     };
 
 }();
+var GetCheckbox = function (){
+    var data=new Array();
+    $("input:checkbox[name='selectdel[]']").each(function (){
+        if($(this).attr("checked")=="checked"){
+            data.push($(this).val());
+        }
+    });
+    if(data.length > 0){
+        $.post($("#delall").val(),{'selectdel[]':data}, function (data) {
+            var ret = $.parseJSON(data);
+            if (ret != null ) {
+                if (ret.status == 'success') {
+                    $.fn.yiiGridView.update("subjects-grid",{async:false});
+                    Metronic.initUniform('input:checkbox')
+                }else if(ret.status == 'failed'){
+
+                    alert('删除失败');
+                    $.fn.yiiGridView.update("subjects-grid",{async:false});
+                    Metronic.initUniform('input:checkbox')
+                }
+                else if(ret.status == 'few'){
+                    alert('部分与其他数据有关联记录无法删除');
+                    $.fn.yiiGridView.update("subjects-grid",{async:false});
+                    Metronic.initUniform('input:checkbox')
+                }
+            }
+        });
+    }else{
+        alert("请选择要删除的行!");
+    }
+}

@@ -28,7 +28,6 @@ class SalaryController extends Controller
 	{
 		return array(
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions'=>array('index','create','update','save','delete'),
 				'users'=>array('@'),
 			),
 			array('deny',  // deny all users
@@ -131,12 +130,61 @@ class SalaryController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+        $relation = Salary::model()->getRelation('salary', $id);
+        if($relation==null) {
+            $model = $this->loadModel($id);
+            $model->delete();
+
+            $trans = Transition::model()->findAll(['condition'=>'data_type = "salary" and data_id=:data_id','params'=>[':data_id'=>$id]]);
+            foreach($trans as $item){
+                $item->delete();
+            }
+        }else{
+            $result['status'] = 'failed';
+            $result['message'] = '其他数据与此交易有关联，无法删除';
+            echo json_encode($result);
+        }
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 	}
+
+    /*
+     * delete all
+     */
+    public function actionDelall(){
+        if (Yii::app()->request->isPostRequest)
+        {
+            $in = [];
+                foreach($_POST['selectdel'] as $item){
+                $relation = Salary::model()->getRelation('salary', $item);
+                if(empty($relation))
+                    $in[] = $item;
+            }
+            $criteria= new CDbCriteria;
+            $criteria->addInCondition('id', $in);
+            $models = Salary::model()->findAll($criteria);
+            if(!empty($models))
+                foreach ($models as $item) {
+                    $this->actionDelete($item->id);
+                }
+
+            if(count($in) == count($_POST['selectdel']))
+                $status = 'success';
+            elseif(empty($in))
+                $status = 'failed';
+            else
+                $status = 'few';
+
+            if(isset(Yii::app()->request->isAjaxRequest)) {
+                echo CJSON::encode(array('status' => $status));
+            } else
+                $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
+        }
+        else
+            throw new CHttpException(400,'不合法的请求，请稍后重试');
+    }
 
     /**
      * Lists all models.

@@ -16,7 +16,8 @@
     </div>
     <div class="col-md-4 col-sm-12">
         <div class="btn-toolbar margin-bottom-10">
-            <button type="submit" class="btn btn-default btn-file">导入</button>
+            <input type="hidden" id="submit_type" name="submit_type" value="import">
+            <button onclick="javascript:$('#submit_type').val('import');$('#form').submit();" class="btn btn-default btn-file">导入</button>
             <a download="" href="/download/<?= Yii::t('import', strtoupper($type)) ?>.xlsx">
                 <button class="btn btn-default btn-file" type="button">模板下载
                 </button>
