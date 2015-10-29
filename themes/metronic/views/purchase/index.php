@@ -81,7 +81,6 @@ $('.search-form form').submit(function(){
                     'footer' => '<span class="glyphicon glyphicon-trash" onclick="GetCheckbox();" ></span>',
                     'class' => 'CCheckBoxColumn',
                     'headerHtmlOptions' => array('width' => '33px'),
-                    'headerTemplate'=> CHtml::checkBox($this->id.'_all',false,array('class'=>'select-on-check-all', 'onclick'=>"checkAll()")),
                     'checkBoxHtmlOptions' => array('name' => 'selectdel[]'),
                 ),
                 array(

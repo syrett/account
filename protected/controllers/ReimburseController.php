@@ -129,7 +129,7 @@ class ReimburseController extends Controller
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
 	 * @param integer $id the ID of the model to be deleted
 	 */
-	public function actionDelete($id)
+    public function actionDelete($id, $type=1)
 	{
         $relation = Reimburse::model()->getRelation('reimburse', $id);
         if($relation==null) {
@@ -158,7 +158,7 @@ class ReimburseController extends Controller
         }
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
+        if(!isset($_GET['ajax']) && $type==1)
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 	}
 

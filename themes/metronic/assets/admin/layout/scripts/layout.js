@@ -600,7 +600,7 @@ var GetCheckbox = function (){
                     Metronic.initUniform('input:checkbox')
                 }
                 else if(ret.status == 'few'){
-                    alert('部分与其他数据有关联记录无法删除');
+                    alert('部分与其他数据有关联的记录无法删除');
                     $.fn.yiiGridView.update("subjects-grid",{async:false});
                     Metronic.initUniform('input:checkbox')
                 }
