@@ -546,7 +546,7 @@ class Stock extends LFSModel
         $count = 0 ;
         switch($type){
             case '固定资产':    //1601 1701 1801
-                if(!empty($items['B'])!=''&&$items['C']!=''&&$items['D']!=''&&$items['E']!=''){
+                if(!empty($items['B'])!=''&&$items['D']!=''&&$items['E']!=''){
                     $model->name = $items['B'];
                     $model->model = $items['C'];
                     $count = intval($items['D']);
@@ -563,7 +563,7 @@ class Stock extends LFSModel
                 }
                 break;
             case '库存商品':    //1405 1403
-                if(!empty($items['B'])!=''&&$items['C']!=''&&$items['D']!=''&&$items['E']!=''){
+                if(!empty($items['B'])!=''&&$items['D']!=''&&$items['E']!=''){
                     $model->name = $items['B'];
                     $model->model = $items['C'];
                     $count = intval($items['D']);
