@@ -1424,9 +1424,9 @@ class TransitionController extends Controller
         foreach ($trans as $row => $item) {
             $arr = $item['Transition'];
             $arr['updated_at'] = time();
-            if($arr['entry_amount']=='')
+            if(isset($arr['price'])&&$arr['price']!=''&&$arr['count']>0)
                 $arr['entry_amount'] = $arr['price']*$arr['count'];
-            elseif(!isset($arr['price'])||$arr['price']==''){
+            elseif(isset($arr['entry_amount'])){
                 $arr['price'] = $arr['entry_amount'];
             }
             $arr['entry_date'] = date('Ymd',strtotime($arr['entry_date']));
