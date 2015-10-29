@@ -135,12 +135,23 @@ class ReimburseController extends Controller
         if($relation==null) {
             $model = $this->loadModel($id);
             $order_no = $model->order_no;
-            $model->delete();
-
+            //凭证是否可以删除
             $trans = Transition::model()->findAll(['condition'=>'data_type = "reimburse" and data_id=:data_id','params'=>[':data_id'=>$id]]);
+            $delete = true;
+            foreach($trans as $item){
+                $delete = $item['entry_reviewed']==1?false:$delete;
+            }
+            if(!$delete){		//如果不能删除就直接返回
+                $result['status'] = 'failed';
+                $result['message'] = '生成的凭证已审核或已过账，无法删除';
+                echo json_encode($result);
+                if($type==2)
+                    return true;
+            }
             foreach($trans as $item){
                 $item->delete();
             }
+            $model->delete();
             $porders = Preparation::model()->findAllByAttributes([], "real_order like '%$order_no%'");
             if(!empty($porders)){
                 foreach ($porders as $item) {
@@ -178,8 +189,9 @@ class ReimburseController extends Controller
             $criteria->addInCondition('id', $in);
             $models = Reimburse::model()->findAll($criteria);
             if(!empty($models))
-                foreach ($models as $item) {
-                    $this->actionDelete($item->id, 2);
+                foreach ($models as $key => $item) {
+                    if($this->actionDelete($item->id, 2))
+                        unset($in[$key]);
                 }
 
             if(count($in) == count($_POST['selectdel']))

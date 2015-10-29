@@ -27,7 +27,6 @@ class PurchaseController extends Controller
 	{
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions'=>array('index','create','update','save','delete'),
                 'users'=>array('@'),
             ),
 
@@ -133,12 +132,24 @@ class PurchaseController extends Controller
         if($relation==null) {
             $model = $this->loadModel($id);
             $order_no = $model->order_no;
-            $model->delete();
 
+            //凭证是否可以删除
             $trans = Transition::model()->findAll(['condition'=>'data_type = "purchase" and data_id=:data_id','params'=>[':data_id'=>$id]]);
+            $delete = true;
+            foreach($trans as $item){
+                $delete = $item['entry_reviewed']==1?false:$delete;
+            }
+            if(!$delete){		//如果不能删除就直接返回
+                $result['status'] = 'failed';
+                $result['message'] = '生成的凭证已审核或已过账，无法删除';
+                echo json_encode($result);
+                if($type==2)
+                    return true;
+            }
             foreach($trans as $item){
                 $item->delete();
             }
+            $model->delete();
             //删除预订单里和此项目有关联的金额
             $porders = Preparation::model()->findAllByAttributes([], "real_order like '%$order_no%'");
             if(!empty($porders)){
@@ -168,7 +179,7 @@ class PurchaseController extends Controller
         {
             $in = [];
             foreach($_POST['selectdel'] as $item){
-                $relation = Pruchase::model()->getRelation('purchase', $item);
+                $relation = Purchase::model()->getRelation('purchase', $item);
                 if(empty($relation))
                     $in[] = $item;
             }
@@ -176,8 +187,9 @@ class PurchaseController extends Controller
             $criteria->addInCondition('id', $in);
             $models = Pruchase::model()->findAll($criteria);
             if(!empty($models))
-                foreach ($models as $item) {
-                    $this->actionDelete($item->id, 2);
+                foreach ($models as $key => $item) {
+                    if($this->actionDelete($item->id, 2))
+                        unset($in[$key]);
                 }
 
             if(count($in) == count($_POST['selectdel']))

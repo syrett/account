@@ -41,6 +41,7 @@ $('.search-form form').submit(function(){
         </div>
         <!-- search-form -->
 
+        <input type="hidden" id="delall" value="<?= CHtml::normalizeUrl(array('/reimburse/delall/'))?>" >
         <?php
         $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'subjects-grid',

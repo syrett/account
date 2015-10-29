@@ -101,14 +101,24 @@ class BankController extends Controller
         if($relation==null){
             $model = $this->loadModel($id);
             $order_no = $model->order_no;
-            $model->delete();
-            $porder = Preparation::model()->findByAttributes(['pid'=>$id, 'type'=>'bank']);
-            if($porder)
-                $porder->delete();
-            $trans = Transition::model()->findAll(['condition'=>'data_type = "bank" and data_id=:data_id','params'=>[':data_id'=>$id]]);
-            foreach($trans as $item){
-                $item->delete();
-            }
+			//凭证是否可以删除
+			$trans = Transition::model()->findAll(['condition'=>'data_type = "bank" and data_id=:data_id','params'=>[':data_id'=>$id]]);
+			$delete = true;
+			foreach($trans as $item){
+				$delete = $item['entry_reviewed']==1?false:$delete;
+			}
+			if(!$delete){		//如果不能删除就直接返回
+				$result['status'] = 'failed';
+				if($type==2)
+					return true;
+			}
+			foreach($trans as $item){
+				$item->delete();
+			}
+			$model->delete();
+			$porder = Preparation::model()->findByAttributes(['pid'=>$id, 'type'=>'bank']);
+			if($porder)
+				$porder->delete();
             $reim = Reimburse::model()->findByAttributes([],"paid like '%$order_no%'");
             if($reim){
                 $paid = json_decode($reim['paid'], true);
@@ -141,10 +151,11 @@ class BankController extends Controller
             }
             $criteria= new CDbCriteria;
             $criteria->addInCondition('id', $in);
-            $bank = Bank::model()->findAll($criteria);
-            if(!empty($bank))
-                foreach ($bank as $item) {
-                    $this->actionDelete($item->id, 2);
+			$models = Bank::model()->findAll($criteria);
+            if(!empty($models))
+                foreach ($models as $key => $item) {
+                    if($this->actionDelete($item->id, 2))
+						unset($in[$key]);
                 }
 
             if(count($in) == count($_POST['selectdel']))
