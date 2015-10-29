@@ -92,10 +92,12 @@ $('.search-form form').submit(function(){
 					'template' => '<div class="btn-group">{update}{delete}</div>',
 					'deleteConfirmation' => '确定要删除该条记录？',
                     'afterDelete' => 'function(link, success, data){
-                    if(success){
-                        var data = JSON.parse(data);
-                        alert(data.message);
-                    }}'
+						if(success && data != ""){
+							var data = JSON.parse(data);
+							alert(data.message);
+						}
+                    	setTimeout(function(){ Metronic.initUniform("input:checkbox") }, 500);;
+                    }'
 				),
 			),
 			'pager' => array('class'=>'CLinkPager', 'header' => '','firstPageLabel'=>'首页','lastPageLabel'=>'末页','nextPageLabel'=>'下一页','prevPageLabel'=>'上一页'),
