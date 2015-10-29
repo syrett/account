@@ -167,7 +167,7 @@ class SalaryController extends Controller
             $models = Salary::model()->findAll($criteria);
             if(!empty($models))
                 foreach ($models as $item) {
-                    $this->actionDelete($item->id);
+                    $this->actionDelete($item->id, 2);
                 }
 
             if(count($in) == count($_POST['selectdel']))
