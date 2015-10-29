@@ -1432,7 +1432,7 @@ class TransitionController extends Controller
             $arr['entry_date'] = date('Ymd',strtotime($arr['entry_date']));
             switch($type){
                 case 'bank':
-                    $subject_2 = $_POST['subject_2'];
+                    $subject_2 = $_POST['subject_b'];
                     $arr['subject_2'] = $subject_2;
                     $model = new Bank;
                     if(!$this->checkVIP())

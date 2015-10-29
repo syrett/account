@@ -67,15 +67,15 @@ $tranDate = $this->getTransitionDate('post');
                         $data = [];
                         $class = 'form-control';
                         if (empty($banks)) {
-                            echo '<input type="hidden" name="subject_2" value="1001" /></div>';
+                            echo '<input type="hidden" name="subject_b" value="1001" /></div>';
                         } else {
                         foreach ($banks as $item) {
                             $data[$item['sbj_number']] = $item['sbj_name'];
                         }
                         $user = User::model()->find(Yii::app()->user->id);
                         $this->widget('ESelect2', array(
-                            'name' => 'subject_2',
-                            'id' => 'subject_2',
+                            'name' => 'subject_b',
+                            'id' => 'subject_b',
                             'value' => $user->bank,
                             'htmlOptions' => ['class' => $class,],
                             'data' => $data,
