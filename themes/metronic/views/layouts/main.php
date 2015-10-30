@@ -632,6 +632,10 @@ $baseUrl = Yii::app()->theme->baseUrl;
                                 <span class="title">员工列表</span>
                             </a>
                         </li>
+
+                        <?
+                        if (User2::model()->checkVIP()) {
+                        ?>
                         <li>
                             <a href="<?= $this->createUrl('transition/salary') ?>">
                                 <i class="icon-calculator"></i>
@@ -644,6 +648,7 @@ $baseUrl = Yii::app()->theme->baseUrl;
                                 <span class="title">员工报销</span>
                             </a>
                         </li>
+                        <? } ?>
                         <li>
                             <a href="<?= $this->createUrl('department/admin') ?>">
                                 <i class="icon-drawer"></i>

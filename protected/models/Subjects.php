@@ -212,6 +212,7 @@ class Subjects extends CActiveRecord
     {
         $sql = "SELECT sbj_cat FROM subjects WHERE sbj_number=:sbj_id";
         $data = Subjects::model()->findBySql($sql, array(':sbj_id' => $sbj_id));
+        if($data)
         foreach ($data as $s) {
             return $s;
         }
