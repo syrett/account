@@ -479,6 +479,7 @@ class Transition extends CActiveRecord
             "preOrder" => [],
             "invoice" => "0",
             "tax" => "0",
+            "overworth" => 0,
             "parent" => "",
             'stocks' => '',
             'stocks_count' => '',
@@ -682,7 +683,8 @@ class Transition extends CActiveRecord
                             $arr[$key] = convertDate($item);
                     }
                 }
-                $arr['entry_name'] = isset($items['target']) ? $items['target'] : $arr['entry_name'];
+                $arr['entry_name'] = isset($items['name']) ? $items['name'] : (isset($items['name'])?$items['target']:'');
+                $arr['target'] = isset($items['target'])?$items['target']:$arr['entry_name'];
                 $arr['entry_date'] = isset($items['date']) ? $items['date'] : $arr['entry_date'];
                 $arr['entry_memo'] = isset($items['memo']) ? $items['memo'] : $arr['entry_memo'];
                 $arr['entry_amount'] = str_replace(",", "", trim(isset($items['amount']) ? $items['amount'] : $arr['entry_amount']));

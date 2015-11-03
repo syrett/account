@@ -30,6 +30,7 @@ $tranDate = $this->getTransitionDate('post');
             <tr>
                 <th></th>
                 <th style="width: 155px"><?= $form->labelEx($model, 'target') ?></th>
+                <th class="input_mid"><?= $form->labelEx($model, 'name') ?></th>
                 <th class="input_mid"><?= $form->labelEx($model, 'date') ?></th>
                 <th class="input_full"><?= $form->labelEx($model, 'memo') ?></th>
                 <th class="input-large"><?= $form->labelEx($model, 'amount') ?></th>
@@ -44,7 +45,10 @@ $tranDate = $this->getTransitionDate('post');
                 <tr line="<?= $key ?>" <?= $key % 2 == 1 ? 'class="table-tr"' : '' ?>>
                     <td><input type="checkbox" class="checkboxes" value="1"></td>
                     <td><input type="text" id="tran_name_<?= $key ?>"
-                               name="lists[<?= $key ?>][Transition][entry_name]" placeholder="对方名称"
+                               name="lists[<?= $key ?>][Transition][target]" placeholder="对方名称"
+                               value="<?= $item['target'] ?>"></td>
+                    <td><input type="text" id="tran_name_<?= $key ?>"
+                               name="lists[<?= $key ?>][Transition][entry_name]" placeholder="名称"
                                value="<?= $item['entry_name'] ?>"></td>
                     <td><input class="input_mid" type="text" id="tran_date_<?= $key ?>"
                                name="lists[<?= $key ?>][Transition][entry_date]"

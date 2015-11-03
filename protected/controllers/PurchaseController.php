@@ -149,6 +149,8 @@ class PurchaseController extends Controller
             foreach($trans as $item){
                 $item->delete();
             }
+            //删除stock
+            Stock::model()->deleteAllByAttributes(['order_no'=>$order_no]);
             $model->delete();
             //删除预订单里和此项目有关联的金额
             $porders = Preparation::model()->findAllByAttributes([], "real_order like '%$order_no%'");
@@ -161,6 +163,7 @@ class PurchaseController extends Controller
                     $item->save();
                 }
             }
+
         }else{
             $result['status'] = 'failed';
             $result['message'] = '其他数据与此交易有关联，无法删除';

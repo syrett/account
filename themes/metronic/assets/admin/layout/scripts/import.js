@@ -2,6 +2,7 @@
  * Created by pdwjun on 2015/3/4.
  */
 $(document).ready(function () {
+    //商品采购的采购用途，如果选了已经存在的商品，之前选择了库存商品中的某一项，则以后库存商品中的其他项都隐藏
     $("#selectItem2").val(2);
     $("#selectItem3").val(3);
     $("#dialog").hide();
@@ -37,8 +38,8 @@ $(document).ready(function () {
 });
 
 $(window).bind("load", function () {
-    if($("#subject_2").length>0)
-    $("#subject_2").select2("readonly", true);
+    if ($("#subject_b").length > 0)
+        $("#subject_b").select2("readonly", true);
 });
 function itemsplit(e) {
 
@@ -128,9 +129,9 @@ function chooseOption(e) {
         options += "," + $(value).find("button[class*='active']").val()
     })
     options += "," + e.value;
-    if(e.value == '借出款项'){
+    if (e.value == '借出款项') {
         $("#setting-info").html('<i class="fa fa-bell-o"></i>&nbsp;&nbsp;&nbsp;预支给员工的款项请在员工报销模块录入');
-    }else{
+    } else {
         $("#setting-info").html('');
     }
     $.ajax({
@@ -147,7 +148,7 @@ function chooseOption(e) {
                 str += '<i class="fa fa-check"></i> 已选择 => <span id="sub_name">"' + data.sbj_name + '"</span><br >';
                 if (data.option != 0) {
                     $.each(data.option, function (key, value) {
-                        if(key / 7 == Math.round(key/7))
+                        if (key / 7 == Math.round(key / 7))
                             str += '<br >';
                         if (value[0] == 'text')
                             str += '<br ><input type="text" name="new-option" id="new-option" placeholder="' + value[1] + '" >'
@@ -159,7 +160,7 @@ function chooseOption(e) {
                                 var checked = "checked";
                             else
                                 var checked = "";
-                            str += '<input type="checkbox" '+ checked + ' name="new-option" id="'+ value[1] + '" >' + value[2] + '&nbsp;'+ value[3] + '&nbsp;&nbsp;&nbsp;&nbsp;'
+                            str += '<input type="checkbox" ' + checked + ' name="new-option" id="' + value[1] + '" >' + value[2] + '&nbsp;' + value[3] + '&nbsp;&nbsp;&nbsp;&nbsp;'
                         }
                     })
                 }
@@ -181,7 +182,7 @@ function chooseOption(e) {
                     str += '</select>'
                 } else
                     $.each(data.data, function (key, value) {
-                        if(typeof(value)=='object'){
+                        if (typeof(value) == 'object') {
                             key = Object.keys(value)[0]
                             value = value[key];
                         }
@@ -209,9 +210,9 @@ function chooseOption(e) {
                         newsbjname = data.newsbjname;
                     }
                     str += '<input type="hidden" name="new-type" id="new-type" value="1">' +
-                    '<input type="hidden" id="new-subject" name="new-subject" value="' + newsbj + '" > ' +
-                    '<input type="hidden" id="new-sbjname" value="' + newsbjname + '" > ' +
-                    '<br ><input type="text" class="new-item" placeholder="手动填写" id="new-name" name="new-name" value="' + $("#tran_name_" + id).val() + '" >';
+                        '<input type="hidden" id="new-subject" name="new-subject" value="' + newsbj + '" > ' +
+                        '<input type="hidden" id="new-sbjname" value="' + newsbjname + '" > ' +
+                        '<br ><input type="text" class="new-item" placeholder="手动填写" id="new-name" name="new-name" value="' + $("#tran_name_" + id).val() + '" >';
 
                     if (data.list != '') {
                         str += '<select id="new-invoice" name="new-invoice" data-placeholder="请选择">';
@@ -235,8 +236,8 @@ function chooseOption(e) {
                 }
                 else if (data.new == 'employee') {
                     str += '<input type="hidden" name="new-type" id="new-type" value="2">' +
-                    '<br ><input type="text" class="new-item" placeholder="新员工姓名" id="new-name" name="new-name"  value="' + $("#tran_name_" + id).val() + '" >' +
-                    '<br ><select id="new-department" name="new-department" data-placeholder="新员工所属部门">';
+                        '<br ><input type="text" class="new-item" placeholder="新员工姓名" id="new-name" name="new-name"  value="' + $("#tran_name_" + id).val() + '" >' +
+                        '<br ><select id="new-department" name="new-department" data-placeholder="新员工所属部门">';
                     $.each(data.list, function (key, value) {
                         str += '<option value="' + value['id'] + '">' + value['name'] + '</option>';
                     })
@@ -270,8 +271,6 @@ function itemSet() {
     //addNew();
     var sbj = $("#subject").val();
     var item_id = $("#item_id").val()
-    if (sbj.substr(0, 4) == "6001" && $("#withtax_" + item_id).val() == 1)
-        setTaxSubject(item_id);
     if (sbj != "") {
         unset(item_id);
         e = $("#info_" + item_id);
@@ -281,39 +280,73 @@ function itemSet() {
         e.attr('title', sbj);
         //显示选择路径
         var str = "";
+        var path = new Array();
+        $("#overworth_" + item_id).val(0);
         $.each($(".options").find("button[class*='active']"), function (key, value) {
-            //if (str != "")
-            //    str += "=>";
-            if ($(value).html() == '选择') {
+            if ($(value).text() == '选择') {
                 str += "=>" + $(value).val();
+                path.push($(value).val());
             }
-            else if ($(value).html() == '有溢价') {
+            else if ($(value).text() == '有溢价') {
+                $("#overworth_" + item_id).val($("#new-option").val());
                 $("#additional_sbj0_" + item_id).val(4002);//溢价金额作为资本公积4002贷方
-                amount = parseFloat($("#tran_amount_" + item_id).val())
-                $("#additional_amount0_" + item_id).val(amount - parseFloat($("#new-option").val()));
+                $("#additional_amount0_" + item_id).val(parseFloat($("#new-option").val()));
             }
-            else
-                str += "=>" + removePath($(value).html());
+            else {
+                var temp = removePath($(value).text())
+                str += "=>" + temp;
+                path.push(temp[0]);
+            }
         })
         //设置含税，简单版可以这样设置，复杂版要重新设计
         if ($("#withtax").is(":checked") == true)
             $("#withtax_" + item_id).val(1);
         else
             $("#withtax_" + item_id).val(0);
+
+        if (sbj.substr(0, 4) == "6001" && $("#withtax_" + item_id).val() == 1){
+            //setTaxSubject(item_id);
+            $("#tax_" + item_id).val($("#withtax_" + item_id).val() == 1 ? 3 : 0);
+
+        }
         $("#path_" + item_id).val(str);
         e.html(str);
         e.addClass("path-success");
         //设置checkbox的选项
-        $.each($("#setting").find("input[type='checkbox']:checked"), function(key, element){
+        $.each($("#setting").find("input[type='checkbox']:checked"), function (key, element) {
             var id = $(element).attr('id') + "_" + item_id;
-            if($("#"+ id).length > 0)
+            if ($("#" + id).length > 0)
                 $("#" + id).val(1);
-            else{
-                $("data").append('<input type="hidden" id="'+ id +'" name="lists['+item_id + '][Transition][' + $(element).attr('id') + ']" value="1" >');
+            else {
+                $("data").append('<input type="hidden" id="' + id + '" name="lists[' + item_id + '][Transition][' + $(element).attr('id') + ']" value="1" >');
             }
         });
         var last = $(".options button[class*='active']:last").val()
-        $("#last_"+ item_id).val(last);
+        $("#last_" + item_id).val(last);
+
+        var department_id_show = false;
+        if (typeof(path[1]) != 'undefined' && (path[1] == '供应商采购' || path[1] == '员工报销')) {
+            if (in_array(sbj.substr(0, 4), ['1601', '1701', '1801'])) {
+                department_id_show = true;
+                $("#department_id_"+item_id).removeClass("hidden");
+                $("[id='department_id_" + item_id + "']").show().select2();
+            }else{
+                $("#department_id_"+item_id).addClass("hidden");
+                $("select[id='department_id_" + item_id + "']").select2("destroy").hide();
+            }
+        }else{
+            $("#department_id_"+item_id).addClass("hidden");
+            $("select[id='department_id_" + item_id + "']").select2("destroy").hide();
+        }
+        $.each($("[id^='subject_']:not(#subject_b)"),function (key, element) {
+            if(in_array(element.value.substr(0, 4), ['1601', '1701', '1801']))
+                department_id_show = true;
+        })
+        if (department_id_show)
+            $("#department_id_th,#department_id_td").removeClass("hidden");
+        else
+            $("#department_id_th,#department_id_td").addClass("hidden");
+
     }
     else {
         e.addClass("path-fail");
@@ -332,11 +365,15 @@ function save() {
         var item_id = $(value).find("input[id^='id_']").val();
         var sbj = $("#subject_" + item_id).val();
         $("#invoice_" + item_id).val($("#new-invoice").val() == 2 ? 1 : 0);
-        $("#tax_" + item_id).val($("#withtax_" + item_id).val() == 1 ? 3 : 0);
-
         //主营业务收入才计算税率
-        if (sbj.substr(0, 4) == "6001" && $("#withtax_" + item_id).val() == 1)
+        if (sbj.substr(0, 4) == "6001" && $("#withtax_" + item_id).val() == 1){
             setTaxAmount(item_id);    //设置税
+            setTaxSubject(item_id);
+        }
+        if ($("#overworth_" + item_id).val() != 0 && $("#overworth_" + item_id).val() != ''){
+            $("#additional_sbj0_" + item_id).val(4002);//溢价金额作为资本公积4002贷方
+            $("#additional_amount0_" + item_id).val(parseFloat($("#overworth_" + item_id).val()));
+        }
     })
     $("#form").submit();
 }
@@ -436,22 +473,22 @@ function addNew(e) {
     }
 }
 
-function setTaxSubject(item_id){
+function setTaxSubject(item_id) {
 
     $.ajax({
         type: 'POST',
         url: $("#get-subject").val(),
-        data: {"name":"增值税","subject":2221},
-        sync: false,
+        data: {"name": "增值税", "subject": 2221},
+        async: false,
         success: function (msg) {
-            if(msg != 0){
+            if (msg != 0) {
                 $.ajax({
                     type: 'POST',
                     url: $("#get-subject").val(),
                     data: {"name": "销项", "subject": msg},
-                    sync: false,
-                    success: function (msg) {
-                        $("#additional_sbj0_" + item_id).val(msg);//科目编号,应交税费2221的二级科目 进项（采购默认）参考gbl数据库
+                    async: false,
+                    success: function (sbj) {
+                        $("#additional_sbj0_" + item_id).val(sbj);//科目编号,应交税费2221的二级科目 进项（采购默认）参考gbl数据库
                     }
                 });
             }
@@ -463,7 +500,6 @@ function setTaxAmount(item_id) {
     //设置税费，目前只设置税费
     //简单版，统一税率为3%
     //if($("#new-category-3").is(":visible")){
-
     var amount = 0;
     if ($("#tran_amount_" + item_id != ''))
         amount = parseFloat($("#tran_amount_" + item_id).val());
@@ -512,6 +548,10 @@ function addRow() {
         $(e).removeClass();
     else
         $(e).addClass("table-tr");
+    //去除select div,重新设置select2
+    $("tr[line='" + item + "'] div[class*='select2-container']").remove();
+    //$("tr[line='" + item + "'] select").show();
+    //$("tr[line='" + item + "'] select").select2();
     $("#data_import tr[id!='trSetting']:last input[id!='id_" + item + "']").val("");
     //添加 总金额提示
     var html = '<span class="help-block help-tip">总金额：<label id="amount_' + item + '">' + 0 + '</label></span>'

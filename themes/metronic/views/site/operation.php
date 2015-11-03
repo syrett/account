@@ -52,65 +52,81 @@ $this->pageTitle = Yii::app()->name;
             <div class="unit-group">
                 没有数据需要处理
             </div>
-        <?php
-        }elseif($operation != 'listAssets')
-        foreach ($list as $year => $months) {
-
-            echo CHtml::beginForm($this->createUrl('/Transition/' . $operation), 'post');
-            ?>
-            <?= $year ?>年
             <?php
-            $data = array();
-            foreach ($months as $month) {
-                $data[$year . $month] = $month;
+        } elseif ($operation != 'listAssets')
+            foreach ($list as $year => $months) {
+
+                echo CHtml::beginForm($this->createUrl('/Transition/' . $operation), 'post');
+                ?>
+                <?= $year ?>年
+                <?php
+                $data = array();
+                foreach ($months as $month) {
+                    $data[$year . $month] = $month;
+                }
+                $this->widget('ESelect2', array(
+                    'name' => 'date',
+                    'data' => $data,
+                    'htmlOptions' => array('class' => 'action')
+                ));
+                ?>
+                <input type="submit" class="btn btn-primary" value="<?= $title ?>"/>
+                <?php
+
+                echo CHtml::endForm();
             }
-            $this->widget('ESelect2', array(
-                'name' => 'date',
-                'data' => $data,
-                'htmlOptions' => array('class' => 'action')
-            ));
-            ?>
-            <input type="submit" class="btn btn-primary" value="<?= $title ?>"/>
-            <?php
 
-            echo CHtml::endForm();
-        }
-
-        if($operation=='listAssets'){
+        if ($operation == 'listAssets') {
             $where = "(entry_subject like '1601%' or entry_subject like '1701%' or entry_subject like '1801%')";
             $stocks = Stock::model()->findByAttributes([], $where);
-            $dataProvider=new CActiveDataProvider('Stock', ['criteria'=>['condition'=>$where]]);
-            if($stocks != null){
+            $dataProvider = new CActiveDataProvider('Stock', ['criteria' => ['condition' => $where]]);
+            if ($stocks != null) {
                 $this->widget('zii.widgets.grid.CGridView', array(
-                    'id' => 'assets-grid',
-                    'dataProvider' => $dataProvider,
-                    'itemsCssClass' => 'table table-striped table-hover',
-                    'columns' => array(
-                        'id',
-                        'hs_no',
-                        'in_date',
-                        [
-                            'name'=>'entry_subject',
-                            'value'=>'Subjects::getSbjPath($data->entry_subject)'
-                        ],
-                        'name',
-                        'in_price',
-                        'value_month',
-                        'value_rate',
-                        [
-                            'header' => '折旧',
-                            'value' => '$data->in_price - $data->getWorth()'
-                        ],
-                        [
-                            'header' => '净值',
-                            'value' => '$data->getWorth()'
-                        ],
-                        [
-                            'header' => '部门',
-                            'value' => 'Department::model()->getNameByOrderNo($data->order_no,$data->department_id)'
-                        ]
+                        'id' => 'assets-grid',
+                        'dataProvider' => $dataProvider,
+                        'itemsCssClass' => 'table table-striped table-hover',
+                        'columns' => array(
+                            'id',
+                            'hs_no',
+                            'in_date',
+                            [
+                                'name' => 'entry_subject',
+                                'value' => 'Subjects::getSbjPath($data->entry_subject)'
+                            ],
+                            'name',
+                            'in_price',
+                            'value_month',
+                            'value_rate',
+                            [
+                                'header' => '折旧',
+                                'value' => '$data->in_price - $data->getWorth()'
+                            ],
+                            [
+                                'header' => '净值',
+                                'value' => '$data->getWorth()'
+                            ],
+                            [
+                                'header' => '部门',
+                                'value' => 'Department::model()->getNameByOrderNo($data->order_no,$data->department_id)'
+                            ],
+                            [
+                                'class' => 'CButtonColumn',
+                                'buttons' => array(
+                                    'scrapped' => array(
+                                        'options' => array(
+                                            'class' => 'btn btn-default tip btn-xs',
+                                            'title' => '编辑',
+                                            'data-confirm' => '确定要报废？'
+                                        ),
+                                        'label' => '<span class="glyphicon glyphicon-ban-circle"></span>',
+                                        'imageUrl' => false,
+                                        'click' => ''
+                                    ),
+                                ),
+                                'template' => '<div class="btn-group">{scrapped}</div>',
+                            ]
 
-                    ))
+                        ))
                 );
             }
         }

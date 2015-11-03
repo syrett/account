@@ -115,6 +115,8 @@ class ProductController extends Controller
             foreach($trans as $item){
                 $item->delete();
             }
+            //删除stock
+            Stock::model()->deleteAllByAttributes(['order_no'=>$order_no]);
             $model->delete();
             //删除预订单里和此项目有关联的金额
             $porders = Preparation::model()->findAllByAttributes([], "real_order like '%$order_no%'");

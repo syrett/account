@@ -115,6 +115,8 @@ class BankController extends Controller
 			foreach($trans as $item){
 				$item->delete();
 			}
+            //删除stock
+            Stock::model()->deleteAllByAttributes(['order_no'=>$order_no]);
 			$model->delete();
 			$porder = Preparation::model()->findByAttributes(['pid'=>$id, 'type'=>'bank']);
 			if($porder)

@@ -184,13 +184,13 @@ function addBank() {
         subject: 1002
     }
     var msg = createSubject(data);
-    if (msg > 0 && $("#subject_2 > option[value='" + msg + "']").length == 0) {
-        $("#subject_2").append(new Option(name, msg));
+    if (msg > 0 && $("#subject_b > option[value='" + msg + "']").length == 0) {
+        $("#subject_b").append(new Option(name, msg));
     }
-    $("#subject_2 option").each(function () {
+    $("#subject_b option").each(function () {
         this.selected = (this.value == msg);
     });
-    $("#subject_2").select2();
+    $("#subject_b").select2();
 }
 
 /*
@@ -202,13 +202,13 @@ function lockBank(e) {
         $.ajax({
             type: "POST",
             url: url,
-            data: {"bank": $("#subject_2").val()}
+            data: {"bank": $("#subject_b").val()}
         })
-        $("#subject_2").select2("readonly", true);
+        $("#subject_b").select2("readonly", true);
         $(e).html("解锁银行");
     }
     else {
-        $("#subject_2").select2("readonly", false);
+        $("#subject_b").select2("readonly", false);
         $(e).html("锁定银行");
     }
     e.value = e.value == 0 ? 1 : 0;
@@ -219,7 +219,7 @@ function active(e) {
 }
 
 function checkBank() {
-    if ($("select[id='subject_2']").length > 0 && $("#subject_2").attr("readonly") == undefined)
+    if ($("select[id='subject_b']").length > 0 && $("#subject_b").attr("readonly") == undefined)
         alert("请锁定银行")
     else
         return true;

@@ -286,9 +286,12 @@ class Stock extends LFSModel
         if($type=='purchase'){
             $this->setAttribute('order_no', $item['order_no']);
             $this->setAttribute('name', $item['entry_name']);
-            $this->setAttribute('model', $item['model']);
-            $this->setAttribute('vendor_id', $item['vendor_id']);
-            $this->setAttribute('department_id', $item['department_id']);
+            if(isset($item['model'])&&$item['model']!='')
+                $this->setAttribute('model', $item['model']);
+            if(isset($item['vendor_id'])&&$item['vendor_id']!='')
+                $this->setAttribute('vendor_id', $item['vendor_id']);
+            if(isset($item['department_id'])&&$item['department_id']!='')
+                $this->setAttribute('department_id', $item['department_id']);
             $this->setAttribute('entry_subject', $item['entry_subject']);
             $this->setAttribute('in_date', $item['entry_date']);
             $this->setAttribute('in_price', $item['price']);
@@ -309,7 +312,8 @@ class Stock extends LFSModel
             $this->setAttribute('order_no', $item['order_no']);
             $this->setAttribute('order_no_sale', $item['order_no']);
             $this->setAttribute('name', $item['entry_name']);
-            $this->setAttribute('client_id', $item['client_id']);
+            if(isset($item['client_id'])&&$item['client_id']!='')
+                $this->setAttribute('client_id', $item['client_id']);
             $this->setAttribute('out_date', $item['entry_date']);
             $this->setAttribute('subject', $item['entry_subject']);
             $this->setAttribute('status', $item['status_id']);

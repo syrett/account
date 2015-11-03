@@ -47,7 +47,8 @@ $tranDate = $this->getTransitionDate('post');
             </div>
             <div class="col-md-3 col-sm-12">
                 <div class="btn-toolbar margin-bottom-10">
-                    <button type="submit" class="btn btn-default btn-file">导入</button>
+                    <input type="hidden" id="submit_type" name="submit_type" value="import">
+                    <button onclick="javascript:$('#submit_type').val('import');$('#form').submit();" class="btn btn-default btn-file">导入</button>
                     <a download="" href="/download/<?= Yii::t('import', strtoupper($type)) ?>.xlsx">
                         <button class="btn btn-default btn-file" type="button">模板下载
                         </button>
@@ -100,6 +101,7 @@ $tranDate = $this->getTransitionDate('post');
                     <th class="table_checkbox"><input type="checkbox" class="group-checkable"
                                                       data-set="#import_table .checkboxes"></th>
                     <th class="input_mid">交易方名称</th>
+                    <th class="input_mid">名称</th>
                     <th class="input_mid"><select id="selectItem1" name="selectItem1"><?= $select ?></select></th>
                     <th class="input_full"><select id="selectItem2" name="selectItem2"><?= $select ?></select></th>
                     <th class="input-large"><select id="selectItem3" name="selectItem3"><?= $select ?></select></th>
@@ -114,8 +116,12 @@ $tranDate = $this->getTransitionDate('post');
                             <td><input type="checkbox" class="checkboxes" value="1" id="item_<?= $key ?>"
                                        name="lists[<?= $key ?>]"
                                        value="<?= isset($item['id']) ? $item['id'] : '' ?>"></td>
+                            <td><input type="text" id="tran_target_<?= $key ?>"
+                                       name="lists[<?= $key ?>][Transition][target]" placeholder="对方名称"
+                                       value="<?= $item['target'] ?>" class="form-control input-small">
+                            </td>
                             <td><input type="text" id="tran_name_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][entry_name]" placeholder="对方名称"
+                                       name="lists[<?= $key ?>][Transition][entry_name]" placeholder="名称"
                                        value="<?= $item['entry_name'] ?>" class="form-control input-small">
                             </td>
                             <td>

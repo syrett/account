@@ -1734,14 +1734,14 @@ class TransitionController extends Controller
                     }
                     break;
             }
-            if($newone==0 && $id != '' && $id != '0' )
+            if($newone==0 && $id != '' && $id != '0' ){
                 $model = $model::model()->findByPk($id);
+            }
             elseif (!empty($item['Transition']['d_id'])){
                 $model = $model::model()->findByPk($item['Transition']['d_id']);
-                $arr['order_no'] = $model->initOrderno();
-            }elseif(empty($arr['order_no'])){
-                $arr['order_no'] = $model->initOrderno();
+                $model->order_no = $model->initOrderno();
             }
+            $arr['order_no'] = $model->order_no==''?$model->initOrderno():$model->order_no;
             $newone ++;
             if ($arr['price'] == "" || ($arr['price'] == 0 && !isset($arr['before_tax']))) {
                 $arr['error'] = ['金额不能为空或为0'];
@@ -1844,7 +1844,42 @@ class TransitionController extends Controller
             if(isset($result[$row]['status']) && $result[$row]['status'] == 0)
                 continue;
             if ($model->save()) {
+                //免费版，库存和固定资产的创建通过银行 供应商采购和 销售收入判断。
+                if(!$this->checkVIP()){
+                    switch(substr($model->subject,0,4)){
+                        case '1601':        //固定资产
+                        case '1604':        //在建工程
+                        case '1403':        //原材料
+                        case '1405':        //库存商品
+                        case '1701':        //无形资产
+                        case '1801':        //长期待摊
+                            $psubject = 'purchase';
+                            break;
+//                        case '6001':        //原材料
+//                            $psubject = 'product';
+//                            break;
+                        default :
 
+                    }
+                    if(isset($psubject)){
+                        if($new){
+                            $stock = new Stock();
+                            $stock->load($arr, $psubject);
+                            $stock->saveMultiple(1);
+                        }else{
+                            $stock = Stock::model()->findByAttributes(['order_no'=>$model->order_no]);
+                            if($stock){
+                                $stock->load($arr, $psubject);
+                                $stock->save();
+                            }else{
+                                $stock = new Stock();
+                                $stock->load($arr, $psubject);
+                                $stock->saveMultiple(1);
+                            }
+                        }
+                    }else
+                        Stock::model()->deleteAllByAttributes(['order_no'=>$model->order_no]);
+                }
                 //修改原来以此为预收或预付的订单的状态为正常，再将本次已选中订单状态更新
 
                 if(isset($preOrder)){   //生成预支预付预收订单

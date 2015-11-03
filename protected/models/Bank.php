@@ -43,7 +43,7 @@ class Bank extends LFSModel
 			array('target', 'length', 'max'=>512),
 			array('date', 'length', 'max'=>64),
 			array('subject', 'length', 'max'=>16),
-			array('memo, type, pid, order_no, created_at, tax, path, relation', 'safe'),
+			array('memo, type, pid, order_no, created_at, tax, path, relation, overworth', 'safe'),
             array('amount', 'checkAmount'),
 			// The following rule is used by search().
 			array('id, target, date, memo, amount, parent, order_no, invoice, tax, status_id, created_at, updated_at', 'safe', 'on'=>'search'),
@@ -70,6 +70,8 @@ class Bank extends LFSModel
 			'id' => 'ID',
             'order_no' => '订单号',
 			'target' => '交易对象',
+            'name' => '名称',
+            'department_id' => '部门',
 			'date' => '日期',
 			'memo' => '说明',
 			'amount' => '金额',
@@ -159,7 +161,9 @@ class Bank extends LFSModel
 	 * load 加载数据
 	 */
 	public function load($item){
-		$this->setAttribute('target', $item['entry_name']);
+        $this->setAttribute('target', isset($item['target'])?$item['target']:'');
+        $this->setAttribute('name', $item['entry_name']);
+        $this->setAttribute('department_id', isset($item['department_id'])?$item['department_id']:'');
         $this->setAttribute('order_no', isset($item['order_no'])?$item['order_no']:'');
 		$this->setAttribute('date', $item['entry_date']);
 		$this->setAttribute('memo', $item['entry_memo']);
@@ -169,6 +173,7 @@ class Bank extends LFSModel
 		$this->setAttribute('parent', isset($item['parent'])?$item['parent']:'');
 		$this->setAttribute('invoice', isset($item['invoice'])?$item['invoice']:'');
         $this->setAttribute('tax',  isset($item['tax'])?$item['tax']:'');
+        $this->setAttribute('overworth',  isset($item['overworth'])?$item['overworth']:'');
         $this->setAttribute('path',  isset($item['path'])?$item['path']:'');
         $this->setAttribute('relation',  isset($item['relation'])?$item['relation']:'');
 		$this->setAttribute('updated_at', isset($item['updated_at'])?$item['updated_at']:'');

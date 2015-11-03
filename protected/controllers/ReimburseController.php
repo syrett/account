@@ -28,7 +28,6 @@ class ReimburseController extends Controller
 	{
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions'=>array('index','create','update','save','delete'),
                 'users'=>array('@'),
             ),
             array('deny',  // deny all users

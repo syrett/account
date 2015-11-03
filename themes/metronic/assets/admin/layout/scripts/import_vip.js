@@ -37,8 +37,8 @@ $(document).ready(function () {
 });
 
 $(window).bind("load", function () {
-    if($("#subject_2").length>0)
-        $("#subject_2").select2("readonly", true);
+    if($("#subject_b").length>0)
+        $("#subject_b").select2("readonly", true);
 });
 function itemsplit(e) {
 
@@ -293,14 +293,13 @@ function itemSet() {
                 str += "=>" + $(value).val();
             }
             else if ($(value).text() == '有溢价') {
+                $("#overworth_" + item_id).val($("#new-option").val());
                 $("#additional_sbj0_" + item_id).val(4002);//溢价金额作为资本公积4002贷方
-                amount = parseFloat($("#tran_amount_" + item_id).val())
-                $("#additional_amount0_" + item_id).val(amount - parseFloat($("#new-option").val()));
+                $("#additional_amount0_" + item_id).val($("#new-option").val());
             }
             else
                 str += "=>" + removePath($(value).text());
         })
-        //设置含税，简单版可以这样设置，复杂版要重新设计
         if ($("#new-option").is(":checked") == true)
             $("#withtax_" + item_id).val(1);
         else
@@ -376,6 +375,10 @@ function save() {
         var sbj = $("#subject_" + item_id).val();
         $("#invoice_" + item_id).val($("#new-invoice").val() == 2 ? 1 : 0);
         //$("#tax_" + item_id).val($("#withtax_" + item_id).val() == 1 ? 3 : 0);
+        if ($("#overworth_" + item_id).val() != 0 && $("#overworth_" + item_id).val() != ''){
+            $("#additional_sbj0_" + item_id).val(4002);//溢价金额作为资本公积4002贷方
+            $("#additional_amount0_" + item_id).val(parseFloat($("#overworth_" + item_id).val()));
+        }
 
     })
     $("#abc table tr:first").nextAll('tr:visible[id!=trSetting]').find("[id*='btn_confirm_']").each(function (key, value) {

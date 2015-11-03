@@ -12,6 +12,7 @@ $baseUrl = Yii::app()->theme->baseUrl;
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_common.js');
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import.js');
 
+$departmentArray = Department::model()->getDepartmentArray();
 $this->pageTitle = Yii::app()->name;
 $tranDate = $this->getTransitionDate('post');
 /*if(!isset($model)){
@@ -63,16 +64,18 @@ $tranDate = $this->getTransitionDate('post');
                         $banks = Subjects::model()->list_sub($sbj);
                         $data = [];
                         $class = 'form-control';
+                        if ($type == 'bank'){
+
                         if (empty($banks)) {
-                            echo '<input type="hidden" name="subject_2" value="1001" /></div>';
+                            echo '<input type="hidden" name="subject_b" value="1001" /></div>';
                         } else {
                         foreach ($banks as $item) {
                             $data[$item['sbj_number']] = $item['sbj_name'];
                         }
                         $user = User::model()->find(Yii::app()->user->id);
                         $this->widget('ESelect2', array(
-                            'name' => 'subject_2',
-                            'id' => 'subject_2',
+                            'name' => 'subject_b',
+                            'id' => 'subject_b',
                             'value' => $user->bank,
                             'htmlOptions' => ['class' => $class,],
                             'data' => $data,
@@ -86,6 +89,7 @@ $tranDate = $this->getTransitionDate('post');
                 </div>
                 <?
                 }
+                }
                 ?>
             </div>
         </div>
@@ -97,6 +101,8 @@ $tranDate = $this->getTransitionDate('post');
                     <th class="table_checkbox"><input type="checkbox" class="group-checkable"
                                                       data-set="#import_table .checkboxes"></th>
                     <th class="input_mid">交易方名称</th>
+                    <th class="input_mid">名称</th>
+                    <th class="input_mid hidden" id="department_id_th">部门</th>
                     <th class="input_mid"><select id="selectItem1" name="selectItem1"><?= $select ?></select></th>
                     <th class="input_full"><select id="selectItem2" name="selectItem2"><?= $select ?></select></th>
                     <th class="input-large"><select id="selectItem3" name="selectItem3"><?= $select ?></select></th>
@@ -111,9 +117,23 @@ $tranDate = $this->getTransitionDate('post');
                             <td><input type="checkbox" class="checkboxes" value="1" id="item_<?= $key ?>"
                                        name="lists[<?= $key ?>]"
                                        value="<?= isset($item['id']) ? $item['id'] : '' ?>"></td>
+                            <td><input type="text" id="tran_target_<?= $key ?>"
+                                       name="lists[<?= $key ?>][Transition][target]" placeholder="对方名称"
+                                       value="<?= $item['target'] ?>" class="form-control input-small">
+                            </td>
                             <td><input type="text" id="tran_name_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][entry_name]" placeholder="对方名称"
+                                       name="lists[<?= $key ?>][Transition][entry_name]" placeholder="名称"
                                        value="<?= $item['entry_name'] ?>" class="form-control input-small">
+                            </td>
+                            <td class="hidden" id="department_id_td"><?
+                                $this->widget('ext.select2.ESelect2', array(
+                                    'name' => 'lists[' . $key . '][Transition][department_id]',
+                                    'id' => 'department_id_' . $key,
+                                    'data' => $departmentArray,
+                                    'value' => $item['department_id'],
+                                    'htmlOptions' => array('class' => 'select-full',)
+                                ));
+                                ?>
                             </td>
                             <td>
                                 <input class="form-control form-control-inline input_mid " type="text"
@@ -153,6 +173,8 @@ $tranDate = $this->getTransitionDate('post');
                                 <input type="hidden" id="withtax_<?= $key ?>" value="<?= $item['tax'] > 0 ? 1 : 0 ?>">
                                 <input type="hidden" id="tax_<?= $key ?>" name="lists[<?= $key ?>][Transition][tax]"
                                        value="<?= $item['tax'] ?>">
+                                <input type="hidden" id="overworth_<?= $key ?>" name="lists[<?= $key ?>][Transition][overworth]"
+                                       value="<?= $item['overworth'] ?>">
                                 <input type="hidden" id="parent_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][parent]" value="<?= $item['parent'] ?>">
                                 <input type="hidden" id="additional_sbj0_<?= $key ?>"
@@ -168,12 +190,14 @@ $tranDate = $this->getTransitionDate('post');
                                        name="lists[<?= $key ?>][Transition][additional][1][amount]"
                                        value="<?= $item['additional'][1]['amount'] ?>">
                                 <input type="hidden" id="last_<?= $key ?>" name="lists[<?= $key ?>][Transition][last]"
-                                       value = "<?isset($item['last'])?$item['last']:''?>">
+                                       value="<? isset($item['last']) ? $item['last'] : '' ?>">
                                 <input type="hidden" id="path_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][path]"
                                        value="<?= $item['path'] ?>">
+
                                 <div class="btn-group">
-                                    <a class="btn btn-xs blue dropdown-toggle" data-toggle="modal" onclick="itemsetting(this)"
+                                    <a class="btn btn-xs blue dropdown-toggle" data-toggle="modal"
+                                       onclick="itemsetting(this)"
                                        href="#category-box">
                                         <button type="button" class="btn btn-xs blue"><i
                                                 class="fa fa-file-o"></i> 记账
@@ -208,7 +232,7 @@ $tranDate = $this->getTransitionDate('post');
                     }
                     ?>
                     <input type="hidden" id="rows" value="<?= $lines ?>">
-                <?
+                    <?
                 }
                 ?>
             </table>
@@ -228,7 +252,8 @@ $tranDate = $this->getTransitionDate('post');
 </div>
 <div class="dataTables_wrapper no-footer">
     <div class="text-center">
-        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证</button>
+        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证
+        </button>
     </div>
 </div>
 
@@ -263,7 +288,8 @@ $tranDate = $this->getTransitionDate('post');
             <!-- .modal-body -->
             <div class="modal-footer">
                 <button class="btn btn-circle green" data-dismiss="modal" type="button" onclick="itemSet()">确定</button>
-                <button class="btn btn-circle default" data-dismiss="modal" type="button"">取消
+                <button class="btn btn-circle default" data-dismiss="modal" type="button"
+                ">取消
                 </button>
             </div>
         </div>

@@ -58,6 +58,8 @@ class LFSModel extends CActiveRecord
             case '1601': $prefix = 'F';break;
             case '1701': $prefix = 'I';break;
             case '1801': $prefix = 'D';break;
+            case '1403': $prefix = 'R';break;
+            case '1405': $prefix = 'S';break;
             default: $prefix = '';
         }
         $sql = "select max(hs_no) hs_no from stock where hs_no like '$prefix%' ";
