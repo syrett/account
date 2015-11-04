@@ -112,6 +112,11 @@ $departmentArray = Department::model()->getDepartmentArray();
                             <input type="hidden" id="additional_amount1_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][additional][1][amount]"
                                    value="<?= $item['additional'][1]['amount'] ?>">
+                            <input type="hidden" id="last_<?= $key ?>" name="lists[<?= $key ?>][Transition][last]"
+                                   value = "<?isset($item['last'])?$item['last']:''?>">
+                            <input type="hidden" id="path_<?= $key ?>"
+                                   name="lists[<?= $key ?>][Transition][path]"
+                                   value="<?= $item['path'] ?>">
 
                         </data>
 

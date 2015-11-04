@@ -1435,10 +1435,51 @@ class TransitionController extends Controller
                     $subject_2 = $_POST['subject_b'];
                     $arr['subject_2'] = $subject_2;
                     $model = new Bank;
-                    if(!$this->checkVIP())
-                        break;
                     $path = explode('=>', $arr['path']);
                     if(count($path)>1)
+                        if($path[1] == '收入' && isset($path[3]) && $path[3]=='处置长期资产'){
+                            //变卖长期资产，
+                            if(isset($path[4]) && $path[4] != '其他'){
+                                preg_match("/[^_]*/", $path[4], $matches);
+                                $hs_no = $matches[0];
+                                //报废时的待处理财产损益
+                                if($hs_no != ''){
+                                    $stock = Stock::model()->findByAttributes(['hs_no'=>$hs_no]);
+                                    $tran_old = Transition::model()->findByAttributes([
+                                        'data_type'=>'scrap','data_id'=>$stock->id],
+                                        'entry_subject like "1901%"');
+                                    $amount_pre = $tran_old?$tran_old->entry_amount:0;
+                                    $where = 'path like "%'. $matches[0]. '%" and path like "%支出%" and path like "%处置长期资产%"';
+                                    $temp1 = Bank::model()->findAllByAttributes([], $where);
+                                    $temp2 = Cash::model()->findAllByAttributes([], $where);
+                                    if($temp1){
+                                        foreach ($temp1 as $temp) {
+                                            $amount_pre += $temp->amount;
+                                        }
+                                    }
+                                    if($temp2){
+                                        foreach ($temp2 as $temp) {
+                                            $amount_pre += $temp->amount;
+                                        }
+                                    }
+                                    $arr['entry_subject'] = $tran_old->entry_subject;
+                                    $arr['entry_amount'] = $amount_pre;
+                                    $arr['entry_transaction'] = 1;
+                                    if($arr['price'] < $amount_pre){    //营业外支出
+                                        $arr['subject_2'] = $subject_2. ',6711';
+                                        $arr['subject_2_price'] = $arr['price']. ','. ($amount_pre - $arr['price']);
+                                        $arr['subject_2_transa'] = '2,1';   //借贷
+                                    }elseif($arr['price'] > $amount_pre){
+                                        $arr['subject_2'] = $subject_2. ',6301';
+                                        $arr['subject_2_price'] = $arr['price']. ','. ($arr['price'] - $amount_pre);
+                                        $arr['subject_2_transa'] = '2,2';
+                                    }
+
+                                }
+                            }
+                        }
+                    if(!$this->checkVIP())
+                        break;
                     if($path[2]=='销售收入'){
                         $order = Product::model()->findByAttributes(['order_no'=>$path[4]]);
                         if($order){
@@ -2131,12 +2172,16 @@ class TransitionController extends Controller
 
                     if(count($subject_2_arr)>1){
                         $subject_2_price = explode(',', $arr['subject_2_price']);
+                        if(isset($arr['subject_2_transa']))
+                            $subject_2_transa = explode(',', $arr['subject_2_transa']);
                         foreach($subject_2_arr as $key => $item){
                             if($subject_2_price[$key]!=0){
                                 $data['entry_amount'] = $subject_2_price[$key];
                                 $data['entry_subject'] = $item;
                                 $tran_tmp = new Transition();
                                 $tran_tmp->attributes = $data;
+                                if(isset($subject_2_transa[$key]))
+                                    $tran_tmp->entry_transaction = $subject_2_transa[$key];
                                 $tran_temp[] = $tran_tmp;
                             }
                         }

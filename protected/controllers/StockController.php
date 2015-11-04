@@ -31,7 +31,6 @@ class StockController extends Controller
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete', 'assets'),
                 'users' => array('@'),
             ),
             array('deny',  // deny all users
@@ -112,6 +111,90 @@ class StockController extends Controller
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 	}
 
+    /**
+     * 报废商品.
+     * @param integer $id the ID of the model to be updated
+     */
+    public function actionScrap($id,$action='scrap')
+    {
+        if(Yii::app()->request->isAjaxRequest){
+//        if(1){
+            if($action=='scrap'){
+                $model=$this->loadModel($id);
+                if($model->status!=4){
+                    $model->status = 4;
+                    $date = Transition::getTransitionDate();
+                    $prefix = substr($date,0,6);
+                    $type = Subjects::getName($model->entry_subject);
+                    $tran1 = new Transition();
+                    $tran2 = new Transition();
+                    $tran3 = new Transition();
+                    $tran1->entry_transaction = 1;
+                    $tran2->entry_transaction = 1;
+                    $tran3->entry_transaction = 2;
+                    $tran1->entry_subject = '1901';
+                    $tran2->entry_subject = Subjects::matchSubject($type, '1602');
+                    $tran3->entry_subject = $model->entry_subject;
+                    $tran1->entry_amount = $model->getWorth();
+                    $tran2->entry_amount = $model->in_price - $model->getWorth();
+                    $tran3->entry_amount = $model->in_price;
+                    $data = [
+                        'data_type' => 'scrap',
+                        'data_id' => $model->id,
+                        'entry_num_prefix' => $prefix,
+                        'entry_memo' => $type.'_'.$model->hs_no.'_报废',
+                        'entry_date' => convertDate($date, 'Y-m-d 00:00:00'),
+                        'entry_num' => Transition::model()->tranSuffix($prefix),
+                        'entry_creater' => Yii::app()->user->id,
+                        'entry_editor' => Yii::app()->user->id,
+                    ];
+                    //待处理财产损1901,累计折旧1602，固定资产、库存商品或原材料，无形资产
+                    $tran1->attributes = $data;
+                    $tran2->attributes = $data;
+                    $tran3->attributes = $data;
+                    $worth = explode(',', $model->worth);
+                    $worth[] = 0;
+                    $model->worth = implode(',', $worth);
+                    $model->save();
+                    if($tran1->validate()){
+                        if($tran1->save() && $tran3->save()){
+                            $tran2->entry_amount>0?$tran2->save():'';
+                            echo json_encode(['status'=>'success','msg'=>'报废成功']);
+                        }
+                        else
+                            echo json_encode(['status'=>'failed','msg'=>'报废失败']);
+                    }
+
+                }else
+                    echo json_encode(['status'=>'failed','msg'=>'该物品已经报废']);
+
+            }else{      //取消报废
+                $model = $this->loadModel($id);
+                if($model->status==4){
+                    $trans = Transition::model()->findAllByAttributes(['data_type'=>'scrap', 'data_id'=>$id]);
+                    $reviewed = false;
+                    foreach ($trans as $item) {
+                        $reviewed = $item->entry_reviewed?true:$reviewed;
+                    }
+                    if($reviewed){
+                        echo json_encode(['status'=>'failed','msg'=>'生成的报废凭证已经审核，无法取消报废']);
+                    }else{
+                        foreach ($trans as $tran) {
+                            $tran->delete();
+                        }
+                        $model->status = 1;
+                        $arr = explode(',', $model['worth']);
+                        array_pop($arr);
+                        $model->worth = implode(',', $arr);
+                        $model->save();
+                        echo json_encode(['status'=>'success','msg'=>'已经取消报废']);
+                    }
+                }else
+                    echo json_encode(['status'=>'failed','msg'=>'该物品没有报废，无法取消报废']);
+            }
+        }else
+            echo json_encode(['status'=>'failed','msg'=>'必须为ajax提交']);
+    }
 	/**
 	 * Lists all models.
 	 */

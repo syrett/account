@@ -124,7 +124,7 @@ class Client extends CActiveRecord
       return $arr;
     }
 
-    public function getAllMount($options){
+    public function getAllMount($options, $add = ''){
         $result = 0;
         $sbj = '1122';
         $model = Subjects::model()->findByAttributes(['sbj_name'=>$this->company], 'sbj_number like "1122%"');
@@ -139,6 +139,12 @@ class Client extends CActiveRecord
             $result = $balance + $in-$out;
         }else
             $result = Transition::model()->getAllMount($sbj, $options['entry_transaction'], 'after', '');
+        //如果有坏账，去除坏账金额
+        if($add == 'bad'){
+            $tran = Transition::model()->findByAttributes(['data_type'=>'bad_debts','data_id'=>$this->id, 'entry_closing'=>0]);
+            if($tran)
+                $result -= $tran->entry_amount;
+        }
         return $result;
     }
 
@@ -186,5 +192,13 @@ class Client extends CActiveRecord
         $sbj2 = Subjects::matchSubject($name,['2203']);
         $result[] = ['subject_2' => $sbj2, 'order_no' => '预收款'];
         return $result;
+    }
+
+    /*
+     * 是否有坏账
+     */
+    public function hasDad(){
+        $tran = Transition::model()->findByAttributes(['data_type'=>'bad_debts', 'data_id'=>$this->id, 'entry_closing'=>0]);
+        return $tran?true:false;
     }
 }

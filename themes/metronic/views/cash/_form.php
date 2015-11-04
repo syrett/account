@@ -63,45 +63,50 @@ $tranDate = $this->getTransitionDate('post');
                                 id="amount_<?= $key ?>"><?= $item['entry_amount'] ?></label>
                         </span></td>
                     <td class="action">
+                        <input type="hidden" id="did_<?= $key ?>" name="lists[<?= $key ?>][Transition][d_id]"
+                               value="<?= isset($item['d_id']) ? $item['d_id'] : '' ?>">
                         <input type="hidden" id="id_<?= $key ?>" value="<?= $key ?>">
-                        <input id="subject_2" name="subject_2" type="hidden" readonly
-                               value="<?= $model['subject_2'] ?>">
-                        <input type="hidden" id="status_id_<?= $key ?>"
-                               name="lists[<?= $key ?>][Transition][status_id]"
-                               value="<?= $item['status_id'] ?>">
-                        <input type="hidden" id="subject_<?= $key ?>"
-                               name="lists[<?= $key ?>][Transition][entry_subject]"
-                               value="<?= $item['entry_subject'] ?>">
-                        <input type="hidden" id="transaction_<?= $key ?>"
-                               name="lists[<?= $key ?>][Transition][entry_transaction]"
-                               value="<?= $item['entry_transaction'] ?>">
-                        <input type="hidden" id="invoice_<?= $key ?>"
-                               name="lists[<?= $key ?>][Transition][invoice]" value="">
-                        <input type="hidden" id="tax_<?= $key ?>" name="lists[<?= $key ?>][Transition][tax]"
-                               value="<?= $item['tax'] ?>">
-                        <input type="hidden" id="withtax_<?= $key ?>"
-                               value="<?= $item['tax'] > 0 ? 1 : 0 ?>">
-                        <input type="hidden" id="parent_<?= $key ?>"
-                               name="lists[<?= $key ?>][Transition][parent]" value="">
-                        <input type="hidden" id="additional_sbj0_<?= $key ?>"
-                               name="lists[<?= $key ?>][Transition][additional][0][subject]"
-                               value="<?= $item['additional'][0]['subject'] ?>">
-                        <input type="hidden" id="additional_amount0_<?= $key ?>"
-                               name="lists[<?= $key ?>][Transition][additional][0][amount]"
-                               value="<?= $item['additional'][0]['amount'] ?>">
-                        <input type="hidden" id="additional_sbj1_<?= $key ?>"
-                               name="lists[<?= $key ?>][Transition][additional][1][subject]"
-                               value="<?= $item['additional'][1]['subject'] ?>">
-                        <input type="hidden" id="additional_amount1_<?= $key ?>"
-                               name="lists[<?= $key ?>][Transition][additional][1][amount]"
-                               value="<?= $item['additional'][1]['amount'] ?>">
-                        <input id="get-subject" type="hidden" value="<?= $this->createUrl(
-                            '/subjects/matchsubject'
-                        ) ?>">
-                        <input id="data" type="hidden" value="">
-                        <input id="subject" type="hidden" value="">
-                        <input id="item_id" type="hidden" value="">
+                        <data>
+                            <input id="subject_b" name="subject_b" type="hidden" readonly
+                                   value="<?= $model['subject_2'] ?>">
+                            <input type="hidden" id="status_id_<?= $key ?>"
+                                   name="lists[<?= $key ?>][Transition][status_id]"
+                                   value="<?= $item['status_id'] ?>">
+                            <input type="hidden" id="subject_<?= $key ?>"
+                                   name="lists[<?= $key ?>][Transition][entry_subject]"
+                                   value="<?= $item['entry_subject'] ?>">
+                            <input type="hidden" id="transaction_<?= $key ?>"
+                                   name="lists[<?= $key ?>][Transition][entry_transaction]"
+                                   value="<?= $item['entry_transaction'] ?>">
+                            <input type="hidden" id="invoice_<?= $key ?>"
+                                   name="lists[<?= $key ?>][Transition][invoice]" value="">
+                            <input type="hidden" id="tax_<?= $key ?>" name="lists[<?= $key ?>][Transition][tax]"
+                                   value="<?= $item['tax'] ?>">
+                            <input type="hidden" id="overworth_<?= $key ?>" name="lists[<?= $key ?>][Transition][overworth]"
+                                   value="<?= $item['overworth'] ?>">
+                            <input type="hidden" id="withtax_<?= $key ?>"
+                                   value="<?= $item['tax'] > 0 ? 1 : 0 ?>">
+                            <input type="hidden" id="parent_<?= $key ?>"
+                                   name="lists[<?= $key ?>][Transition][parent]" value="">
+                            <input type="hidden" id="additional_sbj0_<?= $key ?>"
+                                   name="lists[<?= $key ?>][Transition][additional][0][subject]"
+                                   value="<?= $item['additional'][0]['subject'] ?>">
+                            <input type="hidden" id="additional_amount0_<?= $key ?>"
+                                   name="lists[<?= $key ?>][Transition][additional][0][amount]"
+                                   value="<?= $item['additional'][0]['amount'] ?>">
+                            <input type="hidden" id="additional_sbj1_<?= $key ?>"
+                                   name="lists[<?= $key ?>][Transition][additional][1][subject]"
+                                   value="<?= $item['additional'][1]['subject'] ?>">
+                            <input type="hidden" id="additional_amount1_<?= $key ?>"
+                                   name="lists[<?= $key ?>][Transition][additional][1][amount]"
+                                   value="<?= $item['additional'][1]['amount'] ?>">
+                            <input type="hidden" id="last_<?= $key ?>" name="lists[<?= $key ?>][Transition][last]"
+                                   value = "<?isset($item['last'])?$item['last']:''?>">
+                            <input type="hidden" id="path_<?= $key ?>"
+                                   name="lists[<?= $key ?>][Transition][path]"
+                                   value="<?= $item['path'] ?>">
 
+                        </data>
                         <div class="btn-group">
                             <a class="btn btn-xs blue dropdown-toggle" data-toggle="modal" onclick="itemsetting(this)"
                                href="#category-box">

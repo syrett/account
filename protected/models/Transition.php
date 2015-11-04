@@ -36,6 +36,16 @@ class Transition extends CActiveRecord
     public $select; // search的时候，定义返回字段
 
     /**
+     * Returns the static model of the specified AR class.
+     * Please note that you should have this exact method in all your CActiveRecord descendants!
+     * @param string $className active record class name.
+     * @return Transition the static model class
+     */
+    public static function model($className = __CLASS__)
+    {
+        return parent::model($className);
+    }
+    /**
      * @return array validation rules for model attributes.
      */
     public function rules()
@@ -270,17 +280,6 @@ class Transition extends CActiveRecord
             }
         }
         return $arr;
-    }
-
-    /**
-     * Returns the static model of the specified AR class.
-     * Please note that you should have this exact method in all your CActiveRecord descendants!
-     * @param string $className active record class name.
-     * @return Transition the static model class
-     */
-    public static function model($className = __CLASS__)
-    {
-        return parent::model($className);
     }
 
     public static function listTransition()

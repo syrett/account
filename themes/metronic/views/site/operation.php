@@ -112,18 +112,45 @@ $this->pageTitle = Yii::app()->name;
                             [
                                 'class' => 'CButtonColumn',
                                 'buttons' => array(
-                                    'scrapped' => array(
+                                    'scrap' => array(
                                         'options' => array(
                                             'class' => 'btn btn-default tip btn-xs',
-                                            'title' => '编辑',
-                                            'data-confirm' => '确定要报废？'
+                                            'title' => '操作',
+                                            'confirm' => '确定要执行此操作？',
+                                            'ajax' => [
+                                                'dataType' => 'json',
+                                                'url' => 'js:$(this).attr("href")',
+                                                'success' => 'js:function(data) {
+                                                        alert(data.msg);
+                                                $.fn.yiiGridView.update("assets-grid")}'
+                                            ]
                                         ),
-                                        'label' => '<span class="glyphicon glyphicon-ban-circle"></span>',
+                                        'label' => "<span class='glyphicon glyphicon-ban-circle'></span>",
                                         'imageUrl' => false,
-                                        'click' => ''
+                                        'url' => 'Yii::app()->createUrl("/Stock/scrap", ["id"=>$data->id,"action"=>$data->status==4?"unscrap":"scrap"])'
                                     ),
+//                                    'unscrap' => array(
+//                                        'options' => array(
+//                                            'class' => 'btn btn-default tip btn-xs',
+//                                            'title' => '编辑',
+//                                            'confirm' => '确定要报废？',
+//                                            'ajax' => [
+//                                                'dataType' => 'json',
+//                                                'url' => 'js:$(this).attr("href")',
+//                                                'success' => 'js:function(data) {
+//                                                    if(data.status=="success")
+//                                                        alert("取消报废成功")
+//                                                    else
+//                                                        alert(data.msg);
+//                                                $.fn.yiiGridView.update("assets-grid")}'
+//                                            ]
+//                                        ),
+//                                        'label' => "<span class='glyphicon glyphicon-ok-circle'></span>",
+//                                        'imageUrl' => false,
+//                                        'url' => 'Yii::app()->createUrl("/Stock/scrap", ["id"=>$data->id,"action"=>"unscrap"])'
+//                                    ),
                                 ),
-                                'template' => '<div class="btn-group">{scrapped}</div>',
+                                'template' => '<div class="btn-group">{scrap}</div>',
                             ]
 
                         ))

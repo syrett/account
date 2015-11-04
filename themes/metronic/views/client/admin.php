@@ -78,8 +78,25 @@ $left = $before + $unreceived - $received;
                             'label' => '<span class="glyphicon glyphicon-trash"></span>',
                             'imageUrl' => false,
                         ),
+                        'bad' => array(
+                            'options' => array(
+                                'class' => 'btn btn-default tip btn-xs',
+                                'title' => '坏账处理',
+                                'confirm' => '确定要执行此操作？',
+                                'ajax' => [
+                                    'dataType' => 'json',
+                                    'url' => 'js:$(this).attr("href")',
+                                    'success' => 'js:function(data) {
+                                                        alert(data.msg);
+                                                $.fn.yiiGridView.update("client-grid")}'
+                                ]
+                            ),
+                            'label' => "<span class='glyphicon glyphicon-ban-circle'></span>",
+                            'imageUrl' => false,
+                            'url' => 'Yii::app()->createUrl("/client/bad", ["client_id"=>$data->id,"amount"=>$GLOBALS["a"]+$GLOBALS["b"]-$GLOBALS["c"],"action"=>$data->hasDad()?"unbad":"bad"])'
+                        ),
                     ),
-                    'template' => '<div class="btn-group">{update}</div>',
+                    'template' => '<div class="btn-group">{update}{bad}</div>',
                     'deleteConfirmation' => '确定要删除该条记录？',
                     'afterDelete' => 'function(link,success,data){if(success) alert(data);}'
                 ),

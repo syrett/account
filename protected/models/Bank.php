@@ -167,7 +167,7 @@ class Bank extends LFSModel
         $this->setAttribute('order_no', isset($item['order_no'])?$item['order_no']:'');
 		$this->setAttribute('date', $item['entry_date']);
 		$this->setAttribute('memo', $item['entry_memo']);
-		$this->setAttribute('amount', $item['entry_amount']);
+		$this->setAttribute('amount', $item['price']);
         $this->setAttribute('subject', $item['entry_subject']);
         $this->setAttribute('subject_2', $item['subject_2']);
 		$this->setAttribute('parent', isset($item['parent'])?$item['parent']:'');
@@ -679,6 +679,7 @@ eof;
             'data' => $result,
         ];
     }
+    //不可调整 处理长期资产 的顺序
     private static function getOtherOutcome($key = ''){
         return [
             'data' => ['处置长期资产','罚款','捐赠','税务罚款','补贴','其他'],
@@ -687,6 +688,19 @@ eof;
     private static function getOtherIncome($key = ''){
         return [
             'data' => ['处置长期资产','罚款','捐赠','税收返还','补贴','其他'],
+        ];
+    }
+    //报废的资产
+    private static function getAssets($key = ''){
+        $stocks = Stock::model()->findAllByAttributes(['status'=>4, 'status_scrap'=>0]);
+        if($stocks){
+            foreach($stocks as $stock){
+                $result[$stock->id] = $stock->hs_no. '_'. $stock->name. '_'.  $stock->model;
+            }
+        }else
+            $result[] = '其他';
+        return [
+            'data' => $result
         ];
     }
     /*
@@ -962,7 +976,17 @@ eof;
                     break;
                 case '其他支出'  :
                     if (isset($options[3])) {
-                        return self::endOption(6711);
+                        if($options[3]==0){ //选择处置长期资产
+                            if (isset($options[4])) {
+                                if($options[4]==0)
+                                    return self::endOption(6711);
+                                else{
+                                    return self::endOption(1901);
+                                }
+                            }else
+                                $result = self::getAssets($data[1]);
+                        }else
+                            return self::endOption(6711);
                     } else
                         $result = self::getOtherOutcome($data[1]);
                     break;
@@ -1124,7 +1148,17 @@ eof;
                     break;
                 case '其他收入'  :
                     if (isset($options[3])) {
-                        return self::endOption(6301);
+                        if($options[3]==0){ //选择处置长期资产
+                            if (isset($options[4])) {
+                                if($options[4]==0)
+                                    return self::endOption(6301);
+                                else{
+                                    return self::endOption(1901);
+                                }
+                            }else
+                                $result = self::getAssets($data[1]);
+                        }else
+                            return self::endOption(6301);
                     } else
                         $result = self::getOtherIncome($data[1]);
                     break;

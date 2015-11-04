@@ -221,4 +221,46 @@ class ClientController extends Controller
             echo json_encode($result);
         }
     }
+
+    /*
+     * 坏账处理
+     */
+    public function actionBad($client_id, $amount, $action){
+        if (Yii::app()->request->isAjaxRequest ) {
+            $model = $this->loadModel($client_id);
+            if($model){
+                if($action=='bad'){
+                    $tran1 = new Transition();
+                    $tran2 = new Transition();
+                    $tran1->entry_transaction = 1;
+                    $tran2->entry_transaction = 2;
+                    $tran1->entry_subject = Subjects::matchSubject('坏账损失', '6602');;
+                    $tran2->entry_subject = '1231';
+                    $date = Transition::getTransitionDate();
+                    $prefix = substr($date,0,6);
+                    $data = [
+                        'data_type' => 'bad_debts',
+                        'data_id' => $model->id,
+                        'entry_num_prefix' => $prefix,
+                        'entry_memo' => $model->company.'_坏账',
+                        'entry_date' => convertDate($date, 'Y-m-d 00:00:00'),
+                        'entry_num' => Transition::model()->tranSuffix($prefix),
+                        'entry_creater' => Yii::app()->user->id,
+                        'entry_editor' => Yii::app()->user->id,
+                        'entry_amount' => $amount,
+                    ];
+                    $tran1->attributes = $data;
+                    $tran2->attributes = $data;
+                    $tran1->save();
+                    $tran2->save();
+                    echo json_encode(['status'=>'success','msg'=>'坏账处理完成']);
+                }else{      //取消坏账
+                    Transition::model()->deleteAllByAttributes(['data_type'=>'bad_debts','data_id'=>$client_id, 'entry_closing'=>0]);
+                    echo json_encode(['status'=>'success','msg'=>'已经取消坏账']);
+                }
+            }else
+                echo json_encode(['status'=>'failed','msg'=>'无法找到该客户，刷新后重试']);
+        }else
+            echo json_encode(['status'=>'failed','msg'=>'无效的请求']);
+    }
 }
