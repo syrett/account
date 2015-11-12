@@ -2,9 +2,9 @@
 /* @var $this StockController */
 /* @var $model Stock */
 
-$this->pageTitle = Yii::app()->name . ' - 固定资产期初数据';
+$this->pageTitle = Yii::app()->name . ' - 长期资产期初数据';
 $this->breadcrumbs = array(
-    '固定资产期初数据',
+    '长期资产期初数据',
 );
 
 $baseUrl = Yii::app()->theme->baseUrl;
@@ -44,7 +44,7 @@ if(!empty($departments))
         ?>
         <div class="portlet-title">
             <div class="caption">
-                <span class="font-green-sharp">固定资产期初余额明细</span>
+                <span class="font-green-sharp">长期资产期初余额明细</span>
                 <span class="caption-helper">期初余额:<?= $balance?></span>
             </div>
             <div class="actions">

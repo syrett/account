@@ -57,8 +57,10 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                     $vendorArray = Vendor::model()->getVendorArray();
                     $stockArray = Stock::model()->getStockArray();
                     $taxArray = Transition::getTaxArray('purchase');
-                    $arr = [1601, 1403, 1405, 6602, 6601, 6401, 1701, 1604, 1801];
+                    $arr = [1601, 1403, 1405, 6602, 6601, 6401, 1701];
                     $subjectArray = Transition::getSubjectArray($arr);
+                    $subjectArray += ProjectB::model()->getProject();
+                    $subjectArray += ProjectLong::model()->getProject();
                     $departmentArray = Department::model()->getDepartmentArray();
                     ?>
                     <tr line="<?= $key ?>" class="table-tr <?= $item['status_id']==1?'':'label-danger'?>">

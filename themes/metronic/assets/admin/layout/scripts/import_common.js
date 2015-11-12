@@ -228,7 +228,7 @@ function checkBank() {
 function itemclose(e) {
     var line = $(e.parentNode.parentNode.parentNode).attr("line");
     e.parentNode.parentNode.parentNode.remove();
-    sumAmount($("#data_import").find("tr[line=" + line + "]:first"));
+    sumAmount($("#data_import").find("tr[line=" + line + "]:first").find("[id*='tran_amount_']"));
 }
 //作废
 var oldStatus = 1;

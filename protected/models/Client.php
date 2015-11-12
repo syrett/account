@@ -130,21 +130,32 @@ class Client extends CActiveRecord
         $model = Subjects::model()->findByAttributes(['sbj_name'=>$this->company], 'sbj_number like "1122%"');
         if($model==null)
             $model = Subjects::model()->findByAttributes([],"sbj_name like '%$this->company%' and sbj_number like '1122%'");
-        if($model!=null)
+        if($model!=null){
             $sbj = $model->sbj_number;
-        if(isset($options['type'])&&$options['type']=='before'){
-            $balance = Subjects::get_balance($sbj);
-            $in = Transition::model()->getAllMount($sbj, 1, $options['type'], $options['date']);
-            $out = Transition::model()->getAllMount($sbj, 2, $options['type'], $options['date']);
-            $result = $balance + $in-$out;
-        }else
-            $result = Transition::model()->getAllMount($sbj, $options['entry_transaction'], 'after', '');
-        //如果有坏账，去除坏账金额
-        if($add == 'bad'){
-            $tran = Transition::model()->findByAttributes(['data_type'=>'bad_debts','data_id'=>$this->id, 'entry_closing'=>0]);
-            if($tran)
-                $result -= $tran->entry_amount;
+
+            if(isset($options['type'])&&$options['type']=='before'){
+                $balance = Subjects::get_balance($sbj);
+                $in = Transition::model()->getAllMount($sbj, 1, $options['type'], $options['date']);
+                $out = Transition::model()->getAllMount($sbj, 2, $options['type'], $options['date']);
+                $result = $balance + $in-$out;
+            }else
+                $result = Transition::model()->getAllMount($sbj, $options['entry_transaction'], 'after', '');
+            //如果有坏账，去除坏账金额
+            if($add == 'bad'){
+                $tran = Transition::model()->findByAttributes(['data_type'=>'bad_debts','data_id'=>$this->id, 'entry_closing'=>0]);
+                if($tran)
+                    $result -= $tran->entry_amount;
+            }
         }
+        return $result;
+    }
+
+    //未收到
+    public function getUnreceived(){
+        $a = $this->getAllMount(["type"=>"before","date"=>date("Y")."-01-01 00:00:00"]);
+        $b = $this->getAllMount(["entry_transaction"=>1]);
+        $c = $this->getAllMount(["entry_transaction"=>2]);
+        $result = $a+$b-$c;
         return $result;
     }
 

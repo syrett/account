@@ -492,20 +492,43 @@ class Stock extends LFSModel
     /*
      * 超过折旧年限
      */
-    public function overPeriod(){
+    public function overPeriod($date2=''){
+        if($date2==''){
+            $date2 = Transition::getTransitionDate();
+            $date2 = strtotime('+1 month', strtotime($date2));
+        }else
+            $date2 .= strlen($date2)==6?'01':'';
         $date = $this->in_date;
         $sbj = $this->entry_subject;
+        if(substr($sbj,0,4) == '1801'){
+            if($this->date_a!='')
+                $date = $this->date_a;
+            else
+                return false;
+        }
+        $year = 0;
         $option = Options::model()->findByAttributes(['entry_subject'=>$sbj]);
         if($option)
             $year = $option->year;
-        $date = strtotime('+5 year', strtotime($date));
-        $now = strtotime("now");
+        $date = strtotime('+'.$year.' year', strtotime($date));
+        $now = strtotime($date2);
         if($date<=$now)
             return true;
         else
             return false;
     }
 
+    /*
+     * 检查是否需要折旧或摊销
+     */
+    public function checkDeprec($date){
+
+        if(substr($this->entry_subject,0,4)=='1801')
+            $this['in_date'] = $this->date_a;
+        if(substr($date,0,6)>substr($this['in_date'],0,6))
+            return true;
+        return false;
+    }
     /*
      * 结账时，保存净值。如果反结账，删除计提折旧
      */
@@ -519,20 +542,23 @@ class Stock extends LFSModel
                 $cdb->condition = "entry_subject like '$subject%'"; //固定资产等
                 $stocks = Stock::model()->findAllByAttributes([], $cdb);
                 $option = Options::model()->findByAttributes([], "entry_subject like '$subject%'");
+                if($option==null)
+                    $option = Options::model()->findByAttributes([], "entry_subject like '".substr($subject,0,4)."%'");
                 foreach ($stocks as $item) {
-                    //当月采购不计提，
+                    //1601 1701 当月采购不计提，长期待摊1801，如果设置了data_a日期才开始摊销
                     $year = getYear($entry_prefix);
                     $month = getMon($entry_prefix);
                     $date = mktime(0,0,0,$month+1,1,$year);
                     $date = date('Ymd', $date);
-                    if($date>=$item['in_date']){
+                    //
+                    if($item->checkDeprec($date)){
                         $price = $item->getWorth();
                         $worth = $price - $price * (100 - $option->value) / 100 / ($option->year * 12);
                         $arr = explode(',', $item->worth);
                         $arr[] = round2($worth);
                         $item->worth = implode(',', $arr);
                         $item->save();
-                                            }
+                    }
                 }
             }
         }

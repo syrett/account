@@ -51,19 +51,19 @@ $left = $before + $unreceived - $received;
                 'phone',
                 [
                     'header' => '年初余额',
-                    'value' => '$GLOBALS["a"] = $data->getAllMount(["type"=>"before","date"=>date("Y")."-01-01 00:00:00"])'
+                    'value' => '$data->getAllMount(["type"=>"before","date"=>date("Y")."-01-01 00:00:00"]);'
                 ],
                 [
                     'header' => '本年增加',
-                    'value' => '$GLOBALS["b"] = $data->getAllMount(["entry_transaction"=>1]);',
+                    'value' => '$data->getAllMount(["entry_transaction"=>1]);',
                 ],
                 [
                     'header' => '本年已收',
-                    'value' => '$GLOBALS["c"] = $data->getAllMount(["entry_transaction"=>2]);',
+                    'value' => '$data->getAllMount(["entry_transaction"=>2]);',
                 ],
                 [
                     'header' => '未收',
-                    'value' => '$GLOBALS["a"]+$GLOBALS["b"]-$GLOBALS["c"]',
+                    'value' => '$GLOBALS["d"] = $data->getUnreceived()',
                 ],
                 array(
                     'class' => 'CButtonColumn',
@@ -93,7 +93,7 @@ $left = $before + $unreceived - $received;
                             ),
                             'label' => "<span class='glyphicon glyphicon-ban-circle'></span>",
                             'imageUrl' => false,
-                            'url' => 'Yii::app()->createUrl("/client/bad", ["client_id"=>$data->id,"amount"=>$GLOBALS["a"]+$GLOBALS["b"]-$GLOBALS["c"],"action"=>$data->hasDad()?"unbad":"bad"])'
+                            'url' => 'Yii::app()->createUrl("/client/bad", ["client_id"=>$data->id,"amount"=>$GLOBALS["d"],"action"=>$data->hasDad()?"unbad":"bad"])'
                         ),
                     ),
                     'template' => '<div class="btn-group">{update}{bad}</div>',

@@ -13,6 +13,7 @@ $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_common.j
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import.js');
 
 $departmentArray = Department::model()->getDepartmentArray();
+$clientArray = Client::model()->getClientArray();
 $this->pageTitle = Yii::app()->name;
 $tranDate = $this->getTransitionDate('post');
 /*if(!isset($model)){
@@ -103,6 +104,7 @@ $tranDate = $this->getTransitionDate('post');
                     <th class="input_mid">交易方名称</th>
                     <th class="input_mid">名称</th>
                     <th class="input_mid hidden" id="department_id_th">部门</th>
+                    <th class="input_mid hidden" id="client_id_th">客户</th>
                     <th class="input_mid"><select id="selectItem1" name="selectItem1"><?= $select ?></select></th>
                     <th class="input_full"><select id="selectItem2" name="selectItem2"><?= $select ?></select></th>
                     <th class="input-large"><select id="selectItem3" name="selectItem3"><?= $select ?></select></th>
@@ -131,6 +133,16 @@ $tranDate = $this->getTransitionDate('post');
                                     'id' => 'department_id_' . $key,
                                     'data' => $departmentArray,
                                     'value' => $item['department_id'],
+                                    'htmlOptions' => array('class' => 'select-full',)
+                                ));
+                                ?>
+                            </td>
+                            <td class="hidden" id="client_id_td"><?
+                                $this->widget('ext.select2.ESelect2', array(
+                                    'name' => 'lists[' . $key . '][Transition][client_id]',
+                                    'id' => 'client_id_' . $key,
+                                    'data' => $clientArray,
+                                    'value' => $item['client_id'],
                                     'htmlOptions' => array('class' => 'select-full',)
                                 ));
                                 ?>

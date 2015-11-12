@@ -12,7 +12,9 @@ $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import.js');
 
 $this->pageTitle = Yii::app()->name;
 $tranDate = $this->getTransitionDate('post');
-
+$arr = ['1601','1701','1801'];
+$departmentArray = Department::model()->getDepartmentArray();
+$clientArray = Client::model()->getClientArray();
 ?>
 
 <div class="row" id="abc">
@@ -31,6 +33,8 @@ $tranDate = $this->getTransitionDate('post');
                 <th></th>
                 <th style="width: 155px"><?= $form->labelEx($model, 'target') ?></th>
                 <th class="input_mid"><?= $form->labelEx($model, 'name') ?></th>
+                <th class="input_mid <?= $model['client_id']!=0?'':'hidden'?>" id="client_id_th"><?= $form->labelEx($model, 'client_id') ?></th>
+                <th class="input_mid <?= in_array(substr($model->subject,0,4),$arr)?'':'hidden'?>" id="department_id_th"><?= $form->labelEx($model, 'department_id') ?></th>
                 <th class="input_mid"><?= $form->labelEx($model, 'date') ?></th>
                 <th class="input_full"><?= $form->labelEx($model, 'memo') ?></th>
                 <th class="input-large"><?= $form->labelEx($model, 'amount') ?></th>
@@ -50,6 +54,26 @@ $tranDate = $this->getTransitionDate('post');
                     <td><input type="text" id="tran_name_<?= $key ?>"
                                name="lists[<?= $key ?>][Transition][entry_name]" placeholder="名称"
                                value="<?= $item['entry_name'] ?>"></td>
+                    <td class="<?= in_array(substr($model->subject,0,4),$arr)?'':'hidden'?>" id="department_id_td"><?
+                        $this->widget('ext.select2.ESelect2', array(
+                            'name' => 'lists[' . $key . '][Transition][department_id]',
+                            'id' => 'department_id_' . $key,
+                            'data' => $departmentArray,
+                            'value' => $item['department_id'],
+                            'htmlOptions' => array('class' => 'select-full',)
+                        ));
+                        ?>
+                    </td>
+                    <td class="<?= $item['client_id']!=0?'':'hidden'?>" id="client_id_td"><?
+                        $this->widget('ext.select2.ESelect2', array(
+                            'name' => 'lists[' . $key . '][Transition][client_id]',
+                            'id' => 'client_id_' . $key,
+                            'data' => $clientArray,
+                            'value' => $item['client_id'],
+                            'htmlOptions' => array('class' => 'select-full',)
+                        ));
+                        ?>
+                    </td>
                     <td><input class="input_mid" type="text" id="tran_date_<?= $key ?>"
                                name="lists[<?= $key ?>][Transition][entry_date]"
                                value="<?= $item['entry_date'] ?>"></td>

@@ -347,6 +347,28 @@ function itemSet() {
         else
             $("#department_id_th,#department_id_td").addClass("hidden");
 
+        var client_id_show = false;
+        if (typeof(path[1]) != 'undefined' && path[1] == '销售收入' ) {
+            if (in_array(sbj.substr(0, 4), ['6001'])) {
+                client_id_show = true;
+                $("#client_id_"+item_id).removeClass("hidden");
+                $("[id='client_id_" + item_id + "']").show().select2();
+            }else{
+                $("#client_id_"+item_id).addClass("hidden");
+                $("select[id='client_id_" + item_id + "']").select2("destroy").hide();
+            }
+        }else{
+            $("#client_id_"+item_id).addClass("hidden");
+            $("select[id='client_id_" + item_id + "']").select2("destroy").hide();
+        }
+        $.each($("[id^='subject_']:not(#subject_b)"),function (key, element) {
+            if(in_array(element.value.substr(0, 4), ['6001']))
+                client_id_show = true;
+        })
+        if (client_id_show)
+            $("#client_id_th,#client_id_td").removeClass("hidden");
+        else
+            $("#client_id_th,#client_id_td").addClass("hidden");
     }
     else {
         e.addClass("path-fail");
@@ -562,6 +584,6 @@ function addRow() {
             startDate: getDate()
         });
     });
-    $(e).find("[id*='btn_del']").attr("disabled", true);
+    $(e).find("[id*='btn_del']").attr("disabled",false);
     $(e).children(':last-child').find("span").html('');
 }

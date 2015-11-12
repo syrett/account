@@ -153,42 +153,55 @@ class SubjectsController extends Controller
             $sbj = $this->loadModel($id);
         else
             $sbj = Subjects::model()->findByAttributes(['sbj_number'=>$sbj_number]);
+        //一级科目不能删除
+        if(!$sbj){
+            echo "科目已经删除";return true;
+        }elseif(strlen($sbj->sbj_number)<=4){
+            echo "一级科目无法删除"; return true;
+        }
         //有子科目，无法删除
         if($sbj->has_sub==1)
             echo "有子科目不能删除！";
-        //有凭证
-        if(Subjects::model()->hasTransition($sbj->sbj_number)){
-            //有兄弟科目
-            if(Subjects::model()->hasBrother($sbj->sbj_number)){
-                echo "此科目不能删除！";
-                //不能删
-            }else{
-                Bank::model()->updateSubject($sbj->sbj_number);
-                Post::model()->updateSubject($sbj->sbj_number);
-                Transition::model()->updateSubject($sbj->sbj_number, substr($sbj->sbj_number,0,-2));
-                Subjects::model()->noSub($sbj->sbj_number);
-                Subjects::model()->tranBalance($sbj->sbj_number);
-                $sbj->delete();
-                echo "删除成功！";
-            }
-        }else{  //无凭证
-            try{
-                Bank::model()->updateSubject($sbj->sbj_number);
-                //有兄弟科目，可直接删除
-                if(Subjects::model()->hasBrother($sbj->sbj_number))
-                    $sbj->delete();
-                else{   //无兄弟科目
+        else{//有凭证
+            if(Subjects::model()->hasTransition($sbj->sbj_number)){
+                //有兄弟科目
+                if(Subjects::model()->hasBrother($sbj->sbj_number)){
+                    echo "此科目不能删除！";
+                    //不能删
+                }else{
+                    $trans = Transition::model()->findByAttributes(['entry_subject'=>$sbj->sbj_number]);
+                    if($trans){
+                        echo "该科目下有凭证，无法删除";return true;
+                    }
+                    Bank::model()->updateSubject($sbj->sbj_number);
                     Post::model()->updateSubject($sbj->sbj_number);
-                    //设置父科目 无子科目
+                    Transition::model()->updateSubject($sbj->sbj_number, substr($sbj->sbj_number,0,-2));
                     Subjects::model()->noSub($sbj->sbj_number);
                     Subjects::model()->tranBalance($sbj->sbj_number);
                     $sbj->delete();
+                    echo "删除成功！";
                 }
-                echo "删除成功！";
-            }catch (CDbException $e){
-                echo "删除失败！";
+            }else{  //无凭证
+                try{
+                    Bank::model()->updateSubject($sbj->sbj_number);
+                    //有兄弟科目，可直接删除
+                    if(Subjects::model()->hasBrother($sbj->sbj_number))
+                        $sbj->delete();
+                    else{   //无兄弟科目
+                        Post::model()->updateSubject($sbj->sbj_number);
+                        //设置父科目 无子科目
+                        Subjects::model()->noSub($sbj->sbj_number);
+                        Subjects::model()->tranBalance($sbj->sbj_number);
+                        $sbj->delete();
+                    }
+                    echo "删除成功！";
+                }catch (CDbException $e){
+                    echo "删除失败！";
+                }
             }
+
         }
+
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
@@ -323,10 +336,12 @@ class SubjectsController extends Controller
             //因为只涉及库存商品，所以只是1405下的子科目
             $stock = Stock::model()->findByAttributes(['name'=>$name], "entry_subject like '1405%'");
             if($stock){
-                $arr = [1601, 1403, $stock->entry_subject, 6602, 6601, 6401, 1701, 1604, 1801];    //其他科目正常，库存商品1405只显示一条
+                $arr = [1601, 1403, $stock->entry_subject, 6602, 6601, 6401, 1701];    //其他科目正常，库存商品1405只显示一条
             }else
-                $arr = [1601, 1403, 1405, 6602, 6601, 6401, 1701, 1604, 1801];
+                $arr = [1601, 1403, 1405, 6602, 6601, 6401, 1701];
             $subjectArray = Transition::getSubjectArray($arr);
+            $subjectArray += ProjectB::model()->getProject();
+            $subjectArray += ProjectLong::model()->getProject();
 //                $subjectArray['_'. $stock->entry_subject] = Subjects::getSbjPath($stock->entry_subject);
             $result = json_encode($subjectArray);
             echo $result;

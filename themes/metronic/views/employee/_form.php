@@ -16,7 +16,8 @@ $statusArray = ['离职','正常','兼职'];
     <div class="col-sm-10">
         <?php echo $form->textField($model, 'name', array('class' => 'form-control')); ?>
     </div>
-    <?php echo $form->error($model, 'name'); ?>
+    <div class="col-sm-2"></div>
+    <?php echo $form->error($model, 'name',array('class' => 'col-sm-10')); ?>
 </div>
 
 <div class="form-group">
@@ -24,7 +25,8 @@ $statusArray = ['离职','正常','兼职'];
     <div class="col-sm-10">
         <?php echo $form->dropDownList($model, 'department_id', $department_array, array('class' => 'form-control')); ?>
     </div>
-    <?php echo $form->error($model, 'department_id'); ?>
+    <div class="col-sm-2"></div>
+    <?php echo $form->error($model, 'department_id',array('class' => 'col-sm-10')); ?>
 </div>
 
 <div class="form-group">
@@ -32,7 +34,8 @@ $statusArray = ['离职','正常','兼职'];
     <div class="col-sm-10">
         <?php echo $form->textField($model, 'base', array('class' => 'form-control')); ?>
     </div>
-    <?php echo $form->error($model, 'base'); ?>
+    <div class="col-sm-2"></div>
+    <?php echo $form->error($model, 'base',array('class' => 'col-sm-10')); ?>
 </div>
 
 <div class="form-group">
@@ -40,7 +43,8 @@ $statusArray = ['离职','正常','兼职'];
     <div class="col-sm-10">
         <?php echo $form->textField($model, 'base_2', array('class' => 'form-control')); ?>
     </div>
-    <?php echo $form->error($model, 'base_2'); ?>
+    <div class="col-sm-2"></div>
+    <?php echo $form->error($model, 'base_2',array('class' => 'col-sm-10')); ?>
 </div>
 
 <div class="form-group">
@@ -48,7 +52,8 @@ $statusArray = ['离职','正常','兼职'];
     <div class="col-sm-10">
         <?php echo $form->textField($model, 'position', array('class' => 'form-control')); ?>
     </div>
-    <?php echo $form->error($model, 'position'); ?>
+    <div class="col-sm-2"></div>
+    <?php echo $form->error($model, 'position',array('class' => 'col-sm-10')); ?>
 </div>
 
 <div class="form-group">
@@ -56,7 +61,8 @@ $statusArray = ['离职','正常','兼职'];
     <div class="col-sm-10">
         <?php echo $form->textArea($model, 'memo', array('class' => 'form-control')); ?>
     </div>
-    <?php echo $form->error($model, 'memo'); ?>
+    <div class="col-sm-2"></div>
+    <?php echo $form->error($model, 'memo',array('class' => 'col-sm-10')); ?>
 </div>
 
 <div class="form-group">
@@ -64,7 +70,8 @@ $statusArray = ['离职','正常','兼职'];
     <div class="col-sm-10">
         <?php echo $form->dropDownList($model, 'status', $statusArray, array('class' => 'form-control')); ?>
     </div>
-    <?php echo $form->error($model, 'status'); ?>
+    <div class="col-sm-2"></div>
+    <?php echo $form->error($model, 'status',array('class' => 'col-sm-10')); ?>
 </div>
 
 <div class="form-group">

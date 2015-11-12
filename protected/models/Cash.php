@@ -69,6 +69,8 @@ class Cash extends LFSModel
             'order_no' => '订单号',
 			'target' => '交易对象',
             'name' => '名称',
+            'department_id' => '部门',
+            'client_id' => '客户',
 			'date' => '日期',
 			'memo' => '说明',
 			'amount' => '金额',
@@ -160,6 +162,8 @@ class Cash extends LFSModel
         $this->setAttribute('target', isset($item['target'])?$item['target']:'');
         $this->setAttribute('name', $item['entry_name']);
         $this->setAttribute('department_id', isset($item['department_id'])?$item['department_id']:'');
+        $this->setAttribute('client_id', isset($item['client_id'])?$item['client_id']:'');
+        $this->setAttribute('order_no', isset($item['order_no'])?$item['order_no']:'');
 		$this->setAttribute('date', $item['entry_date']);
 		$this->setAttribute('memo', $item['entry_memo']);
 		$this->setAttribute('amount', $item['entry_amount']);

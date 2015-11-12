@@ -124,6 +124,7 @@ class StockController extends Controller
                 if($model->status!=4){
                     $model->status = 4;
                     $date = Transition::getTransitionDate();
+                    $date = date('Ymd', strtotime('+1 month', strtotime($date)));
                     $prefix = substr($date,0,6);
                     $type = Subjects::getName($model->entry_subject);
                     $tran1 = new Transition();
@@ -564,18 +565,20 @@ class StockController extends Controller
             $sbj = $item['sbj_number'];
             $cdb->condition = "entry_subject like '$sbj%'"; //固定资产等
             $stocks = Stock::model()->findAllByAttributes([], $cdb);
-            foreach ($stocks as $item) {
-//                if (!$item->overPeriod()) {
-                $price = $item->getWorth();
-                $price = $price * (100 - $item->value_rate) / 100 / $item->value_month;
-                $amount += $price;
-                if (isset($list[$key]['entry_amount']))
-                    $list[$key]['entry_amount'] += $price;
-                else
-                    $list[$key]['entry_amount'] = $price;
-                if (!isset($list[$key]['sbj_2_name']))
-                    $list[$key]['sbj_2_name'] = Subjects::model()->getName($item->entry_subject);
-//                }
+            foreach ($stocks as $item2) {
+                if (!$item2->overPeriod($date)) {
+                    if($item2->checkDeprec($date)){
+                        $price = $item2->getWorth();
+                        $price = $price * (100 - $item2->value_rate) / 100 / $item2->value_month;
+                        $amount += $price;
+                        if (isset($list[$key]['entry_amount']))
+                            $list[$key]['entry_amount'] += $price;
+                        else
+                            $list[$key]['entry_amount'] = $price;
+                        if (!isset($list[$key]['sbj_2_name']))
+                            $list[$key]['sbj_2_name'] = Subjects::model()->getName($item2->entry_subject);
+                    }
+                }
             }
         }
         if ($amount > 0) {
@@ -780,5 +783,46 @@ class StockController extends Controller
             }
             echo json_encode($result);
         }
+    }
+
+    /*
+     * 设置长期待摊 和 在建工程的 起始摊销日期，这2个科目，不以交易日期为准，用户手动设置
+     */
+    public function actionActive($id, $action){
+        $stock = $this->loadModel($id);
+        if($stock){
+            if(in_array(substr($stock->entry_subject,0,4),[1801])){
+                if($action == "active"){
+                    if($stock->status!=1)
+                        $result = ['status'=>'failed','msg'=>'该项目状态为出库或报废，无法进行摊销'];
+                    else{
+                        if($stock->date_a!='')
+                            $result = ['status'=>'failed','msg'=>'该项目已经设置摊销，无需再次设置'];
+                        else{
+                            $date = Transition::getCondomDate();
+                            $date = date('Ymd', strtotime('+1 month', strtotime($date)));
+                            $stock->date_a = $date;
+                            $stock->save();
+                            $result = ['status'=>'success','msg'=>'设置摊销日期为'.convertDate($date,'Y年m月')];
+                        }
+                    }
+                }else{  //  取消摊销
+                    if($stock->date_a=='')
+                        $result = ['status'=>'failed','msg'=>'该项目没有设置摊销，无法取消'];
+                    else{
+                        if($stock->getWorth()==$stock->in_price){
+                            $stock->date_a = '';
+                            $stock->save();
+                            $result = ['status'=>'success','msg'=>'取消摊销成功'];
+                        }else
+                            $result = ['status'=>'failed','msg'=>'该项目已经开始摊销，无法取消'];
+                    }
+
+                }
+            }else
+                $result = ['status'=>'failed','msg'=>'该项目不属于长期待摊或在建工程，摊销或折旧起始日期为交易日'];
+        }else
+            $result = ['status'=>'failed','msg'=>'无法找到该项目，请刷新后重试'];
+        echo json_encode($result);
     }
 }

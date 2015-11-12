@@ -76,8 +76,21 @@ $this->pageTitle = Yii::app()->name;
                 echo CHtml::endForm();
             }
 
-        if ($operation == 'listAssets') {
-            $where = "(entry_subject like '1601%' or entry_subject like '1701%' or entry_subject like '1801%')";
+        if (substr($operation,0,10) == 'listAssets') {
+            switch($operation){
+                case 'listAssets' :
+                    $where = "(entry_subject like '1601%')";
+                    break;
+                case 'listAssets2' :
+                    $where = "(entry_subject like '1604%' )";
+                    break;
+                case 'listAssets3' :
+                    $where = "(entry_subject like '1701%' )";
+                    break;
+                case 'listAssets4' :
+                    $where = "(entry_subject like '1801%')";
+                    break;
+            }
             $stocks = Stock::model()->findByAttributes([], $where);
             $dataProvider = new CActiveDataProvider('Stock', ['criteria' => ['condition' => $where]]);
             if ($stocks != null) {
@@ -94,6 +107,7 @@ $this->pageTitle = Yii::app()->name;
                                 'value' => 'Subjects::getSbjPath($data->entry_subject)'
                             ],
                             'name',
+                            'model',
                             'in_price',
                             'value_month',
                             'value_rate',
@@ -112,7 +126,7 @@ $this->pageTitle = Yii::app()->name;
                             [
                                 'class' => 'CButtonColumn',
                                 'buttons' => array(
-                                    'scrap' => array(
+                                    'scrap' => array(   //报废
                                         'options' => array(
                                             'class' => 'btn btn-default tip btn-xs',
                                             'title' => '操作',
@@ -125,9 +139,9 @@ $this->pageTitle = Yii::app()->name;
                                                 $.fn.yiiGridView.update("assets-grid")}'
                                             ]
                                         ),
-                                        'label' => "<span class='glyphicon glyphicon-ban-circle'></span>",
+                                        'label' => "<span class='glyphicon'>报废</span>",
                                         'imageUrl' => false,
-                                        'url' => 'Yii::app()->createUrl("/Stock/scrap", ["id"=>$data->id,"action"=>$data->status==4?"unscrap":"scrap"])'
+//                                        'url' => 'Yii::app()->createUrl("/Stock/scrap", ["id"=>$data->id,"action"=>$data->status==4?"unscrap":"scrap"])'
                                     ),
 //                                    'unscrap' => array(
 //                                        'options' => array(
@@ -138,16 +152,12 @@ $this->pageTitle = Yii::app()->name;
 //                                                'dataType' => 'json',
 //                                                'url' => 'js:$(this).attr("href")',
 //                                                'success' => 'js:function(data) {
-//                                                    if(data.status=="success")
-//                                                        alert("取消报废成功")
-//                                                    else
-//                                                        alert(data.msg);
+//                                                    alert(data.msg);
 //                                                $.fn.yiiGridView.update("assets-grid")}'
 //                                            ]
 //                                        ),
 //                                        'label' => "<span class='glyphicon glyphicon-ok-circle'></span>",
 //                                        'imageUrl' => false,
-//                                        'url' => 'Yii::app()->createUrl("/Stock/scrap", ["id"=>$data->id,"action"=>"unscrap"])'
 //                                    ),
                                 ),
                                 'template' => '<div class="btn-group">{scrap}</div>',

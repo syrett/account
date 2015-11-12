@@ -582,11 +582,20 @@ class Subjects extends CActiveRecord
         $model->sbj_cat = $subj[1];
 
         if ($model->save()) {
-            //如果是新的子科目，将post中科目表id修改为新id，把期初余额过度到新科目
             $psbj['start_balance'] = 0;
             $psbj->save();
-            if (strlen($subj[0]) > 4 && substr($subj[0], -2) == '01')  ////1为同级科目，2为子科目
+            //如果是新的子科目，
+            //将post中科目表id修改为新id;
+            //把期初余额过度到新科目;
+            //stock transition entry_subject 过度
+            //cost product purchase salary 过度
+            if (strlen($subj[0]) > 4 && substr($subj[0], -2) == '01') //长度大于4，最后2度是01，则判断是第一次新建子科目
             {
+                $arr = ['stock'=>'entry_subject', 'transition'=>'entry_subject', 'cost'=>'subject', 'product'=>'subject', 'purchase'=>'subject', 'salary'=>'subject'];
+                foreach ($arr as $table=>$item) {
+                    $sql = "update $table set $item = :sbj_id where $item = :par_id";
+                    Yii::app()->db->createCommand($sql)->bindValues(array(':sbj_id'=>$model->sbj_number,':par_id'=>$psbj->sbj_number))->execute();
+                }
                 Post::tranPost($subj[0]);
                 self::hasSub($subj[0]);
             }

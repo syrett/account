@@ -164,10 +164,7 @@ class EmployeeController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Employee');
-		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
-		));
+        $this->redirect(['admin']);
 	}
 
 	/**

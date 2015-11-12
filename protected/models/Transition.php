@@ -279,7 +279,7 @@ class Transition extends CActiveRecord
                     array_push($arr[$year], $month);
             }
         }
-        return $arr;
+//        return $arr;
     }
 
     public static function listTransition()
@@ -322,12 +322,36 @@ class Transition extends CActiveRecord
     }
 
     /*
-     * 可反结账日期
+     * 列出固定资产
      */
     public static function listAssets()
     {
-        $tran = new Transition();
-        return $tran->listDate2([],['1601','1701','1801']);
+//        $tran = new Transition();
+//        return $tran->listDate2([],['1601']);
+    }
+    /*
+     * 列出无形资产
+     */
+    public static function listAssets2()
+    {
+//        $tran = new Transition();
+//        return $tran->listDate2([],['1601']);
+    }
+    /*
+     * 列出在建工程
+     */
+    public static function listAssets3()
+    {
+//        $tran = new Transition();
+//        return $tran->listDate2([],['1601']);
+    }
+    /*
+     * 列出长期待摊
+     */
+    public static function listAssets4()
+    {
+//        $tran = new Transition();
+//        return $tran->listDate2([],['1601']);
     }
 
     /*
@@ -349,7 +373,7 @@ class Transition extends CActiveRecord
         $sql = 'select date from `transitiondate` ';
         $date = Yii::app()->db->createCommand($sql)->queryRow();
         if ($date['date']!=null)
-            return $date['date'];
+            return $date['date'].'01';
         else {
             $date = Condom::model()->getStartTime();
             $date = new DateTime($date . '01');
@@ -366,7 +390,7 @@ class Transition extends CActiveRecord
         $sql = 'select date from `condomdate` ';
         $date = Yii::app()->db->createCommand($sql)->queryRow();
         if (!empty($date['date']))
-            return $date['date'];
+            return $date['date'].'01';
         else {
             $date = Condom::model()->getStartTime();
             $date = new DateTime($date . '01');
