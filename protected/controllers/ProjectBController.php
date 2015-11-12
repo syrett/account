@@ -185,7 +185,7 @@ class ProjectBController extends Controller
         $stock->model = $type;
         $stock->entry_subject = $sbj;
         $stock->department_id = $did;
-        $stock->in_date = Transition::model()->getCondomDate();
+        $stock->in_date = date('Ymd', strtotime('+1 month',strtotime(Transition::model()->getCondomDate())));
         $stock->in_price = $amount;
         $option = Options::model()->findByAttributes(['entry_subject'=>$sbj]);
         if($option!=null){
