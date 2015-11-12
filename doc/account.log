@@ -423,3 +423,21 @@ ALTER TABLE `stock` ADD `status_scrap` INT NOT NULL COMMENT '报废后，是否�
 ALTER TABLE `bank` ADD `client_id` INT NOT NULL AFTER `name`;
 ALTER TABLE `cash` ADD `client_id` INT NOT NULL AFTER `name`;
 ALTER TABLE `stock` ADD `date_a` VARCHAR(16) NOT NULL COMMENT '摊销折旧起始日期' AFTER `status_scrap`;
+
+CREATE TABLE IF NOT EXISTS `project_b` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(512) NOT NULL,
+  `memo` varchar(1024) NOT NULL,
+  `status` int(11) NOT NULL,
+  `create_at` varchar(16) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `project_long` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(512) NOT NULL,
+  `memo` varchar(1024) NOT NULL,
+  `status` int(11) NOT NULL,
+  `create_at` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
