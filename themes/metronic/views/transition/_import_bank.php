@@ -118,7 +118,7 @@ $tranDate = $this->getTransitionDate('post');
                                        value="<?= isset($item['id']) ? $item['id'] : '' ?>"></td>
                             <td><input type="text" id="tran_target_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][target]" placeholder="对方名称"
-                                       value="<?= $item['target'] ?>" class="form-control input-small">
+                                       value="<?=isset($item['target'])?$item['target']:'' ?>" class="form-control input-small">
                             </td>
                             <td><input type="text" id="tran_name_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_name]" placeholder="名称"

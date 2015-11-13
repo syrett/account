@@ -420,7 +420,7 @@ class TransitionController extends Controller
                     if(trim($item['C'])!='')
                         $sheetData[] = Transition::getSheetData($item,'bank');
                 }
-            } elseif($_FILES['attachment']['name']==''){
+            } elseif($_POST['submit_type']!='import'){
                 //保存按钮
                 $arr = $this->saveAll('bank');
                 if (!empty($arr))
