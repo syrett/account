@@ -221,11 +221,16 @@ $baseUrl = Yii::app()->theme->baseUrl;
                                         <div class="col-md-4">
                                             <h4>组织</h4>
                                             <ul class="list-unstyled">
+                                                <? if (User2::model()->checkVIP()) {
+                                                ?>
+
                                                 <li><a href="<?= $this->createUrl('vendor/create') ?>">供应商</a></li>
-                                                <li><a href="<?= $this->createUrl('client/create') ?>">客户</a></li>
+                                                <li><a href="<?= $this->createUrl('client/create') ?>">客户</a></li> <?
+                                                }
+                                                ?>
                                                 <li><a href="<?= $this->createUrl('department/create') ?>">部门</a></li>
                                                 <li><a href="<?= $this->createUrl('employee/create') ?>">员工</a></li>
-                                                <li><a href="<?= $this->createUrl('project/create') ?>">项目</a></li>
+<!--                                                <li><a href="--><?//= $this->createUrl('project/create') ?><!--">项目</a></li>-->
                                             </ul>
                                         </div>
                                         <div class="col-md-4">
