@@ -638,4 +638,55 @@ class Stock extends LFSModel
         else
             return false;
     }
+
+    /*
+     * 某科目下的金额
+     */
+    public static function getTotal($sbj, $type='worth'){
+        $total = 0;
+        $stocks = Stock::model()->findAllByAttributes([], "entry_subject like '$sbj%'");
+        if($stocks!=null){
+            foreach($stocks as $item){
+                $total += $type=='worth'?$item->getWorth():$item[$type];
+            }
+        }
+        return $total;
+    }
+
+    /*
+     * 在建工程是否可以转固
+     */
+    public function checkTransform(){
+        $name = Subjects::getName($this->entry_subject);
+        $project = ProjectB::model()->findByAttributes(['name'=>$name]);
+        if($project!=null){
+            return $project->status==1?true:false;
+        }else   //项目已被删除
+            return false;
+    }
+    /*
+     * 在长期待摊是否可以完工
+     */
+    public function checkFinish(){
+        $name = Subjects::getName($this->entry_subject);
+        $project = ProjectLong::model()->findByAttributes(['name'=>$name]);
+        if($project!=null){
+            return $project->status==1?true:false;
+        }else   //项目已被删除
+            return false;
+    }
+
+    /*
+     * 获取项目状态 ,在建 转固 完工
+     */
+    public function getPStatus(){
+        $sbj = substr($this->entry_subject,0,4);
+        $name = Subjects::getName($this->entry_subject);
+        if($sbj=='1604')   //在建工程
+            $project = ProjectB::model()->findByAttributes(['name'=>$name]);
+        elseif($sbj=='1801')    //长期待摊
+            $project = ProjectLong::model()->findByAttributes(['name'=>$name]);
+        return $project!=null?$project->status:0;
+
+    }
 }

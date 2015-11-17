@@ -166,8 +166,11 @@ class ProjectLongController extends Controller
      */
     public function actionActive($id, $action)
     {
+        //$id是stock的id,需要找到project id
+        $stock_temp = Stock::model()->findByPk($id);
+        $model = ProjectLong::model()->findByAttributes(['name'=>Subjects::getName($stock_temp->entry_subject)]);
         $stocks = null;
-        $model = $this->loadModel($id);
+//        $model = $this->loadModel($id);
         $sbj = Subjects::model()->findByAttributes(['sbj_name' => $model->name], 'sbj_number like "1801%"');
         if ($sbj !== null)
             $stocks = Stock::model()->findAllByAttributes(['entry_subject' => $sbj->sbj_number]);

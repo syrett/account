@@ -111,18 +111,16 @@ $relation = Bank::model()->getRelation('bank',$model->id);
                         <div class="btn-group">
                             <a class="btn btn-xs blue dropdown-toggle" data-toggle="modal" onclick="itemsetting(this)"
                                href="#category-box">
-                                <button type="button" class="btn btn-xs blue"><i
-                                        class="fa fa-file-o"></i> 记账
+                                <button type="button" class="btn btn-xs blue">记账
                                 </button>
                             </a>
                             <!-- button type="button" class="btn btn-xs blue" onclick="itemsetting(this)"><i class="fa fa-file-o"></i> 记账
                             </button -->
                             <button type="button" data-type="double" class="btn btn-xs"
-                                    onclick="itemsplit(this)"><i
-                                    class="fa fa-unlink"></i> 拆分
+                                    onclick="itemsplit(this)">拆分
                             </button>
                             <button type="button" data-type="delete" id="btn_del_<?= $key ?>" class="btn btn-xs"
-                                    onclick="itemclose(this)" disabled><i class="fa fa-times"></i>删分
+                                    onclick="itemclose(this)" disabled>删分
                             </button>
                         </div>
 

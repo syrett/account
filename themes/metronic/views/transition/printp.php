@@ -21,10 +21,12 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/print.js', CCli
 }
 </style>
 
-<div class="panel panel-default">
-
-    <!-- Default panel contents -->
-    <div class="panel-heading"><h3>打印凭证</h3></div>
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="font-green-sharp">打印凭证</span>
+        </div>
+    </div>
     <div class="panel-body">
     <!-- search-form -->
 	<?php echo CHtml::beginForm($this->createUrl('transition/print'),'POST',array('class'=>'form-inline')); ?>

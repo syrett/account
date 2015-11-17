@@ -218,6 +218,28 @@ class StockController extends Controller
 			'model'=>$model,'action'=>$action
 		));
 	}
+    public function actionAdmin1601($action='')
+    {
+        $model=new Stock('search');
+        $model->unsetAttributes();  // clear any default values
+        if(isset($_GET['Stock']))
+            $model->attributes=$_GET['Stock'];
+
+        $this->render('admin1601',array(
+            'model'=>$model,'action'=>$action
+        ));
+    }
+    public function actionAdmin1701($action='')
+    {
+        $model=new Stock('search');
+        $model->unsetAttributes();  // clear any default values
+        if(isset($_GET['Stock']))
+            $model->attributes=$_GET['Stock'];
+
+        $this->render('admin1701',array(
+            'model'=>$model,'action'=>$action
+        ));
+    }
 
     /*
      * 导入的期初数据可以修改删除

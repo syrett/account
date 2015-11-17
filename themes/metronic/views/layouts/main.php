@@ -223,7 +223,6 @@ $baseUrl = Yii::app()->theme->baseUrl;
                                             <ul class="list-unstyled">
                                                 <? if (User2::model()->checkVIP()) {
                                                 ?>
-
                                                 <li><a href="<?= $this->createUrl('vendor/create') ?>">供应商</a></li>
                                                 <li><a href="<?= $this->createUrl('client/create') ?>">客户</a></li> <?
                                                 }
@@ -256,6 +255,8 @@ $baseUrl = Yii::app()->theme->baseUrl;
                                             <h4>其它</h4>
                                             <ul class="list-unstyled">
                                                 <li><a href="<?= $this->createUrl('subjects/create') ?>">会计科目</a></li>
+                                                <li><a href="<?= $this->createUrl('projectB/create') ?>">在建工程</a></li>
+                                                <li><a href="<?= $this->createUrl('projectLong/create') ?>">长期待摊</a></li>
                                                 <!--                                                <li><a href="-->
                                                 <? //= $this->createUrl('project/create') ?><!--">工程项目</a>-->
                                                 </li>
@@ -652,7 +653,7 @@ $baseUrl = Yii::app()->theme->baseUrl;
                             </ul>
                         </li>
                         <li>
-                            <a href="<?= $this->createUrl('Site/operation&operation=listAssets') ?>">
+                            <a href="<?= $this->createUrl('stock/admin1601') ?>">
                                 <i class="icon-tag"></i>
                                 <span class="title">固定资产</span>
                             </a>
@@ -664,7 +665,7 @@ $baseUrl = Yii::app()->theme->baseUrl;
                             </a>
                         </li>
                         <li>
-                            <a href="<?= $this->createUrl('Site/operation&operation=listAssets3') ?>">
+                            <a href="<?= $this->createUrl('stock/admin1701') ?>">
                                 <i class="icon-frame"></i>
                                 <span class="title">无形资产</span>
                             </a>

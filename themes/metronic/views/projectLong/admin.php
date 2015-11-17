@@ -6,11 +6,20 @@ $this->pageTitle = Yii::app()->name . ' - 长期待摊';
 $this->breadcrumbs = array(
     '长期待摊',
 );
+$total = Stock::getTotal('1801','worth');
+$where = "(entry_subject like '1801%')";
+$sort = new CSort();
+$sort->defaultOrder = ['in_date'=>CSort::SORT_DESC,'project' => CSort::SORT_ASC];
+$sort->attributes = [
+    'project' => ['asc' => 'entry_subject', 'desc' => 'entry_subject desc']
+];
+$dataProvider = new CActiveDataProvider('Stock', ['criteria' => ['condition' => $where], 'sort' => $sort]);
 ?>
 <div class="portlet light">
     <div class="portlet-title">
         <div class="caption">
             <span class="font-green-sharp">长期待摊</span>
+            <span class="caption-helper">长期待摊总计:<?= $total?></span>
         </div>
         <div class="actions">
             <?php
@@ -24,23 +33,22 @@ $this->breadcrumbs = array(
 
         <?php $this->widget('zii.widgets.grid.CGridView', array(
             'id'=>'project-long-grid',
-            'dataProvider' => $model->search(),
-//            'filter' => $model,
+            'dataProvider' => $dataProvider,
             'itemsCssClass' => 'table table-striped table-hover',
             'columns' => array(
                 'id',
-                'name',
                 [
-                    'header'=>'采购内容',
-                    'value'=>'$data->detail()'
+                    'header' => '项目',
+                    'name' => 'project',
+                    'value' => 'Subjects::getName($data->entry_subject)'
                 ],
-                'memo',
+                'name',
                 array(
                     'name'=>'status',
                     'filter'=>array('1'=>'正常','2'=>'完工'),
-                    'value'=>'($data->status=="1")?("正常"):("完工")'
+                    'value'=>'($data->getPStatus()=="1")?("正常"):("完工")'
                 ),
-                ['name'=>'create_at','value'=>'date("Y-m-d H:m",$data->create_at)'],
+                ['name'=>'in_date','value'=>'convertDate($data->in_date, "Y年m月d日")'],
                 array(
                     'class' => 'CButtonColumn',
                     'buttons' => array(
@@ -60,7 +68,8 @@ $this->breadcrumbs = array(
                             'label' => "<span class='glyphicon'>完工</span>",
                             'imageUrl' => false,
                             'url' => 'Yii::app()->createUrl("/projectLong/active", ["id"=>$data->id,"action"=>$data->status!=1?"unactive":"active"])',
-                            'visible' => '$data->status==1&&trim($data->assets)!=""',
+//                            'visible' => '$data->status==1&&trim($data->assets)!=""',
+                            'visible' => '$data->checkFinish()',
                         ),
                         'view' => array(
                             'options' => array('class' => 'btn btn-default tip btn-xs', 'title' => '查看'),

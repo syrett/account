@@ -8,11 +8,20 @@ $this->pageTitle = Yii::app()->name . ' - 在建工程';
 $this->breadcrumbs = array(
     '在建工程',
 );
+$total = Stock::getTotal('1604','worth');
+$where = "(entry_subject like '1604%')";
+$sort = new CSort();
+$sort->defaultOrder = ['in_date'=>CSort::SORT_DESC,'project' => CSort::SORT_ASC];
+$sort->attributes = [
+    'project' => ['asc' => 'entry_subject', 'desc' => 'entry_subject desc']
+];
+$dataProvider = new CActiveDataProvider('Stock', ['criteria' => ['condition' => $where], 'sort' => $sort]);
 ?>
 <div class="portlet light">
     <div class="portlet-title">
         <div class="caption">
             <span class="font-green-sharp">在建工程</span>
+            <span class="caption-helper">在建工程总计:<?= $total?></span>
         </div>
         <div class="actions">
             <?php
@@ -26,24 +35,23 @@ $this->breadcrumbs = array(
 
         <?php $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'project-b-grid',
-            'dataProvider' => $model->search(),
-//            'filter' => $model,
+            'dataProvider' => $dataProvider,
             'itemsCssClass' => 'table table-striped table-hover',
             'columns' => array(
                 'id',
-                'name',
                 [
-                    'header' => '采购内容',
-                    'name' => 'assets',
-                    'value' => '$data->detail()'
+                    'header' => '项目',
+                    'name' => 'project',
+                    'value' => 'Subjects::getName($data->entry_subject)'
                 ],
-                'memo',
+                'name',
+//                'memo',
                 array(
                     'name' => 'status',
                     'filter' => array('1' => '在建', '2' => '转固'),
-                    'value' => '($data->status=="1")?("在建"):("转固")'
+                    'value' => '($data->getPStatus()=="1")?("在建"):("转固")'
                 ),
-                ['name' => 'create_at', 'value' => 'date("Y-m-d H:m",$data->create_at)'],
+                ['name' => 'in_date', 'value' => 'convertDate($data->in_date,"Y-m-d")'],
                 array(
                     'class' => 'CButtonColumn',
                     'buttons' => array(
@@ -68,8 +76,8 @@ $this->breadcrumbs = array(
                             'url' => '"#transform"',
                             'label' => "<span class='glyphicon'>转固</span>",
                             'imageUrl' => false,
-//                            'url' => 'Yii::app()->createUrl("/Stock/transform", ["id"=>$data->id])',
-                            'visible' => '$data->status==1&&trim($data->assets)!=""',
+//                            'visible' => '$data->status==1&&trim($data->assets)!=""',
+                            'visible' => '$data->checkTransform()',
                         ),
                         'delete' => array(
                             'options' => array('class' => 'btn btn-default tip delete btn-xs', 'title' => '删除'),

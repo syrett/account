@@ -32,7 +32,7 @@ class ProjectLong extends LFSModel
             array('name, memo', 'required'),
             array('status, create_at', 'numerical', 'integerOnly' => true),
             array('name', 'length', 'max' => 512),
-            array('name', 'unique', 'message' => '名称不能重复'),
+            array('name', 'unique', 'message' => '项目名称不能重复'),
             array('memo', 'length', 'max' => 1024),
             // The following rule is used by search().
             array('id, name, memo, status, create_at', 'safe', 'on' => 'search'),

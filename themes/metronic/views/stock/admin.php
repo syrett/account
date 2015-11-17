@@ -7,11 +7,13 @@ $this->breadcrumbs = array(
     '库存商品查看',
 );
 ?>
-<div class="panel panel-default voucher form">
-    <!-- Default panel contents -->
-    <div class="panel-heading">
-        <h2>库存商品查看</h2>
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="font-green-sharp">库存商品查看</span>
+        </div>
     </div>
+
 
     <div class="panel-body">
         <?php
