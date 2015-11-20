@@ -1478,7 +1478,7 @@ class TransitionController extends Controller
                                 }
                             }
                         }
-                    if(!$this->checkVIP())
+                    if(!$this->checkVIP() || count($path)<=1)
                         break;
                     if($path[2]=='销售收入'){
                         $order = Product::model()->findByAttributes(['order_no'=>$path[4]]);
