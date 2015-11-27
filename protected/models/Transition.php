@@ -563,10 +563,10 @@ class Transition extends CActiveRecord
                         $arr['entry_memo'] = trim($items['B']);
                         $arr['entry_appendix_id'] = Vendor::model()->matchName(trim($items['C']));
                         $arr['entry_name'] = Stock::model()->matchName(trim($items['D']));
-                        $arr['model'] = trim($items['E']);
-                        $amount = trim($items['F']);
-                        $arr['count'] = trim($items['G']);
-                        $arr['department_id'] = Department::model()->matchName(trim($items['H']));
+                        $arr['model'] = trim(isset($items['E'])?$items['E']:'');
+                        $amount = trim(isset($items['F'])?$items['F']:'');
+                        $arr['count'] = trim(isset($items['G'])?$items['G']:'');
+                        $arr['department_id'] = Department::model()->matchName(trim(isset($items['H'])?$items['H']:''));
                         break;
                     case 'product':
                         $arr['entry_date'] = convertDate($items['A']);

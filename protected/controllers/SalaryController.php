@@ -15,7 +15,6 @@ class SalaryController extends Controller
 	{
 		return array(
 			'accessControl', // perform access control for CRUD operations
-			'postOnly + delete', // we only allow deletion via POST request
 		);
 	}
 
@@ -134,7 +133,7 @@ class SalaryController extends Controller
         if($relation==null) {
             $model = $this->loadModel($id);
             //凭证是否可以删除
-            $trans = Transition::model()->findAll(['condition'=>'data_type = "reimburse" and data_id=:data_id','params'=>[':data_id'=>$id]]);
+            $trans = Transition::model()->findAll(['condition'=>'data_type = "salary" and data_id=:data_id','params'=>[':data_id'=>$id]]);
             $delete = true;
             foreach($trans as $item){
                 $delete = $item['entry_reviewed']==1?false:$delete;
@@ -158,7 +157,7 @@ class SalaryController extends Controller
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if(!isset($_GET['ajax']) && $type==1)
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
 	}
 
     /*

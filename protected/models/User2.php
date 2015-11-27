@@ -112,4 +112,13 @@ class User2 extends CActiveRecord
             return true;
         }
     }
+
+    public static function getBank(){
+        $uid = Yii::app()->user->id;
+        $user = User2::model()->findByPk($uid);
+        if($user!=null)
+            return $user->bank;
+        else
+            return 1002;
+    }
 }

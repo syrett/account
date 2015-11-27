@@ -193,7 +193,11 @@ function convertDate($date, $format='')
     $length = strlen($date);
     if ($length < 5)   //2015
         return $date;
-    $d = new DateTime($date);
+    try{
+        $d = new DateTime($date);
+    }catch (Exception $s){
+        return $date;
+    }
     return $d->format($format);
 }
 

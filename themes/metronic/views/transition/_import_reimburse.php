@@ -13,15 +13,16 @@ $this->pageTitle = Yii::app()->name;
 
 ?>
 <div class="dataTables_wrapper no-footer">
-    <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form']); ?>
     <?
     $select = '<option value=1 >日期</option><option value=2 >交易说明</option><option value=3 >金额</option>';
     ?>
     <div class="row">
+        <a id="first" href="#large" data-toggle="modal" value="<?= $option ?>"></a>
         <?
         $this->renderPartial('_import_navigate', array('type' => $type));
         ?>
     </div>
+    <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form']); ?>
     <div class="row import-tab" id="abc">
         <div class="box">
             <table id="data_import" class="table table-bordered dataTable">
@@ -65,63 +66,63 @@ $this->pageTitle = Yii::app()->name;
                         <tr line="<?= $key ?>" <?= $key % 2 == 1 ? 'class="table-tr"' : '' ?>>
 <!--                            <td><input class="" type="checkbox" id="item_--><?//= $key ?><!--" name="lists[--><?//= $key ?><!--]"-->
 <!--                                       value="--><?//= isset($item['id']) ? $item['id'] : '' ?><!--"></td>-->
-                            <td><input readonly="readonly" class="input_mmin" type="text" id="tran_employee_id_<?= $key ?>"
+                            <td><input readonly="readonly" class="form-control input_mmin" type="text" id="tran_employee_id_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][employee_name]"
                                        value="<?= $item['employee_name'] ?>">
                             </td>
-                            <td><input readonly="readonly" class="input_mmin" type="text" id="tran_department_id_<?= $key ?>"
+                            <td><input readonly="readonly" class="form-control input_mmin" type="text" id="tran_department_id_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][department_name]"
                                        value="<?= $item['department_name'] ?>">
                             </td>
-                            <td><input class="input_min" type="text" id="tran_date_<?= $key ?>"
+                            <td><input class="form-control input_min" type="text" id="tran_date_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_date]"
                                        value="<?= $item['entry_date'] ?>">
                             </td>
-                            <td><input class="input_min" type="text" id="tran_memo_id_<?= $key ?>"
+                            <td><input class="form-control input_min" type="text" id="tran_memo_id_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_memo]"
                                        value="<?= $item['entry_memo'] ?>">
                             </td>
-                            <td><input class="input_mmmin" type="text" id="tran_travel_amount_<?= $key ?>"
+                            <td><input class="form-control input_mmmin" type="text" id="tran_travel_amount_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][travel_amount]"
                                        value="<?= $item['travel_amount'] ?>">
                             </td>
-                            <td><input class="input_mmmin" type="text" id="tran_benefit_amount_<?= $key ?>"
+                            <td><input class="form-control input_mmmin" type="text" id="tran_benefit_amount_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][benefit_amount]"
                                        value="<?= $item['benefit_amount'] ?>">
                             </td>
-                            <td><input class="input_mmmin" type="text" id="tran_traffic_amount_<?= $key ?>"
+                            <td><input class="form-control input_mmmin" type="text" id="tran_traffic_amount_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][traffic_amount]"
                                        value="<?= $item['traffic_amount'] ?>">
                             </td>
-                            <td><input class="input_mmmin" type="text" id="tran_phone_amount_<?= $key ?>"
+                            <td><input class="form-control input_mmmin" type="text" id="tran_phone_amount_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][phone_amount]"
                                        value="<?= $item['phone_amount'] ?>">
                             </td>
-                            <td><input class="input_mmmin" type="text" id="tran_entertainment_amount_<?= $key ?>"
+                            <td><input class="form-control input_mmmin" type="text" id="tran_entertainment_amount_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entertainment_amount]"
                                        value="<?= $item['entertainment_amount'] ?>">
                             </td>
-                            <td><input class="input_mmmin" type="text" id="tran_office_amount_<?= $key ?>"
+                            <td><input class="form-control input_mmmin" type="text" id="tran_office_amount_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][office_amount]"
                                        value="<?= $item['office_amount'] ?>">
                             </td>
-                            <td><input class="input_mmmin" type="text" id="tran_rent_amount_<?= $key ?>"
+                            <td><input class="form-control input_mmmin" type="text" id="tran_rent_amount_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][rent_amount]"
                                        value="<?= $item['rent_amount'] ?>">
                             </td>
-                            <td><input class="input_mmmin" type="text" id="tran_watere_amount_<?= $key ?>"
+                            <td><input class="form-control input_mmmin" type="text" id="tran_watere_amount_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][watere_amount]"
                                        value="<?= $item['watere_amount'] ?>">
                             </td>
-                            <td><input class="input_mmmin" type="text" id="tran_train_amount_<?= $key ?>"
+                            <td><input class="form-control input_mmmin" type="text" id="tran_train_amount_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][train_amount]"
                                        value="<?= $item['train_amount'] ?>">
                             </td>
-                            <td><input class="input_mmmin" type="text" id="tran_service_amount_<?= $key ?>"
+                            <td><input class="form-control input_mmmin" type="text" id="tran_service_amount_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][service_amount]"
                                        value="<?= $item['service_amount'] ?>">
                             </td>
-                            <td><input class="input_mmmin" type="text" id="tran_stamping_amount_<?= $key ?>"
+                            <td><input class="form-control input_mmmin" type="text" id="tran_stamping_amount_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][stamping_amount]"
                                        value="<?= $item['stamping_amount'] ?>">
                             </td>
@@ -253,6 +254,8 @@ $this->pageTitle = Yii::app()->name;
 </div>
 <div class="panel-footer">
     <div class="text-center">
+        <button class="btn btn-warning" onclick="javascript:$('#first').click();"><span class="glyphicon glyphicon-repeat"></span> 重新导入
+        </button>
         <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证</button>
     </div>
 </div>

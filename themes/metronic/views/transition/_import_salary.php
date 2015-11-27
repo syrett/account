@@ -13,15 +13,16 @@ $this->pageTitle = Yii::app()->name;
 
 ?>
 <div class="dataTables_wrapper no-footer">
-    <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form']); ?>
     <?
     $select = '<option value=1 >日期</option><option value=2 >交易说明</option><option value=3 >金额</option>';
     ?>
     <div class="row">
+        <a id="first" href="#large" data-toggle="modal" value="<?= $option ?>"></a>
         <?
         $this->renderPartial('_import_navigate', array('type' => $type));
         ?>
     </div>
+    <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form']); ?>
     <div class="row import-tab" id="abc">
         <div class="box">
             <table id="data_import" class="table table-bordered dataTable">
@@ -63,54 +64,54 @@ $this->pageTitle = Yii::app()->name;
                         <tr line="<?= $key ?>" <?= $key % 2 == 1 ? 'class="table-tr"' : '' ?>>
                             <td><input type="checkbox" id="item_<?= $key ?>" name="lists[<?= $key ?>]"
                                        value="<?= isset($item['id']) ? $item['id'] : '' ?>"></td>
-                            <td><input readonly="readonly" class="input_mmin" type="text" id="tran_employee_id_<?= $key ?>"
+                            <td><input readonly="readonly" class="form-control input_mmin" type="text" id="tran_employee_id_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][employee_name]"
                                        value="<?= $item['employee_name'] ?>">
                             </td>
-                            <td><input readonly="readonly" class="input_mmin" type="text" id="tran_department_id_<?= $key ?>"
+                            <td><input readonly="readonly" class="form-control input_mmin" type="text" id="tran_department_id_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][department_name]"
                                        value="<?= $item['department_name'] ?>">
                             </td>
-                            <td><input class="input_min" type="text" id="tran_salary_amount_<?= $key ?>"
+                            <td><input class="form-control input_min" type="text" id="tran_salary_amount_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][salary_amount]"
                                        value="<?= $item['salary_amount'] ?>">
                             </td>
-                            <td><input class="input_mmin" type="text" id="tran_bonus_amount_<?= $key ?>"
+                            <td><input class="form-control input_mmin" type="text" id="tran_bonus_amount_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][bonus_amount]"
                                        value="<?= $item['bonus_amount'] ?>">
                             </td>
-                            <td><input readonly="true" class="input_min" type="text" id="tran_total_amount_<?= $key ?>"
+                            <td><input readonly="true" class="form-control input_min" type="text" id="tran_total_amount_<?= $key ?>"
                                        value="<?= round2($item['salary_amount']+$item['bonus_amount']) ?>">
                             </td>
-                            <td><input class="input_mmin" type="text" id="tran_benefit_amount_<?= $key ?>"
+                            <td><input class="form-control input_mmin" type="text" id="tran_benefit_amount_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][benefit_amount]"
                                        value="<?= $item['benefit_amount'] ?>">
                             </td>
-                            <td><input readonly="readonly" class="input_mmin" type="text" id="tran_social_personal_<?= $key ?>"
+                            <td><input readonly="readonly" class="form-control input_mmin" type="text" id="tran_social_personal_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][social_personal]"
                                        value="<?= $item['social_personal'] ?>">
                             </td>
-                            <td><input readonly="readonly" class="input_mmin" type="text" id="tran_provident_personal_<?= $key ?>"
+                            <td><input readonly="readonly" class="form-control input_mmin" type="text" id="tran_provident_personal_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][provident_personal]"
                                        value="<?= $item['provident_personal'] ?>">
                             </td>
-                            <td><input readonly="readonly" class="input_min" type="text" id="tran_before_tax_<?= $key ?>"
+                            <td><input readonly="readonly" class="form-control input_min" type="text" id="tran_before_tax_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][before_tax]"
                                        value="<?= $item['before_tax'] ?>">
                             </td>
-                            <td><input readonly="readonly" class="input_min" type="text" id="tran_personal_tax_<?= $key ?>"
+                            <td><input readonly="readonly" class="form-control input_min" type="text" id="tran_personal_tax_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][personal_tax]"
                                        value="<?= $item['personal_tax'] ?>">
                             </td>
-                            <td><input readonly="readonly" class="input_min" type="text" id="tran_after_tax_<?= $key ?>"
+                            <td><input readonly="readonly" class="form-control input_min" type="text" id="tran_after_tax_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][after_tax]"
                                        value="<?= $item['after_tax'] ?>">
                             </td>
-                            <td><input readonly="readonly" class="input_mmin" type="text" id="tran_social_company_<?= $key ?>"
+                            <td><input readonly="readonly" class="form-control input_mmin" type="text" id="tran_social_company_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][social_company]"
                                        value="<?= $item['social_company'] ?>">
                             </td>
-                            <td><input readonly="readonly" class="input_mmin" type="text" id="tran_provident_company_<?= $key ?>"
+                            <td><input readonly="readonly" class="form-control input_mmin" type="text" id="tran_provident_company_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][provident_company]"
                                        value="<?= $item['provident_company'] ?>">
                             </td>
@@ -211,6 +212,8 @@ $this->pageTitle = Yii::app()->name;
 </div>
 <div class="panel-footer">
     <div class="text-center">
+        <button class="btn btn-warning" onclick="javascript:$('#first').click();"><span class="glyphicon glyphicon-repeat"></span> 重新导入
+        </button>
         <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证</button>
     </div>
 </div>

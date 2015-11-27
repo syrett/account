@@ -68,7 +68,7 @@ $(window).load(function () {
                 }
             }
         })
-    })
+    });
     $.each($("select[id*='tran_subject_']"), function (key, obj) {
         var sbj = $(obj).val();
         var row = key;
@@ -77,7 +77,9 @@ $(window).load(function () {
             $("select[id='department_id_" + row + "']").select2();
         } else
             $("select[id='department_id_" + row + "']").select2("destroy").hide();
-    })
+    });
+    if($("#first").attr('value')=='empty')
+        $("#first").click();
 })
 function updateUsefor(element, line) {
     var url = $("#get-usefor").val();

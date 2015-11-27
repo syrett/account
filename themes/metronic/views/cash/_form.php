@@ -33,7 +33,6 @@ $clientArray = Client::model()->getClientArray();
                 <th></th>
                 <th style="width: 155px"><?= $form->labelEx($model, 'target') ?></th>
                 <th class="input_mid"><?= $form->labelEx($model, 'name') ?></th>
-                <th class="input_mid <?= $model['client_id']!=0?'':'hidden'?>" id="client_id_th"><?= $form->labelEx($model, 'client_id') ?></th>
                 <th class="input_mid <?= in_array(substr($model->subject,0,4),$arr)?'':'hidden'?>" id="department_id_th"><?= $form->labelEx($model, 'department_id') ?></th>
                 <th class="input_mid"><?= $form->labelEx($model, 'date') ?></th>
                 <th class="input_full"><?= $form->labelEx($model, 'memo') ?></th>

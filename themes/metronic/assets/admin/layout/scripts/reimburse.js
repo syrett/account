@@ -6,4 +6,6 @@ $(window).load(function () {
     if($("#hasPreOrder").val()==1){
        $(".porder").show()
     }
+    if ($("#first").attr('value') == 'empty')
+        $("#first").click();
 })

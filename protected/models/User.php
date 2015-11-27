@@ -96,7 +96,7 @@ class User extends UserActiveRecord
 	}
 
     public static function saveBank($bank){
-        $user = User::model()->find(Yii::app()->user->id);
+        $user = User::model()->findByPk(Yii::app()->user->id);
         $user->bank = $bank;
         $user->save();
     }

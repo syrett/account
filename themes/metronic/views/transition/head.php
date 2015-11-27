@@ -14,10 +14,9 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scrip
 $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.css');
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/datatables/media/js/jquery.dataTables.min.js', CClientScript::POS_END);
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js', CClientScript::POS_END);
-$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/pages/scripts/table-managed.js', CClientScript::POS_END);
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/bootstrap-wizard/jquery.bootstrap.wizard.min.js', CClientScript::POS_END);
 
 $cs->registerScript('ComponentsPickersInit','ComponentsPickers.init();', CClientScript::POS_READY);
-$cs->registerScript('ChartsFlotchartsInitPie','TableManaged.init();', CClientScript::POS_READY);
 
 $bank_money = '';
 $bank_money_icon = 'bank';
@@ -58,11 +57,11 @@ if ($bank_money == 'cash')
 	}
     $vip = 1;
     if($this->checkVIP()){
-        $this->renderPartial('_import_'.$type, array('type'=>$type,'sheetData' => $sheetData));
+        $this->renderPartial('_import_'.$type, array('type'=>$type,'sheetData' => $sheetData, 'option' => isset($option)?$option:''));
         $vip = 2;
     }
     else{
-        $this->renderPartial('_import', array('type'=>$type,'sheetData' => $sheetData));
+        $this->renderPartial('_import', array('type'=>$type,'sheetData' => $sheetData, 'option' => isset($option)?$option:''));
     }
     ?>
 	</div>

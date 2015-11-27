@@ -14,4 +14,6 @@ $(window).load(function () {
         //closeInSeconds: 4, // auto close after defined seconds
         icon: 'bell-o custom-i' // put icon before the message
     });
+    if($("#first").attr('value')=='empty')
+        $("#first").click();
 });

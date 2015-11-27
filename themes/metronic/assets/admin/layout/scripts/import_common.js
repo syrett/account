@@ -2,6 +2,81 @@
  * Created by dell on 2015/7/1.
  */
 
+var form = $('#submit_form');
+var error = $('.alert-danger', form);
+var success = $('.alert-success', form);
+
+var handleTitle = function(tab, navigation, index) {
+    var total = navigation.find('li').length;
+    var current = index + 1;
+    // set wizard title
+    $('.step-title', $('#form_wizard_1')).text('Step ' + (index + 1) + ' of ' + total);
+    // set done steps
+    jQuery('li', $('#form_wizard_1')).removeClass("done");
+    var li_list = navigation.find('li');
+    for (var i = 0; i < index; i++) {
+        jQuery(li_list[i]).addClass("done");
+    }
+
+    if (current == 1) {
+        $('#form_wizard_1').find('.button-previous').hide();
+    } else {
+        $('#form_wizard_1').find('.button-previous').show();
+    }
+
+    if (current >= total) {
+        $('#form_wizard_1').find('.button-next').hide();
+        $('#form_wizard_1').find('.button-submit').show();
+    } else {
+        $('#form_wizard_1').find('.button-next').show();
+        $('#form_wizard_1').find('.button-submit').hide();
+    }
+    Metronic.scrollTo($('.page-title'));
+}
+$(document).ready(function () {
+    $('#form_wizard_1').bootstrapWizard({
+        'nextSelector': '.button-next',
+        'previousSelector': '.button-previous',
+        onTabClick: function (tab, navigation, index, clickedIndex) {
+            return false;
+            /*
+             success.hide();
+             error.hide();
+             if (form.valid() == false) {
+             return false;
+             }
+             handleTitle(tab, navigation, clickedIndex);
+             */
+        },
+        onNext: function (tab, navigation, index) {
+            success.hide();
+            error.hide();
+
+            handleTitle(tab, navigation, index);
+        },
+        onPrevious: function (tab, navigation, index) {
+            success.hide();
+            error.hide();
+
+            handleTitle(tab, navigation, index);
+        },
+        onTabShow: function (tab, navigation, index) {
+            var total = navigation.find('li').length;
+            var current = index + 1;
+            var $percent = (current / total) * 100;
+            $('#form_wizard_1').find('.progress-bar').css({
+                width: $percent + '%'
+            });
+        }
+    });
+
+    $('#form_wizard_1').find('.button-previous').hide();
+    $('#form_wizard_1').find('.button-submit').hide();
+    $('#form_wizard_1 .button-submit').click(function () {
+        $('#submit_type').val('import');$('#form-import').submit();
+    }).hide();
+
+});
 //日期选择器的起始日期
 function getDate() {
     var startDate = $("#dp_startdate").val();
@@ -52,12 +127,12 @@ function chooseSubject(e) {
 //设置按钮宽度
 function setWidth(e) {
     /*
-    var width = Math.max.apply(Math, $(e.parentNode.nextSibling.nextSibling).find('button[class*="btn-"]').map(function () {
-        return $(this).width();
-    }).get());
-    $(e.parentNode.nextSibling.nextSibling).find('button[class*="btn-"]').width(width);
-    $(e.parentNode.nextSibling.nextSibling).find('input[class*="new-"]:visible').width(width);
-    */
+     var width = Math.max.apply(Math, $(e.parentNode.nextSibling.nextSibling).find('button[class*="btn-"]').map(function () {
+     return $(this).width();
+     }).get());
+     $(e.parentNode.nextSibling.nextSibling).find('button[class*="btn-"]').width(width);
+     $(e.parentNode.nextSibling.nextSibling).find('input[class*="new-"]:visible').width(width);
+     */
 }
 
 //设置交易方名称
@@ -69,7 +144,7 @@ function setTarget(id) {
 //去除路径，只保留交易方名称abc ，路径格式为 ***/**/abc
 function removePath(path) {
     //正则匹配
-    path = $('<div>'+path+'</div>').text().trim();
+    path = $('<div>' + path + '</div>').text().trim();
     var reg = /[^/]([^\x00-\xff]|\w)+(<i>|$)/;
     if (reg.test(path)) {
         path = path.match(reg)
@@ -84,9 +159,13 @@ function setTransaction(id) {
     $("#transaction_" + id).val(1);
     var type = $(".options:first > button.active").val();
     var action = $("#action").val();
-    switch(action){
-        case 'product': $("#transaction_" + id).val(2);break;
-        case 'purchase': $("#transaction_" + id).val(1);break;
+    switch (action) {
+        case 'product':
+            $("#transaction_" + id).val(2);
+            break;
+        case 'purchase':
+            $("#transaction_" + id).val(1);
+            break;
         default :
             if (type == '支出')
                 $("#transaction_" + id).val(1)
@@ -101,7 +180,7 @@ function setTransaction(id) {
     var option = $(".options:nth-of-type(3) > button.active").val();
     if (option == '银行转账')
         $("#status_id_" + id).val("2")   //这种状态不需要生成凭证
-    else if($("#status_id_"+id).val()!='0')
+    else if ($("#status_id_" + id).val() != '0')
         $("#status_id_" + id).val("1")
 
 }
@@ -197,21 +276,27 @@ function addBank() {
  解锁，锁定银行
  */
 function lockBank(e) {
-    if (e.value == 1) {
-        var url = $("#user-bank").val();
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: {"bank": $("#subject_b").val()}
-        })
-        $("#subject_b").select2("readonly", true);
-        $(e).html("解锁银行");
-    }
-    else {
-        $("#subject_b").select2("readonly", false);
-        $(e).html("锁定银行");
-    }
-    e.value = e.value == 0 ? 1 : 0;
+    var url = $("#user-bank").val();
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: {"bank": $("#subject_b").val()}
+    })
+    //if (e.value == 1) {
+    //    var url = $("#user-bank").val();
+    //    $.ajax({
+    //        type: "POST",
+    //        url: url,
+    //        data: {"bank": $("#subject_b").val()}
+    //    })
+    //    $("#subject_b").select2("readonly", true);
+    //    $(e).html("解锁银行");
+    //}
+    //else {
+    //    $("#subject_b").select2("readonly", false);
+    //    $(e).html("锁定银行");
+    //}
+    //e.value = e.value == 0 ? 1 : 0;
 }
 
 function active(e) {
@@ -234,33 +319,33 @@ function itemclose(e) {
 var oldStatus = 1;
 function itemInvalid(e) {
     var id = $(e.parentNode.parentNode).find("input[id^='id_']")[0].value;
-    if($("#status_id_" + id).val()!="0"){
-        oldStatus = $("status_id_"+id).val();
+    if ($("#status_id_" + id).val() != "0") {
+        oldStatus = $("status_id_" + id).val();
         $("#status_id_" + id).val("0");
         $(e.parentNode.parentNode.parentNode).addClass('label-danger');
-    }else{
+    } else {
         $("#status_id_" + id).val(oldStatus);
         $(e.parentNode.parentNode.parentNode).removeClass('label-danger');
     }
 }
 
-function sumAmount2(ob){
+function sumAmount2(ob) {
     var counts = $(ob).parent().parent().find("[name*='[Transition][stocks_count]']").val();
     var prices = $(ob).parent().parent().find("[name*='[Transition][stocks_price]']").val();
     counts = counts.split(",");
     prices = prices.split(",");
     var amount = 0;
-    for(var index = counts.length-1; index >= 0; --index){
-        amount += counts[index]*prices[index];
+    for (var index = counts.length - 1; index >= 0; --index) {
+        amount += counts[index] * prices[index];
     }
     $(ob).parent().parent().find("[id*='tran_amount_']").html(toAmount(amount));
     $(ob).parent().parent().find("[id*='entry_amount_']").val(toAmount(amount));
 }
 
-function toAmount(price){
-    if(price>0){
+function toAmount(price) {
+    if (price > 0) {
         price = price + 0.000001;
-    }else if(price < 0)
+    } else if (price < 0)
         price = price - 0.000001;
 
     price = price * 100;
@@ -268,6 +353,6 @@ function toAmount(price){
     return price / 100;
 }
 
-function genPOrder(type){
+function genPOrder(type) {
 
 }

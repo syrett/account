@@ -24,76 +24,10 @@ $tranDate = $this->getTransitionDate('post');
 
 <div class="dataTables_wrapper no-footer">
     <?
-    echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form', 'class' => 'form-horizontal']); ?>
-    <?
+    echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form', 'class' => 'form-horizontal']);
+
     $select = '<option value=1 >日期</option><option value=2 >交易说明</option><option value=3 >金额</option>';
     ?>
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="col-md-4 col-sm-12">
-                <div class="form-group">
-                    <div class="input-group choose-btn-group">
-                        <div class="input-icon">
-                            <i class="fa fa-file fa-fw"></i>
-                            <input type="text" class="form-control btn-file" id="import_file_name" readonly="">
-                        </div>
-					<span class="input-group-btn">
-						<span class="btn btn-default btn-file">
-							选择文件<input name="attachment" type="file" accept=".xls,.xlsx">
-						</span>
-					</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-12">
-                <div class="btn-toolbar margin-bottom-10">
-                    <input type="hidden" id="submit_type" name="submit_type" value="import">
-                    <button onclick="javascript:$('#submit_type').val('import');$('#form').submit();" class="btn btn-default btn-file">导入</button>
-                    <a download="" href="/download/<?= Yii::t('import', strtoupper($type)) ?>.xlsx">
-                        <button class="btn btn-default btn-file" type="button">模板下载
-                        </button>
-                    </a>
-                </div>
-
-            </div>
-            <div class="col-md-5 col-sm-12">
-                <div class="form-inline pull-right">
-                    <div class="form-group">
-                        <?php
-                        if ($type == 'bank')
-                            $sbj = 1002;
-                        if ($type == 'cash')
-                            $sbj = 1001;
-                        $banks = Subjects::model()->list_sub($sbj);
-                        $data = [];
-                        $class = 'form-control';
-                        if (empty($banks)) {
-                            echo '<input type="hidden" name="subject_b" value="1001" /></div>';
-                        } else {
-                        foreach ($banks as $item) {
-                            $data[$item['sbj_number']] = $item['sbj_name'];
-                        }
-                        $user = User::model()->find(Yii::app()->user->id);
-                        $this->widget('ESelect2', array(
-                            'name' => 'subject_b',
-                            'id' => 'subject_b',
-                            'value' => $user->bank,
-                            'htmlOptions' => ['class' => $class,],
-                            'data' => $data,
-                        ));
-                        ?>
-                        <input id="bank_name" placeholder="银行名称" type="text" class="form-control"/>
-                        <button class="btn btn-default btn-file" type="button" onclick="addBank()">添加</button>
-                        <button class="btn btn-default btn-file" type="button" onclick="lockBank(this)" value="0">解锁银行
-                        </button>
-                    </div>
-                </div>
-                <?
-                }
-                ?>
-            </div>
-        </div>
-    </div>
     <div class="import-tab" id="abc">
         <div class="box">
             <table id="data_import" class="table table-bordered table-striped table-hover" id="import_table">
@@ -118,7 +52,8 @@ $tranDate = $this->getTransitionDate('post');
                                        value="<?= isset($item['id']) ? $item['id'] : '' ?>"></td>
                             <td><input type="text" id="tran_target_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][target]" placeholder="对方名称"
-                                       value="<?=isset($item['target'])?$item['target']:'' ?>" class="form-control input-small">
+                                       value="<?= isset($item['target']) ? $item['target'] : '' ?>"
+                                       class="form-control input-small">
                             </td>
                             <td><input type="text" id="tran_name_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_name]" placeholder="名称"
@@ -150,8 +85,8 @@ $tranDate = $this->getTransitionDate('post');
                                 <input type="hidden" id="id_<?= $key ?>" value="<?= $key ?>">
                                 <data>
                                     <input type="hidden" id="status_id_<?= $key ?>"
-                                             name="lists[<?= $key ?>][Transition][status_id]"
-                                             value="<?= $item['status_id'] ?>">
+                                           name="lists[<?= $key ?>][Transition][status_id]"
+                                           value="<?= $item['status_id'] ?>">
                                     <input type="hidden" id="subject_<?= $key ?>"
                                            name="lists[<?= $key ?>][Transition][entry_subject]"
                                            value="<?= $item['entry_subject'] ?>">
@@ -159,10 +94,15 @@ $tranDate = $this->getTransitionDate('post');
                                            name="lists[<?= $key ?>][Transition][entry_transaction]"
                                            value="<?= $item['entry_transaction'] ?>">
                                     <input type="hidden" id="invoice_<?= $key ?>"
-                                           name="lists[<?= $key ?>][Transition][invoice]" value="<?= $item['invoice'] ?>">
-                                    <input type="hidden" id="withtax_<?= $key ?>" value="<?= $item['tax'] > 0 ? 1 : 0 ?>">
+                                           name="lists[<?= $key ?>][Transition][invoice]"
+                                           value="<?= $item['invoice'] ?>">
+                                    <input type="hidden" id="withtax_<?= $key ?>"
+                                           value="<?= $item['tax'] > 0 ? 1 : 0 ?>">
                                     <input type="hidden" id="tax_<?= $key ?>" name="lists[<?= $key ?>][Transition][tax]"
                                            value="<?= $item['tax'] ?>">
+                                    <input type="hidden" id="overworth_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][overworth]"
+                                           value="<?= $item['overworth'] ?>">
                                     <input type="hidden" id="parent_<?= $key ?>"
                                            name="lists[<?= $key ?>][Transition][parent]" value="<?= $item['parent'] ?>">
                                     <input type="hidden" id="additional_sbj0_<?= $key ?>"
@@ -177,8 +117,9 @@ $tranDate = $this->getTransitionDate('post');
                                     <input type="hidden" id="additional_amount1_<?= $key ?>"
                                            name="lists[<?= $key ?>][Transition][additional][1][amount]"
                                            value="<?= $item['additional'][1]['amount'] ?>">
-                                    <input type="hidden" id="last_<?= $key ?>" name="lists[<?= $key ?>][Transition][last]"
-                                        value = "<?isset($item['last'])?$item['last']:''?>">
+                                    <input type="hidden" id="last_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][last]"
+                                           value="<? isset($item['last']) ? $item['last'] : '' ?>">
                                     <input type="hidden" id="path_<?= $key ?>"
                                            name="lists[<?= $key ?>][Transition][path]"
                                            value="<?= $item['path'] ?>">
@@ -186,7 +127,8 @@ $tranDate = $this->getTransitionDate('post');
 
                                 <!--                                <div class="btn-group-vertical" role="group">-->
                                 <div class="btn-group">
-                                    <a class="btn btn-xs blue dropdown-toggle" data-toggle="modal" onclick="itemsetting(this)"
+                                    <a class="btn btn-xs blue dropdown-toggle" data-toggle="modal"
+                                       onclick="itemsetting(this)"
                                        href="#category-box">
                                         <button type="button" class="btn btn-xs blue">记账
                                         </button>
@@ -207,7 +149,7 @@ $tranDate = $this->getTransitionDate('post');
                                <?
                                if (!empty($item['error'])) {
                                    foreach ($item['error'] as $err) {
-                                       echo is_array($err)?$err[0]:$err;
+                                       echo is_array($err) ? $err[0] : $err;
                                    }
                                }
                                ?>
@@ -219,7 +161,7 @@ $tranDate = $this->getTransitionDate('post');
                     }
                     ?>
                     <input type="hidden" id="rows" value="<?= $lines ?>">
-                <?
+                    <?
                 }
                 ?>
             </table>
@@ -239,6 +181,8 @@ $tranDate = $this->getTransitionDate('post');
 </div>
 <div class="dataTables_wrapper no-footer">
     <div class="text-center">
+        <button class="btn btn-warning" onclick="javascript:$('#first').click();"><span class="glyphicon glyphicon-repeat"></span> 重新导入
+        </button>
         <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证
         </button>
     </div>
@@ -274,13 +218,129 @@ $tranDate = $this->getTransitionDate('post');
             </div>
             <!-- .modal-body -->
             <div class="modal-footer">
-                <span class="left-info" id="setting-info" ></span>
+                <span class="left-info" id="setting-info"></span>
                 <button class="btn btn-circle green" data-dismiss="modal" type="button" onclick="itemSet()">确定</button>
-                <button class="btn btn-circle default" data-dismiss="modal" type="button"">取消
-                </button>
+                <button class="btn btn-circle default" data-dismiss="modal" type="button">取消</button>
             </div>
         </div>
         <!-- .modal-content -->
     </div>
     <!-- modal-dialog -->
 </div><!-- #category-box -->
+
+<div class="modal fade bs-modal-lg" id="large" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg" id="form_wizard_1">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">导入银行交易</h4>
+            </div>
+
+            <?
+            echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form-import', 'class' => 'form-horizontal']);
+            ?>
+            <div class="modal-body import-bank form-wizard">
+                <div class="stepwizard">
+                    <ul class=" stepwizard-row">
+                        <li class="stepwizard-step col-md-3 active">
+                            <a href="#tab_step_1" data-toggle="tab" class="btn btn-default btn-circle step">
+                                <span class="number">1</span>
+                            </a>
+                            <p>
+                                选择银行
+                            </p>
+                        </li>
+                        <li class="stepwizard-step col-md-3">
+                            <a href="#tab_step_2" data-toggle="tab" class="btn btn-default btn-circle step">
+                                <span class="number">2</span>
+                            </a>
+                            <p>
+                                模板下载
+                            </p>
+                        </li>
+                        <li class="stepwizard-step col-md-3">
+                            <a href="#tab_step_3" data-toggle="tab" class="btn btn-default btn-circle step">
+                                <span class="number">3</span>
+                            </a>
+                            <p>
+                                导入数据
+                            </p>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab_step_1">
+                            <p><?
+                                if ($type == 'bank')
+                                    $sbj = 1002;
+                                if ($type == 'cash')
+                                    $sbj = 1001;
+                                $banks = Subjects::model()->list_sub($sbj);
+                                $data = [];
+                                $class = 'form-control';
+                                if (empty($banks)) {
+                                    echo '<input type="hidden" name="subject_b" value="1001" />';
+                                } else {
+                                    foreach ($banks as $item) {
+                                        $data[$item['sbj_number']] = $item['sbj_name'];
+                                    }
+                                    $user = User::model()->findByPk(Yii::app()->user->id);
+                                    $this->widget('ESelect2', array(
+                                        'name' => 'subject_b',
+                                        'id' => 'subject_b',
+                                        'value' => $user->bank,
+                                        'htmlOptions' => ['class' => $class,],
+                                        'data' => $data,
+                                    ));
+                                    ?>
+                                <? } ?>
+
+                            </p>
+
+                        </div>
+                        <div class="tab-pane" id="tab_step_2">
+                            <p>
+                                <a download="" href="/download/<?= Yii::t('import', strtoupper($type)) ?>.xlsx">
+                                    <button class="btn btn-default btn-file" type="button">模板下载
+                                    </button>
+                                </a>
+                            </p>
+
+                        </div>
+                        <div class="tab-pane" id="tab_step_3">
+                            <p>
+                            <div class="input-group choose-btn-group">
+                                <div class="input-icon">
+                                    <i class="fa fa-file fa-fw"></i>
+                                    <input type="text" class="form-control btn-file" id="import_file_name" readonly="">
+                                </div>
+                                <span class="input-group-btn">
+                                    <span class="btn btn-default btn-file">
+                                        选择文件<input name="attachment" type="file" accept=".xls,.xlsx">
+                                    </span>
+                                </span>
+                            </div>
+                            </p>
+                        </div>
+                    </div>
+                    <input type="hidden" id="submit_type" name="submit_type" >
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn default" data-dismiss="modal">取消</button>
+                <a href="javascript:;" class="btn default button-previous">
+                    <i class="m-icon-swapleft"></i> 上一步 </a>
+                <a href="javascript:;" class="btn blue button-next">
+                    下一步 <i class="m-icon-swapright m-icon-white"></i>
+                </a>
+                <a href="javascript:;" class="btn blue button-submit">
+                    导入 <i class="m-icon-swapright m-icon-white"></i>
+                </a>
+
+            </div>
+            <?php echo CHtml::endForm(); ?>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<a id="first" href="#large" data-toggle="modal" value="<?= $option ?>"></a>

@@ -34,11 +34,14 @@ $(document).ready(function () {
         $(this).nextAll("span[class*='label-warning']").html("");
     })
 
+    $("div").delegate("#subject_b", "change",function () {
+        lockBank();
+    });
 });
 
 $(window).bind("load", function () {
-    if($("#subject_b").length>0)
-        $("#subject_b").select2("readonly", true);
+    //if($("#subject_b").length>0)
+    //    $("#subject_b").select2("readonly", true);
 });
 function itemsplit(e) {
 

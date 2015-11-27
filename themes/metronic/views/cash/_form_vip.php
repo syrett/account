@@ -84,6 +84,9 @@ $relation = Cash::model()->getRelation('cash',$model->id);
                                    name="lists[<?= $key ?>][Transition][invoice]" value="">
                             <input type="hidden" id="tax_<?= $key ?>" name="lists[<?= $key ?>][Transition][tax]"
                                    value="<?= $item['tax'] ?>">
+                            <input type="hidden" id="overworth_<?= $key ?>"
+                                   name="lists[<?= $key ?>][Transition][overworth]"
+                                   value="<?= $item['overworth'] ?>">
                             <input type="hidden" id="withtax_<?= $key ?>"
                                    value="<?= $item['tax'] > 0 ? 1 : 0 ?>">
                             <input type="hidden" id="parent_<?= $key ?>"

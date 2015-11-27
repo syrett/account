@@ -15,15 +15,16 @@ $this->pageTitle = Yii::app()->name;
 $preOrder = Preparation::getOrderArray($type);
 ?>
 <div class="dataTables_wrapper no-footer">
-    <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form']); ?>
     <?
     $select = '<option value=1 >日期</option><option value=2 >交易说明</option><option value=3 >金额</option>';
     ?>
     <div class="row">
+        <a id="first" href="#large" data-toggle="modal" value="<?= $option ?>"></a>
         <?
         $this->renderPartial('_import_navigate', array('type' => $type));
         ?>
     </div>
+    <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form']); ?>
     <div class="row import-tab" id="abc">
         <div class="box">
             <table id="data_import" class="table table-bordered dataTable">
@@ -226,6 +227,8 @@ $preOrder = Preparation::getOrderArray($type);
 </div>
 <div class="panel-footer">
     <div class="text-center">
+        <button class="btn btn-warning" onclick="javascript:$('#first').click();"><span class="glyphicon glyphicon-repeat"></span> 重新导入
+        </button>
         <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证
         </button>
     </div>

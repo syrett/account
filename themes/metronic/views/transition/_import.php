@@ -11,6 +11,7 @@ $cs = Yii::app()->clientScript;
 $baseUrl = Yii::app()->theme->baseUrl;
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_common.js');
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import.js');
+$cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/bank.js');
 
 $departmentArray = Department::model()->getDepartmentArray();
 $clientArray = Client::model()->getClientArray();
@@ -31,68 +32,10 @@ $tranDate = $this->getTransitionDate('post');
     <div class="row">
         <div class="col-xs-12">
             <div class="col-md-4 col-sm-12">
-                <div class="form-group">
-                    <div class="input-group choose-btn-group">
-                        <div class="input-icon">
-                            <i class="fa fa-file fa-fw"></i>
-                            <input type="text" class="form-control btn-file" id="import_file_name" readonly="">
-                        </div>
-					<span class="input-group-btn">
-						<span class="btn btn-default btn-file">
-							选择文件<input name="attachment" type="file" accept=".xls,.xlsx">
-						</span>
-					</span>
-                    </div>
-                </div>
             </div>
             <div class="col-md-3 col-sm-12">
-                <div class="btn-toolbar margin-bottom-10">
-                    <button type="submit" class="btn btn-default btn-file">导入</button>
-                    <button download="" href="/download/<?= Yii::t('import', strtoupper($type)) ?>.xlsx"
-                            class="btn btn-default btn-file" type="button">模板下载
-                    </button>
-                </div>
-
             </div>
-            <div class="col-md-5 col-sm-12">
-                <div class="form-inline pull-right">
-                    <div class="form-group">
-                        <?php
-                        if ($type == 'bank')
-                            $sbj = 1002;
-                        if ($type == 'cash')
-                            $sbj = 1001;
-                        $banks = Subjects::model()->list_sub($sbj);
-                        $data = [];
-                        $class = 'form-control';
-                        if ($type == 'bank'){
 
-                        if (empty($banks)) {
-                            echo '<input type="hidden" name="subject_b" value="1001" /></div>';
-                        } else {
-                        foreach ($banks as $item) {
-                            $data[$item['sbj_number']] = $item['sbj_name'];
-                        }
-                        $user = User::model()->find(Yii::app()->user->id);
-                        $this->widget('ESelect2', array(
-                            'name' => 'subject_b',
-                            'id' => 'subject_b',
-                            'value' => $user->bank,
-                            'htmlOptions' => ['class' => $class,],
-                            'data' => $data,
-                        ));
-                        ?>
-                        <input id="bank_name" placeholder="银行名称" type="text" class="form-control"/>
-                        <button class="btn btn-default btn-file" type="button" onclick="addBank()">添加</button>
-                        <button class="btn btn-default btn-file" type="button" onclick="lockBank(this)" value="0">解锁银行
-                        </button>
-                    </div>
-                </div>
-                <?
-                }
-                }
-                ?>
-            </div>
         </div>
     </div>
     <div class="import-tab" id="abc">
@@ -121,7 +64,8 @@ $tranDate = $this->getTransitionDate('post');
                                        value="<?= isset($item['id']) ? $item['id'] : '' ?>"></td>
                             <td><input type="text" id="tran_target_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][target]" placeholder="对方名称"
-                                       value="<?= $item['target'] ?>" class="form-control input-small">
+                                       value="<?= isset($item['target']) ? $item['target'] : '' ?>"
+                                       class="form-control input-small">
                             </td>
                             <td><input type="text" id="tran_name_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_name]" placeholder="名称"
@@ -185,7 +129,8 @@ $tranDate = $this->getTransitionDate('post');
                                 <input type="hidden" id="withtax_<?= $key ?>" value="<?= $item['tax'] > 0 ? 1 : 0 ?>">
                                 <input type="hidden" id="tax_<?= $key ?>" name="lists[<?= $key ?>][Transition][tax]"
                                        value="<?= $item['tax'] ?>">
-                                <input type="hidden" id="overworth_<?= $key ?>" name="lists[<?= $key ?>][Transition][overworth]"
+                                <input type="hidden" id="overworth_<?= $key ?>"
+                                       name="lists[<?= $key ?>][Transition][overworth]"
                                        value="<?= $item['overworth'] ?>">
                                 <input type="hidden" id="parent_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][parent]" value="<?= $item['parent'] ?>">
@@ -262,6 +207,9 @@ $tranDate = $this->getTransitionDate('post');
 </div>
 <div class="dataTables_wrapper no-footer">
     <div class="text-center">
+        <button class="btn btn-warning" onclick="javascript:$('#first').click();"><span
+                class="glyphicon glyphicon-repeat"></span> 重新导入
+        </button>
         <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证
         </button>
     </div>
@@ -307,3 +255,123 @@ $tranDate = $this->getTransitionDate('post');
     </div>
     <!-- modal-dialog -->
 </div><!-- #category-box -->
+
+<div class="modal fade bs-modal-lg" id="large" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">导入银行交易</h4>
+            </div>
+
+            <div class="modal-body import-bank">
+                <?
+
+                echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form-import', 'class' => 'form-horizontal']);
+                ?>
+                <div class="tabbable tabbable-tabdrop">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a href="#tab_step_1" data-toggle="tab" aria-expanded="true">一、选择银行</a>
+                        </li>
+                        <li class="">
+                            <a href="#tab_step_2" data-toggle="tab" aria-expanded="false">二、模板下载</a>
+                        </li>
+                        <li>
+                            <a href="#tab_step_3" data-toggle="tab">三、导入数据</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab_step_1">
+                            <p><?
+                                if ($type == 'bank')
+                                    $sbj = 1002;
+                                if ($type == 'cash')
+                                    $sbj = 1001;
+                                $banks = Subjects::model()->list_sub($sbj);
+                                $data = [];
+                                $class = 'form-control';
+                                if (empty($banks)) {
+                                    echo '<input type="hidden" name="subject_b" value="1001" />';
+                                } else {
+                                    foreach ($banks as $item) {
+                                        $data[$item['sbj_number']] = $item['sbj_name'];
+                                    }
+                                    $user = User::model()->findByPk(Yii::app()->user->id);
+                                    $this->widget('ESelect2', array(
+                                        'name' => 'subject_b',
+                                        'id' => 'subject_b',
+                                        'value' => $user->bank,
+                                        'htmlOptions' => ['class' => $class,],
+                                        'data' => $data,
+                                    ));
+                                    ?>
+                                <? } ?>
+
+                            </p>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn default" data-dismiss="modal">取消</button>
+                                <button type="button" class="btn blue"
+                                        onclick="javascript:$('a[href=\'#tab_step_2\']').click()">下一步
+                                </button>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tab_step_2">
+                            <p>
+                                <a download="" href="/download/<?= Yii::t('import', strtoupper($type)) ?>.xlsx">
+                                    <button class="btn btn-default btn-file" type="button">模板下载
+                                    </button>
+                                </a>
+                            </p>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn default" data-dismiss="modal">取消</button>
+                                <button type="button" class="btn blue"
+                                        onclick="javascript:$('a[href=\'#tab_step_1\']').click()">上一步
+                                </button>
+                                <button type="button" class="btn blue"
+                                        onclick="javascript:$('a[href=\'#tab_step_3\']').click()">下一步
+                                </button>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tab_step_3">
+                            <p>
+
+                            <div class="input-group choose-btn-group">
+                                <div class="input-icon">
+                                    <i class="fa fa-file fa-fw"></i>
+                                    <input type="text" class="form-control btn-file" id="import_file_name" readonly="">
+                                </div>
+                                            <span class="input-group-btn">
+                                                <span class="btn btn-default btn-file">
+                                                    选择文件<input name="attachment" type="file" accept=".xls,.xlsx">
+                                                </span>
+                                            </span>
+                            </div>
+                            </p>
+                            <div class="modal-footer">
+                                <button type="button" class="btn default" data-dismiss="modal">取消</button>
+                                <button type="button" class="btn blue"
+                                        onclick="javascript:$('a[href=\'#tab_step_2\']').click()">上一步
+                                </button>
+                                <button type="button" class="btn blue"
+                                        onclick="javascript:$('#submit_type').val('import');$('#form-import').submit();">
+                                    导入
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="submit_type" name="submit_type">
+                </div>
+                <?php echo CHtml::endForm(); ?>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<a id="first" href="#large" data-toggle="modal" value="<?= $option ?>"></a>

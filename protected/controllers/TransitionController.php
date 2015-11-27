@@ -189,10 +189,12 @@ class TransitionController extends Controller
     public function actionPurchase()
     {
         $info = [];
+        $option = 'empty';
         Yii::import('ext.phpexcel.PHPExcel.PHPExcel_IOFactory');
         if (Yii::app()->request->isPostRequest) {
             //上传附件查看
-            if ($_FILES['attachment']!='' && file_exists($_FILES['attachment']['tmp_name'])) {
+            if (isset($_FILES['attachment']) && file_exists($_FILES['attachment']['tmp_name'])) {
+                $option = 'import';
                 $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
                 $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
                 //去除第一行
@@ -200,7 +202,8 @@ class TransitionController extends Controller
                 foreach($list as $item){
                     $sheetData[] = Transition::getSheetData($item, 'purchase');
                 }
-            } elseif($_FILES['attachment']['name']==''){
+            } elseif(!isset($_POST['submit_type'])){
+                $option = 'save';
                 //保存按钮
                 $arr = $this->saveAll('purchase');
                 if (!empty($arr))
@@ -228,7 +231,7 @@ class TransitionController extends Controller
         }
 
         $model[] = new Transition();
-        return $this->render('head', ['type' => 'purchase', 'sheetData' => $sheetData, 'info' => $info]);
+        return $this->render('head', ['type' => 'purchase', 'sheetData' => $sheetData, 'info' => $info, 'option'=>$option]);
     }
 
     /**
@@ -237,10 +240,12 @@ class TransitionController extends Controller
     public function actionSale()
     {
         $info = [];
+        $option = 'empty';
         Yii::import('ext.phpexcel.PHPExcel.PHPExcel_IOFactory');
         if (Yii::app()->request->isPostRequest) {
             //上传附件查看
-            if ($_FILES['attachment']!='' && file_exists($_FILES['attachment']['tmp_name'])) {
+            if (isset($_FILES['attachment']) && file_exists($_FILES['attachment']['tmp_name'])) {
+                $option = 'import';
                 $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
                 $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
                 //去除第一行
@@ -248,7 +253,8 @@ class TransitionController extends Controller
                 foreach($list as $item){
                     $sheetData[] = Transition::getSheetData($item, 'product');
                 }
-            } elseif($_FILES['attachment']['name']==''){
+            } elseif(!isset($_POST['submit_type'])){
+                $option = 'save';
                 //保存按钮
                 $arr = $this->saveAll('product');
                 if (!empty($arr))
@@ -276,7 +282,7 @@ class TransitionController extends Controller
         }
 
         $model[] = new Transition();
-        return $this->render('head', ['type' => 'product', 'sheetData' => $sheetData, 'info' => $info]);
+        return $this->render('head', ['type' => 'product', 'sheetData' => $sheetData, 'info' => $info, 'option'=>$option]);
     }
 
     /**
@@ -286,10 +292,12 @@ class TransitionController extends Controller
     {
         $info = [];
         $sheetData = [];
+        $option = 'empty';
         Yii::import('ext.phpexcel.PHPExcel.PHPExcel_IOFactory');
         if (Yii::app()->request->isPostRequest) {
+            $option = 'import';
             //上传附件查看
-            if ($_FILES['attachment']!='' && file_exists($_FILES['attachment']['tmp_name']) && $_POST['submit_type'] != 'save') {
+            if (isset($_FILES['attachment']) && file_exists($_FILES['attachment']['tmp_name'])) {
                 $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
                 $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
                 //去除第一行
@@ -301,13 +309,15 @@ class TransitionController extends Controller
                 }
             }
             elseif(isset($_POST['type']) && $_POST['type'] =='load') {    //加载上月工资
+                $option = 'save';
                 $employees = Employee::model()->findAll('status=1');
                 foreach($employees as $item){
                     $cri = new CDbCriteria(['order'=>'entry_date desc']);
                     $salary = Salary::model()->findByAttributes(['employee_id'=>$item->id], $cri);
                     $sheetData[] = Transition::getSheetData($salary?$salary->attributes:['employee_id'=>$item->id], 'salary');
                 }
-            }elseif($_POST['submit_type'] == 'save'){
+            } elseif(!isset($_POST['submit_type'])){
+                $option = 'save';
                 //保存工资数据，生成并保存凭证
                 $arr = $this->saveAll('salary');
                 if (!empty($arr))
@@ -342,7 +352,7 @@ class TransitionController extends Controller
         }
 
         $model[] = new Transition();
-        return $this->render('head', ['type' => 'salary', 'sheetData' => $sheetData, 'info' => $info]);
+        return $this->render('head', ['type' => 'salary', 'sheetData' => $sheetData, 'info' => $info, 'option'=>$option]);
     }
 
     /**
@@ -351,10 +361,12 @@ class TransitionController extends Controller
     public function actionReimburse()
     {
         $info = [];
+        $option = 'empty';
         Yii::import('ext.phpexcel.PHPExcel.PHPExcel_IOFactory');
         if (Yii::app()->request->isPostRequest) {
+            $option = 'import';
             //上传附件查看
-            if ($_FILES['attachment']!='' && file_exists($_FILES['attachment']['tmp_name']) && $_POST['submit_type'] != 'save') {
+            if (isset($_FILES['attachment']) && file_exists($_FILES['attachment']['tmp_name'])) {
                 $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
                 $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
                 //去除第一行
@@ -364,7 +376,8 @@ class TransitionController extends Controller
                     if($employee)
                     $sheetData[] = Transition::getSheetData($item, 'reimburse');
                 }
-            }elseif($_POST['submit_type'] == 'save'){
+            } elseif(!isset($_POST['submit_type'])){
+                $option = 'save';
                 //保存按钮
                 $arr = $this->saveAll('reimburse');
                 if (!empty($arr))
@@ -399,7 +412,7 @@ class TransitionController extends Controller
         }
 
         $model[] = new Transition();
-        return $this->render('head', ['type' => 'reimburse', 'sheetData' => $sheetData, 'info' => $info]);
+        return $this->render('head', ['type' => 'reimburse', 'sheetData' => $sheetData, 'info' => $info, 'option'=>$option]);
     }
 
     /**
@@ -408,10 +421,12 @@ class TransitionController extends Controller
     public function actionBank()
     {
         $info = [];
+        $option = 'empty';
         Yii::import('ext.phpexcel.PHPExcel.PHPExcel_IOFactory');
         if (Yii::app()->request->isPostRequest) {
             //上传附件查看
-            if ($_FILES['attachment']!='' && file_exists($_FILES['attachment']['tmp_name'])) {
+            if (isset($_FILES['attachment']) && file_exists($_FILES['attachment']['tmp_name'])) {
+                $option = 'import';
                 $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
                 $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
                 //去除第一行
@@ -420,7 +435,8 @@ class TransitionController extends Controller
                     if(trim($item['C'])!='')
                         $sheetData[] = Transition::getSheetData($item,'bank');
                 }
-            } elseif($_POST['submit_type']!='import'){
+            } elseif(!isset($_POST['submit_type'])){
+                $option = 'save';
                 //保存按钮
                 $arr = $this->saveAll('bank');
                 if (!empty($arr))
@@ -448,7 +464,7 @@ class TransitionController extends Controller
         }
 
         $model[] = new Transition();
-        return $this->render('head', ['type' => 'bank', 'sheetData' => $sheetData, 'info' => $info]);
+        return $this->render('head', ['type' => 'bank', 'sheetData' => $sheetData, 'info' => $info, 'option'=>$option]);
     }
 
     /**
@@ -457,10 +473,12 @@ class TransitionController extends Controller
     public function actionCash()
     {
         $info = [];
+        $option = 'empty';
         Yii::import('ext.phpexcel.PHPExcel.PHPExcel_IOFactory');
         if (Yii::app()->request->isPostRequest) {
             //上传附件查看
-            if ($_FILES['attachment']!='' && file_exists($_FILES['attachment']['tmp_name'])) {
+            if (isset($_FILES['attachment']) && file_exists($_FILES['attachment']['tmp_name'])) {
+                $option = 'import';
                 $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
                 $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
                 //去除第一行
@@ -468,7 +486,8 @@ class TransitionController extends Controller
                 foreach($list as $item){
                     $sheetData[] = Transition::getSheetData($item,'cash');
                 }
-            } elseif($_POST['submit_type']!='import'){
+            } elseif(!isset($_POST['submit_type'])){
+                $option = 'save';
                 //保存按钮,
                 $arr = $this->saveAll('cash');
                 if (!empty($arr))
@@ -497,7 +516,7 @@ class TransitionController extends Controller
         }
 
         $model[] = new Transition();
-        return $this->render('head', ['type' => 'cash', 'sheetData' => $sheetData, 'info' => $info]);
+        return $this->render('head', ['type' => 'cash', 'sheetData' => $sheetData, 'info' => $info, 'option'=>$option]);
     }
 
     public function actionReorganise($date)
@@ -1432,7 +1451,7 @@ class TransitionController extends Controller
             $arr['entry_date'] = date('Ymd',strtotime($arr['entry_date']));
             switch($type){
                 case 'bank':
-                    $subject_2 = $_POST['subject_b'];
+                    $subject_2 = User2::getBank();
                     $arr['subject_2'] = $subject_2;
                     $model = new Bank;
                     $path = explode('=>', $arr['path']);
@@ -1521,6 +1540,7 @@ class TransitionController extends Controller
                 case 'cash':
                     $arr['subject_2'] = 1001;   //库存现金
                     $model = new Cash;
+                    $path = explode('=>', $arr['path']);
                     if(!$this->checkVIP())
                         break;
                     $path = explode('=>', $arr['path']);
@@ -1571,6 +1591,12 @@ class TransitionController extends Controller
                         $sbj = Subjects::matchSubject($vendor->company,[2202]);
                     else{
                         $arr['error'] = ['请选择供应商'];
+                        $arr['id'] = isset($id)?$id:'';
+                        $result[] = ['status' => 0, 'data' => $arr];
+                        continue 2;
+                    }
+                    if($arr['entry_name']=='0'){
+                        $arr['error'] = ['请商品或服务名称'];
                         $arr['id'] = isset($id)?$id:'';
                         $result[] = ['status' => 0, 'data' => $arr];
                         continue 2;

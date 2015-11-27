@@ -43,7 +43,9 @@ $(window).load(function () {
                 }
             }
         })
-    })
+    });
+    if($("#first").attr('value')=='empty')
+        $("#first").click();
 })
 function addProduct(){
     addRow();

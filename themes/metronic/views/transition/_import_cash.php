@@ -24,40 +24,17 @@ $tranDate = $this->getTransitionDate('post');
 
 <div class="dataTables_wrapper no-footer">
     <?
-    echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form', 'class' => 'form-horizontal']); ?>
-    <?
     $select = '<option value=1 >日期</option><option value=2 >交易说明</option><option value=3 >金额</option>';
     ?>
     <div class="row">
-        <div class="col-xs-12">
-            <div class="col-md-4 col-sm-12">
-                <div class="form-group">
-                    <div class="input-group choose-btn-group">
-                        <div class="input-icon">
-                            <i class="fa fa-file fa-fw"></i>
-                            <input type="text" class="form-control btn-file" id="import_file_name" readonly="">
-                        </div>
-					<span class="input-group-btn">
-						<span class="btn btn-default btn-file">
-							选择文件<input name="attachment" type="file" accept=".xls,.xlsx">
-						</span>
-					</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-12">
-                <div class="btn-toolbar margin-bottom-10">
-                    <input type="hidden" id="submit_type" name="submit_type" value="import">
-                    <button onclick="javascript:$('#submit_type').val('import');$('#form').submit();" class="btn btn-default btn-file">导入</button>
-                    <a download="" href="/download/<?= Yii::t('import', strtoupper($type)) ?>.xlsx">
-                        <button class="btn btn-default btn-file" type="button">模板下载
-                        </button>
-                    </a>
-                </div>
-
-            </div>
-        </div>
+        <a id="first" href="#large" data-toggle="modal" value="<?= $option ?>"></a>
+        <?
+        $this->renderPartial('_import_navigate', array('type' => $type));
+        ?>
     </div>
+    <?
+    echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form', 'class' => 'form-horizontal']); ?>
+
     <div class="import-tab" id="abc">
         <div class="box">
             <table id="data_import" class="table table-bordered table-striped table-hover" id="import_table">
@@ -82,7 +59,8 @@ $tranDate = $this->getTransitionDate('post');
                                        value="<?= isset($item['id']) ? $item['id'] : '' ?>"></td>
                             <td><input type="text" id="tran_target_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][target]" placeholder="对方名称"
-                                       value="<?= isset($item['target'])?$item['target']:'' ?>" class="form-control input-small">
+                                       value="<?= isset($item['target']) ? $item['target'] : '' ?>"
+                                       class="form-control input-small">
                             </td>
                             <td><input type="text" id="tran_name_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_name]" placeholder="名称"
@@ -114,8 +92,8 @@ $tranDate = $this->getTransitionDate('post');
                                 <input type="hidden" id="id_<?= $key ?>" value="<?= $key ?>">
                                 <data>
                                     <input type="hidden" id="status_id_<?= $key ?>"
-                                             name="lists[<?= $key ?>][Transition][status_id]"
-                                             value="<?= $item['status_id'] ?>">
+                                           name="lists[<?= $key ?>][Transition][status_id]"
+                                           value="<?= $item['status_id'] ?>">
                                     <input type="hidden" id="subject_<?= $key ?>"
                                            name="lists[<?= $key ?>][Transition][entry_subject]"
                                            value="<?= $item['entry_subject'] ?>">
@@ -123,10 +101,15 @@ $tranDate = $this->getTransitionDate('post');
                                            name="lists[<?= $key ?>][Transition][entry_transaction]"
                                            value="<?= $item['entry_transaction'] ?>">
                                     <input type="hidden" id="invoice_<?= $key ?>"
-                                           name="lists[<?= $key ?>][Transition][invoice]" value="<?= $item['invoice'] ?>">
-                                    <input type="hidden" id="withtax_<?= $key ?>" value="<?= $item['tax'] > 0 ? 1 : 0 ?>">
+                                           name="lists[<?= $key ?>][Transition][invoice]"
+                                           value="<?= $item['invoice'] ?>">
+                                    <input type="hidden" id="withtax_<?= $key ?>"
+                                           value="<?= $item['tax'] > 0 ? 1 : 0 ?>">
                                     <input type="hidden" id="tax_<?= $key ?>" name="lists[<?= $key ?>][Transition][tax]"
                                            value="<?= $item['tax'] ?>">
+                                    <input type="hidden" id="overworth_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][overworth]"
+                                           value="<?= $item['overworth'] ?>">
                                     <input type="hidden" id="parent_<?= $key ?>"
                                            name="lists[<?= $key ?>][Transition][parent]" value="<?= $item['parent'] ?>">
                                     <input type="hidden" id="additional_sbj0_<?= $key ?>"
@@ -141,8 +124,9 @@ $tranDate = $this->getTransitionDate('post');
                                     <input type="hidden" id="additional_amount1_<?= $key ?>"
                                            name="lists[<?= $key ?>][Transition][additional][1][amount]"
                                            value="<?= $item['additional'][1]['amount'] ?>">
-                                    <input type="hidden" id="last_<?= $key ?>" name="lists[<?= $key ?>][Transition][last]"
-                                        value = "<?isset($item['last'])?$item['last']:''?>">
+                                    <input type="hidden" id="last_<?= $key ?>"
+                                           name="lists[<?= $key ?>][Transition][last]"
+                                           value="<? isset($item['last']) ? $item['last'] : '' ?>">
                                     <input type="hidden" id="path_<?= $key ?>"
                                            name="lists[<?= $key ?>][Transition][path]"
                                            value="<?= $item['path'] ?>">
@@ -150,16 +134,19 @@ $tranDate = $this->getTransitionDate('post');
 
                                 <!--                                <div class="btn-group-vertical" role="group">-->
                                 <div class="btn-group">
-                                    <a class="btn btn-xs blue dropdown-toggle" data-toggle="modal" onclick="itemsetting(this)"
+                                    <a class="btn btn-xs blue dropdown-toggle" data-toggle="modal"
+                                       onclick="itemsetting(this)"
                                        href="#category-box">
                                         <button type="button" class="btn btn-xs blue">记账</button>
                                     </a>
                                     <!-- button type="button" class="btn btn-xs blue" onclick="itemsetting(this)"><i class="fa fa-file-o"></i> 记账
                                     </button -->
                                     <button type="button" data-type="double" class="btn btn-xs"
-                                            onclick="itemsplit(this)">拆分</button>
+                                            onclick="itemsplit(this)">拆分
+                                    </button>
                                     <button type="button" data-type="delete" id="btn_del_<?= $key ?>" class="btn btn-xs"
-                                            onclick="itemclose(this)" disabled>删分</button>
+                                            onclick="itemclose(this)" disabled>删分
+                                    </button>
                                 </div>
                                 <!--                                </div>-->
                             </td>
@@ -168,7 +155,7 @@ $tranDate = $this->getTransitionDate('post');
                                <?
                                if (!empty($item['error'])) {
                                    foreach ($item['error'] as $err) {
-                                       echo is_array($err)?$err[0]:$err;
+                                       echo is_array($err) ? $err[0] : $err;
                                    }
                                }
                                ?>
@@ -180,7 +167,7 @@ $tranDate = $this->getTransitionDate('post');
                     }
                     ?>
                     <input type="hidden" id="rows" value="<?= $lines ?>">
-                <?
+                    <?
                 }
                 ?>
             </table>
@@ -200,7 +187,10 @@ $tranDate = $this->getTransitionDate('post');
 </div>
 <div class="dataTables_wrapper no-footer">
     <div class="text-center">
-        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证</button>
+        <button class="btn btn-warning" onclick="javascript:$('#first').click();"><span class="glyphicon glyphicon-repeat"></span> 重新导入
+        </button>
+        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证
+        </button>
     </div>
 </div>
 
@@ -234,9 +224,10 @@ $tranDate = $this->getTransitionDate('post');
             </div>
             <!-- .modal-body -->
             <div class="modal-footer">
-                <span class="left-info" id="setting-info" ></span>
+                <span class="left-info" id="setting-info"></span>
                 <button class="btn btn-circle green" data-dismiss="modal" type="button" onclick="itemSet()">确定</button>
-                <button class="btn btn-circle default" data-dismiss="modal" type="button"">取消
+                <button class="btn btn-circle default" data-dismiss="modal" type="button"
+                ">取消
                 </button>
             </div>
         </div>
