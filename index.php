@@ -5,8 +5,8 @@ if(preg_match('/\..*/',$_SERVER['HTTP_HOST'],$match))
     $domain = $match[0];
 $domain = substr($domain,1);
 defined('DOMAIN') or define('DOMAIN',"$domain");
-defined('LoginURL') or define('LoginURL','http://manage.'.$domain.'/frontend/web/index.php?r=users/guest/login');
-defined('LogoutURL') or define('LogoutURL','http://manage.'.$domain.'/frontend/web/index.php?r=users/user/logout');
+defined('LoginURL') or define('LoginURL','http://manage.'.$domain.'/login');
+defined('LogoutURL') or define('LogoutURL','http://manage.'.$domain.'/logout');
 $yii=dirname(__FILE__).'/vendor/yii/framework/yii.php';
 //if (false == strpos('abc.com', $domain)) {
 if ('abc.com' == $domain) {
