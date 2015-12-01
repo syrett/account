@@ -591,7 +591,8 @@ class StockController extends Controller
                 if (!$item2->overPeriod($date)) {
                     if($item2->checkDeprec($date)){
                         $price = $item2->getWorth();
-                        $price = $price * (100 - $item2->value_rate) / 100 / $item2->value_month;
+                        $month = $item2->worth==''?0:count(explode(',', $item2->worth))-1;
+                        $price = $price * (100 - $item2->value_rate) / 100 / ($item2->value_month - $month);
                         $amount += $price;
                         if (isset($list[$key]['entry_amount']))
                             $list[$key]['entry_amount'] += $price;
