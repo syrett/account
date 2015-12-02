@@ -365,6 +365,7 @@ class Subjects extends CActiveRecord
         $cat_3 = 0;
         foreach ($data as $sbj_id => $start_balance) {
             $sbj_cat = $this->getCat($sbj_id);
+            if($start_balance != 0)
             switch ($sbj_cat) {
                 case 1:
                     $cat_1 += (100 * $start_balance);
@@ -378,8 +379,8 @@ class Subjects extends CActiveRecord
             }
         }
 
-        $sum1 = $cat_1;
-        $sum2 = $cat_2 + $cat_3;
+        $sum1 = (string)$cat_1;
+        $sum2 = (string)($cat_2 + $cat_3);
         if ($sum1 == $sum2) {
             return true;
         } else {
