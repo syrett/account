@@ -584,12 +584,22 @@ div.flash-success a
     height: 1px;
     background-color: #ccc;
     z-order: 0;
-
 }
 
+.stepwizard-step-left {
+    text-align: left;
+}
+.stepwizard-step-right {
+    text-align: right;
+}
+.stepwizard-step-center{
+    text-align: center;
+}
 .stepwizard-step {
     display: table-cell;
-    text-align: center;
+    /*text-align: center;*/
+    padding: 0 !important;
+    margin: 0 !important;
     position: relative;
 }
 
@@ -602,4 +612,93 @@ div.flash-success a
     line-height: 1.428571429;
     border-radius: 15px;
     display: inline-block;
+}
+.head_image{
+    width: 100%;
+    /*height:333px;*/
+    background-size: contain;
+    background-position-y: 30px;
+}
+.head_image select{
+    width: 95%;
+}
+.head_image th{
+    background-image:url('../img/th.png');
+    height:30px;
+    background-repeat:no-repeat;
+    color: #525252;
+    text-shadow: #012b4d 2px 2px 2px;
+    text-align: center;
+}
+
+.head_image td{
+    text-indent:5px;
+    color:#444;
+    border-bottom:1px solid #bbb;
+    border-left:1px solid #bbb;
+}
+
+.head_image td.left{
+    border-left:1px solid #2e638e;
+}
+
+.head_image td.right{
+    border-right:1px solid #2e638e;
+}
+
+.head_image td.bottom{
+    border-bottom:1px solid #2e638e;
+}
+.grip{
+    width:20px;
+    height:30px;
+    margin-top:-3px;
+    background-image:url(../img/grip.png);
+    margin-left:-5px;
+    position:relative;
+    z-index:88;
+    cursor:e-resize;
+}
+
+.grip:hover{
+    background-position-x:-20px;
+}
+
+.dragging .grip{
+    background-position-x:-40px;
+}
+.head_image .dotted{
+    background-image:url('../img/dotted.png');
+    background-repeat:repeat-y;
+}
+.head_image tr{
+    width: 100%;
+}
+.head_image tbody tr{
+    /*background-image: url('http://theme.com/theme/assets/admin/layout2/img/avatar3_small.jpg');*/
+    background-repeat: no-repeat;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+}
+.show_image_option{
+    float:left;
+    width: 100%;
+}
+.show_image_option_conf{
+    float:left;
+}
+.show_image_option_rows{
+    float: right;
+}
+#show_image .clear{
+    height: 25px;
+}
+.scroller .list-unstyled li{
+    display: table-cell;
+    width: 154px;
+}
+.form-horizontal .form-group{
+    height: 70px;
 }
