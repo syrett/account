@@ -1020,7 +1020,7 @@ class Transition extends CActiveRecord
 
     public function getEntry_amount($prefix, $sub_id)
     {
-        $sql = "SELECT sum( case when entry_transaction = 2 then entry_amount else -entry_amount end) amount FROM `transition` WHERE entry_num_prefix='$prefix' and entry_subject='$sub_id'";
+        $sql = "SELECT sum( case when entry_transaction = 1 then entry_amount else -entry_amount end) amount FROM `transition` WHERE entry_num_prefix='$prefix' and entry_subject='$sub_id'";
         $data = Yii::app()->db->createCommand($sql)->queryAll();
         if (isset($data[0]['amount']))
             return $data[0]['amount'];
