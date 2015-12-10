@@ -150,7 +150,7 @@ class SiteController extends Controller
         if (isset($_REQUEST['operation'])) {
             $operation = $_REQUEST['operation'];
             $date = isset($_REQUEST['date']) ? $_REQUEST['date'] : date('Ym', time());
-            $this->render('operation', array('operation' => $operation));
+            $this->render('operation', array('operation' => $operation, 'date' => $date));
         } else
             $this->redirect('/');
     }

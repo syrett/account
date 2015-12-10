@@ -27,7 +27,7 @@ $tranDate = $this->getTransitionDate('post');
     <?
     echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form', 'class' => 'form-horizontal']);
 
-    $select = '<option value="target_name" >交易方名称</option>
+    $select = '<option value="target_name" >交易对方名称</option>
                 <option value="date" >日期</option>
                 <option value="memo" >交易摘要</option>
                 <option value="amount" >金额</option>
@@ -39,8 +39,7 @@ $tranDate = $this->getTransitionDate('post');
                 <tr>
                     <th class="table_checkbox"><input type="checkbox" class="group-checkable"
                                                       data-set="#import_table .checkboxes"></th>
-                    <th class="input_mid">交易方名称</th>
-                    <th class="input_mid">名称</th>
+                    <th class="input_mid">交易对方名称</th>
                     <th class="input_mid">日期</th>
                     <th class="input_full">交易摘要</th>
                     <th class="input-large">金额</th>
@@ -59,10 +58,6 @@ $tranDate = $this->getTransitionDate('post');
                                        name="lists[<?= $key ?>][Transition][target]" placeholder="对方名称"
                                        value="<?= isset($item['target']) ? $item['target'] : '' ?>"
                                        class="form-control input-small">
-                            </td>
-                            <td><input type="text" id="tran_name_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][entry_name]" placeholder="名称"
-                                       value="<?= $item['entry_name'] ?>" class="form-control input-small">
                             </td>
                             <td>
                                 <input class="form-control form-control-inline input_mid " type="text"
@@ -181,6 +176,7 @@ $tranDate = $this->getTransitionDate('post');
             </div>
 
         </div>
+        <input type="hidden" name="subject_b" value="<?= $info['subject_b']?>">
     </div>
     <?php echo CHtml::endForm(); ?>
 </div>
@@ -225,8 +221,8 @@ $tranDate = $this->getTransitionDate('post');
             <!-- .modal-body -->
             <div class="modal-footer">
                 <span class="left-info" id="setting-info"></span>
-                <button class="btn btn-circle green" data-dismiss="modal" type="button" onclick="itemSet()">确定</button>
-                <button class="btn btn-circle default" data-dismiss="modal" type="button">取消</button>
+                <button class="btn btn-default blue" data-dismiss="modal" type="button" onclick="itemSet()">确定</button>
+                <button class="btn btn-default default" data-dismiss="modal" type="button">取消</button>
             </div>
         </div>
         <!-- .modal-content -->
@@ -308,7 +304,7 @@ $tranDate = $this->getTransitionDate('post');
                         </div>
                         <div class="tab-pane stepwizard-step-center" id="tab_step_2">
                             <p>
-                                <a download="" href="/download/<?= Yii::t('import', strtoupper($type)) ?>.xlsx">
+                                <a download="" href="/download/银行交易_模板.xlsx">
                                     <button class="btn btn-default btn-file" type="button">模板下载
                                     </button>
                                 </a>
@@ -337,9 +333,9 @@ $tranDate = $this->getTransitionDate('post');
                                         <input type="checkbox" checked name="image_row1_type"> <span>图片第一行无需导入</span>
                                     </div>
                                     <div class="show_image_option_rows">
-                                        <a class="btn btn-default btn-xs" title="删除列" href="#" id="yt0">
+                                        <a class="btn btn-default btn-xs" id="delCol" onclick="delCol()" title="删除列" href="#" id="yt0">
                                             <span class="">删除列<i class="fa fa-hand-o-up"></i></span></a>
-                                        <a class="btn btn-default btn-xs" title="添加列" href="#" id="yt0">
+                                        <a class="btn btn-default btn-xs" id="addCol" onclick="addCol()"  title="添加列" href="#" id="yt0">
                                             <span class="">添加列<i class="fa fa-hand-o-down"></i></span></a>
 
                                     </div>

@@ -21,18 +21,18 @@ $amount_3 = 0;
 
 $bank = Transition::model()->findAllByAttributes([], 'entry_subject like "1002%"');
 foreach ($bank as $item) {
-    $bank_amount = $item['entry_transaction']==1?$bank_amount+$item['entry_amount']:$bank_amount-$item['entry_amount'];
+    $bank_amount = $item['entry_transaction'] == 1 ? $bank_amount + $item['entry_amount'] : $bank_amount - $item['entry_amount'];
 }
 $cash = Transition::model()->findAllByAttributes([], 'entry_subject like "1001%"');
 foreach ($cash as $item) {
-    $cash_amount = $item['entry_transaction']==1?$cash_amount+$item['entry_amount']:$cash_amount-$item['entry_amount'];
+    $cash_amount = $item['entry_transaction'] == 1 ? $cash_amount + $item['entry_amount'] : $cash_amount - $item['entry_amount'];
 }
 $amount_should = Transition::model()->findAllByAttributes([], "entry_subject like '1122%'");
-foreach($amount_should as $item){
-    $should_amount = $item['entry_transaction']==1?$should_amount+$item['entry_amount']:$should_amount-$item['entry_amount'];
+foreach ($amount_should as $item) {
+    $should_amount = $item['entry_transaction'] == 1 ? $should_amount + $item['entry_amount'] : $should_amount - $item['entry_amount'];
 }
 $amount_0 = $should_amount;
-$amount_out = Transition::model()->findAllByAttributes(['entry_transaction'=>2], "entry_subject like '1001%' or entry_subject like '1002%'");
+$amount_out = Transition::model()->findAllByAttributes(['entry_transaction' => 2], "entry_subject like '1001%' or entry_subject like '1002%'");
 foreach ($amount_out as $item) {
     $amount_3 += $item['entry_amount'];
 }
@@ -42,132 +42,134 @@ $data = [];
 $bank_out = Bank::model()->findAllByAttributes([], "path like '%>支出=%'");
 foreach ($bank_out as $item) {
     $path = explode('=>', $item['path']);
-    if(count($path)>1){
-        if($path[2] == '供应商采购'){
-            if(end($path)!='预付款'){
-                $purchase = Purchase::model()->findByAttributes(['order_no'=>end($path)]);
-                if($purchase){
-                    switch(substr($purchase['subject'],0,4)){
+    if (count($path) > 1) {
+        if ($path[2] == '供应商采购') {
+            if (end($path) != '预付款') {
+                $purchase = Purchase::model()->findByAttributes(['order_no' => end($path)]);
+                if ($purchase) {
+                    switch (substr($purchase['subject'], 0, 4)) {
                         case 1601:
-                            $data['固定资产'] = isset($data['固定资产'])?$data['固定资产']+$item['amount']:$item['amount'];
+                            $data['固定资产'] = isset($data['固定资产']) ? $data['固定资产'] + $item['amount'] : $item['amount'];
                             break;
                         case 1701:
-                            $data['无形资产'] = isset($data['无形资产'])?$data['无形资产']+$item['amount']:$item['amount'];
+                            $data['无形资产'] = isset($data['无形资产']) ? $data['无形资产'] + $item['amount'] : $item['amount'];
                             break;
                         case 1801:
-                            $data['长期待摊'] = isset($data['长期待摊'])?$data['长期待摊']+$item['amount']:$item['amount'];
+                            $data['长期待摊'] = isset($data['长期待摊']) ? $data['长期待摊'] + $item['amount'] : $item['amount'];
                             break;
                         case 1403:
                         case 1405:
-                            $data['存货采购'] = isset($data['存货采购'])?$data['存货采购']+$item['amount']:$item['amount'];
+                            $data['存货采购'] = isset($data['存货采购']) ? $data['存货采购'] + $item['amount'] : $item['amount'];
                             break;
                         default :
-                            $data['其他采购'] = isset($data['其他采购'])?$data['其他采购']+$item['amount']:$item['amount'];
+                            $data['其他采购'] = isset($data['其他采购']) ? $data['其他采购'] + $item['amount'] : $item['amount'];
                     }
                 }
-            }else{
-                $preorder = Preparation::model()->findByAttributes(['type'=>'bank', 'pid'=>$item->id]);
-                if(isset($preorder['real_order'])){
+            } else {
+                $preorder = Preparation::model()->findByAttributes(['type' => 'bank', 'pid' => $item->id]);
+                if (isset($preorder['real_order'])) {
                     $real_order = json_decode($preorder['real_order'], true);
-                    if($real_order)
+                    if ($real_order)
                         foreach ($real_order as $order => $amount) {
-                            $purchase = Purchase::model()->findByAttributes(['order_no'=>$order]);
-                            if($purchase){
-                                switch(substr($purchase['subject'],0,4)){
+                            $purchase = Purchase::model()->findByAttributes(['order_no' => $order]);
+                            if ($purchase) {
+                                switch (substr($purchase['subject'], 0, 4)) {
                                     case 1601:
-                                        $data['固定资产'] = isset($data['固定资产'])?$data['固定资产']+$amount:$amount;
+                                        $data['固定资产'] = isset($data['固定资产']) ? $data['固定资产'] + $amount : $amount;
                                         break;
                                     case 1701:
-                                        $data['无形资产'] = isset($data['无形资产'])?$data['无形资产']+$amount:$amount;
+                                        $data['无形资产'] = isset($data['无形资产']) ? $data['无形资产'] + $amount : $amount;
                                         break;
                                     case 1801:
-                                        $data['长期待摊'] = isset($data['长期待摊'])?$data['长期待摊']+$amount:$amount;
+                                        $data['长期待摊'] = isset($data['长期待摊']) ? $data['长期待摊'] + $amount : $amount;
                                         break;
                                     case 1403:
                                     case 1405:
-                                        $data['存货采购'] = isset($data['存货采购'])?$data['存货采购']+$amount:$amount;
+                                        $data['存货采购'] = isset($data['存货采购']) ? $data['存货采购'] + $amount : $amount;
                                         break;
                                     default :
-                                        $data['其他采购'] = isset($data['其他采购'])?$data['其他采购']+$amount:$amount;
+                                        $data['其他采购'] = isset($data['其他采购']) ? $data['其他采购'] + $amount : $amount;
                                 }
                             }
-                    }
+                        }
 
                 }
             }
-        }else
-            $data[$path[2]] = isset($data[$path[2]])?$data[$path[2]]+$item['amount']:$item['amount'];
+        } else
+            $data[$path[2]] = isset($data[$path[2]]) ? $data[$path[2]] + $item['amount'] : $item['amount'];
     }
 }
 //现金
 $cash_out = Cash::model()->findAllByAttributes([], "path like '%>支出=%'");
 foreach ($cash_out as $item) {
     $path = explode('=>', $item['path']);
-    if(count($path)>1){
-        if($path[2] == '供应商采购'){
-            if(end($path)!='预付款'){
-                $purchase = Purchase::model()->findByAttributes(['order_no'=>end($path)]);
-                if($purchase){
-                    switch(substr($purchase['subject'],0,4)){
+    if (count($path) > 1) {
+        if ($path[2] == '供应商采购') {
+            if (end($path) != '预付款') {
+                $purchase = Purchase::model()->findByAttributes(['order_no' => end($path)]);
+                if ($purchase) {
+                    switch (substr($purchase['subject'], 0, 4)) {
                         case 1601:
-                            $data['固定资产'] = isset($data['固定资产'])?$data['固定资产']+$item['amount']:$item['amount'];
+                            $data['固定资产'] = isset($data['固定资产']) ? $data['固定资产'] + $item['amount'] : $item['amount'];
                             break;
                         case 1701:
-                            $data['无形资产'] = isset($data['无形资产'])?$data['无形资产']+$item['amount']:$item['amount'];
+                            $data['无形资产'] = isset($data['无形资产']) ? $data['无形资产'] + $item['amount'] : $item['amount'];
                             break;
                         case 1801:
-                            $data['长期待摊'] = isset($data['长期待摊'])?$data['长期待摊']+$item['amount']:$item['amount'];
+                            $data['长期待摊'] = isset($data['长期待摊']) ? $data['长期待摊'] + $item['amount'] : $item['amount'];
                             break;
                         case 1403:
                         case 1405:
-                            $data['存货采购'] = isset($data['存货采购'])?$data['存货采购']+$item['amount']:$item['amount'];
+                            $data['存货采购'] = isset($data['存货采购']) ? $data['存货采购'] + $item['amount'] : $item['amount'];
                             break;
                         default :
-                            $data['其他采购'] = isset($data['其他采购'])?$data['其他采购']+$item['amount']:$item['amount'];
+                            $data['其他采购'] = isset($data['其他采购']) ? $data['其他采购'] + $item['amount'] : $item['amount'];
                     }
                 }
-            }else{
-                $preorder = Preparation::model()->findByAttributes(['type'=>'cash', 'pid'=>$item->id]);
-                if($preorder){
+            } else {
+                $preorder = Preparation::model()->findByAttributes(['type' => 'cash', 'pid' => $item->id]);
+                if ($preorder) {
                     $real_order = json_decode($preorder['real_order'], true);
                     foreach ($real_order as $order => $amount) {
-                        $purchase = Purchase::model()->findByAttributes(['order_no'=>$order]);
-                        if($purchase){
-                            switch(substr($purchase['subject'],0,4)){
+                        $purchase = Purchase::model()->findByAttributes(['order_no' => $order]);
+                        if ($purchase) {
+                            switch (substr($purchase['subject'], 0, 4)) {
                                 case 1601:
-                                    $data['固定资产'] = isset($data['固定资产'])?$data['固定资产']+$amount:$amount;
+                                    $data['固定资产'] = isset($data['固定资产']) ? $data['固定资产'] + $amount : $amount;
                                     break;
                                 case 1701:
-                                    $data['无形资产'] = isset($data['无形资产'])?$data['无形资产']+$amount:$amount;
+                                    $data['无形资产'] = isset($data['无形资产']) ? $data['无形资产'] + $amount : $amount;
                                     break;
                                 case 1801:
-                                    $data['长期待摊'] = isset($data['长期待摊'])?$data['长期待摊']+$amount:$amount;
+                                    $data['长期待摊'] = isset($data['长期待摊']) ? $data['长期待摊'] + $amount : $amount;
                                     break;
                                 case 1403:
                                 case 1405:
-                                    $data['存货采购'] = isset($data['存货采购'])?$data['存货采购']+$amount:$amount;
+                                    $data['存货采购'] = isset($data['存货采购']) ? $data['存货采购'] + $amount : $amount;
                                     break;
                                 default :
-                                    $data['其他采购'] = isset($data['其他采购'])?$data['其他采购']+$amount:$amount;
+                                    $data['其他采购'] = isset($data['其他采购']) ? $data['其他采购'] + $amount : $amount;
                             }
                         }
                     }
 
                 }
             }
-        }else
-            $data[$path[2]] = isset($data[$path[2]])?$data[$path[2]]+$item['amount']:$item['amount'];
+        } else
+            $data[$path[2]] = isset($data[$path[2]]) ? $data[$path[2]] + $item['amount'] : $item['amount'];
     }
 }
 $data_chart = [];
-foreach($data as $cat => $value){
-    $data_chart[] = ['category'=>$cat,'value'=>$value];
-}
+if (!empty($data))
+    foreach ($data as $cat => $value) {
+        $data_chart[] = ['category' => $cat, 'value' => $value];
+    } else
+    $data_chart[] = ['category' => '银行现金', 'value' => '1'];
 $data_str = json_encode($data_chart);
 $js_str = 'var chart = AmCharts.makeChart( "chartdiv-homepage-3d-pie", {
   "type": "pie",
   "theme": "light",
-  "dataProvider": '. $data_str. ',
+  "dataProvider": ' . $data_str . ',
   "valueField": "value",
   "titleField": "category",
   "startEffect": "elastic",
@@ -254,7 +256,7 @@ $cs->registerScript('ChartsFlotchartsInitPie', $js_str, CClientScript::POS_READY
                         </div>
                         <div class="details">
                             <div class="number">
-                                <?= round2($amount_0>0?$amount_0:0) ?>
+                                <?= round2($amount_0 > 0 ? $amount_0 : 0) ?>
                             </div>
                             <div class="desc">
                                 应收账款
@@ -276,42 +278,42 @@ $cs->registerScript('ChartsFlotchartsInitPie', $js_str, CClientScript::POS_READY
                 </div>
                 <div class="actions">
                     <div class="btn-group">
-<!--                        <a class="btn btn-sm green dropdown-toggle" href="javascript:;" data-toggle="dropdown"-->
-<!--                           aria-expanded="false"><span class="md-click-circle md-click-animate"-->
-<!--                                                       style="height: 95px; width: 95px; top: -38.5px; left: 23px;"></span>-->
-<!--                            本月 <i class="fa fa-angle-down"></i>-->
-<!--                        </a>-->
-<!--                        <ul class="dropdown-menu pull-right">-->
-<!--                            <li>-->
-<!--                                <a href="javascript:;">-->
-<!--                                    过去30天</a>-->
-<!--                            </li>-->
-<!--                            <li>-->
-<!--                                <a href="javascript:;">-->
-<!--                                    本月</a>-->
-<!--                            </li>-->
-<!--                            <li>-->
-<!--                                <a href="javascript:;">-->
-<!--                                    本季度</a>-->
-<!--                            </li>-->
-<!--                            <li>-->
-<!--                                <a href="javascript:;">-->
-<!--                                    今年</a>-->
-<!--                            </li>-->
-<!--                            <li class="divider"></li>-->
-<!--                            <li>-->
-<!--                                <a href="javascript:;">-->
-<!--                                    上月</a>-->
-<!--                            </li>-->
-<!--                            <li>-->
-<!--                                <a href="javascript:;">-->
-<!--                                    上季度</a>-->
-<!--                            </li>-->
-<!--                            <li>-->
-<!--                                <a href="javascript:;">-->
-<!--                                    去年</a>-->
-<!--                            </li>-->
-<!--                        </ul>-->
+                        <!--                        <a class="btn btn-sm green dropdown-toggle" href="javascript:;" data-toggle="dropdown"-->
+                        <!--                           aria-expanded="false"><span class="md-click-circle md-click-animate"-->
+                        <!--                                                       style="height: 95px; width: 95px; top: -38.5px; left: 23px;"></span>-->
+                        <!--                            本月 <i class="fa fa-angle-down"></i>-->
+                        <!--                        </a>-->
+                        <!--                        <ul class="dropdown-menu pull-right">-->
+                        <!--                            <li>-->
+                        <!--                                <a href="javascript:;">-->
+                        <!--                                    过去30天</a>-->
+                        <!--                            </li>-->
+                        <!--                            <li>-->
+                        <!--                                <a href="javascript:;">-->
+                        <!--                                    本月</a>-->
+                        <!--                            </li>-->
+                        <!--                            <li>-->
+                        <!--                                <a href="javascript:;">-->
+                        <!--                                    本季度</a>-->
+                        <!--                            </li>-->
+                        <!--                            <li>-->
+                        <!--                                <a href="javascript:;">-->
+                        <!--                                    今年</a>-->
+                        <!--                            </li>-->
+                        <!--                            <li class="divider"></li>-->
+                        <!--                            <li>-->
+                        <!--                                <a href="javascript:;">-->
+                        <!--                                    上月</a>-->
+                        <!--                            </li>-->
+                        <!--                            <li>-->
+                        <!--                                <a href="javascript:;">-->
+                        <!--                                    上季度</a>-->
+                        <!--                            </li>-->
+                        <!--                            <li>-->
+                        <!--                                <a href="javascript:;">-->
+                        <!--                                    去年</a>-->
+                        <!--                            </li>-->
+                        <!--                        </ul>-->
                     </div>
                 </div>
             </div>

@@ -2,8 +2,6 @@
  * Created by pdwjun on 2015/3/4.
  */
 $(document).ready(function () {
-    $("#selectItem2").val(2);
-    $("#selectItem3").val(3);
     $("#dialog").hide();
     $("div").on('blur', "input[id*='tran_amount']", function (e) {
         sumAmount1(this.parentNode.parentNode)
@@ -223,7 +221,7 @@ function chooseOption(e) {
                     str += '<input type="hidden" name="new-type" id="new-type" value="1">' +
                     '<input type="hidden" id="new-subject" name="new-subject" value="' + newsbj + '" > ' +
                     '<input type="hidden" id="new-sbjname" value="' + newsbjname + '" > ' +
-                    '<br ><input type="text" class="new-item" placeholder="手动填写" id="new-name" name="new-name" value="' + $("#tran_name_" + id).val() + '" >';
+                    '<br ><input type="text" class="new-item" placeholder="手动填写" id="new-name" name="new-name" value="' + $("#tran_target_" + id).val() + '" >';
 
                     if (data.list != '') {
                         str += '<select id="new-invoice" name="new-invoice" data-placeholder="请选择">';

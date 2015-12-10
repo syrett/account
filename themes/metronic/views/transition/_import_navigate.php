@@ -13,7 +13,7 @@
             <div class="modal-body import-bank form-wizard">
                 <div class="stepwizard">
                     <ul class=" stepwizard-row">
-                        <li class="stepwizard-step col-md-6 active">
+                        <li class="stepwizard-step col-md-1 stepwizard-step-left  active">
                             <a href="#tab_step_1" data-toggle="tab" class="btn btn-default btn-circle step">
                                 <span class="number">1</span>
                             </a>
@@ -21,7 +21,7 @@
                                 模板下载
                             </p>
                         </li>
-                        <li class="stepwizard-step col-md-5">
+                        <li class="stepwizard-step col-md-11 stepwizard-step-right">
                             <a href="#tab_step_2" data-toggle="tab" class="btn btn-default btn-circle step">
                                 <span class="number">2</span>
                             </a>
@@ -60,7 +60,7 @@
                                 </div>
                                 <span class="input-group-btn">
                                     <span class="btn btn-default btn-file">
-                                        选择文件<input name="attachment" type="file" accept=".xls,.xlsx">
+                                        选择文件<input name="attachment" type="file" accept=".xls,.xlsx,.jpg">
                                     </span>
                                 </span>
                             </div>

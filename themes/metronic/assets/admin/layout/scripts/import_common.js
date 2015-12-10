@@ -34,6 +34,10 @@ var handleTitle = function(tab, navigation, index) {
     Metronic.scrollTo($('.page-title'));
 }
 $(document).ready(function () {
+    $("#selectItem2").val('date');
+    $("#selectItem3").val('memo');
+    $("#selectItem4").val('amount');
+    if( $('#form_wizard_1').length > 0)
     $('#form_wizard_1').bootstrapWizard({
         'nextSelector': '.button-next',
         'previousSelector': '.button-previous',
@@ -353,6 +357,49 @@ function toAmount(price) {
     return price / 100;
 }
 
-function genPOrder(type) {
-
+//图片识别，添加1列
+function addCol() {
+    if($("#head_image th").length < 8){
+        $("#head_image").colResizable({disable:true});
+        $("#head_image th:last").width('');
+        $("#head_image thead tr").append($("#head_image tr th:last").clone());
+        $("#head_image tbody tr").append('<td>&nbsp;</td>');
+        $("#head_image").colResizable({
+            liveDrag:true,
+            gripInnerHtml:"<div class='grip'></div>",
+            draggingClass:"dragging",
+            onResize:onSampleResized
+        });
+        if($("#head_image th").length >= 8) {
+            $("#addCol").addClass('disabled');
+        }
+        $("#delCol").removeClass('disabled');
+    }
 }
+function delCol() {
+    if($("#head_image th").length > 2){
+        $("#head_image").colResizable({disable:true});
+        $("#head_image thead tr th:last").remove();
+        $("#head_image tbody tr td:last").remove();
+        $("#head_image").colResizable({
+            liveDrag:true,
+            gripInnerHtml:"<div class='grip'></div>",
+            draggingClass:"dragging",
+            onResize:onSampleResized
+        });
+        if($("#head_image th").length <= 2) {
+            $("#delCol").addClass('disabled');
+        }
+        $("#addCol").removeClass('disabled');
+    }
+}
+
+var onSampleResized = function(e){
+    var columns = $(e.currentTarget).find("th");
+    var col = 1;
+    columns.each(function(){
+        $("#head_image th:nth-child("+col+") input").val($(this).width());
+        col ++;
+    });
+
+};

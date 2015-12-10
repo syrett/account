@@ -114,6 +114,10 @@ $baseUrl = Yii::app()->theme->baseUrl;
                                     <i class="icon-info"></i> 账套信息</a>
                             </li>
                             <li>
+                                <a href="<?= $this->createUrl('permission/index') ?>">
+                                    <i class="icon-lock-open"></i> 账套权限</a>
+                            </li>
+                            <li>
                                 <!-- <?= $this->createUrl('options/setting') ?> -->
                                 <a href="" data-target="#static" data-toggle="modal">
                                     <i class="icon-equalizer"></i> 参数设置</a>
@@ -248,7 +252,7 @@ $baseUrl = Yii::app()->theme->baseUrl;
                                                 ?>
                                                 <li><a href="<?= $this->createUrl('transition/bank') ?>">银行交易</a></li>
                                                 <li><a href="<?= $this->createUrl('transition/cash') ?>">现金流水</a></li>
-                                                <li><a href="<?= $this->createUrl('transition/create') ?>">手动输入</a></li>
+                                                <li><a href="<?= $this->createUrl('transition/create') ?>">往来调整</a></li>
                                             </ul>
                                         </div>
                                         <div class="col-md-4">

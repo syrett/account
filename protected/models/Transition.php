@@ -34,7 +34,74 @@ class Transition extends CActiveRecord
     public $entry_number; //  entry_num_prefix. entry_num     完整凭证编号，供凭证管理、排序搜索使用
     public $entry_time;
     public $select; // search的时候，定义返回字段
+    public static $input_arr = ["entry_name" => "",
+        "model" => "",
+        "entry_date" => "",
+        "entry_memo" => "",
+        "entry_amount" => "",
+        "entry_transaction" => "",
+        "d_id" => "",
+        "entry_subject" => "",
+        "subject_2" => "",
+        "entry_appendix_id" => "",
+        "hs_no" => "",
+        "order_no" => "",
+        "vendor_id" => "",
+        "client_id" => "",
+        "department_id" => "",
+        "price" => "",
+        "count" => "1",
+        "unit" => "",
+        "paid" => "",
+        "preorder" => [],
+        "preOrder" => [],
+        "invoice" => "0",
+        "tax" => "0",
+        "overworth" => 0,
+        "parent" => "",
+        'stocks' => '',
+        'stocks_count' => '',
+        'stocks_price' => '',
+        'employee_name' => '',
+        'department_name' => '',
+        'salary_amount' => '',
+        'bonus_amount' => '',
+        'benefit_amount' => '',
+        'social_personal' => '',
+        'provident_personal' => '',
+        'before_tax' => '',
+        'personal_tax' => '',
+        'after_tax' => '',
+        'social_company' => '',
+        'provident_company' => '',
+        'base_amount' => '',
+        'base_2_amount' => '',
+        'travel_amount' => '',
+        'traffic_amount' => '',
+        'phone_amount' => '',
+        'entertainment_amount' => '',
+        'office_amount' => '',
+        'rent_amount' => '',
+        'watere_amount' => '',
+        'train_amount' => '',
+        'service_amount' => '',
+        'stamping_amount' => '',
+        "additional" => [
+            "0" => [
+                "subject" => "",
+                "amount" => "",
+            ],
+            "1" => [
+                "subject" => "",
+                "amount" => "",
+            ],
 
+        ],
+        'path' => '',
+        "entry_reviewed" => "0",
+        "status_id" => "1",
+
+    ];
     /**
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
@@ -478,85 +545,25 @@ class Transition extends CActiveRecord
     public static function getSheetData($items = [], $type)
     {
         $starttime = Condom::model()->getStartTime();
-        $arr = [
-            "entry_name" => "",
-            "model" => "",
-            "entry_date" => $starttime,
-            "entry_memo" => "",
-            "entry_amount" => "",
-            "entry_transaction" => "",
-            "d_id" => "",
-            "entry_subject" => "",
-            "subject_2" => "",
-            "entry_appendix_id" => "",
-            "hs_no" => "",
-            "order_no" => "",
-            "vendor_id" => "",
-            "client_id" => "",
-            "department_id" => "",
-            "price" => "",
-            "count" => "1",
-            "unit" => "",
-            "paid" => "",
-            "preorder" => [],
-            "preOrder" => [],
-            "invoice" => "0",
-            "tax" => "0",
-            "overworth" => 0,
-            "parent" => "",
-            'stocks' => '',
-            'stocks_count' => '',
-            'stocks_price' => '',
-            'employee_name' => '',
-            'department_name' => '',
-            'salary_amount' => '',
-            'bonus_amount' => '',
-            'benefit_amount' => '',
-            'social_personal' => '',
-            'provident_personal' => '',
-            'before_tax' => '',
-            'personal_tax' => '',
-            'after_tax' => '',
-            'social_company' => '',
-            'provident_company' => '',
-            'base_amount' => '',
-            'base_2_amount' => '',
-            'travel_amount' => '',
-            'traffic_amount' => '',
-            'phone_amount' => '',
-            'entertainment_amount' => '',
-            'office_amount' => '',
-            'rent_amount' => '',
-            'watere_amount' => '',
-            'train_amount' => '',
-            'service_amount' => '',
-            'stamping_amount' => '',
-            "additional" => [
-                "0" => [
-                    "subject" => "",
-                    "amount" => "",
-                ],
-                "1" => [
-                    "subject" => "",
-                    "amount" => "",
-                ],
-
-            ],
-            'path' => '',
-            "entry_reviewed" => "0",
-            "status_id" => "1",
-        ];
+        $arr = Transition::$input_arr;
+        $arr['entry_date'] = $starttime;
         if (is_array($items)) {
             $arr = array_merge($arr, $items);
-            if (isset($items['B'])) { //未严格限制必须某一列必须有数据才可
+            if (isset($items['A'])||isset($items['B'])) { //未严格限制必须某一列必须有数据才可
                 switch($type){
                     case 'bank':
                     case 'cash':
-                        $arr['entry_name'] = trim($items['A']);
-                        $arr['entry_date'] = convertDate($items['B']);
-                        $arr['entry_memo'] = trim($items['C']);
-
-                        $amount = trim($items['D']) != '' ? $items['D'] : $items['E'];
+                        $arr['target'] = trim($items['A']);
+                        if(User2::checkVIP()){
+                            $arr['entry_date'] = convertDate($items['B']);
+                            $arr['entry_memo'] = trim($items['C']);
+                            $amount = trim($items['D']) != '' ? $items['D'] : $items['E'];
+                        }else{
+                            $arr['entry_name'] = trim($items['B']);
+                            $arr['entry_date'] = convertDate($items['C']);
+                            $arr['entry_memo'] = trim($items['D']);
+                            $amount = trim($items['E']) != '' ? $items['E'] : $items['F'];
+                        }
                         break;
                     case 'purchase':
                         $arr['entry_date'] = convertDate($items['A']);
@@ -706,7 +713,7 @@ class Transition extends CActiveRecord
                             $arr[$key] = convertDate($item);
                     }
                 }
-                $arr['entry_name'] = isset($items['name']) ? $items['name'] : (isset($items['name'])?$items['target']:'');
+                $arr['entry_name'] = isset($items['name']) ? $items['name'] : (isset($items['entry_name'])?$items['entry_name']:'');
                 $arr['target'] = isset($items['target'])?$items['target']:$arr['entry_name'];
                 $arr['entry_date'] = isset($items['date']) ? $items['date'] : $arr['entry_date'];
                 $arr['entry_memo'] = isset($items['memo']) ? $items['memo'] : $arr['entry_memo'];
@@ -724,6 +731,41 @@ class Transition extends CActiveRecord
                     $arr['base_2_amount'] = $employee->base_2;
                     $arr['entry_subject'] = Department::matchSubject($employee->department_id, '工资');
                 }
+            }
+        }
+        return $arr;
+    }
+
+    public static function getSheetDataFromImage($data,$conf){
+        $arr = [];
+        foreach ($data as $key => $item) {
+            $rowsData = json_decode($item);
+            if($rowsData->errNum == '0'){   //匹配成功
+                $rows = $rowsData->retData;
+                if($conf[0]==true)      //第一行不需要，直接跳过
+                    array_shift($rows);
+                foreach ($rows as $row => $api) {
+                    if(empty($arr[$row]))
+                        $arr[$row] = Transition::$input_arr;
+                    switch($conf[1][$key]){
+                        case 'target_name':
+                            $arr[$row]['target'] = $api->word;break;
+                        case 'memo':
+                            $arr[$row]['entry_memo'] = $api->word;break;
+                        case 'name':
+                            $arr[$row]['entry_name'] = $api->word;break;
+                        case 'date':
+                            $arr[$row]['entry_date'] = $api->word;break;
+                        case 'amount':
+                            $arr[$row]['entry_amount'] = $api->word;break;
+                        default:
+                            break;
+                    }
+
+                }
+
+            }else{
+
             }
         }
         return $arr;
@@ -922,7 +964,8 @@ class Transition extends CActiveRecord
             $tran->entry_reviewer = $entry_reviewer;
             $tran->entry_subject = $sub['id'];
             $amount = $this->getEntry_amount($entry_prefix, $sub['id']);
-            $tran->entry_amount = $this->getEntry_amount($entry_prefix, $sub['id']);
+            $amount = $sub['sbj_cat'] == '4'?-$amount:$amount;
+            $tran->entry_amount = $amount;
             $sum = $sub['sbj_cat'] == '4' ? $sum + $amount : $sum - $amount;     //该科目合计多少
 //          $trans[] = $tran;
             if ($amount != 0) {
@@ -1054,7 +1097,7 @@ class Transition extends CActiveRecord
      */
     public function listSubjectsGrouped()
     {
-        $sel = "select * from subjects where has_sub=0 ";
+        $sel = "select * from subjects where has_sub=0 and sbj_number not like '1001%' and sbj_number not like '1002%' ";
         $order = " order by concat(`sbj_number`) asc"; //
         $sbj_cat = 1;
         $arr = array();

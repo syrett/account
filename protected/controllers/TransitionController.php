@@ -1,4 +1,5 @@
 <?php
+
 class TransitionController extends Controller
 {
     /**
@@ -29,11 +30,7 @@ class TransitionController extends Controller
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'users' => array('@'),
             ),
-            array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin',),
-                'users' => array('@'),
-            ),
-            array('deny', // deny all users
+            array('deny',  // deny all users
                 'users' => array('*'),
             ),
         );
@@ -199,10 +196,10 @@ class TransitionController extends Controller
                 $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
                 //去除第一行
                 array_shift($list);
-                foreach($list as $item){
+                foreach ($list as $item) {
                     $sheetData[] = Transition::getSheetData($item, 'purchase');
                 }
-            } elseif(!isset($_POST['submit_type'])){
+            } elseif (!isset($_POST['submit_type'])) {
                 $option = 'save';
                 //保存按钮
                 $arr = $this->saveAll('purchase');
@@ -218,7 +215,7 @@ class TransitionController extends Controller
                             $sheetData[] = $data;
                         }
                     }
-                else{
+                else {
                     Yii::app()->user->setFlash('success', "保存成功!");
                     //跳转到历史数据管理页面
                     $this->redirect(Yii::app()->createUrl('purchase'));
@@ -226,12 +223,12 @@ class TransitionController extends Controller
             }
         }
 
-        if (empty($sheetData)){
+        if (empty($sheetData)) {
             $sheetData[] = Transition::getSheetData([], 'purchase');
         }
 
         $model[] = new Transition();
-        return $this->render('head', ['type' => 'purchase', 'sheetData' => $sheetData, 'info' => $info, 'option'=>$option]);
+        return $this->render('head', ['type' => 'purchase', 'sheetData' => $sheetData, 'info' => $info, 'option' => $option]);
     }
 
     /**
@@ -250,10 +247,10 @@ class TransitionController extends Controller
                 $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
                 //去除第一行
                 array_shift($list);
-                foreach($list as $item){
+                foreach ($list as $item) {
                     $sheetData[] = Transition::getSheetData($item, 'product');
                 }
-            } elseif(!isset($_POST['submit_type'])){
+            } elseif (!isset($_POST['submit_type'])) {
                 $option = 'save';
                 //保存按钮
                 $arr = $this->saveAll('product');
@@ -269,7 +266,7 @@ class TransitionController extends Controller
                             $sheetData[] = $data;
                         }
                     }
-                else{
+                else {
                     Yii::app()->user->setFlash('success', "保存成功!");
                     //跳转到历史数据管理页面
                     $this->redirect(Yii::app()->createUrl('product'));
@@ -277,12 +274,12 @@ class TransitionController extends Controller
             }
         }
 
-        if (empty($sheetData)){
+        if (empty($sheetData)) {
             $sheetData[] = Transition::getSheetData([], 'product');
         }
 
         $model[] = new Transition();
-        return $this->render('head', ['type' => 'product', 'sheetData' => $sheetData, 'info' => $info, 'option'=>$option]);
+        return $this->render('head', ['type' => 'product', 'sheetData' => $sheetData, 'info' => $info, 'option' => $option]);
     }
 
     /**
@@ -302,21 +299,20 @@ class TransitionController extends Controller
                 $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
                 //去除第一行
                 array_shift($list);
-                foreach($list as $item){
-                    $employee = Employee::model()->findByAttributes(['name'=>$item['B']]);
-                    if($employee)
-                    $sheetData[] = Transition::getSheetData($item, 'salary');
+                foreach ($list as $item) {
+                    $employee = Employee::model()->findByAttributes(['name' => $item['B']]);
+                    if ($employee)
+                        $sheetData[] = Transition::getSheetData($item, 'salary');
                 }
-            }
-            elseif(isset($_POST['type']) && $_POST['type'] =='load') {    //加载上月工资
+            } elseif (isset($_POST['type']) && $_POST['type'] == 'load') {    //加载上月工资
                 $option = 'save';
                 $employees = Employee::model()->findAll('status=1');
-                foreach($employees as $item){
-                    $cri = new CDbCriteria(['order'=>'entry_date desc']);
-                    $salary = Salary::model()->findByAttributes(['employee_id'=>$item->id], $cri);
-                    $sheetData[] = Transition::getSheetData($salary?$salary->attributes:['employee_id'=>$item->id], 'salary');
+                foreach ($employees as $item) {
+                    $cri = new CDbCriteria(['order' => 'entry_date desc']);
+                    $salary = Salary::model()->findByAttributes(['employee_id' => $item->id], $cri);
+                    $sheetData[] = Transition::getSheetData($salary ? $salary->attributes : ['employee_id' => $item->id], 'salary');
                 }
-            } elseif(!isset($_POST['submit_type'])){
+            } elseif (!isset($_POST['submit_type'])) {
                 $option = 'save';
                 //保存工资数据，生成并保存凭证
                 $arr = $this->saveAll('salary');
@@ -332,7 +328,7 @@ class TransitionController extends Controller
                             $sheetData[] = $data;
                         }
                     }
-                else{
+                else {
                     Yii::app()->user->setFlash('success', "保存成功!");
                     //跳转到历史数据管理页面
                     $this->redirect(Yii::app()->createUrl('salary'));
@@ -340,7 +336,7 @@ class TransitionController extends Controller
             }
         }
 
-        if (empty($sheetData)){
+        if (empty($sheetData)) {
 //            $objPHPExcel = PHPExcel_IOFactory::load(Yii::app()->basePath.'\..\download\test2.xlsx');
 //            $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
 //            //去除第一行
@@ -352,7 +348,7 @@ class TransitionController extends Controller
         }
 
         $model[] = new Transition();
-        return $this->render('head', ['type' => 'salary', 'sheetData' => $sheetData, 'info' => $info, 'option'=>$option]);
+        return $this->render('head', ['type' => 'salary', 'sheetData' => $sheetData, 'info' => $info, 'option' => $option]);
     }
 
     /**
@@ -371,12 +367,12 @@ class TransitionController extends Controller
                 $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
                 //去除第一行
                 array_shift($list);
-                foreach($list as $item){
-                    $employee = Employee::model()->findByAttributes(['name'=>$item['A']]);
-                    if($employee)
-                    $sheetData[] = Transition::getSheetData($item, 'reimburse');
+                foreach ($list as $item) {
+                    $employee = Employee::model()->findByAttributes(['name' => $item['A']]);
+                    if ($employee)
+                        $sheetData[] = Transition::getSheetData($item, 'reimburse');
                 }
-            } elseif(!isset($_POST['submit_type'])){
+            } elseif (!isset($_POST['submit_type'])) {
                 $option = 'save';
                 //保存按钮
                 $arr = $this->saveAll('reimburse');
@@ -392,7 +388,7 @@ class TransitionController extends Controller
                             $sheetData[] = $data;
                         }
                     }
-                else{
+                else {
                     Yii::app()->user->setFlash('success', "保存成功!");
                     //跳转到历史数据管理页面
                     $this->redirect(Yii::app()->createUrl('reimburse'));
@@ -400,7 +396,7 @@ class TransitionController extends Controller
             }
         }
 
-        if (empty($sheetData)){
+        if (empty($sheetData)) {
 //            $objPHPExcel = PHPExcel_IOFactory::load(Yii::app()->basePath.'\..\download\test.xlsx');
 //            $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
 //            //去除第一行
@@ -412,7 +408,7 @@ class TransitionController extends Controller
         }
 
         $model[] = new Transition();
-        return $this->render('head', ['type' => 'reimburse', 'sheetData' => $sheetData, 'info' => $info, 'option'=>$option]);
+        return $this->render('head', ['type' => 'reimburse', 'sheetData' => $sheetData, 'info' => $info, 'option' => $option]);
     }
 
     /**
@@ -421,27 +417,68 @@ class TransitionController extends Controller
     public function actionBank()
     {
         $info = [];
+        $info['subject_b'] = isset($_POST['subject_b'])?$_POST['subject_b']:User2::getBank();
         $option = 'empty';
         Yii::import('ext.phpexcel.PHPExcel.PHPExcel_IOFactory');
         if (Yii::app()->request->isPostRequest) {
             //上传附件查看
             if (isset($_FILES['attachment']) && file_exists($_FILES['attachment']['tmp_name'])) {
                 $option = 'import';
-                $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
-                $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
-                //去除第一行
-                array_shift($list);
-                foreach($list as $item){
-                    if(trim($item['C'])!='')
-                        $sheetData[] = Transition::getSheetData($item,'bank');
+                $path_parts = pathinfo( $_FILES['attachment']['name']);
+                $ext = strtolower($path_parts['extension']);
+                if($ext == 'jpg'){
+                    $jpeg_quality = 99;
+                    $img_r = imagecreatefromjpeg($_FILES['attachment']['tmp_name']);
+
+                    $position_x = 0;
+                    foreach($_POST['selectItem'] as $key => $item){
+                        $col[$position_x] = (int)$_POST['show_image_conf_w'][$key];
+                        $position_x += (int)$_POST['show_image_conf_w'][$key];
+                    }
+
+                    $finfo = getimagesize($_FILES['attachment']['tmp_name']);
+                    $targ_h = $finfo[1];
+                    $param = $finfo[0]/$position_x;
+                    Yii::import('ext.Baidu.OCR_Baidu');
+                    foreach ($col as $position => $width) {
+                        $targ_w = $width * $param;
+                        $dst_r = imagecreatetruecolor($targ_w, $targ_h);
+
+                        imagecopyresampled($dst_r, $img_r, 0, 0, $position*$param, 0, $targ_w, $targ_h, $targ_w, $targ_h);
+
+//                        imagejpeg($dst_r, 'temp.jpg', $jpeg_quality);
+//                        $imageFileContents = file_get_contents('temp.jpg');
+                        ob_start();
+                        imagejpeg($dst_r,null, $jpeg_quality);
+                        $imageFileContents = ob_get_contents();
+                        ob_end_clean();
+                        $data[] = OCR_Baidu::getText($imageFileContents);
+                    }
+                    $conf = [];
+                    $conf[] = isset($_POST['image_row1_type']);
+                    $conf[] = $_POST['selectItem'];
+                    $sheetData = Transition::getSheetDataFromImage($data, $conf);
                 }
-            } elseif(!isset($_POST['submit_type'])){
+                if($ext == 'xls' || $ext == 'xlsx'){
+
+                    $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
+                    $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+                    //去除第一行
+                    array_shift($list);
+                    foreach($list as $item){
+                        if(trim($item['A'])!='')
+                            $sheetData[] = Transition::getSheetData($item,'bank');
+                    }
+
+                }
+
+            } elseif (!isset($_POST['submit_type'])) {
                 $option = 'save';
                 //保存按钮
                 $arr = $this->saveAll('bank');
                 if (!empty($arr))
                     foreach ($arr as $item) {
-                        $data = Transition::getSheetData($item['data'],'bank');
+                        $data = Transition::getSheetData($item['data'], 'bank');
                         if ($item['status'] == 0) {
                             Yii::app()->user->setFlash('error', "保存失败!");
                             $sheetData[] = $data;
@@ -451,7 +488,7 @@ class TransitionController extends Controller
                             $sheetData[] = $data;
                         }
                     }
-                else{
+                else {
                     Yii::app()->user->setFlash('success', "保存成功!");
                     //跳转到历史数据管理页面
                     $this->redirect(Yii::app()->createUrl('bank'));
@@ -459,12 +496,12 @@ class TransitionController extends Controller
             }
         }
 
-        if (empty($sheetData)){
-            $sheetData[] = Transition::getSheetData([],'bank');
+        if (empty($sheetData)) {
+            $sheetData[] = Transition::getSheetData([], 'bank');
         }
 
         $model[] = new Transition();
-        return $this->render('head', ['type' => 'bank', 'sheetData' => $sheetData, 'info' => $info, 'option'=>$option]);
+        return $this->render('head', ['type' => 'bank', 'sheetData' => $sheetData, 'info' => $info, 'option' => $option]);
     }
 
     /**
@@ -483,16 +520,16 @@ class TransitionController extends Controller
                 $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
                 //去除第一行
                 array_shift($list);
-                foreach($list as $item){
-                    $sheetData[] = Transition::getSheetData($item,'cash');
+                foreach ($list as $item) {
+                    $sheetData[] = Transition::getSheetData($item, 'cash');
                 }
-            } elseif(!isset($_POST['submit_type'])){
+            } elseif (!isset($_POST['submit_type'])) {
                 $option = 'save';
                 //保存按钮,
                 $arr = $this->saveAll('cash');
                 if (!empty($arr))
                     foreach ($arr as $item) {
-                        $data = Transition::getSheetData($item['data'],'cash');
+                        $data = Transition::getSheetData($item['data'], 'cash');
                         if ($item['status'] == 0) {
                             Yii::app()->user->setFlash('error', "保存失败!");
                             $sheetData[] = $data;
@@ -502,7 +539,7 @@ class TransitionController extends Controller
                             $sheetData[] = $data;
                         }
                     }
-                else{
+                else {
                     Yii::app()->user->setFlash('success', "保存成功!");
                     //跳转到历史数据管理页面
                     $this->redirect(Yii::app()->createUrl('cash'));
@@ -511,12 +548,12 @@ class TransitionController extends Controller
             }
         }
 
-        if (empty($sheetData)){
-            $sheetData[] = Transition::getSheetData([],'cash');
+        if (empty($sheetData)) {
+            $sheetData[] = Transition::getSheetData([], 'cash');
         }
 
         $model[] = new Transition();
-        return $this->render('head', ['type' => 'cash', 'sheetData' => $sheetData, 'info' => $info, 'option'=>$option]);
+        return $this->render('head', ['type' => 'cash', 'sheetData' => $sheetData, 'info' => $info, 'option' => $option]);
     }
 
     public function actionReorganise($date)
@@ -945,67 +982,65 @@ class TransitionController extends Controller
     /*
      * 批量审核
      */
-    public function actionSetReviewedAll(){
-        if (Yii::app()->request->isPostRequest)
-        {
+    public function actionSetReviewedAll()
+    {
+        if (Yii::app()->request->isPostRequest) {
             $result = true;
             //凭证编号 ：2015050001
-            foreach($_POST['selectall'] as $item){
-                $criteria= new CDbCriteria;
-                $entry_num_prefix = substr($item,0,6);
-                $entry_num = (int)substr($item,6);
+            foreach ($_POST['selectall'] as $item) {
+                $criteria = new CDbCriteria;
+                $entry_num_prefix = substr($item, 0, 6);
+                $entry_num = (int)substr($item, 6);
                 $criteria->addCondition('entry_num_prefix= :entry_num_prefix');
                 $criteria->addCondition('entry_num = :entry_num');
                 $criteria->params['entry_num_prefix'] = $entry_num_prefix;
                 $criteria->params['entry_num'] = $entry_num;
                 $trans = Transition::model()->findAll($criteria);
-                if(!empty($trans)){
-                    foreach($trans as $item){
-                        $result = $item->setReviewed()?$result:false;
+                if (!empty($trans)) {
+                    foreach ($trans as $item) {
+                        $result = $item->setReviewed() ? $result : false;
                     }
                 }
             }
-            if(isset(Yii::app()->request->isAjaxRequest)) {
-                if($result)
+            if (isset(Yii::app()->request->isAjaxRequest)) {
+                if ($result)
                     echo CJSON::encode(array('success' => true));
                 else
                     echo CJSON::encode(array('success' => false));
             } else
                 $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
-        }
-        else
-            throw new CHttpException(400,'不合法的请求，请稍后重试');
+        } else
+            throw new CHttpException(400, '不合法的请求，请稍后重试');
     }
 
     /*
      * 批量取消审核
      */
-    public function actionUnReviewedAll(){
-        if (Yii::app()->request->isPostRequest)
-        {
+    public function actionUnReviewedAll()
+    {
+        if (Yii::app()->request->isPostRequest) {
             //凭证编号 ：2015050001
-            foreach($_POST['selectall'] as $item){
-                $criteria= new CDbCriteria;
-                $entry_num_prefix = substr($item,0,6);
-                $entry_num = (int)substr($item,6);
+            foreach ($_POST['selectall'] as $item) {
+                $criteria = new CDbCriteria;
+                $entry_num_prefix = substr($item, 0, 6);
+                $entry_num = (int)substr($item, 6);
                 $criteria->addCondition('entry_num_prefix= :entry_num_prefix');
                 $criteria->addCondition('entry_num = :entry_num');
                 $criteria->params['entry_num_prefix'] = $entry_num_prefix;
                 $criteria->params['entry_num'] = $entry_num;
                 $trans = Transition::model()->findAll($criteria);
-                if(!empty($trans)){
-                    foreach($trans as $item){
+                if (!empty($trans)) {
+                    foreach ($trans as $item) {
                         $item->unReviewed();
                     }
                 }
             }
-            if(isset(Yii::app()->request->isAjaxRequest)) {
+            if (isset(Yii::app()->request->isAjaxRequest)) {
                 echo CJSON::encode(array('success' => true));
             } else
                 $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
-        }
-        else
-            throw new CHttpException(400,'不合法的请求，请稍后重试');
+        } else
+            throw new CHttpException(400, '不合法的请求，请稍后重试');
     }
 
     /*
@@ -1058,10 +1093,12 @@ class TransitionController extends Controller
 
         if (!Transition::model()->checkSettlement($entry_prefix))
             throw new CHttpException(400, $entry_prefix . "结账失败");
-        if(Transition::model()->isAllClosing($entry_prefix))
+        if (Transition::model()->isAllClosing($entry_prefix))
             throw new CHttpException(400, $entry_prefix . "已经结账");
         Transition::model()->settlement($entry_prefix);
-        Stock::model()->saveWorth($entry_prefix);    //过账时的计提折旧操作，在结账时保存净值
+        if(SYSDB!='account_testabxc' && SYSDB!='account_gbl' && SYSDB!='account_201508089731')
+
+            Stock::model()->saveWorth($entry_prefix);    //过账时的计提折旧操作，在结账时保存净值
         Yii::app()->user->setFlash('success', $entry_prefix . "结账成功!");
         $this->render('/site/success');
     }
@@ -1078,9 +1115,9 @@ class TransitionController extends Controller
     /*
      * 反结账
      */
-    public function actionAntiSettlement($edate='')
+    public function actionAntiSettlement($edate = '')
     {
-        $date= date('Ym', time());
+        $date = date('Ym', time());
 //        $date = '201509';
         $result = false;
         while ($date >= Condom::model()->getStartTime() && $date >= $edate) {
@@ -1090,9 +1127,9 @@ class TransitionController extends Controller
         }
 
         if ($result) {
-            Yii::app()->user->setFlash('success', $lastdate."反结账成功!");
+            Yii::app()->user->setFlash('success', $lastdate . "反结账成功!");
             $this->render('/site/success');
-        } elseif($date<Condom::model()->getStartTime())
+        } elseif ($date < Condom::model()->getStartTime())
             throw new CHttpException(400, "已经反结账至账套起始日期");
         else
             throw new CHttpException(400, $lastdate . " 反结账失败");
@@ -1101,18 +1138,18 @@ class TransitionController extends Controller
     /*
      * 反结账
      */
-    public function antiSettlement($date){
+    public function antiSettlement($date)
+    {
 
         $model = Transition::model()->deleteAllByAttributes(array('entry_num_prefix' => $date, 'entry_settlement' => 1,));
-        Transition::model()->deleteAllByAttributes(['entry_num_prefix' => $date], 'entry_memo like "附加税-'.$date. '%"');
-        if(Transition::model()->findByAttributes(['entry_num_prefix'=>$date],'entry_closing=1') || $model)
-        {
-            $rows = Transition::model()->deleteAllByAttributes(['entry_num_prefix' => $date], 'entry_memo like "计提折旧-'.$date. '%"');
-            if($rows > 0) {
+        Transition::model()->deleteAllByAttributes(['entry_num_prefix' => $date], 'entry_memo like "附加税-' . $date . '%"');
+        if (Transition::model()->findByAttributes(['entry_num_prefix' => $date], 'entry_closing=1') || $model) {
+            $rows = Transition::model()->deleteAllByAttributes(['entry_num_prefix' => $date], 'entry_memo like "计提折旧-' . $date . '%"');
+            if ($rows > 0) {
                 $cdb = new CDbCriteria();
                 $cdb->addCondition('entry_subject like "1601%" or entry_subject like "1701%" or entry_subject like "1801%"');
                 $stocks = Stock::model()->findAll($cdb);
-                foreach($stocks as $item){
+                foreach ($stocks as $item) {
                     $arr = explode(',', $item['worth']);
                     array_pop($arr);
                     $item->worth = implode(',', $arr);
@@ -1121,7 +1158,7 @@ class TransitionController extends Controller
             }
         }
         $timeold =
-        //删除post表中的数据
+            //删除post表中的数据
         $year = substr($date, 0, 4);
         $month = substr($date, 4, 6);
         Post::model()->deleteAllByAttributes(array('year' => $year, 'month' => $month));
@@ -1167,11 +1204,16 @@ class TransitionController extends Controller
     {
         $model = new Transition('search');
         $model->unsetAttributes(); // clear any default values
-        if (isset($_REQUEST['date'])) {
-            $criteria = array('entry_num_prefix' => $_REQUEST['date']);
-            $model->attributes = $criteria;
-        }
+        if (isset($_REQUEST['date']))
+            $model->attributes = array('entry_num_prefix' => $_REQUEST['date']);
+        if (isset($_GET['Subjects']))
+            $model->attributes = $_GET['Subjects'];
+        $dataProvider = $model->search();
+        $dataProvider->pagination = array(
+            'pageSize' => 30
+        );
         $this->render('admin', array(
+            'dataProvider' => $dataProvider,
             'model' => $model,
         ));
     }
@@ -1182,7 +1224,7 @@ class TransitionController extends Controller
             Yii::import('application.controllers.PostController');
             $postctrl = new PostController();
             $postctrl->actionPost($_REQUEST['date']);
-        }else
+        } else
             $this->redirect('/');
     }
 
@@ -1190,7 +1232,7 @@ class TransitionController extends Controller
     {     //run Reorganise
         if (isset($_REQUEST['date'])) {
             $this->actionReorganise($_REQUEST['date']);
-        }else
+        } else
             $this->redirect('/');
     }
 
@@ -1198,7 +1240,7 @@ class TransitionController extends Controller
     {     //run settlement
         if (isset($_REQUEST['date'])) {
             $this->actionSettlement($_REQUEST['date']);
-        }else
+        } else
             $this->redirect('/');
     }
 
@@ -1206,16 +1248,16 @@ class TransitionController extends Controller
     {     //run settlement
         if (isset($_REQUEST['date'])) {
             $this->actionAntiSettlement($_REQUEST['date']);
-        }else
+        } else
             $this->redirect('/');
     }
 
     public function actionListAssets()
     {
-    //run settlement
+        //run settlement
         if (isset($_REQUEST['date'])) {
             $this->actionDepreciation($_REQUEST['date']);
-        }else
+        } else
             $this->redirect('/');
     }
 
@@ -1443,40 +1485,40 @@ class TransitionController extends Controller
         foreach ($trans as $row => $item) {
             $arr = $item['Transition'];
             $arr['updated_at'] = time();
-            if(isset($arr['price'])&&$arr['price']!=''&&$arr['count']>0)
-                $arr['entry_amount'] = $arr['price']*$arr['count'];
-            elseif(isset($arr['entry_amount'])){
+            if (isset($arr['price']) && $arr['price'] != '' && $arr['count'] > 0)
+                $arr['entry_amount'] = $arr['price'] * $arr['count'];
+            elseif (isset($arr['entry_amount'])) {
                 $arr['price'] = $arr['entry_amount'];
             }
-            $arr['entry_date'] = date('Ymd',strtotime($arr['entry_date']));
-            switch($type){
+            $arr['entry_date'] = date('Ymd', strtotime($arr['entry_date']));
+            switch ($type) {
                 case 'bank':
-                    $subject_2 = User2::getBank();
+                    $subject_2 = isset($_POST['subject_b'])?$_POST['subject_b']:User2::getBank();
                     $arr['subject_2'] = $subject_2;
                     $model = new Bank;
                     $path = explode('=>', $arr['path']);
-                    if(count($path)>1)
-                        if($path[1] == '收入' && isset($path[3]) && $path[3]=='处置长期资产'){
+                    if (count($path) > 1)
+                        if ($path[1] == '收入' && isset($path[3]) && $path[3] == '处置长期资产') {
                             //变卖长期资产，
-                            if(isset($path[4]) && $path[4] != '其他'){
+                            if (isset($path[4]) && $path[4] != '其他') {
                                 preg_match("/[^_]*/", $path[4], $matches);
                                 $hs_no = $matches[0];
                                 //报废时的待处理财产损益
-                                if($hs_no != ''){
-                                    $stock = Stock::model()->findByAttributes(['hs_no'=>$hs_no]);
+                                if ($hs_no != '') {
+                                    $stock = Stock::model()->findByAttributes(['hs_no' => $hs_no]);
                                     $tran_old = Transition::model()->findByAttributes([
-                                        'data_type'=>'scrap','data_id'=>$stock->id],
+                                        'data_type' => 'scrap', 'data_id' => $stock->id],
                                         'entry_subject like "1901%"');
-                                    $amount_pre = $tran_old?$tran_old->entry_amount:0;
-                                    $where = 'path like "%'. $matches[0]. '%" and path like "%支出%" and path like "%处置长期资产%"';
+                                    $amount_pre = $tran_old ? $tran_old->entry_amount : 0;
+                                    $where = 'path like "%' . $matches[0] . '%" and path like "%支出%" and path like "%处置长期资产%"';
                                     $temp1 = Bank::model()->findAllByAttributes([], $where);
                                     $temp2 = Cash::model()->findAllByAttributes([], $where);
-                                    if($temp1){
+                                    if ($temp1) {
                                         foreach ($temp1 as $temp) {
                                             $amount_pre += $temp->amount;
                                         }
                                     }
-                                    if($temp2){
+                                    if ($temp2) {
                                         foreach ($temp2 as $temp) {
                                             $amount_pre += $temp->amount;
                                         }
@@ -1484,56 +1526,56 @@ class TransitionController extends Controller
                                     $arr['entry_subject'] = $tran_old->entry_subject;
                                     $arr['entry_amount'] = $amount_pre;
                                     $arr['entry_transaction'] = 1;
-                                    if($arr['price'] < $amount_pre){    //营业外支出
-                                        $arr['subject_2'] = $subject_2. ',6711';
-                                        $arr['subject_2_price'] = $arr['price']. ','. ($amount_pre - $arr['price']);
+                                    if ($arr['price'] < $amount_pre) {    //营业外支出
+                                        $arr['subject_2'] = $subject_2 . ',6711';
+                                        $arr['subject_2_price'] = $arr['price'] . ',' . ($amount_pre - $arr['price']);
                                         $arr['subject_2_transa'] = '2,1';   //借贷
-                                    }elseif($arr['price'] > $amount_pre){
-                                        $arr['subject_2'] = $subject_2. ',6301';
-                                        $arr['subject_2_price'] = $arr['price']. ','. ($arr['price'] - $amount_pre);
+                                    } elseif ($arr['price'] > $amount_pre) {
+                                        $arr['subject_2'] = $subject_2 . ',6301';
+                                        $arr['subject_2_price'] = $arr['price'] . ',' . ($arr['price'] - $amount_pre);
                                         $arr['subject_2_transa'] = '2,2';
                                     }
 
                                 }
                             }
                         }
-                    if(!$this->checkVIP() || count($path)<=1)
+                    if (!$this->checkVIP() || count($path) <= 1)
                         break;
-                    if($path[2]=='销售收入'){
-                        $order = Product::model()->findByAttributes(['order_no'=>$path[4]]);
-                        if($order){
+                    if ($path[2] == '销售收入') {
+                        $order = Product::model()->findByAttributes(['order_no' => $path[4]]);
+                        if ($order) {
                             $model['type'] = 'product';
                             $model['pid'] = $order['id'];
-                            $arr['relation'] = json_encode(['product'=>$order['id']]);
+                            $arr['relation'] = json_encode(['product' => $order['id']]);
                         }
-                    }elseif($path[2] == '供应商采购'){
-                        $order = Purchase::model()->findByAttributes(['order_no'=>$path[4]]);
-                        if($order){
+                    } elseif ($path[2] == '供应商采购') {
+                        $order = Purchase::model()->findByAttributes(['order_no' => $path[4]]);
+                        if ($order) {
                             $model['type'] = 'purchase';
                             $model['pid'] = $order['id'];
-                            $arr['relation'] = json_encode(['purchase'=>$order['id']]);
+                            $arr['relation'] = json_encode(['purchase' => $order['id']]);
                         }
-                    }elseif($path[2] == '员工报销' && isset($path[4]) && $path[4] != '预支款'){
-                        $order = Reimburse::model()->findByAttributes(['order_no'=>$path[4]]);
-                        if($order){
+                    } elseif ($path[2] == '员工报销' && isset($path[4]) && $path[4] != '预支款') {
+                        $order = Reimburse::model()->findByAttributes(['order_no' => $path[4]]);
+                        if ($order) {
                             $model['type'] = 'reimburse';
                             $model['pid'] = $order['id'];
-                            $arr['relation'] = json_encode(['reimburse'=>$order['id']]);
+                            $arr['relation'] = json_encode(['reimburse' => $order['id']]);
                         }
                         $arr['entry_subject'] = $subject_2;
                         $arr['entry_transaction'] = 2;
-                        $sbj2241 = Subjects::matchSubject($path[3],['2241']);
+                        $sbj2241 = Subjects::matchSubject($path[3], ['2241']);
                         $sbj1221 = Subjects::matchSubject($path[3], ['1221']);
                         $amounttmp = $order->mountTotal() - $order->mountPaid();
-                        if($amounttmp >= $arr['entry_amount'])
+                        if ($amounttmp >= $arr['entry_amount'])
                             $arr['subject_2'] = $sbj2241;
-                        else{   //金额超出原报销订单的部分，生成预支订单
+                        else {   //金额超出原报销订单的部分，生成预支订单
                             $preOrder = new Preparation();
                             $preOrder->order_no = $preOrder->initOrder('reimburse');
                             $preOrder->type = $type;
                             $preOrder->entry_amount = $arr['entry_amount'] - $amounttmp;
-                            $arr['subject_2'] = $sbj2241. ','. $sbj1221;
-                            $arr['subject_2_price'] = $amounttmp. ','. ($arr['entry_amount'] - $amounttmp);
+                            $arr['subject_2'] = $sbj2241 . ',' . $sbj1221;
+                            $arr['subject_2_price'] = $amounttmp . ',' . ($arr['entry_amount'] - $amounttmp);
                         }
                     }
                     break;
@@ -1541,68 +1583,68 @@ class TransitionController extends Controller
                     $arr['subject_2'] = 1001;   //库存现金
                     $model = new Cash;
                     $path = explode('=>', $arr['path']);
-                    if(!$this->checkVIP())
+                    if (!$this->checkVIP())
                         break;
                     $path = explode('=>', $arr['path']);
-                    if(count($path)>1)
-                    if($path[2]=='销售收入'){
-                        $order = Product::model()->findByAttributes(['order_no'=>$path[4]]);
-                        if($order){
-                            $model['type'] = 'product';
-                            $model['pid'] = $order['id'];
-                            $arr['relation'] = json_encode(['product'=>$order['id']]);
+                    if (count($path) > 1)
+                        if ($path[2] == '销售收入') {
+                            $order = Product::model()->findByAttributes(['order_no' => $path[4]]);
+                            if ($order) {
+                                $model['type'] = 'product';
+                                $model['pid'] = $order['id'];
+                                $arr['relation'] = json_encode(['product' => $order['id']]);
+                            }
+                        } elseif ($path[2] == '供应商采购') {
+                            $order = Purchase::model()->findByAttributes(['order_no' => $path[4]]);
+                            if ($order) {
+                                $model['type'] = 'purchase';
+                                $model['pid'] = $order['id'];
+                                $arr['relation'] = json_encode(['purchase' => $order['id']]);
+                            }
+                        } elseif ($path[2] == '员工报销' && isset($path[4]) && $path[4] != '预支款') {
+                            $order = Reimburse::model()->findByAttributes(['order_no' => $path[4]]);
+                            if ($order) {
+                                $model['type'] = 'reimburse';
+                                $model['pid'] = $order['id'];
+                                $arr['relation'] = json_encode(['reimburse' => $order['id']]);
+                            }
+                            $arr['entry_subject'] = $arr['subject_2'];
+                            $arr['entry_transaction'] = 2;
+                            $sbj2241 = Subjects::matchSubject($path[3], ['2241']);
+                            $sbj1221 = Subjects::matchSubject($path[3], ['1221']);
+                            $amounttmp = $order->mountTotal() - $order->mountPaid();
+                            if ($amounttmp >= $arr['entry_amount'])
+                                $arr['subject_2'] = $sbj2241;
+                            else {   //金额超出原报销订单的部分，生成预支订单
+                                $preOrder = new Preparation();
+                                $preOrder->order_no = $preOrder->initOrder('reimburse');
+                                $preOrder->type = $type;
+                                $preOrder->entry_amount = $arr['entry_amount'] - $amounttmp;
+                                $arr['subject_2'] = $sbj2241 . ',' . $sbj1221;
+                                $arr['subject_2_price'] = $amounttmp . ',' . ($arr['entry_amount'] - $amounttmp);
+                            }
                         }
-                    }elseif($path[2] == '供应商采购'){
-                        $order = Purchase::model()->findByAttributes(['order_no'=>$path[4]]);
-                        if($order){
-                            $model['type'] = 'purchase';
-                            $model['pid'] = $order['id'];
-                            $arr['relation'] = json_encode(['purchase'=>$order['id']]);
-                        }
-                    }elseif($path[2] == '员工报销' && isset($path[4]) && $path[4] != '预支款'){
-                        $order = Reimburse::model()->findByAttributes(['order_no'=>$path[4]]);
-                        if($order){
-                            $model['type'] = 'reimburse';
-                            $model['pid'] = $order['id'];
-                            $arr['relation'] = json_encode(['reimburse'=>$order['id']]);
-                        }
-                        $arr['entry_subject'] = $arr['subject_2'];
-                        $arr['entry_transaction'] = 2;
-                        $sbj2241 = Subjects::matchSubject($path[3],['2241']);
-                        $sbj1221 = Subjects::matchSubject($path[3], ['1221']);
-                        $amounttmp = $order->mountTotal() - $order->mountPaid();
-                        if($amounttmp >= $arr['entry_amount'])
-                            $arr['subject_2'] = $sbj2241;
-                        else{   //金额超出原报销订单的部分，生成预支订单
-                            $preOrder = new Preparation();
-                            $preOrder->order_no = $preOrder->initOrder('reimburse');
-                            $preOrder->type = $type;
-                            $preOrder->entry_amount = $arr['entry_amount'] - $amounttmp;
-                            $arr['subject_2'] = $sbj2241. ','. $sbj1221;
-                            $arr['subject_2_price'] = $amounttmp. ','. ($arr['entry_amount'] - $amounttmp);
-                        }
-                    }
                     break;
                 case 'purchase':
                     $arr['entry_appendix_type'] = 1;
                     $model = new Purchase();
                     $vendor = Vendor::model()->findByPk($arr['vendor_id']);
-                    if($vendor!=null)
-                        $sbj = Subjects::matchSubject($vendor->company,[2202]);
-                    else{
+                    if ($vendor != null)
+                        $sbj = Subjects::matchSubject($vendor->company, [2202]);
+                    else {
                         $arr['error'] = ['请选择供应商'];
-                        $arr['id'] = isset($id)?$id:'';
+                        $arr['id'] = isset($id) ? $id : '';
                         $result[] = ['status' => 0, 'data' => $arr];
                         continue 2;
                     }
-                    if($arr['entry_name']=='0'){
+                    if ($arr['entry_name'] == '0') {
                         $arr['error'] = ['请商品或服务名称'];
-                        $arr['id'] = isset($id)?$id:'';
+                        $arr['id'] = isset($id) ? $id : '';
                         $result[] = ['status' => 0, 'data' => $arr];
                         continue 2;
                     }
                     $porders = [];
-                    if(isset($arr['preOrder']) && ($arr['preOrder']!='0'||$arr['preOrder']!='')){
+                    if (isset($arr['preOrder']) && ($arr['preOrder'] != '0' || $arr['preOrder'] != '')) {
                         $amountpre = 0;
                         foreach ($arr['preOrder'] as $item) {
                             $porder = Preparation::model()->findByAttributes(['order_no' => $item]);
@@ -1633,36 +1675,36 @@ class TransitionController extends Controller
                             $arr['subject_2'] = $sbj . ',' . $sbj1123;
                             $arr['subject_2_price'] = $amounttmp . ',' . $amountpre;
                         }
-                    }else{
+                    } else {
                         $arr['subject_2'] = $sbj;
                         $arr['subject_2_price'] = $arr['entry_amount'];
                     }
-                    $arr['entry_subject'] = substr($arr['entry_subject'],1);
+                    $arr['entry_subject'] = substr($arr['entry_subject'], 1);
                     break;
                 case 'product':
                     //设置科目，1122应收账款下的子科目
                     $client = Client::model()->findByPk($arr['client_id']);
-                    if($client!=null)
-                        $sbj = Subjects::matchSubject($client->company,[1122]);
-                    else{
+                    if ($client != null)
+                        $sbj = Subjects::matchSubject($client->company, [1122]);
+                    else {
                         $arr['error'] = ['请选择客户'];
-                        $arr['id'] = isset($id)?$id:'';
+                        $arr['id'] = isset($id) ? $id : '';
                         $result[] = ['status' => 0, 'data' => $arr];
                         continue 2;
                     }
                     $porders = [];
-                    if(isset($arr['preOrder']) && ($arr['preOrder']!='0'||$arr['preOrder']!='')){
+                    if (isset($arr['preOrder']) && ($arr['preOrder'] != '0' || $arr['preOrder'] != '')) {
                         $amountpre = 0;
                         foreach ($arr['preOrder'] as $item) {
-                            $porder = Preparation::model()->findByAttributes(['order_no'=>$item]);
-                            if($porder){
-                                if($porder['type']=='bank')
+                            $porder = Preparation::model()->findByAttributes(['order_no' => $item]);
+                            if ($porder) {
+                                if ($porder['type'] == 'bank')
                                     $ordertmp = Bank::model()->findByPk($porder['pid']);
-                                elseif($porder['type'] == 'cash')
+                                elseif ($porder['type'] == 'cash')
                                     $ordertmp = Cash::model()->findByPk($porder['pid']);
-                                if($ordertmp['date'] > $arr['entry_date']){
+                                if ($ordertmp['date'] > $arr['entry_date']) {
                                     $arr['error'] = ['销售日期必须大于预收款日期'];
-                                    $arr['id'] = isset($id)?$id:'';
+                                    $arr['id'] = isset($id) ? $id : '';
                                     $result[] = ['status' => 0, 'data' => $arr];
                                     continue 3;
                                 }
@@ -1672,32 +1714,31 @@ class TransitionController extends Controller
                             }
                         }
 
-                        $sbj2203 = Subjects::matchSubject($client->company,[2203]);
-                        $amounttmp = $arr['entry_amount']-$amountpre;
-                        if($amounttmp <= 0) {  //采购金额大于等于 所以预支款金额总和
+                        $sbj2203 = Subjects::matchSubject($client->company, [2203]);
+                        $amounttmp = $arr['entry_amount'] - $amountpre;
+                        if ($amounttmp <= 0) {  //采购金额大于等于 所以预支款金额总和
                             $arr['subject_2'] = $sbj2203;
                             $arr['subject_2_price'] = $amountpre;
-                        }
-                        else{
-                            $arr['subject_2'] = $sbj . ','. $sbj2203;
+                        } else {
+                            $arr['subject_2'] = $sbj . ',' . $sbj2203;
                             $arr['subject_2_price'] = $amounttmp . ',' . $amountpre;
                         }
-                    }else{
+                    } else {
                         $arr['subject_2'] = $sbj;
                         $arr['subject_2_price'] = $arr['entry_amount'];
                     }
-                    $arr['entry_subject'] = substr($arr['entry_subject'],1);
+                    $arr['entry_subject'] = substr($arr['entry_subject'], 1);
                     $arr['entry_appendix_type'] = 2;
                     $model = new Product();
                     break;
                 case 'stock':
-                    $stock = Stock::model()->findByAttributes(['name'=>$arr['entry_name'],'model'=>$arr['model']]);
-                    $arr['entry_memo'] = '成本结转-'. $stock->name. '_'. $arr['model'];
+                    $stock = Stock::model()->findByAttributes(['name' => $arr['entry_name'], 'model' => $arr['model']]);
+                    $arr['entry_memo'] = '成本结转-' . $stock->name . '_' . $arr['model'];
                     $model = new Cost();
                     break;
                 case 'salary':
-                    $employee = Employee::model()->findByAttributes(['name'=>$arr['employee_name']]);
-                    $arr['entry_memo'] = '个人工资-'. $arr['employee_name']. '-'. convertDate($arr['entry_date'],'Y年m月');
+                    $employee = Employee::model()->findByAttributes(['name' => $arr['employee_name']]);
+                    $arr['entry_memo'] = '个人工资-' . $arr['employee_name'] . '-' . convertDate($arr['entry_date'], 'Y年m月');
                     $model = new Salary();
                     $sbj_arr = [];
                     $sbj_arr[] = Subjects::matchSubject('应付工资', '2211');    //税后工资
@@ -1714,9 +1755,9 @@ class TransitionController extends Controller
                     $arr['subject_2'] = implode(',', $sbj_arr);
                     $arr['subject_2_price'] = implode(',', $amount_arr);
                     //删除旧的工资数据和凭证
-                    $salary = Salary::model()->findByAttributes(['employee_id'=>$employee->id,'entry_date'=>$arr['entry_date']]);
-                    if($salary!=null){
-                        Transition::model()->deleteAllByAttributes(['data_type'=>'salary','data_id'=>$salary->id]);
+                    $salary = Salary::model()->findByAttributes(['employee_id' => $employee->id, 'entry_date' => $arr['entry_date']]);
+                    if ($salary != null) {
+                        Transition::model()->deleteAllByAttributes(['data_type' => 'salary', 'data_id' => $salary->id]);
                         $model = $salary;
                         $model->load($arr);
                     }
@@ -1735,7 +1776,7 @@ class TransitionController extends Controller
                         'service_amount' => '服务费',
                         'stamping_amount' => '印花税'
                     ];
-                    $employee = Employee::model()->findByAttributes(['name'=>$arr['employee_name']]);
+                    $employee = Employee::model()->findByAttributes(['name' => $arr['employee_name']]);
 
                     $model = new Reimburse();
                     $tran_arr = [];
@@ -1743,7 +1784,7 @@ class TransitionController extends Controller
                     //导致后面几项报销检查其他应收的金额没有及时更新,后面检查时，需要把这次项目前面的金额合并计算在内
                     $reim_amount_2 = 0;
                     foreach ($lists as $key => $item) {
-                        if($arr[$key] > 0){
+                        if ($arr[$key] > 0) {
                             $reim = new Transition();
                             $tmp = Department::matchSubject($employee->department_id, $item);
                             $arr['entry_subject'] = $tmp;
@@ -1753,7 +1794,7 @@ class TransitionController extends Controller
                             $sbj2241 = Subjects::matchSubject($arr['employee_name'], 2241); //其他应付
                             //与预支款金额比较
                             $porders = [];
-                            if(isset($arr['preOrder']) && ($arr['preOrder']!='0'||$arr['preOrder']!='')) {
+                            if (isset($arr['preOrder']) && ($arr['preOrder'] != '0' || $arr['preOrder'] != '')) {
                                 $amountpre = 0;
                                 foreach ($arr['preOrder'] as $a => $item) {
                                     $porder = Preparation::model()->findByAttributes(['order_no' => $item]);
@@ -1768,27 +1809,27 @@ class TransitionController extends Controller
                                             $result[] = ['status' => 0, 'data' => $arr];
                                             continue 4;
                                         }
-                                        if($id != ''){
+                                        if ($id != '') {
                                             $b = $model->findByPk($id);
                                             $amountpre += $porder->entry_amount - $porder->amount_used + $porder->getAmount($b->order_no);
-                                        }else
+                                        } else
                                             $amountpre += $porder->entry_amount - $porder->amount_used;
                                         $porder->status = 2;
                                         $porders[$a] = $porder;
                                     }
                                 }
-                                    $amounttmp = $reim_amount_2 + $arr[$key] - $amountpre;
-                                    if ($amounttmp <= 0) {
-                                        $sbj2['subject_2'] = $sbj1221;
-                                        $sbj2['subject_2_price'] = $arr[$key];
-                                    } elseif ($reim_amount_2 >= $amountpre) {
-                                        $sbj2['subject_2'] = $sbj2241;
-                                        $sbj2['subject_2_price'] = $arr[$key];
-                                    } else {
-                                        $sbj2['subject_2'] = $sbj1221 . ',' . $sbj2241;
-                                        $sbj2['subject_2_price'] = ($amountpre - $reim_amount_2) . ',' . ($arr[$key] - $amountpre + $reim_amount_2);
-                                    }
-                            }else{
+                                $amounttmp = $reim_amount_2 + $arr[$key] - $amountpre;
+                                if ($amounttmp <= 0) {
+                                    $sbj2['subject_2'] = $sbj1221;
+                                    $sbj2['subject_2_price'] = $arr[$key];
+                                } elseif ($reim_amount_2 >= $amountpre) {
+                                    $sbj2['subject_2'] = $sbj2241;
+                                    $sbj2['subject_2_price'] = $arr[$key];
+                                } else {
+                                    $sbj2['subject_2'] = $sbj1221 . ',' . $sbj2241;
+                                    $sbj2['subject_2_price'] = ($amountpre - $reim_amount_2) . ',' . ($arr[$key] - $amountpre + $reim_amount_2);
+                                }
+                            } else {
                                 $sbj2['subject_2'] = $sbj2241;
                                 $sbj2['subject_2_price'] = $arr[$key];
                             }
@@ -1801,20 +1842,19 @@ class TransitionController extends Controller
                     }
                     break;
             }
-            if($newone==0 && $id != '' && $id != '0' ){
+            if ($newone == 0 && $id != '' && $id != '0') {
                 $model = $model::model()->findByPk($id);
-            }
-            elseif (!empty($item['Transition']['d_id'])){
+            } elseif (!empty($item['Transition']['d_id'])) {
                 $model = $model::model()->findByPk($item['Transition']['d_id']);
                 $model->order_no = $model->initOrderno();
             }
-            $arr['order_no'] = $model->order_no==''?$model->initOrderno():$model->order_no;
-            $newone ++;
+            $arr['order_no'] = $model->order_no == '' ? $model->initOrderno() : $model->order_no;
+            $newone++;
             if ($arr['price'] == "" || ($arr['price'] == 0 && !isset($arr['before_tax']))) {
                 $arr['error'] = ['金额不能为空或为0'];
                 $result[] = ['status' => 0, 'data' => $arr];
                 continue;
-            }elseif(!checkAmount($arr['price'])){
+            } elseif (!checkAmount($arr['price'])) {
                 $arr['error'] = ['金额格式不正确'];
                 $result[] = ['status' => 0, 'data' => $arr];
                 continue;
@@ -1828,41 +1868,41 @@ class TransitionController extends Controller
                 $arr['error'] = ['日期不能为空'];
                 $result[] = ['status' => 0, 'data' => $arr];
                 continue;
-            }elseif(!Transition::createCheckDate($arr['entry_date'])){   //该日期是否已经过账
+            } elseif (!Transition::createCheckDate($arr['entry_date'])) {   //该日期是否已经过账
                 $arr['error'] = ['该日期已经结账，或早于账套起始日期'];
                 $result[] = ['status' => 0, 'data' => $arr];
                 continue;
             }
-            if(Transition::model()->checkReviewed($id)){
+            if (Transition::model()->checkReviewed($id)) {
                 $arr['error'] = ['该数据生成凭证已经审核，无法修改'];
                 $result[] = ['status' => 0, 'data' => $arr];
                 continue;
             }
             $model->load($arr);
-            if($model->validate()&&$type=='stock'){
+            if ($model->validate() && $type == 'stock') {
                 //此商品此型号，之前已经导入的当前日期的数据删除
                 Cost::model()->deleteAllByAttributes([
-                    'entry_date'=>$arr['entry_date'],
-                    'entry_name'=>$arr['entry_name'],
-                    'model'=>$arr['model']],"id <> '$model->id'");
+                    'entry_date' => $arr['entry_date'],
+                    'entry_name' => $arr['entry_name'],
+                    'model' => $arr['model']], "id <> '$model->id'");
                 //设置stock成本结转日期为空
-                Stock::model()->updateAll(['cost_date'=>'','status'=>1], "name='". $arr['entry_name']."' and model='". $arr['model']. "' and cost_date like '". $arr['entry_date']. "%'");
+                Stock::model()->updateAll(['cost_date' => '', 'status' => 1], "name='" . $arr['entry_name'] . "' and model='" . $arr['model'] . "' and cost_date like '" . $arr['entry_date'] . "%'");
 
-                $stock = Stock::model()->findAllByAttributes(['name'=>$arr['entry_name'],'model'=>$arr['model']],
-                    ['condition'=>'cost_date = ""','order'=>'in_date']);
-                if(empty($stock))
+                $stock = Stock::model()->findAllByAttributes(['name' => $arr['entry_name'], 'model' => $arr['model']],
+                    ['condition' => 'cost_date = ""', 'order' => 'in_date']);
+                if (empty($stock))
                     break;
                 $total = count($stock);
-                if($arr['count'] >= $total){
-                    $arr['error'] = ['盘点数量不能大于等于'. $total];
+                if ($arr['count'] >= $total) {
+                    $arr['error'] = ['盘点数量不能大于等于' . $total];
                     $result[] = ['status' => 0, 'data' => $arr];
                     continue;
-                }else
+                } else
                     $count = $total - $arr['count'];
 
                 $amount = 0;
-                foreach($stock as $sto){
-                    if($count>0){   //设置stock为成本结转的日期，
+                foreach ($stock as $sto) {
+                    if ($count > 0) {   //设置stock为成本结转的日期，
                         $amount += $sto['in_price'];
                         $sto['cost_date'] = $arr['entry_date'];
                         $sto['status'] = 2;
@@ -1907,13 +1947,13 @@ class TransitionController extends Controller
 //                    }
 //                }
             }
-            $new = $model->isNewRecord?true:false;
-            if(isset($result[$row]['status']) && $result[$row]['status'] == 0)
+            $new = $model->isNewRecord ? true : false;
+            if (isset($result[$row]['status']) && $result[$row]['status'] == 0)
                 continue;
             if ($model->save()) {
                 //免费版，库存和固定资产的创建通过银行 供应商采购和 销售收入判断。
-                if(!$this->checkVIP()){
-                    switch(substr($model->subject,0,4)){
+                if (!$this->checkVIP()) {
+                    switch (substr($model->subject, 0, 4)) {
                         case '1601':        //固定资产
                         case '1604':        //在建工程
                         case '1403':        //原材料
@@ -1928,37 +1968,37 @@ class TransitionController extends Controller
                         default :
 
                     }
-                    if(isset($psubject)){
-                        if($new){
+                    if (isset($psubject)) {
+                        if ($new) {
                             $stock = new Stock();
                             $stock->load($arr, $psubject);
                             $stock->saveMultiple(1);
-                        }else{
-                            $stock = Stock::model()->findByAttributes(['order_no'=>$model->order_no]);
-                            if($stock){
+                        } else {
+                            $stock = Stock::model()->findByAttributes(['order_no' => $model->order_no]);
+                            if ($stock) {
                                 $stock->load($arr, $psubject);
                                 $stock->save();
-                            }else{
+                            } else {
                                 $stock = new Stock();
                                 $stock->load($arr, $psubject);
                                 $stock->saveMultiple(1);
                             }
                         }
-                    }else
-                        Stock::model()->deleteAllByAttributes(['order_no'=>$model->order_no]);
+                    } else
+                        Stock::model()->deleteAllByAttributes(['order_no' => $model->order_no]);
                 }
                 //修改原来以此为预收或预付的订单的状态为正常，再将本次已选中订单状态更新
 
-                if(isset($preOrder)){   //生成预支预付预收订单
-                    Preparation::model()->deleteAllByAttributes(['pid'=>$model->id, 'type'=>$type]);
+                if (isset($preOrder)) {   //生成预支预付预收订单
+                    Preparation::model()->deleteAllByAttributes(['pid' => $model->id, 'type' => $type]);
                     $preOrder->pid = $model->id;
                     $preOrder->save();
                 }
-                if(isset($porders)){   //修改预支预付预收订单的状态和真实关联订单
+                if (isset($porders)) {   //修改预支预付预收订单的状态和真实关联订单
                     $relation = [];
                     $entry_amount = $arr['entry_amount'];
                     $oldporder = Preparation::model()->findAllByAttributes([], "real_order like '%$model->order_no%' ");
-                    if(!empty($oldporder)) {
+                    if (!empty($oldporder)) {
                         foreach ($oldporder as $a) {
                             $b = json_decode($a->real_order, true);
                             $a->amount_used -= $b[$model->order_no];
@@ -1969,16 +2009,16 @@ class TransitionController extends Controller
                     }
                     $amount_2 = 0;
                     foreach ($porders as $a) {
-                        if($entry_amount <= 0)
+                        if ($entry_amount <= 0)
                             continue;
                         $porder = Preparation::model()->findByPk($a['id']);
                         $real_order = json_decode($porder->real_order, true);
                         $pamount = $porder->entry_amount - $porder->amount_used;
-                        $pamount = ($entry_amount < $pamount)?$entry_amount:$pamount;
-                        if($real_order)
-                            $real_order = array_merge($real_order,[$model->order_no=>$pamount]);
+                        $pamount = ($entry_amount < $pamount) ? $entry_amount : $pamount;
+                        if ($real_order)
+                            $real_order = array_merge($real_order, [$model->order_no => $pamount]);
                         else
-                            $real_order = [$model->order_no=>$pamount];
+                            $real_order = [$model->order_no => $pamount];
                         $porder->real_order = json_encode($real_order);
                         $amount = 0;
                         foreach ($real_order as $a) {
@@ -1986,30 +2026,30 @@ class TransitionController extends Controller
                         }
                         $porder->amount_used = $amount;
                         $porder->save();
-                        $relation[] = [$porder->type=>$porder->pid];
+                        $relation[] = [$porder->type => $porder->pid];
                         $entry_amount -= $pamount;
                         $amount_2 += $pamount;
                     }
                     $model->relation = json_encode($relation);
                     $model->save();
                 }
-                if($this->checkVIP()){
-                    if($type == 'bank' || $type == 'cash'){
-                        if(isset($path[4]) && ($path[4]=='预支款' || $path[4]=='预付款'|| $path[4]=='预收款')){  //预收
-                            Preparation::model()->deleteAllByAttributes(['pid'=>$model->id, 'type'=>$type]);
+                if ($this->checkVIP()) {
+                    if ($type == 'bank' || $type == 'cash') {
+                        if (isset($path[4]) && ($path[4] == '预支款' || $path[4] == '预付款' || $path[4] == '预收款')) {  //预收
+                            Preparation::model()->deleteAllByAttributes(['pid' => $model->id, 'type' => $type]);
                             $order = new Preparation();
-                            if(substr($arr['entry_subject'],0,4)=='2203')
+                            if (substr($arr['entry_subject'], 0, 4) == '2203')
                                 $order->order_no = $order->initOrder('product');
-                            elseif(substr($arr['entry_subject'],0,4)=='1123')
+                            elseif (substr($arr['entry_subject'], 0, 4) == '1123')
                                 $order->order_no = $order->initOrder('purchase');
-                            elseif(substr($arr['entry_subject'],0,4)=='1221')
+                            elseif (substr($arr['entry_subject'], 0, 4) == '1221')
                                 $order->order_no = $order->initOrder('reimburse');
                             $order->entry_amount = $arr['entry_amount'];
                             $order->type = $type;
                             $order->pid = $model->id;
                             $order->save();
                         }
-                        if(count($path)>1 && $path[2] == '员工报销') {
+                        if (count($path) > 1 && $path[2] == '员工报销') {
                             //银行如果保存的是员工报销的话，需要把报销的项目保存起来
                             $pro_arr = ['travel', 'benefit', 'traffic', 'phone', 'entertainment', 'office', 'rent', 'watere', 'train', 'service', 'stamping'];
                             $tmp_arr = [];
@@ -2022,8 +2062,8 @@ class TransitionController extends Controller
                                 $order = $arr['last'];
                                 $reim = Reimburse::model()->findByAttributes(['order_no' => $order]);
                                 if ($reim) {
-    //                                $tmp_arr2 = array_filter(explode(',', $reim->paid));
-    //                                $tmp_arr = array_unique(array_merge($tmp_arr, $tmp_arr2));
+                                    //                                $tmp_arr2 = array_filter(explode(',', $reim->paid));
+                                    //                                $tmp_arr = array_unique(array_merge($tmp_arr, $tmp_arr2));
 
                                     $paid = json_decode($reim['paid'], true);
                                     $paid[$model->order_no] = implode(',', $tmp_arr);
@@ -2036,14 +2076,14 @@ class TransitionController extends Controller
                         }
                     }
                     //采购的如果是固定资产，无形资产，长期待摊，需要把当时的
-                    if($type == 'purchase'){
-                        if(isset($amount_2)){
+                    if ($type == 'purchase') {
+                        if (isset($amount_2)) {
                             $subject_2 = explode(',', $arr['subject_2']);
                             $subject_2_price = explode(',', $arr['subject_2_price']);
-                            if(count($subject_2)>1){
+                            if (count($subject_2) > 1) {
                                 $entry_amount = array_sum($subject_2_price);
                                 foreach ($subject_2 as $akey => $a) {
-                                    if(strpos($a, '1123') !== false)
+                                    if (strpos($a, '1123') !== false)
                                         $subject_2_price[$akey] = $amount_2;
                                     else
                                         $subject_2_price[$akey] = $entry_amount - $amount_2;
@@ -2054,44 +2094,43 @@ class TransitionController extends Controller
                         }
                         $stock = new Stock();
                         $stock->load($arr, 'purchase');
-                        if($id != '' && $arr['entry_name']!='劳务服务' && $arr['entry_name']!='缴纳税款'){
+                        if ($id != '' && $arr['entry_name'] != '劳务服务' && $arr['entry_name'] != '缴纳税款') {
 
                             $model = $model::model()->findByPk($id);
-                            $old_count = count(Stock::model()->findAllByAttributes(['order_no'=>$stock->order_no]));
+                            $old_count = count(Stock::model()->findAllByAttributes(['order_no' => $stock->order_no]));
 
                             $count = $old_count - (int)$arr['count'];
-                            $stock->updateAll($stock->form('purchase'),"order_no='$stock->order_no'");
-                            $one = $stock->findByAttributes(['order_no'=>$stock->order_no]);
-                            if($one){
+                            $stock->updateAll($stock->form('purchase'), "order_no='$stock->order_no'");
+                            $one = $stock->findByAttributes(['order_no' => $stock->order_no]);
+                            if ($one) {
                                 $stock->value_month = $one['value_month'];
                                 $stock->value_rate = $one['value_rate'];
                             }
-                            if($count<0){   //数量有增加
+                            if ($count < 0) {   //数量有增加
                                 $stock->saveMultiple(-$count);
-                            }
-                            elseif($count>0){   //数量减少
-                                $left = $stock->getCount(['name'=>$arr['entry_name'],'status'=>1]);
+                            } elseif ($count > 0) {   //数量减少
+                                $left = $stock->getCount(['name' => $arr['entry_name'], 'status' => 1]);
                                 $stock->delStock($count);
-                                if($left>=$count && $count!=0)
+                                if ($left >= $count && $count != 0)
                                     $stock->delStock($count);
-                                else{
-                                    $arr['error'] = ["数量不能小于：". ($count - $left + $arr['count'])];
+                                else {
+                                    $arr['error'] = ["数量不能小于：" . ($count - $left + $arr['count'])];
                                     $result[] = ['status' => 0, 'data' => $arr];
                                     continue;
                                 }
                             }
-                        }else{
+                        } else {
                             $stock->saveMultiple($arr['count']);
                         }
                     }
-                    if($type == 'product'){
-                        if($amount_2){
+                    if ($type == 'product') {
+                        if ($amount_2) {
                             $subject_2 = explode(',', $arr['subject_2']);
                             $subject_2_price = explode(',', $arr['subject_2_price']);
-                            if(count($subject_2)>1){
+                            if (count($subject_2) > 1) {
                                 $entry_amount = array_sum($subject_2_price);
                                 foreach ($subject_2 as $akey => $a) {
-                                    if(strpos($a, '2203') !== false)
+                                    if (strpos($a, '2203') !== false)
                                         $subject_2_price[$akey] = $amount_2;
                                     else
                                         $subject_2_price[$akey] = $entry_amount - $amount_2;
@@ -2101,14 +2140,14 @@ class TransitionController extends Controller
                             $arr['subject_2_price'] = implode(',', $subject_2_price);
                         }
                     }
-                    if($type == 'reimburse'){
-                        if($amount_2){
+                    if ($type == 'reimburse') {
+                        if ($amount_2) {
                             $subject_2 = explode(',', $arr['subject_2']);
                             $subject_2_price = explode(',', $arr['subject_2_price']);
-                            if(count($subject_2)>0){
+                            if (count($subject_2) > 0) {
                                 $entry_amount = array_sum($subject_2_price);
                                 foreach ($subject_2 as $akey => $a) {
-                                    if(strpos($a, '1221') !== false)
+                                    if (strpos($a, '1221') !== false)
                                         $subject_2_price[$akey] = $amount_2;
                                     else
                                         $subject_2_price[$akey] = $entry_amount - $amount_2;
@@ -2119,7 +2158,7 @@ class TransitionController extends Controller
                         }
                     }
                 }
-                if($arr['entry_transaction']=='')
+                if ($arr['entry_transaction'] == '')
                     $arr['entry_transaction'] = 1;
                 $tran = new Transition;
                 $tran2 = new Transition;
@@ -2141,7 +2180,7 @@ class TransitionController extends Controller
                 $data['entry_appendix_type'] = null;
                 $data['entry_appendix_id'] = 0;
                 //如果有手动生成的数组凭证，则表明不只一条凭证
-                if(!empty($tran_arr)){
+                if (!empty($tran_arr)) {
                     foreach ($tran_arr as $item) {
 //                        $data['entry_num'] = $this->tranSuffix($prefix);
                         $data['entry_transaction'] = 1;
@@ -2149,29 +2188,28 @@ class TransitionController extends Controller
                         $item[0]->save();
                         $subject_2_arr = explode(',', $item[1]['subject_2']);
                         $subject_2_price = explode(',', $item[1]['subject_2_price']);
-                        foreach($subject_2_arr as $key => $item2){
-                            if($subject_2_price[$key]!=0){
+                        foreach ($subject_2_arr as $key => $item2) {
+                            if ($subject_2_price[$key] != 0) {
                                 $tran_tmp = Transition::model()->findByAttributes([
-                                    'entry_num_prefix'=>$item[0]->entry_num_prefix,
+                                    'entry_num_prefix' => $item[0]->entry_num_prefix,
                                     'entry_num' => $item[0]->entry_num,
                                     'entry_subject' => $item2
                                 ]);
-                                if(!$tran_tmp){
+                                if (!$tran_tmp) {
                                     $tmp = new Transition();
                                     $tmp->attributes = $item[0]->attributes;
                                     $tmp->entry_transaction = 2;
                                     $tmp->entry_subject = $item2;
                                     $tmp->entry_amount = $subject_2_price[$key];
                                     $tmp->save();
-                                }else{
+                                } else {
                                     $tran_tmp->entry_amount += $subject_2_price[$key];
                                     $tran_tmp->save();
                                 }
                             }
                         }
                     }
-                }
-                elseif ($tran->validate()) {
+                } elseif ($tran->validate()) {
                     //设置同一凭证的其他条目，并修改$tran的金额
                     $amount = $tran->getAttribute('entry_amount');
                     $list = [];
@@ -2196,31 +2234,31 @@ class TransitionController extends Controller
                     $data['entry_subject'] = $arr['subject_2'];
                     $subject_2_arr = explode(',', $arr['subject_2']);
 
-                    if(count($subject_2_arr)>1){
+                    if (count($subject_2_arr) > 1) {
                         $subject_2_price = explode(',', $arr['subject_2_price']);
-                        if(isset($arr['subject_2_transa']))
+                        if (isset($arr['subject_2_transa']))
                             $subject_2_transa = explode(',', $arr['subject_2_transa']);
-                        foreach($subject_2_arr as $key => $item){
-                            if($subject_2_price[$key]!=0){
+                        foreach ($subject_2_arr as $key => $item) {
+                            if ($subject_2_price[$key] != 0) {
                                 $data['entry_amount'] = $subject_2_price[$key];
                                 $data['entry_subject'] = $item;
                                 $tran_tmp = new Transition();
                                 $tran_tmp->attributes = $data;
-                                if(isset($subject_2_transa[$key]))
+                                if (isset($subject_2_transa[$key]))
                                     $tran_tmp->entry_transaction = $subject_2_transa[$key];
                                 $tran_temp[] = $tran_tmp;
                             }
                         }
-                    }else
+                    } else
                         $tran2->attributes = $data;
-                    try{
+                    try {
                         if ($model->id != '')
                             $this->delTran($type, $model->id);
-                        if($arr['status_id']=="1") {  //0：作废；2：银行间转账，都不需要生成凭证，
-                            if($tran->entry_amount!=0)
+                        if ($arr['status_id'] == "1") {  //0：作废；2：银行间转账，都不需要生成凭证，
+                            if ($tran->entry_amount != 0)
                                 $tran->save();
-                            if(!empty($tran_temp))
-                                foreach($tran_temp as $item){
+                            if (!empty($tran_temp))
+                                foreach ($tran_temp as $item) {
                                     $item->save();
                                 }
                             else
@@ -2228,7 +2266,7 @@ class TransitionController extends Controller
                             foreach ($list as $item) {
                                 $item->save();
                             }
-                            if (isset($arr['tax'])&&$arr['tax'] == 5) { //营业税需要生成2个凭证
+                            if (isset($arr['tax']) && $arr['tax'] == 5) { //营业税需要生成2个凭证
                                 $tran3 = new Transition();
                                 $tran4 = new Transition();
                                 $data = array_merge($data, [
@@ -2248,7 +2286,7 @@ class TransitionController extends Controller
                             $model->status_id = 1;
                         }
                         $model->save();
-                    }catch (CDbException $e){
+                    } catch (CDbException $e) {
 
                     }
                 }
@@ -2268,7 +2306,7 @@ class TransitionController extends Controller
      */
     public function delTran($type, $id)
     {
-        Transition::model()->deleteAll('data_type=:type and data_id=:id ', [':type' => $type,':id' => $id]);
+        Transition::model()->deleteAll('data_type=:type and data_id=:id ', [':type' => $type, ':id' => $id]);
     }
 
     /*

@@ -150,7 +150,8 @@ class PostController extends Controller
           //过账成功后，要计提固定资产折旧
           Yii::import('application.controllers.StockController');
           $con = new StockController('');
-          $con->actionDepreciation($date);
+          if(SYSDB!='account_testabxc' && SYSDB!='account_gbl' && SYSDB!='account_201508089731')
+              $con->actionDepreciation($date);
           //生成附加税凭证
           Transition::createSurtax($date);
 		Post::model()->postTransition($date);

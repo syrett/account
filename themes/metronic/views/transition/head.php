@@ -57,11 +57,11 @@ if ($bank_money == 'cash')
 	}
     $vip = 1;
     if($this->checkVIP()){
-        $this->renderPartial('_import_'.$type, array('type'=>$type,'sheetData' => $sheetData, 'option' => isset($option)?$option:''));
+        $this->renderPartial('_import_'.$type, array('type'=>$type,'sheetData' => $sheetData, 'info' => $info, 'option' => isset($option)?$option:''));
         $vip = 2;
     }
     else{
-        $this->renderPartial('_import', array('type'=>$type,'sheetData' => $sheetData, 'option' => isset($option)?$option:''));
+        $this->renderPartial('_import', array('type'=>$type,'sheetData' => $sheetData, 'info' => $info, 'option' => isset($option)?$option:''));
     }
     ?>
 	</div>

@@ -176,6 +176,7 @@ class SubjectBalance extends CModel
     $criteria=new CDbCriteria;
     $criteria->compare('year', $year);
     $criteria->addBetweenCondition('month', $startMonth, $endMonth);
+      $criteria->order = 'subject_id asc';
     $active_data = Post::model()->findAll($criteria);
     return $active_data;
     

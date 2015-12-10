@@ -12,6 +12,7 @@ $baseUrl = Yii::app()->theme->baseUrl;
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_common.js');
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import.js');
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/bank.js');
+$cs->registerScriptFile($baseUrl . '/assets/global/plugins/colResizable/js/colResizable.min.js');
 
 $departmentArray = Department::model()->getDepartmentArray();
 $clientArray = Client::model()->getClientArray();
@@ -25,10 +26,23 @@ $tranDate = $this->getTransitionDate('post');
 
 
 <div class="dataTables_wrapper no-footer">
-    <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form', 'class' => 'form-horizontal']); ?>
     <?
-    $select = '<option value=1 >日期</option><option value=2 >交易说明</option><option value=3 >金额</option>';
+    $select = '<option value="target_name" >交易对方名称</option>
+                <option value="name" >商品/服务</option>
+                <option value="date" >日期</option>
+                <option value="memo" >交易摘要</option>
+                <option value="amount" >金额</option>
+                <option value="none" >无效的列</option>';
     ?>
+
+    <div class="row">
+        <a id="first" href="#large" data-toggle="modal" value="<?= $option ?>"></a>
+        <?
+        $this->renderPartial('_import_navigate', array('type' => $type));
+        ?>
+    </div>
+    <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form', 'class' => 'form-horizontal']); ?>
+
     <div class="row">
         <div class="col-xs-12">
             <div class="col-md-4 col-sm-12">
@@ -44,13 +58,13 @@ $tranDate = $this->getTransitionDate('post');
                 <tr>
                     <th class="table_checkbox"><input type="checkbox" class="group-checkable"
                                                       data-set="#import_table .checkboxes"></th>
-                    <th class="input_mid">交易方名称</th>
-                    <th class="input_mid">名称</th>
+                    <th class="input_mid">交易对方名称</th>
+                    <th class="input_mid">商品/服务</th>
                     <th class="input_mid hidden" id="department_id_th">部门</th>
                     <th class="input_mid hidden" id="client_id_th">客户</th>
-                    <th class="input_mid"><select id="selectItem1" name="selectItem1"><?= $select ?></select></th>
-                    <th class="input_full"><select id="selectItem2" name="selectItem2"><?= $select ?></select></th>
-                    <th class="input-large"><select id="selectItem3" name="selectItem3"><?= $select ?></select></th>
+                    <th class="input_mid">日期</th>
+                    <th class="input_full">摘要</th>
+                    <th class="input-large">金额</th>
                     <th style="width: 200px">操作</th>
                     <th style="width: 10%">&nbsp;</th>
                 </tr>
@@ -245,8 +259,8 @@ $tranDate = $this->getTransitionDate('post');
             </div>
             <!-- .modal-body -->
             <div class="modal-footer">
-                <button class="btn btn-circle green" data-dismiss="modal" type="button" onclick="itemSet()">确定</button>
-                <button class="btn btn-circle default" data-dismiss="modal" type="button"
+                <button class="btn btn-default blue" data-dismiss="modal" type="button" onclick="itemSet()">确定</button>
+                <button class="btn btn-default default" data-dismiss="modal" type="button"
                 ">取消
                 </button>
             </div>
@@ -255,123 +269,3 @@ $tranDate = $this->getTransitionDate('post');
     </div>
     <!-- modal-dialog -->
 </div><!-- #category-box -->
-
-<div class="modal fade bs-modal-lg" id="large" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <h4 class="modal-title">导入银行交易</h4>
-            </div>
-
-            <div class="modal-body import-bank">
-                <?
-
-                echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form-import', 'class' => 'form-horizontal']);
-                ?>
-                <div class="tabbable tabbable-tabdrop">
-                    <ul class="nav nav-tabs">
-                        <li class="active">
-                            <a href="#tab_step_1" data-toggle="tab" aria-expanded="true">一、选择银行</a>
-                        </li>
-                        <li class="">
-                            <a href="#tab_step_2" data-toggle="tab" aria-expanded="false">二、模板下载</a>
-                        </li>
-                        <li>
-                            <a href="#tab_step_3" data-toggle="tab">三、导入数据</a>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="tab_step_1">
-                            <p><?
-                                if ($type == 'bank')
-                                    $sbj = 1002;
-                                if ($type == 'cash')
-                                    $sbj = 1001;
-                                $banks = Subjects::model()->list_sub($sbj);
-                                $data = [];
-                                $class = 'form-control';
-                                if (empty($banks)) {
-                                    echo '<input type="hidden" name="subject_b" value="1001" />';
-                                } else {
-                                    foreach ($banks as $item) {
-                                        $data[$item['sbj_number']] = $item['sbj_name'];
-                                    }
-                                    $user = User::model()->findByPk(Yii::app()->user->id);
-                                    $this->widget('ESelect2', array(
-                                        'name' => 'subject_b',
-                                        'id' => 'subject_b',
-                                        'value' => $user->bank,
-                                        'htmlOptions' => ['class' => $class,],
-                                        'data' => $data,
-                                    ));
-                                    ?>
-                                <? } ?>
-
-                            </p>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn default" data-dismiss="modal">取消</button>
-                                <button type="button" class="btn blue"
-                                        onclick="javascript:$('a[href=\'#tab_step_2\']').click()">下一步
-                                </button>
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="tab_step_2">
-                            <p>
-                                <a download="" href="/download/<?= Yii::t('import', strtoupper($type)) ?>.xlsx">
-                                    <button class="btn btn-default btn-file" type="button">模板下载
-                                    </button>
-                                </a>
-                            </p>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn default" data-dismiss="modal">取消</button>
-                                <button type="button" class="btn blue"
-                                        onclick="javascript:$('a[href=\'#tab_step_1\']').click()">上一步
-                                </button>
-                                <button type="button" class="btn blue"
-                                        onclick="javascript:$('a[href=\'#tab_step_3\']').click()">下一步
-                                </button>
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="tab_step_3">
-                            <p>
-
-                            <div class="input-group choose-btn-group">
-                                <div class="input-icon">
-                                    <i class="fa fa-file fa-fw"></i>
-                                    <input type="text" class="form-control btn-file" id="import_file_name" readonly="">
-                                </div>
-                                            <span class="input-group-btn">
-                                                <span class="btn btn-default btn-file">
-                                                    选择文件<input name="attachment" type="file" accept=".xls,.xlsx">
-                                                </span>
-                                            </span>
-                            </div>
-                            </p>
-                            <div class="modal-footer">
-                                <button type="button" class="btn default" data-dismiss="modal">取消</button>
-                                <button type="button" class="btn blue"
-                                        onclick="javascript:$('a[href=\'#tab_step_2\']').click()">上一步
-                                </button>
-                                <button type="button" class="btn blue"
-                                        onclick="javascript:$('#submit_type').val('import');$('#form-import').submit();">
-                                    导入
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <input type="hidden" id="submit_type" name="submit_type">
-                </div>
-                <?php echo CHtml::endForm(); ?>
-            </div>
-            <div class="modal-footer">
-
-            </div>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
-<a id="first" href="#large" data-toggle="modal" value="<?= $option ?>"></a>

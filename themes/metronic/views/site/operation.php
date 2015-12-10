@@ -56,7 +56,7 @@ $this->pageTitle = Yii::app()->name;
         } elseif ($operation != 'listAssets')
             foreach ($list as $year => $months) {
 
-                echo CHtml::beginForm($this->createUrl('/Transition/' . $operation), 'post');
+                echo CHtml::beginForm($this->createUrl('/Transition/' . $operation), 'get');
                 ?>
                 <?= $year ?>年
                 <?php

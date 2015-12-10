@@ -163,7 +163,7 @@ class Bank extends LFSModel
 	 */
 	public function load($item){
         $this->setAttribute('target', isset($item['target'])?$item['target']:'');
-        $this->setAttribute('name', $item['entry_name']);
+        $this->setAttribute('name', isset($item['entry_name'])?$item['entry_name']:(isset($item['target'])?$item['target']:''));
         $this->setAttribute('department_id', isset($item['department_id'])?$item['department_id']:'');
         $this->setAttribute('client_id', isset($item['client_id'])?$item['client_id']:'');
         $this->setAttribute('order_no', isset($item['order_no'])?$item['order_no']:'');

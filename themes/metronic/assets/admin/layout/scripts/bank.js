@@ -17,3 +17,34 @@ $(window).load(function () {
     if($("#first").attr('value')=='empty')
         $("#first").click();
 });
+
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var ext = input.files[0].name.match(/[^\.]+$/);
+        if(ext[0].toLowerCase()=='jpg'){   //选择了图片文件
+            $("#show_image").removeClass('hidden');
+            $("#show_image").show();
+            var reader = new FileReader();
+            var img = new Image();
+            reader.onload = function (e) {
+                img.src = e.target.result;
+                var width = $("#head_image tbody tr").width();
+                var height = width*img.height/img.width;
+                $("[name='show_image_conf_w[]']").val(width/4);
+                $("#head_image").css('background-image', "url("+e.target.result+")");
+                $("#head_image tbody tr:nth-child(1)").height(height);
+            };
+
+            $("#head_image").colResizable({
+                liveDrag:true,
+                gripInnerHtml:"<div class='grip'></div>",
+                draggingClass:"dragging",
+                onResize:onSampleResized
+            });
+
+            reader.readAsDataURL(input.files[0]);
+        }else{
+            $("#show_image").hide();
+        }
+    }
+}

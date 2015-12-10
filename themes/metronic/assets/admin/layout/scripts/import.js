@@ -3,8 +3,6 @@
  */
 $(document).ready(function () {
     //商品采购的采购用途，如果选了已经存在的商品，之前选择了库存商品中的某一项，则以后库存商品中的其他项都隐藏
-    $("#selectItem2").val(2);
-    $("#selectItem3").val(3);
     $("#dialog").hide();
     $("div").on('blur', "input[id*='tran_amount']", function (e) {
         totalAmount(this.parentNode.parentNode)

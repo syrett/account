@@ -1,26 +1,27 @@
 <?php
 
 /**
- * This is the model class for table "tbl_user2".
+ * This is the model class for table "permission".
  *
- * The followings are the available columns in table 'tbl_user2':
- * @property integer $id
- * @property string $username
- * @property string $password
- * @property string $email
+ * The followings are the available columns in table 'permission':
+ * @property string $id
+ * @property string $category
+ * @property string $name
+ * @property string $description
+ * @property integer $form
+ * @property string $options
+ * @property string $default_value
+ * @property string $rule
+ * @property integer $sort_num
  */
-class User2 extends CActiveRecord
+class Permission extends CActiveRecord
 {
-	public function getDbConnection() {
-
-		return Yii::app()->dbadmin;
-	}
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'yii2_start_users';
+		return 'permission';
 	}
 
 	/**
@@ -31,11 +32,14 @@ class User2 extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('username, password, email', 'required'),
-			array('username, password, email', 'length', 'max'=>128),
+			array('id, category, name, form, sort_num', 'required'),
+			array('form, sort_num', 'numerical', 'integerOnly'=>true),
+			array('id, category, name, rule', 'length', 'max'=>64),
+			array('description', 'length', 'max'=>128),
+			array('options, default_value', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, username, password, email', 'safe', 'on'=>'search'),
+			array('id, category, name, description, form, options, default_value, rule, sort_num', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -57,9 +61,14 @@ class User2 extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'username' => 'Username',
-			'password' => 'Password',
-			'email' => 'Email',
+			'category' => 'Category',
+			'name' => 'Name',
+			'description' => 'Description',
+			'form' => 'Form',
+			'options' => 'Options',
+			'default_value' => 'Default Value',
+			'rule' => 'Rule',
+			'sort_num' => 'Sort Num',
 		);
 	}
 
@@ -81,10 +90,15 @@ class User2 extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('username',$this->username,true);
-		$criteria->compare('password',$this->password,true);
-		$criteria->compare('email',$this->email,true);
+		$criteria->compare('id',$this->id,true);
+		$criteria->compare('category',$this->category,true);
+		$criteria->compare('name',$this->name,true);
+		$criteria->compare('description',$this->description,true);
+		$criteria->compare('form',$this->form);
+		$criteria->compare('options',$this->options,true);
+		$criteria->compare('default_value',$this->default_value,true);
+		$criteria->compare('rule',$this->rule,true);
+		$criteria->compare('sort_num',$this->sort_num);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -95,38 +109,10 @@ class User2 extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return User2 the static model class
+	 * @return Permission the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
 	}
-
-    public static function checkVIP($uid=0){
-        if($uid==0)
-            $uid = Yii::app()->user->id;
-        $user = User2::model()->findByPk($uid);
-        if(empty($user) || $user->vip==0){
-            return false;
-        }else{
-            return true;
-        }
-    }
-
-    public static function getBank(){
-        $uid = Yii::app()->user->id;
-        $user = User2::model()->findByPk($uid);
-        if($user!=null){
-            if(Subjects::model()->findByAttributes(['sbj_number'=>$user->bank]))
-                return $user->bank;
-            else{
-                $banks = Subjects::model()->findAllByAttributes([],'sbj_number like "1002%"');
-                if(count($banks)>1){
-                    $bank = end($banks);
-                    return $bank->sbj_number;
-                }
-            }
-        }
-        return 1002;
-    }
 }
