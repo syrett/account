@@ -78,7 +78,7 @@ class Stock extends LFSModel
     public function attributeLabels()
     {
         return array(
-            'id' => 'ID',
+            'id' => '编号',
             'hs_no' => '资产编号',
             'order_no' => '订单号',
             'name' => '名称',
@@ -345,7 +345,7 @@ class Stock extends LFSModel
         return $this->updateAll($a,$c);
     }
     public function saveMultiple($count){
-
+        $result = false;
         $stock = [
             'entry_subject'=>$this->entry_subject,
             'order_no'=>$this->order_no,
@@ -633,7 +633,7 @@ class Stock extends LFSModel
     public function check_balance($sbj){
         $sbalance = $this->get_balance($sbj);
         $tbalance = Subjects::get_balance($sbj);
-        if($sbalance==$tbalance)
+        if((string)$sbalance==(string)$tbalance)
             return true;
         else
             return false;
