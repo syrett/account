@@ -1,8 +1,9 @@
 <?php
 /* @var $this SalaryController */
 /* @var $dataProvider CActiveDataProvider */
+/* @var $model SalaryModel */
 
-$this->breadcrumbs=array(
+$this->breadcrumbs = array(
     Yii::t('import', 'Salary') => array('index')
 );
 
@@ -36,12 +37,9 @@ $('.search-form form').submit(function(){
             require_once(dirname(__FILE__) . '/../layouts/action_navigation.php');
             ?>
         </div>
-        <div class="alert alert-info">
-            提示：可以通过比较符号 (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>或者 <b>=</b>) 来进行搜索
-        </div>
         <!-- search-form -->
 
-        <input type="hidden" id="delall" value="<?= CHtml::normalizeUrl(array('/salary/delall/'))?>"
+        <input type="hidden" id="delall" value="<?= CHtml::normalizeUrl(array('/salary/delall/')) ?>">
         <?php
         $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'subjects-grid',
@@ -61,19 +59,35 @@ $('.search-form form').submit(function(){
                 array(
                     'name' => 'order_no',
                     'type' => 'shortText',
-                    'filter'=>CHtml::activeTextField($model, 'order_no',array("class"=>"input_mid")),
+                    'filter' => CHtml::activeTextField($model, 'order_no', ['placeholder' => '查询', "class" => "input_mid"]),
+                    'sortable' => false
                 ),
                 array(
                     'name' => 'entry_date',
                     'value' => 'date("Y年m月d日",strtotime($data->entry_date))',
-                    'filter'=>CHtml::activeTextField($model, 'entry_date',array("class"=>"input_mid")),
+                    'filter' => CHtml::activeTextField($model, 'entry_date', ['placeholder' => date('Ymd', time()), "class" => "input_mid"]),
+                    'sortable' => false
                 ),
                 array(
-                    'name' => 'employee.name'
+                    'name' => 'employee.name',
+                    'filter' => CHtml::activeTextField($model, 'employee_id', ['placeholder' => '查询', "class" => "input_mid"]),
+                    'sortable' => false
                 ),
-                'salary_amount',
-                'bonus_amount',
-                'benefit_amount',
+                [
+                    'name' => 'salary_amount',
+                    'filter' => false,
+                    'sortable' => false
+                ],
+                [
+                    'name' => 'bonus_amount',
+                    'filter' => false,
+                    'sortable' => false
+                ],
+                [
+                    'name' => 'benefit_amount',
+                    'filter' => false,
+                    'sortable' => false
+                ],
                 array(
                     'class' => 'CButtonColumn',
                     'buttons' => array(

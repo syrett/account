@@ -8,10 +8,10 @@ $this->pageTitle = Yii::app()->name . ' - 在建工程';
 $this->breadcrumbs = array(
     '在建工程',
 );
-$total = Stock::getTotal('1604','worth');
+$total = Stock::getTotal('1604', 'worth');
 $where = "(entry_subject like '1604%')";
 $sort = new CSort();
-$sort->defaultOrder = ['in_date'=>CSort::SORT_DESC,'project' => CSort::SORT_ASC];
+$sort->defaultOrder = ['in_date' => CSort::SORT_DESC, 'project' => CSort::SORT_ASC];
 $sort->attributes = [
     'project' => ['asc' => 'entry_subject', 'desc' => 'entry_subject desc']
 ];
@@ -21,7 +21,7 @@ $dataProvider = new CActiveDataProvider('Stock', ['criteria' => ['condition' => 
     <div class="portlet-title">
         <div class="caption">
             <span class="font-green-sharp">在建工程</span>
-            <span class="caption-helper">在建工程总计:<?= $total?></span>
+            <span class="caption-helper">在建工程总计:<?= $total ?></span>
         </div>
         <div class="actions">
             <?php
@@ -32,65 +32,91 @@ $dataProvider = new CActiveDataProvider('Stock', ['criteria' => ['condition' => 
         </div>
     </div>
     <div class="portlet-body">
-
-        <?php $this->widget('zii.widgets.grid.CGridView', array(
-            'id' => 'project-b-grid',
-            'dataProvider' => $dataProvider,
-            'itemsCssClass' => 'table table-striped table-hover',
-            'columns' => array(
-                'id',
-                [
-                    'header' => '项目',
-                    'name' => 'project',
-                    'value' => 'Subjects::getName($data->entry_subject)'
-                ],
-                'name',
-//                'memo',
-                array(
-                    'name' => 'status',
-                    'filter' => array('1' => '在建', '2' => '转固'),
-                    'value' => '($data->getPStatus()=="1")?("在建"):("转固")'
-                ),
-                ['name' => 'in_date', 'value' => 'convertDate($data->in_date,"Y-m-d")'],
-                array(
-                    'class' => 'CButtonColumn',
-                    'buttons' => array(
-                        'view' => array(
-                            'options' => array('class' => 'btn btn-default tip btn-xs', 'title' => '查看'),
-                            'label' => '<span class="glyphicon glyphicon-eye-open"></span>',
-                            'imageUrl' => false,
-                        ),
-                        'update' => array(
-                            'options' => array('class' => 'btn btn-default tip btn-xs', 'title' => '编辑'),
-                            'label' => '<span class="glyphicon ">编辑</span>',
-                            'imageUrl' => false,
-                        ),
-                        'transform' => array(
-                            'options' => array(
-                                'class' => 'btn btn-default tip btn-xs',
-                                'data-toggle' => "modal",
-                                'role' => 'button',
-                                'title' => '转固',
-                                'onClick' => 'rowClick(this)'
-                            ),
-                            'url' => '"#transform"',
-                            'label' => "<span class='glyphicon'>转固</span>",
-                            'imageUrl' => false,
-//                            'visible' => '$data->status==1&&trim($data->assets)!=""',
-                            'visible' => '$data->checkTransform()',
-                        ),
-                        'delete' => array(
-                            'options' => array('class' => 'btn btn-default tip delete btn-xs', 'title' => '删除'),
-                            'label' => '<span class="glyphicon ">删除</span>',
-                            'imageUrl' => false,
-                        ),
+        <div class="caption">
+            <span class="">
+                    <?php
+                    $pros = ProjectB::model()->findAll();
+                    $none = true;
+                    $str = '<h4><strong>未开工项目 : </strong>';
+                    foreach ($pros as $pro) {
+                        $sbj = Subjects::model()->findByAttributes(['sbj_name' => $pro->name], 'sbj_number like "1604%"');
+                        if ($sbj) {
+                            if (!Stock::model()->findByAttributes(['entry_subject' => $sbj->sbj_number])) {
+                                $str .= "<span class='caption-helper'> $pro->name</span>";
+                                $none = false;
+                            }
+                        }
+                    }
+                    $str .= '</h4>';
+                    echo $none?'':$str;
+                    ?>
+            </span>
+        </div>
+        <p>
+            <?php $this->widget('zii.widgets.grid.CGridView', array(
+                'id' => 'project-b-grid',
+                'dataProvider' => $dataProvider,
+                'itemsCssClass' => 'table table-striped table-hover',
+                'columns' => array(
+                    [
+                        'name' => 'id',
+                        'value' => 'addZero(ProjectB::getIdBySubject($data->entry_subject),4)'
+                    ],
+                    [
+                        'header' => '项目名称',
+                        'name' => 'project',
+                        'value' => 'Subjects::getName($data->entry_subject)'
+                    ],
+                    [
+                        'header' => '明细',
+                        'name' => 'name'
+                    ],
+                    'in_price',
+                    array(
+                        'name' => 'status',
+                        'filter' => array('1' => '在建', '2' => '转固'),
+                        'value' => '($data->getPStatus()=="1")?("在建"):("转固")'
                     ),
-                    'template' => '<div class="btn-group">{update}{delete}{transform}</div>',
-                    'deleteConfirmation' => '确定要删除该条记录？',
+                    ['name' => 'in_date', 'value' => 'convertDate($data->in_date,"Y-m-d")'],
+                    array(
+                        'class' => 'CButtonColumn',
+                        'buttons' => array(
+                            'view' => array(
+                                'options' => array('class' => 'btn btn-default tip btn-xs', 'title' => '查看'),
+                                'label' => '<span class="glyphicon glyphicon-eye-open"></span>',
+                                'imageUrl' => false,
+                            ),
+                            'update' => array(
+                                'options' => array('class' => 'btn btn-default tip btn-xs', 'title' => '编辑'),
+                                'label' => '<span class="glyphicon ">编辑</span>',
+                                'imageUrl' => false,
+                            ),
+                            'transform' => array(
+                                'options' => array(
+                                    'class' => 'btn btn-default tip btn-xs',
+                                    'data-toggle' => "modal",
+                                    'role' => 'button',
+                                    'title' => '转固',
+                                    'onClick' => 'rowClick(this)'
+                                ),
+                                'url' => '"#transform"',
+                                'label' => "<span class='glyphicon'>转固</span>",
+                                'imageUrl' => false,
+//                            'visible' => '$data->status==1&&trim($data->assets)!=""',
+                                'visible' => '$data->checkTransform()',
+                            ),
+                            'delete' => array(
+                                'options' => array('class' => 'btn btn-default tip delete btn-xs', 'title' => '删除'),
+                                'label' => '<span class="glyphicon ">删除</span>',
+                                'imageUrl' => false,
+                            ),
+                        ),
+                        'template' => '<div class="btn-group">{transform}</div>',
+                        'deleteConfirmation' => '确定要删除该条记录？',
+                    ),
                 ),
-            ),
-        ));
-        ?>
+            ));
+            ?></p>
     </div>
 </div>
 

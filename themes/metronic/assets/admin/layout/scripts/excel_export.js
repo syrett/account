@@ -16,14 +16,17 @@
 
 var tableToExcel = (function () {
     $("#data").val($(".panel").html())
-    $("form").submit()
+    if (typeof $("#export") != 'undefined' && $("#export").length != 0)
+        $("#export").submit();
+    else
+        $("form").submit()
 
 })
 
-var tranToExcel = (function(){
+var tranToExcel = (function () {
     $("#data").val($(".panel").html())
-    $("#export").append('<input type="hidden" name="s_day" value="'+$("#s_day").val()+'" />')
-    $("#export").append('<input type="hidden" name="e_day" value="'+$("#e_day").val()+'" />')
+    $("#export").append('<input type="hidden" name="s_day" value="' + $("#s_day").val() + '" />')
+    $("#export").append('<input type="hidden" name="e_day" value="' + $("#e_day").val() + '" />')
     $("#export").submit()
 
 })

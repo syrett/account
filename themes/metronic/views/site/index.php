@@ -129,28 +129,31 @@ foreach ($cash_out as $item) {
             } else {
                 $preorder = Preparation::model()->findByAttributes(['type' => 'cash', 'pid' => $item->id]);
                 if ($preorder) {
-                    $real_order = json_decode($preorder['real_order'], true);
-                    foreach ($real_order as $order => $amount) {
-                        $purchase = Purchase::model()->findByAttributes(['order_no' => $order]);
-                        if ($purchase) {
-                            switch (substr($purchase['subject'], 0, 4)) {
-                                case 1601:
-                                    $data['固定资产'] = isset($data['固定资产']) ? $data['固定资产'] + $amount : $amount;
-                                    break;
-                                case 1701:
-                                    $data['无形资产'] = isset($data['无形资产']) ? $data['无形资产'] + $amount : $amount;
-                                    break;
-                                case 1801:
-                                    $data['长期待摊'] = isset($data['长期待摊']) ? $data['长期待摊'] + $amount : $amount;
-                                    break;
-                                case 1403:
-                                case 1405:
-                                    $data['存货采购'] = isset($data['存货采购']) ? $data['存货采购'] + $amount : $amount;
-                                    break;
-                                default :
-                                    $data['其他采购'] = isset($data['其他采购']) ? $data['其他采购'] + $amount : $amount;
+                    if($preorder['real_order']!=''){
+                        $real_order = json_decode($preorder['real_order'], true);
+                        foreach ($real_order as $order => $amount) {
+                            $purchase = Purchase::model()->findByAttributes(['order_no' => $order]);
+                            if ($purchase) {
+                                switch (substr($purchase['subject'], 0, 4)) {
+                                    case 1601:
+                                        $data['固定资产'] = isset($data['固定资产']) ? $data['固定资产'] + $amount : $amount;
+                                        break;
+                                    case 1701:
+                                        $data['无形资产'] = isset($data['无形资产']) ? $data['无形资产'] + $amount : $amount;
+                                        break;
+                                    case 1801:
+                                        $data['长期待摊'] = isset($data['长期待摊']) ? $data['长期待摊'] + $amount : $amount;
+                                        break;
+                                    case 1403:
+                                    case 1405:
+                                        $data['存货采购'] = isset($data['存货采购']) ? $data['存货采购'] + $amount : $amount;
+                                        break;
+                                    default :
+                                        $data['其他采购'] = isset($data['其他采购']) ? $data['其他采购'] + $amount : $amount;
+                                }
                             }
                         }
+
                     }
 
                 }

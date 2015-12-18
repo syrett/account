@@ -63,7 +63,7 @@ $this->pageTitle = Yii::app()->name;
                                        name="lists[<?= $key ?>][Transition][entry_date]"
                                        value="<?= $item['entry_date'] ?>">
                             </td>
-                            <td><input class="input_min" type="text" id="tran_memo_<?= $key ?>"
+                            <td><input class="input_min" type="text" id="tran_memo_<?= $key ?>" placeholder="摘要"
                                        name="lists[<?= $key ?>][Transition][entry_memo]"
                                        value="<?= $item['entry_memo'] ?>">
                             </td>

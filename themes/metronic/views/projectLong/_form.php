@@ -15,6 +15,11 @@ require_once(dirname(__FILE__) . '/../viewfunctions.php');
     'htmlOptions' => array('class' => 'form-horizontal',),
 )); ?>
 
+<?
+foreach(Yii::app()->user->getFlashes() as $key => $message) {
+    echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
+}
+?>
 <div class="form-group">
     <?php echo $form->labelEx($model, 'name', array('class' => 'col-sm-2 control-label')); ?>
     <div class="col-sm-10">

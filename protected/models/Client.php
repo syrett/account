@@ -84,12 +84,10 @@ class Client extends CActiveRecord
 	 */
 	public function search()
 	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
-
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('company',$this->company);
+		$criteria->compare('company',$this->company, true);
 		$criteria->compare('vat',$this->vat,true);
 		$criteria->compare('phone',$this->phone,true);
 		$criteria->compare('add',$this->add,true);
@@ -126,26 +124,18 @@ class Client extends CActiveRecord
 
     public function getAllMount($options, $add = ''){
         $result = 0;
-        $sbj = '1122';
-        $model = Subjects::model()->findByAttributes(['sbj_name'=>$this->company], 'sbj_number like "1122%"');
-        if($model==null)
-            $model = Subjects::model()->findByAttributes([],"sbj_name like '%$this->company%' and sbj_number like '1122%'");
-        if($model!=null){
-            $sbj = $model->sbj_number;
-
+        $sbj1 = Subjects::model()->findByAttributes(['sbj_name'=>$this->company], 'sbj_number like "1122%"');
+        $sbj2 = Subjects::model()->findByAttributes(['sbj_name'=>$this->company], 'sbj_number like "2203%"');
+        foreach ([$sbj1, $sbj2] as $sbj) {
+            $sbj = $sbj?$sbj->sbj_number:'';
             if(isset($options['type'])&&$options['type']=='before'){
                 $balance = Subjects::get_balance($sbj);
                 $in = Transition::model()->getAllMount($sbj, 1, $options['type'], $options['date']);
                 $out = Transition::model()->getAllMount($sbj, 2, $options['type'], $options['date']);
-                $result = $balance + $in-$out;
+                $result += $balance + $in-$out;
             }else
-                $result = Transition::model()->getAllMount($sbj, $options['entry_transaction'], 'after', '');
-            //如果有坏账，去除坏账金额
-            if($add == 'bad'){
-                $tran = Transition::model()->findByAttributes(['data_type'=>'bad_debts','data_id'=>$this->id, 'entry_closing'=>0]);
-                if($tran)
-                    $result -= $tran->entry_amount;
-            }
+                $result += Transition::model()->getAllMount($sbj, $options['entry_transaction'], 'after', '');
+
         }
         return $result;
     }

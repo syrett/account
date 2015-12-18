@@ -20,7 +20,6 @@ $this->breadcrumbs=array(
 		</div>
 	</div>
 	<div class="portlet-body">
-		<div class="alert alert-info">提示：可以通过比较符号 (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>或者 <b>=</b>) 来进行搜索</div>
 		<div class="operations">
 			<?php $this->widget('zii.widgets.CMenu', array(
 				/*'type'=>'list',*/

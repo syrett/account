@@ -45,27 +45,31 @@ var chart = AmCharts.makeChart("chartdiv-report", {
     "income": 30.6,
     "expenses": 28.2,
   }, {
-    "month": "五月",
-    "income": 30.6,
-    "expenses": 28.2,
-  }, {
-    "month": "五月",
-    "income": 30.6,
-    "expenses": 28.2,
-  }, {
-    "month": "五月",
-    "income": 30.6,
-    "expenses": 28.2,
-  }, {
-    "month": "五月",
-    "income": 30.6,
-    "expenses": 28.2,
-  }, {
-    "month": "五月",
-    "income": 30.6,
-    "expenses": 28.2,
-  }, {
     "month": "六月",
+    "income": 30.6,
+    "expenses": 28.2,
+  }, {
+    "month": "七月",
+    "income": 30.6,
+    "expenses": 28.2,
+  }, {
+    "month": "八月",
+    "income": 30.6,
+    "expenses": 28.2,
+  }, {
+    "month": "九月",
+    "income": 30.6,
+    "expenses": 28.2,
+  }, {
+    "month": "十月",
+    "income": 30.6,
+    "expenses": 28.2,
+  }, {
+    "month": "十一月",
+    "income": 30.6,
+    "expenses": 28.2,
+  }, {
+    "month": "十二月",
     "income": 34.1,
     "expenses": 30.9,
     "dashLengthColumn": 5,
@@ -204,7 +208,7 @@ $cs->registerScript('ChartsFlotchartsInitPie',$expense_income_data, CClientScrip
                                 </div>
                                 <div class="col-md-8">
                                     <h4 class="media-heading"><a href="<?= $this->createUrl('report/detail') ?>">明细表</a></h4>
-                                    <p>损益表反映企业在一定会计期的经营成果及其分配情况的会计报表，是一段时间内公司经营业绩的财务记录，反映了这段时间的销售收入、销售成本、经营费用及税收状况，报表结果为公司实现的利润或亏损。</p>
+                                    <p>按明细分类账户登记的账簿叫做明细分类账,简称“明细账”。明细账也称明细分类账，是根据总账科目所属的明细科目设置的，用于分类登记某一类经济业务事项，提供有关明细核算资料。</p>
                                 </div>
                             </div>
                         </div>

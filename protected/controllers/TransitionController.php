@@ -1204,8 +1204,12 @@ class TransitionController extends Controller
     {
         $model = new Transition('search');
         $model->unsetAttributes(); // clear any default values
+        if (isset($_POST['s_day']) && $_POST['s_day'] != ''){
+
+        }
         if (isset($_REQUEST['date']))
             $model->attributes = array('entry_num_prefix' => $_REQUEST['date']);
+
         if (isset($_GET['Subjects']))
             $model->attributes = $_GET['Subjects'];
         $dataProvider = $model->search();

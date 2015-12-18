@@ -58,7 +58,7 @@ class ProjectB extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
+			'id' => '编号',
 			'name' => '项目名称',
 			'memo' => '项目描述',
 			'status' => '状态',
@@ -155,5 +155,19 @@ class ProjectB extends CActiveRecord
             }
         }
         return $result;
+    }
+
+    /*
+     *  在建工程返回ID
+     */
+    public function getIdBySubject($sbj){
+        $name = Subjects::getName($sbj);
+        if($name!='' && $name != '不存在的科目编号'){
+            $prob = self::model()->findByAttributes(['name'=>$name]);
+            if(!empty($prob))
+                return $prob->id;
+        }
+        return '';
+
     }
 }

@@ -9,8 +9,9 @@ $this->breadcrumbs = array(
 
 $baseUrl = Yii::app()->theme->baseUrl;
 $cs = Yii::app()->clientScript;
-$cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/balance_common.js');
 $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css');
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scripts/filechoose.js', CClientScript::POS_END);
+$cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/balance_common.js');
 $form = $this->beginWidget('CActiveForm', array(
     'id' => 'employee-form',
     // Please note: When you enable ajax validation, make sure the corresponding

@@ -51,7 +51,7 @@ if($stocks)
         }
         ?>
         <div class="caption">
-            <h2><?= Subjects::getName($type) ?>期初明细</h2>
+            <h2>长期资产期初明细</h2>
             <span class="caption-helper">总账期初余额:<?= round2($balance)?>&nbsp;&nbsp;&nbsp;明细合计:<?= round2($total) ?></span>
         </div>
 

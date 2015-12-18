@@ -703,12 +703,15 @@ class Subjects extends CActiveRecord
      * @return Float 科目编号所有子科目下的期初余额总和
      */
     public static function get_balance($sbj){
-        $sbj = Subjects::model()->findByAttributes(['sbj_number'=>$sbj]);
-        $result = $sbj->start_balance;
-        if($sbj->has_sub){
-            $subs = Subjects::model()->get_sub($sbj->sbj_number);
-            foreach($subs as $item){
-                $result += $item->start_balance;
+        $result = 0;
+        if($sbj){
+            $sbj = Subjects::model()->findByAttributes(['sbj_number'=>$sbj]);
+            $result = $sbj->start_balance;
+            if($sbj->has_sub){
+                $subs = Subjects::model()->get_sub($sbj->sbj_number);
+                foreach($subs as $item){
+                    $result += $item->start_balance;
+                }
             }
         }
         return $result;
@@ -748,5 +751,27 @@ class Subjects extends CActiveRecord
             $params += ['sbj'=>$sbj];
         }
         $this->updateAll(['sbj_name'=>$name], "sbj_name=:name and length(sbj_number) > 4 $where", $params);
+    }
+
+    /*
+     * 报表获取数据
+     */
+    public function getReport($sbj, $date){
+
+        $balance = Subjects::get_balance($sbj);
+        $unreceived = Transition::getAllMount($sbj, 1,'',$date);
+        $unreceived2 = Transition::getAllMount($sbj, 1, 'before',$date);
+//        $year = Transition::getAllMount($sbj, 1, 'after', date('Y0101'));
+
+        $received = Transition::getAllMount($sbj, 2,'',$date);
+        $received2 = Transition::getAllMount($sbj, 2, 'before',$date);
+
+        $before = $balance + $unreceived2 - $received2;
+        $left = $before + $unreceived - $received;
+        $result['before'] = $before;
+        $result['left'] = $left;
+        $result['received'] = $received;
+        $result['unreceived'] = $unreceived;
+        return $result;
     }
 }

@@ -26,19 +26,10 @@ $tranDate = $this->getTransitionDate('post');
 
 
 <div class="dataTables_wrapper no-footer">
-    <?
-    $select = '<option value="target_name" >交易对方名称</option>
-                <option value="name" >商品/服务</option>
-                <option value="date" >日期</option>
-                <option value="memo" >交易摘要</option>
-                <option value="amount" >金额</option>
-                <option value="none" >无效的列</option>';
-    ?>
-
     <div class="row">
         <a id="first" href="#large" data-toggle="modal" value="<?= $option ?>"></a>
         <?
-        $this->renderPartial('_import_navigate', array('type' => $type));
+        $this->renderPartial('_import_navigate'.($type=='bank'?'_bank':''), array('type' => $type));
         ?>
     </div>
     <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form', 'class' => 'form-horizontal']); ?>
@@ -59,12 +50,12 @@ $tranDate = $this->getTransitionDate('post');
                     <th class="table_checkbox"><input type="checkbox" class="group-checkable"
                                                       data-set="#import_table .checkboxes"></th>
                     <th class="input_mid">交易对方名称</th>
-                    <th class="input_mid">商品/服务</th>
+                    <th class="input_full">商品/服务</th>
                     <th class="input_mid hidden" id="department_id_th">部门</th>
                     <th class="input_mid hidden" id="client_id_th">客户</th>
                     <th class="input_mid">日期</th>
                     <th class="input_full">摘要</th>
-                    <th class="input-large">金额</th>
+                    <th class="input_full">金额</th>
                     <th style="width: 200px">操作</th>
                     <th style="width: 10%">&nbsp;</th>
                 </tr>
@@ -79,11 +70,11 @@ $tranDate = $this->getTransitionDate('post');
                             <td><input type="text" id="tran_target_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][target]" placeholder="对方名称"
                                        value="<?= isset($item['target']) ? $item['target'] : '' ?>"
-                                       class="form-control input-small">
+                                       class="form-control input_mid2">
                             </td>
                             <td><input type="text" id="tran_name_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_name]" placeholder="名称"
-                                       value="<?= $item['entry_name'] ?>" class="form-control input-small">
+                                       value="<?= $item['entry_name'] ?>" class="form-control input_mid">
                             </td>
                             <td class="hidden" id="department_id_td"><?
                                 $this->widget('ext.select2.ESelect2', array(
@@ -116,11 +107,11 @@ $tranDate = $this->getTransitionDate('post');
                                 <span class="info_warning"></span>
                             </td>
                             <td class="layout1">
-                                <input class="form-control input-small inline" onkeyup="checkInputAmount(this)"
+                                <input class="form-control input_mid inline" onkeyup="checkInputAmount(this)"
                                        type="text" id="tran_amount_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_amount]"
                                        value="<?= $item['entry_amount'] ?>"/>
-                                <span class="help-block help-tip">总金额：<label
+                                <span class="help-block help-tip">合计：<label
                                         id="amount_<?= $key ?>"><?= $item['entry_amount'] ?></label>
                                 </span><br/>
                                 <span class="label-warning"></span>
@@ -216,6 +207,7 @@ $tranDate = $this->getTransitionDate('post');
             </div>
 
         </div>
+        <input type="hidden" name="subject_b" value="<?= isset($info['subject_b'])?$info['subject_b']:''?>">
     </div>
     <?php echo CHtml::endForm(); ?>
 </div>

@@ -17,7 +17,7 @@
     echo "\n";
     echo CHtml::link('<i class="fa fa-truck"><i></i></i><div>销售交易</div>', array('transition/sale'), array('class' => 'icon-btn'));
     echo "\n";
-    echo CHtml::link('<i class="fa fa-edit"><i></i></i><div>手动录入</div>', array('create'), array('class' => 'icon-btn'));
+    echo CHtml::link('<i class="fa fa-edit"><i></i></i><div>往来调整</div>', array('create'), array('class' => 'icon-btn'));
     echo "\n";
     ?>
 </div>

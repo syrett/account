@@ -63,6 +63,7 @@ class ProjectBController extends Controller
             if ($model->save()) {
                 //创建成功，需要生成，在建工程1604子科目
                 Subjects::matchSubject($model->name, '1604');
+                Yii::app()->user->setFlash('success', "添加成功!");
                 $this->redirect(array('update', 'id' => $model->id));
             }
         }

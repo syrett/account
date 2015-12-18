@@ -32,12 +32,15 @@ $(document).ready(function () {
     $('body').on('keyup', "input[name$='\[entry_memo\]']", function () {
         $(this).nextAll("span[class*='label-warning']").html("");
     })
+    $("div").delegate("#subject_b", "change",function () {
+        lockBank();
+    });
 
 });
 
 $(window).bind("load", function () {
-    if ($("#subject_b").length > 0)
-        $("#subject_b").select2("readonly", true);
+    //if ($("#subject_b").length > 0)
+    //    $("#subject_b").select2("readonly", true);
 });
 function itemsplit(e) {
 
@@ -377,10 +380,10 @@ function itemSet() {
 //保存凭证，此时再根据选择的科目计算一些数值
 function save() {
     //判断银行是否锁定
-    if (!checkBank())
-        return true;
-    if (!checkInput())
-        return true;
+    //if (!checkBank())
+    //    return true;
+    //if (!checkInput())
+    //    return true;
     $("#abc table tr:first").nextAll('tr:visible[id!=trSetting]').each(function (key, value) {
         var item_id = $(value).find("input[id^='id_']").val();
         var sbj = $("#subject_" + item_id).val();

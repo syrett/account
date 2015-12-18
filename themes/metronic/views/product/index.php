@@ -36,14 +36,6 @@ $('.search-form form').submit(function(){
             echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
         }
         ?>
-        <div class="well well-sm head-button">
-            <?php
-            require_once(dirname(__FILE__) . '/../layouts/action_navigation.php');
-            ?>
-        </div>
-        <div class="alert alert-info">
-            提示：可以通过比较符号 (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>或者 <b>=</b>) 来进行搜索
-        </div>
         <!-- search-form -->
 
         <input type="hidden" id="delall" value="<?= CHtml::normalizeUrl(array('/product/delall/'))?>"

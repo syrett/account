@@ -68,13 +68,13 @@ if ($bank_money == 'cash')
 </div>
 <input id="vip" type="hidden" value="<?= $vip?>" >
 <input id="type" type="hidden" value="<?= $this->createUrl(
-    '/bank/type'
+    '/'. $type. '/type'
 ) ?>">
 <input id="user-bank" type="hidden" value="<?= $this->createUrl(
     '/user/savebank'
 ) ?>">
 <input id="option" type="hidden" value="<?= $this->createUrl(
-    '/bank/option'
+    '/'.$type .'/option'
 ) ?>">
 <input id="employee" type="hidden" value="<?= $this->createUrl(
     '/employee/createemployee'

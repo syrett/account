@@ -9,7 +9,7 @@ $this->breadcrumbs = array(
 
 $cs = Yii::app()->clientScript;
 $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css');
-
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scripts/filechoose.js', CClientScript::POS_END);
 $form = $this->beginWidget('CActiveForm', array(
     'id' => 'employee-form',
     // Please note: When you enable ajax validation, make sure the corresponding
@@ -79,7 +79,7 @@ $department_array = Employee::model()->listDepartment();
                             <th class=""><?= $form->labelEx($sheetData[0], 'base_2', array('class' => 'control-label')); ?></th>
                             <th class=""><?= $form->labelEx($sheetData[0], 'position', array('class' => 'control-label')); ?></th>
                             <th class=""><?= $form->labelEx($sheetData[0], 'memo', array('class' => 'control-label')); ?></th>
-                            <th >提示</th>
+                            <th>提示</th>
                         </tr>
                         <? foreach ($sheetData as $key => $model) {
                             ?>
@@ -95,7 +95,7 @@ $department_array = Employee::model()->listDepartment();
                                     echo $form->error($model, "[$key]name");
                                     ?></td>
                             </tr>
-                        <?
+                            <?
                         }
                         ?>
                     </table>

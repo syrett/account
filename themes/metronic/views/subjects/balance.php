@@ -31,7 +31,7 @@ $this->breadcrumbs=array(
             }
             ?>
         </div>
-		<div class="alert alert-info">注意:改变期初余额将会影响报表的准确性，所以每次改变期初余额后都请反结账！</div>
+		<div class="alert alert-info">注意:改变期初余额将会影响报表的准确性，所以修改期初余额时必须反结账！</div>
 		<form action="?r=subjects/balance" method="POST">
 		<table class="table table-bordered table-hover">
 		  <thead>

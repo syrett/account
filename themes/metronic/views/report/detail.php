@@ -31,9 +31,10 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scrip
         }
         else
         {
-            $year = '';
-            $fm = '';
-            $tm = '';
+            $year = date('Y', time());
+            $fm = '01';
+            $tm = date('m', strtotime("-1 months"));
+            $tm = $tm==12?'01':$tm;
             $subject_id = '';
         }
 

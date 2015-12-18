@@ -31,7 +31,7 @@ $preOrder = Preparation::getOrderArray($type);
                 <tr>
                     <th class="input_min"><input type="checkbox"></th>
                     <th class="input_mid">交易日期</th>
-                    <th class="input-small">交易摘要</th>
+                    <th class="input_mid2">交易摘要</th>
                     <th class="input_mid">客户名称</th>
                     <th class="input_mid">商品/服务名称</th>
                     <th class="input_mid">单价</th>
@@ -56,11 +56,11 @@ $preOrder = Preparation::getOrderArray($type);
                         <tr line="<?= $key ?>" <?= $key % 2 == 1 ? 'class="table-tr"' : '' ?>>
                             <td><input type="checkbox" id="item_<?= $key ?>" name="lists[<?= $key ?>]"
                                        value="<?= isset($item['id']) ? $item['id'] : '' ?>"></td>
-                            <td><input class="input_mid" type="text" id="tran_date_<?= $key ?>"
+                            <td><input class="input_min" type="text" id="tran_date_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_date]"
                                        value="<?= $item['entry_date'] ?>">
                             </td>
-                            <td><input class="input-small" type="text" id="tran_memo_<?= $key ?>"
+                            <td><input class="input_mid2" type="text" id="tran_memo_<?= $key ?>" placeholder="摘要"
                                        name="lists[<?= $key ?>][Transition][entry_memo]"
                                        value="<?= $item['entry_memo'] ?>">
                             </td>
@@ -75,19 +75,8 @@ $preOrder = Preparation::getOrderArray($type);
                                 ));
                                 ?>
                             </td>
-                            <td><?
-
-                                //                                $stockArray += ['劳务服务' => '劳务服务'];
-                                //                                $this->widget('ext.select2.ESelect2', array(
-                                //                                    'name' => 'lists[' . $key . '][Transition][entry_name]',
-                                //                                    'id' => 'tran_entry_name_' . $key,
-                                //                                    'value' => $item['entry_name'],
-                                //                                    'data' => $stockArray,
-                                //                                    'options' => array('formatNoMatches' => 'js:function(term){return Not_Found("stock",term,' . $key . ')}'),
-                                //                                    'htmlOptions' => array('class' => 'select-full',)
-                                //                                ));
-                                ?>
-                                <input class="input-small" type="text" id="tran_entry_name_<?= $key ?>"
+                            <td>
+                                <input class="input_mid2" type="text" id="tran_entry_name_<?= $key ?>" placeholder="商品服务名称"
                                        name="lists[<?= $key ?>][Transition][entry_name]"
                                        value="<?= $item['entry_name'] ?>">
                             </td>

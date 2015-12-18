@@ -235,16 +235,22 @@ class Transition extends CActiveRecord
     public function search()
     {
         $criteria = new CDbCriteria;
+        $month = true;
         if (isset($_REQUEST['s_day']) && $_REQUEST['s_day'] != "") {
             $a = date('Y-m-d 00:00:01', strtotime($_REQUEST['s_day']));
             $criteria->addCondition('t.entry_date>="' . $a . '"', 'AND');
+            $month = false;
         }
         if (isset($_REQUEST['e_day']) && $_REQUEST['e_day'] != "") {
             $a = date('Y-m-d 23:59:59', strtotime($_REQUEST['e_day']));
             $criteria->addCondition('t.entry_date<="' . $a . '"', 'AND');
+            $month = false;
+        }
+        if (isset($_REQUEST['memo']) && $_REQUEST['memo'] != "") {
+            $criteria->addCondition('t.entry_memo like "%' . $_REQUEST['memo'] . '%"');
         }
         $criteria->compare('id', $this->id);
-        $criteria->compare('entry_num_prefix', $this->entry_num_prefix, true);
+        $month?$criteria->compare('entry_num_prefix', $this->entry_num_prefix, true):'';
         $criteria->compare('entry_num', $this->entry_num, true);
         $criteria->compare('entry_num_prefix', $this->entry_number, true);
         $criteria->compare('entry_date', $this->entry_date, true);
@@ -550,6 +556,12 @@ class Transition extends CActiveRecord
         if (is_array($items)) {
             $arr = array_merge($arr, $items);
             if (isset($items['A'])||isset($items['B'])) { //未严格限制必须某一列必须有数据才可
+                $excel = range('A', 'I');
+                foreach($excel as $item){
+                    if(!isset($items[$item]))
+                        $items[$item] = '';
+                }
+
                 switch($type){
                     case 'bank':
                     case 'cash':

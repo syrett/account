@@ -218,7 +218,7 @@ class CashController extends Controller
     public function actionOption()
     {
         if (Yii::app()->request->isAjaxRequest) {
-            echo json_encode(Bank::chooseOption($_POST['type'], $_POST['option'], $_POST['data']));
+            echo json_encode(Cash::chooseOption($_POST['type'], $_POST['option'], $_POST['data']));
         } else
             throw new CHttpException(403,'不允许提交');
     }

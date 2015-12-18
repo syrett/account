@@ -63,6 +63,7 @@ class ProjectLongController extends Controller
             if ($model->save()) {
                 //创建成功，需要生成，长期待摊1801子科目
                 Subjects::matchSubject($model->name, '1801');
+                Yii::app()->user->setFlash('success', "添加成功!");
                 $this->redirect(array('view', 'id' => $model->id));
             }
         }

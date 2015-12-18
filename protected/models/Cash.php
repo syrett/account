@@ -160,18 +160,18 @@ class Cash extends LFSModel
 	 */
 	public function load($item){
         $this->setAttribute('target', isset($item['target'])?$item['target']:'');
-        $this->setAttribute('name', $item['entry_name']);
+        $this->setAttribute('name', isset($item['entry_name'])?$item['entry_name']:(isset($item['target'])?$item['target']:''));
         $this->setAttribute('department_id', isset($item['department_id'])?$item['department_id']:'');
         $this->setAttribute('client_id', isset($item['client_id'])?$item['client_id']:'');
         $this->setAttribute('order_no', isset($item['order_no'])?$item['order_no']:'');
 		$this->setAttribute('date', $item['entry_date']);
 		$this->setAttribute('memo', $item['entry_memo']);
-		$this->setAttribute('amount', $item['entry_amount']);
+		$this->setAttribute('amount', $item['price']);
         $this->setAttribute('subject', $item['entry_subject']);
         $this->setAttribute('subject_2', $item['subject_2']);
 		$this->setAttribute('parent', isset($item['parent'])?$item['parent']:'');
 		$this->setAttribute('invoice', isset($item['invoice'])?$item['invoice']:'');
-		$this->setAttribute('tax',  isset($item['tax'])?$item['tax']:'');
+        $this->setAttribute('tax',  isset($item['tax'])?$item['tax']:'');
         $this->setAttribute('overworth',  isset($item['overworth'])?$item['overworth']:'');
         $this->setAttribute('path',  isset($item['path'])?$item['path']:'');
         $this->setAttribute('relation',  isset($item['relation'])?$item['relation']:'');
@@ -294,6 +294,17 @@ class Cash extends LFSModel
     }
 
     /*
+     * $list Array 根据数组生成返回数据
+     */
+    private static function genData($list){
+        $data = [];
+        foreach($list as $item){
+            $sbj2 = explode(',', $item['subject_2']);
+            array_push($data, ['_' . $sbj2[0] => $item['order_no']]);
+        }
+        return ['data' => $data];
+    }
+    /*
      * 投资种类
      * 选择项的值不能为0
      * 1101子科目
@@ -320,7 +331,7 @@ class Cash extends LFSModel
     {
         $subject = new Subjects();
         $arr = [6111, 1511, 1101];
-        $result = $subject->getitem($arr, $key, ['type' => 0]);
+        $result = $subject->getitem($arr, $key);
         return [
             'data' => array_flip(array_flip($result)),
             'new' => 'no',
@@ -420,17 +431,25 @@ class Cash extends LFSModel
     private static function getDeposit($type, $key = '')
     {
         $subject = new Subjects();
-        if ($type == 1) {
-            $arr = [2202, 1123, 2241, 1221];
+        $options['type'] = 2;
+        if ($type == 1) {   //支付押金
+            $arr = [2202, 2241, 1221];      //1123
             $new = 'allow';
-            $result = $subject->getitem($arr, $key);
+            $result = $subject->getitem($arr, $key, $options);
             $target = true;
-        } elseif ($type == 2) {
-            $arr = [2202, 1123, 2241, 1221];
+        } elseif ($type == 2) { //借出款项，跟员工有关的去除，
+            $arr = [2202, 2241, 1221];
             $new = 'allow';
-            $result = $subject->getitem($arr, $key);
+            $options['reject'] = [];
+            $employees = Employee::model()->findAll();
+            if(!empty($employees)){
+                foreach ($employees as $item) {
+                    $options['reject'][] = $item['name'];
+                }
+            }
+            $result = $subject->getitem($arr, $key, $options);
             $target = true;
-        } elseif ($type == 3) {
+        } elseif ($type == 3) { //归还借款
 //            $arr = [2001, 2501];
             $result = ['金融机构', '非金融机构'];
             $new = 'no';
@@ -456,15 +475,35 @@ class Cash extends LFSModel
      * 金额为原金额x%，3%、6%、13%、17%），形成会计分录
      * 税费=总金额/(1+*%)**%
      * 金额=总金额-税费
+     * @type Integer 没有凭证就不显示
+     * @version Integer version为2，为1表示普通用户版，表示vip版
      */
-    private static function getSupplier($key)
+    private static function getSupplier($key, $type=1, $version=1)
     {
         $subject = new Subjects();
         $arr = [2202, 2241];
-        $result = $subject->getitem($arr, $key, ['type' => 0]);
+        $list = [];
+        if($version == 1)
+            $list = $subject->getitem($arr, $key, ['type' => 0]);
+        else{
+            $list = Vendor::model()->list_vendors();
+//            foreach($vendors as $vendor){
+//                $list += $subject->getitem($arr, $vendor['company'], ['type' => 0]);
+//            }
+        }
 //        $arr = [1601, 1403, 1405, 6602, 6601, 6401, 1701];
 //        $result = $subject->getitem($arr,$key,['工资','社保','公积金','折旧费','研发费']);
 //        $tax = self::getTax();
+        $result = [];
+        if($type==2)
+            foreach ($list as $key => $item) {
+                $model = Transition::model()->findByAttributes(['entry_subject' => substr($key,1)]);
+                if($model)
+                    $result[$item] = $item;
+            }
+        else
+            $result = $list;
+
         return [
             'data' => $result,
             'target' => true,
@@ -482,7 +521,10 @@ class Cash extends LFSModel
     {
         $subject = new Subjects();
         $arr = [1601, 1403, 1405, 6602, 6601, 6401, 1701];
-        $result = $subject->getitem($arr, $key, ['reject' => ['工资', '社保', '公积金', '折旧费', '研发费']]);
+        $result = $subject->getitem($arr, $key, ['type'=>1, 'reject' => ['工资', '社保', '公积金', '折旧费', '研发费']]);
+        //在建工程和长期待摊，需要判断是否已经转固或完工 1604 1801
+        $result += ProjectB::model()->getProject($key);
+        $result += ProjectLong::model()->getProject($key);
         return [
             'data' => $result,
         ];
@@ -491,7 +533,7 @@ class Cash extends LFSModel
     /*
      *  列出所有员工
      */
-    private static function getEmployee($key = '')
+    private static function getEmployee($key = '', $new=false)
 
     {
         $model = new Employee();
@@ -515,12 +557,15 @@ eof;
             $result['_' . $item['id']] = $item['department']['name'] . '/' . $item['name'];
         }
         $list = Yii::app()->db->createCommand('select id,name from '.Department::model()->tableSchema->name )->queryAll();
-        return [
-            'data' => $result,
-            'new' => 'employee',
-            'list' => $list,
-            'target' => true,
-        ];
+        if($new)
+            return [
+                'data' => $result,
+                'new' => 'employee',
+                'list' => $list,
+                'target' => true,
+            ];
+        else
+            return ['data' => $result];
     }
 
     /*
@@ -544,10 +589,11 @@ eof;
     private static function getIncomeItem($type, $key = '')
     {
         $subject = new Subjects();
+        $options['type'] = 2;
         if ($type == 1) {//押金
             $arr = [1122, 1221, 2203, 1123, 2241];
             $new = 'allow';
-            $result = $subject->getitem($arr, $key);
+            $result = $subject->getitem($arr, $key, $options);
             $target = true;
         } elseif ($type == 2) {//借款
 //            $arr = [1122, 1221, 2203, 1123, 2001, 2501];
@@ -555,10 +601,12 @@ eof;
             $result = ['银行借款', '其他借款'];
             $target = false;
         } elseif ($type == 3) {//还款
-            $arr = [1122, 1221, 2203, 1123, 2501];
+//            $arr = [1122, 1221, 2203, 1123, 2501];
             $new = 'no';
-            $result = $subject->getitem($arr, $key);
-            $target = true;
+            $result = ['收回投资', '收回借款'];
+            $target = false;
+//            $result = $subject->getitem($arr, $key);
+//            $target = true;
         }
 //        $arr = [1122, 1221, 2203, 1123, 2001, 2501];
         $list = ['_2001' => '短期借款', '_2501' => '长期借款'];
@@ -586,7 +634,7 @@ eof;
     {
         $subject = new Subjects();
         $arr = [ 6001];
-        $result = $subject->getitem($arr, $key, ['type' => 1, 'sbj_number' => 6001]);
+        $result = $subject->getitem($arr, '', ['type' => 0, 'sbj_number' => 6001]);
         return [
             'data' => array_flip(array_flip($result)),
             'new' => 'no',
@@ -599,10 +647,46 @@ eof;
     private static function getTaxFee($key = ''){
         $subject = new Subjects();
         $arr = [2221];
-        $result = $subject->getitem($arr, $key);
-        $result['_660207']=Subjects::getSbjPath(660207);
+        $result['个人所得税费用'] = '个人所得税费用';
+        $result['营业税金及附加'] = '营业税金及附加';
+        $result += $subject->getitem($arr, $key);
+        $sbj = $subject->getitem([6801,660207], $key, ['level'=>0, 'type'=>2]); //印花税
+        if(!empty($sbj))
+            $result += $sbj;
         return [
             'data' => $result,
+        ];
+    }
+    private static function getTaxFee2($key = ''){
+        $subject = new Subjects();
+        $arr = [6403];
+        $result = $subject->getitem($arr, $key);
+        return [
+            'data' => $result,
+        ];
+    }
+    //不可调整 处理长期资产 的顺序
+    private static function getOtherOutcome($key = ''){
+        return [
+            'data' => ['处置长期资产','罚款','捐赠','税务罚款','补贴','其他'],
+        ];
+    }
+    private static function getOtherIncome($key = ''){
+        return [
+            'data' => ['处置长期资产','罚款','捐赠','税收返还','补贴','其他'],
+        ];
+    }
+    //报废的资产
+    private static function getAssets($key = ''){
+        $stocks = Stock::model()->findAllByAttributes(['status'=>4, 'status_scrap'=>0]);
+        if($stocks){
+            foreach($stocks as $stock){
+                $result[$stock->id] = $stock->hs_no. '_'. $stock->name. '_'.  $stock->model;
+            }
+        }else
+            $result[] = '其他';
+        return [
+            'data' => $result
         ];
     }
     /*
@@ -626,6 +710,7 @@ eof;
      */
     public static function chooseOption($type, $options, $data)
     {
+        $version = User2::model()->checkVIP()?2:1;
         $result = [];
         $options = explode(",", $options);
         $data = explode("|", $data);
@@ -654,7 +739,7 @@ eof;
                         } else
                             $result = self::getSalary();
                     } else{
-                        $result = Subjects::matchSubject($options[3], 2211);
+                        $result = Subjects::matchSubject('应付工资', 2211);
                         return self::endOption($result);
                     }
                     break;
@@ -806,13 +891,16 @@ eof;
                         $result = self::getInterest($data[1]);
                     break;
                 case '材料销售'  :
-                    return self::endOption(640201);
+                    $sbj = Subjects::matchSubject($options[2],'6402');
+                    return self::endOption($sbj);
                     break;
                 case '技术转让'  :
-                    return self::endOption(640202);
+                    $sbj = Subjects::matchSubject($options[2],'6402');
+                    return self::endOption($sbj);
                     break;
                 case '资产租赁'  :
-                    return self::endOption(640203);
+                    $sbj = Subjects::matchSubject($options[2],'6402');
+                    return self::endOption($sbj);
                     break;
 //                    if (isset($options[3])) {
 //                        return self::endOption($options[3]);
@@ -860,17 +948,21 @@ eof;
                     } else
                         $result = self::getTaxFee($data[1]);
                     break;
-                case '银行转账'  :  //银行资金互转
-                    if (isset($options[3])) {
-                        return self::endOption($options[3]);
-                    } else
-                        $result = self::getBank($data[1]);
-                    break;
-                case '现金提取'  :  //将营业外支出6711作为借方科目，形成会计分录
-                    return self::endOption(1001);
-                    break;
                 case '其他支出'  :
-                    return self::endOption(6711);
+                    if (isset($options[3])) {
+                        if($options[3]==0){ //选择处置长期资产
+                            if (isset($options[4])) {
+                                if($options[4]==0)
+                                    return self::endOption(6711);
+                                else{
+                                    return self::endOption(1901);
+                                }
+                            }else
+                                $result = self::getAssets($data[1]);
+                        }else
+                            return self::endOption(6711);
+                    } else
+                        $result = self::getOtherOutcome($data[1]);
                     break;
                 default:
                     $result = [];
@@ -892,7 +984,6 @@ eof;
                     break;
                 case '收到押金'  :
                 case '收到借款'  :
-                case '收到还款'  :
                     if ($options[2] == '收到押金')
                         $type = 1;
                     elseif ($options[2] == '收到借款')
@@ -919,6 +1010,39 @@ eof;
                                 $result['new'] = 'allow';
                                 $result['newsbj'] = 2241;
                                 $result['data'] = $subject->getitem([2241], $data[1]);
+                                $result['target'] = true;
+                            }
+                        }
+                    } else
+                        $result = self::getIncomeItem($type, $data[1]);
+                    break;
+                case '收到还款'  :
+                    $type = 3;
+                    if (isset($options[3])) {
+                        if (strlen($options[3]) >= 4)
+                            return self::endOption($options[3]);
+                        $subject = new Subjects();
+                        if ($options[3] == 0) { //收回投资
+                            if (isset($options[4])) {
+                                if (isset($options[5])){
+                                    return self::endOption($options[5]);
+                                }else{
+                                    if($options[4]==0){
+                                        $result = ['data' => ['_1101'=>'交易性金融资产']];
+                                    }else
+                                        $result = ['data' => ['_1511'=>'长期股权投资']];
+                                }
+                            } else {
+                                $list = ['0' => '小于一年', '1' => '大于一年'];
+                                $result =  ['data' => $list,];
+                            }
+                        } else {  //收回借款
+                            if (isset($options[4])) {
+                                return self::endOption($options[4]);
+                            } else {
+                                $result['new'] = 'allow';
+                                $result['newsbj'] = 2241;
+                                $result['data'] = $subject->getitem([1122, 1221, 2203, 1123, 2501], $data[1]);
                                 $result['target'] = true;
                             }
                         }
@@ -958,7 +1082,7 @@ eof;
                     break;
                 case '投资收益'  :
                     if (isset($options[3])) {//如果选择的科目，其一级科目是6001，可以是接返回，否则根据名字，在6001下新建子科目再返回
-                        if (substr($options[3], 0, 4) != '6111') {
+                        if (!in_array(substr($options[3], 0, 4), ['6111', '1101', '1511'])) {
                             $options[3] = Subjects::createSubject(Subjects::getName($options[3]), 6111);
                         }
                         return self::endOption($options[3]);
@@ -972,25 +1096,32 @@ eof;
                         $result = self::getInterest();
                     break;
                 case '材料销售'  :
-                    return self::endOption(605101);
+                    $sbj = Subjects::matchSubject($options[2],'6051');
+                    return self::endOption($sbj);
                     break;
                 case '技术转让'  :
-                    return self::endOption(605102);
+                    $sbj = Subjects::matchSubject($options[2],'6051');
+                    return self::endOption($sbj);
                     break;
                 case '资产租赁'  :
-                    return self::endOption(605103);
-                    break;
-                case '银行转账'  :  //银行资金互转
-                    if (isset($options[3])) {
-                        return self::endOption($options[3]);
-                    } else
-                        $result = self::getBank($data[1]);
-                    break;
-                case '存入现金'  :
-                    return self::endOption(1001);
+                    $sbj = Subjects::matchSubject($options[2],'6051');
+                    return self::endOption($sbj);
                     break;
                 case '其他收入'  :
-                    return self::endOption(6301);
+                    if (isset($options[3])) {
+                        if($options[3]==0){ //选择处置长期资产
+                            if (isset($options[4])) {
+                                if($options[4]==0)
+                                    return self::endOption(6301);
+                                else{
+                                    return self::endOption(1901);
+                                }
+                            }else
+                                $result = self::getAssets($data[1]);
+                        }else
+                            return self::endOption(6301);
+                    } else
+                        $result = self::getOtherIncome($data[1]);
                     break;
             }
         }
@@ -1031,12 +1162,45 @@ eof;
     }
 
     /*
+     * 修改科目凭证科目为父科目
+     */
+    public static function updateSubject($sbj){
+        $criteria = new CDbCriteria();
+        $criteria->compare('subject', $sbj, true);
+        $rows = Bank::model()->updateAll(['subject' => substr($sbj,0,-2)], $criteria);
+        $criteria = new CDbCriteria();
+        $criteria->compare('subject_2', $sbj, true);
+        $rows = Bank::model()->updateAll(['subject_2' => substr($sbj,0,-2)], $criteria);
+    }
+
+    /*
+     * 如果是采购或销售或报销，金额不能大于未支付部分
+     */
+    public function checkAmount($attribute, $params){
+        $type = $this->type;
+        if($type=='purchase' || $type=='product'){
+            if($type=='purchase')
+                $order = Purchase::model()->findByPk($this->pid);
+            else
+                $order = Product::model()->findByPk($this->pid);
+            $unpaid = floatval($order->price)*$order->count - $order->getPaid();
+            $unpaid = round($unpaid, 2);
+            if($unpaid > 0){
+                $old = $this->findByPk($this->id);
+                $unpaid += $this->isNewRecord?0:$old->amount;
+                if($this->amount > $unpaid)
+                    $this->addError($attribute, "金额不能大于$unpaid");
+            }
+        }
+    }
+
+    /*
      * 有关联的数据
      */
     public function getRelation($type,$id){
-        $relation = Purchase::model()->findAllByAttributes([],"relation like '%\"cash\":\"$id\"%'");
-        $relation += Product::model()->findAllByAttributes([],"relation like '%\"cash\":\"$id\"%'");
-        $relation += Reimburse::model()->findAllByAttributes([],"relation like '%\"cash\":\"$id\"%'");
+        $relation = Purchase::model()->findAllByAttributes([],"relation like '%\"bank\":\"$id\"%'");
+        $relation += Product::model()->findAllByAttributes([],"relation like '%\"bank\":\"$id\"%'");
+        $relation += Reimburse::model()->findAllByAttributes([],"relation like '%\"bank\":\"$id\"%'");
         return $relation;
     }
 }

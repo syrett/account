@@ -30,17 +30,9 @@ $type = 'cost';
         <div class="table-toolbar">
             <div class="row">
                 <div class="col-md-6">
-                    <div class="btn-group">
-                        <?php
-                        echo CHtml::link('<i class="fa fa-bank"><i></i></i><div>导入银行交易</div>', array('bank'), array('class' => 'icon-btn'));
-                        echo "\n";
-                        echo CHtml::link('<i class="fa fa-money"><i></i></i><div>导入现金交易</div>', array('cash'), array('class' => 'icon-btn'));
-                        echo "\n";
-                        echo CHtml::link('<i class="fa fa-edit"><i></i></i><div>手动录入</div>', array('create'), array('class' => 'icon-btn'));
-
-                        echo "\n";
-                        ?>
-                    </div>
+                    <?php
+                    $this->renderPartial('/layouts/menu2');
+                    ?>
                 </div>
                 <div class="col-md-6">
                     <div class="btn-group pull-right">

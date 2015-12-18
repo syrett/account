@@ -22,9 +22,9 @@ $bank_money = '';
 $bank_money_icon = 'bank';
 if ($type == 'bank')
 {
-    $bank_money = 'cash';
+    $bank_money = 'transition/cash';
 }else{
-    $bank_money = 'bank';
+    $bank_money = 'transition/bank';
 }
 
 if ($bank_money == 'cash')
@@ -40,9 +40,10 @@ if ($bank_money == 'cash')
             <?php echo CHtml::link('<i class="glyphicon glyphicon-search"></i> 已导入数据', array('/' . $type), array('class' => 'btn btn-circle btn-default')); ?>
             <input type="hidden" id="dp_startdate" value="<?= Transition::getTransitionDate('post') ?>">
             <?php
-            echo CHtml::link('<i class="fa fa-'.$bank_money_icon.'"></i> 导入'.Yii::t('import', $bank_money), array($bank_money), array('class' => 'btn btn-circle btn-info btn-sm'));
+            echo CHtml::link('<i class="fa fa-bank"></i> 导入'.Yii::t('import', 'bank'), array('transition/bank'), array('class' => 'btn btn-circle btn-info btn-sm'));
+            echo CHtml::link('<i class="fa fa-money"></i> 导入'.Yii::t('import', 'cash'), array('transition/cash'), array('class' => 'btn btn-circle btn-info btn-sm'));
             echo "\n";
-            echo CHtml::link('<i class="fa fa-edit"></i> 手动录入凭证', array('create'), array('class' => 'btn btn-circle btn-default btn-sm'));
+            echo CHtml::link('<i class="fa fa-edit"></i> 手动录入凭证', array('transition/create'), array('class' => 'btn btn-circle btn-default btn-sm'));
             ?>
             <a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title="" data-original-title title="全屏"></a>
         </div>

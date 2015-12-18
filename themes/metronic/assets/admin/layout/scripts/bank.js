@@ -32,7 +32,7 @@ function readURL(input) {
                 var height = width*img.height/img.width;
                 $("[name='show_image_conf_w[]']").val(width/4);
                 $("#head_image").css('background-image', "url("+e.target.result+")");
-                $("#head_image tbody tr:nth-child(1)").height(height);
+                $("#head_image tbody tr:nth-child(1)").height(height+'px');
             };
 
             $("#head_image").colResizable({

@@ -70,7 +70,8 @@ class BankController extends Controller
                 if($tran){
                     $sheetData[0]['data'] = Transition::getSheetData($model->attributes,'bank');
                     $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
-                }
+                }else
+                    $sheetData[0]['data'] = Transition::getSheetData($model->attributes,'bank');
             }
 		}else {
 			$model = $this->loadModel($id);
@@ -79,7 +80,8 @@ class BankController extends Controller
             if($model->status_id==1)
             {
                 $tran = Transition::model()->find(['condition' => 'data_id=:data_id', 'params' => [':data_id' => $id]]);
-                $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
+                if($tran)
+                    $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
             }
 		}
 

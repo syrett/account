@@ -105,11 +105,11 @@ class Salary extends LFSModel
 	public function search()
 	{
 		$criteria=new CDbCriteria;
-
+        $criteria->with = 'employee';
 		$criteria->compare('id',$this->id);
 		$criteria->compare('order_no',$this->order_no,true);
 		$criteria->compare('entry_date',$this->entry_date,true);
-		$criteria->compare('employee_id',$this->employee_id);
+		$criteria->compare('employee.name',$this->employee_id, true);
 		$criteria->compare('salary_amount',$this->salary_amount,true);
 		$criteria->compare('bonus_amount',$this->bonus_amount,true);
 		$criteria->compare('benefit_amount',$this->benefit_amount,true);

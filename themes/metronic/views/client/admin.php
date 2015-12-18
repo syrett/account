@@ -7,14 +7,23 @@ $this->breadcrumbs = array(
     '客户管理',
 );
 
-$balance = Subjects::get_balance(1122);
-$unreceived = Transition::getAllMount(1122,1);
-$unreceived2 = Transition::getAllMount(1122,1,'before');
-$year = Transition::getAllMount(1122,1,'after',date('Y0101'));
-
-$received = Transition::getAllMount(1122,2);
-$received2 = Transition::getAllMount(1122,2,'before');
-
+$balance = 0;
+$unreceived = 0;
+$unreceived2 = 0;
+$received = 0;
+$received2 = 0;
+$clients = Client::model()->findAll();
+foreach($clients as $client) {
+    $sbj1 = Subjects::model()->findByAttributes(['sbj_name'=>$client->company], 'sbj_number like "1122%"');
+    $sbj2 = Subjects::model()->findByAttributes(['sbj_name'=>$client->company], 'sbj_number like "2203%"');
+    $sbj1 = $sbj1?$sbj1->sbj_number:'';
+    $sbj2 = $sbj2?$sbj2->sbj_number:'';
+    $balance += Subjects::get_balance($sbj1) + Subjects::get_balance($sbj2);
+    $unreceived += Transition::getAllMount($sbj1,1) + Transition::getAllMount($sbj2,1);
+    $unreceived2 += Transition::getAllMount($sbj1,2,'before') + Transition::getAllMount($sbj2,2,'before');
+    $received += Transition::getAllMount($sbj1,2) + Transition::getAllMount($sbj2,2);
+    $received2 += Transition::getAllMount($sbj1,1,'before') + Transition::getAllMount($sbj2,1,'before');
+}
 $before = $balance + $unreceived2 - $received2;
 $left = $before + $unreceived - $received;
 ?>
@@ -32,12 +41,12 @@ $left = $before + $unreceived - $received;
         </div>
     </div>
     <div class="well well-sm">
-        <div class="banner" >
-            <div class="banner-balance col-sm-9">年初: ￥<?=$before?>
-                <div class="banner-paid col-sm-4 banner-hover">本年已收: ￥<?=$received?></div>
-                <div class="banner-in col-sm-4 banner-hover">本年增加: ￥<?=$unreceived?></div>
+        <div class="banner">
+            <div class="banner-balance col-sm-9">年初: ￥<?= $before ?>
+                <div class="banner-paid col-sm-4 banner-hover">本年已收: ￥<?= $received ?></div>
+                <div class="banner-in col-sm-4 banner-hover">本年增加: ￥<?= $unreceived ?></div>
             </div>
-            <div class="banner-unpaid col-sm-3 banner-hover">未收: ￥<?=$left?></div>
+            <div class="banner-unpaid col-sm-3 banner-hover">未收: ￥<?= $left ?></div>
         </div>
     </div>
     <div class="portlet-body">
@@ -45,10 +54,20 @@ $left = $before + $unreceived - $received;
             'id' => 'client-grid',
             'dataProvider' => $model->search(),
             'itemsCssClass' => 'table table-striped table-hover',
+            'filter' => $model,
             'columns' => array(
-                'company',
-                'vat',
-                'phone',
+                [
+                    'name' => 'company',
+                    'filter' => CHtml::activeTextField($model, 'company', ['placeholder' => '查询'])
+                ],
+                [
+                    'name' => 'vat',
+                    'filter' => CHtml::activeTextField($model, 'vat', ['placeholder' => '查询'])
+                ],
+                [
+                    'name' => 'phone',
+                    'filter' => CHtml::activeTextField($model, 'phone', ['placeholder' => '查询'])
+                ],
                 [
                     'header' => '年初余额',
                     'value' => '$data->getAllMount(["type"=>"before","date"=>date("Y")."-01-01 00:00:00"]);'

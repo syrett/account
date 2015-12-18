@@ -369,7 +369,7 @@ class StockController extends Controller
         header("Content-Type:application/vnd.ms-execl");
         header("Content-Type:application/octet-stream");
         header("Content-Type:application/download");
-        header("Content-Disposition:attachment;filename='$filename.xls'");
+        header("Content-Disposition:attachment;filename=$filename.xls");
         header("Content-Transfer-Encoding:binary");
         $objWriter->save('php://output');
     }
@@ -405,7 +405,7 @@ class StockController extends Controller
         header("Content-Type:application/vnd.ms-execl");
         header("Content-Type:application/octet-stream");
         header("Content-Type:application/download");
-        header("Content-Disposition:attachment;filename='$filename.xls'");
+        header("Content-Disposition:attachment;filename=$filename.xls");
         header("Content-Transfer-Encoding:binary");
         $objWriter->save('php://output');
     }
@@ -415,7 +415,7 @@ class StockController extends Controller
         $subject_array = Subjects::model()->listSubjects('1601');
         $subject_array += Subjects::model()->listSubjects('1701');
         $subject_array += Subjects::model()->listSubjects('1801');
-        $filename = '固定资产期初余额';
+        $filename = '长期资产期初余额';
         $subjectName = '"';
         if(!empty($subject_array)){
             foreach ($subject_array as $key => $stock) {
@@ -497,7 +497,7 @@ class StockController extends Controller
         header("Content-Type:application/vnd.ms-execl");
         header("Content-Type:application/octet-stream");
         header("Content-Type:application/download");
-        header("Content-Disposition:attachment;filename='$filename.xls'");
+        header("Content-Disposition:attachment;filename=$filename.xls");
         header("Content-Transfer-Encoding:binary");
         $objWriter->save('php://output');
     }
@@ -554,7 +554,7 @@ class StockController extends Controller
         header("Content-Type:application/vnd.ms-execl");
         header("Content-Type:application/octet-stream");
         header("Content-Type:application/download");
-        header("Content-Disposition:attachment;filename='$filename.xls'");
+        header("Content-Disposition:attachment;filename=$filename.xls");
         header("Content-Transfer-Encoding:binary");
         $objWriter->save('php://output');
     }
