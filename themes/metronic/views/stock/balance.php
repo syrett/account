@@ -44,14 +44,14 @@ if($stocks)
 ?>
 <div class="portlet light">
     <!-- Default panel contents -->
+    <?php
+    foreach (Yii::app()->user->getFlashes() as $key => $message) {
+        echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
+    }
+    ?>
     <div class="portlet-title">
-        <?php
-        foreach (Yii::app()->user->getFlashes() as $key => $message) {
-            echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
-        }
-        ?>
         <div class="caption">
-            <h2>长期资产期初明细</h2>
+            <span class="font-green-sharp"><?= $type=='1405'?'库存商品':'长期资产'?>期初明细</span>
             <span class="caption-helper">总账期初余额:<?= round2($balance)?>&nbsp;&nbsp;&nbsp;明细合计:<?= round2($total) ?></span>
         </div>
 

@@ -415,6 +415,7 @@ class StockController extends Controller
         $subject_array = Subjects::model()->listSubjects('1601');
         $subject_array += Subjects::model()->listSubjects('1701');
         $subject_array += Subjects::model()->listSubjects('1801');
+        $subject_array += Subjects::model()->listSubjects('1604');
         $filename = '长期资产期初余额';
         $subjectName = '"';
         if(!empty($subject_array)){

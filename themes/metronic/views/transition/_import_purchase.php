@@ -25,7 +25,7 @@ $this->pageTitle = Yii::app()->name;
     ?>
     <div class="row import-tab" id="abc">
         <div class="box">
-            <table id="data_import" class="table table-bordered dataTable">
+            <table id="data_import" class="table table-bordered dataTable min">
                 <tr>
                     <th class="input_min"><input type="checkbox"></th>
                     <th class="input_min">交易日期</th>

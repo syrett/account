@@ -70,7 +70,7 @@ $tranDate = $this->getTransitionDate('post');
                                 <span class="info_warning"></span>
                             </td>
                             <td class="layout1">
-                                <input class="form-control inline" onkeyup="checkInputAmount(this)"
+                                <input class="form-control inline width-auto" onkeyup="checkInputAmount(this)"
                                        type="text" id="tran_amount_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_amount]"
                                        value="<?= $item['entry_amount'] ?>"/>

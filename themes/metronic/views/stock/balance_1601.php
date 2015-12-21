@@ -27,6 +27,7 @@ $balance = Subjects::get_balance('1601');
 $subject_array = Subjects::model()->listSubjects('1601');
 $subject_array += Subjects::model()->listSubjects('1701');
 $subject_array += Subjects::model()->listSubjects('1801');
+$subject_array += Subjects::model()->listSubjects('1604');
 
 $departments = Department::model()->findAll();
 $department_array = [];
