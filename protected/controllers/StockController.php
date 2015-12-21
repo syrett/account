@@ -382,7 +382,7 @@ class StockController extends Controller
         $objWriter = new PHPExcel_Writer_Excel5($objExcel);
         $objExcel->setActiveSheetIndex(0);
         $objActSheet = $objExcel->getActiveSheet();
-        $objActSheet->getCell('A1')->setValue('日期('.date('Ym').')');
+        $objActSheet->getCell('A1')->setValue('日期('.date('Ymd').')');
         $objActSheet->getCell('B1')->setValue('名称');
         $objActSheet->getCell('C1')->setValue('型号');
         $objActSheet->getCell('D1')->setValue('库存盘点数量');
