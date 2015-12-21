@@ -527,6 +527,10 @@ class Stock extends LFSModel
             $this['in_date'] = $this->date_a;
         if(substr($date,0,6)>substr($this['in_date'],0,6))
             return true;
+        //如果是期初明细，账套起始月就要开始计提
+        $condom = Condom::model()->getStartTime();
+        if($condom == substr($date,0,6) && $this->order_no == null)
+            return true;
         return false;
     }
     /*
@@ -546,12 +550,12 @@ class Stock extends LFSModel
                     $option = Options::model()->findByAttributes([], "entry_subject like '".substr($subject,0,4)."%'");
                 foreach ($stocks as $item) {
                     //1601 1701 当月采购不计提，长期待摊1801，如果设置了data_a日期才开始摊销
-                    $year = getYear($entry_prefix);
-                    $month = getMon($entry_prefix);
-                    $date = mktime(0,0,0,$month+1,1,$year);
-                    $date = date('Ymd', $date);
+//                    $year = getYear($entry_prefix);
+//                    $month = getMon($entry_prefix);
+//                    $date = mktime(0,0,0,$month+1,1,$year);
+//                    $date = date('Ymd', $date);
                     //
-                    if($item->checkDeprec($date)){
+                    if($item->checkDeprec($entry_prefix)){
                         $price = $item->getWorth();
                         $worth = $price - $price * (100 - $option->value) / 100 / ($option->year * 12);
                         $arr = explode(',', $item->worth);

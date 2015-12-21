@@ -1097,7 +1097,6 @@ class TransitionController extends Controller
             throw new CHttpException(400, $entry_prefix . "已经结账");
         Transition::model()->settlement($entry_prefix);
         if(SYSDB!='account_testabxc' && SYSDB!='account_gbl' && SYSDB!='account_201508089731')
-
             Stock::model()->saveWorth($entry_prefix);    //过账时的计提折旧操作，在结账时保存净值
         Yii::app()->user->setFlash('success', $entry_prefix . "结账成功!");
         $this->render('/site/success');
