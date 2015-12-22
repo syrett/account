@@ -596,7 +596,7 @@ class Transition extends CActiveRecord
                         $arr['count'] = trim($items['F']);
                         break;
                     case 'cost':    //成本结转
-                        $arr['entry_date'] = convertDate($items['A'],'Ym');
+                        $arr['entry_date'] = convertDate($items['A'],'Ymd');
                         $arr['entry_name'] = trim($items['B']);
                         $arr['model'] = trim($items['C']);
                         $arr['count'] = trim($items['D']);
