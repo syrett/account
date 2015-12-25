@@ -491,8 +491,8 @@ input[type="text"]:read-only{
     background-color: white;
     font-size: 15px !important;
     font-family:  "Microsoft YaHei" ! important;
-    margin: 10px 25px 5px;
-    margin-left: 0 !important;
+    margin: 10px 25px 5px 5px;
+    margin-left: 5px !important;
 }
 .simScrollDiv button:hover{
     background-color: #0098CD;

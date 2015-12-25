@@ -411,8 +411,8 @@ var_dump($tranDataArray);exit(1);
         $this->month = substr($date, 4, 2);
         if ($this->postAll()) {
             $transition->setPosted(1);
-            if($transition->hasSettlement($date))
-                $transition->setClosing(1);
+//            if($transition->hasSettlement($date))     //
+//                $transition->setClosing(1);
         }
     }
 }

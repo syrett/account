@@ -421,9 +421,9 @@ class StockController extends Controller
         if(!empty($subject_array)){
             foreach ($subject_array as $key => $stock) {
                 if($subjectName!='"')
-                    $subjectName .= ",$stock";
+                    $subjectName .= ",". preg_replace('/^\d*/', '', $stock);
                 else
-                    $subjectName .= "$stock";
+                    $subjectName .= preg_replace('/^\d*/', '', $stock);
             }
             $subjectName .= '"';
         }
@@ -439,8 +439,7 @@ class StockController extends Controller
             }
             $departName .= '"';
         }
-        //要把数字去掉，否则无法生成excel,
-        $subjectName = preg_replace('/\d/', '', $subjectName);
+
         $objExcel = new PHPExcel();
         $objWriter = new PHPExcel_Writer_Excel5($objExcel);
         $objExcel->setActiveSheetIndex(0);
@@ -571,7 +570,7 @@ class StockController extends Controller
      * 计提折旧
      */
     public function saveDepreciation($sbj, $date){
-        $tran = Transition::model()->findByAttributes(['entry_num_prefix'=>$date], 'entry_settlement=1 or entry_closing=1');
+        $tran = Transition::model()->findByAttributes(['entry_num_prefix'=>$date], 'entry_settlement=1 or entry_forward=1');
         if($tran){ //如果已经结账，就不需要重新计提折旧
            return true;
         }
@@ -742,6 +741,7 @@ class StockController extends Controller
                 $subject_array = Subjects::model()->listSubjects('1601');
                 $subject_array += Subjects::model()->listSubjects('1701');
                 $subject_array += Subjects::model()->listSubjects('1801');
+                $subject_array += Subjects::model()->listSubjects('1604');
                 foreach ($subject_array as $item => $subject) {
                     //筛选分类和$item相同科目的行，然后计算金额是否与总账相等
                     $rows = array_filter($lists,function($v) use ($item){
@@ -792,7 +792,7 @@ class StockController extends Controller
             else{
                 $type = $_POST['type'];
                 if($type=='1601'){
-                    $condition = 'order_no is null and (entry_subject like "1601%" or entry_subject like "1701%" or entry_subject like "1801%") ';
+                    $condition = 'order_no is null and (entry_subject like "1601%" or entry_subject like "1701%" or entry_subject like "1801%" or entry_subject like "1604%") ';
                 }elseif($type=='1405'){
                     $condition = 'order_no is null and (entry_subject like "1403%" or entry_subject like "1405%")';
                 }

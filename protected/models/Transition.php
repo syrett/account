@@ -21,6 +21,7 @@
  * @property integer $entry_reviewer
  * @property integer $entry_deleted
  * @property integer $entry_reviewed
+ * @property integer $entry_forward
  * @property integer $entry_posting
  * @property integer $entry_settlement
  * @property integer $entry_closing
@@ -130,7 +131,7 @@ class Transition extends CActiveRecord
 
             array('id, entry_number, entry_num_prefix, entry_num, entry_date, entry_time, entry_memo, entry_transaction,
             entry_subject, entry_amount, entry_appendix, entry_appendix_id, entry_appendix_type,entry_creater, entry_editor, entry_reviewer,
-            entry_deleted, entry_reviewed, entry_posting, entry_closing, entry_settlement', 'safe', 'on' => 'search'),
+            entry_deleted, entry_reviewed, entry_posting, entry_closing, entry_forward, entry_settlement', 'safe', 'on' => 'search'),
             //自定义验证规则
             array('entry_amount', 'check_entry_amount', 'on' => 'create,update'), //借贷相等
         );
@@ -172,7 +173,8 @@ class Transition extends CActiveRecord
             'entry_deleted' => '凭证删除',
             'entry_reviewed' => '凭证审核',
             'entry_posting' => '过账',
-            'entry_closing' => '结转',
+            'entry_forward' => '结转',
+            'entry_closing' => '结账',
             'entry_settlement' => '结转凭证',
             'entry_number' => '凭证编号',
         );
@@ -209,12 +211,23 @@ class Transition extends CActiveRecord
         $transition = $dataProvider->getData();
         return empty($transition);
     }
+    public function isAllForward($date)
+    {
+        $this->unsetAttributes();
+        $this->entry_forward = 0;
+        $this->entry_num_prefix = substr($date,0,6);
+        $this->select = "entry_num_prefix,entry_num,entry_forward";
+        $dataProvider = $this->search();
+        $transition = $dataProvider->getData();
+        return empty($transition);
+    }
+
     public function isAllClosing($date)
     {
         $this->unsetAttributes();
-        $this->entry_closing = 0;
+        $this->entry_closing = 1;
         $this->entry_num_prefix = substr($date,0,6);
-        $this->select = "entry_num_prefix,entry_num,entry_closing";
+        $this->select = "entry_num_prefix,entry_num,entry_forward";
         $dataProvider = $this->search();
         $transition = $dataProvider->getData();
         return empty($transition);
@@ -267,6 +280,7 @@ class Transition extends CActiveRecord
         $criteria->compare('entry_reviewed', $this->entry_reviewed);
         $criteria->compare('entry_posting', $this->entry_posting);
         $criteria->compare('entry_settlement', $this->entry_settlement);
+        $criteria->compare('entry_forward', $this->entry_forward);
         $criteria->compare('entry_closing', $this->entry_closing);
 
         if ($this->select != null)
@@ -382,9 +396,26 @@ class Transition extends CActiveRecord
     public static function listSettlement()
     {
         $tran = new Transition();
+        return $tran->listDate(array('entry_forward' => 0));
+    }
+
+    /*
+     * 可结转日期
+     */
+    public static function listClosing()
+    {
+        $tran = new Transition();
         return $tran->listDate(array('entry_closing' => 0));
     }
 
+    /*
+     * 普通版结账，生成结转凭证直接过账结账
+     */
+    public static function listSettlementcloseing()
+    {
+        $tran = new Transition();
+        return $tran->listDate(array('entry_closing' => 0));
+    }
     /*
      * 可反结账日期
      */
@@ -1000,8 +1031,8 @@ class Transition extends CActiveRecord
             $tran->entry_amount = $sum;
             $tran->save();
         }
-        if ($sum == 0)
-            $tran->setClosing(1);
+//        if ($sum == 0)
+        $tran->setForward(1);
     }
 
     /*
@@ -1081,6 +1112,12 @@ class Transition extends CActiveRecord
             return $data[0]['amount'];
         else
             return 0;
+    }
+
+    public function setForward($bool = 1){
+        return Transition::model()->updateAll(array('entry_forward' => $bool),
+            'entry_num_prefix=:prefix',
+            array(':prefix' => $this->entry_num_prefix));
     }
 
     public function setClosing($bool = 1)

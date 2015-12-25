@@ -40,17 +40,17 @@ function checkinput2(ob){
 }
 
 function sumAmount(ob){
-    var element = $(ob).parent().parent().find("[id*='tran_price_']")[0];
+    var element = $(ob).parent().parent().find("input[id*='tran_amount_']")[0];
     var price_2 = typeof(element)!='undefined'?element.value:0;
-    var element = $(ob).parent().parent().find("[id*='tran_amount_']")[0];
+    var element = $(ob).parent().parent().find("input[id*='tran_price_']")[0];
     var price = typeof(element)!='undefined'?element.value:price_2;
-    var element = $(ob).parent().parent().find("[id*='tran_count_']")[0];
+    var element = $(ob).parent().parent().find("input[id*='tran_count_']")[0];
     var count = typeof(element)!='undefined'?element.value:1;
-    if(price == '' || count =='')
+    if(count =='')
         $($(ob).parent().parent().find("[id*='tran_amount_']")[0]).html(0);
     else{
         price = parseFloat(price);
         count = parseInt(count);
-        $($(ob).parent().parent().find("[id^='amount_']")[0]).html(toAmount(price*count));
+        $($(ob).closest('tr').find("[id^='tran_amount_']")[0]).html(toAmount(price*count));
     }
 }

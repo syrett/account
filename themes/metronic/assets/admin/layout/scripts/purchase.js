@@ -51,7 +51,7 @@ $(window).load(function () {
                         formatResult: function(data){
                             var order = JSON.parse(data.text);
                             var markup = '<div class="popovers" data-placement="left" data-container="body" data-trigger="hover" data-html="true"  data-original-title="' + order.date +'"'
-                            + 'data-content="余额:' + order.amount + '<br>摘要:' + order.memo + '">' + data.id + '</div><script>$(".popovers").popover();<\/script>';
+                            + 'data-content="余额:' + order.amount + '<br>摘要:' + order.memo + '">' + data.id + '</div><script>$(".popovers").popover({html:true});<\/script>';
                             return markup;
                         },
                         formatSelection: function(order) {

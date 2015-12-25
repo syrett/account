@@ -58,7 +58,7 @@ class Subjects extends CActiveRecord
             // The following rule is used by search().
             array('id, sbj_number, sbj_name, sbj_cat, sbj_table, has_sub', 'safe', 'on' => 'search'),
 
-            array('sbj_name','checkSbjName', 'on' => 'create,update'),
+            array('sbj_name', 'checkSbjName', 'on' => 'create,update'),
         );
     }
 
@@ -165,14 +165,14 @@ class Subjects extends CActiveRecord
     /**
      * 列出科目
      */
-    public function listSubjects($sbj='')
+    public function listSubjects($sbj = '')
     {
-        if($sbj=='')
+        if ($sbj == '')
             $sql = "select * from subjects order by concat(`sbj_number`) asc"; //
         else
             $sql = "select * from subjects where sbj_number like '$sbj%' and sbj_number <> '$sbj' order by concat(`sbj_number`) asc";
         $First = Subjects::model()->findAllBySql($sql);
-        if(!$First){
+        if (!$First) {
             $sql = "select * from subjects where sbj_number = '$sbj' ";
             $First = Subjects::model()->findAllBySql($sql);
         }
@@ -191,15 +191,17 @@ class Subjects extends CActiveRecord
         Yii::app()->db->createCommand($sql)->bindParam('par_id', $par_id)->execute();
     }
 
-    public static function noSub($sbj){
+    public static function noSub($sbj)
+    {
         $par_id = substr($sbj, 0, -2);
         $sql = "update subjects set has_sub = 0 where sbj_number = :par_id";
         Yii::app()->db->createCommand($sql)->bindParam('par_id', $par_id)->execute();
     }
 
-    public function tranBalance($sbj){
-        $model = $this->findByAttributes(['sbj_number'=>$sbj]);
-        $parent = $this->findByAttributes(['sbj_number'=>substr($sbj,0,-2)]);
+    public function tranBalance($sbj)
+    {
+        $model = $this->findByAttributes(['sbj_number' => $sbj]);
+        $parent = $this->findByAttributes(['sbj_number' => substr($sbj, 0, -2)]);
         $parent->start_balance = $model->start_balance;
         $parent->save();
     }
@@ -212,10 +214,10 @@ class Subjects extends CActiveRecord
     {
         $sql = "SELECT sbj_cat FROM subjects WHERE sbj_number=:sbj_id";
         $data = Subjects::model()->findBySql($sql, array(':sbj_id' => $sbj_id));
-        if($data)
-        foreach ($data as $s) {
-            return $s;
-        }
+        if ($data)
+            foreach ($data as $s) {
+                return $s;
+            }
     }
 
     /*
@@ -224,11 +226,11 @@ class Subjects extends CActiveRecord
     public static function getSbjPath($id)
     {
         $path = "";
-        $path .= Subjects::getName(substr($id,0,4));
+        $path .= Subjects::getName(substr($id, 0, 4));
         $length = strlen($id);
         $i = 6;
-        while($i <= $length){
-            $path .= '/'.Subjects::getName(substr($id,0,$i));
+        while ($i <= $length) {
+            $path .= '/' . Subjects::getName(substr($id, 0, $i));
             $i = $i + 2;
         }
         return $path;
@@ -286,36 +288,36 @@ class Subjects extends CActiveRecord
         $data = array();
         $sbj_max = $sbj_id * 100 + 99;
         $rejSbj = '';
-        foreach($reject as $item){  //去除包含需要剔除关键字的科目
+        foreach ($reject as $item) {  //去除包含需要剔除关键字的科目
             $rejSbj .= " And sbj_name not like '%$item%' ";
         }
         $sql_1 = "SELECT * FROM subjects";
         $where = " where 1=1 and sbj_number REGEXP '^$sbj_id' ";
-        if($level==0)
+        if ($level == 0)
             $sbjwhere = " AND sbj_number='$sbj_id' ";
-        elseif($level==1)
-            $sbjwhere= " AND sbj_number>='$sbj_id' ";
+        elseif ($level == 1)
+            $sbjwhere = " AND sbj_number>='$sbj_id' ";
         else
             $sbjwhere = " AND sbj_number>'$sbj_id' ";
         $where .= " AND sbj_number<='$sbj_max'";
-        $where .= $rejSbj!=""?$rejSbj:"";
-        $keywhere = " AND sbj_name like '%".$key."%'";
+        $where .= $rejSbj != "" ? $rejSbj : "";
+        $keywhere = " AND sbj_name like '%" . $key . "%'";
         $orderby = " order by INSTR(sbj_name,'$key') desc";
-        $data_1 = self::findAllBySql($sql_1. $where. $sbjwhere. $keywhere. $orderby, array());
-        if(empty($data_1) && $type== 1){
-            $data_1 = self::findAllBySql($sql_1. $where. $sbjwhere. $orderby, array());
-            if(empty($data_1)){
+        $data_1 = self::findAllBySql($sql_1 . $where . $sbjwhere . $keywhere . $orderby, array());
+        if (empty($data_1) && $type == 1) {
+            $data_1 = self::findAllBySql($sql_1 . $where . $sbjwhere . $orderby, array());
+            if (empty($data_1)) {
                 $sbjwhere = " AND sbj_number='$sbj_id'";
-                $data_1 = self::findAllBySql($sql_1. $where. $sbjwhere. $orderby, array());
+                $data_1 = self::findAllBySql($sql_1 . $where . $sbjwhere . $orderby, array());
             }
         }
 //        if (empty($data_1) && $type==2){
 //            $sbjwhere = "AND sbj_number='$sbj_id' ";
 //            $data_1 = self::findAllBySql($sql_1. $where. $sbjwhere. $keywhere. $orderby, array());
         //去除关键字，仍然为空，返回空数组；
-        if (empty($data_1)){
+        if (empty($data_1)) {
             return [];
-        }elseif($data_1[0]->sbj_number==$sbj_id && $data_1[0]["has_sub"] == 1){
+        } elseif ($data_1[0]->sbj_number == $sbj_id && $data_1[0]["has_sub"] == 1) {
             return [];
         }
         foreach ($data_1 as $key => $item) {
@@ -365,18 +367,18 @@ class Subjects extends CActiveRecord
         $cat_3 = 0;
         foreach ($data as $sbj_id => $start_balance) {
             $sbj_cat = $this->getCat($sbj_id);
-            if($start_balance != 0)
-            switch ($sbj_cat) {
-                case 1:
-                    $cat_1 += (100 * $start_balance);
-                    break;
-                case 2:
-                    $cat_2 += (100 * $start_balance);
-                    break;
-                case 3:
-                    $cat_3 += (100 * $start_balance);
-                    break;
-            }
+            if ($start_balance != 0)
+                switch ($sbj_cat) {
+                    case 1:
+                        $cat_1 += (100 * $start_balance);
+                        break;
+                    case 2:
+                        $cat_2 += (100 * $start_balance);
+                        break;
+                    case 3:
+                        $cat_3 += (100 * $start_balance);
+                        break;
+                }
         }
 
         $sum1 = (string)$cat_1;
@@ -459,9 +461,9 @@ class Subjects extends CActiveRecord
 
             if ($number['sbj_number'] != null)
                 return [(int)$number['sbj_number'] + 1, $number['sbj_cat']];
-            else{
+            else {
 
-                $subj = self::findByAttributes(['sbj_number'=>$sbj_nubmer]);
+                $subj = self::findByAttributes(['sbj_number' => $sbj_nubmer]);
                 return [$sbj_nubmer . '01', $subj->sbj_cat];
             }
         }
@@ -477,31 +479,32 @@ class Subjects extends CActiveRecord
     public function getitem($arr, $key = '', $options = [])
     {
         //有前缀，顺序不会随科目编号影响，在前台需要去除第一个字符"_"，如果没有前缀，json数据会自动重新排序
-        $prefix = isset($options['prefix'])?$options['prefix']:'_';
+        $prefix = isset($options['prefix']) ? $options['prefix'] : '_';
         $subject = new Subjects();
         $result = [];
         $type = isset($options['type']) ? $options['type'] : 2;
         foreach ($arr as $item) {
             $arr_subj = $subject->list_sub($item, $key, $options);
             foreach ($arr_subj as $subj) {
-                if($type==0){
-                    $result[$prefix. $subj['sbj_number']] = $subj['sbj_name'];
-                }else
+                if ($type == 0) {
+                    $result[$prefix . $subj['sbj_number']] = $subj['sbj_name'];
+                } else
                     $result[$prefix . $subj['sbj_number']] = Subjects::getSbjPath($subj['sbj_number']);
             }
         }
-        if($type==1 && empty($result))
+        if ($type == 1 && empty($result))
             foreach ($arr as $item) {
                 $arr_subj = $subject->list_sub($item, '', $options);
                 foreach ($arr_subj as $subj) {
-                    if($type==0){
-                        $result[$prefix. $subj['sbj_number']] = $subj['sbj_name'];
-                    }else
-                        $result[$prefix . $subj['sbj_number']]=Subjects::getSbjPath($subj['sbj_number']);
+                    if ($type == 0) {
+                        $result[$prefix . $subj['sbj_number']] = $subj['sbj_name'];
+                    } else
+                        $result[$prefix . $subj['sbj_number']] = Subjects::getSbjPath($subj['sbj_number']);
                 }
             }
         return $result;
     }
+
     /*
      * 根据关键字匹配科目表
      * @key Integer 关键字
@@ -511,18 +514,18 @@ class Subjects extends CActiveRecord
      */
     public static function matchSubject($key, $subjects, $level = 0, $option = 1, $return = 'str')
     {
-        if(!is_array($subjects))
+        if (!is_array($subjects))
             $subjects = [$subjects];
-        if(empty($subjects)){
-            $all = Yii::app()->db->createCommand("select sbj_number from ". self::model()->tableSchema->name. " where length(sbj_number) < 5 ")->queryAll();
-            foreach($all as $item){
+        if (empty($subjects)) {
+            $all = Yii::app()->db->createCommand("select sbj_number from " . self::model()->tableSchema->name . " where length(sbj_number) < 5 ")->queryAll();
+            foreach ($all as $item) {
                 $subjects[] = $item['sbj_number'];
             }
         }
         //似乎应该完成匹配
-        $data = Yii::app()->db->createCommand("select * from ". self::model()->tableSchema->name. " where sbj_name like '%$key%'")->queryAll();
-        if($return == 'str')
-        $sbj = 0;
+        $data = Yii::app()->db->createCommand("select * from " . self::model()->tableSchema->name . " where sbj_name like '%$key%'")->queryAll();
+        if ($return == 'str')
+            $sbj = 0;
         else
             $sbj = [];
         $percent = 100;
@@ -543,24 +546,24 @@ class Subjects extends CActiveRecord
     /*
      * 查询匹配科目
      */
-    public static function findSubject($key, $sbj, $force=false){
+    public static function findSubject($key, $sbj, $force = false)
+    {
         $list = [];
         $result = [];
-        if(is_array($sbj)){
+        if (is_array($sbj)) {
             $list = $sbj;
-        }else
+        } else
             $list[] = $sbj;
-        if(!empty($list))
+        if (!empty($list))
             foreach ($sbj as $item) {
-                if(!$force){
+                if (!$force) {
                     $a = Subjects::model()->find([
-                        'condition'=>'sbj_name like :key and sbj_number like :sbj',
-                        'params'=>[':key'=>$key.'%',':sbj'=>$item.'%']]);
+                        'condition' => 'sbj_name like :key and sbj_number like :sbj',
+                        'params' => [':key' => $key . '%', ':sbj' => $item . '%']]);
 
                     $result[] = $a;
-                }
-                else
-                    $result[] = Subjects::model()->findByAttributes(['sbj_name'=>$key],'sbj_number like ":sbj%"');
+                } else
+                    $result[] = Subjects::model()->findByAttributes(['sbj_name' => $key], 'sbj_number like ":sbj%"');
             }
         return array_values(array_filter($result));
     }
@@ -576,7 +579,7 @@ class Subjects extends CActiveRecord
             return $check;
         }
         $subj = $model->model()->init_new_sbj_number($sbj, 2);
-        $psbj = Subjects::model()->findByAttributes(['sbj_number'=>substr($subj[0],0, -2)]);
+        $psbj = Subjects::model()->findByAttributes(['sbj_number' => substr($subj[0], 0, -2)]);
         $model->start_balance = $psbj['start_balance'];
         $model->sbj_number = $subj[0];
         $model->sbj_name = $key;
@@ -592,10 +595,10 @@ class Subjects extends CActiveRecord
             //cost product purchase salary 过度
             if (strlen($subj[0]) > 4 && substr($subj[0], -2) == '01') //长度大于4，最后2度是01，则判断是第一次新建子科目
             {
-                $arr = ['stock'=>'entry_subject', 'transition'=>'entry_subject', 'cost'=>'subject', 'product'=>'subject', 'purchase'=>'subject', 'salary'=>'subject'];
-                foreach ($arr as $table=>$item) {
+                $arr = ['stock' => 'entry_subject', 'transition' => 'entry_subject', 'cost' => 'subject', 'product' => 'subject', 'purchase' => 'subject', 'salary' => 'subject'];
+                foreach ($arr as $table => $item) {
                     $sql = "update $table set $item = :sbj_id where $item = :par_id";
-                    Yii::app()->db->createCommand($sql)->bindValues(array(':sbj_id'=>$model->sbj_number,':par_id'=>$psbj->sbj_number))->execute();
+                    Yii::app()->db->createCommand($sql)->bindValues(array(':sbj_id' => $model->sbj_number, ':par_id' => $psbj->sbj_number))->execute();
                 }
                 Post::tranPost($subj[0]);
                 self::hasSub($subj[0]);
@@ -623,19 +626,25 @@ class Subjects extends CActiveRecord
     /*
      * 科目类别
      */
-    public static function getCatName($cat){
+    public static function getCatName($cat)
+    {
         $name = '';
-        switch($cat){
+        switch ($cat) {
             case 1:
-                $name = '资产类';break;
+                $name = '资产类';
+                break;
             case 2:
-                $name = '负债类';break;
+                $name = '负债类';
+                break;
             case 3:
-                $name = '权益类';break;
+                $name = '权益类';
+                break;
             case 4:
-                $name = '收入类';break;
+                $name = '收入类';
+                break;
             case 5:
-                $name = '费用类';break;
+                $name = '费用类';
+                break;
         }
         return $name;
     }
@@ -643,18 +652,19 @@ class Subjects extends CActiveRecord
     /*
      * 自定义验证规则
      */
-    public function checkSbjName($attribute, $params){
+    public function checkSbjName($attribute, $params)
+    {
         $model = $this->findByPk($this->id);
-        if($this->sbj_name!= $model->sbj_name){
+        if ($this->sbj_name != $model->sbj_name) {
             $sbj_name = $_POST['Subjects']['sbj_name'];
             $sbj_number = $_POST['Subjects']['sbj_number'];
-            $sbj_num = strlen($sbj_number)>4?substr($sbj_number,0,4):$sbj_number;
+            $sbj_num = strlen($sbj_number) > 4 ? substr($sbj_number, 0, 4) : $sbj_number;
             $criteria = new CDbCriteria;
             $criteria->addCondition('sbj_name=:sbj_name');
             $criteria->addCondition('sbj_number like :sbj_num');
-            $criteria->params = ['sbj_name'=>$sbj_name, 'sbj_num'=>$sbj_num.'%'];
+            $criteria->params = ['sbj_name' => $sbj_name, 'sbj_num' => $sbj_num . '%'];
             $sub = Subjects::model()->find($criteria);
-            if($sub!=null && $sub->sbj_number != $sbj_number)
+            if ($sub != null && $sub->sbj_number != $sbj_number)
                 $this->addError($attribute, '科目名已经存在');
         }
 
@@ -663,11 +673,12 @@ class Subjects extends CActiveRecord
     /*
      * 科目下是否有凭证
      */
-    public static function hasTransition($sbj){
+    public static function hasTransition($sbj)
+    {
         $criteria = new CDbCriteria;
         $criteria->compare('entry_subject', $sbj, true);
         $tran = Transition::model()->find($criteria);
-        if(empty($tran))
+        if (empty($tran))
             return false;
         else
             return true;
@@ -677,20 +688,21 @@ class Subjects extends CActiveRecord
      * @sbj Integer 科目编号
      * 有兄弟科目
      */
-    public static function hasBrother($sbj){
-        if(strlen($sbj)<=4)
+    public static function hasBrother($sbj)
+    {
+        if (strlen($sbj) <= 4)
             return false;
-        $psbj = substr($sbj,0,-2);
+        $psbj = substr($sbj, 0, -2);
         $criteria = new CDbCriteria;
         $criteria->addCondition('sbj_number != :sbj_number');
-        $criteria->params[ ':sbj_number' ] = $sbj;
+        $criteria->params[':sbj_number'] = $sbj;
 
         $criteria->addCondition('sbj_number like :psbj');
-        $criteria->params[ ':psbj' ] = "$psbj%";
-        $criteria->addCondition('length(sbj_number) > '. strlen($psbj));
+        $criteria->params[':psbj'] = "$psbj%";
+        $criteria->addCondition('length(sbj_number) > ' . strlen($psbj));
 
         $sub = Subjects::model()->find($criteria);
-        if(empty($sub))
+        if (empty($sub))
             return false;
         else
             return true;
@@ -702,16 +714,24 @@ class Subjects extends CActiveRecord
      * @sbj Integer 科目编号
      * @return Float 科目编号所有子科目下的期初余额总和
      */
-    public static function get_balance($sbj){
+    public static function get_balance($sbj)
+    {
         $result = 0;
-        if($sbj){
-            $sbj = Subjects::model()->findByAttributes(['sbj_number'=>$sbj]);
-            $result = $sbj->start_balance;
-            if($sbj->has_sub){
-                $subs = Subjects::model()->get_sub($sbj->sbj_number);
-                foreach($subs as $item){
-                    $result += $item->start_balance;
+        if ($sbj) {
+            if ($sbj == '1601') {    //1601为长期资产，包括固定资产1601，无形资产1701，长期待摊1801，在建工程1604
+                $arr = ['1601', '1701', '1801', '1604'];
+            } else
+                $arr = [$sbj];
+            foreach ($arr as $item) {
+                $item = Subjects::model()->findByAttributes(['sbj_number' => $item]);
+                $result += $item->start_balance;
+                if ($item->has_sub) {
+                    $subs = Subjects::model()->get_sub($item->sbj_number);
+                    foreach ($subs as $sub) {
+                        $result += $sub->start_balance;
+                    }
                 }
+
             }
         }
         return $result;
@@ -724,15 +744,16 @@ class Subjects extends CActiveRecord
      * @type Integer 是否包含$sbj参数科目
      * @return Array 所有子科目
      */
-    public function get_sub($sbj, $type=1){
-        if($sbj=='')
+    public function get_sub($sbj, $type = 1)
+    {
+        if ($sbj == '')
             return [];
-        $model = $this->findByAttributes(['sbj_number'=>$sbj]);
-        if($model==null||$model->has_sub==0)
+        $model = $this->findByAttributes(['sbj_number' => $sbj]);
+        if ($model == null || $model->has_sub == 0)
             return [$model->attributes];
         $table = $this->tableName();
         $sql = "select * from $table where sbj_number like '$sbj%'";
-        $sql .= $type==1?"and sbj_number <> '$sbj'":"";
+        $sql .= $type == 1 ? "and sbj_number <> '$sbj'" : "";
         $subs = $this->findAllBySql($sql);
         return $subs;
     }
@@ -743,28 +764,30 @@ class Subjects extends CActiveRecord
      * @name String 新名称
      * @sbj Integer 科目编号
      */
-    public function updateName($oldname, $name, $sbj=''){
-        $params = ['name'=>$oldname];
+    public function updateName($oldname, $name, $sbj = '')
+    {
+        $params = ['name' => $oldname];
         $where = '';
-        if($sbj!=''){
+        if ($sbj != '') {
             $where = " and sbj_number like ':sbj%' ";
-            $params += ['sbj'=>$sbj];
+            $params += ['sbj' => $sbj];
         }
-        $this->updateAll(['sbj_name'=>$name], "sbj_name=:name and length(sbj_number) > 4 $where", $params);
+        $this->updateAll(['sbj_name' => $name], "sbj_name=:name and length(sbj_number) > 4 $where", $params);
     }
 
     /*
      * 报表获取数据
      */
-    public function getReport($sbj, $date){
+    public function getReport($sbj, $date)
+    {
 
         $balance = Subjects::get_balance($sbj);
-        $unreceived = Transition::getAllMount($sbj, 1,'',$date);
-        $unreceived2 = Transition::getAllMount($sbj, 1, 'before',$date);
+        $unreceived = Transition::getAllMount($sbj, 1, '', $date);
+        $unreceived2 = Transition::getAllMount($sbj, 1, 'before', $date);
 //        $year = Transition::getAllMount($sbj, 1, 'after', date('Y0101'));
 
-        $received = Transition::getAllMount($sbj, 2,'',$date);
-        $received2 = Transition::getAllMount($sbj, 2, 'before',$date);
+        $received = Transition::getAllMount($sbj, 2, '', $date);
+        $received2 = Transition::getAllMount($sbj, 2, 'before', $date);
 
         $before = $balance + $unreceived2 - $received2;
         $left = $before + $unreceived - $received;

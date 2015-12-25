@@ -47,6 +47,10 @@ $this->breadcrumbs=array(
                     'headerHtmlOptions' => array('width'=>'33px',),
                     'checkBoxHtmlOptions' => array('name' => 'selectdel[]'),
                 ),
+                [
+                    'name' => 'order_no',
+                    'value' => '$data->porder_no()',
+                ],
 				'target',
 				'date',
 				'memo',

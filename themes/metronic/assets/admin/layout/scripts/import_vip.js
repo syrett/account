@@ -32,7 +32,7 @@ $(document).ready(function () {
         $(this).nextAll("span[class*='label-warning']").html("");
     })
 
-    $("div").delegate("#subject_b", "change",function () {
+    $("div").delegate("#subject_b", "change", function () {
         lockBank();
     });
 });
@@ -132,15 +132,15 @@ function chooseOption(e) {
     id = $("#item_id").val()
     choosed(e);
     var options = "0";
-    if($("#order_no_"+id).length > 0)
-        options = $("#order_no_"+id).val();
+    if ($("#order_no_" + id).length > 0)
+        options = $("#order_no_" + id).val();
     $.each(Array.prototype.reverse.call($(e).parent().prevAll('.options')), function (key, value) {
         options += "," + $(value).find("button[class*='active']").val()
     })
     options += "," + e.value;
-    if(e.value == '借出款项'){
+    if (e.value == '借出款项') {
         $("#setting-info").html('<i class="fa fa-bell-o"></i>&nbsp;&nbsp;&nbsp;预支给员工的款项请在员工报销模块录入');
-    }else{
+    } else {
         $("#setting-info").html('');
     }
     $.ajax({
@@ -157,7 +157,7 @@ function chooseOption(e) {
                 str += '<i class="fa fa-check"></i> 已选择 => <span id="sub_name">"' + data.sbj_name + '"</span><br >';
                 if (data.option != 0) {
                     $.each(data.option, function (key, value) {
-                        if(key / 7 == Math.round(key/7))
+                        if (key / 7 == Math.round(key / 7))
                             str += '<br >';
                         if (value[0] == 'text')
                             str += '<br ><input type="text" name="new-option" id="new-option" placeholder="' + value[1] + '" >'
@@ -169,7 +169,7 @@ function chooseOption(e) {
                                 var checked = "checked";
                             else
                                 var checked = "";
-                            str += '<input type="checkbox" '+ checked + ' name="new-option" id="'+ value[1] + '" >' + value[2] + '&nbsp;'+ value[3] + '&nbsp;&nbsp;&nbsp;&nbsp;'
+                            str += '<input type="checkbox" ' + checked + ' name="new-option" id="' + value[1] + '" >' + value[2] + '&nbsp;' + value[3] + '&nbsp;&nbsp;&nbsp;&nbsp;'
                         }
                     })
                 }
@@ -191,13 +191,23 @@ function chooseOption(e) {
                     str += '</select>'
                 } else
                     $.each(data.data, function (key, value) {
-                        if(typeof(value)=='object'){
+                        var info = '';
+                        if (typeof(value) == 'object') {
                             key = Object.keys(value)[0]
-                            value = value[key];
+                            if (typeof(value[key]) == 'string'){
+                                value = value[key];
+                                info = value;
+                            }
+                            else {
+                                $.each(value[key]['info'], function (e, o) {
+                                    info += e + ': ' + o + '<br />';
+                                });
+                                value = value[key][0];
+                            }
                         }
                         if (IsNum(key.toString().substring(1))) //json.parse会把数组重新排序，所以key为数字数组，key前面都添加了下划线'_'
                             key = key.toString().substring(1)
-                        str += '<button class="btn " type="button" onclick="chooseOption(this)" value="' + key + '">' + value + '</button>'
+                        str += ' <button class="btn popovers" data-trigger="hover" data-content="'+info+'" type="button" onclick="chooseOption(this)" value="' + key + '">' + value + '</button>'
                     });
                 if (data.option != 0) {
                     $.each(data.option, function (key, value) {
@@ -219,9 +229,9 @@ function chooseOption(e) {
                         newsbjname = data.newsbjname;
                     }
                     str += '<input type="hidden" name="new-type" id="new-type" value="1">' +
-                    '<input type="hidden" id="new-subject" name="new-subject" value="' + newsbj + '" > ' +
-                    '<input type="hidden" id="new-sbjname" value="' + newsbjname + '" > ' +
-                    '<br ><input type="text" class="new-item" placeholder="手动填写" id="new-name" name="new-name" value="' + $("#tran_target_" + id).val() + '" >';
+                        '<input type="hidden" id="new-subject" name="new-subject" value="' + newsbj + '" > ' +
+                        '<input type="hidden" id="new-sbjname" value="' + newsbjname + '" > ' +
+                        '<br ><input type="text" class="new-item" placeholder="手动填写" id="new-name" name="new-name" value="' + $("#tran_target_" + id).val() + '" >';
 
                     if (data.list != '') {
                         str += '<select id="new-invoice" name="new-invoice" data-placeholder="请选择">';
@@ -245,8 +255,8 @@ function chooseOption(e) {
                 }
                 else if (data.new == 'employee') {
                     str += '<input type="hidden" name="new-type" id="new-type" value="2">' +
-                    '<br ><input type="text" class="new-item" placeholder="新员工姓名" id="new-name" name="new-name"  value="' + $("#tran_name_" + id).val() + '" >' +
-                    '<br ><select id="new-department" name="new-department" data-placeholder="新员工所属部门">';
+                        '<br ><input type="text" class="new-item" placeholder="新员工姓名" id="new-name" name="new-name"  value="' + $("#tran_name_" + id).val() + '" >' +
+                        '<br ><select id="new-department" name="new-department" data-placeholder="新员工所属部门">';
                     $.each(data.list, function (key, value) {
                         str += '<option value="' + value['id'] + '">' + value['name'] + '</option>';
                     })
@@ -267,6 +277,7 @@ function chooseOption(e) {
                 unsetting();
             }
             setWidth(e);
+            $(".popovers").popover({html:true});
         },
         error: function (msg) {
             //alert(msg);
@@ -309,16 +320,16 @@ function itemSet() {
         e.html(str);
         e.addClass("path-success");
         //设置checkbox的选项
-        $.each($("#setting").find("input[type='checkbox']:checked"), function(key, element){
+        $.each($("#setting").find("input[type='checkbox']:checked"), function (key, element) {
             var id = $(element).attr('id') + "_" + item_id;
-            if($("#"+ id).length > 0)
+            if ($("#" + id).length > 0)
                 $("#" + id).val(1);
-            else{
-                $("data").append('<input type="hidden" id="'+ id +'" name="lists['+item_id + '][Transition][' + $(element).attr('id') + ']" value="1" >');
+            else {
+                $("data").append('<input type="hidden" id="' + id + '" name="lists[' + item_id + '][Transition][' + $(element).attr('id') + ']" value="1" >');
             }
         });
         var last = $(".options button[class*='active']:last").val()
-        $("#last_"+ item_id).val(last);
+        $("#last_" + item_id).val(last);
     }
     else {
         e.addClass("path-fail");
@@ -376,7 +387,7 @@ function save() {
         var sbj = $("#subject_" + item_id).val();
         $("#invoice_" + item_id).val($("#new-invoice").val() == 2 ? 1 : 0);
         //$("#tax_" + item_id).val($("#withtax_" + item_id).val() == 1 ? 3 : 0);
-        if ($("#overworth_" + item_id).val() != 0 && $("#overworth_" + item_id).val() != ''){
+        if ($("#overworth_" + item_id).val() != 0 && $("#overworth_" + item_id).val() != '') {
             $("#additional_sbj0_" + item_id).val(4002);//溢价金额作为资本公积4002贷方
             $("#additional_amount0_" + item_id).val(parseFloat($("#overworth_" + item_id).val()));
         }
@@ -495,14 +506,14 @@ function setTax(item_id, type) {
         name = '销项';
     else if (type == 'purchase')
         name = '进项';
-    var sbj2221 = createSubject({name:'增值税',subject:2221});
+    var sbj2221 = createSubject({name: '增值税', subject: 2221});
     var data = {
         name: name,
         subject: sbj2221
     }
     if (tax == 5) //  5% 为营业税专有税率，借营业税金及附加/营业税，贷应交税金/营业税，不需要单独再计算税
         $("#withtax_" + item_id).val(0);
-    else{
+    else {
         $("#withtax_" + item_id).val(1);
         sbj = createSubject(data);
         $("#additional_sbj0_" + item_id).val(sbj);
@@ -576,6 +587,6 @@ function addRow() {
 
         });
     });
-    $(e).find("[id*='btn_del']").attr("disabled",false);
+    $(e).find("[id*='btn_del']").attr("disabled", false);
     $(e).children(':last-child').find("span").html('');
 }

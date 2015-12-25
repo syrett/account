@@ -22,7 +22,13 @@ $this->pageTitle = Yii::app()->name;
                     $title = '凭证过账';
                     break;
                 case 'listSettlement' :
-                    $title = '期末结账';
+                    $title = '期末结转';
+                    break;
+                case 'listClosing' :
+                    $title = '结账';
+                    break;
+                case 'listSettlementcloseing' :
+                    $title = '结账';
                     break;
                 case 'listAntiSettlement' :
                     $title = '反结账';

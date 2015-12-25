@@ -191,16 +191,16 @@ class Bank extends LFSModel
             '支付押金' => '支付押金',   //  2
             '借出款项' => '借出款项',
             '归还借款' => '归还借款',
-            '供应商采购' => '供应商采购',        //  3
             '员工报销' => '员工报销',         //  4
+            '供应商采购' => '供应商采购',        //  3
             '投资支出' => '投资支出',         //  5
-            '利息手续费' => '利息手续费',          //  6
             '材料销售' => '材料销售',           //  7
             '技术转让' => '技术转让',
             '资产租赁' => '资产租赁',
             '支付股利' => '支付股利',         //  8
             '支付税金' => '支付税金',
             '现金提取' => '现金提取',
+            '利息手续费' => '利息手续费',          //  6
             '银行转账' => '银行转账',
             '汇兑损益' => '汇兑损益',
             '其他支出' => '其他支出',     //  9
@@ -311,7 +311,16 @@ class Bank extends LFSModel
         $data = [];
         foreach($list as $item){
             $sbj2 = explode(',', $item['subject_2']);
-            array_push($data, ['_' . $sbj2[0] => $item['order_no']]);
+            $info = mb_substr($item['order_no'],0,1)=='预'?$item['order_no']:
+                [
+                    $item['order_no'],
+                    'info' => [
+                        '时间' => $item['entry_date'],
+                        '名称' => $item['entry_name'],
+                        '金额' => $item['price']
+                    ]
+                ];
+            array_push($data, ['_' . $sbj2[0] => $info]);
         }
         return ['data' => $data];
     }
@@ -1246,5 +1255,16 @@ eof;
         $relation += Product::model()->findAllByAttributes([],"relation like '%\"bank\":\"$id\"%'");
         $relation += Reimburse::model()->findAllByAttributes([],"relation like '%\"bank\":\"$id\"%'");
         return $relation;
+    }
+
+    /*
+     * 预支订单号
+     */
+    public function porder_no(){
+        $porder = Preparation::model()->findByAttributes(['type'=>'bank','pid'=>$this->id]);
+        if($porder)
+            return $this->order_no. ','. $porder->order_no;
+        else
+            return $this->order_no;
     }
 }

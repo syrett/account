@@ -207,7 +207,7 @@ class Stock extends LFSModel
         $criteria->compare('out_price', $this->out_price);
         switch($type){
             case '1601' :
-                $criteria->addCondition("entry_subject like '1601%' or entry_subject like '1701%' or entry_subject like '1801%'");
+                $criteria->addCondition("entry_subject like '1601%' or entry_subject like '1701%' or entry_subject like '1801%' or entry_subject like '1604%' ");
                 break;
             case '1405' :
                 $criteria->addCondition("entry_subject like '1403%' or entry_subject like '1405%' ");
@@ -588,7 +588,7 @@ class Stock extends LFSModel
                     $model->worth = $items['E'] - $items['F'];
                     $model->value_month = $items['G'];
                     $model->value_rate = $items['H'];
-                    $sbj = Subjects::findSubject(preg_replace('/.*\//','',$items['I']), ['1601','1701','1801']);
+                    $sbj = Subjects::findSubject(preg_replace('/.*\//','',$items['I']), ['1601','1701','1801','1604']);
                     $model->entry_subject = $sbj?$sbj[0]['sbj_number']:'';
                     $model->department_id = Department::model()->findByAttributes(['name'=>$items['J']]);
                 }elseif(isset($items['name'])){

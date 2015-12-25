@@ -226,14 +226,16 @@ $baseUrl = Yii::app()->theme->baseUrl;
                                             <h4>组织</h4>
                                             <ul class="list-unstyled">
                                                 <? if (User2::model()->checkVIP()) {
-                                                ?>
-                                                <li><a href="<?= $this->createUrl('vendor/create') ?>">供应商</a></li>
-                                                <li><a href="<?= $this->createUrl('client/create') ?>">客户</a></li> <?
+                                                    ?>
+                                                    <li><a href="<?= $this->createUrl('vendor/create') ?>">供应商</a></li>
+                                                    <li><a href="<?= $this->createUrl('client/create') ?>">客户</a>
+                                                    </li> <?
                                                 }
                                                 ?>
                                                 <li><a href="<?= $this->createUrl('department/create') ?>">部门</a></li>
                                                 <li><a href="<?= $this->createUrl('employee/create') ?>">员工</a></li>
-<!--                                                <li><a href="--><?//= $this->createUrl('project/create') ?><!--">项目</a></li>-->
+                                                <!--                                                <li><a href="-->
+                                                <? //= $this->createUrl('project/create') ?><!--">项目</a></li>-->
                                             </ul>
                                         </div>
                                         <div class="col-md-4">
@@ -260,7 +262,8 @@ $baseUrl = Yii::app()->theme->baseUrl;
                                             <ul class="list-unstyled">
                                                 <li><a href="<?= $this->createUrl('subjects/create') ?>">会计科目</a></li>
                                                 <li><a href="<?= $this->createUrl('projectB/create') ?>">在建工程</a></li>
-                                                <li><a href="<?= $this->createUrl('projectLong/create') ?>">长期待摊</a></li>
+                                                <li><a href="<?= $this->createUrl('projectLong/create') ?>">长期待摊</a>
+                                                </li>
                                                 <!--                                                <li><a href="-->
                                                 <? //= $this->createUrl('project/create') ?><!--">工程项目</a>-->
                                                 </li>
@@ -558,18 +561,35 @@ $baseUrl = Yii::app()->theme->baseUrl;
                                 <i class="glyphicon glyphicon-print"></i>
                                 打印凭证</a>
                         </li>
-                        <li class="divider">
-                        </li>
                         <li>
                             <a href="<?= $this->createUrl('Site/operation&operation=listPost') ?>">
                                 <i class="glyphicon glyphicon-import"></i>
                                 过账</a>
                         </li>
-                        <li>
-                            <a href="<?= $this->createUrl('Site/operation&operation=listSettlement') ?>">
-                                <i class="glyphicon glyphicon-check"></i>
-                                结账</a>
-                        </li>
+                        <?
+                        if (User2::model()->checkVIP()) {
+                            ?>
+                            <li>
+                                <a href="<?= $this->createUrl('Site/operation&operation=listSettlement') ?>">
+                                    <i class="glyphicon glyphicon-random"></i>
+                                    期末结转</a>
+                            </li>
+                            <li>
+                                <a href="<?= $this->createUrl('Site/operation&operation=listClosing') ?>">
+                                    <i class="glyphicon glyphicon-check"></i>
+                                    结账</a>
+                            </li>
+                            <?
+                        } else {    //普通用户，不需要期末结转 ，结账时候生成结转凭证自动过账结账
+                            ?>
+                            <li>
+                                <a href="<?= $this->createUrl('Site/operation&operation=listSettlementcloseing') ?>">
+                                    <i class="glyphicon glyphicon-check"></i>
+                                    结账</a>
+                            </li>
+                            <?
+                        }
+                        ?>
                         <li>
                             <a href="<?= $this->createUrl('Site/operation&operation=listAntiSettlement') ?>">
                                 <i class="glyphicon glyphicon-repeat"></i>
@@ -587,19 +607,19 @@ $baseUrl = Yii::app()->theme->baseUrl;
                 if (User2::model()->checkVIP()) {
                     ?>
 
-                <li>
-                    <a href="<?= $this->createUrl('client/admin') ?>">
-                        <i class="icon-wallet"></i>
-                        <span class="title">客户</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= $this->createUrl('vendor/admin') ?>">
-                        <i class="icon-basket-loaded"></i>
-                        <span class="title">供应商</span>
-                    </a>
-                </li>
-                <?}?>
+                    <li>
+                        <a href="<?= $this->createUrl('client/admin') ?>">
+                            <i class="icon-wallet"></i>
+                            <span class="title">客户</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?= $this->createUrl('vendor/admin') ?>">
+                            <i class="icon-basket-loaded"></i>
+                            <span class="title">供应商</span>
+                        </a>
+                    </li>
+                <? } ?>
                 <li>
                     <a href="javascript:;">
                         <i class="icon-drawer"></i>

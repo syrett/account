@@ -417,39 +417,39 @@ class TransitionController extends Controller
     public function actionBank()
     {
         $info = [];
-        $info['subject_b'] = isset($_POST['subject_b'])?$_POST['subject_b']:User2::getBank();
+        $info['subject_b'] = isset($_POST['subject_b']) ? $_POST['subject_b'] : User2::getBank();
         $option = 'empty';
         Yii::import('ext.phpexcel.PHPExcel.PHPExcel_IOFactory');
         if (Yii::app()->request->isPostRequest) {
             //上传附件查看
             if (isset($_FILES['attachment']) && file_exists($_FILES['attachment']['tmp_name'])) {
                 $option = 'import';
-                $path_parts = pathinfo( $_FILES['attachment']['name']);
+                $path_parts = pathinfo($_FILES['attachment']['name']);
                 $ext = strtolower($path_parts['extension']);
-                if($ext == 'jpg'){
+                if ($ext == 'jpg') {
                     $jpeg_quality = 99;
                     $img_r = imagecreatefromjpeg($_FILES['attachment']['tmp_name']);
 
                     $position_x = 0;
-                    foreach($_POST['selectItem'] as $key => $item){
+                    foreach ($_POST['selectItem'] as $key => $item) {
                         $col[$position_x] = (int)$_POST['show_image_conf_w'][$key];
                         $position_x += (int)$_POST['show_image_conf_w'][$key];
                     }
 
                     $finfo = getimagesize($_FILES['attachment']['tmp_name']);
                     $targ_h = $finfo[1];
-                    $param = $finfo[0]/$position_x;
+                    $param = $finfo[0] / $position_x;
                     Yii::import('ext.Baidu.OCR_Baidu');
                     foreach ($col as $position => $width) {
                         $targ_w = $width * $param;
                         $dst_r = imagecreatetruecolor($targ_w, $targ_h);
 
-                        imagecopyresampled($dst_r, $img_r, 0, 0, $position*$param, 0, $targ_w, $targ_h, $targ_w, $targ_h);
+                        imagecopyresampled($dst_r, $img_r, 0, 0, $position * $param, 0, $targ_w, $targ_h, $targ_w, $targ_h);
 
 //                        imagejpeg($dst_r, 'temp.jpg', $jpeg_quality);
 //                        $imageFileContents = file_get_contents('temp.jpg');
                         ob_start();
-                        imagejpeg($dst_r,null, $jpeg_quality);
+                        imagejpeg($dst_r, null, $jpeg_quality);
                         $imageFileContents = ob_get_contents();
                         ob_end_clean();
                         $data[] = OCR_Baidu::getText($imageFileContents);
@@ -459,15 +459,15 @@ class TransitionController extends Controller
                     $conf[] = $_POST['selectItem'];
                     $sheetData = Transition::getSheetDataFromImage($data, $conf);
                 }
-                if($ext == 'xls' || $ext == 'xlsx'){
+                if ($ext == 'xls' || $ext == 'xlsx') {
 
                     $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
                     $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
                     //去除第一行
                     array_shift($list);
-                    foreach($list as $item){
-                        if(trim($item['A'])!='')
-                            $sheetData[] = Transition::getSheetData($item,'bank');
+                    foreach ($list as $item) {
+                        if (trim($item['A']) != '')
+                            $sheetData[] = Transition::getSheetData($item, 'bank');
                     }
 
                 }
@@ -1092,14 +1092,78 @@ class TransitionController extends Controller
         }
 
         if (!Transition::model()->checkSettlement($entry_prefix))
-            throw new CHttpException(400, $entry_prefix . "结账失败");
-        if (Transition::model()->isAllClosing($entry_prefix))
-            throw new CHttpException(400, $entry_prefix . "已经结账");
+            throw new CHttpException(400, $entry_prefix . "结转失败");
+        if (Transition::model()->isAllForward($entry_prefix))
+            throw new CHttpException(400, $entry_prefix . "已经结转");
         Transition::model()->settlement($entry_prefix);
-        if(SYSDB!='account_testabxc' && SYSDB!='account_gbl' && SYSDB!='account_201508089731')
+        if (SYSDB != 'account_testabxc' && SYSDB != 'account_gbl' && SYSDB != 'account_201508089731')
             Stock::model()->saveWorth($entry_prefix);    //过账时的计提折旧操作，在结账时保存净值
-        Yii::app()->user->setFlash('success', $entry_prefix . "结账成功!");
+        Yii::app()->user->setFlash('success', $entry_prefix . "结转成功!");
         $this->render('/site/success');
+    }
+
+    /*
+     * 结账
+     */
+    public function actionClosing($entry_prefix)
+    {
+        $flag = false;
+
+        if (!Transition::model()->isAllReviewed($entry_prefix)) {
+            Yii::app()->user->setFlash('error', $entry_prefix . "结账失败! 凭证未审核");
+        } elseif (!Transition::model()->isAllPosted($entry_prefix)) {
+            Yii::app()->user->setFlash('error', $entry_prefix . "结账失败! 凭证未过账");
+        } elseif (!Transition::model()->isAllForward($entry_prefix)) {
+            Yii::app()->user->setFlash('error', $entry_prefix . "结账失败! 凭证未结转");
+        } elseif (!Transition::model()->isAllClosing($entry_prefix)) {
+            Yii::app()->user->setFlash('error', $entry_prefix . "结账失败! 已经结账");
+        } else
+            $flag = true;
+
+        if ($flag) {
+            $tran = Transition::model()->findByAttributes(['entry_num_prefix' => $entry_prefix]);
+            $tran->setClosing(1);
+            Yii::app()->user->setFlash('success', $entry_prefix . "结账成功!");
+        }
+        $this->render('/site/' . ($flag ? 'success' : 'error'));
+    }
+
+    /*
+     * 结账，普通版
+     */
+    public function actionSettlementcloseing($entry_prefix)
+    {
+        $flag = false;
+
+        if (!Transition::model()->isAllReviewed($entry_prefix)) {
+            Yii::app()->user->setFlash('error', $entry_prefix . "结账失败! 凭证未审核");
+        } elseif (!Transition::model()->isAllPosted($entry_prefix)) {
+            Yii::app()->user->setFlash('error', $entry_prefix . "结账失败! 凭证未过账");
+        } elseif (!Transition::model()->isAllClosing($entry_prefix)) {
+            Yii::app()->user->setFlash('error', $entry_prefix . "结账失败! 已经结账");
+        } else
+            $flag = true;
+
+        if ($flag) {    //生成结转凭证，计提固定资产等,并自动审核过账
+            $this->actionSettlement($entry_prefix);
+            $trans = Transition::model()->findAllByAttributes(['entry_reviewed'=>0,'entry_num_prefix'=>$entry_prefix]);
+            if(!empty($trans)){
+                foreach ($trans as $item) {
+                    $item->entry_reviewed = 1;
+                    $item->entry_reviewer = 1;
+                    $item->entry_posting = 1;
+                    $item->entry_forward = 1;
+                    $item->entry_closing = 1;
+                    $item->save();
+                }
+            }
+        }
+        if ($flag) {
+            $tran = Transition::model()->findByAttributes(['entry_num_prefix' => $entry_prefix]);
+            $tran->setClosing(1);
+            Yii::app()->user->setFlash('success', $entry_prefix . "结账成功!");
+        }
+        $this->render('/site/' . ($flag ? 'success' : 'error'));
     }
 
     /*
@@ -1142,22 +1206,22 @@ class TransitionController extends Controller
 
         $model = Transition::model()->deleteAllByAttributes(array('entry_num_prefix' => $date, 'entry_settlement' => 1,));
         Transition::model()->deleteAllByAttributes(['entry_num_prefix' => $date], 'entry_memo like "附加税-' . $date . '%"');
-        if (Transition::model()->findByAttributes(['entry_num_prefix' => $date], 'entry_closing=1') || $model) {
-            $rows = Transition::model()->deleteAllByAttributes(['entry_num_prefix' => $date], 'entry_memo like "计提折旧-' . $date . '%"');
-            if ($rows > 0) {
-                $cdb = new CDbCriteria();
-                $cdb->addCondition('entry_subject like "1601%" or entry_subject like "1701%" or entry_subject like "1801%"');
-                $stocks = Stock::model()->findAll($cdb);
-                foreach ($stocks as $item) {
-                    $arr = explode(',', $item['worth']);
-                    array_pop($arr);
-                    $item->worth = implode(',', $arr);
-                    $item->save();
-                }
+//        if (Transition::model()->findByAttributes(['entry_num_prefix' => $date], 'entry_closing=1') || $model) {
+        $rows = Transition::model()->deleteAllByAttributes(['entry_num_prefix' => $date], 'entry_memo like "计提折旧-' . $date . '%"');
+        if ($rows > 0) {
+            $cdb = new CDbCriteria();
+            $cdb->addCondition('entry_subject like "1601%" or entry_subject like "1701%" or entry_subject like "1801%"');
+            $stocks = Stock::model()->findAll($cdb);
+            foreach ($stocks as $item) {
+                $arr = explode(',', $item['worth']);
+                array_pop($arr);
+                $item->worth = implode(',', $arr);
+                $item->save();
             }
         }
-        $timeold =
-            //删除post表中的数据
+//        }
+
+        //删除post表中的数据
         $year = substr($date, 0, 4);
         $month = substr($date, 4, 6);
         Post::model()->deleteAllByAttributes(array('year' => $year, 'month' => $month));
@@ -1165,6 +1229,7 @@ class TransitionController extends Controller
         $newModel->entry_num_prefix = $date;
         $updated = $newModel->setPosted(0);
         $updated = $newModel->setClosing(0) || $updated;
+        $updated = $newModel->setForward(0) || $updated;
         if ($model >= 1 or $updated)
             return true;
         else
@@ -1203,7 +1268,7 @@ class TransitionController extends Controller
     {
         $model = new Transition('search');
         $model->unsetAttributes(); // clear any default values
-        if (isset($_POST['s_day']) && $_POST['s_day'] != ''){
+        if (isset($_POST['s_day']) && $_POST['s_day'] != '') {
 
         }
         if (isset($_REQUEST['date']))
@@ -1243,6 +1308,22 @@ class TransitionController extends Controller
     {     //run settlement
         if (isset($_REQUEST['date'])) {
             $this->actionSettlement($_REQUEST['date']);
+        } else
+            $this->redirect('/');
+    }
+
+    public function actionListClosing()
+    {     //run settlement
+        if (isset($_REQUEST['date'])) {
+            $this->actionClosing($_REQUEST['date']);
+        } else
+            $this->redirect('/');
+    }
+
+    public function actionListSettlementcloseing()
+    {     //run settlement
+        if (isset($_REQUEST['date'])) {
+            $this->actionSettlementcloseing($_REQUEST['date']);
         } else
             $this->redirect('/');
     }
@@ -1496,7 +1577,7 @@ class TransitionController extends Controller
             $arr['entry_date'] = date('Ymd', strtotime($arr['entry_date']));
             switch ($type) {
                 case 'bank':
-                    $subject_2 = isset($_POST['subject_b'])?$_POST['subject_b']:User2::getBank();
+                    $subject_2 = isset($_POST['subject_b']) ? $_POST['subject_b'] : User2::getBank();
                     $arr['subject_2'] = $subject_2;
                     $model = new Bank;
                     $path = explode('=>', $arr['path']);
