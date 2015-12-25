@@ -441,3 +441,19 @@ CREATE TABLE IF NOT EXISTS `project_long` (
   `create_at` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- 2015年12月8日16:42:41
+ALTER TABLE `bank` CHANGE `status_id` `status_id` TINYINT(4) NOT NULL DEFAULT '1' COMMENT '1:已经生成凭证 ';
+
+-- 2015年12月10日15:20:56
+INSERT INTO `department` ( `name`, `type`, `memo`) VALUES ('管理部门', '2', '管理部门');
+
+-- 2015年12月15日17:08:18
+
+ALTER TABLE `bank` CHANGE `amount` `amount` DECIMAL(12,2) NOT NULL COMMENT '金额';
+ALTER TABLE `cash` CHANGE `amount` `amount` DECIMAL(12,2) NOT NULL COMMENT '金额';
+
+-- 2015年12月22日15:32:02
+ALTER TABLE `transition` ADD `entry_forward` TINYINT NOT NULL COMMENT '是否已经生成结转凭证' AFTER `entry_settlement`;
+ALTER TABLE `employee` CHANGE `base` `base` FLOAT NOT NULL DEFAULT '0' COMMENT '社保基数';
+ALTER TABLE `employee` CHANGE `base_2` `base_2` FLOAT NULL DEFAULT '0' COMMENT '公积金基数';
