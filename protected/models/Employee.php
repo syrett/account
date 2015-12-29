@@ -132,7 +132,7 @@ class Employee extends CActiveRecord
     }
     public function getDepart($employee_id, $type = '')
     {
-        $model = $this->model()->findByPk($employee_id);
+        $model = Employee::model()->findByPk($employee_id);
         if($model){
             if($type=='name')
                 return Department::model()->getName($model->department_id);
