@@ -5,6 +5,14 @@
     </div>
     <div class="panel-body v-title">
         <div class="error">
+            <?php echo CHtml::encode($message); ?>
+            <br >
+            <?
+            if($code == 500){
+                echo $file;
+                echo " $line";
+            }
+            ?>
             <?
             foreach(Yii::app()->user->getFlashes() as $key => $message) {
                 echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
