@@ -523,10 +523,11 @@ class Stock extends LFSModel
      */
     public function checkDeprec($date){
 
-        if(substr($this->entry_subject,0,4)=='1801')
+        if(substr($this->entry_subject,0,4)=='1801'){
             $this['in_date'] = $this->date_a;
-        if(substr($date,0,6)>substr($this['in_date'],0,6))
-            return true;
+            if($this->date_a != '' && $this->date_a != null)
+                return true;
+        }
         //如果是期初明细，账套起始月就要开始计提
         $condom = Condom::model()->getStartTime();
         if($condom == substr($date,0,6) && $this->order_no == null)
