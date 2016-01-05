@@ -64,7 +64,7 @@ class ProjectLongController extends Controller
                 //创建成功，需要生成，长期待摊1801子科目
                 Subjects::matchSubject($model->name, '1801');
                 Yii::app()->user->setFlash('success', "添加成功!");
-                $this->redirect(array('view', 'id' => $model->id));
+                $this->redirect(array('update', 'id' => $model->id));
             }
         }
 
@@ -80,6 +80,17 @@ class ProjectLongController extends Controller
      */
     public function actionUpdate($id)
     {
+        //ID是stock的id，不是项目ID；需要根据subject，获取科目，再获取项目id
+        $stock = Stock::model()->findByPk($id);
+        if($stock){
+            $subject = Subjects::model()->findByAttributes(['sbj_number'=>$stock->entry_subject]);
+            $projectL = ProjectLong::model()->findByAttributes(['name'=>$subject->sbj_name]);
+            if($projectL){
+                $id = $projectL->id;
+            }else{
+                throw new CHttpException(400, "长期待摊科目名称已经手动修改，无法找到对应项目名称");
+            }
+        }
         $model = $this->loadModel($id);
 
         // Uncomment the following line if AJAX validation is needed

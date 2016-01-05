@@ -59,8 +59,8 @@ $total_worth = Stock::getTotal('1601','worth');
                             'scrap' => array(   //报废
                                 'options' => array(
                                     'class' => 'btn btn-default tip btn-xs',
-                                    'title' => '操作',
-                                    'confirm' => '确定要执行此操作？',
+                                    'title' => '报废',
+                                    'confirm' => '确定要报废？报废后将无法撤消',
                                     'ajax' => [
                                         'dataType' => 'json',
                                         'url' => 'js:$(this).attr("href")',
@@ -71,7 +71,8 @@ $total_worth = Stock::getTotal('1601','worth');
                                 ),
                                 'label' => "<span class='glyphicon'>报废</span>",
                                 'imageUrl' => false,
-//                                        'url' => 'Yii::app()->createUrl("/Stock/scrap", ["id"=>$data->id,"action"=>$data->status==4?"unscrap":"scrap"])'
+                                'url' => 'Yii::app()->createUrl("/Stock/scrap", ["id"=>$data->id,"action"=>"scrap"])'
+//                                'url' => 'Yii::app()->createUrl("/Stock/scrap", ["id"=>$data->id,"action"=>$data->status==4?"unscrap":"scrap"])'
                             ),
 //                                    'unscrap' => array(
 //                                        'options' => array(

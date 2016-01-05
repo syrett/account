@@ -20,7 +20,7 @@ $preOrder = $item['preorder'] + $preOrder;
 $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$model->id\"%'");
 ?>
 <div class="panel-body">
-    <div class="row" id="abc">
+    <div class="row import-tab" id="abc">
         <div class="box">
             <?php
             $form = $this->beginWidget('CActiveForm', array(
@@ -30,7 +30,7 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
 //                'action'=>Laofashi. $this->createUrl('/bank/default/update', array('id'=>$_GET['id'])),
             ));
             ?>
-            <table class="table table-bordered dataTable">
+            <table class="table table-bordered dataTable min">
                 <tr>
                     <th class="input_min"><input type="checkbox"></th>
                     <th class="input_mid">交易日期</th>
@@ -49,7 +49,7 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                     }
                     ?>
                     <th style="width: 150px">操作</th>
-                    <th style="width: 10%">&nbsp;</th>
+                    <th style="width: 10%">提示</th>
                 </tr>
                 <?php
                 if (!empty($model)) {
@@ -92,15 +92,15 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                             ));
                             ?>
                         </td>
-                        <td><input class="input_full" type="text" id="tran_model_<?= $key ?>" placeholder="单价"
+                        <td><input class="input_mid" type="text" id="tran_model_<?= $key ?>" placeholder="单价"
                                    name="lists[<?= $key ?>][Transition][model]"
                                    value="<?= $item['model'] ?>">
                         </td>
-                        <td><input class="input_full" type="text" id="tran_price_<?= $key ?>" placeholder="型号"
+                        <td><input class="input_min" type="text" id="tran_price_<?= $key ?>" placeholder="型号"
                                    name="lists[<?= $key ?>][Transition][price]"
                                    value="<?= $item['price'] ?>">
                         </td>
-                        <td><input class="input_full" type="text" id="tran_count_<?= $key ?>" placeholder="数量"
+                        <td><input class="input_min" type="number" id="tran_count_<?= $key ?>" placeholder="数量"
                                    name="lists[<?= $key ?>][Transition][count]"
                                    value="<?= $item['count'] ?>">
                         </td>

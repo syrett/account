@@ -104,12 +104,7 @@ $dataProvider = new CActiveDataProvider('Stock', ['criteria' => ['condition' => 
                                 'imageUrl' => false,
 //                            'visible' => '$data->status==1&&trim($data->assets)!=""',
                                 'visible' => '$data->checkTransform()',
-                            ),
-                            'delete' => array(
-                                'options' => array('class' => 'btn btn-default tip delete btn-xs', 'title' => '删除'),
-                                'label' => '<span class="glyphicon ">删除</span>',
-                                'imageUrl' => false,
-                            ),
+                            )
                         ),
                         'template' => '<div class="btn-group">{transform}</div>',
                         'deleteConfirmation' => '确定要删除该条记录？',

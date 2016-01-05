@@ -5,10 +5,12 @@
     </div>
     <div class="panel-body v-title">
         <div class="error">
-            <?php echo CHtml::encode($message); ?>
-            <br >
+            <?php
+            if(isset($message))
+                echo CHtml::encode($message). '<br />';
+            ?>
             <?
-            if($code == 500){
+            if(isset($code) && $code == 500){
                 echo $file;
                 echo " $line";
             }

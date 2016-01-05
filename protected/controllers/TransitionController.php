@@ -516,13 +516,54 @@ class TransitionController extends Controller
             //上传附件查看
             if (isset($_FILES['attachment']) && file_exists($_FILES['attachment']['tmp_name'])) {
                 $option = 'import';
-                $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
-                $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
-                //去除第一行
-                array_shift($list);
-                foreach ($list as $item) {
-                    $sheetData[] = Transition::getSheetData($item, 'cash');
+                $path_parts = pathinfo($_FILES['attachment']['name']);
+                $ext = strtolower($path_parts['extension']);
+                if ($ext == 'jpg') {
+                    $jpeg_quality = 99;
+                    $img_r = imagecreatefromjpeg($_FILES['attachment']['tmp_name']);
+
+                    $position_x = 0;
+                    foreach ($_POST['selectItem'] as $key => $item) {
+                        $col[$position_x] = (int)$_POST['show_image_conf_w'][$key];
+                        $position_x += (int)$_POST['show_image_conf_w'][$key];
+                    }
+
+                    $finfo = getimagesize($_FILES['attachment']['tmp_name']);
+                    $targ_h = $finfo[1];
+                    $param = $finfo[0] / $position_x;
+                    Yii::import('ext.Baidu.OCR_Baidu');
+                    foreach ($col as $position => $width) {
+                        $targ_w = $width * $param;
+                        $dst_r = imagecreatetruecolor($targ_w, $targ_h);
+
+                        imagecopyresampled($dst_r, $img_r, 0, 0, $position * $param, 0, $targ_w, $targ_h, $targ_w, $targ_h);
+
+//                        imagejpeg($dst_r, 'temp.jpg', $jpeg_quality);
+//                        $imageFileContents = file_get_contents('temp.jpg');
+                        ob_start();
+                        imagejpeg($dst_r, null, $jpeg_quality);
+                        $imageFileContents = ob_get_contents();
+                        ob_end_clean();
+                        $data[] = OCR_Baidu::getText($imageFileContents);
+                    }
+                    $conf = [];
+                    $conf[] = isset($_POST['image_row1_type']);
+                    $conf[] = $_POST['selectItem'];
+                    $sheetData = Transition::getSheetDataFromImage($data, $conf);
                 }
+                if ($ext == 'xls' || $ext == 'xlsx') {
+
+                    $objPHPExcel = PHPExcel_IOFactory::load($_FILES['attachment']['tmp_name']);
+                    $list = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+                    //去除第一行
+                    array_shift($list);
+                    foreach ($list as $item) {
+                        if (trim($item['A']) != '')
+                            $sheetData[] = Transition::getSheetData($item, 'cash');
+                    }
+
+                }
+
             } elseif (!isset($_POST['submit_type'])) {
                 $option = 'save';
                 //保存按钮,
@@ -1146,6 +1187,8 @@ class TransitionController extends Controller
 
         if ($flag) {    //生成结转凭证，计提固定资产等,并自动审核过账
             $this->actionSettlement($entry_prefix);
+            if (SYSDB != 'account_testabxc' && SYSDB != 'account_gbl' && SYSDB != 'account_201508089731')
+                Stock::model()->saveWorth($entry_prefix);    //过账时的计提折旧操作，在结账时保存净值
             $trans = Transition::model()->findAllByAttributes(['entry_reviewed'=>0,'entry_num_prefix'=>$entry_prefix]);
             if(!empty($trans)){
                 foreach ($trans as $item) {

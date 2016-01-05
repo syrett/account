@@ -392,7 +392,7 @@ table#money .left{
     font-size: 13px;
 }
 .input_mmmin{
-    width: 45px;
+    /*width: 45px;*/
 }
 
 .input_mid {
@@ -401,8 +401,8 @@ table#money .left{
 .input_mid2 {
     width: 100px;
 }
-.min input{
-    heigth: 22px;
+.min input, .min select{
+    height: 22px;
 }
 .width-auto{
     width: auto;
@@ -704,10 +704,10 @@ div.flash-success a
 }
 .scroller .list-unstyled li{
     display: table-cell;
-    width: 154px;
+    width: 140px;
 }
 .form-horizontal .form-group{
-    height: 70px;
+    height: 50px;
 }
 .import-tab table>tbody>tr>th, .import-tab table>tbody>tr>td{
     padding: 1px;
@@ -717,9 +717,28 @@ div.flash-success a
     height: 22px;
     line-height: 20px;
 }
+
 .import-tab table>tbody>tr>th .form-control .select2-choice{
     padding-top: 0;
 }
 .import-tab .select2-container .select2-choice .select2-arrow b{
     background-position: 0 -2px;
+}
+.import-big table .select2-container .select2-choice{
+    height: 34px;
+    line-height: 34px;
+}
+.import-big .select2-container .select2-choice .select2-arrow b{
+    background-position: 0 2px;
+}
+.alert-link {
+    color: #423838;
+    text-align: left;
+    margin-top: 20px;
+}
+.min .select2-container .select2-choice > .select2-chosen{
+    max-width: 85px;
+}
+.check-title{
+    padding-left: 12px;
 }

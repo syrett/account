@@ -977,6 +977,9 @@ class Transition extends CActiveRecord
             return false;
     }
 
+    /*
+     * 结转操作凭证
+     */
     public function settlement($entry_prefix)
     {
         $this->reorganise($entry_prefix); //结账前先整理

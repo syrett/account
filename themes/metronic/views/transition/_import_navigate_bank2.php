@@ -1,41 +1,28 @@
 
-<?
-$select = '<option value="target_name" >交易对方名称</option>
-                <option value="name" >商品/服务</option>
-                <option value="date" >日期</option>
-                <option value="memo" >交易摘要</option>
-                <option value="amount" >金额</option>
-                <option value="none" >无效的列</option>';
-?>
-
 <div class="modal fade bs-modal-lg" id="large" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-lg" id="form_wizard_1">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <h4 class="modal-title">导入交易</h4>
+                <h4 class="modal-title">导入<?= Yii::t('import', strtoupper($type)) ?></h4>
             </div>
 
             <?
+            $select = '<option value="target_name" >交易对方名称</option>
+                <option value="name" >商品/服务</option>
+                <option value="date" >日期</option>
+                <option value="memo" >交易摘要</option>
+                <option value="amount" >金额</option>
+                <option value="none" >无效的列</option>';
             echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form-import', 'class' => 'form-horizontal']);
             ?>
             <div class="modal-body import-bank form-wizard">
                 <div class="stepwizard">
-                    <ul class=" stepwizard-row">
-                        <li class="stepwizard-step col-md-1 active stepwizard-step-left">
-                            <a href="#tab_step_1" data-toggle="tab" class="btn btn-default btn-circle step">
-                                <span class="number">1</span>
-                            </a>
-
-                            <p>
-                                选择银行
-                            </p>
-                        </li>
+                    <ul class="hidden stepwizard-row">
                         <li class="stepwizard-step col-md-11 stepwizard-step-right">
-                            <a href="#tab_step_2" data-toggle="tab" class="btn btn-default btn-circle step">
+                            <a href="#tab_step_1" data-toggle="tab" class="btn btn-default btn-circle step">
                                 <span class="number">2</span>
                             </a>
-
                             <p>
                                 导入数据
                             </p>
@@ -43,35 +30,6 @@ $select = '<option value="target_name" >交易对方名称</option>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="tab_step_1">
-                            <p><?
-                                if ($type == 'bank')
-                                    $sbj = 1002;
-                                if ($type == 'cash')
-                                    $sbj = 1001;
-                                $banks = Subjects::model()->list_sub($sbj);
-                                $data = [];
-                                $class = 'form-control';
-                                if (empty($banks)) {
-                                    echo '<input type="hidden" name="subject_b" value="1001" />';
-                                } else {
-                                    foreach ($banks as $item) {
-                                        $data[$item['sbj_number']] = $item['sbj_name'];
-                                    }
-                                    $user = User::model()->findByPk(Yii::app()->user->id);
-                                    $this->widget('ESelect2', array(
-                                        'name' => 'subject_b',
-                                        'id' => 'subject_b',
-                                        'value' => $user->bank,
-                                        'htmlOptions' => ['class' => $class,],
-                                        'data' => $data,
-                                    ));
-                                    ?>
-                                <? } ?>
-
-                            </p>
-
-                        </div>
-                        <div class="tab-pane stepwizard-step-center" id="tab_step_2">
                             <p>
                             <div class="input-group choose-btn-group">
                                 <div class="input-icon">
@@ -80,13 +38,12 @@ $select = '<option value="target_name" >交易对方名称</option>
                                 </div>
                                 <span class="input-group-btn">
                                     <span class="btn btn-default btn-file">
-                                        选择文件<input onchange="readURL(this);" name="attachment" type="file"
-                                                   accept=".xls,.xlsx,.jpg">
+                                        选择文件<input onchange="readURL(this);" name="attachment" type="file" accept=".xls,.xlsx,.jpg">
                                     </span>
                                 </span>
                             </div>
                             <div class="alert alert-block alert-info fade in alert-link">
-                                <p>支持jpg格式的图片，文件大小不超过500KB；也可通过<a download href="/download/银行交易.xlsx" >excel模板</a>导入。</p>
+                                <p>支持jpg格式的图片，文件大小不超过500KB；也可通过<a download href="/download/现金交易.xlsx" >excel模板</a>导入。</p>
                             </div>
                             </p>
                             <div id="show_image" class="hidden">
@@ -132,16 +89,11 @@ $select = '<option value="target_name" >交易对方名称</option>
                             </div>
                         </div>
                     </div>
-                    <input type="hidden" id="submit_type" name="submit_type">
+                    <input type="hidden" id="submit_type" name="submit_type" >
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn default" data-dismiss="modal">取消</button>
-                <a href="javascript:;" class="btn default button-previous">
-                    <i class="m-icon-swapleft"></i> 上一步 </a>
-                <a href="javascript:;" class="btn blue button-next">
-                    下一步 <i class="m-icon-swapright m-icon-white"></i>
-                </a>
                 <a href="javascript:;" class="btn blue button-submit">
                     导入 <i class="m-icon-swapright m-icon-white"></i>
                 </a>

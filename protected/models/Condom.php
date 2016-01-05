@@ -154,4 +154,15 @@ class Condom extends CActiveRecord
         else
             return '未找到此公司名字';
     }
+
+    /*
+     * 获取当前账套的condom
+     */
+    public static function getCondom(){
+        $cri = new CDbCriteria();
+        $cri->addCondition('dbname=:SYSDB');
+        $cri->params['SYSDB'] = substr(SYSDB,8);
+        $condom = Condom::model()->find($cri);
+        return $condom;
+    }
 }

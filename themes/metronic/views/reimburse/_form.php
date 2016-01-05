@@ -72,55 +72,55 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                         <!--                            <td><input class="" type="checkbox" id="item_--><?//= $key ?><!--" name="lists[--><?//= $key ?><!--]"-->
                         <!--                                       value="--><?//= isset($item['id']) ? $item['id'] : '' ?><!--"></td>-->
 
-                        <td><input class="input_min" type="text" id="tran_memo_id_<?= $key ?>"
+                        <td><input class="form-control input_min" type="text" id="tran_memo_id_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entry_memo]"
                                    value="<?= $item['entry_memo'] ?>">
                         </td>
-                        <td><input class="input_min" type="text" id="tran_date_<?= $key ?>"
+                        <td><input class="form-control input_min" type="text" id="tran_date_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entry_date]"
                                    value="<?= $item['entry_date'] ?>">
                         </td>
-                        <td><input class="input_mmmin" type="text" id="tran_travel_amount_<?= $key ?>"
+                        <td><input class="form-control input_mmmin" type="text" id="tran_travel_amount_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][travel_amount]"
                                    value="<?= $item['travel_amount'] ?>">
                         </td>
-                        <td><input class="input_mmmin" type="text" id="tran_benefit_amount_<?= $key ?>"
+                        <td><input class="form-control input_mmmin" type="text" id="tran_benefit_amount_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][benefit_amount]"
                                    value="<?= $item['benefit_amount'] ?>">
                         </td>
-                        <td><input class="input_mmmin" type="text" id="tran_traffic_amount_<?= $key ?>"
+                        <td><input class="form-control input_mmmin" type="text" id="tran_traffic_amount_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][traffic_amount]"
                                    value="<?= $item['traffic_amount'] ?>">
                         </td>
-                        <td><input class="input_mmmin" type="text" id="tran_phone_amount_<?= $key ?>"
+                        <td><input class="form-control input_mmmin" type="text" id="tran_phone_amount_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][phone_amount]"
                                    value="<?= $item['phone_amount'] ?>">
                         </td>
-                        <td><input class="input_mmmin" type="text" id="tran_entertainment_amount_<?= $key ?>"
+                        <td><input class="form-control input_mmmin" type="text" id="tran_entertainment_amount_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entertainment_amount]"
                                    value="<?= $item['entertainment_amount'] ?>">
                         </td>
-                        <td><input class="input_mmmin" type="text" id="tran_office_amount_<?= $key ?>"
+                        <td><input class="form-control input_mmmin" type="text" id="tran_office_amount_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][office_amount]"
                                    value="<?= $item['office_amount'] ?>">
                         </td>
-                        <td><input class="input_mmmin" type="text" id="tran_rent_amount_<?= $key ?>"
+                        <td><input class="form-control input_mmmin" type="text" id="tran_rent_amount_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][rent_amount]"
                                    value="<?= $item['rent_amount'] ?>">
                         </td>
-                        <td><input class="input_mmmin" type="text" id="tran_watere_amount_<?= $key ?>"
+                        <td><input class="form-control input_mmmin" type="text" id="tran_watere_amount_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][watere_amount]"
                                    value="<?= $item['watere_amount'] ?>">
                         </td>
-                        <td><input class="input_mmmin" type="text" id="tran_train_amount_<?= $key ?>"
+                        <td><input class="form-control input_mmmin" type="text" id="tran_train_amount_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][train_amount]"
                                    value="<?= $item['train_amount'] ?>">
                         </td>
-                        <td><input class="input_mmmin" type="text" id="tran_service_amount_<?= $key ?>"
+                        <td><input class="form-control input_mmmin" type="text" id="tran_service_amount_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][service_amount]"
                                    value="<?= $item['service_amount'] ?>">
                         </td>
-                        <td><input class="input_mmmin" type="text" id="tran_stamping_amount_<?= $key ?>"
+                        <td><input class="form-control input_mmmin" type="text" id="tran_stamping_amount_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][stamping_amount]"
                                    value="<?= $item['stamping_amount'] ?>">
                         </td>

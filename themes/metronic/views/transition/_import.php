@@ -29,7 +29,7 @@ $tranDate = $this->getTransitionDate('post');
     <div class="row">
         <a id="first" href="#large" data-toggle="modal" value="<?= $option ?>"></a>
         <?
-        $this->renderPartial('_import_navigate'.($type=='bank'?'_bank':''), array('type' => $type));
+        $this->renderPartial('_import_navigate'.($type=='bank'?'_bank':'_bank2'), array('type' => $type));
         ?>
     </div>
     <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form', 'class' => 'form-horizontal']); ?>
@@ -43,17 +43,16 @@ $tranDate = $this->getTransitionDate('post');
 
         </div>
     </div>
-    <div class="import-tab" id="abc">
+    <div class="import-tab import-big" id="abc">
         <div class="box">
             <table id="data_import" class="table table-bordered table-striped table-hover" id="import_table">
                 <tr>
                     <th class="table_checkbox"><input type="checkbox" class="group-checkable"
                                                       data-set="#import_table .checkboxes"></th>
                     <th class="input_mid">交易对方名称</th>
-                    <th class="input_full">商品/服务</th>
+                    <th class="input_mid">商品/服务</th>
                     <th class="input_mid hidden" id="department_id_th">部门</th>
-                    <th class="input_mid hidden" id="client_id_th">客户</th>
-                    <th class="input_mid">日期</th>
+                    <th class="input_mid2">日期</th>
                     <th class="input_full">摘要</th>
                     <th class="input_full">金额</th>
                     <th style="width: 200px">操作</th>
@@ -86,18 +85,8 @@ $tranDate = $this->getTransitionDate('post');
                                 ));
                                 ?>
                             </td>
-                            <td class="hidden" id="client_id_td"><?
-                                $this->widget('ext.select2.ESelect2', array(
-                                    'name' => 'lists[' . $key . '][Transition][client_id]',
-                                    'id' => 'client_id_' . $key,
-                                    'data' => $clientArray,
-                                    'value' => $item['client_id'],
-                                    'htmlOptions' => array('class' => 'select-full',)
-                                ));
-                                ?>
-                            </td>
                             <td>
-                                <input class="form-control form-control-inline input_mid " type="text"
+                                <input class="form-control form-control-inline input_mid2 " type="text"
                                        id="tran_date_<?= $key ?>" name="lists[<?= $key ?>][Transition][entry_date]"
                                        value="<?= $item['entry_date'] ?>">
                             </td>

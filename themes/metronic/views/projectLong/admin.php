@@ -63,6 +63,7 @@ $dataProvider = new CActiveDataProvider('Stock', ['criteria' => ['condition' => 
                         'value' => 'Subjects::getName($data->entry_subject)'
                     ],
                     'name',
+                    'in_price',
                     array(
                         'name' => 'status',
                         'filter' => array('1' => '正常', '2' => '完工'),
@@ -100,14 +101,9 @@ $dataProvider = new CActiveDataProvider('Stock', ['criteria' => ['condition' => 
                                 'options' => array('class' => 'btn btn-default tip btn-xs', 'title' => '编辑'),
                                 'label' => '<span class="glyphicon ">编辑</span>',
                                 'imageUrl' => false,
-                            ),
-                            'delete' => array(
-                                'options' => array('class' => 'btn btn-default tip delete btn-xs', 'title' => '删除'),
-                                'label' => '<span class="glyphicon ">删除</span>',
-                                'imageUrl' => false,
-                            ),
+                            )
                         ),
-                        'template' => '<div class="btn-group">{update}{delete}{finish}</div>',
+                        'template' => '<div class="btn-group">{update}{finish}</div>',
                         'deleteConfirmation' => '确定要删除该项目？',
                     ),
                 ),

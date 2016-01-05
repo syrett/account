@@ -38,7 +38,7 @@ class ReportController extends Controller
         if (isset($_REQUEST['date']) && $_REQUEST['date'] != '') {
             $date = $_REQUEST['date'];
         } else
-            $date = date("Y-m-t", strtotime("-1 months"));
+            $date = date("Ymt", strtotime("-1 months"));
         $model = new Balance();
         $model->is_closed = 1;
         $model->date = $date;
@@ -66,7 +66,7 @@ class ReportController extends Controller
         if (isset($_REQUEST['date']) && $_REQUEST['date'] != '') {
             $date = $_REQUEST['date'];
         } else
-            $date = date("Y-m-t", strtotime("-1 months"));
+            $date = date("Ymt", strtotime("-1 months"));
         $model = new Profit();
         $model->date = $date;
         $data = $model->genProfitData();

@@ -80,6 +80,17 @@ class ProjectBController extends Controller
      */
     public function actionUpdate($id)
     {
+        //ID是stock的id，不是项目ID；需要根据subject，获取科目，再获取项目id
+        $stock = Stock::model()->findByPk($id);
+        if($stock){
+            $subject = Subjects::model()->findByAttributes(['sbj_number'=>$stock->entry_subject]);
+            $projectB = ProjectB::model()->findByAttributes(['name'=>$subject->sbj_name]);
+            if($projectB){
+                $id = $projectB->id;
+            }else{
+                throw new CHttpException(400, "长期待摊科目名称已经手动修改，无法找到对应项目名称");
+            }
+        }
         $model = $this->loadModel($id);
 
         // Uncomment the following line if AJAX validation is needed

@@ -75,10 +75,11 @@ $(document).ready(function () {
     });
 
     $('#form_wizard_1').find('.button-previous').hide();
-    $('#form_wizard_1').find('.button-submit').hide();
     $('#form_wizard_1 .button-submit').click(function () {
         $('#submit_type').val('import');$('#form-import').submit();
-    }).hide();
+    });
+    if($('#form_wizard_1 li').length > 1)
+        $('#form_wizard_1').find('.button-submit').hide();
 
 });
 //日期选择器的起始日期

@@ -28,8 +28,8 @@ $baseUrl = Yii::app()->theme->baseUrl;
     <meta content="适合小微企业的在线财务管理系统" name="description"/>
     <meta content="老法师（上海）财务咨询有限公司" name="author"/>
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
-    <link href="http://fonts.useso.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet"
-          type="text/css"/>
+<!--    <link href="http://fonts.useso.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet"-->
+<!--          type="text/css"/>-->
     <link href="<?php echo $baseUrl; ?>/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet"
           type="text/css"/>
     <link href="<?php echo $baseUrl; ?>/assets/global/plugins/simple-line-icons/simple-line-icons.min.css"

@@ -12,6 +12,7 @@ $baseUrl = Yii::app()->theme->baseUrl;
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_common.js');
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_vip.js');
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/bank.js');
+$cs->registerScriptFile($baseUrl . '/assets/global/plugins/colResizable/js/colResizable.min.js');
 
 $this->pageTitle = Yii::app()->name;
 $tranDate = $this->getTransitionDate('post');
@@ -38,9 +39,9 @@ $tranDate = $this->getTransitionDate('post');
                     <th class="table_checkbox"><input type="checkbox" class="group-checkable"
                                                       data-set="#import_table .checkboxes"></th>
                     <th class="input_mid">交易方名称</th>
-                    <th class="input_mid"><select id="selectItem1" name="selectItem1"><?= $select ?></select></th>
-                    <th class="input_full"><select id="selectItem2" name="selectItem2"><?= $select ?></select></th>
-                    <th class="input-large"><select id="selectItem3" name="selectItem3"><?= $select ?></select></th>
+                    <th class="input_mid2">日期</th>
+                    <th class="input_full">交易摘要</th>
+                    <th class="input-large">金额</th>
                     <th style="width: 200px">操作</th>
                     <th style="width: 10%">&nbsp;</th>
                 </tr>
@@ -58,7 +59,7 @@ $tranDate = $this->getTransitionDate('post');
                                        class="form-control input-small">
                             </td>
                             <td>
-                                <input class="form-control form-control-inline input_mid " type="text"
+                                <input class="form-control form-control-inline input_mid2 " type="text"
                                        id="tran_date_<?= $key ?>" name="lists[<?= $key ?>][Transition][entry_date]"
                                        value="<?= $item['entry_date'] ?>">
                             </td>
@@ -240,17 +241,9 @@ $tranDate = $this->getTransitionDate('post');
             ?>
             <div class="modal-body import-bank form-wizard">
                 <div class="stepwizard">
-                    <ul class=" stepwizard-row">
-                        <li class="stepwizard-step col-md-1 stepwizard-step-left  active">
-                            <a href="#tab_step_1" data-toggle="tab" class="btn btn-default btn-circle step">
-                                <span class="number">1</span>
-                            </a>
-                            <p>
-                                模板下载
-                            </p>
-                        </li>
+                    <ul class="hidden stepwizard-row">
                         <li class="stepwizard-step col-md-11 stepwizard-step-right">
-                            <a href="#tab_step_2" data-toggle="tab" class="btn btn-default btn-circle step">
+                            <a href="#tab_step_1" data-toggle="tab" class="btn btn-default btn-circle step">
                                 <span class="number">2</span>
                             </a>
                             <p>
@@ -258,28 +251,8 @@ $tranDate = $this->getTransitionDate('post');
                             </p>
                         </li>
                     </ul>
-                    <div id="bar" class="progress progress-striped" role="progressbar">
-                        <div class="progress-bar progress-bar-success">
-                        </div>
-                    </div>
                     <div class="tab-content">
-                        <div class="tab-pane active" id="tab_step_1">
-                            <p>
-                                <a download="" href="/download/<?= Yii::t('import', strtoupper($type)) ?>_模板.xlsx">
-                                    <button class="btn btn-default btn-file" type="button">模板下载
-                                    </button>
-                                </a>
-
-                                <?
-                                if ($type == 'salary') {
-                                    echo "<button type='submit' class='btn btn-default btn-file' name='type' value='load'>提取工资数据</button>";
-                                }
-
-                                ?>
-                            </p>
-
-                        </div>
-                        <div class="tab-pane" id="tab_step_2">
+                        <div class="tab-pane" id="tab_step_1">
                             <p>
                             <div class="input-group choose-btn-group">
                                 <div class="input-icon">
@@ -288,11 +261,55 @@ $tranDate = $this->getTransitionDate('post');
                                 </div>
                                 <span class="input-group-btn">
                                     <span class="btn btn-default btn-file">
-                                        选择文件<input name="attachment" type="file" accept=".xls,.xlsx,.jpg">
+                                        选择文件<input onchange="readURL(this);" name="attachment" type="file" accept=".xls,.xlsx,.jpg">
                                     </span>
                                 </span>
                             </div>
+                            <div class="alert alert-block alert-info fade in alert-link">
+                                <p>可支持jpg格式的图片，文件大小不超过500KB；也可通过<a download href="/download/现金交易_模板.xlsx" >excel模板</a>导入。</p>
+                            </div>
                             </p>
+                            <div id="show_image" class="hidden">
+                                <div class="show_image_option">
+                                    <div class="show_image_option_conf">
+                                        <input type="checkbox" checked name="image_row1_type"> <span>图片第一行无需导入</span>
+                                    </div>
+                                    <div class="show_image_option_rows">
+                                        <a class="btn btn-default btn-xs" id="delCol" onclick="delCol()" title="删除列" href="#" id="yt0">
+                                            <span class="">删除列<i class="fa fa-hand-o-up"></i></span></a>
+                                        <a class="btn btn-default btn-xs" id="addCol" onclick="addCol()"  title="添加列" href="#" id="yt0">
+                                            <span class="">添加列<i class="fa fa-hand-o-down"></i></span></a>
+
+                                    </div>
+                                </div>
+                                <div class="clear">&nbsp;</div>
+                                <div>
+                                    <table id="head_image" class="head_image">
+                                        <thead>
+                                        <tr>
+                                            <th><select id="selectItem1" name="selectItem[]"><?= $select ?></select>
+                                                <input type="hidden" name="show_image_conf_w[]"></th>
+                                            <th><select id="selectItem2" name="selectItem[]"><?= $select ?></select>
+                                                <input type="hidden" name="show_image_conf_w[]"></th>
+                                            <th><select id="selectItem3" name="selectItem[]"><?= $select ?></select>
+                                                <input type="hidden" name="show_image_conf_w[]"></th>
+                                            <th><select id="selectItem4" name="selectItem[]"><?= $select ?></select>
+                                                <input type="hidden" name="show_image_conf_w[]"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                        </tr>
+
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <input type="hidden" id="submit_type" name="submit_type" >
@@ -300,11 +317,6 @@ $tranDate = $this->getTransitionDate('post');
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn default" data-dismiss="modal">取消</button>
-                <a href="javascript:;" class="btn default button-previous">
-                    <i class="m-icon-swapleft"></i> 上一步 </a>
-                <a href="javascript:;" class="btn blue button-next">
-                    下一步 <i class="m-icon-swapright m-icon-white"></i>
-                </a>
                 <a href="javascript:;" class="btn blue button-submit">
                     导入 <i class="m-icon-swapright m-icon-white"></i>
                 </a>

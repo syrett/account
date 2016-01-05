@@ -40,7 +40,7 @@ $tranDate = $this->getTransitionDate('post');
                     <th class="table_checkbox"><input type="checkbox" class="group-checkable"
                                                       data-set="#import_table .checkboxes"></th>
                     <th class="input_mid">交易对方名称</th>
-                    <th class="input_mid">日期</th>
+                    <th class="input_mid2">日期</th>
                     <th class="input_full">交易摘要</th>
                     <th class="input-large">金额</th>
                     <th style="width: 200px">操作</th>
@@ -60,7 +60,7 @@ $tranDate = $this->getTransitionDate('post');
                                        class="form-control input-small">
                             </td>
                             <td>
-                                <input class="form-control form-control-inline input_mid " type="text"
+                                <input class="form-control form-control-inline input_mid2 " type="text"
                                        id="tran_date_<?= $key ?>" name="lists[<?= $key ?>][Transition][entry_date]"
                                        value="<?= $item['entry_date'] ?>">
                             </td>
@@ -248,25 +248,14 @@ $tranDate = $this->getTransitionDate('post');
                             <a href="#tab_step_1" data-toggle="tab" class="btn btn-default btn-circle step">
                                 <span class="number">1</span>
                             </a>
-
                             <p>
                                 选择银行
                             </p>
                         </li>
-                        <li class="stepwizard-step col-md-10 stepwizard-step-center">
+                        <li class="stepwizard-step col-md-11 stepwizard-step-right">
                             <a href="#tab_step_2" data-toggle="tab" class="btn btn-default btn-circle step">
                                 <span class="number">2</span>
                             </a>
-
-                            <p>
-                                模板下载
-                            </p>
-                        </li>
-                        <li class="stepwizard-step col-md-1 stepwizard-step-right" >
-                            <a href="#tab_step_3" data-toggle="tab" class="btn btn-default btn-circle step">
-                                <span class="number">3</span>
-                            </a>
-
                             <p>
                                 导入数据
                             </p>
@@ -304,16 +293,6 @@ $tranDate = $this->getTransitionDate('post');
                         </div>
                         <div class="tab-pane stepwizard-step-center" id="tab_step_2">
                             <p>
-                                <a download="" href="/download/银行交易_模板.xlsx">
-                                    <button class="btn btn-default btn-file" type="button">模板下载
-                                    </button>
-                                </a>
-                            </p>
-
-                        </div>
-                        <div class="tab-pane" id="tab_step_3">
-                            <p>
-
                             <div class="input-group choose-btn-group">
                                 <div class="input-icon">
                                     <i class="fa fa-file fa-fw"></i>
@@ -325,6 +304,9 @@ $tranDate = $this->getTransitionDate('post');
                                                    accept=".xls,.xlsx,.jpg">
                                     </span>
                                 </span>
+                            </div>
+                            <div class="alert alert-block alert-info fade in alert-link">
+                                <p>支持jpg格式的图片，文件大小不超过500KB；也可通过<a download href="/download/银行交易_模板.xlsx" >excel模板</a>导入。</p>
                             </div>
                             </p>
                             <div id="show_image" class="hidden">
