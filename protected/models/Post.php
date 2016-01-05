@@ -356,7 +356,7 @@ var_dump($tranDataArray);exit(1);
       case 4://收入类
         foreach($dataArray as $post){
           $balance = balance2($balance, $post["debit"], $post["credit"], $sbj_cat);
-          $balance += $post['credit'];
+//          $balance += $post['credit'];    //好像重复计算了金额
         };
         break;
       case 5://费用类

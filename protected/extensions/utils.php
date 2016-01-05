@@ -76,7 +76,6 @@ function balance($last_balance, $debit, $credit, $sbj_cat)
 
 function balance2($last_balance, $debit, $credit, $sbj_cat)
 {
-    $balance = 0;
     switch ($sbj_cat) {
         case 5: //费用类
         case 1: //资产类
