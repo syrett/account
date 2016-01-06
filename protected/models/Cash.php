@@ -300,7 +300,7 @@ class Cash extends LFSModel
         $data = [];
         foreach($list as $item){
             $sbj2 = explode(',', $item['subject_2']);
-            $info = mb_substr($item['order_no'],0,1)=='预'?$item['order_no']:
+            $info = mb_substr($item['order_no'],0,1, 'utf-8')=='预'?$item['order_no']:
                 [
                     $item['order_no'],
                     'info' => [
