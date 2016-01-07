@@ -1194,12 +1194,15 @@ class TransitionController extends Controller
                 foreach ($trans as $item) {
                     $item->entry_reviewed = 1;
                     $item->entry_reviewer = 1;
-                    $item->entry_posting = 1;
                     $item->entry_forward = 1;
-                    $item->entry_closing = 1;
                     $item->save();
                 }
             }
+            //生成的结转凭证需要过账
+
+            Yii::import('application.controllers.PostController');
+            $postctrl = new PostController();
+            $postctrl->actionPost($entry_prefix);
         }
         if ($flag) {
             $tran = Transition::model()->findByAttributes(['entry_num_prefix' => $entry_prefix]);
