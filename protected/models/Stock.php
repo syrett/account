@@ -495,7 +495,7 @@ class Stock extends LFSModel
     public function overPeriod($date2=''){
         if($date2==''){
             $date2 = Transition::getTransitionDate();
-            $date2 = strtotime('+1 month', strtotime($date2));
+            $date2 = date('Ymd',strtotime('+1 month', strtotime($date2)));
         }else
             $date2 .= strlen($date2)==6?'01':'';
         $date = $this->in_date;
