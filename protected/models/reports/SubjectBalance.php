@@ -49,8 +49,18 @@ class SubjectBalance extends CModel
 
       $end_balance = balance($start_balance, $arr["debit"], $arr["credit"], $sbj_cat);
       $sep_balance = self::sep_balance($sbj_cat, $end_balance);
-      $end_debit = $sep_balance["debit"];
-      $end_credit = $sep_balance["credit"];
+        $end_credit = 0;
+        $end_debit = 0;
+        if($sbj_cat == 1){  //资产期末在借方，负债在贷方
+            $end_debit = $sep_balance["debit"];
+            $end_debit -= $sep_balance["credit"];
+        }elseif($sbj_cat == 2){
+            $end_credit = $sep_balance["debit"];
+            $end_credit -= $sep_balance["credit"];
+        }else{
+            $end_debit = $sep_balance["debit"];
+            $end_credit = $sep_balance["credit"];
+        }
       //      $end_debit=$start_debit + $arr["debit"];
       //      $end_credit=$start_credit + $arr["credit"];
       if($start_debit!=0 || $start_credit!=0 || $arr["debit"]!=0 || $arr["credit"]!=0 || $end_debit!=0 || $end_credit!=0){
@@ -190,6 +200,22 @@ class SubjectBalance extends CModel
     $year = substr($lastDate,0,4);
     $month = substr($lastDate,4,2);
     $active_data = self::listPost($year, $month, $month);
+      if(count($active_data) == 0){
+
+          //如果没有过账记录，需要检查期初余额
+          $data = Subjects::model()->findAllByAttributes([], 'start_balance <> 0');
+          if (count($data) > 0){
+              foreach ($data as $item) {
+                  $active_data[] = [
+                      'subject_id'=>$item['sbj_number'],
+                      'debit' => 0,
+                      'credit' => 0,
+                      'balance' => $item['start_balance']
+                  ];
+
+              }
+          }
+      }
     $data = array();
     foreach( $active_data as $row){
       $sbj_id = $row["subject_id"];

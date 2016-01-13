@@ -78,10 +78,14 @@ function balance2($last_balance, $debit, $credit, $sbj_cat)
 {
     switch ($sbj_cat) {
         case 5: //费用类
+            $balance = $last_balance + $debit;
+            break;
         case 1: //资产类
             $balance = $last_balance + $debit - $credit;
             break;
         case 4: //收入类
+            $balance = $last_balance + $credit;
+            break;
         case 2: //负债类
             $balance = $last_balance + $credit - $debit;
             break;
@@ -187,6 +191,10 @@ function checkAmount($amount)
  */
 function convertDate($date, $format='')
 {
+    $date = str_replace('\/','',trim($date));
+    $date = str_replace('\\','',$date);
+    $date = str_replace('-','',$date);
+    $date = str_replace('.','',$date);
     if($format=='')
         $format = 'Ymd';
     $length = strlen($date);
