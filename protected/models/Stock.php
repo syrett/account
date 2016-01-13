@@ -50,6 +50,7 @@ class Stock extends LFSModel
         // will receive user inputs.
         return array(
             array('name, in_date, in_price', 'required'),
+            array('name', 'filter', 'filter'=>'trim'),
             array('vendor_id, department_id, client_id', 'numerical', 'integerOnly' => true),
             array('in_price, out_price, value_month, value_rate', 'numerical'),
             array('order_no', 'length', 'max' => 16),
@@ -527,10 +528,14 @@ class Stock extends LFSModel
             $this['in_date'] = $this->date_a;
             if($this->date_a != '' && $this->date_a != null)
                 return true;
+            else
+                return false;
         }
         //如果是期初明细，账套起始月就要开始计提
         $condom = Condom::model()->getStartTime();
         if($condom == substr($date,0,6) && $this->order_no == null)
+            return true;
+        if(!$this->overPeriod($date))
             return true;
         return false;
     }
