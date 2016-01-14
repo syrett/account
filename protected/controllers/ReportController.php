@@ -10,16 +10,18 @@ class ReportController extends Controller
         );
     }
 
+    /**
+     * Specifies the access control rules.
+     * This method is used by the 'accessControl' filter.
+     * @return array access control rules
+     */
     public function accessRules()
     {
-        return array(
-            array('allow',
-                'users' => array('@'),
-            ),
-            array('deny',
-                'users' => array('*'),
-            ),
-        );
+        $rules = parent::accessRules();
+        if ($rules[0]['actions'] == ['manage'])
+            $rules[0]['actions'] = ['index'];
+        $rules[0]['actions'] = array_merge($rules[0]['actions'], ['admin']);
+        return $rules;
     }
 
     /**

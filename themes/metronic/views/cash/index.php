@@ -20,14 +20,11 @@ $this->breadcrumbs=array(
 		</div>
 	</div>
 	<div class="portlet-body">
-		<div class="operations">
-			<?php $this->widget('zii.widgets.CMenu', array(
-				/*'type'=>'list',*/
-				'encodeLabel'=>false,
-				'htmlOptions'=>array('class'=>'nav nav-pills navbar-right'),
-			));
-			?>
-		</div>
+        <?
+        foreach (Yii::app()->user->getFlashes() as $key => $message) {
+            echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
+        }
+        ?>
 		<!-- search-form -->
         <input type="hidden" id="delall" value="<?= CHtml::normalizeUrl(array('/cash/delall/'))?>"
 		<?php

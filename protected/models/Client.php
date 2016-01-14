@@ -32,6 +32,7 @@ class Client extends CActiveRecord
 		return array(
             array('company', 'required'),
             array('company', 'unique', 'message'=>'公司名称不可重复'),
+            array('company', 'filter', 'filter'=>'trim'),
 			array('id', 'numerical', 'integerOnly'=>true),
 			array('company', 'length', 'max'=>100),
 			array('vat', 'length', 'max'=>45),

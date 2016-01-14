@@ -30,10 +30,12 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
 //                'action'=>Laofashi. $this->createUrl('/bank/default/update', array('id'=>$_GET['id'])),
             ));
             ?>
+            订单号：<? echo $item['order_no'] ?>
             <table class="table table-bordered dataTable min">
                 <tr>
                     <th class="input_min"><input type="checkbox"></th>
                     <th class="input_mid">交易日期</th>
+                    <th class="input_mid">交易摘要</th>
                     <th class="input_mid">供应商名称</th>
                     <th class="input_mid">商品/服务名称</th>
                     <th class="input_mid">型号</th>
@@ -42,7 +44,6 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                     <th class="input_mid">税率</th>
                     <th class="input-small">采购用途</th>
                     <th class="input_mid hidden" id="department_id_th" >部门</th>
-                    <th class="input-small">采购说明</th>
                     <?
                     if (!empty($preOrder)) {
                         echo '<th class="input-small">预付款</th>';
@@ -70,6 +71,10 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                                    name="lists[<?= $key ?>][Transition][entry_date]"
                                    value="<?= $item['entry_date'] ?>">
                         </td>
+                        <td><input class="input_mid" type="text" id="tran_memo_<?= $key ?>"
+                                   name="lists[<?= $key ?>][Transition][entry_memo]"
+                                   value="<?= $item['entry_memo'] ?>">
+                        </td>
                         <td><?
                             $this->widget('ext.select2.ESelect2', array(
                                 'name' => 'lists[' . $key . '][Transition][entry_appendix_id]',
@@ -92,11 +97,11 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                             ));
                             ?>
                         </td>
-                        <td><input class="input_mid" type="text" id="tran_model_<?= $key ?>" placeholder="单价"
+                        <td><input class="input_mid" type="text" id="tran_model_<?= $key ?>" placeholder="型号"
                                    name="lists[<?= $key ?>][Transition][model]"
                                    value="<?= $item['model'] ?>">
                         </td>
-                        <td><input class="input_min" type="text" id="tran_price_<?= $key ?>" placeholder="型号"
+                        <td><input class="input_min" type="text" id="tran_price_<?= $key ?>" placeholder="单价"
                                    name="lists[<?= $key ?>][Transition][price]"
                                    value="<?= $item['price'] ?>">
                         </td>
@@ -133,10 +138,6 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                                 'htmlOptions' => array('class' => 'select-full',)
                             ));
                             ?>
-                        </td>
-                        <td><input class="input-small" type="text" id="tran_memo_<?= $key ?>"
-                                   name="lists[<?= $key ?>][Transition][entry_memo]"
-                                   value="<?= $item['entry_memo'] ?>">
                         </td>
                         <?
                         if (!empty($preOrder)) {

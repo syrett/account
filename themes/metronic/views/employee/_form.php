@@ -59,7 +59,8 @@ $statusArray = ['离职','正常','兼职'];
 <div class="form-group">
     <?php echo $form->labelEx($model, 'memo', array('class' => 'col-sm-2 control-label')); ?>
     <div class="col-sm-10">
-        <?php echo $form->textArea($model, 'memo', array('class' => 'form-control')); ?>
+        <?php echo $form->textField($model, 'memo', array('class' => 'form-control')); ?>
+<!--        --><?php //echo $form->textArea($model, 'memo', array('class' => 'form-control')); ?>
     </div>
     <div class="col-sm-2"></div>
     <?php echo $form->error($model, 'memo',array('class' => 'col-sm-10')); ?>

@@ -55,8 +55,8 @@ class SubjectBalance extends CModel
             $end_debit = $sep_balance["debit"];
             $end_debit -= $sep_balance["credit"];
         }elseif($sbj_cat == 2){
-            $end_credit = $sep_balance["debit"];
-            $end_credit -= $sep_balance["credit"];
+            $end_credit -= $sep_balance["debit"];
+            $end_credit += $sep_balance["credit"];
         }else{
             $end_debit = $sep_balance["debit"];
             $end_credit = $sep_balance["credit"];

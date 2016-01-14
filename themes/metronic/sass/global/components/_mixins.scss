@@ -285,7 +285,7 @@
 }
 
 @mixin  pulsate($animation-name, $start-size: 0.75, $end-size: 1, $duration: 1.5s) {
-  @keyframes "#{$animation-name}" {
+  @keyframes #{$animation-name} {
     0%, 100% {
       transform: scale($start-size);
     }

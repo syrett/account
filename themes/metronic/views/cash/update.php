@@ -21,6 +21,8 @@ $('.search-form form').submit(function(){
 ");
 $cs->registerScript('ChartsFlotchartsInitPie','TableManaged.init();', CClientScript::POS_READY);
 $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.css');
+$cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css');
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js', CClientScript::POS_END);
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/select2/select2.min.js', CClientScript::POS_END);
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/datatables/media/js/jquery.dataTables.min.js', CClientScript::POS_END);
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js', CClientScript::POS_END);
@@ -57,4 +59,6 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/pages/script
     }
     ?>
 	</div>
+    <input id="vip" type="hidden" value="<?= $vip?>" >
+    <input type="hidden" id="dp_startdate" value="<?= Transition::getTransitionDate('post') ?>">
 </div>

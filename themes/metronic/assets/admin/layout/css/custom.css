@@ -742,3 +742,7 @@ div.flash-success a
 .check-title{
     padding-left: 12px;
 }
+.top-three li{
+    float: left;
+    width: 30%;
+}

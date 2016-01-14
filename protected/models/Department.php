@@ -28,6 +28,7 @@ class Department extends CActiveRecord
 		return array(
 			array('id', 'numerical', 'integerOnly'=>true),
 			array('name, type', 'required'),
+            array('name', 'filter', 'filter'=>'trim'),
 			array('name', 'length', 'max'=>100),
 			array('memo', 'length', 'max'=>200),
 			// The following rule is used by search().

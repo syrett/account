@@ -17,23 +17,14 @@ class ReimburseController extends Controller
 			'accessControl', // perform access control for CRUD operations
 		);
 	}
-
-	/**
-	 * Specifies the access control rules.
-	 * This method is used by the 'accessControl' filter.
-	 * @return array access control rules
-	 */
-	public function accessRules()
-	{
-        return array(
-            array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'users'=>array('@'),
-            ),
-            array('deny',  // deny all users
-                'users'=>array('*'),
-            ),
-        );
-	}
+    public function accessRules()
+    {
+        $rules = parent::accessRules();
+        if ($rules[0]['actions'] == ['manage'])
+            $rules[0]['actions'] = ['admin'];
+        $rules[0]['actions'] = array_merge($rules[0]['actions'], ['index']);
+        return $rules;
+    }
 
 	/**
 	 * Displays a particular model.
@@ -98,7 +89,7 @@ class ReimburseController extends Controller
             {
                 Yii::app()->user->setFlash('success', "保存成功!");
                 $model = $this->loadModel($id);
-                $tran = Transition::model()->find(['condition' => 'data_id=:data_id', 'params' => [':data_id' => $id]]);
+                $tran = Transition::model()->find(['condition' => 'data_id=:data_id and data_type=:data_type', 'params' => [':data_id' => $id, ':data_type' => 'reimburse']]);
                 $sheetData[0]['data'] = Transition::getSheetData($model->attributes,'reimburse');
                 if($tran!=null)
                     $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
@@ -143,8 +134,7 @@ class ReimburseController extends Controller
                 $result['status'] = 'failed';
                 $result['message'] = '生成的凭证已审核或已过账，无法删除';
                 echo json_encode($result);
-                if($type==2)
-                    return true;
+                return true;
             }
             foreach($trans as $item){
                 $item->delete();

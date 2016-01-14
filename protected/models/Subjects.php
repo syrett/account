@@ -53,7 +53,7 @@ class Subjects extends CActiveRecord
             array('sbj_number', 'unique', 'message' => '{attribute}:{value} 已经存在!'),
             array('start_balance', 'numerical'),
             array('sbj_number', 'numerical', 'integerOnly' => true),
-            array('sbj_name', 'length', 'max' => 20),
+            array('sbj_name', 'length', 'max' => 512),
             array('sbj_cat', 'length', 'max' => 1),
             // The following rule is used by search().
             array('id, sbj_number, sbj_name, sbj_cat, sbj_table, has_sub', 'safe', 'on' => 'search'),
@@ -365,28 +365,35 @@ class Subjects extends CActiveRecord
         $cat_1 = 0;
         $cat_2 = 0;
         $cat_3 = 0;
+        $str1 = '资产(0';
+        $str2 = '负债和权益(0';
         foreach ($data as $sbj_id => $start_balance) {
             $sbj_cat = $this->getCat($sbj_id);
             if ($start_balance != 0)
                 switch ($sbj_cat) {
                     case 1:
                         $cat_1 += (100 * $start_balance);
+                        $str1 .= '+' . $start_balance;
                         break;
                     case 2:
                         $cat_2 += (100 * $start_balance);
+                        $str2 .= '+' . $start_balance;
                         break;
                     case 3:
                         $cat_3 += (100 * $start_balance);
+                        $str2 .= '+' . $start_balance;
                         break;
                 }
         }
-
+        $str1 .= ')';
+        $str2 .= ')';
+        $str = $str1 . $str2;
         $sum1 = (string)$cat_1;
         $sum2 = (string)($cat_2 + $cat_3);
         if ($sum1 == $sum2) {
-            return true;
+            return '';
         } else {
-            return false;
+            return $str;
         }
     }
 
@@ -523,21 +530,23 @@ class Subjects extends CActiveRecord
             }
         }
         //似乎应该完成匹配
-        $data = Yii::app()->db->createCommand("select * from " . self::model()->tableSchema->name . " where sbj_name like '%$key%'")->queryAll();
+        $data = Subjects::model()->findAllByAttributes([], "sbj_name like '%$key%'");
+//        $data = Yii::app()->db->createCommand("select * from " . self::model()->tableSchema->name . " where sbj_name like '%$key%'")->queryAll();
         if ($return == 'str')
             $sbj = 0;
         else
             $sbj = [];
         $percent = 100;
-        foreach ($data as $item) {
-            $per = levenshtein($key, $item['sbj_name']);
-            if ($percent > $per && in_array(substr($item['sbj_number'], 0, 4), $subjects)) {
-                if ($level != 0 && strlen($item['sbj_number']) <= (4 + $level * 2)) {
-                    $sbj += $item['sbj_number'];
-                    $percent = $per;
+        if (count($data) > 0)
+            foreach ($data as $item) {
+                $per = levenshtein($key, $item['sbj_name']);
+                if ($percent > $per && in_array(substr($item['sbj_number'], 0, 4), $subjects)) {
+                    if ($level != 0 && strlen($item['sbj_number']) <= (4 + $level * 2)) {
+                        $sbj += $item['sbj_number'];
+                        $percent = $per;
+                    }
                 }
             }
-        }
         if (($sbj == 0 || empty($sbj)) && $option == 1)
             $sbj = Subjects::createSubject($key, $subjects[0]);
         return $sbj;

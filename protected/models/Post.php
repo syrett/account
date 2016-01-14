@@ -69,9 +69,24 @@ class Post extends CActiveRecord
                                                   ));
 
       $arr=array();
-      
+
+//      if (count($dataArray) <=0 ) {
+//              //如果没有过账记录，需要检查期初余额
+//          $data = Subjects::model()->findAllByAttributes([], 'start_balance <> 0');
+//          if (count($data) > 0){
+//              foreach ($data as $item) {
+//                  $dataArray[] = [
+//                      'subject_id'=>$item['sbj_number'],
+//                      'debit' => 0,
+//                      'credit' => 0,
+//                      'balance' => $item['start_balance']
+//                  ];
+//
+//              }
+//          }
+//      }
+
       if (count($dataArray) <=0 ){
-        
         $post = new Post;
         $post->year=0;
         $post->month=0;
@@ -88,26 +103,11 @@ class Post extends CActiveRecord
     public function postAll()
     {
       $lastBalanceArr = self::getLastBalance($this->year,$this->month);
-  //echo "<pre>";
-    //    var_dump($lastBalanceArr);
-//        echo "</pre>";exit(1);
-
       $transition = new Transition();
-/*  
-    $transition->unsetAttributes();
-      $transition->select="entry_subject,entry_transaction,entry_amount";
-      $transition->entry_num_prefix=beTranPrefix($this->year,$this->month);
-      $tranDataArray = $transition->search()->getData();
-*/
 
       $prefix = beTranPrefix($this->year,$this->month);
       $select="entry_subject,entry_transaction,entry_amount";
       $tranDataArray = $transition->listByPrefix($prefix,$select);
-/*
-	echo "<pre>";
-var_dump($tranDataArray);exit(1);
-	echo "</pre>";
-*/
       $balance=array();
       
       foreach($tranDataArray as $t){
@@ -339,6 +339,10 @@ var_dump($tranDataArray);exit(1);
      */
     public function getDebitCredit($subject_id, $date, $num=1)
     {
+        //日期在账套起始之前，则提取总账期初余额
+//        $condom =  Condom::getCondom();
+//        if($condom->getStartTime()>$date)
+//            $date = $condom->getStartTime();
       $year = getYear($date);
       $month = getMon($date);
       $sbj_cat = Subjects::model()->getCat($subject_id);
@@ -349,7 +353,6 @@ var_dump($tranDataArray);exit(1);
       }
       $dataArray = Post::model()->findAllBySql($sql, array(':year'=>$year,
                                                            ':month'=>$month));
-
       $balance = 0;
 
       switch($sbj_cat){

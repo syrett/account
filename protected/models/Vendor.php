@@ -30,6 +30,7 @@ class Vendor extends CActiveRecord
 		return array(
 			array('company', 'required'),
 //			array('phone', 'required'),
+            array('company', 'filter', 'filter'=>'trim'),
 			array('id', 'numerical', 'integerOnly'=>true),
 			array('vat', 'length', 'max'=>45),
 			array('phone', 'length', 'max'=>20),

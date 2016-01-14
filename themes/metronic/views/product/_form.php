@@ -18,7 +18,7 @@ $preOrder = $item['preorder'] + $preOrder;
 $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$model->id\"%'");
 ?>
 <div class="panel-body">
-    <div class="row" id="abc">
+    <div class="row import-tab" id="abc">
         <div class="box">
             <?php
             $form = $this->beginWidget('CActiveForm', array(
@@ -29,18 +29,18 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
             ));
             ?>
             订单号：<? echo $item['order_no'] ?>
-            <table class="table table-bordered dataTable">
+            <table class="table table-bordered dataTable min">
                 <tr>
                     <th class="input_min"><input type="checkbox"></th>
-                    <th class="input-xsmall">交易日期</th>
-                    <th class="input-small">交易摘要</th>
+                    <th class="input_mid">交易日期</th>
+                    <th class="input_mid">交易摘要</th>
                     <th class="input_mid">客户</th>
-                    <th class="input-xsmall">商品/服务名称</th>
+                    <th class="input_mid">商品/服务名称</th>
                     <th class="input_min">单价</th>
                     <th class="input_min">数量</th>
                     <th class="input_min">合计</th>
                     <th class="input-xsmall">税率</th>
-                    <th class="input-small">采购用途</th>
+                    <th class="input-small">销售类型</th>
                     <?
                     if (!empty($preOrder)) {
                         echo '<th class="input-small">预收款</th>';
@@ -61,13 +61,13 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                     <tr line="<?= $key ?>" class="table-tr <?= $item['status_id']==1?'':'label-danger'?>">
                         <td><input type="checkbox" id="item_<?= $key ?>" name="lists[<?= $key ?>]"
                                    value="<?= isset($item['id']) ? $item['id'] : '' ?>"></td>
-                        <td><input class="input-xsmall" type="text" id="tran_date_<?= $key ?>"
+                        <td><input class="input_mid" type="text" id="tran_date_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entry_date]"
                                    value="<?= $item['entry_date'] ?>">
                         </td>
-                        <td><textarea class="input-small" type="text" id="tran_memo_<?= $key ?>"
+                        <td><input class="input_mid" type="text" id="tran_memo_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entry_memo]"
-                                   ><?= $item['entry_memo'] ?></textarea>
+                                   value="<?= $item['entry_memo'] ?>">
                         </td>
                         <td><?
                             $this->widget('ext.select2.ESelect2', array(

@@ -26,19 +26,11 @@ class SubjectsController extends Controller
      */
     public function accessRules()
     {
-        return array(
-            array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                //                  'actions'=>array('create','update', 'listfirst', 'listsub','balance'),
-                'users' => array('@'),
-            ),
-            array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete'),
-                'users' => array('@'),
-            ),
-            array('deny',  // deny all users
-                'users' => array('*'),
-            ),
-        );
+        $rules = parent::accessRules();
+        if ($rules[0]['actions'] == ['manage'])
+            $rules[0]['actions'] = ['admin', 'update', 'delete', 'view'];
+        $rules[0]['actions'] = array_merge($rules[0]['actions'], ['getuserfor','createsubject']);
+        return $rules;
     }
 
     /**
@@ -47,7 +39,6 @@ class SubjectsController extends Controller
      */
     public function actionView($id)
     {
-        var_dump($this->loadModel($id));
         $this->render('view', array(
             'model' => $this->loadModel($id),
         ));
@@ -84,7 +75,7 @@ class SubjectsController extends Controller
 //            $sbj_type = $_POST['sbj_type'];
             $sbj_type = 2;
             $new_sbj = Subjects::model()->init_new_sbj_number($old_sbj_number, $sbj_type);
-            $pmodel = Subjects::model()->findByAttributes(['sbj_number'=>$old_sbj_number]);
+            $pmodel = Subjects::model()->findByAttributes(['sbj_number' => $old_sbj_number]);
 
             $_POST['Subjects']['sbj_number'] = $new_sbj[0];
             $_POST['Subjects']['sbj_cat'] = $pmodel->sbj_cat;
@@ -149,45 +140,48 @@ class SubjectsController extends Controller
      */
     public function actionDelete($id, $sbj_number = '')
     {
-        if($id!='')
+        if ($id != '')
             $sbj = $this->loadModel($id);
         else
-            $sbj = Subjects::model()->findByAttributes(['sbj_number'=>$sbj_number]);
+            $sbj = Subjects::model()->findByAttributes(['sbj_number' => $sbj_number]);
         //一级科目不能删除
-        if(!$sbj){
-            echo "科目已经删除";return true;
-        }elseif(strlen($sbj->sbj_number)<=4){
-            echo "一级科目无法删除"; return true;
+        if (!$sbj) {
+            echo "科目已经删除";
+            return true;
+        } elseif (strlen($sbj->sbj_number) <= 4) {
+            echo "一级科目无法删除";
+            return true;
         }
         //有子科目，无法删除
-        if($sbj->has_sub==1)
+        if ($sbj->has_sub == 1)
             echo "有子科目不能删除！";
-        else{//有凭证
-            if(Subjects::model()->hasTransition($sbj->sbj_number)){
+        else {//有凭证
+            if (Subjects::model()->hasTransition($sbj->sbj_number)) {
                 //有兄弟科目
-                if(Subjects::model()->hasBrother($sbj->sbj_number)){
+                if (Subjects::model()->hasBrother($sbj->sbj_number)) {
                     echo "此科目不能删除！";
                     //不能删
-                }else{
-                    $trans = Transition::model()->findByAttributes(['entry_subject'=>$sbj->sbj_number]);
-                    if($trans){
-                        echo "该科目下有凭证，无法删除";return true;
+                } else {
+                    $trans = Transition::model()->findByAttributes(['entry_subject' => $sbj->sbj_number]);
+                    if ($trans) {
+                        echo "该科目下有凭证，无法删除";
+                        return true;
                     }
                     Bank::model()->updateSubject($sbj->sbj_number);
                     Post::model()->updateSubject($sbj->sbj_number);
-                    Transition::model()->updateSubject($sbj->sbj_number, substr($sbj->sbj_number,0,-2));
+                    Transition::model()->updateSubject($sbj->sbj_number, substr($sbj->sbj_number, 0, -2));
                     Subjects::model()->noSub($sbj->sbj_number);
                     Subjects::model()->tranBalance($sbj->sbj_number);
                     $sbj->delete();
                     echo "删除成功！";
                 }
-            }else{  //无凭证
-                try{
+            } else {  //无凭证
+                try {
                     Bank::model()->updateSubject($sbj->sbj_number);
                     //有兄弟科目，可直接删除
-                    if(Subjects::model()->hasBrother($sbj->sbj_number))
+                    if (Subjects::model()->hasBrother($sbj->sbj_number))
                         $sbj->delete();
-                    else{   //无兄弟科目
+                    else {   //无兄弟科目
                         Post::model()->updateSubject($sbj->sbj_number);
                         //设置父科目 无子科目
                         Subjects::model()->noSub($sbj->sbj_number);
@@ -195,7 +189,7 @@ class SubjectsController extends Controller
                         $sbj->delete();
                     }
                     echo "删除成功！";
-                }catch (CDbException $e){
+                } catch (CDbException $e) {
                     echo "删除失败！";
                 }
             }
@@ -203,9 +197,9 @@ class SubjectsController extends Controller
         }
 
 
-		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+        if (!isset($_GET['ajax']))
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
     }
 
     /**
@@ -249,10 +243,10 @@ class SubjectsController extends Controller
         $err_msg = '';
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             //有一次过账，就不能改期初余额
-            $post = Transition::model()->findByAttributes(['entry_posting'=>1]);
-            if($post){
+            $post = Transition::model()->findByAttributes(['entry_posting' => 1]);
+            if ($post) {
                 Yii::app()->user->setFlash('error', "账套已经过账，无法修改期初余额!");
-            }else{
+            } else {
                 $p_data = array();
                 foreach ($_POST as $k => $v) {
                     if (is_numeric($k) && is_numeric($v)) {
@@ -260,12 +254,12 @@ class SubjectsController extends Controller
                     }
                 }
                 $model = new Subjects();
-                $bool = $model->check_start_balance($p_data);
-                if ($bool) {
+                $str = $model->check_start_balance($p_data);
+                if ($str=='') {
                     Subjects::model()->set_start_balance($p_data);
                     $this->redirect("?r=subjects/balance");
                 } else {
-                    Yii::app()->user->setFlash('error', "资产与负债权益的和不等!");
+                    Yii::app()->user->setFlash('error', "资产与负债权益的和不等!<br >$str");
                 }
 
             }
@@ -292,21 +286,21 @@ class SubjectsController extends Controller
     /*
      * ajax 获取科目表
      */
-    public function actionAjaxGetSubjects(){
-        if(Yii::app()->request->isAjaxRequest)
-        {
+    public function actionAjaxGetSubjects()
+    {
+        if (Yii::app()->request->isAjaxRequest) {
             $sbj = Transition::model()->listSubjectsGrouped();
             //json数据前台会自动按number重新转换顺序，目前无更好解决办法
             $arr = [];
-            foreach($sbj as $cat => $items){
+            foreach ($sbj as $cat => $items) {
                 $subjcts = [];
-                foreach($items as $key => $item){
-                    $subjcts['_'. $key] = $item;
+                foreach ($items as $key => $item) {
+                    $subjcts['_' . $key] = $item;
                 }
                 $arr[$cat] = $subjcts;
             }
             echo json_encode($arr);
-        }else
+        } else
             throw new CHttpException(403, "无效的请求");
     }
 
@@ -334,10 +328,10 @@ class SubjectsController extends Controller
         if (Yii::app()->request->isAjaxRequest) {
             $name = $_REQUEST['name'];
             //因为只涉及库存商品，所以只是1405下的子科目
-            $stock = Stock::model()->findByAttributes(['name'=>$name], "entry_subject like '1405%'");
-            if($stock){
+            $stock = Stock::model()->findByAttributes(['name' => $name], "entry_subject like '1405%'");
+            if ($stock) {
                 $arr = [1601, 1403, $stock->entry_subject, 6602, 6601, 6401, 1701];    //其他科目正常，库存商品1405只显示一条
-            }else
+            } else
                 $arr = [1601, 1403, 1405, 6602, 6601, 6401, 1701];
             $subjectArray = Transition::getSubjectArray($arr);
             $subjectArray += ProjectB::model()->getProject();
@@ -346,18 +340,19 @@ class SubjectsController extends Controller
             $result = json_encode($subjectArray);
             echo $result;
 
-        }else
+        } else
             throw new CHttpException(403, "无效的请求");
     }
 
     /*
      * 匹配subject
      */
-    public function actionMatchsubject(){
+    public function actionMatchsubject()
+    {
         if (Yii::app()->request->isAjaxRequest) {
             $sbj = Subjects::matchSubject($_POST['name'], [$_POST['subject']]);
             echo $sbj;
-        }else
+        } else
             throw new CHttpException(403, "无效的请求");
     }
 }

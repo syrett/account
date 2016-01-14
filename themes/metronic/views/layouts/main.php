@@ -10,6 +10,18 @@ Yii::app()->clientScript->scriptMap = array(
     'jquery.min.js' => false,
 );
 $baseUrl = Yii::app()->theme->baseUrl;
+$menu1 = [
+    ['name' => '银行交易', 'url' => $this->createUrl('/bank')],
+    ['name' => '现金交易', 'url' => $this->createUrl('/cash')],
+];
+$menu2 = [
+    ['name' => '银行交易', 'url' => $this->createUrl('/bank')],
+    ['name' => '采购交易', 'url' => $this->createUrl('/purchase')],
+    ['name' => '产品销售', 'url' => $this->createUrl('/product')],
+    ['name' => '现金交易', 'url' => $this->createUrl('/cash')],
+    ['name' => '员工工资', 'url' => $this->createUrl('/salary')],
+    ['name' => '员工报销', 'url' => $this->createUrl('/reimburse')],
+]
 ?>
 <!DOCTYPE html>
 <!--[if IE 8]>
@@ -28,8 +40,8 @@ $baseUrl = Yii::app()->theme->baseUrl;
     <meta content="适合小微企业的在线财务管理系统" name="description"/>
     <meta content="老法师（上海）财务咨询有限公司" name="author"/>
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
-<!--    <link href="http://fonts.useso.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet"-->
-<!--          type="text/css"/>-->
+    <!--    <link href="http://fonts.useso.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet"-->
+    <!--          type="text/css"/>-->
     <link href="<?php echo $baseUrl; ?>/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet"
           type="text/css"/>
     <link href="<?php echo $baseUrl; ?>/assets/global/plugins/simple-line-icons/simple-line-icons.min.css"
@@ -284,72 +296,22 @@ $baseUrl = Yii::app()->theme->baseUrl;
                         <div class="dropdown-menu dropdown-content input-xlarge hold-on-click" role="menu">
                             <div class="portlet light">
                                 <div class="portlet-title">
-                                    <div class="caption">最新凭证操作日志</div>
+                                    <div class="caption">已导入数据查看</div>
                                 </div>
                                 <div class="portlet-body">
-                                    <div class="row">
-                                        <table class="table table-condensed table-hover table-no-border">
-                                            <tbody>
-                                            <tr>
-                                                <td>
-                                                    支付
-                                                </td>
-                                                <td>
-                                                    2015/6/15
-                                                </td>
-                                                <td>
-                                                    RMB2000.00
-                                                </td>
-                                                <td>
-                                                    刘德华
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    支票支付-票号1
-                                                </td>
-                                                <td>
-                                                    2015/6/14
-                                                </td>
-                                                <td>
-                                                    RMB35000.00
-                                                </td>
-                                                <td>
-                                                    李宗盛
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    新建发票#20150613
-                                                </td>
-                                                <td>
-                                                    2015/6/13
-                                                </td>
-                                                <td>
-                                                    RMB1200.00
-                                                </td>
-                                                <td>
-                                                    张学友
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    应收账款
-                                                </td>
-                                                <td>
-                                                    2015/6/10
-                                                </td>
-                                                <td>
-                                                    RMB200000.00
-                                                </td>
-                                                <td>
-                                                    乔布斯
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <p><a href="#">更多...</a></p>
+                                    <ul class="list-unstyled top-three">
+                                        <?
+                                        $menu = User2::checkVIP() ? $menu2 : $menu1;
+                                        foreach ($menu as $key => $item) {
+                                            ?>
+                                            <li><a href="<?=$item['url']?>"><?=$item['name']?></a> </li>
+                                            <?
+                                            $key += 1;
+                                            if($key/3 == (int)($key/3))
+                                                echo '<br >';
+                                        }
+                                        ?>
+                                    </ul>
                                 </div>
                             </div>
                             <div class="dropdown-menu-header"></div>

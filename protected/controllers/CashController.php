@@ -19,24 +19,19 @@ class CashController extends Controller
 		);
 	}
 
-	/**
-	 * Specifies the access control rules.
-	 * This method is used by the 'accessControl' filter.
-	 * @return array access control rules
-	 */
-	public function accessRules()
-	{
-		return array(
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('index','create','delete','delall','update','type','option','createemployee','createsubject','save'),
-				'users'=>array('@'),
-			),
-
-			array('deny',  // deny all users
-				'users'=>array('*'),
-			),
-		);
-	}
+    /**
+     * Specifies the access control rules.
+     * This method is used by the 'accessControl' filter.
+     * @return array access control rules
+     */
+    public function accessRules()
+    {
+        $rules = parent::accessRules();
+        if ($rules[0]['actions'] == ['manage'])
+            $rules[0]['actions'] = [''];
+        $rules[0]['actions'] = array_merge($rules[0]['actions'], ['index', 'type', 'option']);
+        return $rules;
+    }
 
 	/**
 	 * Updates a particular model.
@@ -77,7 +72,7 @@ class CashController extends Controller
 			$sheetData[0]['data'] = Transition::getSheetData($model->attributes,'cash');
             if($model->status_id==1)
             {
-                $tran = Transition::model()->find(['condition' => 'data_id=:data_id', 'params' => [':data_id' => $id]]);
+                $tran = Transition::model()->find(['condition' => 'data_id=:data_id and data_type=:data_type', 'params' => [':data_id' => $id, ':data_type' => 'cash']]);
                 if($tran!=null)
                 $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
             }
@@ -98,11 +93,35 @@ class CashController extends Controller
 	{
         $relation = Cash::model()->getRelation('cash',$id);
         if($relation==null){
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $order_no = $model->order_no;
 
             $trans = Transition::model()->findAll(['condition'=>'data_type = "cash" and data_id=:data_id','params'=>[':data_id'=>$id]]);
+            $delete = true;
+            foreach($trans as $item){
+                $delete = $item['entry_reviewed']==1?false:$delete;
+            }
+            if(!$delete){		//如果不能删除就直接返回
+                $result['status'] = 'failed';
+                $result['message'] = '其他数据与此交易有关联，无法删除';
+                echo json_encode($result);
+                return true;
+            }
             foreach($trans as $item){
                 $item->delete();
+            }
+            //删除stock
+            Stock::model()->deleteAllByAttributes(['order_no'=>$order_no]);
+            $model->delete();
+            $porder = Preparation::model()->findByAttributes(['pid'=>$id, 'type'=>'bank']);
+            if($porder)
+                $porder->delete();
+            $reim = Reimburse::model()->findByAttributes([],"paid like '%$order_no%'");
+            if($reim){
+                $paid = json_decode($reim['paid'], true);
+                unset($paid[$order_no]);
+                $reim['paid'] = json_encode($paid);
+                $reim->save();
             }
 
         }else{
@@ -112,7 +131,7 @@ class CashController extends Controller
         }
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if(!isset($_GET['ajax']) && $type==1)
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
 	}
 
     /*

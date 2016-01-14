@@ -30,6 +30,7 @@ class ProjectB extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('name, memo', 'required'),
+            array('name', 'filter', 'filter'=>'trim'),
 			array('status, create_at', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>512),
             array('name', 'unique', 'message'=>'在建工程名称不能重复'),

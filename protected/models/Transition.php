@@ -685,7 +685,7 @@ class Transition extends CActiveRecord
 //                        $arr['stocks_price'] = implode("\r\n",$stocks_price);
                         break;
                     case 'salary':
-                        $date = trim($items['D']);
+                        $date = convertDate($items['D'],'Ymd');
                         $arr['entry_date'] = strlen($date)>6?$date:$date.'01';
                         $arr['employee_name'] = trim($items['B']);
                         $employee = Employee::model()->findByAttributes(['name'=>$arr['employee_name']]);
@@ -713,7 +713,7 @@ class Transition extends CActiveRecord
                         $amount = $payment;
                         break;
                     case 'reimburse':
-                        $date = trim($items['B']);
+                        $date = convertDate($items['B'],'Ymd');
                         $arr['entry_date'] = strlen($date)>6?$date:$date.'01';
                         $arr['entry_memo'] = trim($items['C']);
                         $arr['employee_name'] = trim($items['A']);
@@ -758,7 +758,7 @@ class Transition extends CActiveRecord
                 }
                 $arr['entry_name'] = isset($items['name']) ? $items['name'] : (isset($items['entry_name'])?$items['entry_name']:'');
                 $arr['target'] = isset($items['target'])?$items['target']:$arr['entry_name'];
-                $arr['entry_date'] = isset($items['date']) ? $items['date'] : $arr['entry_date'];
+                $arr['entry_date'] = isset($items['date']) ? $items['date'] : (isset($items['entry_date'])?$items['entry_date']:$arr['entry_date']);
                 $arr['entry_memo'] = isset($items['memo']) ? $items['memo'] : $arr['entry_memo'];
                 $arr['entry_amount'] = str_replace(",", "", trim(isset($items['amount']) ? $items['amount'] : $arr['entry_amount']));
                 $arr['entry_subject'] = isset($items['subject']) ? $items['subject'] : $arr['entry_subject'];
@@ -816,7 +816,7 @@ class Transition extends CActiveRecord
 
     public function listByPrefix($prefix, $select)
     {
-        $sql = "select " . $select . " from transition where entry_num_prefix=" . $prefix;
+        $sql = "select id," . $select . " from transition where entry_num_prefix=" . $prefix;
         $data = $this->findAllBySql($sql, array());
         return $data;
     }

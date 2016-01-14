@@ -18,24 +18,19 @@ class BankController extends Controller
 		);
 	}
 
-	/**
-	 * Specifies the access control rules.
-	 * This method is used by the 'accessControl' filter.
-	 * @return array access control rules
-	 */
-	public function accessRules()
-	{
-		return array(
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('index','create','delete','delall','update','type','option','createemployee','createsubject','save'),
-				'users'=>array('@'),
-			),
-
-			array('deny',  // deny all users
-				'users'=>array('*'),
-			),
-		);
-	}
+    /**
+     * Specifies the access control rules.
+     * This method is used by the 'accessControl' filter.
+     * @return array access control rules
+     */
+    public function accessRules()
+    {
+        $rules = parent::accessRules();
+        if ($rules[0]['actions'] == ['manage'])
+            $rules[0]['actions'] = [''];
+        $rules[0]['actions'] = array_merge($rules[0]['actions'], ['index', 'type', 'option']);
+        return $rules;
+    }
 
 	/**
 	 * Updates a particular model.
@@ -66,7 +61,7 @@ class BankController extends Controller
 			{
 				Yii::app()->user->setFlash('success', "保存成功!");
 				$model = $this->loadModel($id);
-                $tran = Transition::model()->find(['condition' => 'data_id=:data_id', 'params' => [':data_id' => $id]]);
+                $tran = Transition::model()->find(['condition' => 'data_id=:data_id and data_type=:data_type', 'params' => [':data_id' => $id, ':data_type' => 'bank']]);
                 if($tran){
                     $sheetData[0]['data'] = Transition::getSheetData($model->attributes,'bank');
                     $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
@@ -111,8 +106,9 @@ class BankController extends Controller
 			}
 			if(!$delete){		//如果不能删除就直接返回
 				$result['status'] = 'failed';
-				if($type==2)
-					return true;
+                $result['message'] = '生成的凭证已审核或已过账，无法删除';
+                echo json_encode($result);
+                return true;
 			}
 			foreach($trans as $item){
 				$item->delete();

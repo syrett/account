@@ -47,6 +47,7 @@ class User2 extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+            'profiles' => array(self::HAS_ONE, 'Profiles', 'user_id')
 		);
 	}
 
@@ -56,10 +57,10 @@ class User2 extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'username' => 'Username',
+			'id' => '编号',
+			'username' => '用户名',
 			'password' => 'Password',
-			'email' => 'Email',
+			'email' => '邮箱',
 		);
 	}
 

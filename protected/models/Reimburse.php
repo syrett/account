@@ -79,7 +79,7 @@ class Reimburse extends LFSModel
 		return array(
 			'id' => 'ID',
 			'order_no' => '订单号',
-			'entry_date' => '销售日期',
+			'entry_date' => '日期',
 			'entry_memo' => '摘要',
 			'employee_id' => '员工',
 			'travel_amount' => '差旅费',

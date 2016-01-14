@@ -20,6 +20,13 @@ $(window).load(function () {
 var aaa ;
 function readURL(input) {
     if (input.files && input.files[0]) {
+        if(input.files[0].size > 500*1024){  //不能大于500K
+            $(input).val('');
+            alert('文件大小不超过500KB');
+            $("#show_image").hide();
+            return true;
+        }
+        $(input).attr('data-old', $(input).val());
         var ext = input.files[0].name.match(/[^\.]+$/);
         if(ext[0].toLowerCase()=='jpg'){   //选择了图片文件
             $("#show_image").removeClass('hidden');

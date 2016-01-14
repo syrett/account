@@ -33,6 +33,7 @@ class Employee extends CActiveRecord
             array('name, department_id', 'required'),
             array('id, department_id', 'numerical', 'integerOnly' => true),
             array('name, position', 'length', 'max' => 100),
+            array('name, position', 'filter', 'filter'=>'trim'),
             array('memo', 'length', 'max' => 200),
             array('name', 'unique', 'message'=>'员工姓名不可重复'),
             array('base, base_2, departure_date, status', 'safe'),

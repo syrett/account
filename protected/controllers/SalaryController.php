@@ -19,23 +19,6 @@ class SalaryController extends Controller
 	}
 
 	/**
-	 * Specifies the access control rules.
-	 * This method is used by the 'accessControl' filter.
-	 * @return array access control rules
-	 */
-	public function accessRules()
-	{
-		return array(
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'users'=>array('@'),
-			),
-			array('deny',  // deny all users
-				'users'=>array('*'),
-			),
-		);
-	}
-
-	/**
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
 	 */
@@ -98,7 +81,7 @@ class SalaryController extends Controller
             {
                 Yii::app()->user->setFlash('success', "保存成功!");
                 $model = $this->loadModel($id);
-                $tran = Transition::model()->find(['condition' => 'data_id=:data_id', 'params' => [':data_id' => $id]]);
+                $tran = Transition::model()->find(['condition' => 'data_id=:data_id and data_type=:data_type', 'params' => [':data_id' => $id, ':data_type' => 'salary']]);
                 $sheetData[0]['data'] = Transition::getSheetData($model->attributes,'salary');
                 if($tran!=null)
                     $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
@@ -142,8 +125,7 @@ class SalaryController extends Controller
                 $result['status'] = 'failed';
                 $result['message'] = '生成的凭证已审核或已过账，无法删除';
                 echo json_encode($result);
-                if($type==2)
-                    return true;
+                return true;
             }
             foreach($trans as $item){
                 $item->delete();

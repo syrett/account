@@ -18,25 +18,22 @@ class ProductController extends Controller
 		);
 	}
 
-	/**
-	 * Specifies the access control rules.
-	 * This method is used by the 'accessControl' filter.
-	 * @return array access control rules
-	 */
-	public function accessRules()
-	{
-		return array(
-            array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions'=>array('index','update','save','delete','stock'),
-                'users'=>array('@'),
-            ),
-			array('deny',  // deny all users
-				'users'=>array('*'),
-			),
-		);
-	}
+    /**
+     * Specifies the access control rules.
+     * This method is used by the 'accessControl' filter.
+     * @return array access control rules
+     */
+    public function accessRules()
+    {
+        $rules = parent::accessRules();
+        if ($rules[0]['actions'] == ['manage'])
+            $rules[0]['actions'] = [''];
+        $rules[0]['actions'] = array_merge($rules[0]['actions'], ['index']);
+        return $rules;
+    }
 
-	/**
+
+    /**
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id the ID of the model to be updated
@@ -76,7 +73,7 @@ class ProductController extends Controller
             $sheetData[0]['data'] = Transition::getSheetData($model->attributes,'product');
             if($model->status_id==1)
             {
-                $tran = Transition::model()->find(['condition' => 'data_id=:data_id', 'params' => [':data_id' => $id]]);
+                $tran = Transition::model()->find(['condition' => 'data_id=:data_id and data_type=:data_type', 'params' => [':data_id' => $id, ':data_type' => 'product']]);
                 if($tran!=null)
                     $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
             }
@@ -109,8 +106,7 @@ class ProductController extends Controller
                 $result['status'] = 'failed';
                 $result['message'] = '生成的凭证已审核或已过账，无法删除';
                 echo json_encode($result);
-                if($type==2)
-                    return true;
+                return true;
             }
             foreach($trans as $item){
                 $item->delete();
@@ -136,7 +132,7 @@ class ProductController extends Controller
         }
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if(!isset($_GET['ajax']) && $type==1)
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
 	}
 
     /*

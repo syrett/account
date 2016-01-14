@@ -67,10 +67,10 @@ class Profiles extends CActiveRecord
 	{
 		return array(
 			'user_id' => 'User',
-			'name' => 'Name',
+			'name' => '真实姓名',
 			'surname' => 'Surname',
-			'phone' => 'Phone',
-			'condom_id' => 'Condom',
+			'phone' => '电话',
+			'condom_id' => '账套',
 			'bank' => '选择银行',
 			'avatar_url' => 'Avatar Url',
 		);
