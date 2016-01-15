@@ -631,3 +631,128 @@ ALTER TABLE `auth_category`
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
 ALTER TABLE `subjects` CHANGE `sbj_name` `sbj_name` VARCHAR(512) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+-- 2016年1月15日16:05:48
+-- phpMyAdmin SQL Dump
+-- version 4.5.1
+-- http://www.phpmyadmin.net
+--
+-- Host: localhost
+-- Generation Time: Jan 15, 2016 at 04:03 PM
+-- Server version: 10.1.8-MariaDB
+-- PHP Version: 5.6.16
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `account_201512237570`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `auth_permission`
+--
+
+DROP TABLE IF EXISTS `auth_permission`;
+CREATE TABLE `auth_permission` (
+  `id` varchar(64) NOT NULL,
+  `category` varchar(64) NOT NULL DEFAULT 'controller',
+  `name` varchar(64) NOT NULL,
+  `description` varchar(128) DEFAULT NULL,
+  `form` int(11) NOT NULL DEFAULT '0',
+  `options` text,
+  `default_value` mediumtext,
+  `rule` varchar(64) DEFAULT NULL,
+  `sort_num` int(11) NOT NULL DEFAULT '0',
+  `sort` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `auth_permission`
+--
+
+INSERT INTO `auth_permission` (`id`, `category`, `name`, `description`, `form`, `options`, `default_value`, `rule`, `sort_num`, `sort`) VALUES
+('Bank/delete', 'bank', '删除', '', 0, '', '', '', 3, 0),
+('Bank/update', 'bank', '修改', '', 0, '', '', '', 2, 0),
+('Cash/delete', 'cash', '删除', '', 0, '', '', '', 3, 0),
+('Cash/update', 'cash', '修改', '', 0, '', '', '', 2, 0),
+('client', 'product', '客户管理', NULL, 1, NULL, NULL, NULL, 0, 0),
+('department', 'employee', '部门管理', NULL, 0, NULL, NULL, NULL, 0, 0),
+('employee', 'employee', '员工管理', '', 0, '', '', '', 3, 0),
+('option/index', 'condom', '账套信息', '', 0, '', '', '', 0, 0),
+('permission', 'permission', '修改权限', '', 0, '', '', '', 0, 0),
+('product/delete', 'product', '删除', NULL, 1, NULL, NULL, NULL, 3, 0),
+('product/stock', 'product', '成本结转', NULL, 0, NULL, NULL, NULL, 0, 0),
+('product/update', 'product', '修改', NULL, 1, NULL, NULL, NULL, 2, 0),
+('projectB', 'stock_1601', '在建工程', NULL, 0, NULL, NULL, NULL, 0, 0),
+('projectLong', 'stock_1601', '长期待摊管理', NULL, 0, NULL, NULL, NULL, 0, 0),
+('purchase/delete', 'purchase', '删除', NULL, 1, NULL, NULL, NULL, 3, 0),
+('purchase/update', 'purchase', '修改', NULL, 1, NULL, NULL, NULL, 2, 0),
+('report/balance', 'report', '资产负债表', NULL, 0, NULL, NULL, NULL, 0, 0),
+('report/client', 'report', '客户表', NULL, 0, NULL, NULL, NULL, 0, 0),
+('report/department', 'report', '部门表', NULL, 0, NULL, NULL, NULL, 0, 0),
+('report/detail', 'report', '明细表', NULL, 0, NULL, NULL, NULL, 0, 0),
+('report/money', 'report', '现金流量表', NULL, 0, NULL, NULL, NULL, 0, 0),
+('report/profit', 'report', '损益表', NULL, 0, NULL, NULL, NULL, 0, 0),
+('report/subjects', 'report', '科目余额表', NULL, 0, NULL, NULL, NULL, 0, 0),
+('report/vendor', 'report', '供应商表', NULL, 0, NULL, NULL, NULL, 0, 0),
+('salary', 'employee', '员工工资', NULL, 0, NULL, NULL, NULL, 0, 0),
+('stock/admin', 'stock_1601', '库存商品', NULL, 0, NULL, NULL, NULL, 0, 0),
+('stock/admin1601', 'stock_1601', '固定资产', NULL, 0, NULL, NULL, NULL, 0, 0),
+('stock/admin1701', 'stock_1601', '无形资产', NULL, 0, NULL, NULL, NULL, 0, 0),
+('stock/balance_1601', 'stock_1601', '期初明细', NULL, 0, NULL, NULL, NULL, 0, 0),
+('subjects', 'condom', '科目表管理', '', 0, '', '', '', 0, 0),
+('subjects/balance', 'condom', '总账期初余额', '', 0, '', '', '', 0, 0),
+('Transition/bank', 'bank', '银行导入', '', 0, '', '', '', 1, 0),
+('Transition/cash', 'cash', '现金导入', '', 0, '', '', '', 1, 0),
+('transition/create', 'transition', '往来调整', NULL, 0, NULL, NULL, NULL, 0, 0),
+('Transition/listAntiSettlement', 'condom', '反结账', '', 0, '', '', '', 6, 6),
+('Transition/listClosing', 'condom', '结账', '', 0, '', '', '', 5, 5),
+('Transition/listPost', 'condom', '过账', '', 0, '', '', '', 3, 3),
+('Transition/listReorganise', 'transition', '整理凭证', '', 0, '', '', '', 0, 0),
+('Transition/listSettlement', 'condom', '期末结转', '', 0, '', '', '', 4, 4),
+('transition/printp', 'transition', '打印凭证', NULL, 0, NULL, NULL, NULL, 0, 0),
+('Transition/purchase', 'purchase', '导入', '', 1, '', '', '', 1, 0),
+('transition/reimburse', 'employee', '员工报销', NULL, 0, NULL, NULL, NULL, 0, 0),
+('transition/review', 'transition', '审核凭证', NULL, 0, NULL, NULL, NULL, 0, 0),
+('Transition/sale', 'product', '导入', '', 1, '', '', '', 1, 0),
+('transition/unreview', 'transition', '取消审核', NULL, 0, NULL, NULL, NULL, 0, 0),
+('vendor', 'purchase', '供应商管理', NULL, 1, NULL, NULL, NULL, 0, 0);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `auth_permission`
+--
+ALTER TABLE `auth_permission`
+  ADD PRIMARY KEY (`id`);
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
