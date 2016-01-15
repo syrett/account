@@ -28,8 +28,8 @@ class SubjectsController extends Controller
     {
         $rules = parent::accessRules();
         if ($rules[0]['actions'] == ['manage'])
-            $rules[0]['actions'] = ['admin', 'update', 'delete', 'view'];
-        $rules[0]['actions'] = array_merge($rules[0]['actions'], ['getuserfor','createsubject']);
+            $rules[0]['actions'] = ['admin', 'update', 'delete', 'view', 'create'];
+        $rules[0]['actions'] = array_merge($rules[0]['actions'], ['getuserfor','createsubject', 'AjaxGetSubjects']);
         return $rules;
     }
 

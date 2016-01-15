@@ -23,7 +23,7 @@ class StockController extends Controller
     {
         $rules = parent::accessRules();
         if ($rules[0]['actions'] == ['manage'])
-            $rules[0]['actions'] = [];
+            $rules[0]['actions'] = ['admin'];
         $rules[0]['actions'] = array_merge($rules[0]['actions'], []);
         return $rules;
     }

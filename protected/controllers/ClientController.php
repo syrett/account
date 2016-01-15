@@ -19,6 +19,20 @@ class ClientController extends Controller
 		);
 	}
 
+    /**
+     * Specifies the access control rules.
+     * This method is used by the 'accessControl' filter.
+     * @return array access control rules
+     */
+    public function accessRules()
+    {
+        $rules = parent::accessRules();
+        if ($rules[0]['actions'] == ['manage'])
+            $rules[0]['actions'] = ['index', 'admin', 'update', 'create', 'view', 'delete'];
+        $rules[0]['actions'] = array_merge($rules[0]['actions'], ['createclient', 'getclient', 'bad']);
+        return $rules;
+    }
+
 	/**
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
@@ -209,6 +223,10 @@ class ClientController extends Controller
             $model = $this->loadModel($client_id);
             if($model){
                 if($action=='bad'){
+                    if($amount <= 0){
+                        echo json_encode(['status'=>'failed','msg'=>'金额为0，无需处理']);
+                        return true;
+                    }
                     $tran1 = new Transition();
                     $tran2 = new Transition();
                     $tran1->entry_transaction = 1;
@@ -216,6 +234,9 @@ class ClientController extends Controller
                     $tran1->entry_subject = Subjects::matchSubject('坏账损失', '6602');;
                     $tran2->entry_subject = '1231';
                     $date = Transition::getTransitionDate();
+                    $dates = Condom::model()->getStartTime();
+                    if($date < $dates.'01')
+                        $date = $dates;
                     $prefix = substr($date,0,6);
                     $data = [
                         'data_type' => 'bad_debts',
@@ -230,8 +251,7 @@ class ClientController extends Controller
                     ];
                     $tran1->attributes = $data;
                     $tran2->attributes = $data;
-                    $tran1->save();
-                    $tran2->save();
+                    if($tran1->save() && $tran2->save())
                     echo json_encode(['status'=>'success','msg'=>'坏账处理完成']);
                 }else{      //取消坏账
                     Transition::model()->deleteAllByAttributes(['data_type'=>'bad_debts','data_id'=>$client_id, 'entry_closing'=>0]);

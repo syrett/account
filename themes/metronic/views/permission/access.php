@@ -6,13 +6,23 @@ $this->breadcrumbs = array(
     'Permissions',
 );
 
-$cats = AuthCategory::model()->findAll();
+$type = User2::checkVIP();
+//if($type)
+    $cats = AuthCategory::model()->findAll();
+
 $list1 = [];
 foreach ($cats as $cat) {
-    $list1[$cat->description] = [];
-    $permissions = AuthPermission::model()->findAllByAttributes(['category' => $cat->name], ['order' => 'sort_num']);
-    foreach ($permissions as $item) {
-        array_push($list1[$cat->description], $item);
+    if($type)
+        $permissions = AuthPermission::model()->findAllByAttributes(['category' => $cat->name], ['order' => 'sort_num']);
+    else
+        $permissions = AuthPermission::model()->findAllByAttributes(['category' => $cat->name, 'form'=>0], ['order' => 'sort_num']);
+
+    if(count($permissions) != 0){
+        $list1[$cat->description] = [];
+        foreach ($permissions as $item) {
+            array_push($list1[$cat->description], $item);
+        }
+
     }
 }
 //$checkStatus = false;

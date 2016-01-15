@@ -28,8 +28,14 @@ class TransitionController extends Controller
     {
         $rules = parent::accessRules();
         if ($rules[0]['actions'] == ['manage'])
-            $rules[0]['actions'] = [''];
-        $rules[0]['actions'] = array_merge($rules[0]['actions'], ['index', 'admin', 'settlement','listreview','update']);
+            $rules[0]['actions'] = ['create'];
+        $action = $this->getAction()->id;
+        if(in_array($action, ['salary', 'reimburse'] )){
+            $permission = AuthRelation::model()->findByAttributes(['user_id'=>Yii::app()->user->id, 'permission'=>$action]);
+            if($permission)
+                $rules[0]['actions'] = [$action];
+        }
+        $rules[0]['actions'] = array_merge($rules[0]['actions'], ['index', 'admin', 'settlement','listreview','update', 'listtransition', 'appendix']);
         return $rules;
     }
 

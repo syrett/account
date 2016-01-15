@@ -18,6 +18,20 @@ class SalaryController extends Controller
 		);
 	}
 
+    /**
+     * Specifies the access control rules.
+     * This method is used by the 'accessControl' filter.
+     * @return array access control rules
+     */
+    public function accessRules()
+    {
+        $rules = parent::accessRules();
+        if ($rules[0]['actions'] == ['manage'])
+            $rules[0]['actions'] = ['index'];
+        $rules[0]['actions'] = array_merge($rules[0]['actions'], ['']);
+        return $rules;
+    }
+
 	/**
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
