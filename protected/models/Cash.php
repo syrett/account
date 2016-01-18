@@ -42,7 +42,7 @@ class Cash extends LFSModel
 			array('target', 'length', 'max'=>512),
 			array('date', 'length', 'max'=>64),
 			array('subject', 'length', 'max'=>16),
-			array('memo, type, pid, order_no, created_at, tax, path, relation, overworth', 'safe'),
+			array('memo, type, pid, order_no, created_at, tax, path, relation, overworth, entry_transaction', 'safe'),
 			// The following rule is used by search().
 			array('id, target, date, memo, amount, parent, order_no, invoice, tax, status_id, created_at, updated_at', 'safe', 'on'=>'search'),
 		);
@@ -173,6 +173,7 @@ class Cash extends LFSModel
 		$this->setAttribute('invoice', isset($item['invoice'])?$item['invoice']:'');
         $this->setAttribute('tax',  isset($item['tax'])?$item['tax']:'');
         $this->setAttribute('overworth',  isset($item['overworth'])?$item['overworth']:'');
+        $this->setAttribute('entry_transaction', $item['entry_transaction']);
         $this->setAttribute('path',  isset($item['path'])?$item['path']:'');
         $this->setAttribute('relation',  isset($item['relation'])?$item['relation']:'');
 		$this->setAttribute('updated_at', isset($item['updated_at'])?$item['updated_at']:'');
@@ -816,10 +817,12 @@ eof;
                                     $sbj = Subjects::matchSubject($options[3],['1221']);
                                     return self::endOption($sbj);
                                 }else {
+                                    $option = [];
                                     //员工报销需要把报销的项目列出来供选择 多选
                                     $rem = Reimburse::model()->findByAttributes(['order_no' => $options[4]]);
                                     $sbj = 0;
                                     if ($rem) {
+                                        $checkbox = [];
                                         $tmp3 = explode(',', $rem['subject_2']);
                                         if(count($tmp3) > 1){   //报销的贷方科目只有其他应付和其他应收这2项
                                             $sbj = $tmp3[0];

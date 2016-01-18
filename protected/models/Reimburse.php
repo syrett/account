@@ -195,11 +195,11 @@ class Reimburse extends LFSModel
         $arr = json_decode($this->paid, true);
         $total = 0;
         if(count($arr) > 1){
-            $paid = '';
+            $paid = [];
             foreach ($arr as $item) {
-                $paid .= explode(',', $item);
+                $paid += explode(',', $item);
             }
-            $paid = array_filter(implode(',', $paid));
+            $paid = array_filter($paid);
             foreach ($paid as $item) {
                 $total += $this[$item];
             }
