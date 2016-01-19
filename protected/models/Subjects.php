@@ -280,8 +280,9 @@ class Subjects extends CActiveRecord
      * @options Array   参数，$rej=[], $level=2, $level=0 无匹配返回原科目 $type=1 无匹配返回所有 $type=2 无匹配返回父科目
      * @return Array 子科目数组
      */
-    public function list_sub($sbj_id, $key = '', $options = [])
+    public function list_sub($sbj_id='', $key = '', $options = [])
     {
+        $sbj_id = $sbj_id==''?$this->sbj_number:$sbj_id;
         $level = isset($options['level']) ? $options['level'] : 2;
         $type = isset($options['type']) ? $options['type'] : 1;
         $reject = isset($options['reject']) ? $options['reject'] : [];

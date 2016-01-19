@@ -71,7 +71,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scrip
         $this->widget('ESelect2', array(
             'name' => 'subject_id',
             'value' => $subject_id,
-            'data' => Transition::model()->listSubjects(),
+            'data' => Transition::model()->listSubjects('all'),
         ));
         ?>
 		<input type="submit" class="btn btn-primary" value="查看报表" />
@@ -82,7 +82,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scrip
 
 
 <?php
- if(!empty($dataProvider)) {
+ if(!empty($dataProviderArray)) {
 ?>
 <div class="panel panel-default">
 
@@ -105,98 +105,111 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scrip
 		 <th class="text-right">贷方</th>
 		 <th class="text-right">余额</th>
 		 </tr>
+         <?
+         foreach($dataProviderArray as $dataProvider) {
+             ?>
+             <tr>
+                 <th><?= Subjects::getName($dataProvider['sbj_number'])?>(<?= $dataProvider['sbj_number']?>)</th>
+                 <th>&nbsp;</th>
+                 <th>&nbsp;</th>
+                 <th>&nbsp;</th>
+                 <th>&nbsp;</th>
+                 <th>&nbsp;</th>
+             </tr>
+             <tr>
+                 <th>&nbsp;</th>
+                 <th>&nbsp;</th>
+                 <th>期初余额</th>
+                 <th>&nbsp;</th>
+                 <th>&nbsp;</th>
+                 <th class="text-right"><?php echo $dataProvider["start_balance"] ?></th>
+             </tr>
+             <tr>
+                 <?php
+                 $info = $dataProvider["info"];
+                 $month_debit = 0;
+                 $month_credit = 0;
+                 $month_balance = $dataProvider["start_balance"];
+                 $month = 0;
+                 $sbj_cat = Subjects::model()->getCat($subject_id);
+                 foreach ($info as $ti) {
+                     if (isset($ti["debit"])) {
+                         $debit = $ti["debit"];
+                     } else {
+                         $debit = 0;
+                     }
 
-		 <tr>
-		 <th>&nbsp;</th>
-		 <th>&nbsp;</th>
-		 <th>期初余额</th>
-		 <th>&nbsp;</th>
-		 <th>&nbsp;</th>
-		 <th class="text-right"><?php echo $dataProvider["start_balance"] ?></th>
-		 </tr>
-		 <tr>
-<?php
- $info = $dataProvider["info"];
- $month_debit=0;
- $month_credit=0;
- $month_balance=$dataProvider["start_balance"];
- $month=0;
- $sbj_cat = Subjects::model()->getCat($subject_id);
- foreach($info as $ti){
-   if(isset($ti["debit"])){
-     $debit = $ti["debit"];
-   }else{
-     $debit = 0;
-   }
-      
-   if(isset($ti["credit"])){
-     $credit = $ti["credit"];
-   }else{
-     $credit = 0;
-   }
-   $row_month = substr($ti["entry_date"], 5, 2);
-   if ($row_month == $month || $month == 0) {
-     $month_debit += $debit;
-     $month_credit += $credit;
-     $month=$row_month;
-   }else{
+                     if (isset($ti["credit"])) {
+                         $credit = $ti["credit"];
+                     } else {
+                         $credit = 0;
+                     }
+                     $row_month = substr($ti["entry_date"], 5, 2);
+                     if ($row_month == $month || $month == 0) {
+                         $month_debit += $debit;
+                         $month_credit += $credit;
+                         $month = $row_month;
+                     } else {
 
-     $month_balance = balance($month_balance, $month_debit, $month_credit, $sbj_cat);
-     echo "<tr>";
-     echo "<td colspan=3>".$month."月总计 </td>";
-     echo '<td class="text-right">'.number_format($month_debit, 2)."</td>";
-     echo '<td class="text-right">'.number_format($month_credit, 2)."</td>";
-     echo '<td class="text-right">'.number_format($month_balance, 2)."</td>";
-     echo "</tr>";
-     $month_debit = $debit;
-     $month_credit = $credit;
-     $month=$row_month;
-   };
+                         $month_balance = balance($month_balance, $month_debit, $month_credit, $sbj_cat);
+                         echo "<tr>";
+                         echo "<td colspan=3>" . $month . "月总计 </td>";
+                         echo '<td class="text-right">' . number_format($month_debit, 2) . "</td>";
+                         echo '<td class="text-right">' . number_format($month_credit, 2) . "</td>";
+                         echo '<td class="text-right">' . number_format($month_balance, 2) . "</td>";
+                         echo "</tr>";
+                         $month_debit = $debit;
+                         $month_credit = $credit;
+                         $month = $row_month;
+                     };
 
-   echo "<tr>";
-   echo "<td>".substr($ti["entry_date"],0,10)."</td>";
-   echo "<td>".$ti["entry_num"]."</td>";
-   echo "<td>".$ti["entry_memo"]."</td>";
+                     echo "<tr>";
+                     echo "<td>" . substr($ti["entry_date"], 0, 10) . "</td>";
+                     echo "<td>" . $ti["entry_num"] . "</td>";
+                     echo "<td>" . $ti["entry_memo"] . "</td>";
 
-   if(isset($ti["debit"])){
-     echo '<td class="text-right">'.number_format($ti["debit"],2)."</td>";
-     $debit = $ti["debit"];
-   }else{
-     echo "<td> </td>";
-     $debit = 0;
-   }
-      
-   if(isset($ti["credit"])){
-     echo '<td class="text-right">'.number_format($ti["credit"],2)."</td>";
-     $credit = $ti["credit"];
-   }else{
-     echo "<td> </td>";
-     $credit = 0;
-   }
-   echo '<td class="text-right">'.number_format($ti["balance"],2)."</td>";
-   echo "</div>";
-   echo "</tr>";
+                     if (isset($ti["debit"])) {
+                         echo '<td class="text-right">' . number_format($ti["debit"], 2) . "</td>";
+                         $debit = $ti["debit"];
+                     } else {
+                         echo "<td> </td>";
+                         $debit = 0;
+                     }
+
+                     if (isset($ti["credit"])) {
+                         echo '<td class="text-right">' . number_format($ti["credit"], 2) . "</td>";
+                         $credit = $ti["credit"];
+                     } else {
+                         echo "<td> </td>";
+                         $credit = 0;
+                     }
+                     echo '<td class="text-right">' . number_format($ti["balance"], 2) . "</td>";
+                     echo "</div>";
+                     echo "</tr>";
 
 
- }
- 
- if($month != 0){
-     echo "<tr>";
-     echo "<td colspan=3>".$month."月总计 </td>";
-     echo '<td class="text-right">'.number_format($month_debit, 2)."</td>";
-     echo '<td class="text-right">'.number_format($month_credit, 2)."</td>";
-     echo '<td class="text-right">'.number_format(balance($month_balance, $month_debit, $month_credit, $sbj_cat), 2)."</td>";
-     echo "</tr>";
- }
-?>
-				 <tr>
-				 <th>&nbsp;</th>
-				 <th>&nbsp;</th>
-				 <th>总计</th>
- <th class="text-right"><?php echo number_format($dataProvider["sum_debit"],2) ?></th>
- <th class="text-right"><?php echo number_format($dataProvider["sum_credit"],2) ?></th>
- <th class="text-right"><?php echo number_format($dataProvider["end_balance"],2) ?></th>
-				 </tr>
+                 }
+
+                 if ($month != 0) {
+                     echo "<tr>";
+                     echo "<td colspan=3>" . $month . "月总计 </td>";
+                     echo '<td class="text-right">' . number_format($month_debit, 2) . "</td>";
+                     echo '<td class="text-right">' . number_format($month_credit, 2) . "</td>";
+                     echo '<td class="text-right">' . number_format(balance($month_balance, $month_debit, $month_credit, $sbj_cat), 2) . "</td>";
+                     echo "</tr>";
+                 }
+                 ?>
+             <tr>
+                 <th>&nbsp;</th>
+                 <th>&nbsp;</th>
+                 <th>总计</th>
+                 <th class="text-right"><?php echo number_format($dataProvider["sum_debit"], 2) ?></th>
+                 <th class="text-right"><?php echo number_format($dataProvider["sum_credit"], 2) ?></th>
+                 <th class="text-right"><?php echo number_format($dataProvider["end_balance"], 2) ?></th>
+             </tr>
+             <?
+         }
+         ?>
 		</table>
 </div>
 

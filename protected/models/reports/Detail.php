@@ -23,7 +23,8 @@ class Detail extends CModel
     $data["end_balance"] = $this->balance; //期末余额
     $data["info"] = $info;
     $data["sum_debit"] = $this->sum_debit;
-    $data["sum_credit"] = $this->sum_credit;
+      $data["sum_credit"] = $this->sum_credit;
+      $data["sbj_number"] = $sbj_id;
     return $data;
     
   }

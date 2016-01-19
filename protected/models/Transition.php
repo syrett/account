@@ -1133,9 +1133,12 @@ class Transition extends CActiveRecord
     /**
      * 列出科目
      */
-    public function listSubjects()
+    public function listSubjects($type = '')
     {
-        $sql = "select * from subjects where has_sub=0 order by concat(`sbj_number`) asc"; //
+        if($type == '')
+            $sql = "select * from subjects where has_sub=0 order by concat(`sbj_number`) asc"; //
+        elseif($type == 'all')
+            $sql = "select * from subjects order by concat(`sbj_number`) asc"; //
         $First = Subjects::model()->findAllBySql($sql);
         $arr = array();
         foreach ($First as $row) {

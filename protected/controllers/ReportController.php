@@ -138,15 +138,23 @@ class ReportController extends Controller
         }
         $model = new Detail();
         $subject_name = "";
+        $data_array = [];
         if ($subject_id != '') {
-            $subject_name = Subjects::getName($subject_id);
-            $data = $model->genData($subject_id, $year, $fm, $tm);
+            $sbj = Subjects::model()->findByAttributes(['sbj_number'=>$subject_id]);
+            $subject_name = $sbj->sbj_name;
+            if($sbj->has_sub == 1){
+                $list = $sbj->list_sub();
+                foreach ($list as $item) {
+                    $data_array[] = $model->genData($item['sbj_number'], $year, $fm, $tm);
+                }
+            }else
+                $data = $model->genData($subject_id, $year, $fm, $tm);
         } else {
             $data = array();
         }
 
         $company = Condom::model()->getName();
-        $this->render("detail", array("dataProvider" => $data,
+        $this->render("detail", array("dataProviderArray" => count($data_array) == 0?[$data]:$data_array,
             "subject_name" => $subject_name,
             "company" => $company,
             "fromMonth" => $year . '年' . $fm . '月',
