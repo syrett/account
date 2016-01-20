@@ -78,13 +78,13 @@ function balance2($last_balance, $debit, $credit, $sbj_cat)
 {
     switch ($sbj_cat) {
         case 5: //费用类
-            $balance = $last_balance + $debit;
+            $balance = $last_balance + $debit - $credit;
             break;
         case 1: //资产类
             $balance = $last_balance + $debit - $credit;
             break;
         case 4: //收入类
-            $balance = $last_balance + $credit;
+            $balance = $last_balance + $credit - $debit;
             break;
         case 2: //负债类
             $balance = $last_balance + $credit - $debit;
