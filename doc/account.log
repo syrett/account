@@ -741,6 +741,15 @@ ALTER TABLE `auth_permission`
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
 
+-- 2016年1月15日10:33:49
+ALTER TABLE `bank` ADD `entry_transaction` TINYINT NOT NULL COMMENT '支出或收入' AFTER `type`;
+ALTER TABLE `cash` ADD `entry_transaction` TINYINT NOT NULL COMMENT '支出或收入' AFTER `type`;
+UPDATE `bank` SET `entry_transaction` = '2' WHERE `path` like '=>收入%';
+UPDATE `bank` SET `entry_transaction` = '1' WHERE `path` like '=>支出%';
+ALTER TABLE `stock` ADD `month_left` INT NULL COMMENT '剩余计提月份' AFTER `value_month`;
+
+
+
 
 
 
