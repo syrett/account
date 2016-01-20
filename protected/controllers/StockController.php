@@ -24,7 +24,7 @@ class StockController extends Controller
         $rules = parent::accessRules();
         if ($rules[0]['actions'] == ['manage'])
             $rules[0]['actions'] = ['admin'];
-        $rules[0]['actions'] = array_merge($rules[0]['actions'], []);
+        $rules[0]['actions'] = array_merge($rules[0]['actions'], ['excel']);
         return $rules;
     }
 
@@ -571,7 +571,7 @@ class StockController extends Controller
             case '1801': $type = '长期待摊费用';$sbj_2 = '1801';$sbj_name = '摊销费';$x_name = '摊销率';break;
         }
         $list = Subjects::model()->list_sub($sbj);
-        $amount = 0;
+        $amount = 0;    //已经计提次数，也就是月份
         foreach ($list as $key => $item) {
             $sbj = $item['sbj_number'];
             $cdb->condition = "entry_subject like '$sbj%'"; //固定资产等
@@ -581,7 +581,8 @@ class StockController extends Controller
                     if($item2->checkDeprec($date)){
                         $price = $item2->getWorth();
                         $month = $item2->worth==''?0:count(explode(',', $item2->worth))-1;
-                        $price = $price * (100 - $item2->value_rate) / 100 / ($item2->value_month - $month);
+                        $month_left = $item2->getMonthLeft();
+                        $price = $price * (100 - $item2->value_rate) / $month_left / 100;
                         $amount += $price;
                         if (isset($list[$key]['entry_amount']))
                             $list[$key]['entry_amount'] += $price;

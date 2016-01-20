@@ -55,7 +55,7 @@ class Stock extends LFSModel
             array('in_price, out_price, value_month, value_rate', 'numerical'),
             array('order_no', 'length', 'max' => 16),
             array('name', 'length', 'max' => 512),
-            array('out_date, model, entry_subject, value_month, value_rate, cost_date, worth', 'safe'),
+            array('out_date, model, entry_subject, value_month, month_left, value_rate, cost_date, worth', 'safe'),
             // The following rule is used by search().
             array('id, hs_no, order_no, name, vendor_id, in_date, in_price, out_date, out_price, create_time, status', 'safe', 'on' => 'search'),
         );
@@ -563,11 +563,17 @@ class Stock extends LFSModel
                     //
                     if($item->checkDeprec($entry_prefix)){
                         $price = $item->getWorth();
-                        $worth = $price - $price * (100 - $option->value) / 100 / ($option->year * 12);
+                        $month_left = $item->getMonthLeft();
+                        $worth = $price - $price * (100 - $item->value_rate) / $month_left / 100;
                         $arr = explode(',', $item->worth);
                         $arr[] = round2($worth);
                         $item->worth = implode(',', $arr);
-                        $item->save();
+                        if($item->save()){
+                            $month_left -= 1;
+                            $item->month_left = $month_left;
+                            if($month_left <= $item->value_month)
+                                $item->save();
+                        }
                     }
                 }
             }
@@ -698,5 +704,9 @@ class Stock extends LFSModel
             $project = ProjectLong::model()->findByAttributes(['name'=>$name]);
         return $project!=null?$project->status:0;
 
+    }
+
+    public function getMonthLeft(){
+        return ($this->month_left == ''|| $this->month_left == null) ? $this->value_month: $this->month_left;
     }
 }
