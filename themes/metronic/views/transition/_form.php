@@ -218,13 +218,19 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
             );
         echo "\n";
         if (isset($_REQUEST['id']) && accessReview($_REQUEST['id']) && accessSettle($_REQUEST['id'])) {
-            echo CHtml::htmlbutton(($model[0]->entry_reviewed == 1) ? '<span class="glyphicon glyphicon-repeat"></span> 取消审核' : '<span class="glyphicon glyphicon-ok"></span> 审核通过', array(
-                    'submit' => array('transition/review', array('id' => $_REQUEST['id'], 'action' => $model[0]->entry_reviewed)),
+            echo ($model[0]->entry_reviewed == 1) ?
+                CHtml::htmlbutton( '<span class="glyphicon glyphicon-repeat"></span> 取消审核' , array(
+                    'submit' => array('transition/unreview', array('id' => $_REQUEST['id'], 'action' => $model[0]->entry_reviewed)),
                     'name' => 'btnReview',
                     'class' => 'btn btn-default btn-sm',
                     'confirm' => ($model[0]->entry_reviewed == 1) ? '确认取消审核？' : '确认通过审核？',
-                )
-            );
+                )):
+            CHtml::htmlbutton( '<span class="glyphicon glyphicon-ok"></span> 审核通过', array(
+                'submit' => array('transition/review', array('id' => $_REQUEST['id'], 'action' => $model[0]->entry_reviewed)),
+                'name' => 'btnReview',
+                'class' => 'btn btn-default btn-sm',
+                'confirm' => ($model[0]->entry_reviewed == 1) ? '确认取消审核？' : '确认通过审核？',
+            ));
         }
         ?>
     </p>

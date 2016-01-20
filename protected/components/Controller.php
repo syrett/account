@@ -34,9 +34,16 @@ class Controller extends CController
                 foreach ($access as $item) {
                     $actions = explode('/', $item->permission);
                     $controller = strtolower($this->getAction()->controller->id);
+                    $actiont = strtolower($this->getAction()->id);
                     if (strtolower($actions[0]) == $controller) {
                         if (count($actions) > 1) {
-                            $action = strtolower(end($actions)) == strtolower($this->getAction()->id) ? [$this->getAction()->id] : $action;
+                            //审核，取消审核权限控制，review同时控制审核和批量审核，unreview控制取消和批量取消
+                            if(($actiont=='review' || $actiont == 'setreviewedall') && end($actions) == 'review'){
+                                $action = end($actions)=='review'?[$actiont]:[''];
+                            }elseif(($actiont=='unreview' || $actiont == 'unreviewedall') && end($actions) == 'unreview'){
+                                $action = end($actions)=='unreview'?[$actiont]:[''];
+                            }else
+                                $action = strtolower(end($actions)) == strtolower($this->getAction()->id) ? [$this->getAction()->id] : $action;
                         } else {
                             $action = ['manage'];
                         }

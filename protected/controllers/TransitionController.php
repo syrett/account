@@ -27,9 +27,9 @@ class TransitionController extends Controller
     public function accessRules()
     {
         $rules = parent::accessRules();
+        $action = $this->getAction()->id;
         if ($rules[0]['actions'] == ['manage'])
             $rules[0]['actions'] = ['create'];
-        $action = $this->getAction()->id;
         if(in_array($action, ['salary', 'reimburse'] )){
             $permission = AuthRelation::model()->findByAttributes(['user_id'=>Yii::app()->user->id, 'permission'=>$action]);
             if($permission)
@@ -1026,6 +1026,33 @@ class TransitionController extends Controller
         }
 
     }
+    /*
+     * 取消审核
+     */
+    public function actionunReview()
+    {
+        if (Yii::app()->request->isPostRequest) {
+            $id = $_REQUEST[0]['id'];
+            $list = $this->getItems($id);
+            $valid = true;
+            foreach ($list as $item) {
+                $item = $this->loadModel($item['id']);
+                if ($valid = $item->validate() && $valid) {
+                    if ($_REQUEST[0]['action'] == 1) {
+                        $item->unReviewed();
+                    } else {
+                        $item->setReviewed();
+                    }
+                } else {
+                } //当前登陆用户id
+                $items[] = $item;
+            }
+
+            $this->render('update', array(
+                'model' => $items,
+            ));
+        }
+    }
 
     /*
      * 批量审核
@@ -1096,7 +1123,7 @@ class TransitionController extends Controller
      * $var $id
      * @return array()
      */
-    public function getItems($id)
+    private function getItems($id)
     {
         $data = Yii::app()->db->createCommand()
             ->select('entry_num_prefix, entry_num')
@@ -1259,7 +1286,11 @@ class TransitionController extends Controller
         Transition::model()->deleteAllByAttributes(['entry_num_prefix' => $date], 'entry_memo like "附加税-' . $date . '%"');
 //        if (Transition::model()->findByAttributes(['entry_num_prefix' => $date], 'entry_closing=1') || $model) {
         $rows = Transition::model()->deleteAllByAttributes(['entry_num_prefix' => $date], 'entry_memo like "计提折旧-' . $date . '%"');
-        if ($rows > 0) {
+
+        //还要判断是否是对已经结账的月份进行反结账，如果只是对过账的月份进行反结账，固定资产等的净值还保持不变
+        //以，是否能找到未结账标识为判断依据
+        $trans = Transition::model()->findByAttributes(['entry_num_prefix'=>$date, 'entry_closing'=>0]);
+        if ($rows > 0 && count($trans) <= 0) {
             $cdb = new CDbCriteria();
             $cdb->addCondition('entry_subject like "1601%" or entry_subject like "1701%" or entry_subject like "1801%"');
             $stocks = Stock::model()->findAll($cdb);
@@ -1267,7 +1298,13 @@ class TransitionController extends Controller
                 $arr = explode(',', $item['worth']);
                 array_pop($arr);
                 $item->worth = implode(',', $arr);
-                $item->save();
+                if($item->save()){
+                    $month_left = $item->month_left;
+                    $month_left += 1;
+                    $item->month_left = $month_left;
+                    if($month_left <= $item->value_month)
+                        $item->save();
+                }
             }
         }
 //        }
