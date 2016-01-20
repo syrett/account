@@ -74,17 +74,17 @@ function balance($last_balance, $debit, $credit, $sbj_cat)
     return number_format($balance, 2, '.', '');
 }
 
-function balance2($last_balance, $debit, $credit, $sbj_cat)
+function balance2($last_balance, $debit, $credit, $sbj_cat,$settlement=1)
 {
     switch ($sbj_cat) {
         case 5: //费用类
-            $balance = $last_balance + $debit;
+            $balance = $last_balance + $debit - ($settlement==0?$credit:0);
             break;
         case 1: //资产类
             $balance = $last_balance + $debit - $credit;
             break;
         case 4: //收入类
-            $balance = $last_balance + $credit;
+            $balance = $last_balance + $credit - ($settlement==0?$debit:0);
             break;
         case 2: //负债类
             $balance = $last_balance + $credit - $debit;

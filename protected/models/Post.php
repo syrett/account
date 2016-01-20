@@ -106,7 +106,7 @@ class Post extends CActiveRecord
       $transition = new Transition();
 
       $prefix = beTranPrefix($this->year,$this->month);
-      $select="entry_subject,entry_transaction,entry_amount";
+      $select="entry_subject,entry_transaction,entry_amount,entry_settlement";
       $tranDataArray = $transition->listByPrefix($prefix,$select);
       $balance=array();
       
@@ -118,16 +118,19 @@ class Post extends CActiveRecord
         else{
           $tmp_debit = 0;
           $tmp_credit = 0;
-          $tmp_balance = 0;
         }
 
-        if ($t['entry_transaction']=="1") { //1为借
-          $tmp_debit = $tmp_debit + floatval($t['entry_amount']);
-        }
-        elseif($t['entry_transaction']=="2") { //2为贷
-          $tmp_credit = $tmp_credit + floatval($t['entry_amount']);
-        }
-        
+          if($t['entry_settlement'] == 0){
+              if ($t['entry_transaction']=="1") { //1为借
+                  $tmp_debit = $tmp_debit + floatval($t['entry_amount']);
+              }
+              elseif($t['entry_transaction']=="2") { //2为贷
+                  $tmp_credit = $tmp_credit + floatval($t['entry_amount']);
+              }
+          }else{
+              $tmp_debit = $t['entry_amount'];
+              $tmp_credit = $t['entry_amount'];
+          }
         $balance[$t['entry_subject']]['debit']= $tmp_debit;
         $balance[$t['entry_subject']]['credit']= $tmp_credit;
       }

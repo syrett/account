@@ -46,12 +46,12 @@ class Detail extends CModel
       switch ($row["entry_transaction"]) {
       case 1:
         $arr["debit"] = $row["entry_amount"];
-        $arr["balance"] = balance2($this->balance, $row["entry_amount"], 0, $this->sbj_cat);
+        $arr["balance"] = balance2($this->balance, $row["entry_amount"], 0, $this->sbj_cat, $row->entry_settlement);
         $this->sum_debit += $row["entry_amount"];
         break;
       case 2:
         $arr["credit"] = $row["entry_amount"];
-        $arr["balance"] = balance2($this->balance, 0, $row["entry_amount"], $this->sbj_cat);
+        $arr["balance"] = balance2($this->balance, 0, $row["entry_amount"], $this->sbj_cat, $row->entry_settlement);
         $this->sum_credit += $row["entry_amount"];
         break;
       }
