@@ -89,18 +89,18 @@ $left = $before + $unreceived - $received;
                     'buttons' => array(
                         'update' => array(
                             'options' => array('class' => 'btn btn-default tip btn-xs', 'title' => '编辑'),
-                            'label' => '<span class="glyphicon glyphicon-pencil"></span>',
+                            'label' => '编辑',
                             'imageUrl' => false,
                         ),
                         'delete' => array(
                             'options' => array('class' => 'btn btn-default tip btn-xs delete', 'title' => '删除'),
-                            'label' => '<span class="glyphicon glyphicon-trash"></span>',
+                            'label' => '删除',
                             'imageUrl' => false,
                         ),
                         'bad' => array(
                             'options' => array(
                                 'class' => 'btn btn-default tip btn-xs',
-                                'title' => '坏账处理',
+                                'title' => '坏账',
                                 'confirm' => '确定要执行此操作？',
                                 'ajax' => [
                                     'dataType' => 'json',
@@ -110,7 +110,7 @@ $left = $before + $unreceived - $received;
                                                 $.fn.yiiGridView.update("client-grid")}'
                                 ]
                             ),
-                            'label' => "<span class='glyphicon glyphicon-ban-circle'></span>",
+                            'label' => "坏账",
                             'imageUrl' => false,
                             'url' => 'Yii::app()->createUrl("/client/bad", ["client_id"=>$data->id,"amount"=>$GLOBALS["d"],"action"=>$data->hasDad()?"unbad":"bad"])'
                         ),

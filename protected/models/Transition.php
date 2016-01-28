@@ -320,9 +320,10 @@ class Transition extends CActiveRecord
     /*
      * 有凭证的日期
      */
-    public static function listDate($arr=array())
+    public static function listDate($arr=array(), $options = [])
     {
-        $criteria = new CDbCriteria(array('group' => 'entry_num_prefix'));
+        $options['group'] = 'entry_num_prefix';
+        $criteria = new CDbCriteria($options);
         $list = Transition::model()->findAllByAttributes(
             $arr,
             $criteria
@@ -422,7 +423,7 @@ class Transition extends CActiveRecord
     public static function listAntiSettlement()
     {
         $tran = new Transition();
-        return $tran->listDate(array('entry_posting' => 1));
+        return $tran->listDate(['entry_posting' => 1], ['order'=> 'entry_num_prefix desc']);
     }
 
     /*
