@@ -13,7 +13,7 @@ body{
 	background-color:#193048;
 }
 </style>
-<div class="logo">老法师 sorcerer</div>
+<div class="logo">老法师 iLaoFaShi</div>
 <br />
 <div class="panel panel-default">
 	<div class="panel-body">
