@@ -724,7 +724,7 @@ $menu2 = [
 <!-- BEGIN FOOTER -->
 <div class="page-footer">
     <div class="page-footer-inner">
-        2015 &copy; <a href="http://www.laofashigroup.com" target="_blank">老法师（上海）财务咨询有限公司 版权所有</a>
+        2015-2016 &copy; <a href="http://www.ilaofashi.com" target="_blank">老法师（上海）财务咨询有限公司 版权所有</a>
     </div>
     <div class="scroll-to-top">
         <i class="icon-arrow-up"></i>
