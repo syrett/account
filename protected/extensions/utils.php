@@ -191,6 +191,7 @@ function checkAmount($amount)
  */
 function convertDate($date, $format='')
 {
+    $date = (string)$date;
     $date = str_replace('\/','',trim($date));
     $date = str_replace('\\','',$date);
     $date = str_replace('-','',$date);
@@ -199,7 +200,9 @@ function convertDate($date, $format='')
         $format = 'Ymd';
     $length = strlen($date);
     if ($length < 5)   //2015
-        return $date;
+        return $date.'0101';
+    elseif($length == 6)
+        $date .= $date. '01';
     try{
         $d = new DateTime($date);
     }catch (Exception $s){
