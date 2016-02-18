@@ -30,12 +30,12 @@ class TransitionController extends Controller
         $action = $this->getAction()->id;
         if ($rules[0]['actions'] == ['manage'])
             $rules[0]['actions'] = ['create'];
-        if(in_array($action, ['salary', 'reimburse'] )){
-            $permission = AuthRelation::model()->findByAttributes(['user_id'=>Yii::app()->user->id, 'permission'=>$action]);
-            if($permission)
+        if (in_array($action, ['salary', 'reimburse'])) {
+            $permission = AuthRelation::model()->findByAttributes(['user_id' => Yii::app()->user->id, 'permission' => $action]);
+            if ($permission)
                 $rules[0]['actions'] = [$action];
         }
-        $rules[0]['actions'] = array_merge($rules[0]['actions'], ['index', 'admin', 'settlement','listreview','update', 'listtransition', 'appendix']);
+        $rules[0]['actions'] = array_merge($rules[0]['actions'], ['index', 'admin', 'settlement', 'listreview', 'update', 'listtransition', 'appendix']);
         return $rules;
     }
 
@@ -430,9 +430,9 @@ class TransitionController extends Controller
                 $path_parts = pathinfo($_FILES['attachment']['name']);
                 $ext = strtolower($path_parts['extension']);
                 if ($ext == 'jpg') {
-                    if(@imagecreatefromjpeg($_FILES['attachment']['tmp_name'])==false){
+                    if (@imagecreatefromjpeg($_FILES['attachment']['tmp_name']) == false) {
                         $option = 'empty';
-                    }else {
+                    } else {
                         $jpeg_quality = 99;
                         $img_r = imagecreatefromjpeg($_FILES['attachment']['tmp_name']);
 
@@ -521,42 +521,46 @@ class TransitionController extends Controller
         Yii::import('ext.phpexcel.PHPExcel.PHPExcel_IOFactory');
         if (Yii::app()->request->isPostRequest) {
             //上传附件查看
-            if (isset($_FILES['attachment']) && file_exists($_FILES['attachment']['tmp_name']) && imagecreatefromjpeg($_FILES['attachment']['tmp_name'])) {
+            if (isset($_FILES['attachment']) && file_exists($_FILES['attachment']['tmp_name'])) {
                 $option = 'import';
                 $path_parts = pathinfo($_FILES['attachment']['name']);
                 $ext = strtolower($path_parts['extension']);
                 if ($ext == 'jpg') {
-                    $jpeg_quality = 99;
-                    $img_r = imagecreatefromjpeg($_FILES['attachment']['tmp_name']);
+                    if (@imagecreatefromjpeg($_FILES['attachment']['tmp_name']) == false) {
+                        $option = 'empty';
+                    } else {
+                        $jpeg_quality = 99;
+                        $img_r = imagecreatefromjpeg($_FILES['attachment']['tmp_name']);
 
-                    $position_x = 0;
-                    foreach ($_POST['selectItem'] as $key => $item) {
-                        $col[$position_x] = (int)$_POST['show_image_conf_w'][$key];
-                        $position_x += (int)$_POST['show_image_conf_w'][$key];
-                    }
+                        $position_x = 0;
+                        foreach ($_POST['selectItem'] as $key => $item) {
+                            $col[$position_x] = (int)$_POST['show_image_conf_w'][$key];
+                            $position_x += (int)$_POST['show_image_conf_w'][$key];
+                        }
 
-                    $finfo = getimagesize($_FILES['attachment']['tmp_name']);
-                    $targ_h = $finfo[1];
-                    $param = $finfo[0] / $position_x;
-                    Yii::import('ext.Baidu.OCR_Baidu');
-                    foreach ($col as $position => $width) {
-                        $targ_w = $width * $param;
-                        $dst_r = imagecreatetruecolor($targ_w, $targ_h);
+                        $finfo = getimagesize($_FILES['attachment']['tmp_name']);
+                        $targ_h = $finfo[1];
+                        $param = $finfo[0] / $position_x;
+                        Yii::import('ext.Baidu.OCR_Baidu');
+                        foreach ($col as $position => $width) {
+                            $targ_w = $width * $param;
+                            $dst_r = imagecreatetruecolor($targ_w, $targ_h);
 
-                        imagecopyresampled($dst_r, $img_r, 0, 0, $position * $param, 0, $targ_w, $targ_h, $targ_w, $targ_h);
+                            imagecopyresampled($dst_r, $img_r, 0, 0, $position * $param, 0, $targ_w, $targ_h, $targ_w, $targ_h);
 
 //                        imagejpeg($dst_r, 'temp.jpg', $jpeg_quality);
 //                        $imageFileContents = file_get_contents('temp.jpg');
-                        ob_start();
-                        imagejpeg($dst_r, null, $jpeg_quality);
-                        $imageFileContents = ob_get_contents();
-                        ob_end_clean();
-                        $data[] = OCR_Baidu::getText($imageFileContents);
+                            ob_start();
+                            imagejpeg($dst_r, null, $jpeg_quality);
+                            $imageFileContents = ob_get_contents();
+                            ob_end_clean();
+                            $data[] = OCR_Baidu::getText($imageFileContents);
+                        }
+                        $conf = [];
+                        $conf[] = isset($_POST['image_row1_type']);
+                        $conf[] = $_POST['selectItem'];
+                        $sheetData = Transition::getSheetDataFromImage($data, $conf);
                     }
-                    $conf = [];
-                    $conf[] = isset($_POST['image_row1_type']);
-                    $conf[] = $_POST['selectItem'];
-                    $sheetData = Transition::getSheetDataFromImage($data, $conf);
                 }
                 if ($ext == 'xls' || $ext == 'xlsx') {
 
@@ -1026,6 +1030,7 @@ class TransitionController extends Controller
         }
 
     }
+
     /*
      * 取消审核
      */
@@ -1221,8 +1226,8 @@ class TransitionController extends Controller
 
         if ($flag) {    //生成结转凭证，计提固定资产等,并自动审核过账
             $this->actionSettlement($entry_prefix);
-            $trans = Transition::model()->findAllByAttributes(['entry_reviewed'=>0,'entry_num_prefix'=>$entry_prefix]);
-            if(!empty($trans)){
+            $trans = Transition::model()->findAllByAttributes(['entry_reviewed' => 0, 'entry_num_prefix' => $entry_prefix]);
+            if (!empty($trans)) {
                 foreach ($trans as $item) {
                     $item->entry_reviewed = 1;
                     $item->entry_reviewer = 1;
@@ -1289,7 +1294,7 @@ class TransitionController extends Controller
 
         //还要判断是否是对已经结账的月份进行反结账，如果只是对过账的月份进行反结账，固定资产等的净值还保持不变
         //以，是否能找到未结账标识为判断依据
-        $trans = Transition::model()->findByAttributes(['entry_num_prefix'=>$date, 'entry_closing'=>0]);
+        $trans = Transition::model()->findByAttributes(['entry_num_prefix' => $date, 'entry_closing' => 0]);
         if ($rows > 0 && count($trans) <= 0) {
             $cdb = new CDbCriteria();
             $cdb->addCondition('entry_subject like "1601%" or entry_subject like "1701%" or entry_subject like "1801%"');
@@ -1298,11 +1303,11 @@ class TransitionController extends Controller
                 $arr = explode(',', $item['worth']);
                 array_pop($arr);
                 $item->worth = implode(',', $arr);
-                if($item->save()){
+                if ($item->save()) {
                     $month_left = $item->month_left;
                     $month_left += 1;
                     $item->month_left = $month_left;
-                    if($month_left <= $item->value_month)
+                    if ($month_left <= $item->value_month)
                         $item->save();
                 }
             }
