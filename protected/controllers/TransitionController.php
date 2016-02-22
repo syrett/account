@@ -251,7 +251,8 @@ class TransitionController extends Controller
                 //去除第一行
                 array_shift($list);
                 foreach ($list as $item) {
-                    $sheetData[] = Transition::getSheetData($item, 'product');
+                    if (isset($item['A']) || isset($item['B']))
+                        $sheetData[] = Transition::getSheetData($item, 'product');
                 }
             } elseif (!isset($_POST['submit_type'])) {
                 $option = 'save';
@@ -619,7 +620,7 @@ class TransitionController extends Controller
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.
      * @param integer $id the ID of the model to be loaded
-     * @return Transition the loaded model
+     * @return Transition the loaded models
      * @throws CHttpException
      */
     public function loadModel($id)
