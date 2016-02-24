@@ -66,7 +66,7 @@ $relation = Bank::model()->getRelation('bank',$model->id);
                     <td class="action">
                         <input type="hidden" id="id_<?= $key ?>" value="<?= $key ?>">
                         <input id="subject_b" name="subject_b" type="hidden" readonly
-                               value="<?= $model['subject_2'] ?>">
+                               value="<?= $model['type'] != 'reimburse'?$model['subject_2']:$model['subject'] ?>">
                         <input type="hidden" id="order_no_<?= $key ?>"
                                name="lists[<?= $key ?>][Transition][order_no]"
                                value="<?= $item['order_no'] ?>">

@@ -566,11 +566,11 @@ class Transition extends CActiveRecord
     /*
      * 是否已经审核
      */
-    public static function checkReviewed($id)
+    public static function checkReviewed($id, $type)
     {
         if ($id == "" || $id == "0")
             return false;
-        $tran = Transition::model()->findByAttributes(['data_id' => $id]);
+        $tran = Transition::model()->findByAttributes(['data_id' => $id, 'data_type' => $type]);
         if (!empty($tran) && $tran->entry_reviewed == 1)
             return true;
         else
@@ -980,6 +980,7 @@ class Transition extends CActiveRecord
 
     /*
      * 结转操作凭证
+     * 结转时，如果是当年12月，多生成一条凭证，借本年利润，贷利润分配/未分配利润；
      */
     public function settlement($entry_prefix)
     {
@@ -1034,6 +1035,9 @@ class Transition extends CActiveRecord
             $tran->entry_subject = '4103';              //本年利润
             $tran->entry_amount = $sum;
             $tran->save();
+            //如果是12月，将本年利润过到，未分配利润下
+            if(substr($entry_prefix,4,6) == 12)
+                $tran->passProfit();
         }
 //        if ($sum == 0)
         $tran->setForward(1);
@@ -1098,6 +1102,17 @@ class Transition extends CActiveRecord
         $num = $data['b'] + 1;
         $num = $this->AddZero($num); //数字补0
         return $num;
+    }
+
+    /*
+     * 本年利润过度到未分配利润
+     */
+    public function passProfit(){
+        $entry_prefix = $this->entry_num_prefix;
+        $entry_num = $this->tranSuffix($entry_prefix);
+        $tran1 = new Transition();
+        $tran2 = new Transition();
+
     }
 
     /*

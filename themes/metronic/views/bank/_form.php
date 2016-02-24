@@ -81,7 +81,7 @@ $clientArray = Client::model()->getClientArray();
                         <input type="hidden" id="id_<?= $key ?>" value="<?= $key ?>">
                         <data>
                             <input id="subject_b" name="subject_b" type="hidden" readonly
-                                   value="<?= $model['subject_2'] ?>">
+                                   value="<?= $model['type'] != 'reimburse'?$model['subject_2']:$model['subject'] ?>">
                             <input type="hidden" id="status_id_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][status_id]"
                                    value="<?= $item['status_id'] ?>">

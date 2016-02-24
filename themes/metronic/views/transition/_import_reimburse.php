@@ -22,7 +22,7 @@ $this->pageTitle = Yii::app()->name;
         $this->renderPartial('_import_navigate', array('type' => $type));
         ?>
     </div>
-    <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form']); ?>
+    <?php echo CHtml::beginForm('', 'post', ['id' => 'form']); ?>
     <div class="row import-tab" id="abc">
         <div class="box">
             <table id="data_import" class="table table-bordered dataTable">

@@ -68,7 +68,7 @@ function echoData($key, $data, $name="default")
                  <th>资产</th>
                  <th class="text-right">年初数</th>
                  <th class="text-right">期末数</th>
-                 <th>负债及股权益(所有者权益)</th>
+                 <th>负债及股东权益(所有者权益)</th>
                  <th class="text-right">年初数</th>
                  <th class="text-right">期末数</th>
                  </tr>

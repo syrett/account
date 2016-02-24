@@ -74,7 +74,7 @@ class BankController extends Controller
 			$sheetData[0]['data'] = Transition::getSheetData($model->attributes,'bank');
             if($model->status_id==1)
             {
-                $tran = Transition::model()->find(['condition' => 'data_id=:data_id', 'params' => [':data_id' => $id]]);
+                $tran = Transition::model()->find(['condition' => 'data_id=:data_id and data_type=:data_type', 'params' => [':data_id' => $id, ':data_type' => 'bank']]);
                 if($tran)
                     $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
             }

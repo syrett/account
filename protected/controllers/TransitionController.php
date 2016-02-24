@@ -2051,7 +2051,7 @@ class TransitionController extends Controller
                 $result[] = ['status' => 0, 'data' => $arr];
                 continue;
             }
-            if (Transition::model()->checkReviewed($id)) {
+            if (Transition::model()->checkReviewed($id, $type)) {
                 $arr['error'] = ['该数据生成凭证已经审核，无法修改'];
                 $result[] = ['status' => 0, 'data' => $arr];
                 continue;
