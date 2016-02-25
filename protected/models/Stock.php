@@ -520,6 +520,22 @@ class Stock extends LFSModel
     }
 
     /*
+     * 开始计提
+     */
+    public function startPeriod($date){
+        //如果是期初明细，账套起始月就要开始计提，期初明细的固定资产order_no为null
+        if($this->order_no == null)
+            return true;
+
+        $in_date = substr($this->in_date, 0, 6);
+        $date = substr($date, 0, 6);
+        if($date > $in_date)
+            return true;
+        return false;
+
+    }
+
+    /*
      * 检查是否需要折旧或摊销
      */
     public function checkDeprec($date){
@@ -531,11 +547,8 @@ class Stock extends LFSModel
             else
                 return false;
         }
-        //如果是期初明细，账套起始月就要开始计提
-        $condom = Condom::model()->getStartTime();
-        if($condom == substr($date,0,6) && $this->order_no == null)
-            return true;
-        if(!$this->overPeriod($date))
+        //是否开始计提，然后检查是否超过年限
+        if($this->startPeriod($date) && !$this->overPeriod($date))
             return true;
         return false;
     }
