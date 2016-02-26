@@ -748,7 +748,8 @@ UPDATE `bank` SET `entry_transaction` = '2' WHERE `path` like '=>收入%';
 UPDATE `bank` SET `entry_transaction` = '1' WHERE `path` like '=>支出%';
 ALTER TABLE `stock` ADD `month_left` INT NULL COMMENT '剩余计提月份' AFTER `value_month`;
 
-
+-- 2016年2月25日15:00:47
+ALTER TABLE `product` ADD `realorder` VARCHAR(64) NULL COMMENT '客户自己的订单号' AFTER `order_no`;
 
 
 
