@@ -84,6 +84,10 @@ $left = $before + $unreceived - $received;
                     'header' => '未收',
                     'value' => '$GLOBALS["d"] = $data->getUnreceived()',
                 ],
+                [
+                    'header' => '账期 / 账龄',
+                    'value' => '$data->getAge()',
+                ],
                 array(
                     'class' => 'CButtonColumn',
                     'buttons' => array(
@@ -95,6 +99,11 @@ $left = $before + $unreceived - $received;
                         'delete' => array(
                             'options' => array('class' => 'btn btn-default tip btn-xs delete', 'title' => '删除'),
                             'label' => '删除',
+                            'imageUrl' => false,
+                        ),
+                        'view' => array(
+                            'options' => array('class' => 'btn btn-default tip btn-xs view', 'title' => '查看'),
+                            'label' => '查看',
                             'imageUrl' => false,
                         ),
                         'bad' => array(
@@ -115,7 +124,7 @@ $left = $before + $unreceived - $received;
                             'url' => 'Yii::app()->createUrl("/client/bad", ["client_id"=>$data->id,"amount"=>$GLOBALS["d"],"action"=>$data->hasDad()?"unbad":"bad"])'
                         ),
                     ),
-                    'template' => '<div class="btn-group">{update}{bad}</div>',
+                    'template' => '<div class="btn-group">{update}{view}</div>',
                     'deleteConfirmation' => '确定要删除该条记录？',
                     'afterDelete' => 'function(link,success,data){if(success) alert(data);}'
                 ),

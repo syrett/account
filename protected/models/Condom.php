@@ -133,7 +133,7 @@ class Condom extends CActiveRecord
 		return parent::model($className);
 	}
 
-    public function getStartTime(){
+    public static function getStartTime(){
         $cri = new CDbCriteria();
         $cri->addCondition('dbname=:SYSDB');
         $cri->params['SYSDB'] = substr(SYSDB,8);

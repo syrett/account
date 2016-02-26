@@ -43,8 +43,9 @@ class Product extends LFSModel
             array('client_id, tax, count', 'numerical', 'integerOnly'=>true),
             array('price, paied', 'numerical'),
             array('entry_name', 'length', 'max'=>512),
+            array('realorder', 'length', 'max'=>64),
 			// The following rule is used by search().
-            array('id, order_no, entry_date, client_id, entry_name, price, tax, create_time, update_time, status_id', 'safe', 'on'=>'search'),
+            array('id, order_no, realorder, entry_date, client_id, entry_name, price, tax, create_time, update_time, status_id', 'safe', 'on'=>'search'),
         );
 	}
 
@@ -68,6 +69,7 @@ class Product extends LFSModel
 			'id' => 'ID',
 			'no' => '编号',
             'order_no' => '订单号',
+            'realorder' => '销售单号',
             'entry_date' => '交易日期',
             'vendor_id' => '客户',
             'entry_name' => '商品名称',
@@ -100,6 +102,7 @@ class Product extends LFSModel
 
 		$criteria->compare('id',$this->id);
         $criteria->compare('order_no',$this->order_no);
+        $criteria->compare('realorder',$this->realorder);
         $criteria->compare('entry_date',$this->entry_date);
         $criteria->compare('client_id',$this->client_id);
         $criteria->compare('entry_name',$this->entry_name,true);
@@ -134,6 +137,7 @@ class Product extends LFSModel
         $this->setAttribute('entry_name', $item['entry_name']);
         $this->setAttribute('entry_memo', $item['entry_memo']);
         $this->setAttribute('entry_date', $item['entry_date']);
+        $this->setAttribute('realorder', $item['realorder']);
         $this->setAttribute('subject', $item['entry_subject']);
         $this->setAttribute('subject_2', $item['subject_2']);
         $this->setAttribute('tax',  isset($item['tax'])?$item['tax']:'');

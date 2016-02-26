@@ -10,6 +10,7 @@
  * @property string $entry_time
  * @property string $entry_date
  * @property string $entry_memo
+ * @property string $realorder
  * @property integer $entry_transaction
  * @property integer $entry_subject
  * @property float $entry_amount
@@ -35,10 +36,12 @@ class Transition extends CActiveRecord
     public $entry_number; //  entry_num_prefix. entry_num     完整凭证编号，供凭证管理、排序搜索使用
     public $entry_time;
     public $select; // search的时候，定义返回字段
-    public static $input_arr = ["entry_name" => "",
+    public static $input_arr = [
+        "entry_name" => "",
         "model" => "",
         "entry_date" => "",
         "entry_memo" => "",
+        "realorder" => "",
         "entry_amount" => "",
         "entry_transaction" => "",
         "d_id" => "",
@@ -621,11 +624,12 @@ class Transition extends CActiveRecord
                         break;
                     case 'product':
                         $arr['entry_date'] = convertDate($items['A']);
-                        $arr['entry_memo'] = trim($items['B']);
-                        $arr['entry_appendix_id'] = Client::model()->matchName(trim($items['C']));
-                        $arr['entry_name'] = Stock::model()->matchName(trim($items['D']));
-                        $amount = trim($items['E']);
-                        $arr['count'] = trim($items['F']);
+                        $arr['realorder'] = trim($items['B']);
+                        $arr['entry_memo'] = trim($items['C']);
+                        $arr['entry_appendix_id'] = Client::model()->matchName(trim($items['D']));
+                        $arr['entry_name'] = Stock::model()->matchName(trim($items['E']));
+                        $amount = trim($items['F']);
+                        $arr['count'] = trim($items['G']);
                         break;
                     case 'cost':    //成本结转
                         $arr['entry_date'] = convertDate($items['A'],'Ymd');
@@ -761,6 +765,7 @@ class Transition extends CActiveRecord
                 $arr['target'] = isset($items['target'])?$items['target']:$arr['entry_name'];
                 $arr['entry_date'] = isset($items['date']) ? $items['date'] : (isset($items['entry_date'])?$items['entry_date']:$arr['entry_date']);
                 $arr['entry_memo'] = isset($items['memo']) ? $items['memo'] : $arr['entry_memo'];
+                $arr['realorder'] = isset($items['realorder']) ? $items['realorder'] : '';
                 $arr['entry_amount'] = str_replace(",", "", trim(isset($items['amount']) ? $items['amount'] : $arr['entry_amount']));
                 $arr['entry_subject'] = isset($items['subject']) ? $items['subject'] : $arr['entry_subject'];
                 if(!empty($items['client_id']))

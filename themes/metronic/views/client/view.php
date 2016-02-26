@@ -1,30 +1,102 @@
 <?php
-/* @var $this ClientController */
-/* @var $model Client */
-
-$this->breadcrumbs=array(
-	'Clients'=>array('index'),
-	$model->id,
+/* @var $this SubjectController */
+/* @var $dataProvider CActiveDataProvider */
+$this->pageTitle = Yii::app()->name . ' - 客户管理';
+$this->breadcrumbs = array(
+    '客户账务',
 );
-
-$this->menu=array(
-	array('label'=>'List Client', 'url'=>array('index')),
-	array('label'=>'Create Client', 'url'=>array('create')),
-	array('label'=>'Update Client', 'url'=>array('update', 'id'=>$model->id)),
-	array('label'=>'Delete Client', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
-	array('label'=>'Manage Client', 'url'=>array('admin')),
-);
+$ageDetail = $model->getClientAge();
 ?>
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="font-green-sharp">客户账务</span>
+        </div>
+        <div class="actions">
+            <?php
+            echo CHtml::link('<i class="fa fa-bars"></i> 客户列表', array('admin'), array('class' => 'btn btn-circle btn-primary btn-sm'));
+            ?>
+            <a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title=""
+               data-original-title title="全屏"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="tabbable tabbable-tabdrop">
+            <ul class="nav nav-tabs">
+                <?
+                foreach (Client::$ageZone as $tab => $item) {
 
-<h1>View Client #<?php echo $model->id; ?></h1>
+                    ?>
+                    <li class="<?= $tab == 0 ? 'active' : '' ?>">
+                        <a href="#tab<?= $tab ?>" data-toggle="tab"><?= $item ?></a>
+                    </li>
+                    <?php
+                }
+                ?>
+            </ul>
+            <div class="tab-content">
+                <?
+                foreach (Client::$ageZone as $tab => $item) {
 
-<?php $this->widget('zii.widgets.CDetailView', array(
-	'data'=>$model,
-	'attributes'=>array(
-		'id',
-		'vat',
-		'phone',
-		'add',
-		'memo',
-	),
-)); ?>
+                    ?>
+                    <div class="tab-pane <?= $tab == 0 ? 'active' : '' ?>" id="tab<?= $tab ?>">
+                        <p><?php
+                            $this->widget('zii.widgets.grid.CGridView', array(
+                                'id' => 'client-grid',
+                                'dataProvider' => $dataProvider[$tab],
+                                'itemsCssClass' => 'table table-striped table-hover',
+                                'columns' => array(
+                                    [
+                                        'header' => '凭证号',
+                                        'value' => '$data->entry_num_prefix. addZero($data->entry_num)'
+                                    ],
+                                    [
+                                        'header' => '日期',
+                                        'value' => 'convertDate($data->entry_date, "Y-m-d")'
+                                    ],
+                                    [
+                                        'header' => '说明',
+                                        'name' => 'entry_memo'
+                                    ],
+                                    [
+                                        'header' => '金额',
+                                        'name' => 'entry_amount'
+                                    ],
+                                    [
+                                        'class' => 'CButtonColumn',
+                                        'buttons' => [
+                                            'bad' => array(
+                                                'options' => array(
+                                                    'class' => 'btn btn-default tip btn-xs',
+                                                    'title' => '坏账',
+                                                    'confirm' => '确定要执行此操作？',
+                                                    'ajax' => [
+                                                        'dataType' => 'json',
+                                                        'url' => 'js:$(this).attr("href")',
+                                                        'success' => 'js:function(data) {
+                                                        alert(data.msg);
+                                                $.fn.yiiGridView.update("client-grid")}'
+                                                    ]
+                                                ),
+                                                'label' => "坏账",
+                                                'imageUrl' => false,
+                                                'url' => 'Yii::app()->createUrl("/client/bad", ["client_id"=>' . $model->id . ',"amount"=>$data->entry_amount,"action"=>"bad"])'
+                                            ),
+                                        ],
+                                        'template' => '<div class="btn-group">{bad}</div>',
+
+                                    ]
+                                )));
+                            ?>
+                        </p>
+                    </div>
+                    <?php
+                }
+                ?>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+

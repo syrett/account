@@ -62,10 +62,13 @@ $('.search-form form').submit(function(){
                     'headerHtmlOptions' => array('class' => 'input-small'),
                 ),
                 array(
+                    'name' => 'realorder',
+                    'filter'=>CHtml::activeTextField($model, 'realorder',array("class"=>"input_mid")),
+                ),
+                array(
                     'name' => 'entry_date',
                     'value' => 'date("Y年m月d日",strtotime($data->entry_date))',
-                    'htmlOptions' => array('class' => 'input-small'),
-                    'headerHtmlOptions' => array('class' => 'input-small'),
+                    'filter'=>CHtml::activeTextField($model, 'entry_date',array("class"=>"input_mid")),
                 ),
                 array(
                     'name' => 'entry_name',
@@ -89,8 +92,7 @@ $('.search-form form').submit(function(){
                 array(
                     'name' => 'create_time',
                     'value' => 'date("Y年m月d日",strtotime($data->create_time))',
-                    'htmlOptions' => array('class' => 'input-small'),
-                    'headerHtmlOptions' => array('class' => 'input-small'),
+                    'filter'=>CHtml::activeTextField($model, 'create_time',array("class"=>"input_mid")),
                 ),
                 array(
                     'class' => 'CButtonColumn',

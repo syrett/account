@@ -391,10 +391,17 @@ table#money .left{
     padding: 0px 2px;
     font-size: 13px;
 }
-.input_mmmin{
-    /*width: 45px;*/
+.input_number{
+    width: 35px;
+    padding: 0px 2px;
+    font-size: 13px;
 }
 
+.input_money {
+    width: 45px;
+    padding: 0px 2px;
+    font-size: 13px;
+}
 .input_mid {
     width: 80px;
 }

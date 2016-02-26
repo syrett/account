@@ -285,7 +285,10 @@ function lockBank(e) {
     $.ajax({
         type: "POST",
         url: url,
-        data: {"bank": $("#subject_b").val()}
+        data: {"bank": $("#subject_b").val()},
+        success: function(data){
+            $("[name='subject_b']").val($("#subject_b").val())
+        }
     })
     //if (e.value == 1) {
     //    var url = $("#user-bank").val();

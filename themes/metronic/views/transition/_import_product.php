@@ -31,11 +31,12 @@ $preOrder = Preparation::getOrderArray($type);
                 <tr>
                     <th class="input_min"><input type="checkbox"></th>
                     <th class="input_mid">交易日期</th>
+                    <th class="input_mid">订单号</th>
                     <th class="input_mid2">交易摘要</th>
                     <th class="input_mid">客户名称</th>
                     <th class="input_mid">商品/服务名称</th>
-                    <th class="input_mid">单价</th>
-                    <th class="input_min">数量</th>
+                    <th class="input_money">单价</th>
+                    <th class="input_number">数量</th>
                     <th class="input_min">合计</th>
                     <th class="input-small">税率</th>
                     <th class="input-small">销售类型</th>
@@ -60,6 +61,10 @@ $preOrder = Preparation::getOrderArray($type);
                                        name="lists[<?= $key ?>][Transition][entry_date]"
                                        value="<?= $item['entry_date'] ?>">
                             </td>
+                            <td><input class="input_mid" type="text" id="tran_realorder_<?= $key ?>" placeholder="订单号"
+                                       name="lists[<?= $key ?>][Transition][realorder]"
+                                       value="<?= $item['realorder'] ?>">
+                            </td>
                             <td><input class="input_mid2" type="text" id="tran_memo_<?= $key ?>" placeholder="摘要"
                                        name="lists[<?= $key ?>][Transition][entry_memo]"
                                        value="<?= $item['entry_memo'] ?>">
@@ -80,11 +85,11 @@ $preOrder = Preparation::getOrderArray($type);
                                        name="lists[<?= $key ?>][Transition][entry_name]"
                                        value="<?= $item['entry_name'] ?>">
                             </td>
-                            <td><input class="input_mid" type="text" id="tran_price_<?= $key ?>" placeholder="单价"
+                            <td><input class="input_money" type="text" id="tran_price_<?= $key ?>" placeholder="单价"
                                        name="lists[<?= $key ?>][Transition][price]" onkeyup="checkinput1(this)"
                                        onblur="checkinput1(this)" value="<?= $item['price'] ?>">
                             </td>
-                            <td><input class="input_min" type="number" min="1" id="tran_count_<?= $key ?>"
+                            <td><input class="input_number" type="number" min="1" id="tran_count_<?= $key ?>"
                                        placeholder="数量"
                                        name="lists[<?= $key ?>][Transition][count]" onkeyup="checkinput2(this)"
                                        onblur="checkinput1(this)" value="<?= $item['count'] ?>">

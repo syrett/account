@@ -34,6 +34,7 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                     <th class="input_min"><input type="checkbox"></th>
                     <th class="input_mid">交易日期</th>
                     <th class="input_mid">交易摘要</th>
+                    <th class="input_mid">销售单号</th>
                     <th class="input_mid">客户</th>
                     <th class="input_mid">商品/服务名称</th>
                     <th class="input_min">单价</th>
@@ -64,6 +65,10 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                         <td><input class="input_mid" type="text" id="tran_date_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entry_date]"
                                    value="<?= $item['entry_date'] ?>">
+                        </td>
+                        <td><input class="input_mid" type="text" id="tran_realorder_<?= $key ?>"
+                                   name="lists[<?= $key ?>][Transition][realorder]"
+                                   value="<?= $item['realorder'] ?>">
                         </td>
                         <td><input class="input_mid" type="text" id="tran_memo_<?= $key ?>"
                                    name="lists[<?= $key ?>][Transition][entry_memo]"
