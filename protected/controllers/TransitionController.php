@@ -2411,7 +2411,7 @@ class TransitionController extends Controller
                         $tran['entry_amount'] = -$tran['entry_amount'];
                     $data['entry_subject'] = $arr['subject_2'];
                     $subject_2_arr = explode(',', $arr['subject_2']);
-
+                    $tran_temp = [];
                     if (count($subject_2_arr) > 1) {
                         $subject_2_price = explode(',', $arr['subject_2_price']);
                         if (isset($arr['subject_2_transa']))
