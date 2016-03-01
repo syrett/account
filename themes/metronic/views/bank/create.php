@@ -9,11 +9,11 @@
 <head>
         <meta charset="utf-8"/>
         <script src="/themes/metronic/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
-        <link rel="stylesheet" type="text/css" href="/css/gridview.css" /><link rel="stylesheet" type="text/css" href="/assets/1dc091a4/pager.css" /><script type="text/javascript" src="/assets/13c23a11/jquery.ba-bbq.js"></script><title>老法师 -- 云端财务管理系统</title>
+        <link rel="stylesheet" type="text/css" href="/css/gridview.css" /><link rel="stylesheet" type="text/css" href="/assets/1dc091a4/pager.css" /><script type="text/javascript" src="/assets/13c23a11/jquery.ba-bbq.js"></script><title><?= Yii::t('import', '老法师 -- 云端财务管理系统') ?></title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta content="width=device-width, initial-scale=1" name="viewport"/>
-        <meta content="适合小微企业的在线财务管理系统" name="description"/>
-        <meta content="老法师（上海）财务咨询有限公司" name="author"/>
+        <meta content="<?= Yii::t('import', '适合小微企业的在线财务管理系统') ?>" name="description"/>
+        <meta content="<?= Yii::t('import', '老法师（上海）财务咨询有限公司') ?>" name="author"/>
         <!-- BEGIN GLOBAL MANDATORY STYLES -->
         <link href="http://fonts.useso.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet"
                          type="text/css"/>
@@ -78,7 +78,7 @@
                                data-target=".navbar-collapse">
                     </a>
                 <!-- END RESPONSIVE MENU TOGGLER -->
-                … title="编辑" href="/index.php?r=bank/update&amp;id=2"><span class="glyphicon glyphicon-pencil"></span></a><a class="btn btn-default tip delete btn-xs" title="删除" href="/index.php?r=bank/delete&amp;id=2"><span class="glyphicon glyphicon-trash"></span></a></div></td></tr><tr class="row-odd"><td class="checkbox-column"><input value="1" id="subjects-grid_c0_1" type="checkbox" name="selectdel[]" /></td><td>b公司</td><td>20150901</td><td>ha</td><td>5</td><td>应付账款/asdf</td><td class="button-column"><div class="btn-group"><a class="btn btn-default tip btn-xs" title="编辑" href="/index.php?r=bank/update&amp;id=1"><span class="glyphicon glyphicon-pencil"></span></a><a class="btn btn-default tip delete btn-xs" title="删除" href="/index.php?r=bank/delete&amp;id=1"><span class="glyphicon glyphicon-trash"></span></a></div></td></tr></tbody></table><div class="keys" style="display:none" title="/index.php?ajax=subjects-grid&amp;r=bank%2Findex"><span>2</span><span>1</span></div></div>	</div>
+                … title="<?= Yii::t('import', '编辑') ?>" href="/index.php?r=bank/update&amp;id=2"><span class="glyphicon glyphicon-pencil"></span></a><a class="btn btn-default tip delete btn-xs" title="<?= Yii::t('import', '删除') ?>" href="/index.php?r=bank/delete&amp;id=2"><span class="glyphicon glyphicon-trash"></span></a></div></td></tr><tr class="row-odd"><td class="checkbox-column"><input value="1" id="subjects-grid_c0_1" type="checkbox" name="selectdel[]" /></td><td>b公司</td><td>20150901</td><td>ha</td><td>5</td><td>应付账款/asdf</td><td class="button-column"><div class="btn-group"><a class="btn btn-default tip btn-xs" title="<?= Yii::t('import', '编辑') ?>" href="/index.php?r=bank/update&amp;id=1"><span class="glyphicon glyphicon-pencil"></span></a><a class="btn btn-default tip delete btn-xs" title="<?= Yii::t('import', '删除') ?>" href="/index.php?r=bank/delete&amp;id=1"><span class="glyphicon glyphicon-trash"></span></a></div></td></tr></tbody></table><div class="keys" style="display:none" title="/index.php?ajax=subjects-grid&amp;r=bank%2Findex"><span>2</span><span>1</span></div></div>	</div>
 </div>
     </div>
   </div><!--/row-->
@@ -90,7 +90,7 @@
 <!-- BEGIN FOOTER -->
 <div class="page-footer">
         <div class="page-footer-inner">
-                2015 &copy; <a href="http://www.laofashigroup.com" target="_blank">老法师（上海）财务咨询有限公司 版权所有</a>
+                2015 &copy; <a href="http://www.laofashigroup.com" target="_blank"><?= Yii::t('import', '老法师（上海）财务咨询有限公司 版权所有') ?></a>
             </div>
         <div class="scroll-to-top">
                 <i class="icon-arrow-up"></i>
@@ -136,7 +136,7 @@ $('.search-form form').submit(function(){
 	return false;
 });
     jQuery(document).on('click','#subjects-grid a.btn.btn-default.tip.delete.btn-xs',function() {
-        	if(!confirm('确定要删除该条记录？')) return false;
+        	if(!confirm(<?= Yii::t('import', '确定要删除该条记录？') ?>)) return false;
 	var th = this,
             		afterDelete = function(){};
 	jQuery('#subjects-grid').yiiGridView('update', {

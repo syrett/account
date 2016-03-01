@@ -32,31 +32,31 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
             elseif(isset($item['employee_id']))
                 $employee = Employee::model()->findByPk($item['employee_id']);
             ?>
-            姓名：<?= $employee->name ?>&nbsp;&nbsp;&nbsp;月份：<?= convertDate($item['entry_date'], 'Y年m月')?>&nbsp;&nbsp;&nbsp;部门：<?= Department::model()->getName($employee->department_id) ?>
+            <?= Yii::t('import', '姓名：') ?><?= $employee->name ?>&nbsp;&nbsp;&nbsp;<?= Yii::t('import', '月份：') ?><?= convertDate($item['entry_date'], Yii::t('import', 'Y年m月'))?>&nbsp;&nbsp;&nbsp;<?= Yii::t('import', '部门：') ?><?= Department::model()->getName($employee->department_id) ?>
             <table class="table table-bordered dataTable">
                 <tr>
                     <!--                    <th class="input_min"   ><input type="checkbox"></th>-->
 
-                    <th class="input_min"   >摘要</th>
-                    <th class="input_min"   >时间</th>
-                    <th class="input_mmmin"  >差旅费</th>
-                    <th class="input_mmmin"  >福利费<br >餐费等</th>
-                    <th class="input_mmmin"  >交通费</th>
-                    <th class="input_mmmin"  >通讯费</th>
-                    <th class="input_mmmin"  >招待费</th>
-                    <th class="input_mmmin"  >办公费</th>
-                    <th class="input_mmmin"  >租金</th>
-                    <th class="input_mmmin"  >水电费</th>
-                    <th class="input_mmmin"  >培训费</th>
-                    <th class="input_mmmin"  >服务费</th>
-                    <th class="input_mmmin"  >印花税</th>
+                    <th class="input_min"   ><?= Yii::t('import', '摘要') ?></th>
+                    <th class="input_min"   ><?= Yii::t('import', '时间') ?></th>
+                    <th class="input_mmmin"  ><?= Yii::t('import', '差旅费') ?></th>
+                    <th class="input_mmmin"  ><?= Yii::t('import', '福利费<br >餐费等') ?></th>
+                    <th class="input_mmmin"  ><?= Yii::t('import', '交通费') ?></th>
+                    <th class="input_mmmin"  ><?= Yii::t('import', '通讯费') ?></th>
+                    <th class="input_mmmin"  ><?= Yii::t('import', '招待费') ?></th>
+                    <th class="input_mmmin"  ><?= Yii::t('import', '办公费') ?></th>
+                    <th class="input_mmmin"  ><?= Yii::t('import', '租金') ?></th>
+                    <th class="input_mmmin"  ><?= Yii::t('import', '水电费') ?></th>
+                    <th class="input_mmmin"  ><?= Yii::t('import', '培训费') ?></th>
+                    <th class="input_mmmin"  ><?= Yii::t('import', '服务费') ?></th>
+                    <th class="input_mmmin"  ><?= Yii::t('import', '印花税') ?></th>
                     <?
                     if (!empty($preOrder)) {
-                        echo '<th class="input-small">预支款</th>';
+                        echo '<th class="input-small">'.Yii::t('import', '预支款').'</th>';
                     }
                     ?>
                     <!--                    <th class="input_min">操作</th>-->
-                    <th style="width: 10%">提示</th>
+                    <th style="width: 10%"><?= Yii::t('import', '提示') ?></th>
                 </tr>
                 <?php
 
@@ -137,7 +137,7 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                                         'formatResult' => 'js:function(data){
                                             var order = JSON.parse(data.text);
                                             var markup = \'<div class="popovers" data-placement="left" data-container="body" data-trigger="hover" data-html="true"  data-original-title="\' + order.date +\'"\'
-                                            + \'data-content="余额:\' + order.amount + \'<br>摘要:\' + order.memo + \'">\' + data.id + \'</div><script>$(".popovers").popover();<\/script>\';
+                                            + \'data-content="'.Yii::t('import', '余额:').'\' + order.amount + \''.Yii::t('import', '<br>摘要:').'\' + order.memo + \'">\' + data.id + \'</div><script>$(".popovers").popover();<\/script>\';
                                             return markup;
                                         }',
                                         'formatSelection' => 'js: function(order) {
@@ -206,11 +206,11 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                             <div>
 
                                 <button type="button" id="btn_confirm_<?= $key ?>" class="hidden btn btn-default"
-                                        onclick="">确认
+                                        onclick=""><?= Yii::t('import', '确认') ?>
                                 </button>
 
                                 <button type="button" id="btn_del_<?= $key ?>" class="btn btn-xs" disabled
-                                        onclick=""></i>删除
+                                        onclick=""><?= Yii::t('import', '删除') ?>
                                 </button>
                             </div>
                         </td>
@@ -242,13 +242,13 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
             <?
             if (($model->status_id == 1 && $item['entry_reviewed'] == 1 )|| $relation != null) {
                 ?>
-                <span class="info-">该数据生成凭证已经审核，或和其他数据有关联，无法修改</span>
+                <span class="info-"><?= Yii::t('import', '该数据生成凭证已经审核，或和其他数据有关联，无法修改') ?></span>
             <?
             } else {
                 ?>
                 <div class="panel-footer">
                     <div class="text-center">
-                        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证</button>
+                        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> <?= Yii::t('import', '保存凭证') ?></button>
                     </div>
                 </div>
             <?php

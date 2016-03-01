@@ -2,9 +2,9 @@
 /* @var $this StockController */
 /* @var $model Stock */
 
-$this->pageTitle = Yii::app()->name . ' - 库存商品期初明细';
+$this->pageTitle = Yii::app()->name . Yii::t('import', ' - 库存商品期初明细');
 $this->breadcrumbs = array(
-    '库存商品期初明细',
+    Yii::t('import', '库存商品期初明细'),
 );
 
 $baseUrl = Yii::app()->theme->baseUrl;
@@ -37,16 +37,16 @@ $balance_1405 = Subjects::get_balance('1405');
         ?>
         <div class="portlet-title">
             <div class="caption">
-                <span class="font-green-sharp">库存商品期初余额明细</span>
+                <span class="font-green-sharp"><?= Yii::t('import', '库存商品期初余额明细') ?></span>
             </div>
             <div class="actions">
                 <div class="actions">
-                    <?php echo CHtml::link('<i class="glyphicon glyphicon-search"></i> 已导入数据', array('/stock/balance','type'=>'1405'), array('class' => 'btn btn-circle btn-default')); ?>
+                    <?php echo CHtml::link('<i class="glyphicon glyphicon-search"></i>'.Yii::t('import', '已导入数据'), array('/stock/balance','type'=>'1405'), array('class' => 'btn btn-circle btn-default')); ?>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="alert alert-info">提示：录入本模块前，请先完成总账期初余额设置。本模块必须一次性全部导入。</div>
+            <div class="alert alert-info"><?= Yii::t('import', '提示：录入本模块前，请先完成总账期初余额设置。本模块必须一次性全部导入。') ?></div>
         </div>
         <div class="portlet-body">
             <div class="col-md-4 col-sm-12">
@@ -58,7 +58,7 @@ $balance_1405 = Subjects::get_balance('1405');
                         </div>
 					<span class="input-group-btn">
 						<span class="btn btn-default btn-file">
-							选择文件<input name="attachment" type="file" accept=".xls,.xlsx">
+							<?= Yii::t('import', '选择文件') ?><input name="attachment" type="file" accept=".xls,.xlsx">
 						</span>
 					</span>
                     </div>
@@ -66,9 +66,9 @@ $balance_1405 = Subjects::get_balance('1405');
             </div>
             <div class="col-md-4 col-sm-12">
                 <div class="btn-toolbar margin-bottom-10">
-                    <button type="submit" class="btn btn-default btn-file">导入</button>
+                    <button type="submit" class="btn btn-default btn-file"><?= Yii::t('import', '导入') ?></button>
                     <a download="" href="<?=$this->createUrl('/Stock/excel1405') ?>">
-                        <button class="btn btn-default btn-file" type="button">模板下载
+                        <button class="btn btn-default btn-file" type="button"><?= Yii::t('import', '模板下载') ?>
                         </button>
                     </a>
                 </div>
@@ -107,8 +107,8 @@ $balance_1405 = Subjects::get_balance('1405');
 
     <div class="form-group">
         <div class="col-sm-2">
-            <span class="">库存商品期初余额:<label id="balance"><?= $balance_1405 ?></label></span>
-            <span class="">当前合计:<label id="total"></label></span>
+            <span class=""><?= Yii::t('import', '库存商品期初余额:') ?><label id="balance"><?= $balance_1405 ?></label></span>
+            <span class=""><?= Yii::t('import', '当前合计:') ?><label id="total"></label></span>
         </div>
     </div>
     <div class="form-group">

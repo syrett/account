@@ -9,7 +9,7 @@ $form = $this->beginWidget('CActiveForm', array(
     'enableAjaxValidation' => false,
     'htmlOptions' => array('class' => 'form-horizontal',),
 ));
-$statusArray = ['离职','正常','兼职'];
+$statusArray = [Yii::t('import', '离职'), Yii::t('import', '正常'), Yii::t('import', '兼职')];
 ?>
 <div class="form-group">
     <?php echo $form->labelEx($model, 'name', array('class' => 'col-sm-2 control-label')); ?>
@@ -77,7 +77,7 @@ $statusArray = ['离职','正常','兼职'];
 
 <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10 text-center">
-        <?php echo CHtml::submitButton($model->isNewRecord ? '添加' : '保存', array('class' => 'btn btn-circle btn-primary',)); ?>
+        <?php echo CHtml::submitButton($model->isNewRecord ? Yii::t('import', '添加') : Yii::t('import', '保存'), array('class' => 'btn btn-circle btn-primary',)); ?>
         <?php echo BtnBack(); ?>
     </div>
 </div>

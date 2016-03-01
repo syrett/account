@@ -9,7 +9,7 @@ $this->breadcrumbs=array(
 
 ?>
 
-<h1>查看长期待摊:<?php echo $model->name; ?></h1>
+<h1><?= Yii::t('import', '查看长期待摊') ?>:<?php echo $model->name; ?></h1>
 
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,

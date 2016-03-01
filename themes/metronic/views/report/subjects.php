@@ -45,8 +45,8 @@ $years = Transition::model()->hasTransitionYears();
 </style>
 <div class="alert alert-info">
     <?php echo CHtml::beginForm('', 'post', array('class' => 'form-inline', 'role' => 'form')); ?>
-    <h3>科目余额表</h3>
-    请选择日期：
+    <h3><?= Yii::t('import', '科目余额表') ?></h3>
+    <?= Yii::t('import', '请选择日期：') ?>
     <div class="form-group">
         <?php
         $this->widget('ESelect2', array(
@@ -55,7 +55,7 @@ $years = Transition::model()->hasTransitionYears();
             'data' => $years,
         ));
         ?>
-        年
+        <?= Yii::t('import', '年') ?>
         <?php
         $months = array(1 => '1', 2 => '2', 3 => '3', 4 => '4', 5 => '5', 6 => '6', 7 => '7', 8 => '8', 9 => '9', 10 => '10', 11 => '11', 12 => '12');
         $this->widget('ESelect2', array(
@@ -64,7 +64,7 @@ $years = Transition::model()->hasTransitionYears();
             'data' => $months,
         ));
         ?>
-        月 至
+        <?= Yii::t('import', '月 至') ?>
         <?php
 
         $this->widget('ESelect2', array(
@@ -72,47 +72,47 @@ $years = Transition::model()->hasTransitionYears();
             'value' => $tm,
             'data' => $months,
         ));
-        ?>月
-        <input type="submit" class="btn btn-primary" value="查看报表"/>
+        ?><?= Yii::t('import', '月') ?>
+        <input type="submit" class="btn btn-primary" value="<?= Yii::t('import', '查看报表') ?>"/>
     </div>
     <?php echo CHtml::endForm(); ?>
 </div>
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h2>科目余额表</h2>
+        <h2><?= Yii::t('import', '科目余额表') ?></h2>
         <?php echo $fromMonth . "-" . $toMonth ?>
     </div>
 
     <table id="subjects" class="table table-bordered">
         <thead>
         <tr>
-            <th class="text-right">科目编码</th>
-            <th class="text-right">科目名称</th>
-            <th class="text-right">期初借方</th>
-            <th class="text-right">期初贷方</th>
-            <th class="text-right">本期发生借方</th>
-            <th class="text-right">本期发生贷方</th>
-            <th class="text-right">期末借方</th>
-            <th class="text-right">期末贷方</th>
+            <th class="text-right"><?= Yii::t('import', '科目编码') ?></th>
+            <th class="text-right"><?= Yii::t('import', '科目名称') ?></th>
+            <th class="text-right"><?= Yii::t('import', '期初借方') ?></th>
+            <th class="text-right"><?= Yii::t('import', '期初贷方') ?></th>
+            <th class="text-right"><?= Yii::t('import', '本期发生借方') ?></th>
+            <th class="text-right"><?= Yii::t('import', '本期发生贷方') ?></th>
+            <th class="text-right"><?= Yii::t('import', '期末借方') ?></th>
+            <th class="text-right"><?= Yii::t('import', '期末贷方') ?></th>
         </tr>
         <?php
         foreach ($dataProvider as $sbjCat => $sbjCat_info) {
             switch ($sbjCat) {
                 case "1":
-                    $sbjCat_name = "资产小计";
+                    $sbjCat_name = Yii::t('import', "资产小计");
                     break;
                 case "2":
-                    $sbjCat_name = "负债小计";
+                    $sbjCat_name = Yii::t('import', "负债小计");
                     break;
                 case "3":
-                    $sbjCat_name = "权益小计";
+                    $sbjCat_name = Yii::t('import', "权益小计");
                     break;
                 case "4":
-                    $sbjCat_name = "收入小计";
+                    $sbjCat_name = Yii::t('import', "收入小计");
                     break;
                 case "5":
-                    $sbjCat_name = "费用小计";
+                    $sbjCat_name = Yii::t('import', "费用小计");
                     break;
 
             };
@@ -162,14 +162,14 @@ $years = Transition::model()->hasTransitionYears();
 
     echo CHtml::beginForm($this->createUrl('/Report/createexcel'), 'post', ['id'=>'export']);
     if ($fm != ""){
-    $excel_name = "科目余额表 " . $fromMonth . "-" . $toMonth . ".xls";
+    $excel_name = Yii::t('import', "科目余额表 ") . $fromMonth . "-" . $toMonth . ".xls";
     ?>
 
     <input type="hidden" name="data" id="data" value=""/>
     <input type="hidden" name="name" id="name" value="<?= $excel_name ?>"/>
     <p class="text-right">
         <?php
-        echo '<button type="button" onclick="tableToExcel()" class="btn btn-primary"><span class="glyphicon glyphicon-export"></span> 导出</button>';
+        echo '<button type="button" onclick="tableToExcel()" class="btn btn-primary"><span class="glyphicon glyphicon-export"></span>'.Yii::t('import', '导出').'</button>';
         }
         echo CHtml::endForm();
         ?>

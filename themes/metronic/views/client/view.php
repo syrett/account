@@ -10,14 +10,14 @@ $ageDetail = $model->getClientAge();
 <div class="portlet light">
     <div class="portlet-title">
         <div class="caption">
-            <span class="font-green-sharp">客户账务</span>
+            <span class="font-green-sharp"><?= Yii::t('import', '客户账务') ?></span>
         </div>
         <div class="actions">
             <?php
-            echo CHtml::link('<i class="fa fa-bars"></i> 客户列表', array('admin'), array('class' => 'btn btn-circle btn-primary btn-sm'));
+            echo CHtml::link('<i class="fa fa-bars"></i>'.Yii::t('import', '客户列表'), array('admin'), array('class' => 'btn btn-circle btn-primary btn-sm'));
             ?>
             <a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title=""
-               data-original-title title="全屏"></a>
+               data-original-title title="<?= Yii::t('import', '全屏') ?>"></a>
         </div>
     </div>
     <div class="portlet-body">
@@ -47,19 +47,19 @@ $ageDetail = $model->getClientAge();
                                 'itemsCssClass' => 'table table-striped table-hover',
                                 'columns' => array(
                                     [
-                                        'header' => '凭证号',
+                                        'header' => Yii::t('import', '凭证号'),
                                         'value' => '$data->entry_num_prefix. addZero($data->entry_num)'
                                     ],
                                     [
-                                        'header' => '日期',
+                                        'header' => Yii::t('import', '日期'),
                                         'value' => 'convertDate($data->entry_date, "Y-m-d")'
                                     ],
                                     [
-                                        'header' => '说明',
+                                        'header' => Yii::t('import', '说明'),
                                         'name' => 'entry_memo'
                                     ],
                                     [
-                                        'header' => '金额',
+                                        'header' => Yii::t('import', '金额'),
                                         'name' => 'entry_amount'
                                     ],
                                     [
@@ -68,8 +68,8 @@ $ageDetail = $model->getClientAge();
                                             'bad' => array(
                                                 'options' => array(
                                                     'class' => 'btn btn-default tip btn-xs',
-                                                    'title' => '坏账',
-                                                    'confirm' => '确定要执行此操作？',
+                                                    'title' => Yii::t('import', '坏账'),
+                                                    'confirm' => Yii::t('import', '确定要执行此操作？'),
                                                     'ajax' => [
                                                         'dataType' => 'json',
                                                         'url' => 'js:$(this).attr("href")',
@@ -78,7 +78,7 @@ $ageDetail = $model->getClientAge();
                                                 $.fn.yiiGridView.update("client-grid")}'
                                                     ]
                                                 ),
-                                                'label' => "坏账",
+                                                'label' => Yii::t('import', '坏账'),
                                                 'imageUrl' => false,
                                                 'url' => 'Yii::app()->createUrl("/client/bad", ["client_id"=>' . $model->id . ',"amount"=>$data->entry_amount,"action"=>"bad"])'
                                             ),

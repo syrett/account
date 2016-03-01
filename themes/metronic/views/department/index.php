@@ -1,7 +1,7 @@
 <?php
 /* @var $this DepartmentController */
 /* @var $dataProvider CActiveDataProvider */
-$this->pageTitle=Yii::app()->name . ' - 部门管理';
+$this->pageTitle=Yii::app()->name . Yii::t('import', ' - 部门管理');
 $this->breadcrumbs=array(
 	'Departments',
 );

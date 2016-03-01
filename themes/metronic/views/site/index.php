@@ -3,8 +3,8 @@
 
 $this->pageTitle = Yii::app()->name;
 date_default_timezone_set('Asia/Shanghai');
-$weekarray = array("日", "一", "二", "三", "四", "五", "六");
-$dayoftoday = "星期" . $weekarray[date("w")];
+$weekarray = array(Yii::t('import', "日"), Yii::t('import',"一"), Yii::t('import',"二"), Yii::t('import',"三"), Yii::t('import',"四"), Yii::t('import',"五"), Yii::t('import',"六"));
+$dayoftoday = Yii::t('import',"星期") . $weekarray[date("w")];
 
 $cs = Yii::app()->clientScript;
 
@@ -43,26 +43,26 @@ $bank_out = Bank::model()->findAllByAttributes([], "path like '%>支出=%'");
 foreach ($bank_out as $item) {
     $path = explode('=>', $item['path']);
     if (count($path) > 1) {
-        if ($path[2] == '供应商采购') {
-            if (end($path) != '预付款') {
+        if ($path[2] == Yii::t('import','供应商采购')) {
+            if (end($path) != Yii::t('import','预付款')) {
                 $purchase = Purchase::model()->findByAttributes(['order_no' => end($path)]);
                 if ($purchase) {
                     switch (substr($purchase['subject'], 0, 4)) {
                         case 1601:
-                            $data['固定资产'] = isset($data['固定资产']) ? $data['固定资产'] + $item['amount'] : $item['amount'];
+                            $data[Yii::t('import','固定资产')] = isset($data[Yii::t('import','固定资产')]) ? $data[Yii::t('import','固定资产')] + $item['amount'] : $item['amount'];
                             break;
                         case 1701:
-                            $data['无形资产'] = isset($data['无形资产']) ? $data['无形资产'] + $item['amount'] : $item['amount'];
+                            $data[Yii::t('import','无形资产')] = isset($data[Yii::t('import','无形资产')]) ? $data[Yii::t('import','无形资产')] + $item['amount'] : $item['amount'];
                             break;
                         case 1801:
-                            $data['长期待摊'] = isset($data['长期待摊']) ? $data['长期待摊'] + $item['amount'] : $item['amount'];
+                            $data[Yii::t('import','长期待摊')] = isset($data[Yii::t('import','长期待摊')]) ? $data[Yii::t('import','长期待摊')] + $item['amount'] : $item['amount'];
                             break;
                         case 1403:
                         case 1405:
-                            $data['存货采购'] = isset($data['存货采购']) ? $data['存货采购'] + $item['amount'] : $item['amount'];
+                            $data[Yii::t('import','存货采购')] = isset($data[Yii::t('import','存货采购')]) ? $data[Yii::t('import','存货采购')] + $item['amount'] : $item['amount'];
                             break;
                         default :
-                            $data['其他采购'] = isset($data['其他采购']) ? $data['其他采购'] + $item['amount'] : $item['amount'];
+                            $data[Yii::t('import','其他采购')] = isset($data[Yii::t('import','其他采购')]) ? $data[Yii::t('import','其他采购')] + $item['amount'] : $item['amount'];
                     }
                 }
             } else {
@@ -75,20 +75,20 @@ foreach ($bank_out as $item) {
                             if ($purchase) {
                                 switch (substr($purchase['subject'], 0, 4)) {
                                     case 1601:
-                                        $data['固定资产'] = isset($data['固定资产']) ? $data['固定资产'] + $amount : $amount;
+                                        $data[Yii::t('import','固定资产')] = isset($data[Yii::t('import','固定资产')]) ? $data[Yii::t('import','固定资产')] + $amount : $amount;
                                         break;
                                     case 1701:
-                                        $data['无形资产'] = isset($data['无形资产']) ? $data['无形资产'] + $amount : $amount;
+                                        $data[Yii::t('import','无形资产')] = isset($data[Yii::t('import','无形资产')]) ? $data[Yii::t('import','无形资产')] + $amount : $amount;
                                         break;
                                     case 1801:
-                                        $data['长期待摊'] = isset($data['长期待摊']) ? $data['长期待摊'] + $amount : $amount;
+                                        $data[Yii::t('import','长期待摊')] = isset($data[Yii::t('import','长期待摊')]) ? $data[Yii::t('import','长期待摊')] + $amount : $amount;
                                         break;
                                     case 1403:
                                     case 1405:
-                                        $data['存货采购'] = isset($data['存货采购']) ? $data['存货采购'] + $amount : $amount;
+                                        $data[Yii::t('import','存货采购')] = isset($data[Yii::t('import','存货采购')]) ? $data[Yii::t('import','存货采购')] + $amount : $amount;
                                         break;
                                     default :
-                                        $data['其他采购'] = isset($data['其他采购']) ? $data['其他采购'] + $amount : $amount;
+                                        $data[Yii::t('import','其他采购')] = isset($data[Yii::t('import','其他采购')]) ? $data[Yii::t('import','其他采购')] + $amount : $amount;
                                 }
                             }
                         }
@@ -104,26 +104,26 @@ $cash_out = Cash::model()->findAllByAttributes([], "path like '%>支出=%'");
 foreach ($cash_out as $item) {
     $path = explode('=>', $item['path']);
     if (count($path) > 1) {
-        if ($path[2] == '供应商采购') {
-            if (end($path) != '预付款') {
+        if ($path[2] == Yii::t('import','供应商采购')) {
+            if (end($path) != Yii::t('import','预付款')) {
                 $purchase = Purchase::model()->findByAttributes(['order_no' => end($path)]);
                 if ($purchase) {
                     switch (substr($purchase['subject'], 0, 4)) {
                         case 1601:
-                            $data['固定资产'] = isset($data['固定资产']) ? $data['固定资产'] + $item['amount'] : $item['amount'];
+                            $data[Yii::t('import','固定资产')] = isset($data[Yii::t('import','固定资产')]) ? $data[Yii::t('import','固定资产')] + $item['amount'] : $item['amount'];
                             break;
                         case 1701:
-                            $data['无形资产'] = isset($data['无形资产']) ? $data['无形资产'] + $item['amount'] : $item['amount'];
+                            $data[Yii::t('import','无形资产')] = isset($data[Yii::t('import','无形资产')]) ? $data[Yii::t('import','无形资产')] + $item['amount'] : $item['amount'];
                             break;
                         case 1801:
-                            $data['长期待摊'] = isset($data['长期待摊']) ? $data['长期待摊'] + $item['amount'] : $item['amount'];
+                            $data[Yii::t('import','长期待摊')] = isset($data[Yii::t('import','长期待摊')]) ? $data[Yii::t('import','长期待摊')] + $item['amount'] : $item['amount'];
                             break;
                         case 1403:
                         case 1405:
-                            $data['存货采购'] = isset($data['存货采购']) ? $data['存货采购'] + $item['amount'] : $item['amount'];
+                            $data[Yii::t('import','存货采购')] = isset($data[Yii::t('import','存货采购')]) ? $data[Yii::t('import','存货采购')] + $item['amount'] : $item['amount'];
                             break;
                         default :
-                            $data['其他采购'] = isset($data['其他采购']) ? $data['其他采购'] + $item['amount'] : $item['amount'];
+                            $data[Yii::t('import','其他采购')] = isset($data[Yii::t('import','其他采购')]) ? $data[Yii::t('import','其他采购')] + $item['amount'] : $item['amount'];
                     }
                 }
             } else {
@@ -136,20 +136,20 @@ foreach ($cash_out as $item) {
                             if ($purchase) {
                                 switch (substr($purchase['subject'], 0, 4)) {
                                     case 1601:
-                                        $data['固定资产'] = isset($data['固定资产']) ? $data['固定资产'] + $amount : $amount;
+                                        $data[Yii::t('import','固定资产')] = isset($data[Yii::t('import','固定资产')]) ? $data[Yii::t('import','固定资产')] + $amount : $amount;
                                         break;
                                     case 1701:
-                                        $data['无形资产'] = isset($data['无形资产']) ? $data['无形资产'] + $amount : $amount;
+                                        $data[Yii::t('import','无形资产')] = isset($data[Yii::t('import','无形资产')]) ? $data[Yii::t('import','无形资产')] + $amount : $amount;
                                         break;
                                     case 1801:
-                                        $data['长期待摊'] = isset($data['长期待摊']) ? $data['长期待摊'] + $amount : $amount;
+                                        $data[Yii::t('import','长期待摊')] = isset($data[Yii::t('import','长期待摊')]) ? $data[Yii::t('import','长期待摊')] + $amount : $amount;
                                         break;
                                     case 1403:
                                     case 1405:
-                                        $data['存货采购'] = isset($data['存货采购']) ? $data['存货采购'] + $amount : $amount;
+                                        $data[Yii::t('import','存货采购')] = isset($data[Yii::t('import','存货采购')]) ? $data[Yii::t('import','存货采购')] + $amount : $amount;
                                         break;
                                     default :
-                                        $data['其他采购'] = isset($data['其他采购']) ? $data['其他采购'] + $amount : $amount;
+                                        $data[Yii::t('import','其他采购')] = isset($data[Yii::t('import','其他采购')]) ? $data[Yii::t('import','其他采购')] + $amount : $amount;
                                 }
                             }
                         }
@@ -167,7 +167,7 @@ if (!empty($data))
     foreach ($data as $cat => $value) {
         $data_chart[] = ['category' => $cat, 'value' => $value];
     } else
-    $data_chart[] = ['category' => '银行现金', 'value' => '1'];
+    $data_chart[] = ['category' => Yii::t('import','银行现金'), 'value' => '1'];
 $data_str = json_encode($data_chart);
 $js_str = 'var chart = AmCharts.makeChart( "chartdiv-homepage-3d-pie", {
   "type": "pie",
@@ -206,7 +206,7 @@ $cs->registerScript('ChartsFlotchartsInitPie', $js_str, CClientScript::POS_READY
 <!-- BEGIN PAGE HEADER-->
 <h3 class="page-title">
     <?= Condom::model()->getName() ?> <br/>
-    <small><?php echo $dayoftoday . "，" . date("Y年n月j日") ?></small>
+    <small><?php echo $dayoftoday . "，" . date(Yii::t('import', "Y年n月j日")) ?></small>
 </h3>
 <!-- END PAGE HEADER-->
 <div class="clearfix">
@@ -217,7 +217,7 @@ $cs->registerScript('ChartsFlotchartsInitPie', $js_str, CClientScript::POS_READY
         <div class="portlet light">
             <div class="portlet-title">
                 <div class="caption">
-                    <span class="caption-subject font-green-sharp bold uppercase">流动资产</span>
+                    <span class="caption-subject font-green-sharp bold uppercase"><?= Yii::t('import', '流动资产') ?></span>
                 </div>
                 <div class="actions"></div>
             </div>
@@ -232,7 +232,7 @@ $cs->registerScript('ChartsFlotchartsInitPie', $js_str, CClientScript::POS_READY
                                 <?= round2($cash_amount) ?>
                             </div>
                             <div class="desc">
-                                库存现金
+                                <?= Yii::t('import', '库存现金') ?>
                             </div>
                         </div>
                     </a>
@@ -247,7 +247,7 @@ $cs->registerScript('ChartsFlotchartsInitPie', $js_str, CClientScript::POS_READY
                                 <?= round2($bank_amount) ?>
                             </div>
                             <div class="desc">
-                                银行存款
+                                <?= Yii::t('import', '银行存款') ?>
                             </div>
                         </div>
                     </a>
@@ -262,7 +262,7 @@ $cs->registerScript('ChartsFlotchartsInitPie', $js_str, CClientScript::POS_READY
                                 <?= round2($amount_0 > 0 ? $amount_0 : 0) ?>
                             </div>
                             <div class="desc">
-                                应收账款
+                                <?= Yii::t('import', '应收账款') ?>
                             </div>
                         </div>
                     </a>
@@ -277,7 +277,7 @@ $cs->registerScript('ChartsFlotchartsInitPie', $js_str, CClientScript::POS_READY
         <div class="portlet light">
             <div class="portlet-title">
                 <div class="caption">
-                    <span class="caption-subject font-green-sharp bold uppercase">运营支出</span>
+                    <span class="caption-subject font-green-sharp bold uppercase"><?= Yii::t('import', '运营支出') ?></span>
                 </div>
                 <div class="actions">
                     <div class="btn-group">

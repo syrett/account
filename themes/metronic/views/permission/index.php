@@ -6,7 +6,7 @@
 <div class="portlet light">
     <div class="portlet-title">
         <div class="caption">
-            <span class="font-green-sharp">权限设置</span>
+            <span class="font-green-sharp"><?= Yii::t('import', '权限设置') ?></span>
         </div>
     </div>
     <div class="portlet-body">
@@ -27,14 +27,14 @@
                         'class' => 'CButtonColumn',
                         'buttons' => array(
                             'access' => array(
-                                'options' => array('class' => 'btn btn-default tip btn-xs', 'title' => '配置权限'),
+                                'options' => array('class' => 'btn btn-default tip btn-xs', 'title' => Yii::t('import', '配置权限')),
                                 'label' => '<span class="glyphicon glyphicon-pencil"></span>',
                                 'imageUrl' => false,
                                 'url' => 'Yii::app()->createUrl("Permission/access", ["id"=>$data->id])'
                             ),
                         ),
                         'template' => '<div class="btn-group">{access}</div>',
-                        'deleteConfirmation' => '确定要删除该条记录？',
+                        'deleteConfirmation' => Yii::t('import', '确定要删除该条记录？'),
                     ),
                 ),
             ));

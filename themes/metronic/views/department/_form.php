@@ -9,7 +9,7 @@ $form=$this->beginWidget('CActiveForm', array(
 	'enableAjaxValidation'=>false,
 	'htmlOptions'=>array('class'=>'form-horizontal',),
 ));
-$dapartType = array(1=>'生产部门',2=>'管理部门',3=>'销售部门',4=>'研发部门');
+$dapartType = array(1=>Yii::t('import', '生产部门'),2=>Yii::t('import', '管理部门'),3=>Yii::t('import', '销售部门'),4=>Yii::t('import', '研发部门'));
 ?>
 
 <div class="form-group">	
@@ -35,7 +35,7 @@ $dapartType = array(1=>'生产部门',2=>'管理部门',3=>'销售部门',4=>'�
 </div>
 <div class="form-group">
 <div class="col-sm-offset-2 col-sm-10 text-center">
-	<?php echo CHtml::submitButton('保存', array('class'=>'btn btn-circle btn-primary',)); ?>
+	<?php echo CHtml::submitButton(Yii::t('import', '保存'), array('class'=>'btn btn-circle btn-primary',)); ?>
 	<?php echo BtnBack(); ?>
 </div>
 </div>

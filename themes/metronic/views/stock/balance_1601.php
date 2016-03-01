@@ -2,9 +2,9 @@
 /* @var $this StockController */
 /* @var $model Stock */
 
-$this->pageTitle = Yii::app()->name . ' - 长期资产期初数据';
+$this->pageTitle = Yii::app()->name . Yii::t('import', ' - 长期资产期初数据');
 $this->breadcrumbs = array(
-    '长期资产期初数据',
+    Yii::t('import', '长期资产期初数据'),
 );
 
 $baseUrl = Yii::app()->theme->baseUrl;
@@ -46,17 +46,17 @@ if(!empty($departments))
         ?>
         <div class="portlet-title">
             <div class="caption">
-                <span class="font-green-sharp">长期资产期初余额明细</span>
-                <span class="caption-helper">期初余额:<?= $balance?></span>
+                <span class="font-green-sharp"><?= Yii::t('import', '长期资产期初余额明细') ?></span>
+                <span class="caption-helper"><?= Yii::t('import', '期初余额') ?>:<?= $balance?></span>
             </div>
             <div class="actions">
                 <div class="actions">
-                    <?php echo CHtml::link('<i class="glyphicon glyphicon-search"></i> 已导入数据', array('/stock/balance','type'=>'1601'), array('class' => 'btn btn-circle btn-default')); ?>
+                    <?php echo CHtml::link('<i class="glyphicon glyphicon-search"></i>'.Yii::t('import', '已导入数据'), array('/stock/balance','type'=>'1601'), array('class' => 'btn btn-circle btn-default')); ?>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="alert alert-info">提示：录入本模块前，请先完成总账期初余额设置。本模块必须一次性全部导入。</div>
+            <div class="alert alert-info"><?= Yii::t('import', '提示：录入本模块前，请先完成总账期初余额设置。本模块必须一次性全部导入。') ?></div>
         </div>
         <div class="portlet-body">
             <div class="col-md-4 col-sm-12">
@@ -68,7 +68,7 @@ if(!empty($departments))
                         </div>
 					<span class="input-group-btn">
 						<span class="btn btn-default btn-file">
-							选择文件<input name="attachment" type="file" accept=".xls,.xlsx">
+							<?= Yii::t('import', '选择文件') ?><input name="attachment" type="file" accept=".xls,.xlsx">
 						</span>
 					</span>
                     </div>
@@ -76,9 +76,9 @@ if(!empty($departments))
             </div>
             <div class="col-md-4 col-sm-12">
                 <div class="btn-toolbar margin-bottom-10">
-                    <button type="submit" class="btn btn-default btn-file">导入</button>
+                    <button type="submit" class="btn btn-default btn-file"><?= Yii::t('import', '导入') ?></button>
                     <a download="" href="<?=$this->createUrl('/Stock/excel1601') ?>">
-                        <button class="btn btn-default btn-file" type="button">模板下载
+                        <button class="btn btn-default btn-file" type="button"><?= Yii::t('import', '模板下载') ?>
                         </button>
                     </a>
                 </div>
@@ -90,10 +90,10 @@ if(!empty($departments))
                             <th class="input_min"><input type="checkbox"></th>
                             <th class=""><?= $form->labelEx($sheetData[0][0], 'name', array('class' => 'control-label')); ?></th>
                             <th class=""><?= $form->labelEx($sheetData[0][0], 'model', array('class' => 'control-label')); ?></th>
-                            <th class=""><?= CHtml::label('数量','count',['class'=>'control-label'])?></th>
-                            <th class=""><?= CHtml::label('单位原值','count',['class'=>'control-label'])?></th>
-                            <th class=""><?= CHtml::label('净值','count',['class'=>'control-label'])?></th>
-                            <th class=""><?= CHtml::label('剩余折旧月份','count',['class'=>'control-label'])?></th>
+                            <th class=""><?= CHtml::label(Yii::t('import', '数量'),'count',['class'=>'control-label'])?></th>
+                            <th class=""><?= CHtml::label(Yii::t('import', '单位原值'),'count',['class'=>'control-label'])?></th>
+                            <th class=""><?= CHtml::label(Yii::t('import', '净值'),'count',['class'=>'control-label'])?></th>
+                            <th class=""><?= CHtml::label(Yii::t('import', '剩余折旧月份'),'count',['class'=>'control-label'])?></th>
                             <th class=""><?= $form->labelEx($sheetData[0][0], 'value_rate', array('class' => 'control-label')); ?></th>
                             <th class=""><?= $form->labelEx($sheetData[0][0], 'entry_subject', array('class' => 'control-label')); ?></th>
                             <th class=""><?= $form->labelEx($sheetData[0][0], 'department_id', array('class' => 'control-label')); ?></th>
@@ -125,12 +125,12 @@ if(!empty($departments))
 
     <div class="form-group">
         <div class="col-sm-2">
-            <span class="">合计:<label id="total"></label></span>
+            <span class=""><?= Yii::t('import', '合计:') ?><label id="total"></label></span>
         </div>
     </div>
     <div class="form-group">
         <div class="col-sm-12 text-center">
-            <?php echo CHtml::submitButton('保 存', array('class' => 'btn btn btn-primary',)); ?>
+            <?php echo CHtml::submitButton(Yii::t('import', '保 存'), array('class' => 'btn btn btn-primary',)); ?>
         </div>
     </div>
 <?php $this->endWidget(); ?>

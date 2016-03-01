@@ -18,22 +18,22 @@ $('.search-form form').submit(function(){
 });
 ", CClientScript::POS_READY);
 
-$this->pageTitle = Yii::app()->name . ' - 科目表管理';
+$this->pageTitle = Yii::app()->name . Yii::t('import', ' - 科目表管理');
 $this->breadcrumbs = array(
-    '科目表管理',
+    Yii::t('import', '科目表管理'),
 );
 
 ?>
 <div class="portlet light">
 	<div class="portlet-title">
 		<div class="caption">
-		<span class="font-green-sharp">科目表管理</span>
+		<span class="font-green-sharp"><?= Yii::t('import', '科目表管理') ?></span>
 		</div>
 		<div class="actions">
 		    <?php
-				echo CHtml::link('<i class="fa fa-edit"></i> 添加科目', array('create'), array('class' => 'btn btn-circle btn-primary btn-sm'));
+				echo CHtml::link('<i class="fa fa-edit"></i>'.Yii::t('import', '添加科目'), array('create'), array('class' => 'btn btn-circle btn-primary btn-sm'));
     		?>
-			<a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title="" data-original-title title="全屏"></a>
+			<a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title="" data-original-title title="<?= Yii::t('import', '全屏') ?>"></a>
 		</div>
 	</div>
 	<div class="portlet-body">
@@ -67,12 +67,12 @@ $this->breadcrumbs = array(
                     'class' => 'CButtonColumn',
                     'buttons' => array(
                         'update' => array(
-                            'options' => array('class' => 'btn btn-default tip btn-xs', 'title' => '编辑'),
+                            'options' => array('class' => 'btn btn-default tip btn-xs', 'title' => Yii::t('import', '编辑')),
                             'label' => '<span class="glyphicon glyphicon-pencil"></span>',
                             'imageUrl' => false,
                         ),
                         'delete' => array(
-                            'options' => array('class' => 'btn btn-default tip delete btn-xs', 'title' => '删除'),
+                            'options' => array('class' => 'btn btn-default tip delete btn-xs', 'title' => Yii::t('import', '删除')),
                             'label' => '<span class="glyphicon glyphicon-trash"></span>',
                             'imageUrl' => false,
                         ),
@@ -82,7 +82,7 @@ $this->breadcrumbs = array(
                     'afterDelete' => 'function(link,success,data){if(success) alert(data);}'
                 ),
             ),
-            'pager' => array('class' => 'CLinkPager', 'header' => '', 'firstPageLabel' => '首页', 'lastPageLabel' => '末页', 'nextPageLabel' => '下一页', 'prevPageLabel' => '上一页'),
+            'pager' => array('class' => 'CLinkPager', 'header' => '', 'firstPageLabel' => Yii::t('import', '首页'), 'lastPageLabel' => Yii::t('import', '末页'), 'nextPageLabel' => Yii::t('import', '下一页'), 'prevPageLabel' => Yii::t('import', '上一页')),
         ));
         //            echo Select2::dropDownList('Subjects[sbj_cat]',$model->sbj_cat,array('1'=>'资产类','2'=>'负债类','3'=>'权益类','4'=>'收入类','5'=>'费用类',));
         //            echo Select2::dropDownList('sbj_cat',$model->attribute,CHtml::listData(Subjects::model()->findall(), 'sbj_cat', 'sbj_cat'),'');

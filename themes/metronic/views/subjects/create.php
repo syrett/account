@@ -7,10 +7,10 @@ $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scripts/
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/admin/layout/scripts/subjects.js', CClientScript::POS_END);
 
-$this->pageTitle=Yii::app()->name . ' - 会计科目表管理';
+$this->pageTitle=Yii::app()->name . Yii::t('import', ' - 会计科目表管理');
 $this->breadcrumbs=array(
-	'会计科目表管理',
-	'添加'
+    Yii::t('import', '会计科目表管理'),
+    Yii::t('import', '添加')
 );
 
 ?>
@@ -18,13 +18,13 @@ $this->breadcrumbs=array(
 <div class="portlet light">
 	<div class="portlet-title">
 		<div class="caption">
-		<span class="font-green-sharp">科目表管理</span>
+		<span class="font-green-sharp"><?= Yii::t('import', '科目表管理') ?></span>
 		</div>
 		<div class="actions">
 		    <?php
-				echo CHtml::link('<i class="fa fa-edit"></i> 科目列表', array('admin'), array('class' => 'btn btn-circle btn-primary btn-sm'));
+				echo CHtml::link('<i class="fa fa-edit"></i>'.Yii::t('import', '科目列表'), array('admin'), array('class' => 'btn btn-circle btn-primary btn-sm'));
     		?>
-			<a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title="" data-original-title title="全屏"></a>
+			<a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title="" data-original-title title="<?= Yii::t('import', '全屏') ?>"></a>
 		</div>
 	</div>
 	<div class="portlet-body">

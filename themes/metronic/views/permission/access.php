@@ -31,7 +31,7 @@ $checkStatus = AuthRelation::model()->findByAttributes(['user_id'=>$user_id])==n
 <div class="portlet light">
     <div class="portlet-title">
         <div class="caption">
-            <span class="font-green-sharp">权限设置</span>
+            <span class="font-green-sharp"><?= Yii::t('import', '权限设置') ?></span>
         </div>
     </div>
     <div class="portlet-body">
@@ -54,7 +54,7 @@ $checkStatus = AuthRelation::model()->findByAttributes(['user_id'=>$user_id])==n
                     <div class="check-title">
                         <span class="help-block">
                             <label><input class="check-all" type="checkbox"
-                                          value="1">全选</label>
+                                          value="1"><?= Yii::t('import', '全选') ?></label>
                         </span>
                     </div>
                 </div>
@@ -98,7 +98,7 @@ $checkStatus = AuthRelation::model()->findByAttributes(['user_id'=>$user_id])==n
 
                 <div class="col-md-10">
                     <div class="form-control height-auto">
-                        <input type="submit" class="btn btn-primary" value="保存"/>
+                        <input type="submit" class="btn btn-primary" value="<?= Yii::t('import', '保存') ?>"/>
                     </div>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 <?php
-$this->pageTitle=Yii::app()->name . ' - 会计凭证管理';
+$this->pageTitle=Yii::app()->name . Yii::t('import', ' - 会计凭证管理');
 $this->breadcrumbs=array(
-    '导入凭证',
+    Yii::t('import', '导入凭证'),
 );
 $cs = Yii::app()->clientScript;
 $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css');
@@ -34,18 +34,18 @@ if ($bank_money == 'cash')
 <div class="portlet light">
     <div class="portlet-title">
         <div class="caption">
-            <span class="font-green-sharp">导入<?= Yii::t('import', strtoupper($type)) ?></span>
+            <span class="font-green-sharp"><?= Yii::t('import', '导入') ?><?= Yii::t('import', strtoupper($type)) ?></span>
         </div>
         <div class="actions">
-            <?php echo CHtml::link('<i class="glyphicon glyphicon-search"></i> 已导入数据', array('/' . $type), array('class' => 'btn btn-circle btn-default')); ?>
+            <?php echo CHtml::link('<i class="glyphicon glyphicon-search"></i>'.Yii::t('import', '已导入数据'), array('/' . $type), array('class' => 'btn btn-circle btn-default')); ?>
             <input type="hidden" id="dp_startdate" value="<?= Transition::getTransitionDate('post') ?>">
             <?php
-            echo CHtml::link('<i class="fa fa-bank"></i> 导入'.Yii::t('import', 'bank'), array('transition/bank'), array('class' => 'btn btn-circle btn-info btn-sm'));
-            echo CHtml::link('<i class="fa fa-money"></i> 导入'.Yii::t('import', 'cash'), array('transition/cash'), array('class' => 'btn btn-circle btn-info btn-sm'));
+            echo CHtml::link('<i class="fa fa-bank"></i>'.Yii::t('import', '导入').Yii::t('import', 'bank'), array('transition/bank'), array('class' => 'btn btn-circle btn-info btn-sm'));
+            echo CHtml::link('<i class="fa fa-money"></i> '.Yii::t('import', '导入').Yii::t('import', 'cash'), array('transition/cash'), array('class' => 'btn btn-circle btn-info btn-sm'));
             echo "\n";
-            echo CHtml::link('<i class="fa fa-edit"></i> 手动录入凭证', array('transition/create'), array('class' => 'btn btn-circle btn-default btn-sm'));
+            echo CHtml::link('<i class="fa fa-edit"></i>'.Yii::t('import', '手动录入凭证'), array('transition/create'), array('class' => 'btn btn-circle btn-default btn-sm'));
             ?>
-            <a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title="" data-original-title title="全屏"></a>
+            <a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title="" data-original-title title="<?= Yii::t('import', '全屏') ?>"></a>
         </div>
     </div>
     <div class="portlet-body">

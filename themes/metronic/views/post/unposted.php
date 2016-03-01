@@ -3,7 +3,7 @@
 /* @var $dataProvider CActiveDataProvider */
 
 $this->breadcrumbs=array(
-	'过账',
+	Yii::t('import', '过账'),
 );
 
 $this->menu=array(
@@ -31,7 +31,7 @@ $this->widget('zii.widgets.grid.CGridView',
                                            'template' => '{post}',
                                            'buttons'=>array(
                                                             'post'=>array(
-                                                                          'label'=>"过账",
+                                                                          'label'=>Yii::t('import', "过账"),
                                                                           'url'=>'"index.php?r=post/post&subject=$data->sbj_number&date='.$date.'"',),),
 
                                            ),

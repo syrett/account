@@ -3,9 +3,9 @@
 /* @var $model Stock */
 //显示期初多少，入库多少，领用多少，还剩多少
 
-$this->pageTitle = Yii::app()->name . ' - 库存商品查看';
+$this->pageTitle = Yii::app()->name . Yii::t('import', ' - 库存商品查看');
 $this->breadcrumbs = array(
-    '库存商品查看',
+    Yii::t('import', '库存商品查看'),
 );
 if ($action == 'order') {
 
@@ -23,7 +23,7 @@ if ($action == 'order') {
 <div class="panel panel-default voucher form">
     <!-- Default panel contents -->
     <div class="panel-heading">
-        <h2>库存商品-<?=$model->name?></h2>
+        <h2><?= Yii::t('import', '库存商品') ?>-<?=$model->name?></h2>
     </div>
 
     <div class="well well-sm">
@@ -34,11 +34,11 @@ if ($action == 'order') {
 
             } elseif ($action == '') {
                 ?>
-                <div class="banner-balance col-sm-9">年初: <?= $before ?>
-                    <div class="banner-out col-sm-3">本年出库: <?= $out ?></div>
-                    <div class="banner-in col-sm-3">本年采购: <?= $in ?></div>
+                <div class="banner-balance col-sm-9"><?= Yii::t('import', '年初:') ?> <?= $before ?>
+                    <div class="banner-out col-sm-3"><?= Yii::t('import', '本年出库:') ?> <?= $out ?></div>
+                    <div class="banner-in col-sm-3"><?= Yii::t('import', '本年采购:') ?> <?= $in ?></div>
                 </div>
-                <div class="banner-paid col-sm-3">剩余: <?= $left ?></div>
+                <div class="banner-paid col-sm-3"><?= Yii::t('import', '剩余:') ?> <?= $left ?></div>
             <?php
             }
             ?>
@@ -54,36 +54,36 @@ if ($action == 'order') {
                     'name' => 'id',
                 ),
                 array(
-                    'header' => '订单号',
+                    'header' => Yii::t('import', '订单号'),
                     'name' => 'order_no',
                 ),
                 array(
-                    'header' => '供应商',
+                    'header' => Yii::t('import', '供应商'),
                     'name' => 'vendor_id',
                     'value' => 'Vendor::model()->getName($data["vendor_id"])',
                 ),
                 array(
-                    'header' => '日期',
+                    'header' => Yii::t('import', '日期'),
                     'name' => 'in_date',
                 ),
                 array(
-                    'header' => '单价',
+                    'header' => Yii::t('import', '单价'),
                     'name' => 'in_price',
                 ),
                 array(
-                    'header' => '年初',
+                    'header' => Yii::t('import', '年初'),
                     'name' => 'before',
                 ),
                 array(
-                    'header' => '本年入库',
+                    'header' => Yii::t('import', '本年入库'),
                     'value' => '$data["in_date"]>=date("Y")."0101"?$data["count"]:0',
                 ),
                 array(
-                    'header' => '本年出库',
+                    'header' => Yii::t('import', '本年出库'),
                     'name' => 'out',
                 ),
                 array(
-                    'header' => '剩余',
+                    'header' => Yii::t('import', '剩余'),
                     'name' => 'left',
                 ),
 //                array(

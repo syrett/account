@@ -1,7 +1,7 @@
 <?php
-$this->pageTitle = Yii::app()->name . ' - 期初明细';
+$this->pageTitle = Yii::app()->name . Yii::t('import', ' - 期初明细');
 $this->breadcrumbs = array(
-    '期初明细',
+    Yii::t('import', '期初明细'),
 );
 
 $baseUrl = Yii::app()->theme->baseUrl;
@@ -54,14 +54,14 @@ if ($stocks)
     ?>
     <div class="portlet-title">
         <div class="caption">
-            <span class="font-green-sharp"><?= $type == '1405' ? '库存商品' : '长期资产' ?>期初明细</span>
-            <span class="caption-helper">总账期初余额:<?= round2($balance) ?>
-                &nbsp;&nbsp;&nbsp;明细合计:<?= round2($total) ?></span>
+            <span class="font-green-sharp"><?= $type == '1405' ? Yii::t('import', '库存商品') : Yii::t('import', '长期资产') ?><?= Yii::t('import', '期初明细') ?></span>
+            <span class="caption-helper"><?= Yii::t('import', '总账期初余额:') ?><?= round2($balance) ?>
+                &nbsp;&nbsp;&nbsp;<?= Yii::t('import', '明细合计:') ?><?= round2($total) ?></span>
         </div>
 
         <div class="actions">
             <div class="actions">
-                <?php echo CHtml::link('清空期初余额', "#truncate", array('class' => 'btn btn-circle btn-default', 'data-toggle' => 'modal')); ?>
+                <?php echo CHtml::link(Yii::t('import', '清空期初余额'), "#truncate", array('class' => 'btn btn-circle btn-default', 'data-toggle' => 'modal')); ?>
 
                 <input id="url_truncate" type="hidden" value="<?= $this->createUrl('stock/truncate') ?>">
             </div>
@@ -74,24 +74,24 @@ if ($stocks)
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                        <h4 class="modal-title">确认要清空期初明细？</h4>
+                        <h4 class="modal-title"><?= Yii::t('import', '确认要清空期初明细？') ?></h4>
                     </div>
                     <div class="modal-body">
                         <p>
-                            以下科目期初余额明细将清空！！！
+                            <?= Yii::t('import', '以下科目期初余额明细将清空！！！') ?>
                         </p>
                         <?
                         if ($type == '1601') {
                             $msg = Subjects::getName('1601') . ',' . Subjects::getName('1701') . ',' . Subjects::getName('1801');
                         } elseif ($type == '1405')
                             $msg = Subjects::getName('1403') . ',' . Subjects::getName('1405');
-                        echo "包含 $msg ";
+                        echo Yii::t('import', "包含") ."$msg ";
                         ?>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn default" data-dismiss="modal" aria-hidden="true">取消</button>
+                        <button class="btn default" data-dismiss="modal" aria-hidden="true"><?= Yii::t('import', '取消') ?></button>
                         <a onclick="javascript:truncate('<?= $type ?>');">
-                            <button data-dismiss="modal" class="btn blue">确认</button>
+                            <button data-dismiss="modal" class="btn blue"><?= Yii::t('import', '确认') ?></button>
                         </a>
                     </div>
                 </div>
@@ -103,12 +103,12 @@ if ($stocks)
                 'class' => 'CButtonColumn',
                 'buttons' => array(
                     'update' => array(
-                        'options' => array('class' => 'btn btn-default tip btn-xs', 'title' => '编辑'),
+                        'options' => array('class' => 'btn btn-default tip btn-xs', 'title' => Yii::t('import', '编辑')),
                         'label' => '<span class="glyphicon glyphicon-pencil"></span>',
                         'imageUrl' => false,
                     ),
                     'delete' => array(
-                        'options' => array('class' => 'btn btn-default tip delete btn-xs', 'title' => '删除'),
+                        'options' => array('class' => 'btn btn-default tip delete btn-xs', 'title' => Yii::t('import', '删除')),
                         'label' => '<span class="glyphicon glyphicon-trash"></span>',
                         'imageUrl' => false,
                     ),
@@ -116,7 +116,7 @@ if ($stocks)
                 'header' => '操作',
                 'htmlOptions' => array('style' => 'min-width: 68px;'),
                 'template' => '<div class="btn-group">{update}</div>',
-                'deleteConfirmation' => '确定要删除该条记录？',
+                'deleteConfirmation' => Yii::t('import', '确定要删除该条记录？'),
             ));
         $this->widget('zii.widgets.grid.CGridView', array(
                 'id' => 'vendor-grid',

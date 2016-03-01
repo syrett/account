@@ -2,10 +2,10 @@
 /* @var $this ProjectLongController */
 /* @var $model ProjectLong */
 
-$this->pageTitle=Yii::app()->name . ' - 修改长期待摊';
+$this->pageTitle=Yii::app()->name . Yii::t('import', ' - 修改长期待摊');
 $this->breadcrumbs=array(
-    '长期待摊列表',
-    '新建长期待摊'
+    Yii::t('import', '长期待摊列表'),
+    Yii::t('import', '新建长期待摊')
 );
 
 ?>
@@ -13,13 +13,13 @@ $this->breadcrumbs=array(
 <div class="portlet light">
     <div class="portlet-title">
         <div class="caption">
-            <span class="font-green-sharp">修改长期待摊</span>
+            <span class="font-green-sharp"><?= Yii::t('import', '修改长期待摊') ?></span>
         </div>
         <div class="actions">
             <?php
-            echo CHtml::link('<i class="fa fa-bars"></i> 长期待摊列表', array('admin'), array('class' => 'btn btn-circle btn-primary btn-sm'));
+            echo CHtml::link('<i class="fa fa-bars"></i>'.Yii::t('import', '长期待摊列表'), array('admin'), array('class' => 'btn btn-circle btn-primary btn-sm'));
             ?>
-            <a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title="" data-original-title title="全屏"></a>
+            <a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title="" data-original-title title="<?= Yii::t('import', '全屏') ?>"></a>
         </div>
     </div>
     <div class="portlet-body">

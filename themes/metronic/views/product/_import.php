@@ -15,7 +15,7 @@ $this->pageTitle = Yii::app()->name;
 <div class="dataTables_wrapper no-footer">
     <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form']); ?>
     <?
-    $select = '<option value=1 >日期</option><option value=2 >交易说明</option><option value=3 >金额</option>';
+    $select = '<option value=1 >'.Yii::t('import', '日期').'</option><option value=2 >'.Yii::t('import', '交易说明').'</option><option value=3 >'.Yii::t('import', '金额').'</option>';
     ?>
     <div class="row">
         <div class="col-xs-12">
@@ -28,7 +28,7 @@ $this->pageTitle = Yii::app()->name;
                         </div>
                 <span class="input-group-btn">
                     <span class="btn btn-default btn-file">
-                        选择文件<input name="attachment" type="file" accept=".xls,.xlsx">
+                        <?= Yii::t('import', '选择文件') ?><input name="attachment" type="file" accept=".xls,.xlsx">
                     </span>
                 </span>
                     </div>
@@ -36,9 +36,9 @@ $this->pageTitle = Yii::app()->name;
             </div>
             <div class="col-md-4 col-sm-12">
                 <div class="btn-toolbar margin-bottom-10">
-                    <button type="submit" class="btn btn-default btn-file">导入</button>
+                    <button type="submit" class="btn btn-default btn-file"><?= Yii::t('import', '导入') ?></button>
                     <a href="<?= $this->createUrl('/Stock/excel') ?>">
-                        <button class="btn btn-default btn-file" type="button"><strong>库存下载</strong>
+                        <button class="btn btn-default btn-file" type="button"><strong><?= Yii::t('import', '库存下载') ?></strong>
                         </button>
                     </a>
                 </div>
@@ -51,12 +51,12 @@ $this->pageTitle = Yii::app()->name;
             <table id="data_import" class="table table-bordered dataTable">
                 <tr>
                     <th class="input_min"><input type="checkbox"></th>
-                    <th class="input_mid">日期</th>
-                    <th class="input_mid">名称</th>
-                    <th class="input_mid">型号</th>
-                    <th class="input_mid">盘点数量</th>
+                    <th class="input_mid"><?= Yii::t('import', '日期') ?></th>
+                    <th class="input_mid"><?= Yii::t('import', '名称') ?></th>
+                    <th class="input_mid"><?= Yii::t('import', '型号') ?></th>
+                    <th class="input_mid"><?= Yii::t('import', '盘点数量') ?></th>
 <!--                    <th class="input-small">操作</th>-->
-                    <th style="width: 10%">提示</th>
+                    <th style="width: 10%"><?= Yii::t('import', '提示') ?></th>
                 </tr>
                 <?php
 
@@ -116,11 +116,11 @@ $this->pageTitle = Yii::app()->name;
                                 <div>
 
                                     <button type="button" id="btn_confirm_<?= $key ?>" class="hidden btn btn-default"
-                                            onclick="">确认
+                                            onclick=""><?= Yii::t('import', '确认') ?>
                                     </button>
 
                                     <button type="button" id="btn_del_<?= $key ?>" class="btn btn-xs" disabled
-                                            onclick="itemclose(this)"><i class="fa fa-times"></i>删除
+                                            onclick="itemclose(this)"><i class="fa fa-times"></i><?= Yii::t('import', '删除') ?>
                                     </button>
                                 </div>
                             </td>
@@ -165,7 +165,7 @@ $this->pageTitle = Yii::app()->name;
 </div>
 <div class="panel-footer">
     <div class="text-center">
-        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证</button>
+        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> <?= Yii::t('import', '保存凭证') ?></button>
     </div>
 </div>
 <script>

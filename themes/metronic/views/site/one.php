@@ -12,7 +12,7 @@ $list = $this->listMonth('listSettlement');
 
     <!-- Default panel contents -->
     <div class="panel-heading"><h2>
-            账套操作
+            <?= Yii::t('import', '账套操作') ?>
 
         </h2></div>
     <div class="panel-body v-title">
@@ -25,7 +25,7 @@ $list = $this->listMonth('listSettlement');
             'htmlOptions' => array('class' => 'form-horizontal',),
         ));
         if (!empty($list)) {
-            echo '一键结账截至日期';
+            echo Yii::t('import', '一键结账截至日期');
             foreach ($list as $year => $months) {
                 foreach ($months as $month) {
                     $data[$year . $month] = $year . '年' . $month;
@@ -39,10 +39,10 @@ $list = $this->listMonth('listSettlement');
             ?>
 
             <?php echo CHtml::hiddenField('progress_key', uniqid(), array('id' => 'progress_key')); ?>
-            <input type="button" class="btn btn-primary" onclick="save()" value="确定"/>
+            <input type="button" class="btn btn-primary" onclick="save()" value="<?= Yii::t('import', '确定') ?>"/>
         <?
         } else
-            echo '没有数据需要处理，可以导出报表';
+            echo Yii::t('import', '没有数据需要处理，可以导出报表');
         $this->endWidget();
         ?>
         <?

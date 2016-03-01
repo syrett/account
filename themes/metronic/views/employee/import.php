@@ -1,10 +1,10 @@
 <?php
 /* @var $this EmployeeController */
 /* @var $dataProvider CActiveDataProvider */
-$this->pageTitle = Yii::app()->name . ' - 员工管理';
+$this->pageTitle = Yii::app()->name . Yii::t('import', ' - 员工管理');
 $this->breadcrumbs = array(
-    '员工列表',
-    '添加员工'
+    Yii::t('import', '员工列表'),
+    Yii::t('import', '添加员工')
 );
 
 $cs = Yii::app()->clientScript;
@@ -32,15 +32,15 @@ $department_array = Employee::model()->listDepartment();
         ?>
         <div class="portlet-title">
             <div class="caption">
-                <span class="font-green-sharp">批量添加员工</span>
+                <span class="font-green-sharp"><?= Yii::t('import', '批量添加员工') ?></span>
             </div>
             <div class="actions">
                 <?php
-                echo CHtml::link('<i class="fa fa-bars"></i> 员工列表', array('admin'), array('class' => 'btn btn-circle btn-primary btn-sm'));
+                echo CHtml::link('<i class="fa fa-bars"></i>'.Yii::t('import', '员工列表'), array('admin'), array('class' => 'btn btn-circle btn-primary btn-sm'));
                 ?>
                 <a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen"
                    data-original-title=""
-                   data-original-title title="全屏"></a>
+                   data-original-title title="<?= Yii::t('import', '全屏') ?>"></a>
             </div>
         </div>
         <div class="portlet-body">
@@ -53,7 +53,7 @@ $department_array = Employee::model()->listDepartment();
                         </div>
 					<span class="input-group-btn">
 						<span class="btn btn-default btn-file">
-							选择文件<input name="attachment" type="file" accept=".xls,.xlsx">
+							<?= Yii::t('import', '选择文件') ?><input name="attachment" type="file" accept=".xls,.xlsx">
 						</span>
 					</span>
                     </div>
@@ -61,9 +61,9 @@ $department_array = Employee::model()->listDepartment();
             </div>
             <div class="col-md-4 col-sm-12">
                 <div class="btn-toolbar margin-bottom-10">
-                    <button type="submit" class="btn btn-default btn-file">导入</button>
+                    <button type="submit" class="btn btn-default btn-file"><?= Yii::t('import', '导入') ?></button>
                     <a download="" href="/download/员工导入.xlsx">
-                        <button class="btn btn-default btn-file" type="button">模板下载
+                        <button class="btn btn-default btn-file" type="button"><?= Yii::t('import', '模板下载') ?>
                         </button>
                     </a>
                 </div>
@@ -107,7 +107,7 @@ $department_array = Employee::model()->listDepartment();
 
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10 text-center">
-            <?php echo CHtml::submitButton('保存', array('class' => 'btn btn-circle btn-primary',)); ?>
+            <?php echo CHtml::submitButton(Yii::t('import', '保存'), array('class' => 'btn btn-circle btn-primary',)); ?>
         </div>
     </div>
 <?php $this->endWidget(); ?>

@@ -3,7 +3,7 @@
 /* @var $dataProvider CActiveDataProvider */
 
 $this->breadcrumbs=array(
-	'过账',
+	Yii::t('import', '过账'),
 );
 
 $this->menu=array(

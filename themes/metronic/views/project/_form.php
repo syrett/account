@@ -25,7 +25,7 @@ $form=$this->beginWidget('CActiveForm', array(
 		</div>
 		<div class="form-group">
 		<div class="col-sm-offset-2 col-sm-10 text-center">
-			<?php echo CHtml::submitButton('保存', array('class'=>'btn btn-circle btn-primary',)); ?>
+			<?php echo CHtml::submitButton(Yii::t('import', '保存'), array('class'=>'btn btn-circle btn-primary',)); ?>
 			<?php echo BtnBack(); ?>
 		</div>
 		</div>

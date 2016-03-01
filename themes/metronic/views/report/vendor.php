@@ -34,35 +34,35 @@ function echoData($data)
 ?>
 <div class="alert alert-info">
     <?php echo CHtml::beginForm('', 'post', array('class' => 'form-inline')); ?>
-    <h3>供应商表</h3>
+    <h3><?= Yii::t('import', '供应商表') ?></h3>
     <div class="form-group">
-        <label class="control-label" for="date">请选择报表日期：</label>
+        <label class="control-label" for="date"><?= Yii::t('import', '请选择报表日期：') ?></label>
         <input type="text" data-date="201210" data-date-format="yyyymm" data-date-viewmode="years"
                data-date-minviewmode="months" name="date"
                class="form-control form-control-inline input-small date-picker"
                value="<?php echo isset($date) ? $date : '' ?>" id="date" readonly="">
-        <input type="submit" class="btn btn-primary" value="查看报表"/>
+        <input type="submit" class="btn btn-primary" value="<?= Yii::t('import', '查看报表') ?>"/>
     </div>
     <p>&nbsp;</p>
     <?php echo CHtml::endForm(); ?>
 </div>
 <div <?php if (!$data) echo 'style="display:none"'; ?>" class="panel panel-default">
 <div class="panel-heading">
-    <h2>供 应 商 表</h2>
+    <h2><?= Yii::t('import', '供 应 商 表') ?></h2>
 </div>
 <div class="panel-body">
-    <p class="text-center"><span class="pull-left">日期：<?php echo $date; ?></span> 编制单位：<?php echo $company ?> <span
-            class="pull-right">金额单位：元</span></p>
+    <p class="text-center"><span class="pull-left"><?= Yii::t('import', '日期：') ?><?php echo $date; ?></span> <?= Yii::t('import', '编制单位：') ?><?php echo $company ?> <span
+            class="pull-right"><?= Yii::t('import', '金额单位：元') ?></span></p>
 </div>
 
 <table id="vendor" class="table table-bordered table-hover">
     <thead>
     <tr>
-        <th>供应商</th>
-        <th>期初</th>
-        <th>本期增加</th>
-        <th>本期已付</th>
-        <th>未付</th>
+        <th><?= Yii::t('import', '供应商') ?></th>
+        <th><?= Yii::t('import', '期初') ?></th>
+        <th><?= Yii::t('import', '本期增加') ?></th>
+        <th><?= Yii::t('import', '本期已付') ?></th>
+        <th><?= Yii::t('import', '未付') ?></th>
     </tr>
     </thead>
     <?php echoData($data) ?>
@@ -74,14 +74,14 @@ function echoData($data)
     echo CHtml::beginForm($this->createUrl('/Report/createexcel'), 'post');
     if ($date != ""){
     $d = date('Y-m', strtotime($date));
-    $excel_name = "供应商表 " . $d . ".xls";
+    $excel_name = Yii::t('import', "供应商表 ") . $d . ".xls";
     ?>
 
     <input type="hidden" name="data" id="data" value=""/>
     <input type="hidden" name="name" id="name" value="<?= $excel_name ?>"/>
     <p class="text-right">
         <?php
-        echo '<button type="button" onclick="tableToExcel()" class="btn btn-primary"><span class="glyphicon glyphicon-export"></span> 导出</button>';
+        echo '<button type="button" onclick="tableToExcel()" class="btn btn-primary"><span class="glyphicon glyphicon-export"></span>'.Yii::t('import', '导出').'</button>';
         }
         echo CHtml::endForm();
         ?>

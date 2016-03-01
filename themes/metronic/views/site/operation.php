@@ -13,31 +13,31 @@ $this->pageTitle = Yii::app()->name;
             $title = '';
             switch ($operation) {
                 case 'listReview' :
-                    $title = '审核凭证';
+                    $title = Yii::t('import', '审核凭证');
                     break;
                 case 'listTransition' :
-                    $title = '查询凭证';
+                    $title = Yii::t('import','查询凭证');
                     break;
                 case 'listPost' :
-                    $title = '凭证过账';
+                    $title = Yii::t('import','凭证过账');
                     break;
                 case 'listSettlement' :
-                    $title = '期末结转';
+                    $title = Yii::t('import','期末结转');
                     break;
                 case 'listClosing' :
-                    $title = '结账';
+                    $title = Yii::t('import','结账');
                     break;
                 case 'listSettlementcloseing' :
-                    $title = '结账';
+                    $title = Yii::t('import','结账');
                     break;
                 case 'listAntiSettlement' :
-                    $title = '反结账';
+                    $title = Yii::t('import','反结账');
                     break;
                 case 'listReorganise' :
-                    $title = '整理凭证';
+                    $title = Yii::t('import','整理凭证');
                     break;
                 case 'listAssets' :
-                    $title = '固定资产';
+                    $title = Yii::t('import','固定资产');
                     break;
             }
             echo $title;
@@ -49,14 +49,14 @@ $this->pageTitle = Yii::app()->name;
         <!-- search-form -->
         <?php
         $status = $this->getTransitionDate('end');
-        echo "已结账至日期：" . $status['date'];
+        echo Yii::t('import', "已结账至日期：") . $status['date'];
         $list = $this->listMonth($operation);
 
         if (empty($list) && $operation != 'listAssets') {
             ?>
 
             <div class="unit-group">
-                没有数据需要处理
+                <?= Yii::t('import', '没有数据需要处理') ?>
             </div>
             <?php
         } elseif ($operation != 'listAssets')
@@ -64,7 +64,7 @@ $this->pageTitle = Yii::app()->name;
 
                 echo CHtml::beginForm($this->createUrl('/Transition/' . $operation), 'get');
                 ?>
-                <?= $year ?>年
+                <?= $year ?><?= Yii::t('import', '年') ?>
                 <?php
                 $data = array();
                 foreach ($months as $month) {

@@ -2,9 +2,9 @@
 /* @var $this ProductController */
 /* @var $model Product */
 
-$this->pageTitle = Yii::app()->name . ' - 会计凭证管理';
+$this->pageTitle = Yii::app()->name . Yii::t('import', ' - 会计凭证管理');
 $this->breadcrumbs = array(
-    '导入凭证',
+    Yii::t('import', '导入凭证'),
 );
 $cs = Yii::app()->clientScript;
 $cs->registerCssFile(Yii::app()->theme->baseUrl . '/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css');
@@ -21,7 +21,7 @@ $type = 'product';
 
 <div class="portlet box blue">
     <div class="portlet-title">
-        <div class="caption">修改<?= Yii::t('import', strtoupper($type)) ?></div>
+        <div class="caption"><?= Yii::t('import', '修改') ?><?= Yii::t('import', strtoupper($type)) ?></div>
     </div>
     <div class="portlet-body">
         <?php
@@ -38,7 +38,7 @@ $type = 'product';
                 </div>
                 <div class="col-md-6">
                     <div class="btn-group pull-right">
-                        <? echo CHtml::link('<span class="glyphicon glyphicon-search"></span> 已导入数据', array('/' . $type), array('class' => 'btn btn-default')); ?>
+                        <? echo CHtml::link('<span class="glyphicon glyphicon-search"></span>'.Yii::t('import', '已导入数据'), array('/' . $type), array('class' => 'btn btn-default')); ?>
                         <input type="hidden" id="dp_startdate" value="<?= Transition::getTransitionDate('post') ?>">
                     </div>
                 </div>

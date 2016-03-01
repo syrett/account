@@ -6,9 +6,9 @@ $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scripts/checkinput.js', CClientScript::POS_END);
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scripts/subjects.js', CClientScript::POS_END);
 
-$this->pageTitle=Yii::app()->name . ' - 科目期初余额';
+$this->pageTitle=Yii::app()->name . Yii::t('import', ' - 科目期初余额');
 $this->breadcrumbs=array(
-	'科目期初余额',
+    Yii::t('import', '科目期初余额'),
 );
 
 
@@ -17,10 +17,10 @@ $this->breadcrumbs=array(
 <div class="portlet light">
 	<div class="portlet-title">
 		<div class="caption">
-		<span class="font-green-sharp">期初余额</span>
+		<span class="font-green-sharp"><?= Yii::t('import', '期初余额') ?></span>
 		</div>
 		<div class="actions">
-			<a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title="" data-original-title title="全屏"></a>
+			<a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title="" data-original-title title="<?= Yii::t('import', '全屏') ?>"></a>
 		</div>
 	</div>
 	<div class="portlet-body">
@@ -31,15 +31,15 @@ $this->breadcrumbs=array(
             }
             ?>
         </div>
-		<div class="alert alert-info">注意:改变期初余额将会影响报表的准确性，所以修改期初余额时必须反结账！</div>
+		<div class="alert alert-info"><?= Yii::t('import', '注意:改变期初余额将会影响报表的准确性，所以修改期初余额时必须反结账！') ?></div>
 		<form action="?r=subjects/balance" method="POST">
 		<table class="table table-bordered table-hover">
 		  <thead>
 		  <tr>
-		  <th class="col-md-3">科目编码</th>
-		  <th class="col-md-3">科目名称</th>
-		  <th class="col-md-1">科目类别</th>
-		  <th class="col-md-2">期初余额</th>
+		  <th class="col-md-3"><?= Yii::t('import', '科目编码') ?></th>
+		  <th class="col-md-3"><?= Yii::t('import', '科目名称') ?></th>
+		  <th class="col-md-1"><?= Yii::t('import', '科目类别') ?></th>
+		  <th class="col-md-2"><?= Yii::t('import', '期初余额') ?></th>
 		  </tr>
 		  </thead>
 		<?php
@@ -58,9 +58,9 @@ $this->breadcrumbs=array(
 			<td class="col-md-3">
 		<?php
 		 switch ($item["sbj_cat"]) {
-		 case "1":echo "资产";break;
-		 case "2":echo "负债";break;
-		 case "3":echo "权益";break;
+		 case "1":echo Yii::t('import', "资产");break;
+		 case "2":echo Yii::t('import', "负债");break;
+		 case "3":echo Yii::t('import', "权益");break;
 		 }
 		?>
 			</td>
@@ -79,7 +79,7 @@ $this->breadcrumbs=array(
 		</table>
 		<div class="form-group" >
 			<div class="text-center">
-			<?php echo CHtml::submitButton('保存', array('class'=>'btn btn-circle btn-primary',)); ?>
+			<?php echo CHtml::submitButton(Yii::t('import', '保存'), array('class'=>'btn btn-circle btn-primary',)); ?>
 			<?php echo BtnBack(); ?>
 			</div>
 		</div>

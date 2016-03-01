@@ -26,23 +26,23 @@ $item = $sheetData[0]['data'];
             ));
             $employee = Employee::model()->findByPk($item['employee_id']);
             ?>
-            姓名：<?= $employee->name ?>&nbsp;&nbsp;&nbsp;月份：<?= convertDate($item['entry_date'], 'Y年m月')?>&nbsp;&nbsp;&nbsp;部门：<?= Department::model()->getName($employee->department_id) ?>
+            <?= Yii::t('import', '姓名：') ?><?= $employee->name ?>&nbsp;&nbsp;&nbsp;<?= Yii::t('import', '月份：') ?><?= convertDate($item['entry_date'], Yii::t('import', 'Y年m月'))?>&nbsp;&nbsp;&nbsp;<?= Yii::t('import', '部门：') ?><?= Department::model()->getName($employee->department_id) ?>
             <table class="table table-bordered dataTable">
                 <tr>
                     <th class="input_min"><input type="checkbox"></th>
-                    <th class="input_mid">基本工资</th>
-                    <th class="input_mid">奖金</th>
-                    <th class="input_mid">应付工资</th>
-                    <th class="input_mid">其他(福利等)</th>
-                    <th class="input_mid">社保个人</th>
-                    <th class="input_min">公积金个人</th>
-                    <th class="input_mid">税前工资</th>
-                    <th class="input_min">个人所得税</th>
-                    <th class="input_mid">税后工资</th>
-                    <th class="input_min">社保公司</th>
-                    <th class="input_min">公积金公司</th>
-                    <th class="input-small">操作</th>
-                    <th style="width: 10%">提示</th>
+                    <th class="input_mid"><?= Yii::t('import', '基本工资') ?></th>
+                    <th class="input_mid"><?= Yii::t('import', '奖金') ?></th>
+                    <th class="input_mid"><?= Yii::t('import', '应付工资') ?></th>
+                    <th class="input_mid"><?= Yii::t('import', '其他(福利等)') ?></th>
+                    <th class="input_mid"><?= Yii::t('import', '社保个人') ?></th>
+                    <th class="input_min"><?= Yii::t('import', '公积金个人') ?></th>
+                    <th class="input_mid"><?= Yii::t('import', '税前工资') ?></th>
+                    <th class="input_min"><?= Yii::t('import', '个人所得税') ?></th>
+                    <th class="input_mid"><?= Yii::t('import', '税后工资') ?></th>
+                    <th class="input_min"><?= Yii::t('import', '社保公司') ?></th>
+                    <th class="input_min"><?= Yii::t('import', '公积金公司') ?></th>
+                    <th class="input-small"><?= Yii::t('import', '操作') ?></th>
+                    <th style="width: 10%"><?= Yii::t('import', '提示') ?></th>
                 </tr>
                 <?php
 
@@ -156,11 +156,11 @@ $item = $sheetData[0]['data'];
                             <div>
 
                                 <button type="button" id="btn_confirm_<?= $key ?>" class="hidden btn btn-default"
-                                        onclick="">确认
+                                        onclick=""><?= Yii::t('import', '确认') ?>
                                 </button>
 
                                 <button type="button" id="btn_del_<?= $key ?>" class="btn btn-xs" disabled
-                                        onclick=""></i>删除
+                                        onclick=""><?= Yii::t('import', '删除') ?>
                                 </button>
                             </div>
                         </td>
@@ -192,13 +192,13 @@ $item = $sheetData[0]['data'];
             <?
             if ($model->status_id == 1 && $item['entry_reviewed'] == 1) {
                 ?>
-                <span class="info-">该数据生成凭证已经审核，无法修改</span>
+                <span class="info-"><?= Yii::t('import', '该数据生成凭证已经审核，无法修改') ?></span>
             <?
             } else {
                 ?>
                 <div class="panel-footer">
                     <div class="text-center">
-                        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证</button>
+                        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span><?= Yii::t('import', '保存凭证') ?></button>
                     </div>
                 </div>
             <?php

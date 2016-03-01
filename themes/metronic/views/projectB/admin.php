@@ -4,9 +4,9 @@
 
 $departmentArray = Department::model()->getDepartmentArray();
 $sbjArray = Transition::getSubjectArray([1601]);
-$this->pageTitle = Yii::app()->name . ' - 在建工程';
+$this->pageTitle = Yii::app()->name . Yii::t('import', ' - 在建工程');
 $this->breadcrumbs = array(
-    '在建工程',
+    Yii::t('import', '在建工程'),
 );
 $total = Stock::getTotal('1604', 'worth');
 $where = "(entry_subject like '1604%')";
@@ -20,15 +20,15 @@ $dataProvider = new CActiveDataProvider('Stock', ['criteria' => ['condition' => 
 <div class="portlet light">
     <div class="portlet-title">
         <div class="caption">
-            <span class="font-green-sharp">在建工程</span>
-            <span class="caption-helper">在建工程总计:<?= $total ?></span>
+            <span class="font-green-sharp"><?= Yii::t('import', '在建工程') ?></span>
+            <span class="caption-helper"><?= Yii::t('import', '在建工程总计:') ?><?= $total ?></span>
         </div>
         <div class="actions">
             <?php
-            echo CHtml::link('<i class="fa fa-plus"></i> 新建在建工程', array('create'), array('class' => 'btn btn-circle btn-primary btn-sm'));
+            echo CHtml::link('<i class="fa fa-plus"></i>'.Yii::t('import', '新建在建工程'), array('create'), array('class' => 'btn btn-circle btn-primary btn-sm'));
             ?>
             <a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title=""
-               data-original-title title="全屏"></a>
+               data-original-title title="<?= Yii::t('import', '全屏') ?>"></a>
         </div>
     </div>
     <div class="portlet-body">
@@ -37,7 +37,7 @@ $dataProvider = new CActiveDataProvider('Stock', ['criteria' => ['condition' => 
                     <?php
                     $pros = ProjectB::model()->findAll();
                     $none = true;
-                    $str = '<h4><strong>未开工项目 : </strong>';
+                    $str = '<h4><strong>'.Yii::t('import', '未开工项目 :').'</strong>';
                     foreach ($pros as $pro) {
                         $sbj = Subjects::model()->findByAttributes(['sbj_name' => $pro->name], 'sbj_number like "1604%"');
                         if ($sbj) {
@@ -63,32 +63,32 @@ $dataProvider = new CActiveDataProvider('Stock', ['criteria' => ['condition' => 
                         'value' => 'addZero(ProjectB::getIdBySubject($data->entry_subject),4)'
                     ],
                     [
-                        'header' => '项目名称',
+                        'header' => Yii::t('import', '项目名称'),
                         'name' => 'project',
                         'value' => 'Subjects::getName($data->entry_subject)'
                     ],
                     [
-                        'header' => '明细',
+                        'header' => Yii::t('import', '明细'),
                         'name' => 'name'
                     ],
                     'in_price',
                     array(
                         'name' => 'status',
-                        'filter' => array('1' => '在建', '2' => '转固'),
-                        'value' => '($data->getPStatus()=="1")?("在建"):("转固")'
+                        'filter' => array('1' => Yii::t('import', '在建'), '2' => Yii::t('import', '转固')),
+                        'value' => '($data->getPStatus()=="1") ? ('.Yii::t('import', "在建").') : ('.Yii::t('import', "转固").')'
                     ),
                     ['name' => 'in_date', 'value' => 'convertDate($data->in_date,"Y-m-d")'],
                     array(
                         'class' => 'CButtonColumn',
                         'buttons' => array(
                             'view' => array(
-                                'options' => array('class' => 'btn btn-default tip btn-xs', 'title' => '查看'),
+                                'options' => array('class' => 'btn btn-default tip btn-xs', 'title' => Yii::t('import', '查看')),
                                 'label' => '<span class="glyphicon glyphicon-eye-open"></span>',
                                 'imageUrl' => false,
                             ),
                             'update' => array(
-                                'options' => array('class' => 'btn btn-default tip btn-xs', 'title' => '编辑'),
-                                'label' => '<span class="glyphicon ">编辑</span>',
+                                'options' => array('class' => 'btn btn-default tip btn-xs', 'title' => Yii::t('import', '编辑')),
+                                'label' => '<span class="glyphicon ">'.Yii::t('import', '编辑').'</span>',
                                 'imageUrl' => false,
                             ),
                             'transform' => array(
@@ -96,18 +96,18 @@ $dataProvider = new CActiveDataProvider('Stock', ['criteria' => ['condition' => 
                                     'class' => 'btn btn-default tip btn-xs',
                                     'data-toggle' => "modal",
                                     'role' => 'button',
-                                    'title' => '转固',
+                                    'title' => Yii::t('import', '转固'),
                                     'onClick' => 'rowClick(this)'
                                 ),
                                 'url' => '"#transform"',
-                                'label' => "<span class='glyphicon'>转固</span>",
+                                'label' => "<span class='glyphicon'>".Yii::t('import', '转固')."</span>",
                                 'imageUrl' => false,
 //                            'visible' => '$data->status==1&&trim($data->assets)!=""',
                                 'visible' => '$data->checkTransform()',
                             )
                         ),
                         'template' => '<div class="btn-group">{transform}</div>',
-                        'deleteConfirmation' => '确定要删除该条记录？',
+                        'deleteConfirmation' => Yii::t('import', '确定要删除该条记录？'),
                     ),
                 ),
             ));
@@ -115,26 +115,26 @@ $dataProvider = new CActiveDataProvider('Stock', ['criteria' => ['condition' => 
     </div>
 </div>
 
-<div id="transform" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="在建工程转固" aria-hidden="true"
+<div id="transform" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="<?= Yii::t('import', '在建工程转固') ?>" aria-hidden="true"
      style="display: none">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <h4 class="modal-title">在建工程转固</h4>
+                <h4 class="modal-title"><?= Yii::t('import', '在建工程转固') ?></h4>
             </div>
             <div class="modal-body row">
                 <div class="panel-heading col-md-12">
                     <strong>
-                        在建工程转固后，无法撤消！！！
+                        <?= Yii::t('import', '在建工程转固后，无法撤消！！！') ?>
                     </strong>
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-3">固定资产名称</div>
-                        <div class="col-md-3">型号</div>
-                        <div class="col-md-3">使用部门</div>
-                        <div class="col-md-3">资产类别</div>
+                        <div class="col-md-3"><?= Yii::t('import', '固定资产名称') ?></div>
+                        <div class="col-md-3"><?= Yii::t('import', '型号') ?></div>
+                        <div class="col-md-3"><?= Yii::t('import', '使用部门') ?></div>
+                        <div class="col-md-3"><?= Yii::t('import', '资产类别') ?></div>
                     </div>
                     <div class="row">
                         <div class="col-md-3">
@@ -168,8 +168,8 @@ $dataProvider = new CActiveDataProvider('Stock', ['criteria' => ['condition' => 
                 </p>
             </div>
             <div class="modal-footer">
-                <button class="btn default" data-dismiss="modal" aria-hidden="true">取消</button>
-                <button class="btn yellow" data-dismiss="modal" onclick="transform()">确定</button>
+                <button class="btn default" data-dismiss="modal" aria-hidden="true"><?= Yii::t('import', '取消') ?></button>
+                <button class="btn yellow" data-dismiss="modal" onclick="transform()"><?= Yii::t('import', '确定') ?></button>
             </div>
         </div>
     </div>

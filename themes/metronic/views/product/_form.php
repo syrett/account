@@ -28,27 +28,27 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
 //                'action'=>Laofashi. $this->createUrl('/bank/default/update', array('id'=>$_GET['id'])),
             ));
             ?>
-            订单号：<? echo $item['order_no'] ?>
+            <?= Yii::t('import', '订单号：') ?><? echo $item['order_no'] ?>
             <table class="table table-bordered dataTable min">
                 <tr>
                     <th class="input_min"><input type="checkbox"></th>
-                    <th class="input_mid">交易日期</th>
-                    <th class="input_mid">交易摘要</th>
-                    <th class="input_mid">销售单号</th>
-                    <th class="input_mid">客户</th>
-                    <th class="input_mid">商品/服务名称</th>
-                    <th class="input_min">单价</th>
-                    <th class="input_min">数量</th>
-                    <th class="input_min">合计</th>
-                    <th class="input-xsmall">税率</th>
-                    <th class="input-small">销售类型</th>
+                    <th class="input_mid"><?= Yii::t('import', '交易日期') ?></th>
+                    <th class="input_mid"><?= Yii::t('import', '交易摘要') ?></th>
+                    <th class="input_mid"><?= Yii::t('import', '销售单号') ?></th>
+                    <th class="input_mid"><?= Yii::t('import', '客户') ?></th>
+                    <th class="input_mid"><?= Yii::t('import', '商品/服务名称') ?></th>
+                    <th class="input_min"><?= Yii::t('import', '单价') ?></th>
+                    <th class="input_min"><?= Yii::t('import', '数量') ?></th>
+                    <th class="input_min"><?= Yii::t('import', '合计') ?></th>
+                    <th class="input-xsmall"><?= Yii::t('import', '税率') ?></th>
+                    <th class="input-small"><?= Yii::t('import', '销售类型') ?></th>
                     <?
                     if (!empty($preOrder)) {
-                        echo '<th class="input-small">预收款</th>';
+                        echo '<th class="input-small">'.Yii::t('import', '预收款').'</th>';
                     }
                     ?>
-                    <th class="input-xsmall">操作</th>
-                    <th style="width: 10%">提示</th>
+                    <th class="input-xsmall"><?= Yii::t('import', '操作') ?></th>
+                    <th style="width: 10%"><?= Yii::t('import', '提示') ?></th>
                 </tr>
                 <?php
                 if (!empty($model)) {
@@ -101,12 +101,12 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                                    name="lists[<?= $key ?>][Transition][entry_name]"
                                    value="<?= $item['entry_name'] ?>">
                         </td>
-                        <td><input class="input_min" type="text" id="tran_price_<?= $key ?>" placeholder="单价"
+                        <td><input class="input_min" type="text" id="tran_price_<?= $key ?>" placeholder="<?= Yii::t('import', '单价') ?>"
                                    name="lists[<?= $key ?>][Transition][price]" onkeyup="checkinput1(this)"
                                    onblur="checkinput1(this)" value="<?= $item['price'] ?>">
                         </td>
                         <td><input class="input_min" type="number" min="1" id="tran_count_<?= $key ?>"
-                                   placeholder="数量"
+                                   placeholder="<?= Yii::t('import', '数量') ?>"
                                    name="lists[<?= $key ?>][Transition][count]" onkeyup="checkinput2(this)"
                                    onblur="checkinput1(this)" value="<?= $item['count'] ?>">
                         </td>
@@ -147,7 +147,7 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                                         'formatResult' => 'js:function(data){
                                             var order = JSON.parse(data.text);
                                             var markup = \'<div class="popovers" data-placement="left" data-container="body" data-trigger="hover" data-html="true"  data-original-title="\' + order.date +\'"\'
-                                            + \'data-content="余额:\' + order.amount + \'<br>摘要:\' + order.memo + \'">\' + data.id + \'</div><script>$(".popovers").popover();<\/script>\';
+                                            + \'data-content="'.Yii::t('import', '余额:').'\' + order.amount + \'<br>'.Yii::t('import', '摘要:').'\' + order.memo + \'">\' + data.id + \'</div><script>$(".popovers").popover();<\/script>\';
                                             return markup;
                                         }',
                                         'formatSelection' => 'js: function(order) {
@@ -211,11 +211,11 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                             <div>
 
                                 <button type="button" id="btn_confirm_<?= $key ?>" class="hidden btn btn-default"
-                                        onclick="itemSetDefault(this, '<?= $type ?>')">确认
+                                        onclick="itemSetDefault(this, '<?= $type ?>')"><?= Yii::t('import', '确认') ?>
                                 </button>
 
                                 <button type="button" id="btn_del_<?= $key ?>" class="btn btn-xs"
-                                        onclick="itemInvalid(this)"><i class="fa fa-times"></i>作废
+                                        onclick="itemInvalid(this)"><i class="fa fa-times"></i><?= Yii::t('import', '作废') ?>
                                 </button>
                             </div>
                         </td>
@@ -244,22 +244,22 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                 ?>
                 <tr id="trSetting" style="display: none">
                     <td colspan="100">
-                        <div id="itemSetting" title="记账设置" class="box">
+                        <div id="itemSetting" title="<?= Yii::t('import', '记账设置') ?>" class="box">
                             <!--    <div class="modal-header bg-light-blue-active" >设置</div>-->
                             <div id="setting">
                                 <div class="options btn-group-xs">
                                     <button class="btn btn-default" type="button" onclick="chooseType(this,1)"
-                                            value="支出">支出
+                                            value="<?= Yii::t('import', '支出') ?>"><?= Yii::t('import', '支出') ?>
                                     </button>
                                     <br/>
                                     <button class="btn btn-default" type="button" onclick="chooseType(this,2)"
-                                            value="收入">收入
+                                            value="<?= Yii::t('import', '收入') ?>"><?= Yii::t('import', '收入') ?>
                                     </button>
                                 </div>
                             </div>
                             <div class="actionSetting" style="margin-top: 20px;text-align: center;">
-                                <button class="btn btn-success " type="button" onclick="itemSet()">确定</button>
-                                <button class="btn btn-default" type="button" onclick="dialogClose()">取消</button>
+                                <button class="btn btn-success " type="button" onclick="itemSet()"><?= Yii::t('import', '确定') ?></button>
+                                <button class="btn btn-default" type="button" onclick="dialogClose()"><?= Yii::t('import', '取消') ?></button>
                             </div>
                         </div>
 
@@ -269,12 +269,12 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
             <?
             if (($model->status_id == 1 && $item['entry_reviewed'] == 1 )|| $relation != null) {
                 ?>
-                <span class="info-">该数据生成凭证已经审核，或和其他数据有关联，无法修改</span>
+                <span class="info-"><?= Yii::t('import', '该数据生成凭证已经审核，或和其他数据有关联，无法修改') ?></span>
             <?
             } else {
                 ?><div class="panel-footer">
                     <div class="text-center">
-                        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证</button>
+                        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> <?= Yii::t('import', '保存凭证') ?></button>
                     </div>
                 </div>
             <?php

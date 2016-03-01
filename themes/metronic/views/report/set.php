@@ -31,32 +31,32 @@ function echoData($data)
 ?>
 <div class="alert alert-info">
 	<?php echo CHtml::beginForm('','post',array('class'=>'form-inline')); ?>
-	<h3>客户表 供应商表 </h3>
+	<h3><?= Yii::t('import', '客户表 供应商表') ?> </h3>
 	<div class="form-group">
-		<label class="control-label" for="date">请选择报表日期：</label>
+		<label class="control-label" for="date"><?= Yii::t('import', '请选择报表日期：') ?></label>
 		<input class="form-control" type="text" name="date" id="date" value="<?php echo isset($date)?$date:'' ?>" readonly />
-		<input type="submit" class="btn btn-primary" value="查看报表" />
+		<input type="submit" class="btn btn-primary" value="<?= Yii::t('import', '查看报表') ?>" />
 	</div>
 	<p>&nbsp;</p>
 	<?php echo CHtml::endForm(); ?>
 </div>
 <div <?php if(!$data) echo 'style="display:none"'; ?>" class="panel panel-default">
 	<div class="panel-heading">
-		<h2>报 表</h2>
+		<h2><?= Yii::t('import', '报 表') ?></h2>
 	</div>
 	<div class="panel-body">
-		<p class="pull-right">金额单位：元</p>
+		<p class="pull-right"><?= Yii::t('import', '金额单位：元') ?></p>
 	</div>
 
 	<table class="table table-bordered table-hover">
 		<thead>
 		 <tr>
 		 <th>&nbsp;</th>
-		 <th>本期借方</th>
-		 <th>本期贷方</th>
-		 <th>本年借方</th>
-		 <th>本年贷方</th>
-		 <th>余额</th>
+		 <th><?= Yii::t('import', '本期借方') ?></th>
+		 <th><?= Yii::t('import', '本期贷方') ?></th>
+		 <th><?= Yii::t('import', '本年借方') ?></th>
+		 <th><?= Yii::t('import', '本年贷方') ?></th>
+		 <th><?= Yii::t('import', '余额') ?></th>
 		 </tr>
 		<?php echoData($data) ?>
 	 </table>

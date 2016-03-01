@@ -3,7 +3,7 @@
 /* @var $model Department */
 
 $this->breadcrumbs=array(
-	'部门管理'=>array('index'),
+	Yii::t('import', '部门管理')=>array('index'),
 	$model->name,
 );
 

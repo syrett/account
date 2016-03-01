@@ -1,14 +1,14 @@
 <?php
 /* @var $this DepartmentController */
 /* @var $dataProvider CActiveDataProvider */
-$this->pageTitle=Yii::app()->name . ' - 部门管理';
+$this->pageTitle=Yii::app()->name . Yii::t('import', ' - 部门管理');
 $this->breadcrumbs=array(
-	'部门管理',
-	'添加部门'
+	Yii::t('import', '部门管理'),
+	Yii::t('import', '添加部门')
 );
 
 $this->menu=array(
-	array('label'=>'<span class="glyphicon glyphicon-th-list"></span> 部门列表',
+	array('label'=>'<span class="glyphicon glyphicon-th-list"></span>'.Yii::t('import', '部门列表'),
 		  'url'=>array('admin'),
 		  'linkOptions'=>array('class'=>'btn btn-primary')
 		  ),	
@@ -17,14 +17,14 @@ $this->menu=array(
 <div class="portlet light">
     <div class="portlet-title">
         <div class="caption">
-            <span class="font-green-sharp">添加部门</span>
+            <span class="font-green-sharp"><?= Yii::t('import', '添加部门') ?></span>
         </div>
         <div class="actions">
 		    <?php
-				echo CHtml::link('<i class="fa fa-bars"></i> 部门列表', array('admin'), array('class' => 'btn btn-circle btn-primary btn-sm'));
+				echo CHtml::link('<i class="fa fa-bars"></i>'. Yii::t('import', '部门列表') , array('admin'), array('class' => 'btn btn-circle btn-primary btn-sm'));
     		?>
             <a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title=""
-               data-original-title title="全屏"></a>
+               data-original-title title="<?= Yii::t('import', '全屏') ?>"></a>
         </div>
     </div>
     <div class="portlet-body">

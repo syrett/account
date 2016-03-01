@@ -26,10 +26,10 @@
             var percentage_txt = percentage + "%";
             $("#percentage").text(percentage_txt);
             if (percentage == 100) {
-                alert('已经结账成功');
+                alert(<?= Yii::t('import', '已经结账成功') ?>);
                 location.reload();
             } else if(percentage == 0) {
-                alert('还有凭证未审核，请通过其他账号操作');
+                alert(<?= Yii::t('import', '还有凭证未审核，请通过其他账号操作') ?>);
             } else {
                 show_progress();
             }

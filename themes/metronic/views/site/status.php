@@ -14,7 +14,7 @@ $arr = Transition::model()->listDate();
 
     <!-- Default panel contents -->
     <div class="panel-heading"><h2>
-            结账情况
+            <?= Yii::t('import', '结账情况') ?>
         </h2></div>
     <div class="panel-body v-title list-month">
         <?
@@ -23,9 +23,9 @@ $arr = Transition::model()->listDate();
             foreach ($months as $month) {
                 $li = "<li>$month 月&nbsp;&nbsp;&nbsp;&nbsp;";
                 if ($year . $month <= $date)
-                    $li .= '已结账';
+                    $li .= Yii::t('import', '已结账');
                 else
-                    $li .= '未结账';
+                    $li .= Yii::t('import', '未结账');
                 $li .= '</li>';
                 echo $li;
             }

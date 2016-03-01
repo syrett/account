@@ -23,15 +23,15 @@ $item = $sheetData[0]['data'];
 //                'action'=>Laofashi. $this->createUrl('/bank/default/update', array('id'=>$_GET['id'])),
             ));
             ?>
-            成本结转单号：<?= $item['order_no'] ?>
+            <?= Yii::t('import', '成本结转单号：') ?><?= $item['order_no'] ?>
             <table class="table table-bordered dataTable">
                 <tr>
                     <th class="input_min"><input type="checkbox"></th>
-                    <th class="input_mid">交易日期</th>
-                    <th class="input_mid">名称</th>
-                    <th class="input_mid">型号</th>
-                    <th class="input_mid">盘点数量</th>
-                    <th style="width: 10%">提示</th>
+                    <th class="input_mid"><?= Yii::t('import', '交易日期') ?></th>
+                    <th class="input_mid"><?= Yii::t('import', '名称') ?></th>
+                    <th class="input_mid"><?= Yii::t('import', '型号') ?></th>
+                    <th class="input_mid"><?= Yii::t('import', '盘点数量') ?></th>
+                    <th style="width: 10%"><?= Yii::t('import', '提示') ?></th>
                 </tr>
                 <?php
 
@@ -104,11 +104,11 @@ $item = $sheetData[0]['data'];
                             <div>
 
                                 <button type="button" id="btn_confirm_<?= $key ?>" class="hidden btn btn-default"
-                                        onclick="">确认
+                                        onclick=""><?= Yii::t('import', '确认') ?>
                                 </button>
 
                                 <button type="button" id="btn_del_<?= $key ?>" class="btn btn-xs" disabled
-                                        onclick="itemclose(this)"><i class="fa fa-times"></i>删除
+                                        onclick="itemclose(this)"><i class="fa fa-times"></i><?= Yii::t('import', '删除') ?>
                                 </button>
                             </div>
                         </td>
@@ -140,13 +140,13 @@ $item = $sheetData[0]['data'];
             <?
             if ($model->status_id == 1 && $item['entry_reviewed'] == 1) {
                 ?>
-                <span class="info-">该数据生成凭证已经审核，无法修改</span>
+                <span class="info-"><?= Yii::t('import', '该数据生成凭证已经审核，无法修改') ?></span>
             <?
             } else {
                 ?>
                 <div class="panel-footer">
                     <div class="text-center">
-                        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证</button>
+                        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> <?= Yii::t('import', '保存凭证') ?></button>
                     </div>
                 </div>
             <?php

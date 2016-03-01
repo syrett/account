@@ -1,7 +1,7 @@
 <div class="panel panel-default voucher form">
 
    <!-- Default panel contents -->
-   <div class="panel-heading">过账
+   <div class="panel-heading"><?= Yii::t('import', '过账') ?>
    <div class="actions">
 
    <?
@@ -10,7 +10,7 @@
                                                     ));
 $this->widget('zii.widgets.CMenu', array(
                                          'items'=>array(
-                                                        array('label' => '未过账', 'url' => array('unposted'),),
+                                                        array('label' => Yii::t('import', '未过账'), 'url' => array('unposted'),),
                                                         ),
                                          'htmlOptions'=>array('class'=>'operations', 'style'=>'list-style: none',),
                                          ));
@@ -52,7 +52,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
                                                                                ),
                                                                          'entry_amount',
                                                                          array(
-                                                                               'name' => '余额',
+                                                                               'name' => Yii::t('import', '余额'),
                                                                                'value' => '0',
                                                                                ),
                                                                          'entry_editor',
@@ -70,7 +70,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 
   <input type="hidden" name="subject" value='<?php echo $_GET['subject'] ?>' />
   <input type="hidden" name="date" value='<?php echo $_GET['date'] ?>' />
-  <?php echo CHtml::submitButton('过账', array('class' => 'btn btn-primary',)); ?>
+  <?php echo CHtml::submitButton(Yii::t('import', '过账'), array('class' => 'btn btn-primary',)); ?>
 
   <?php echo CHtml::endForm(); ?>
 </div>

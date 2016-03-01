@@ -1,7 +1,7 @@
 <?php
-$this->pageTitle = Yii::app()->name . ' - 参数配置';
+$this->pageTitle = Yii::app()->name . Yii::t('import', ' - 参数配置');
 $this->breadcrumbs = array(
-    '参数配置',
+    Yii::t('import', '参数配置'),
 );
 /* @var $this OptionsController */
 /* @var $model Options */
@@ -10,7 +10,7 @@ $this->breadcrumbs = array(
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h2>参数配置</h2>
+        <h2><?= Yii::t('import', '参数配置') ?></h2>
     </div>
     <div class="panel-body">
         <?php echo CHtml::beginForm(); ?>
@@ -19,7 +19,7 @@ $this->breadcrumbs = array(
                 <div class="portlet green-meadow box">
                     <div class="portlet-title">
                         <div class="caption">
-                            <i class="fa fa-cogs"></i>折旧或摊销年限(年)：
+                            <i class="fa fa-cogs"></i><?= Yii::t('import', '折旧或摊销年限(年)：') ?>
                         </div>
                     </div>
                     <div class="portlet-body">
@@ -58,7 +58,7 @@ $this->breadcrumbs = array(
                 <div class="portlet blue-hoki box">
                     <div class="portlet-title">
                         <div class="caption">
-                            <i class="fa fa-cogs"></i>残值率(%)：
+                            <i class="fa fa-cogs"></i><?= Yii::t('import', '残值率(%)：') ?>
                         </div>
                     </div>
                     <div class="portlet-body">
@@ -95,14 +95,14 @@ $this->breadcrumbs = array(
                 <div class="portlet purple box">
                     <div class="portlet-title">
                         <div class="caption">
-                            <i class="fa fa-cogs"></i>附加税税率(%)：
+                            <i class="fa fa-cogs"></i><?= Yii::t('import', '附加税税率(%)：') ?>
                         </div>
                     </div>
                     <div class="portlet-body">
                         <?
                         $arr = [];
                         //应交税费/城建税，教育费附加，地方教育费附加；其他应付款/河道管理费
-                        $list = ['2221'=>'城建税,教育费附加,地方教育费附加','2241'=>'河道管理费'];
+                        $list = ['2221'=>Yii::t('import', '城建税,教育费附加,地方教育费附加'),'2241'=>Yii::t('import', '河道管理费')];
                         foreach($list as $key => $item){
                             $keys = explode(',', $item);
                             foreach($keys as $name){
@@ -141,7 +141,7 @@ $this->breadcrumbs = array(
         </div>
         <div class="text-center">
             <?php
-            echo CHtml::tag('button', array('encode' => false, 'class' => 'btn btn-primary',), '<span class="glyphicon glyphicon-floppy-disk"></span> 保存');
+            echo CHtml::tag('button', array('encode' => false, 'class' => 'btn btn-primary',), '<span class="glyphicon glyphicon-floppy-disk"></span>'.Yii::t('import', '保存'));
             ?>
         </div>
         <!-- search-form -->

@@ -26,7 +26,7 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
     foreach(Yii::app()->user->getFlashes() as $key => $message) {
         echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
     }?>
-	<div class="alert alert-info">注意：新建科目为所选科目“子科目”</div>
+	<div class="alert alert-info"><?= Yii::t('import', '注意：新建科目为所选科目“子科目”') ?></div>
     <?php
     if($model->getIsNewRecord()) {
     ?>
@@ -100,7 +100,7 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
     ?>
 	<div class="form-group">
 		<div class="col-sm-offset-2 col-sm-10">
-			<?php echo CHtml::submitButton($model->isNewRecord ? '添加' : '保存', array('class'=>'btn btn-circle btn-primary',)); ?>
+			<?php echo CHtml::submitButton($model->isNewRecord ? Yii::t('import', '添加') : Yii::t('import', '保存'), array('class'=>'btn btn-circle btn-primary',)); ?>
 			<?php echo BtnBack(); ?>
 		</div>
 	</div>

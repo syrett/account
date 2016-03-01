@@ -35,7 +35,7 @@ $relation = Cash::model()->getRelation('cash',$model->id);
                 <th class="input_mid"><?= $form->labelEx($model, 'date') ?></th>
                 <th class="input_full"><?= $form->labelEx($model, 'memo') ?></th>
                 <th class="input-large"><?= $form->labelEx($model, 'amount') ?></th>
-                <th style="width: 200px">操作</th>
+                <th style="width: 200px"><?= Yii::t('import', '操作') ?></th>
                 <th style="width: 10%">&nbsp;</th>
             </tr>
             <?php
@@ -46,10 +46,10 @@ $relation = Cash::model()->getRelation('cash',$model->id);
                 <tr line="<?= $key ?>" <?= $key % 2 == 1 ? 'class="table-tr"' : '' ?>>
                     <td><input type="checkbox"/></td>
                     <td><input type="text" id="tran_name_<?= $key ?>"
-                               name="lists[<?= $key ?>][Transition][target]" placeholder="对方名称"
+                               name="lists[<?= $key ?>][Transition][target]" placeholder="<?= Yii::t('import', '对方名称') ?>"
                                value="<?= $item['target'] ?>"></td>
                     <td><input type="text" id="tran_name_<?= $key ?>"
-                               name="lists[<?= $key ?>][Transition][entry_name]" placeholder="名称"
+                               name="lists[<?= $key ?>][Transition][entry_name]" placeholder="<?= Yii::t('import', '名称') ?>"
                                value="<?= $item['entry_name'] ?>"></td>
                     <td><input class="input_mid" type="text" id="tran_date_<?= $key ?>"
                                name="lists[<?= $key ?>][Transition][entry_date]"
@@ -60,7 +60,7 @@ $relation = Cash::model()->getRelation('cash',$model->id);
                     <td><input class="input_mid" type="text" id="tran_amount_<?= $key ?>"
                                name="lists[<?= $key ?>][Transition][entry_amount]"
                                value="<?= $item['entry_amount'] ?>">
-                        <span class="tip2">总金额：<label
+                        <span class="tip2"><?= Yii::t('import', '总金额：') ?><label
                                 id="amount_<?= $key ?>"><?= $item['entry_amount'] ?></label>
                         </span></td>
                     <td class="action">
@@ -114,16 +114,16 @@ $relation = Cash::model()->getRelation('cash',$model->id);
                         <div class="btn-group">
                             <a class="btn btn-xs blue dropdown-toggle" data-toggle="modal" onclick="itemsetting(this)"
                                href="#category-box">
-                                <button type="button" class="btn btn-xs blue">记账
+                                <button type="button" class="btn btn-xs blue"><?= Yii::t('import', '记账') ?>
                                 </button>
                             </a>
                             <!-- button type="button" class="btn btn-xs blue" onclick="itemsetting(this)"><i class="fa fa-file-o"></i> 记账
                             </button -->
                             <button type="button" data-type="double" class="btn btn-xs"
-                                    onclick="itemsplit(this)">拆分
+                                    onclick="itemsplit(this)"><?= Yii::t('import', '拆分') ?>
                             </button>
                             <button type="button" data-type="delete" id="btn_del_<?= $key ?>" class="btn btn-xs"
-                                    onclick="itemclose(this)" disabled>删分
+                                    onclick="itemclose(this)" disabled><?= Yii::t('import', '删分') ?>
                             </button>
                         </div>
 
@@ -158,12 +158,12 @@ $relation = Cash::model()->getRelation('cash',$model->id);
         <?
         if (($model->status_id == 1 && $item['entry_reviewed'] == 1 )|| $relation != null) {
             ?>
-            <span class="info-">该数据生成凭证已经审核，或和其他数据有关联，无法修改</span>
+            <span class="info-"><?= Yii::t('import', '该数据生成凭证已经审核，或和其他数据有关联，无法修改') ?></span>
         <?
         } else {
             ?>
             <div class="text-center">
-                <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证</button>
+                <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> <?= Yii::t('import', '保存凭证') ?></button>
             </div>
         <?php
         }
@@ -203,10 +203,10 @@ $relation = Cash::model()->getRelation('cash',$model->id);
                                 <div id="setting" class="itemsetting">
                                     <div class="options ">
                                         <button class="btn " type="button" onclick="chooseType(this,1)"
-                                                value="支出">支出
+                                                value="<?= Yii::t('import', '支出') ?>"><?= Yii::t('import', '支出') ?>
                                         </button>
                                         <button class="btn " type="button" onclick="chooseType(this,2)"
-                                                value="收入">收入
+                                                value="<?= Yii::t('import', '收入') ?>"><?= Yii::t('import', '收入') ?>
                                         </button>
                                     </div>
                                 </div>
@@ -220,8 +220,8 @@ $relation = Cash::model()->getRelation('cash',$model->id);
             </div>
             <!-- .modal-body -->
             <div class="modal-footer">
-                <button class="btn btn-circle green" data-dismiss="modal" type="button" onclick="itemSet()">确定</button>
-                <button class="btn btn-circle default" data-dismiss="modal" type="button"">取消
+                <button class="btn btn-circle green" data-dismiss="modal" type="button" onclick="itemSet()"><?= Yii::t('import', '确定') ?></button>
+                <button class="btn btn-circle default" data-dismiss="modal" type="button""><?= Yii::t('import', '取消') ?>
                 </button>
             </div>
         </div>

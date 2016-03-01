@@ -2,9 +2,9 @@
 /* @var $this StockController */
 /* @var $model Stock */
 
-$this->pageTitle = Yii::app()->name . ' - 固定资产查看';
+$this->pageTitle = Yii::app()->name . Yii::t('import',' - 固定资产查看');
 $this->breadcrumbs = array(
-    '固定资产查看',
+    Yii::t('import','固定资产查看'),
 );
 $total_in = Stock::getTotal('1601','in_price');
 $total_worth = Stock::getTotal('1601','worth');
@@ -12,9 +12,9 @@ $total_worth = Stock::getTotal('1601','worth');
 <div class="portlet light">
     <div class="portlet-title">
         <div class="caption">
-            <span class="font-green-sharp">固定资产查看</span>
-            <span class="caption-helper">固定资产原值总计:<?= $total_in?></span>
-            <span class="caption-helper">固定资产净值总计:<?= $total_worth?></span>
+            <span class="font-green-sharp"><?= Yii::t('import', '固定资产查看') ?></span>
+            <span class="caption-helper"><?= Yii::t('import', '固定资产原值总计') ?>:<?= $total_in?></span>
+            <span class="caption-helper"><?= Yii::t('import', '固定资产净值总计') ?>:<?= $total_worth?></span>
         </div>
     </div>
 
@@ -42,15 +42,15 @@ $total_worth = Stock::getTotal('1601','worth');
                     'value_month',
                     'value_rate',
                     [
-                        'header' => '折旧',
+                        'header' => Yii::t('import','折旧'),
                         'value' => '$data->in_price - $data->getWorth()'
                     ],
                     [
-                        'header' => '净值',
+                        'header' => Yii::t('import','净值'),
                         'value' => '$data->getWorth()'
                     ],
                     [
-                        'header' => '部门',
+                        'header' => Yii::t('import','部门'),
                         'value' => 'Department::model()->getNameByOrderNo($data->order_no,$data->department_id)'
                     ],
                     [
@@ -59,8 +59,8 @@ $total_worth = Stock::getTotal('1601','worth');
                             'scrap' => array(   //报废
                                 'options' => array(
                                     'class' => 'btn btn-default tip btn-xs',
-                                    'title' => '报废',
-                                    'confirm' => '确定要报废？报废后将无法撤消',
+                                    'title' => Yii::t('import','报废'),
+                                    'confirm' => Yii::t('import','确定要报废？报废后将无法撤消'),
                                     'ajax' => [
                                         'dataType' => 'json',
                                         'url' => 'js:$(this).attr("href")',
@@ -69,7 +69,7 @@ $total_worth = Stock::getTotal('1601','worth');
                                                 $.fn.yiiGridView.update("assets-grid")}'
                                     ]
                                 ),
-                                'label' => "<span class='glyphicon'>报废</span>",
+                                'label' => "<span class='glyphicon'>".Yii::t('import','报废')."</span>",
                                 'imageUrl' => false,
                                 'url' => 'Yii::app()->createUrl("/Stock/scrap", ["id"=>$data->id,"action"=>"scrap"])'
 //                                'url' => 'Yii::app()->createUrl("/Stock/scrap", ["id"=>$data->id,"action"=>$data->status==4?"unscrap":"scrap"])'
