@@ -120,17 +120,18 @@ class Post extends CActiveRecord
                 $tmp_credit = 0;
             }
 
+            //过账时，这里是重点，很容易出错
             if ($t['entry_settlement'] == 0) {
                 if ($t['entry_transaction'] == "1") { //1为借
                     if ($t['entry_amount'] > 0)
                         $tmp_debit = $tmp_debit + floatval($t['entry_amount']);
                     else
-                        $tmp_credit = $tmp_credit + floatval($t['entry_amount']);
+                        $tmp_credit = $tmp_credit - floatval($t['entry_amount']);
                 } elseif ($t['entry_transaction'] == "2") { //2为贷
                     if ($t['entry_amount'] > 0)
                         $tmp_credit = $tmp_credit + floatval($t['entry_amount']);
                     else
-                        $tmp_debit = $tmp_debit + floatval($t['entry_amount']);
+                        $tmp_debit = $tmp_debit - floatval($t['entry_amount']);
                 }
             } else {
                 if ($t['entry_transaction'] == "1") { //1为借
@@ -139,6 +140,18 @@ class Post extends CActiveRecord
                     $tmp_credit = $tmp_credit + floatval($t['entry_amount']);
                 }
             }
+
+//            if($t['entry_settlement'] == 0){
+//                if ($t['entry_transaction']=="1") { //1为借
+//                    $tmp_debit = $tmp_debit + floatval($t['entry_amount']);
+//                }
+//                elseif($t['entry_transaction']=="2") { //2为贷
+//                    $tmp_credit = $tmp_credit + floatval($t['entry_amount']);
+//                }
+//            }else{
+//                $tmp_debit = $t['entry_amount'];
+//                $tmp_credit = $t['entry_amount'];
+//            }
             $balance[$t['entry_subject']]['debit'] = $tmp_debit;
             $balance[$t['entry_subject']]['credit'] = $tmp_credit;
         }
