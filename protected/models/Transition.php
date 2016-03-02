@@ -314,6 +314,81 @@ class Transition extends CActiveRecord
         ));
     }
 
+
+    public function multiSearch()
+    {
+        $criteria = new CDbCriteria;
+        $month = true;
+
+        if (isset($_REQUEST['multi_search'])) {
+
+            if(is_numeric($_REQUEST['multi_search']) &&mb_strlen($_REQUEST['multi_search']) == 10) {
+                $a = substr($_REQUEST['multi_search'], 0, 6);
+                $b = substr($_REQUEST['multi_search'], 6)+0;
+                $criteria->addCondition('t.entry_num_prefix = "'.$a.'"');
+                $criteria->addCondition('t.entry_num = "'.$b.'"');
+            }
+
+            $tmp_timestamp = strtotime($_REQUEST['multi_search']);
+            if ($tmp_timestamp !== false) {
+                $criteria->addCondition('t.entry_date = "'.date('Y-m-d', $tmp_timestamp).'"', 'OR');
+                $month = false;
+            }
+            if ($_REQUEST['multi_search'] != '')
+            $criteria->addCondition('t.entry_memo like "%' . $_REQUEST['multi_search'] . '%"', 'OR');
+
+        }
+
+
+        $criteria->compare('id', $this->id);
+        $month?$criteria->compare('entry_num_prefix', $this->entry_num_prefix, true):'';
+        $criteria->compare('entry_num', $this->entry_num, true);
+        $criteria->compare('entry_num_prefix', $this->entry_number, true);
+        $criteria->compare('entry_date', $this->entry_date, true);
+        $criteria->compare('entry_time', $this->entry_time, true);
+        $criteria->compare('entry_memo', $this->entry_memo, true);
+        $criteria->compare('entry_transaction', $this->entry_transaction, true);
+        $criteria->compare('entry_subject', $this->entry_subject, true);
+        $criteria->compare('entry_amount', $this->entry_amount);
+        $criteria->compare('entry_appendix', $this->entry_appendix, true);
+        $criteria->compare('entry_creater', $this->entry_creater);
+        $criteria->compare('entry_editor', $this->entry_editor);
+        $criteria->compare('entry_reviewer', $this->entry_reviewer);
+        $criteria->compare('entry_deleted', $this->entry_deleted);
+        $criteria->compare('entry_reviewed', $this->entry_reviewed);
+        $criteria->compare('entry_posting', $this->entry_posting);
+        $criteria->compare('entry_settlement', $this->entry_settlement);
+        $criteria->compare('entry_forward', $this->entry_forward);
+        $criteria->compare('entry_closing', $this->entry_closing);
+
+        if ($this->select != null)
+            $criteria->select = $this->select;
+//        $criteria->compare('entry_number',$this->entry_num_prefix, true);
+
+        $sort = new CSort();
+        $sort->attributes = array(
+            'entry_number' => array(
+                'asc' => ' entry_num_prefix asc ,entry_num  ASC, entry_transaction asc',
+                'desc' => 'entry_num_prefix desc , entry_num  DESC,  entry_transaction asc'
+            ),
+            '*', // this adds all of the other columns as sortable
+        );
+
+        /* Default Sort Order*/
+        $sort->defaultOrder = array(
+            'entry_number' => CSort::SORT_DESC,
+        );
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageVar' => 'p',
+                'pageSize' => '20',
+            ),
+            'sort' => $sort,
+        ));
+    }
+
     public static function listReview()
     {
         $tran = new Transition();

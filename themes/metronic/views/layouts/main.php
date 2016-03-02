@@ -21,7 +21,8 @@ $menu2 = [
     ['name' => '现金交易', 'url' => $this->createUrl('/cash')],
     ['name' => '员工工资', 'url' => $this->createUrl('/salary')],
     ['name' => '员工报销', 'url' => $this->createUrl('/reimburse')],
-]
+];
+$toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
 ?>
 <!DOCTYPE html>
 <!--[if IE 8]>
@@ -108,6 +109,18 @@ $menu2 = [
             <!-- BEGIN TOP NAVIGATION MENU -->
             <div class="top-menu">
                 <ul class="nav navbar-nav pull-right">
+                    <li class="language-switch">
+                        <?
+                        $url = removeStringAfter(Yii::app()->request->requestUri, '&');
+                        if (!stripos($url, '?'))
+                            $url .= '?';
+                        ?>
+                        <a href="<?= $url ?>&lang=<?= $toLanguage ?>"
+                           class="dropdown-toggle">
+                            <i class="fa fa-language"></i>
+					<span class="username username-hide-on-mobile">
+					<?= Yii::app()->params->languages[$toLanguage] ?></span></a>
+                    </li>
                     <!-- BEGIN USER LOGIN DROPDOWN -->
                     <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                     <li class="dropdown dropdown-extended">
@@ -204,12 +217,15 @@ $menu2 = [
                                     <div class="caption">搜索凭证</div>
                                 </div>
                                 <div class="portlet-body">
-                                    <form action="#">
-                                        <div class="input-icon right">
-                                            <i class="fa fa-search"></i>
-                                            <input type="text" class="form-control" placeholder="输入凭证字号，日期，内容等...">
-                                        </div>
-                                    </form>
+
+                                    <?php echo CHtml::beginForm(['transition/listTransition'], 'post'); ?>
+                                    <div class="input-icon right">
+                                        <i class="fa fa-search"></i>
+                                        <input name="multi_search" type="text" class="form-control"
+                                               placeholder="输入凭证字号，日期，内容等...">
+                                    </div>
+
+                                    <?php echo CHtml::endForm(); ?>
                                     <ul>
                                         <li>
                                             <a href="<?= $this->createUrl('Site/operation&operation=listTransition') ?>">逐月查询</a>
@@ -304,10 +320,10 @@ $menu2 = [
                                         $menu = User2::checkVIP() ? $menu2 : $menu1;
                                         foreach ($menu as $key => $item) {
                                             ?>
-                                            <li><a href="<?=$item['url']?>"><?=$item['name']?></a> </li>
+                                            <li><a href="<?= $item['url'] ?>"><?= $item['name'] ?></a></li>
                                             <?
                                             $key += 1;
-                                            if($key/3 == (int)($key/3))
+                                            if ($key / 3 == (int)($key / 3))
                                                 echo '<br >';
                                         }
                                         ?>
