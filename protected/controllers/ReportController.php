@@ -54,7 +54,8 @@ class ReportController extends Controller
           }*/
         $company = Condom::model()->getName();
 
-        $this->render("balance", array("data" => $data,
+        $this->render("balance", array(
+            "data" => $data,
             "date" => $date,
             "company" => $company));
     }
