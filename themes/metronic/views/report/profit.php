@@ -49,7 +49,7 @@ function echoData($key, $data, $name="default")
 	<?php echo CHtml::beginForm('','post',array('class'=>'form-inline')); ?>
 	<h3><?= Yii::t('import', '损益表') ?></h3>
 	<div class="form-group">
-		<label class="control-label" for="date"><?= Yii::t('import', '请选择报表日期：') ?></label>
+		<label class="control-label" for="date"><?= Yii::t('import', '请选择报表日期') ?>：</label>
 		<input type="text" data-date-format="yyyymmdd" name="date" class="form-control form-control-inline input-small date-picker" value="<?php echo isset($date)?$date:'' ?>" id="date" readonly="">
 		<input type="submit" class="btn btn-primary" value="<?= Yii::t('import', '查看报表') ?>" />
 	</div>
@@ -61,7 +61,7 @@ function echoData($key, $data, $name="default")
 		<h2><?= Yii::t('import', '损 益 表') ?></h2>
 	</div>
 	<div class="panel-body">
-		<p class="text-center"><span class="pull-left"><?= Yii::t('import', '日期：') ?><?php echo $date; ?></span><?= Yii::t('import', '编制单位：') ?> <?php echo $company ?> <span class="pull-right"><?= Yii::t('import', '金额单位：元') ?></span></p>
+		<p class="text-center"><span class="pull-left"><?= Yii::t('import', '日期') ?>：<?php echo $date; ?></span><?= Yii::t('import', '编制单位') ?>：<?php echo $company ?> <span class="pull-right"><?= Yii::t('import', '金额单位：元') ?></span></p>
 	</div>
 
 	<table id="profit" class="table table-bordered table-hover">
@@ -165,7 +165,7 @@ function echoData($key, $data, $name="default")
 	echo CHtml::beginForm($this->createUrl('/Report/createexcel'), 'post');
 	if ($date != ""){
 		$d = date('Y-m',strtotime($date));
-		$excel_name = Yii::t('import', "损益表-").$d.".xls";
+		$excel_name = Yii::t('import', "损益表").'-'.$d.".xls";
 		?>
 		<input type="hidden" name="data" id="data" value="" />
 		<input type="hidden" name="name" id="name" value="<?=$excel_name?>" />

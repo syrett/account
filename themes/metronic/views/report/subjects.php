@@ -132,7 +132,7 @@ $years = Transition::model()->hasTransitionYears();
 
             };
 
-            echo "<tr>";
+            echo '<tr class="bg-info">';
             echo "<td>&nbsp;</td>";
             echo "<td>" . $sbjCat_name . "</td>";
             echo "<td>" . number_format($sbjCat_info["start_debit"], 2) . "</td>";

@@ -41,7 +41,7 @@ function echoData($key, $data, $name = "default")
     <h3><?= Yii::t('import', '现金流量表') ?></h3>
 
     <div class="form-group">
-        <label class="control-label"for="date"><?= Yii::t('import', '请选择报表日期：') ?></label>
+        <label class="control-label"for="date"><?= Yii::t('import', '请选择报表日期') ?>：</label>
         <input type="text"data-date-format="yyyymmdd"name="date"
                class="form-control form-control-inline input-small date-picker"
                value="<?php echo isset($date) ? $date : '' ?>"id="date"readonly="">
@@ -59,8 +59,8 @@ function echoData($key, $data, $name = "default")
         <h2><?= Yii::t('import', '现 金 流 量 表') ?></h2>
     </div>
     <div class="panel-body">
-        <p class="text-center"><span class="pull-left"><?= Yii::t('import', '日期：') ?><?php echo date('Y-m-d', strtotime($date)); ?></span>
-            <?= Yii::t('import', '编制单位：') ?><?= Condom::model()->getName() ?> <span class="pull-right"><?= Yii::t('import', '金额单位：元') ?></span></p>
+        <p class="text-center"><span class="pull-left"><?= Yii::t('import', '日期') ?>：<?php echo date('Y-m-d', strtotime($date)); ?></span>
+            <?= Yii::t('import', '编制单位') ?>：<?= Condom::model()->getName() ?> <span class="pull-right"><?= Yii::t('import', '金额单位：元') ?></span></p>
     </div>
 
     <table class="table table-bordered table-hover" id="money">
@@ -117,7 +117,7 @@ function echoData($key, $data, $name = "default")
             <?php echoData(68, $data, Yii::t('import',"财务费用")) ?>
         </tr>
         <tr>
-            <?php echoData(0, $data, Yii::t('import',"二、投资活动产生的现金流量：")) ?>
+            二、<?php echoData(0, $data, Yii::t('import',"投资活动产生的现金流量")) ?>：
             <?php echoData(69, $data, Yii::t('import',"投资损失（减：收益）")) ?>
         </tr>
         <tr>

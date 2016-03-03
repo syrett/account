@@ -35,7 +35,7 @@ class SubjectBalance extends CModel
     $start = self::getStart($year, $fromMonth); //期初
     $end = self::getEnd($year, $toMonth); //期末
     $data = array();
-    
+
     if (count($sum)==0){
       $sum=$start;
     }
@@ -64,24 +64,27 @@ class SubjectBalance extends CModel
       //      $end_debit=$start_debit + $arr["debit"];
       //      $end_credit=$start_credit + $arr["credit"];
       if($start_debit!=0 || $start_credit!=0 || $arr["debit"]!=0 || $arr["credit"]!=0 || $end_debit!=0 || $end_credit!=0){
-        
-        array_push($data, array("subject_id"=>$sbj_id,
-                                "subject_cat"=>$sbj_cat,
-                              "subject_name"=>$sbj_name,
-                              "start_debit"=>$start_debit,
-                              "start_credit"=>$start_credit,
-                              "sum_debit"=>$arr["debit"],
-                              "sum_credit"=>$arr["credit"],
-                                "end_debit"=>$end_debit,
-                              "end_credit"=>$end_credit));
-      }
-    };
+          $tmp_key = sprintf('%-08s', $sbj_id);
+          $data[$tmp_key] = array("subject_id"=>$sbj_id,
+              "subject_cat"=>$sbj_cat,
+              "subject_name"=>$sbj_name,
+              "start_debit"=>$start_debit,
+              "start_credit"=>$start_credit,
+              "sum_debit"=>$arr["debit"],
+              "sum_credit"=>$arr["credit"],
+              "end_debit"=>$end_debit,
+              "end_credit"=>$end_credit);
 
+      }
+    }
+
+      ksort($data);
     $catData = self::cat_subjects($data);
     /*    echo "<pre>";
     var_dump($catData);
     echo "</pre>";
     */
+
     return $catData;
   }
 
@@ -161,15 +164,16 @@ class SubjectBalance extends CModel
   /*
    * 得到某年从某月到某月的post发生额,不跨年
    */
-  private function getSum($year, $startMonth, $endMonth){
+  private function getSum($year, $startMonth, $endMonth)
+  {
     $active_data = self::listPost($year, $startMonth, $endMonth);
     $data = array();
-    foreach( $active_data as $row){
+    foreach($active_data as $row) {
       $sbj_id = $row["subject_id"];
-      if(isset($data[$sbj_id])){
+      if(isset($data[$sbj_id])) {
         $data[$sbj_id]["debit"] += $row["debit"];
         $data[$sbj_id]["credit"] += $row["credit"];
-      }else{
+      } else {
         $data[$sbj_id]["debit"] = $row["debit"];
         $data[$sbj_id]["credit"] = $row["credit"];
       }

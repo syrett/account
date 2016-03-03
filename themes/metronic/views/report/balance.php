@@ -126,7 +126,7 @@ function echoData($key, $data, $name="default")
                  <?php echoData("flow_debt", $data,  Yii::t('report', "流动负债合计")) ?>
                  </tr>
                  <tr>
-                 <?php echoData("empty", $data,  Yii::t('report', "非流动资产:")) ?>
+                 <?php echoData("empty", $data,  Yii::t('report', "非流动资产")) ?>:
                  <?php echoData("empty", $data,  "") ?>
                  </tr>
                  <tr>
