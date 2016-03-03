@@ -81,11 +81,11 @@ class Subjects extends CActiveRecord
     {
         return array(
             'id' => 'ID',
-            'sbj_number' => '科目编号',
-            'sbj_name' => '科目名称',
-            'sbj_cat' => '科目类别',
-            'sbj_table' => '报表名称',
-            'sbj_balance' => '科目余额',
+            'sbj_number' => Yii::t('subjects', '科目编号'),
+            'sbj_name' => Yii::t('subjects', '科目名称'),
+            'sbj_cat' => Yii::t('subjects', '科目类别'),
+            'sbj_table' => Yii::t('subjects', '报表名称'),
+            'sbj_balance' => Yii::t('subjects', '科目余额'),
         );
     }
 

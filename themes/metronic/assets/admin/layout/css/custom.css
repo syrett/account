@@ -5,7 +5,13 @@
     margin-right: 5px;
     display: inline-block;
 }
-
+.language-switch {
+    height: 68px;
+}
+.navbar-nav>.language-switch > a{
+    padding: 28px 16px 19px 16px;
+    line-height: 20px;
+}
 .reviewed {
     background-color: rgb(204, 255, 204);
 }

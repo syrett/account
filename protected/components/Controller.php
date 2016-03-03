@@ -80,6 +80,11 @@ class Controller extends CController
      */
     public function beforeAction($action)
     {
+        if(isset($_GET['lang'])){
+            $this->saveLanguage($_GET['lang']);
+        }
+        $user = User::model()->findByPk(Yii::app()->user->id);
+        Yii::app()->language = isset($user->lang)?$user->lang:Yii::app()->language;
         //以下controller才执行权限检验
         $controllers = ['bank', 'cash', 'purchase', 'product', 'client', 'department', 'employee', 'options', 'post', 'project', 'report', 'subjects', 'transition', 'vendor'];
         if (!in_array($this->uniqueId, $controllers) || User::model()->superAdmin())
@@ -133,4 +138,9 @@ class Controller extends CController
             return $date;
     }
 
+    public function saveLanguage($lang){
+        $user = User::model()->findByPk(Yii::app()->user->id);
+        $user->lang = $lang;
+        $user->save();
+    }
 }

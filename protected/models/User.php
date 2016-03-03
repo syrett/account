@@ -13,6 +13,7 @@
  * @property string $title
  * @property integer $sys_role
  * @property string $roles
+ * @property string $lang
  */
 class User extends UserActiveRecord
 {
@@ -58,8 +59,6 @@ class User extends UserActiveRecord
 	 */
 	public function search()
 	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
-
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);

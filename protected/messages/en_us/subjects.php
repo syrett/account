@@ -6,6 +6,14 @@
  * Time: 9:42
  */
 return [
+    '科目编号' => 'Subject No.',
+    '科目名称' => 'Subject Name',
+    '科目类别' => 'Subject Category',
+    '报表名称' => 'Report Name',
+    '科目余额' => 'Subject Balance',
+    '首页' => 'First Page',
+    '下一页' => 'Next',
+    '上一页' => 'Previous',
     //资产类 Assets
     '流动资产' => 'Current assets',    //
     '货币资金' => 'Cash and cash equivalents',    //

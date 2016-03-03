@@ -107,10 +107,11 @@ class ReportController extends Controller
         $data = $model->genData($year . $fm, $year . $tm);
 
         $company = Condom::model()->getName();
-        $this->render("subjects", array("dataProvider" => $data,
+        $this->render("subjects", array(
+            "dataProvider" => $data,
             "fm" => $fm,
-            "fromMonth" => $year . '年' . $fm . '月',
-            "toMonth" => $year . '年' . $tm . '月',
+            "fromMonth" => $year . '-' . $fm,
+            "toMonth" => $year . '-' . $tm,
             "company" => $company));
     }
 

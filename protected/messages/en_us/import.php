@@ -35,4 +35,10 @@ return [
     'REIMBURSE' => '员工报销',
     'PREPRODUCT' => '预收',
     'PREPURCHASE' => '预付',
+
+
+    '科目表管理' => 'Subjects Manage',
+    '添加科目' => 'New Subject',
+    '导出' => 'Export',
+    '导入' => 'Import',
 ];

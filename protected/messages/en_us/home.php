@@ -92,7 +92,35 @@ return [
     '采购交易' => 'Purchase Transaction',
     '产品销售' => 'Sales Transaction',
     '银行交易' => 'Bank Transaction',
-    '现金流水' => 'Cash Transactions',
+    '现金流水' => 'Cash Transaction',
+    '现金交易' => 'Cash Transaction',
     '往来调整' => 'Adjustments',
+
+    '已导入数据查看' => 'Import History',
+    '组织' => 'Organize',
+    '流动资产' => 'Current assets',
+    '运营支出' => 'Operating expenses',
+
+    '库存现金' => 'Cash in stock',
+    '银行存款' => 'Cash in bank',
+    '应收账款' => 'Account receivable',
+
+    //记账时，选择的支出为类别，首页饼图按类别显示金额需要用到这个数据
+    '工资社保' => 'Social Security Benefits',
+    '支付押金' => 'Deposit',
+    '借出款项' => 'Loans To Others',
+    '归还借款' => 'Repayment Of Loans',
+    '投资支出' => 'Investment',
+    '材料销售' => 'Material Sales',
+    '技术转让' => 'Transfer Of Technology',
+    '资产租赁' => 'Capital Lease',
+    '支付股利' => 'Pay Dividends',
+    '支付税金' => 'Pay Raxes',
+    '现金提取' => 'Cash Withdrawal',
+    '银行转账' => 'Bank Transfer',
+    '汇兑损益' => 'Exchange Gains And Losses',
+    '其他支出' => 'Others',
+    '供应商采购' => 'Purchasing',
+    '利息手续费'=> 'Interest Charges',
 
 ];

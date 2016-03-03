@@ -16,6 +16,7 @@ return array(
     'preload' => array('log'),
     // Change system language to Chinese Simple
     'language' => 'zh_cn',
+    'sourceLanguage' => 'zh_cn',
     // autoloading model and component classes
     'import' => array(
         'application.models.*',
@@ -167,7 +168,8 @@ return array(
     // using Yii::app()->params['paramName']
     'params' => array(
         // this is used in contact page
-        'adminEmail' => 'webmaster@example.com',
+        'adminEmail' => 'wxj@laofashigroup.com',
+        'languages'=>array('en_us'=>'English', 'zh_cn'=>'中文'),
         'sbj_cat' => array(1 => '资产类 ', 2 => '负债类 ', 3 => '权益类 ', 4 => '收入类 ', 5 => '费用类'),
         'profitReport_sum' => array(
             array("id" => "trading_profit", "name" => "二、营业利润", "to" => "profit_sum", "function" => "sum"),

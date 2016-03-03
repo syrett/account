@@ -11,16 +11,16 @@ Yii::app()->clientScript->scriptMap = array(
 );
 $baseUrl = Yii::app()->theme->baseUrl;
 $menu1 = [
-    ['name' => '银行交易', 'url' => $this->createUrl('/bank')],
-    ['name' => '现金交易', 'url' => $this->createUrl('/cash')],
+    ['name' => Yii::t('home', '银行交易'), 'url' => $this->createUrl('/bank')],
+    ['name' => Yii::t('home', '现金交易'), 'url' => $this->createUrl('/cash')],
 ];
 $menu2 = [
-    ['name' => '银行交易', 'url' => $this->createUrl('/bank')],
-    ['name' => '采购交易', 'url' => $this->createUrl('/purchase')],
-    ['name' => '产品销售', 'url' => $this->createUrl('/product')],
-    ['name' => '现金交易', 'url' => $this->createUrl('/cash')],
-    ['name' => '员工工资', 'url' => $this->createUrl('/salary')],
-    ['name' => '员工报销', 'url' => $this->createUrl('/reimburse')],
+    ['name' => Yii::t('home', '银行交易'), 'url' => $this->createUrl('/bank')],
+    ['name' => Yii::t('home', '采购交易'), 'url' => $this->createUrl('/purchase')],
+    ['name' => Yii::t('home', '产品销售'), 'url' => $this->createUrl('/product')],
+    ['name' => Yii::t('home', '现金交易'), 'url' => $this->createUrl('/cash')],
+    ['name' => Yii::t('home', '员工工资'), 'url' => $this->createUrl('/salary')],
+    ['name' => Yii::t('home', '员工报销'), 'url' => $this->createUrl('/reimburse')],
 ];
 $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
 ?>
@@ -132,39 +132,39 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li class="external">
-                                <h3><span class="bold">基本设置</span></h3>
+                                <h3><span class="bold"><?= Yii::t('home', '基本设置') ?></span></h3>
                             </li>
                             <li>
                                 <a href="<?= $this->createUrl('options/index') ?>">
-                                    <i class="icon-info"></i> 账套信息</a>
+                                    <i class="icon-info"></i><?= Yii::t('home', '账套信息') ?></a>
                             </li>
                             <li>
                                 <a href="<?= $this->createUrl('permission/index') ?>">
-                                    <i class="icon-lock-open"></i> 账套权限</a>
+                                    <i class="icon-lock-open"></i><?= Yii::t('home', '账套权限') ?></a>
                             </li>
                             <li>
                                 <!-- <?= $this->createUrl('options/setting') ?> -->
                                 <a href="" data-target="#static" data-toggle="modal">
-                                    <i class="icon-equalizer"></i> 参数设置</a>
+                                    <i class="icon-equalizer"></i><?= Yii::t('home', '参数设置') ?></a>
                             </li>
                             <li>
                                 <a href="<?= $this->createUrl('subjects/balance') ?>">
-                                    <i class="icon-grid"></i> 期初余额 </a>
+                                    <i class="icon-grid"></i><?= Yii::t('home', '期初余额') ?> </a>
                             </li>
                             <li>
                                 <a href="<?= $this->createUrl('project/admin') ?>">
-                                    <i class="icon-rocket"></i> 项目列表</a>
+                                    <i class="icon-rocket"></i><?= Yii::t('home', '项目列表') ?></a>
                             </li>
                             <li>
                                 <a href="<?= $this->createUrl('employee/admin') ?>">
-                                    <i class="icon-user"></i> 员工列表</a>
+                                    <i class="icon-user"></i><?= Yii::t('home', '员工列表') ?></a>
                             </li>
                             <li class="external">
-                                <h3><span class="bold">系统选项</span></h3>
+                                <h3><span class="bold"><?= Yii::t('home', '系统选项') ?></span></h3>
                             </li>
                             <li>
                                 <a href="<?= LogoutURL ?>">
-                                    <i class="icon-key"></i> 退出 </a>
+                                    <i class="icon-key"></i><?= Yii::t('home', '退出') ?> </a>
                             </li>
                         </ul>
                     </li>
@@ -175,26 +175,26 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
                            data-close-others="true">
                             <i class="glyphicon glyphicon-question-sign"></i>
-                            <span class="username username-hide-on-mobile"> 帮助 </span>
+                            <span class="username username-hide-on-mobile"> <?= Yii::t('home', '帮助') ?> </span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li class="external">
-                                <h3><span class="bold">常见问题 FAQ</span></h3>
+                                <h3><span class="bold"><?= Yii::t('home', '常见问题') ?></span></h3>
                             </li>
                             <li>
                                 <a href="#">
-                                    <i class="icon-user"></i> 如何录入凭证？ </a>
+                                    <i class="icon-user"></i><?= Yii::t('home', '如何录入凭证') ?>？ </a>
                             </li>
                             <li>
                                 <a href="#">
-                                    <i class="icon-calendar"></i> 更多内容</a>
+                                    <i class="icon-calendar"></i><?= Yii::t('home', '更多内容') ?></a>
                             </li>
                             <li class="external">
-                                <h3><span class="bold">专业培训</span></h3>
+                                <h3><span class="bold"><?= Yii::t('home', '专业培训') ?></span></h3>
                             </li>
                             <li>
                                 <a href="http://www.laofashigroup.com/contact-us/" target="_blank">
-                                    <i class="icon-call-out"></i> 服务热线 400-821-0913 </a>
+                                    <i class="icon-call-out"></i><?= Yii::t('home', '服务热线') ?> 400-821-0913 </a>
                             </li>
                         </ul>
                     </li>
@@ -214,7 +214,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                         <div class="dropdown-menu dropdown-content input-large hold-on-click" role="menu">
                             <div class="portlet light">
                                 <div class="portlet-title">
-                                    <div class="caption">搜索凭证</div>
+                                    <div class="caption"><?= Yii::t('home', '搜索凭证') ?></div>
                                 </div>
                                 <div class="portlet-body">
 
@@ -222,15 +222,17 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                     <div class="input-icon right">
                                         <i class="fa fa-search"></i>
                                         <input name="multi_search" type="text" class="form-control"
-                                               placeholder="输入凭证字号，日期，内容等...">
+                                               placeholder="<?= Yii::t('home', '输入凭证字号，日期，内容等') ?>">
                                     </div>
 
                                     <?php echo CHtml::endForm(); ?>
                                     <ul>
                                         <li>
-                                            <a href="<?= $this->createUrl('Site/operation&operation=listTransition') ?>">逐月查询</a>
+                                            <a href="<?= $this->createUrl('Site/operation&operation=listTransition') ?>"><?= Yii::t('home', '逐月查询') ?></a>
                                         </li>
-                                        <li><a href="<?= $this->createUrl('transition/listreview') ?>">审核凭证</a></li>
+                                        <li>
+                                            <a href="<?= $this->createUrl('transition/listreview') ?>"><?= Yii::t('home', '审核凭证') ?></a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -243,54 +245,73 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                             <i class="fa fa-plus fa-2x"></i>
                         </a>
 
-                        <div class="dropdown-menu dropdown-content input-xlarge hold-on-click" role="menu">
+                        <div class="dropdown-menu dropdown-content hold-on-click" role="menu">
                             <div class="portlet light">
                                 <div class="portlet-title">
-                                    <div class="caption">新建</div>
+                                    <div class="caption"><?= Yii::t('home', '新建') ?></div>
                                 </div>
                                 <div class="portlet-body">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <h4>组织</h4>
+                                            <h4><?= Yii::t('home', '组织') ?></h4>
                                             <ul class="list-unstyled">
                                                 <? if (User2::model()->checkVIP()) {
                                                     ?>
-                                                    <li><a href="<?= $this->createUrl('vendor/create') ?>">供应商</a></li>
-                                                    <li><a href="<?= $this->createUrl('client/create') ?>">客户</a>
+                                                    <li>
+                                                        <a href="<?= $this->createUrl('vendor/create') ?>"><?= Yii::t('home', '供应商') ?></a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="<?= $this->createUrl('client/create') ?>"><?= Yii::t('home', '客户') ?></a>
                                                     </li> <?
                                                 }
                                                 ?>
-                                                <li><a href="<?= $this->createUrl('department/create') ?>">部门</a></li>
-                                                <li><a href="<?= $this->createUrl('employee/create') ?>">员工</a></li>
+                                                <li>
+                                                    <a href="<?= $this->createUrl('department/create') ?>"><?= Yii::t('home', '部门') ?></a>
+                                                </li>
+                                                <li>
+                                                    <a href="<?= $this->createUrl('employee/create') ?>"><?= Yii::t('home', '员工') ?></a>
+                                                </li>
                                                 <!--                                                <li><a href="-->
                                                 <? //= $this->createUrl('project/create') ?><!--">项目</a></li>-->
                                             </ul>
                                         </div>
                                         <div class="col-md-4">
-                                            <h4>凭证</h4>
+                                            <h4><?= Yii::t('home', '凭证') ?></h4>
                                             <ul class="list-unstyled">
                                                 <? if (User2::model()->checkVIP()) {
                                                     ?>
 
                                                     <li>
-                                                        <a href="<?= $this->createUrl('transition/purchase') ?>">采购交易</a>
+                                                        <a href="<?= $this->createUrl('transition/purchase') ?>"><?= Yii::t('home', '采购交易') ?></a>
                                                     </li>
-                                                    <li><a href="<?= $this->createUrl('transition/sale') ?>">产品销售</a>
+                                                    <li>
+                                                        <a href="<?= $this->createUrl('transition/sale') ?>"><?= Yii::t('home', '产品销售') ?></a>
                                                     </li>
                                                     <?
                                                 }
                                                 ?>
-                                                <li><a href="<?= $this->createUrl('transition/bank') ?>">银行交易</a></li>
-                                                <li><a href="<?= $this->createUrl('transition/cash') ?>">现金流水</a></li>
-                                                <li><a href="<?= $this->createUrl('transition/create') ?>">往来调整</a></li>
+                                                <li>
+                                                    <a href="<?= $this->createUrl('transition/bank') ?>"><?= Yii::t('home', '银行交易') ?></a>
+                                                </li>
+                                                <li>
+                                                    <a href="<?= $this->createUrl('transition/cash') ?>"><?= Yii::t('home', '现金流水') ?></a>
+                                                </li>
+                                                <li>
+                                                    <a href="<?= $this->createUrl('transition/create') ?>"><?= Yii::t('home', '往来调整') ?></a>
+                                                </li>
                                             </ul>
                                         </div>
                                         <div class="col-md-4">
-                                            <h4>其它</h4>
+                                            <h4><?= Yii::t('home', '其他') ?></h4>
                                             <ul class="list-unstyled">
-                                                <li><a href="<?= $this->createUrl('subjects/create') ?>">会计科目</a></li>
-                                                <li><a href="<?= $this->createUrl('projectB/create') ?>">在建工程</a></li>
-                                                <li><a href="<?= $this->createUrl('projectLong/create') ?>">长期待摊</a>
+                                                <li>
+                                                    <a href="<?= $this->createUrl('subjects/create') ?>"><?= Yii::t('home', '会计科目') ?></a>
+                                                </li>
+                                                <li>
+                                                    <a href="<?= $this->createUrl('projectB/create') ?>"><?= Yii::t('home', '在建工程') ?></a>
+                                                </li>
+                                                <li>
+                                                    <a href="<?= $this->createUrl('projectLong/create') ?>"><?= Yii::t('home', '长期待摊') ?></a>
                                                 </li>
                                                 <!--                                                <li><a href="-->
                                                 <? //= $this->createUrl('project/create') ?><!--">工程项目</a>-->
@@ -309,10 +330,10 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                             <i class="fa fa-history fa-2x"></i>
                         </a>
 
-                        <div class="dropdown-menu dropdown-content input-xlarge hold-on-click" role="menu">
+                        <div class="dropdown-menu dropdown-content hold-on-click" role="menu">
                             <div class="portlet light">
                                 <div class="portlet-title">
-                                    <div class="caption">已导入数据查看</div>
+                                    <div class="caption"><?= Yii::t('home', '已导入数据查看') ?></div>
                                 </div>
                                 <div class="portlet-body">
                                     <ul class="list-unstyled top-three">
@@ -349,7 +370,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <h4 class="modal-title">参数设置</h4>
+                <h4 class="modal-title"><?= Yii::t('home', '参数设置') ?></h4>
             </div>
             <div class="modal-body">
                 <?php echo CHtml::beginForm($this->createUrl('options/setting')); ?>
@@ -358,17 +379,17 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                         <ul class="nav nav-tabs">
                             <li class="active">
                                 <a href="#tab_15_1" data-toggle="tab" aria-expanded="true">
-                                    <i class="fa fa-cogs"></i> 折旧或摊销年限(年)
+                                    <i class="fa fa-cogs"></i><?= Yii::t('home', '折旧或摊销年限(年)') ?>
                                 </a>
                             </li>
                             <li>
                                 <a href="#tab_15_2" data-toggle="tab" aria-expanded="true">
-                                    <i class="fa fa-cogs"></i> 残值率(%)
+                                    <i class="fa fa-cogs"></i><?= Yii::t('home', '残值率') ?>(%)
                                 </a>
                             </li>
                             <li>
                                 <a href="#tab_15_3" data-toggle="tab" aria-expanded="true">
-                                    <i class="fa fa-cogs"></i> 附加税税率(%)
+                                    <i class="fa fa-cogs"></i><?= Yii::t('home', '附加税税率') ?>(%)
                                 </a>
                             </li>
                         </ul>
@@ -508,41 +529,41 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                 <li class="start active">
                     <a href="<?php echo Yii::app()->homeUrl; ?>">
                         <i class="icon-home"></i>
-                        <span class="title">首页</span>
+                        <span class="title"><?= Yii::t('home', '首页') ?></span>
                         <span class="selected"></span>
                     </a>
                 </li>
                 <li>
                     <a href="javascript:;">
                         <i class="icon-layers"></i>
-                        <span class="title">总账</span>
+                        <span class="title"><?= Yii::t('home', '总账') ?></span>
                         <span class="arrow "></span>
                     </a>
                     <ul class="sub-menu">
                         <li>
                             <a href="<?= $this->createUrl('subjects/admin') ?>">
                                 <i class="glyphicon glyphicon-list-alt"></i>
-                                科目表</a>
+                                <?= Yii::t('home', '科目表') ?></a>
                         </li>
                         <li>
                             <a href="<?= $this->createUrl('subjects/balance') ?>">
                                 <i class="icon-calculator"></i>
-                                期初余额</a>
+                                <?= Yii::t('home', '期初余额') ?></a>
                         </li>
                         <li>
                             <a href="<?= $this->createUrl('Site/operation&operation=listReorganise') ?>">
                                 <i class="glyphicon glyphicon-list"></i>
-                                整理凭证</a>
+                                <?= Yii::t('home', '整理凭证') ?></a>
                         </li>
                         <li>
                             <a href="<?= $this->createUrl('transition/printp') ?>">
                                 <i class="glyphicon glyphicon-print"></i>
-                                打印凭证</a>
+                                <?= Yii::t('home', '打印凭证') ?></a>
                         </li>
                         <li>
                             <a href="<?= $this->createUrl('Site/operation&operation=listPost') ?>">
                                 <i class="glyphicon glyphicon-import"></i>
-                                过账</a>
+                                <?= Yii::t('home', '过账') ?></a>
                         </li>
                         <?
                         if (User2::model()->checkVIP()) {
@@ -550,12 +571,12 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                             <li>
                                 <a href="<?= $this->createUrl('Site/operation&operation=listSettlement') ?>">
                                     <i class="glyphicon glyphicon-random"></i>
-                                    期末结转</a>
+                                    <?= Yii::t('home', '期末结转') ?></a>
                             </li>
                             <li>
                                 <a href="<?= $this->createUrl('Site/operation&operation=listClosing') ?>">
                                     <i class="glyphicon glyphicon-check"></i>
-                                    结账</a>
+                                    <?= Yii::t('home', '结账') ?></a>
                             </li>
                             <?
                         } else {    //普通用户，不需要期末结转 ，结账时候生成结转凭证自动过账结账
@@ -563,7 +584,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                             <li>
                                 <a href="<?= $this->createUrl('Site/operation&operation=listSettlementcloseing') ?>">
                                     <i class="glyphicon glyphicon-check"></i>
-                                    结账</a>
+                                    <?= Yii::t('home', '结账') ?></a>
                             </li>
                             <?
                         }
@@ -571,14 +592,14 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                         <li>
                             <a href="<?= $this->createUrl('Site/operation&operation=listAntiSettlement') ?>">
                                 <i class="glyphicon glyphicon-repeat"></i>
-                                反结账</a>
+                                <?= Yii::t('home', '反结账') ?></a>
                         </li>
                     </ul>
                 </li>
                 <li class="last">
                     <a href="<?= $this->createUrl('report/admin') ?>">
                         <i class="icon-bar-chart"></i>
-                        <span class="title">报表</span>
+                        <span class="title"><?= Yii::t('home', '报表') ?></span>
                     </a>
                 </li>
                 <?
@@ -588,39 +609,39 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                     <li>
                         <a href="<?= $this->createUrl('client/admin') ?>">
                             <i class="icon-wallet"></i>
-                            <span class="title">客户</span>
+                            <span class="title"><?= Yii::t('home', '客户') ?></span>
                         </a>
                     </li>
                     <li>
                         <a href="<?= $this->createUrl('vendor/admin') ?>">
                             <i class="icon-basket-loaded"></i>
-                            <span class="title">供应商</span>
+                            <span class="title"><?= Yii::t('home', '供应商') ?></span>
                         </a>
                     </li>
                 <? } ?>
                 <li>
                     <a href="javascript:;">
                         <i class="icon-drawer"></i>
-                        <span class="title">库存商品</span>
+                        <span class="title"><?= Yii::t('home', '库存商品') ?></span>
                         <span class="arrow "></span>
                     </a>
                     <ul class="sub-menu">
                         <li>
                             <a href="<?= $this->createUrl('stock/admin') ?>">
                                 <i class="icon-drawer"></i>
-                                <span class="title">库存商品</span>
+                                <span class="title"><?= Yii::t('home', '库存商品') ?></span>
                             </a>
                         </li>
                         <li>
                             <a href="<?= $this->createUrl('product/stock') ?>">
                                 <i class="icon-equalizer"></i>
-                                <span class="title">成本结转</span>
+                                <span class="title"><?= Yii::t('home', '成本结转') ?></span>
                             </a>
                         </li>
                         <li>
                             <a href="<?= $this->createUrl('stock/balance_1405') ?>">
                                 <i class="icon-calculator"></i>
-                                <span class="title">库存期初</span>
+                                <span class="title"><?= Yii::t('home', '期初库存') ?></span>
                             </a>
                         </li>
                     </ul>
@@ -629,27 +650,27 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                 <li>
                     <a href="javascript:;">
                         <i class="icon-drawer"></i>
-                        <span class="title">长期资产</span>
+                        <span class="title"><?= Yii::t('home', '长期资产') ?></span>
                         <span class="arrow "></span>
                     </a>
                     <ul class="sub-menu">
                         <li>
                             <a href="javascript:;">
                                 <i class="icon-plus"></i>
-                                <span class="title">新建项目</span>
+                                <span class="title"><?= Yii::t('home', '新建项目') ?></span>
                                 <span class="arrow "></span>
                             </a>
                             <ul class="sub-menu">
                                 <li>
                                     <a href="<?= $this->createUrl('projectB/create') ?>">
                                         <i class="icon-chemistry"></i>
-                                        <span class="title">在建工程</span>
+                                        <span class="title"><?= Yii::t('home', '在建工程') ?></span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="<?= $this->createUrl('projectLong/create') ?>">
                                         <i class="icon-support"></i>
-                                        <span class="title">长期待摊</span>
+                                        <span class="title"><?= Yii::t('home', '长期待摊') ?></span>
                                     </a>
                                 </li>
                             </ul>
@@ -657,31 +678,31 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                         <li>
                             <a href="<?= $this->createUrl('stock/admin1601') ?>">
                                 <i class="icon-tag"></i>
-                                <span class="title">固定资产</span>
+                                <span class="title"><?= Yii::t('home', '固定资产') ?></span>
                             </a>
                         </li>
                         <li>
                             <a href="<?= $this->createUrl('projectB/admin') ?>">
                                 <i class="icon-chemistry"></i>
-                                <span class="title">在建工程</span>
+                                <span class="title"><?= Yii::t('home', '在建工程') ?></span>
                             </a>
                         </li>
                         <li>
                             <a href="<?= $this->createUrl('stock/admin1701') ?>">
                                 <i class="icon-frame"></i>
-                                <span class="title">无形资产</span>
+                                <span class="title"><?= Yii::t('home', '无形资产') ?></span>
                             </a>
                         </li>
                         <li>
                             <a href="<?= $this->createUrl('projectLong/admin') ?>">
                                 <i class="icon-support"></i>
-                                <span class="title">长期待摊</span>
+                                <span class="title"><?= Yii::t('home', '长期待摊') ?></span>
                             </a>
                         </li>
                         <li>
                             <a href="<?= $this->createUrl('stock/balance_1601') ?>">
                                 <i class="icon-calculator"></i>
-                                <span class="title">期初余额</span>
+                                <span class="title"><?= Yii::t('home', '期初余额') ?></span>
                             </a>
                         </li>
                     </ul>
@@ -689,13 +710,13 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                 <li>
                     <a href="<?= $this->createUrl('employee/admin') ?>">
                         <i class="icon-users"></i>
-                        <span class="title">员工</span>
+                        <span class="title"><?= Yii::t('home', '员工') ?></span>
                     </a>
                     <ul class="sub-menu">
                         <li>
                             <a href="<?= $this->createUrl('employee/admin') ?>">
                                 <i class="icon-users"></i>
-                                <span class="title">员工列表</span>
+                                <span class="title"><?= Yii::t('home', '员工列表') ?></span>
                             </a>
                         </li>
 
@@ -705,20 +726,20 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                             <li>
                                 <a href="<?= $this->createUrl('transition/salary') ?>">
                                     <i class="icon-diamond"></i>
-                                    <span class="title">员工工资</span>
+                                    <span class="title"><?= Yii::t('home', '员工工资') ?></span>
                                 </a>
                             </li>
                             <li>
                                 <a href="<?= $this->createUrl('transition/reimburse') ?>">
                                     <i class="icon-link"></i>
-                                    <span class="title">员工报销</span>
+                                    <span class="title"><?= Yii::t('home', '员工报销') ?></span>
                                 </a>
                             </li>
                         <? } ?>
                         <li>
                             <a href="<?= $this->createUrl('department/admin') ?>">
                                 <i class="icon-badge"></i>
-                                <span class="title">部门管理</span>
+                                <span class="title"><?= Yii::t('home', '部门管理') ?></span>
                             </a>
                         </li>
                     </ul>
