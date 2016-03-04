@@ -752,6 +752,10 @@ ALTER TABLE `stock` ADD `month_left` INT NULL COMMENT '剩余计提月份' AFTER
 ALTER TABLE `product` ADD `realorder` VARCHAR(64) NULL COMMENT '客户自己的订单号' AFTER `order_no`;
 
 
+-- 2016年3月1日16:57:38
+ALTER TABLE `post` CHANGE `balance` `balance` DOUBLE NOT NULL COMMENT '科目余额，非期初余额';
+ALTER TABLE `subjects` ADD `sbj_name_en` VARCHAR(512) NULL AFTER `sbj_name`;
+
 
 
 
