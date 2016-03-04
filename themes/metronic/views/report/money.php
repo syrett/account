@@ -46,9 +46,9 @@ function echoData($key, $data, $name = "default")
                class="form-control form-control-inline input-small date-picker"
                value="<?php echo isset($date) ? $date : '' ?>"id="date"readonly="">
         <input type="button"onclick="javascript:$('#type').val('month');$('#report').submit();"class="btn btn-primary"
-               value="<?= Yii::t('report', '月份报表查看') ?>"/>
+               value="<?= Yii::t('report', '月份报表') ?>"/>
         <input type="button"onclick="javascript:$('#type').val('year');;$('#report').submit();"class="btn btn-primary"
-               value="<?= Yii::t('report', '年度报表查看') ?>"/>
+               value="<?= Yii::t('report', '年度报表') ?>"/>
         <input type="hidden"name="type"id="type">
     </div>
     <p>&nbsp;</p>
