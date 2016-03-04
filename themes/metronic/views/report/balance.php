@@ -29,7 +29,7 @@ function echoData($key, $data, $name = "default")
     } else {
         $arr = $data[$key];
         if ($name === "default") {
-            echo "<th>" . $arr["name"] . "</th>";
+            echo "<th>" . Yii::t('report', $arr["name"]) . "</th>";
         } else {
             echo "<th>" . $name . "</th>";
         }
@@ -117,7 +117,7 @@ function echoData($key, $data, $name = "default")
         </tr>
         <tr>
             <?php echoData(0, $data, Yii::t('report', "一年内到期的非流动资产")) ?>
-            <?php echoData(0, $data, Yii::t('report', "一年内到期的非流动负债 ")) ?>
+            <?php echoData(0, $data, Yii::t('report', "一年内到期的非流动负债")) ?>
         </tr>
         <tr>
             <?php echoData(10, $data, Yii::t('report', "其他流动资产")) ?>

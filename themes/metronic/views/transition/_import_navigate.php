@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <h4 class="modal-title">导入<?= Yii::t('import', strtoupper($type)) ?></h4>
+                <h4 class="modal-title">导入<?= LFSModel::typeName($type) ?></h4>
             </div>
 
             <?
@@ -37,7 +37,7 @@
                     <div class="tab-content">
                         <div class="tab-pane active" id="tab_step_1">
                             <p>
-                                <a download="" href="/download/<?= Yii::t('import', strtoupper($type)) ?>.xlsx">
+                                <a download="" href="/download/<?= LFSModel::typeName($type) ?>.xlsx">
                                     <button class="btn btn-default btn-file" type="button">模板下载
                                     </button>
                                 </a>

@@ -159,8 +159,8 @@ class ReportController extends Controller
         $this->render("detail", array("dataProviderArray" => count($data_array) == 0?[$data]:$data_array,
             "subject_name" => $subject_name,
             "company" => $company,
-            "fromMonth" => $year . '年' . $fm . '月',
-            "toMonth" => $year . '年' . $tm . '月'));
+            "fromMonth" => $year . '-' . $fm,
+            "toMonth" => $year . '-' . $tm));
 
     }
 

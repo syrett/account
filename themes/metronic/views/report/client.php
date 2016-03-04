@@ -34,14 +34,14 @@ function echoData($data)
 
 <div class="alert alert-info">
     <?php echo CHtml::beginForm('', 'post', array('class' => 'form-inline')); ?>
-    <h3><?= Yii::t('import', '客 户 表') ?></h3>
+    <h3><?= Yii::t('report', '客户表') ?></h3>
     <div class="form-group">
-        <label class="control-label" for="date"><?= Yii::t('import', '请选择报表日期：') ?></label>
+        <label class="control-label" for="date"><?= Yii::t('report', '请选择报表日期') ?>：</label>
         <input type="text" data-date="201210" data-date-format="yyyymm" data-date-viewmode="years"
                data-date-minviewmode="months" name="date"
                class="form-control form-control-inline input-small date-picker"
                value="<?php echo isset($date) ? $date : '' ?>" id="date" readonly="">
-        <input type="submit" class="btn btn-primary" value="<?= Yii::t('import', '查看报表') ?>"/>
+        <input type="submit" class="btn btn-primary" value="<?= Yii::t('report', '查看报表') ?>"/>
     </div>
     <?php echo CHtml::endForm(); ?>
     <p>&nbsp;</p>
@@ -49,19 +49,19 @@ function echoData($data)
 
 <div <?php if (!$data) echo 'style="display:none"'; ?>" class="panel panel-default">
 <div class="panel-heading">
-    <h2><?= Yii::t('import', '客 户 表') ?></h2>
+    <h2><?= Yii::t('report', '客户表') ?></h2>
 </div>
 <div class="panel-body">
-    <p class="text-center"><span class="pull-left"><?= Yii::t('import', '日期：') ?><?php echo $date; ?></span> <?= Yii::t('import', '编制单位：') ?><?php echo $company ?><span
-            class="pull-right"><?= Yii::t('import', '金额单位：元') ?></span></p>
+    <p class="text-center"><span class="pull-left"><?= Yii::t('report', '日期') ?>：<?php echo $date; ?></span> <?= Yii::t('report', '编制单位') ?>：<?php echo $company ?><span
+            class="pull-right"><?= Yii::t('report', '金额单位：元') ?></span></p>
 </div>
 <table id="client" class="table table-bordered table-hover">
     <tr>
-        <th><?= Yii::t('import', '客户') ?></th>
-        <th><?= Yii::t('import', '期初') ?></th>
-        <th><?= Yii::t('import', '本期增加') ?></th>
-        <th><?= Yii::t('import', '本期已收') ?></th>
-        <th><?= Yii::t('import', '未收') ?></th>
+        <th><?= Yii::t('report', '客户') ?></th>
+        <th><?= Yii::t('report', '期初') ?></th>
+        <th><?= Yii::t('report', '本期增加') ?></th>
+        <th><?= Yii::t('report', '本期已收') ?></th>
+        <th><?= Yii::t('report', '未收') ?></th>
     </tr>
     <?php echoData($data) ?>
 </table>
@@ -72,14 +72,14 @@ function echoData($data)
     echo CHtml::beginForm($this->createUrl('/Report/createexcel'), 'post');
     if ($date != ""){
     $d = date('Y-m', strtotime($date));
-    $excel_name = Yii::t('import', "客户表 ") . $d . ".xls";
+    $excel_name = Yii::t('report', "客户表") . " $d.xls";
     ?>
 
     <input type="hidden" name="data" id="data" value=""/>
     <input type="hidden" name="name" id="name" value="<?= $excel_name ?>"/>
     <p class="text-right">
         <?php
-        echo '<button type="button" onclick="tableToExcel()" class="btn btn-primary"><span class="glyphicon glyphicon-export"></span>'.Yii::t('import', '导出').'</button>';
+        echo '<button type="button" onclick="tableToExcel()" class="btn btn-primary"><span class="glyphicon glyphicon-export"></span>'.Yii::t('report', '导出').'</button>';
         }
         echo CHtml::endForm();
         ?>

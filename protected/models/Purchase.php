@@ -66,19 +66,19 @@ class Purchase extends LFSModel
 	{
 		return array(
 			'id' => 'ID',
-			'order_no' => '订单号',
-			'entry_date' => '交易日期',
-			'vendor_id' => '供应商ID',
-			'entry_name' => '商品名称',
-            'department_id' => '部门',
-            'price' => '价格',
-            'count' => '数量',
-			'unit' => '单位',
-			'tax' => '税率',
-			'paied' => '已付金额',
-			'create_time' => '创建日期',
-			'update_time' => '更新日期',
-			'status_id' => '状态',
+			'order_no' => Yii::t('models/model','订单号'),
+			'entry_date' => Yii::t('models/model','交易日期'),
+			'vendor_id' => Yii::t('models/model','供应商ID'),
+			'entry_name' => Yii::t('models/model','商品名称'),
+            'department_id' => Yii::t('models/model','部门'),
+            'price' => Yii::t('models/model','价格'),
+            'count' => Yii::t('models/model','数量'),
+			'unit' => Yii::t('models/model','单位'),
+			'tax' => Yii::t('models/model','税率'),
+			'paied' => Yii::t('models/model','已付金额'),
+			'create_time' => Yii::t('models/model','创建日期'),
+			'update_time' => Yii::t('models/model','更新日期'),
+			'status_id' => Yii::t('models/model','状态'),
 		);
 	}
 

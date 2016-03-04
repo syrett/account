@@ -1,4 +1,5 @@
 <?php
+
 /**
  * LFSModel is the customized base model class.
  * Some models classes for this application should extend from this base class.
@@ -8,32 +9,48 @@ class LFSModel extends CActiveRecord
     /*
      * init order no
      */
-    public function initOrderno(){
+    public function initOrderno()
+    {
         $table = $this->tableName();
-        switch($table){
-            case 'bank': $prefix = 'BA';break;
-            case 'cash': $prefix = 'CA';break;
-            case 'purchase': $prefix = 'PO';break;
-            case 'product': $prefix = 'SO';break;
-            case 'cost': $prefix = 'CO';break;
-            case 'salary': $prefix = 'SA';break;
-            case 'reimburse': $prefix = 'RE';break;
+        switch ($table) {
+            case 'bank':
+                $prefix = 'BA';
+                break;
+            case 'cash':
+                $prefix = 'CA';
+                break;
+            case 'purchase':
+                $prefix = 'PO';
+                break;
+            case 'product':
+                $prefix = 'SO';
+                break;
+            case 'cost':
+                $prefix = 'CO';
+                break;
+            case 'salary':
+                $prefix = 'SA';
+                break;
+            case 'reimburse':
+                $prefix = 'RE';
+                break;
             default :
-                $prefix = '';break;
+                $prefix = '';
+                break;
         }
         $prefix .= date('Ym');
         $sql = "select max(order_no) order_no from $table where order_no like '$prefix%' ";
         $model = $this->findBySql($sql);
-        if($model!=null){
-            $orderno = substr($model->order_no,8);
-            $orderno = (int) $orderno + 1;
+        if ($model != null) {
+            $orderno = substr($model->order_no, 8);
+            $orderno = (int)$orderno + 1;
             $orderno = addZero($orderno);
             return "$prefix$orderno";
-        }else
-            return "$prefix"."0001";
+        } else
+            return "$prefix" . "0001";
     }
 
-    public function delMultiple($condition,$count)
+    public function delMultiple($condition, $count)
     {
         $where = ' where 1=1';
         if (is_array($condition)) {
@@ -52,33 +69,81 @@ class LFSModel extends CActiveRecord
      *
      * 1601固定资产编码以F000001，1701无形资产I000001，1801长期待摊费用D000001
      */
-    public function initHSno($sbj){
+    public function initHSno($sbj)
+    {
         $sbj = substr($sbj, 0, 4);
-        switch($sbj){
-            case '1601': $prefix = 'F';break;
-            case '1701': $prefix = 'I';break;
-            case '1801': $prefix = 'D';break;
-            case '1403': $prefix = 'R';break;
-            case '1405': $prefix = 'S';break;
-            default: $prefix = '';
+        switch ($sbj) {
+            case '1601':
+                $prefix = 'F';
+                break;
+            case '1701':
+                $prefix = 'I';
+                break;
+            case '1801':
+                $prefix = 'D';
+                break;
+            case '1403':
+                $prefix = 'R';
+                break;
+            case '1405':
+                $prefix = 'S';
+                break;
+            default:
+                $prefix = '';
         }
         $sql = "select max(hs_no) hs_no from stock where hs_no like '$prefix%' ";
         $model = Stock::model()->findBySql($sql);
-        if($model!=null){
-            $hs_no = substr($model->hs_no,1);
-            $hs_no = (int) $hs_no + 1;
+        if ($model != null) {
+            $hs_no = substr($model->hs_no, 1);
+            $hs_no = (int)$hs_no + 1;
             $hs_no = addZero($hs_no, 6);
             return "$prefix$hs_no";
-        }else
-            return "$prefix"."000001";
+        } else
+            return "$prefix" . "000001";
 
     }
 
-    public function getRelation($type,$id){
+    public function getRelation($type, $id)
+    {
         $relation = [];
-        $relation += Bank::model()->findAllByAttributes([],"relation like '%\"$type\":\"$id\"%'");
-        $relation += Cash::model()->findAllByAttributes([],"relation like '%\"$type\":\"$id\"%'");
+        $relation += Bank::model()->findAllByAttributes([], "relation like '%\"$type\":\"$id\"%'");
+        $relation += Cash::model()->findAllByAttributes([], "relation like '%\"$type\":\"$id\"%'");
         return $relation;
     }
 
+    public static function typeName($type)
+    {
+        switch (strtoupper($type)) {
+            case 'BANK':
+                $name = '银行交易';
+                break;
+            case 'CASH':
+                $name = '现金交易';
+                break;
+            case 'PURCHASE':
+                $name = '商品采购';
+                break;
+            case 'PRODUCT':
+                $name = '产品销售';
+                break;
+            case 'COST':
+                $name = '成本结转';
+                break;
+            case 'SALARY':
+                $name = '员工工资';
+                break;
+            case 'REIMBURSE':
+                $name = '员工报销';
+                break;
+            case 'PREPRODUCT':
+                $name = '预收';
+                break;
+            case 'PREPURCHASE':
+                $name = '预付';
+                break;
+            default:
+                $name = '';
+        }
+        return $name;
+    }
 }

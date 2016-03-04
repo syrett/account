@@ -34,7 +34,7 @@ if ($bank_money == 'cash')
 <div class="portlet light">
 	<div class="portlet-title">
 		<div class="caption">
-		<span class="font-green-sharp">导入<?= Yii::t('import', strtoupper($type)) ?></span>
+		<span class="font-green-sharp">导入<?= LFSModel::typeName($type) ?></span>
 		</div>
 		<div class="actions">
 			<?php echo CHtml::link('<i class="glyphicon glyphicon-search"></i> 已导入数据', array('/' . $type), array('class' => 'btn btn-circle btn-default')); ?>

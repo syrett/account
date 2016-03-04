@@ -241,7 +241,8 @@ class Subjects extends CActiveRecord
      */
     static public function getName($sbj_id)
     {
-        $sql = "SELECT sbj_name FROM subjects WHERE sbj_number=:sbj_id";
+        $sbj_name = Yii::app()->language=='en_us'?'sbj_name_en':'sbj_name';
+        $sql = "SELECT $sbj_name as `sbj_name` FROM subjects WHERE sbj_number=:sbj_id";
         $data = Subjects::model()->findBySql($sql, array(':sbj_id' => $sbj_id));
         if ($data)
             foreach ($data as $s) {

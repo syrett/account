@@ -35,7 +35,7 @@ $relation = Bank::model()->getRelation('bank',$model->id);
                 <th class="input_mid"><?= $form->labelEx($model, 'date') ?></th>
                 <th class="input_full"><?= $form->labelEx($model, 'memo') ?></th>
                 <th class="input-large"><?= $form->labelEx($model, 'amount') ?></th>
-                <th style="width: 200px"><?= Yii::t('import', '操作') ?></th>
+                <th style="width: 200px">&nbsp;</th>
                 <th style="width: 10%">&nbsp;</th>
             </tr>
             <?php
@@ -60,7 +60,7 @@ $relation = Bank::model()->getRelation('bank',$model->id);
                     <td><input class="input_mid" type="text" id="tran_amount_<?= $key ?>"
                                name="lists[<?= $key ?>][Transition][entry_amount]"
                                value="<?= $item['entry_amount'] ?>">
-                        <span class="tip2"><?= Yii::t('import', '总金额：') ?><label
+                        <span class="tip2"><?= Yii::t('import', '总金额') ?>：<label
                                 id="amount_<?= $key ?>"><?= $item['entry_amount'] ?></label>
                         </span></td>
                     <td class="action">

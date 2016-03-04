@@ -12,9 +12,9 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scrip
 </style>
 <div class="alert alert-info">
 	<?php echo CHtml::beginForm('','post',array('class'=>'form-inline')); ?>
-	<h3><?= Yii::t('import', '明 细 表') ?></h3>
+	<h3><?= Yii::t('report', '明细表') ?></h3>
 	<div class="form-group">
-		<label class="control-label" for="date"><?= Yii::t('import', '请选择报表日期：') ?></label>
+		<label class="control-label" for="date"><?= Yii::t('report', '请选择报表日期') ?>:</label>
         <?php
         if(isset($_REQUEST['year']))
         {
@@ -49,7 +49,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scrip
             'data' => $years,
         ));
         ?>
-        <?= Yii::t('import', '年') ?>
+        <?= Yii::t('report', '年') ?>
         <?php
         $this->widget('ESelect2', array(
             'name' => 'fm',
@@ -57,7 +57,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scrip
             'data' => $months,
         ));
         ?>
-        <?= Yii::t('import', '月 至') ?>
+        <?= Yii::t('report', '月 至') ?>
         <?php
         $this->widget('ESelect2', array(
             'name' => 'tm',
@@ -65,8 +65,8 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scrip
             'data' => $months,
         ));
         ?>
-        <?= Yii::t('import', '月') ?>
-        <label class="control-label" for="date"><?= Yii::t('import', '选择科目') ?></label>
+        <?= Yii::t('report', '月') ?>&nbsp;&nbsp;&nbsp;&nbsp;
+        <?= Yii::t('report', '选择科目') ?>
         <?php
         $this->widget('ESelect2', array(
             'name' => 'subject_id',
@@ -74,7 +74,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scrip
             'data' => Transition::model()->listSubjects('all'),
         ));
         ?>
-		<input type="submit" class="btn btn-primary" value="<?= Yii::t('import', '查看报表') ?>" />
+		<input type="submit" class="btn btn-primary" value="<?= Yii::t('report', '查看报表') ?>" />
 	</div>
 	<p>&nbsp;</p>
 	<?php echo CHtml::endForm(); ?>
@@ -87,10 +87,10 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scrip
 <div class="panel panel-default">
 
 	<div class="panel-heading">
-		<h2><?= Yii::t('import', '明 细 表') ?></h2>
+		<h2><?= Yii::t('report', '明细表') ?></h2>
 	</div>
 	<div class="panel-body">
-		<p class="text-center"><span class="pull-left"><?= Yii::t('import', '日期：') ?><?php echo $fromMonth."-".$toMonth ?></span> <?= Yii::t('import', '编制单位：') ?><?php echo $company ?> <span class="pull-right"><span class="pull-right"><?= Yii::t('import', '金额单位：元') ?></span></p>
+		<p class="text-center"><span class="pull-left"><?= Yii::t('report', '日期') ?>：<?php echo $fromMonth."-".$toMonth ?></span> <?= Yii::t('report', '编制单位') ?>：<?php echo $company ?> <span class="pull-right"><span class="pull-right"><?= Yii::t('report', '金额单位：元') ?></span></p>
 	</div>
      <table id="detail" class="table table-bordered table-hover">
 		 <tr>
@@ -98,12 +98,12 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scrip
 		 </tr>
 
 		 <tr>
-		 <th><?= Yii::t('import', '日期') ?></th>
-		 <th><?= Yii::t('import', '凭证号码') ?></th>
-		 <th><?= Yii::t('import', '描述') ?></th>
-		 <th class="text-right"><?= Yii::t('import', '借方') ?></th>
-		 <th class="text-right"><?= Yii::t('import', '贷方') ?></th>
-		 <th class="text-right"><?= Yii::t('import', '余额') ?></th>
+		 <th><?= Yii::t('report', '日期') ?></th>
+		 <th><?= Yii::t('report', '凭证号') ?></th>
+		 <th><?= Yii::t('report', '描述') ?></th>
+		 <th class="text-right"><?= Yii::t('report', '借方') ?></th>
+		 <th class="text-right"><?= Yii::t('report', '贷方') ?></th>
+		 <th class="text-right"><?= Yii::t('report', '余额') ?></th>
 		 </tr>
          <?
          foreach($dataProviderArray as $dataProvider) {
@@ -119,7 +119,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scrip
              <tr>
                  <th>&nbsp;</th>
                  <th>&nbsp;</th>
-                 <th><?= Yii::t('import', '期初余额') ?></th>
+                 <th><?= Yii::t('report', '期初余额') ?></th>
                  <th>&nbsp;</th>
                  <th>&nbsp;</th>
                  <th class="text-right"><?php echo $dataProvider["start_balance"] ?></th>
@@ -153,7 +153,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scrip
 
                          $month_balance = balance($month_balance, $month_debit, $month_credit, $sbj_cat);
                          echo "<tr>";
-                         echo "<td colspan=3>" . $month . Yii::t('import', "月总计")."</td>";
+                         echo "<td colspan=3>" . $month . Yii::t('report', "月总计")."</td>";
                          echo '<td class="text-right">' . number_format($month_debit, 2) . "</td>";
                          echo '<td class="text-right">' . number_format($month_credit, 2) . "</td>";
                          echo '<td class="text-right">' . number_format($month_balance, 2) . "</td>";
@@ -192,7 +192,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scrip
 
                  if ($month != 0) {
                      echo "<tr>";
-                     echo "<td colspan=3>" . $month . Yii::t('import', "月总计")."</td>";
+                     echo "<td colspan=3>" . $month . Yii::t('report', "月总计")."</td>";
                      echo '<td class="text-right">' . number_format($month_debit, 2) . "</td>";
                      echo '<td class="text-right">' . number_format($month_credit, 2) . "</td>";
                      echo '<td class="text-right">' . number_format(balance($month_balance, $month_debit, $month_credit, $sbj_cat), 2) . "</td>";
@@ -202,7 +202,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scrip
              <tr>
                  <th>&nbsp;</th>
                  <th>&nbsp;</th>
-                 <th><?= Yii::t('import', '总计') ?></th>
+                 <th><?= Yii::t('report', '总计') ?></th>
                  <th class="text-right"><?php echo number_format($dataProvider["sum_debit"], 2) ?></th>
                  <th class="text-right"><?php echo number_format($dataProvider["sum_credit"], 2) ?></th>
                  <th class="text-right"><?php echo number_format($dataProvider["end_balance"], 2) ?></th>
@@ -221,14 +221,14 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scrip
     <?php
     echo CHtml::beginForm($this->createUrl('/Report/createexcel'), 'post');
     if ($subject_id != ""){
-      $excel_name = Yii::t('import', "明细表-").$subject_name." ".$fromMonth."-".$toMonth.".xls";
+      $excel_name = Yii::t('report', "明细表")."-$subject_name $fromMonth $toMonth.xls";
         ?>
 
         <input type="hidden" name="data" id="data" value="" />
         <input type="hidden" name="name" id="name" value="<?=$excel_name?>" />
 		<p class="text-right">
 		<?php
-		echo '<button type="button" onclick="tableToExcel()" class="btn btn-primary"><span class="glyphicon glyphicon-export"></span>'.Yii::t('import', '导出').'</button>';
+		echo '<button type="button" onclick="tableToExcel()" class="btn btn-primary"><span class="glyphicon glyphicon-export"></span>'.Yii::t('report', '导出').'</button>';
 	}
 	echo CHtml::endForm();
 	?>

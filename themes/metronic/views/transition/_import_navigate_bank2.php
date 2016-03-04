@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <h4 class="modal-title">导入<?= Yii::t('import', strtoupper($type)) ?></h4>
+                <h4 class="modal-title">导入<?= LFSModel::typeName($type) ?></h4>
             </div>
 
             <?
