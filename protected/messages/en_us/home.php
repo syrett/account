@@ -101,7 +101,7 @@ return [
     '流动资产' => 'Current assets',
     '运营支出' => 'Operating expenses',
 
-    '库存现金' => 'Cash in stock',
+    '库存现金' => 'Cash on hand',
     '银行存款' => 'Cash in bank',
     '应收账款' => 'Account receivable',
 
