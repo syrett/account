@@ -1,10 +1,9 @@
-
 <div class="modal fade bs-modal-lg" id="large" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-lg" id="form_wizard_1">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <h4 class="modal-title">导入<?= LFSModel::typeName($type) ?></h4>
+                <h4 class="modal-title"><?= Yii::t('import', '导入') ?> <?= Yii::t('import', LFSModel::typeName($type)) ?></h4>
             </div>
 
             <?
@@ -18,7 +17,7 @@
                                 <span class="number">1</span>
                             </a>
                             <p>
-                                模板下载
+                                <?= Yii::t('import', '模板下载') ?>
                             </p>
                         </li>
                         <li class="stepwizard-step col-md-11 stepwizard-step-right">
@@ -26,7 +25,7 @@
                                 <span class="number">2</span>
                             </a>
                             <p>
-                                导入数据
+                                <?= Yii::t('import', '导入数据') ?>
                             </p>
                         </li>
                     </ul>
@@ -38,13 +37,14 @@
                         <div class="tab-pane active" id="tab_step_1">
                             <p>
                                 <a download="" href="/download/<?= LFSModel::typeName($type) ?>.xlsx">
-                                    <button class="btn btn-default btn-file" type="button">模板下载
+                                    <button class="btn btn-default btn-file"
+                                            type="button"><?= Yii::t('import', '模板下载') ?>
                                     </button>
                                 </a>
 
                                 <?
                                 if ($type == 'salary') {
-                                    echo "<button type='submit' class='btn btn-default btn-file' name='type' value='load'>提取工资数据</button>";
+                                    echo "<button type='submit' class='btn btn-default btn-file' name='type' value='load'>" . Yii::t('import', '提取工资数据') . "</button>";
                                 }
 
                                 ?>
@@ -60,25 +60,26 @@
                                 </div>
                                 <span class="input-group-btn">
                                     <span class="btn btn-default btn-file">
-                                        选择文件<input name="attachment" type="file" accept=".xls,.xlsx,.jpg">
+                                        <?= Yii::t('import', '选择文件') ?><input name="attachment" type="file"
+                                                                              accept=".xls,.xlsx,.jpg">
                                     </span>
                                 </span>
                             </div>
                             </p>
                         </div>
                     </div>
-                    <input type="hidden" id="submit_type" name="submit_type" >
+                    <input type="hidden" id="submit_type" name="submit_type">
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn default" data-dismiss="modal"><?= Yii::t('import', '取消') ?></button>
                 <a href="javascript:;" class="btn default button-previous">
-                    <i class="m-icon-swapleft"></i> 上一步 </a>
+                    <i class="m-icon-swapleft"></i> <?= Yii::t('import', '上一步') ?> </a>
                 <a href="javascript:;" class="btn blue button-next">
-                    下一步 <i class="m-icon-swapright m-icon-white"></i>
+                    <?= Yii::t('import', '下一步') ?> <i class="m-icon-swapright m-icon-white"></i>
                 </a>
                 <a href="javascript:;" class="btn blue button-submit">
-                    导入 <i class="m-icon-swapright m-icon-white"></i>
+                    <?= Yii::t('import', '导入') ?> <i class="m-icon-swapright m-icon-white"></i>
                 </a>
 
             </div>

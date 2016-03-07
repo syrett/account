@@ -74,11 +74,11 @@ class Client extends CActiveRecord
     {
         return array(
             'id' => 'ID',
-            'company' => '公司名',
-            'vat' => '税号',
-            'phone' => '联系电话',
-            'add' => '公司地址',
-            'memo' => '备注',
+            'company' => YII::t('models/model', '公司名'),
+            'vat' =>  YII::t('models/model', '税号'),
+            'phone' =>  YII::t('models/model', '联系电话'),
+            'add' =>  YII::t('models/model', '公司地址'),
+            'memo' =>  YII::t('models/model', '备注'),
         );
     }
 

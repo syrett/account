@@ -28,24 +28,24 @@ $this->pageTitle = Yii::app()->name;
             <table id="data_import" class="table table-bordered dataTable">
                 <tr>
 <!--                    <th class="input_min"   ><input type="checkbox"></th>-->
-                    <th class="input_mmin"  >姓名</th>
-                    <th class="input_mmin"  >部门</th>
-                    <th class="input_min"   >时间</th>
-                    <th class="input_min"   >摘要</th>
-                    <th class="input_mmmin" >差旅费</th>
-                    <th class="input_mmmin" >福利费<br>餐费等</th>
-                    <th class="input_mmmin" >交通费</th>
-                    <th class="input_mmmin" >通讯费</th>
-                    <th class="input_mmmin" >招待费</th>
-                    <th class="input_mmmin" >办公费</th>
-                    <th class="input_mmmin" >租金</th>
-                    <th class="input_mmmin" >水电费</th>
-                    <th class="input_mmmin" >培训费</th>
-                    <th class="input_mmmin" >服务费</th>
-                    <th class="input_mmmin" >印花税</th>
-                    <th class="input-small porder">预支款</th>
-<!--                    <th class="input_min">操作</th>-->
-                    <th style="width: 10%">提示</th>
+                    <th class="input_mmin"  ><?= Yii::t('import', '姓名') ?></th>
+                    <th class="input_mmin"  ><?= Yii::t('import', '部门') ?></th>
+                    <th class="input_min"   ><?= Yii::t('import', '时间') ?></th>
+                    <th class="input_min"   ><?= Yii::t('import', '摘要') ?></th>
+                    <th class="input_mmmin" ><?= Yii::t('import', '差旅费') ?></th>
+                    <th class="input_mmmin" ><?= Yii::t('import', '福利费') ?><br><?= Yii::t('import', '餐费等') ?></th>
+                    <th class="input_mmmin" ><?= Yii::t('import', '交通费') ?></th>
+                    <th class="input_mmmin" ><?= Yii::t('import', '通讯费') ?></th>
+                    <th class="input_mmmin" ><?= Yii::t('import', '招待费') ?></th>
+                    <th class="input_mmmin" ><?= Yii::t('import', '办公费') ?></th>
+                    <th class="input_mmmin" ><?= Yii::t('import', '租金') ?></th>
+                    <th class="input_mmmin" ><?= Yii::t('import', '水电费') ?></th>
+                    <th class="input_mmmin" ><?= Yii::t('import', '培训费') ?></th>
+                    <th class="input_mmmin" ><?= Yii::t('import', '服务费') ?></th>
+                    <th class="input_mmmin" ><?= Yii::t('import', '印花税') ?></th>
+                    <th class="input-small porder"><?= Yii::t('import', '预支款') ?></th>
+<!--                    <th class="input_min"><?= Yii::t('import', '操作') ?></th>-->
+                    <th style="width: 10%"><?= Yii::t('import', '提示') ?></th>
                 </tr>
                 <?php
 
@@ -207,11 +207,11 @@ $this->pageTitle = Yii::app()->name;
                                 <div>
 
                                     <button type="button" id="btn_confirm_<?= $key ?>" class="hidden btn btn-default"
-                                            onclick="">确认
+                                            onclick=""><?= Yii::t('import', '确认') ?>
                                     </button>
 
                                     <button type="button" id="btn_del_<?= $key ?>" class="btn btn-xs" disabled
-                                            onclick=""></i>删除
+                                            onclick=""></i><?= Yii::t('import', '删除') ?>
                                     </button>
                                 </div>
                             </td>
@@ -254,9 +254,9 @@ $this->pageTitle = Yii::app()->name;
 </div>
 <div class="panel-footer">
     <div class="text-center">
-        <button class="btn btn-warning" onclick="javascript:$('#first').click();"><span class="glyphicon glyphicon-repeat"></span> 重新导入
+        <button class="btn btn-warning" onclick="javascript:$('#first').click();"><span class="glyphicon glyphicon-repeat"></span> <?= Yii::t('import', '重新导入') ?>
         </button>
-        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证</button>
+        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> <?= Yii::t('import', '保存凭证') ?></button>
     </div>
 </div>
 <script>

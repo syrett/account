@@ -40,11 +40,11 @@ $left = $before + $unpaid - $paid;
     </div>
     <div class="well well-sm">
         <div class="banner" >
-            <div class="banner-balance col-sm-9"><?= Yii::t('import', '年初:') ?> ￥<?=$before?>
-                <div class="banner-paid col-sm-4 banner-hover"><?= Yii::t('import', '本年已付:') ?> ￥<?=$paid?></div>
-                <div class="banner-in col-sm-4 banner-hover"><?= Yii::t('import', '本年增加:') ?> ￥<?=$unpaid?></div>
+            <div class="banner-balance col-sm-9"><?= Yii::t('import', '年初') ?>: ￥<?=$before?>
+                <div class="banner-paid col-sm-4 banner-hover"><?= Yii::t('import', '本年已付') ?>: ￥<?=$paid?></div>
+                <div class="banner-in col-sm-4 banner-hover"><?= Yii::t('import', '本年增加') ?>: ￥<?=$unpaid?></div>
             </div>
-            <div class="banner-unpaid col-sm-3 banner-hover"><?= Yii::t('import', '未付:') ?> ￥<?=$left?></div>
+            <div class="banner-unpaid col-sm-3 banner-hover"><?= Yii::t('import', '未付') ?>: ￥<?=$left?></div>
         </div>
     </div>
     <div class="portlet-body">
@@ -97,7 +97,7 @@ $left = $before + $unpaid - $paid;
                             'imageUrl' => false,
                         ),
                     ),
-                    'header' => '操作',
+                    'header' => Yii::t('import', '操作'),
                     'htmlOptions' => array('style' => 'min-width: 68px;'),
                     'template' => '<div class="btn-group">{update}</div>',
                     'deleteConfirmation' => Yii::t('import', '确定要删除该条记录？'),

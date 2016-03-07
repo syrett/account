@@ -25,11 +25,11 @@ $tranDate = $this->getTransitionDate('post');
 
 <div class="dataTables_wrapper no-footer">
     <?
-    $select = '<option value="target_name" >交易对方名称</option>
-                <option value="date" >日期</option>
-                <option value="memo" >交易摘要</option>
-                <option value="amount" >金额</option>
-                <option value="none" >无效的列</option>';
+    $select = '<option value="target_name" >' . Yii::t('import', '交易对方名称'). '</option>
+                <option value="date" >' . Yii::t('import', '日期') . '</option>
+                <option value="memo" >' . Yii::t('import', '交易摘要') . '</option>
+                <option value="amount" >' . Yii::t('import', '金额') . '</option>
+                <option value="none" >' . Yii::t('import', '无效的列') . '</option>';
     echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form', 'class' => 'form-horizontal']); ?>
 
     <div class="import-tab" id="abc">
@@ -38,11 +38,11 @@ $tranDate = $this->getTransitionDate('post');
                 <tr>
                     <th class="table_checkbox"><input type="checkbox" class="group-checkable"
                                                       data-set="#import_table .checkboxes"></th>
-                    <th class="input_mid">交易方名称</th>
-                    <th class="input_mid2">日期</th>
-                    <th class="input_full">交易摘要</th>
-                    <th class="input-large">金额</th>
-                    <th style="width: 200px">操作</th>
+                    <th class="input_mid"><?= Yii::t('import', '交易对方名称') ?></th>
+                    <th class="input_mid2"><?= Yii::t('import', '日期') ?></th>
+                    <th class="input_full"><?= Yii::t('import', '交易摘要') ?></th>
+                    <th class="input-large"><?= Yii::t('import', '金额') ?></th>
+                    <th style="width: 200px"><?= Yii::t('import', '操作') ?></th>
                     <th style="width: 10%">&nbsp;</th>
                 </tr>
                 <?php
@@ -54,7 +54,7 @@ $tranDate = $this->getTransitionDate('post');
                                        name="lists[<?= $key ?>]"
                                        value="<?= isset($item['id']) ? $item['id'] : '' ?>"></td>
                             <td><input type="text" id="tran_target_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][target]" placeholder="对方名称"
+                                       name="lists[<?= $key ?>][Transition][target]" placeholder="<?= Yii::t('import', '对方名称') ?>"
                                        value="<?= isset($item['target']) ? $item['target'] : '' ?>"
                                        class="form-control input-small">
                             </td>
@@ -73,7 +73,7 @@ $tranDate = $this->getTransitionDate('post');
                                        type="text" id="tran_amount_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_amount]"
                                        value="<?= $item['entry_amount'] ?>"/>
-                                <span class="help-block help-tip">总金额：<label
+                                <span class="help-block help-tip"><?= Yii::t('import', '总金额') ?>：<label
                                         id="amount_<?= $key ?>"><?= $item['entry_amount'] ?></label>
                                 </span><br/>
                                 <span class="label-warning"></span>
@@ -129,15 +129,15 @@ $tranDate = $this->getTransitionDate('post');
                                     <a class="btn btn-xs blue dropdown-toggle" data-toggle="modal"
                                        onclick="itemsetting(this)"
                                        href="#category-box">
-                                        <button type="button" class="btn btn-xs blue">记账</button>
+                                        <button type="button" class="btn btn-xs blue"><?= Yii::t('import', '记账') ?></button>
                                     </a>
-                                    <!-- button type="button" class="btn btn-xs blue" onclick="itemsetting(this)"><i class="fa fa-file-o"></i> 记账
+                                    <!-- button type="button" class="btn btn-xs blue" onclick="itemsetting(this)"><i class="fa fa-file-o"></i> <?= Yii::t('import', '记账') ?>
                                     </button -->
                                     <button type="button" data-type="double" class="btn btn-xs"
-                                            onclick="itemsplit(this)">拆分
+                                            onclick="itemsplit(this)"><?= Yii::t('import', '拆分') ?>
                                     </button>
                                     <button type="button" data-type="delete" id="btn_del_<?= $key ?>" class="btn btn-xs"
-                                            onclick="itemclose(this)" disabled>删分
+                                            onclick="itemclose(this)" disabled><?= Yii::t('import', '删分') ?>
                                     </button>
                                 </div>
                                 <!--                                </div>-->
@@ -168,7 +168,7 @@ $tranDate = $this->getTransitionDate('post');
                 <p>
                     <button class="btn btn-default btn-sm" id="btnAdd" name="btnAdd" type="button"
                             onclick="addRow()"><span
-                            class="glyphicon glyphicon-add"></span> 插入新行
+                            class="glyphicon glyphicon-add"></span> <?= Yii::t('import', '插入新行') ?>
                     </button>
                 </p>
             </div>
@@ -179,9 +179,9 @@ $tranDate = $this->getTransitionDate('post');
 </div>
 <div class="dataTables_wrapper no-footer">
     <div class="text-center">
-        <button class="btn btn-warning" onclick="javascript:$('#first').click();"><span class="glyphicon glyphicon-repeat"></span> 重新导入
+        <button class="btn btn-warning" onclick="javascript:$('#first').click();"><span class="glyphicon glyphicon-repeat"></span> <?= Yii::t('import', '重新导入') ?>
         </button>
-        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证
+        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> <?= Yii::t('import', '保存凭证') ?>
         </button>
     </div>
 </div>
@@ -199,10 +199,10 @@ $tranDate = $this->getTransitionDate('post');
                                 <div id="setting" class="itemsetting">
                                     <div class="options ">
                                         <button class="btn " type="button" onclick="chooseType(this,1)"
-                                                value="支出">支出
+                                                value="<?= Yii::t('import', '支出') ?>"><?= Yii::t('import', '支出') ?>
                                         </button>
                                         <button class="btn " type="button" onclick="chooseType(this,2)"
-                                                value="收入">收入
+                                                value="<?= Yii::t('import', '收入') ?>"><?= Yii::t('import', '收入') ?>
                                         </button>
                                     </div>
                                 </div>
@@ -217,9 +217,9 @@ $tranDate = $this->getTransitionDate('post');
             <!-- .modal-body -->
             <div class="modal-footer">
                 <span class="left-info" id="setting-info"></span>
-                <button class="btn btn-default blue" data-dismiss="modal" type="button" onclick="itemSet()">确定</button>
+                <button class="btn btn-default blue" data-dismiss="modal" type="button" onclick="itemSet()"><?= Yii::t('import', '确定') ?></button>
                 <button class="btn btn-default default" data-dismiss="modal" type="button"
-                ">取消
+                "><?= Yii::t('import', '取消') ?>
                 </button>
             </div>
         </div>
@@ -233,7 +233,7 @@ $tranDate = $this->getTransitionDate('post');
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <h4 class="modal-title">导入<?= LFSModel::typeName($type) ?></h4>
+                <h4 class="modal-title"><?= Yii::t('import', '导入现金交易') ?></h4>
             </div>
 
             <?
@@ -247,7 +247,7 @@ $tranDate = $this->getTransitionDate('post');
                                 <span class="number">2</span>
                             </a>
                             <p>
-                                导入数据
+                                <?= Yii::t('import', '导入数据') ?>
                             </p>
                         </li>
                     </ul>
@@ -261,7 +261,7 @@ $tranDate = $this->getTransitionDate('post');
                                 </div>
                                 <span class="input-group-btn">
                                     <span class="btn btn-default btn-file">
-                                        选择文件<input onchange="readURL(this);" name="attachment" type="file" accept=".xls,.xlsx,.jpg">
+                                        <?= Yii::t('import', '选择文件') ?><input onchange="readURL(this);" name="attachment" type="file" accept=".xls,.xlsx,.jpg">
                                     </span>
                                 </span>
                             </div>
@@ -272,13 +272,13 @@ $tranDate = $this->getTransitionDate('post');
                             <div id="show_image" class="hidden">
                                 <div class="show_image_option">
                                     <div class="show_image_option_conf">
-                                        <input type="checkbox" checked name="image_row1_type"> <span>图片第一行无需导入</span>
+                                        <input type="checkbox" checked name="image_row1_type"> <span><?= Yii::t('import', '图片第一行无需导入') ?></span>
                                     </div>
                                     <div class="show_image_option_rows">
-                                        <a class="btn btn-default btn-xs" id="delCol" onclick="delCol()" title="删除列" href="#" id="yt0">
-                                            <span class="">删除列<i class="fa fa-hand-o-up"></i></span></a>
-                                        <a class="btn btn-default btn-xs" id="addCol" onclick="addCol()"  title="添加列" href="#" id="yt0">
-                                            <span class="">添加列<i class="fa fa-hand-o-down"></i></span></a>
+                                        <a class="btn btn-default btn-xs" id="delCol" onclick="delCol()" title="<?= Yii::t('import', '删除列') ?>" href="#" id="yt0">
+                                            <span class=""><?= Yii::t('import', '删除列') ?><i class="fa fa-hand-o-up"></i></span></a>
+                                        <a class="btn btn-default btn-xs" id="addCol" onclick="addCol()"  title="<?= Yii::t('import', '添加列') ?>" href="#" id="yt0">
+                                            <span class=""><?= Yii::t('import', '添加列') ?><i class="fa fa-hand-o-down"></i></span></a>
 
                                     </div>
                                 </div>
@@ -316,9 +316,9 @@ $tranDate = $this->getTransitionDate('post');
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn default" data-dismiss="modal"><?= Yii::t('import', '取消') ?></button>
                 <a href="javascript:;" class="btn blue button-submit">
-                    导入 <i class="m-icon-swapright m-icon-white"></i>
+                    <?= Yii::t('import', '导入') ?> <i class="m-icon-swapright m-icon-white"></i>
                 </a>
 
             </div>

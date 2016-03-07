@@ -28,22 +28,22 @@ $this->pageTitle = Yii::app()->name;
             <table id="data_import" class="table table-bordered dataTable">
                 <tr>
                     <th class="input_min"   ><input type="checkbox"></th>
-                    <th class="input_mmin"  >姓名</th>
-                    <th class="input_mmin"  >部门</th>
-                    <th class="input_min"   >基本工资</th>
-<!--                    <th class="input_min"   >社保基数</th>-->
-                    <th class="input_mmin"  >奖金</th>
-                    <th class="input_min"   >应付工资</th>
-                    <th class="input_mmin"  >其他(福利等)</th>
-                    <th class="input_mmin"  >社保个人部分</th>
-                    <th class="input_mmin"  >公积金个人部分</th>
-                    <th class="input_min"   >税前工资</th>
-                    <th class="input_min"   >个人所得税</th>
-                    <th class="input_mmin"  >税后工资</th>
-                    <th class="input_min"   >社保公司部分</th>
-                    <th class="input_mmin"  >公积金公司部分</th>
-<!--                    <th class="input_min">操作</th>-->
-                    <th style="width: 10%">提示</th>
+                    <th class="input_mmin"  ><?= Yii::t('import', '姓名') ?></th>
+                    <th class="input_mmin"  ><?= Yii::t('import', '部门') ?></th>
+                    <th class="input_min"   ><?= Yii::t('import', '基本工资') ?></th>
+<!--                    <th class="input_min"   ><?= Yii::t('import', '社保基数') ?></th>-->
+                    <th class="input_mmin"  ><?= Yii::t('import', '奖金') ?></th>
+                    <th class="input_min"   ><?= Yii::t('import', '应付工资') ?></th>
+                    <th class="input_mmin"  ><?= Yii::t('import', '其他(福利等)') ?></th>
+                    <th class="input_mmin"  ><?= Yii::t('import', '社保个人部分') ?></th>
+                    <th class="input_mmin"  ><?= Yii::t('import', '公积金个人部分') ?></th>
+                    <th class="input_min"   ><?= Yii::t('import', '税前工资') ?></th>
+                    <th class="input_min"   ><?= Yii::t('import', '个人所得税') ?></th>
+                    <th class="input_mmin"  ><?= Yii::t('import', '税后工资') ?></th>
+                    <th class="input_min"   ><?= Yii::t('import', '社保公司部分') ?></th>
+                    <th class="input_mmin"  ><?= Yii::t('import', '公积金公司部分') ?></th>
+<!--                    <th class="input_min"><?= Yii::t('import', '操作') ?></th>-->
+                    <th style="width: 10%"><?= Yii::t('import', '提示') ?></th>
                 </tr>
                 <?php
 
@@ -169,11 +169,11 @@ $this->pageTitle = Yii::app()->name;
                                 <div>
 
                                     <button type="button" id="btn_confirm_<?= $key ?>" class="hidden btn btn-default"
-                                            onclick="">确认
+                                            onclick=""><?= Yii::t('import', '确认') ?>
                                     </button>
 
                                     <button type="button" id="btn_del_<?= $key ?>" class="btn btn-xs" disabled
-                                            onclick=""></i>删除
+                                            onclick=""></i><?= Yii::t('import', '删除') ?>
                                     </button>
                                 </div>
                             </td>
@@ -212,9 +212,9 @@ $this->pageTitle = Yii::app()->name;
 </div>
 <div class="panel-footer">
     <div class="text-center">
-        <button class="btn btn-warning" onclick="javascript:$('#first').click();"><span class="glyphicon glyphicon-repeat"></span> 重新导入
+        <button class="btn btn-warning" onclick="javascript:$('#first').click();"><span class="glyphicon glyphicon-repeat"></span> <?= Yii::t('import', '重新导入') ?>
         </button>
-        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证</button>
+        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> <?= Yii::t('import', '保存凭证') ?></button>
     </div>
 </div>
 <script>

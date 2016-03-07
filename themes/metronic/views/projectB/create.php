@@ -16,7 +16,7 @@ $this->breadcrumbs=array(
         </div>
         <div class="actions">
             <?php
-            echo CHtml::link('<i class="fa fa-bars"></i>'.Yii::t('import', '在建工程列表'), array('admin'), array('class' => 'btn btn-circle btn-primary btn-sm'));
+            echo CHtml::link('<i class="fa fa-bars"></i> '.Yii::t('import', '在建工程列表'), array('admin'), array('class' => 'btn btn-circle btn-primary btn-sm'));
             ?>
             <a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title="" data-original-title title="<?= Yii::t('import', '全屏') ?>"></a>
         </div>

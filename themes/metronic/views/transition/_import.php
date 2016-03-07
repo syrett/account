@@ -49,13 +49,13 @@ $tranDate = $this->getTransitionDate('post');
                 <tr>
                     <th class="table_checkbox"><input type="checkbox" class="group-checkable"
                                                       data-set="#import_table .checkboxes"></th>
-                    <th class="input_mid">交易对方名称</th>
-                    <th class="input_mid">商品/服务</th>
-                    <th class="input_mid hidden" id="department_id_th">部门</th>
-                    <th class="input_mid2">日期</th>
-                    <th class="input_full">摘要</th>
-                    <th class="input_full">金额</th>
-                    <th style="width: 200px">操作</th>
+                    <th class="input_mid"><?= Yii::t('import', '交易对方名称') ?></th>
+                    <th class="input_mid"><?= Yii::t('import', '商品') ?>/<?= Yii::t('import', '服务') ?></th>
+                    <th class="input_mid hidden" id="department_id_th"><?= Yii::t('import', '部门') ?></th>
+                    <th class="input_mid2"><?= Yii::t('import', '日期') ?></th>
+                    <th class="input_full"><?= Yii::t('import', '摘要') ?></th>
+                    <th class="input_full"><?= Yii::t('import', '金额') ?></th>
+                    <th style="width: 200px"><?= Yii::t('import', '操作') ?></th>
                     <th style="width: 10%">&nbsp;</th>
                 </tr>
                 <?php
@@ -67,12 +67,12 @@ $tranDate = $this->getTransitionDate('post');
                                        name="lists[<?= $key ?>]"
                                        value="<?= isset($item['id']) ? $item['id'] : '' ?>"></td>
                             <td><input type="text" id="tran_target_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][target]" placeholder="对方名称"
+                                       name="lists[<?= $key ?>][Transition][target]" placeholder="<?= Yii::t('import', '对方名称') ?>"
                                        value="<?= isset($item['target']) ? $item['target'] : '' ?>"
                                        class="form-control input_mid2">
                             </td>
                             <td><input type="text" id="tran_name_<?= $key ?>"
-                                       name="lists[<?= $key ?>][Transition][entry_name]" placeholder="名称"
+                                       name="lists[<?= $key ?>][Transition][entry_name]" placeholder="<?= Yii::t('import', '名称') ?>"
                                        value="<?= $item['entry_name'] ?>" class="form-control input_mid">
                             </td>
                             <td class="hidden" id="department_id_td"><?
@@ -100,7 +100,7 @@ $tranDate = $this->getTransitionDate('post');
                                        type="text" id="tran_amount_<?= $key ?>"
                                        name="lists[<?= $key ?>][Transition][entry_amount]"
                                        value="<?= $item['entry_amount'] ?>"/>
-                                <span class="help-block help-tip">合计：<label
+                                <span class="help-block help-tip"><?= Yii::t('import', '合计') ?>：<label
                                         id="amount_<?= $key ?>"><?= $item['entry_amount'] ?></label>
                                 </span><br/>
                                 <span class="label-warning"></span>
@@ -150,16 +150,16 @@ $tranDate = $this->getTransitionDate('post');
                                     <a class="btn btn-xs blue dropdown-toggle" data-toggle="modal"
                                        onclick="itemsetting(this)"
                                        href="#category-box">
-                                        <button type="button" class="btn btn-xs blue">记账
+                                        <button type="button" class="btn btn-xs blue"><?= Yii::t('import', '记账') ?>
                                         </button>
                                     </a>
-                                    <!-- button type="button" class="btn btn-xs blue" onclick="itemsetting(this)"><i class="fa fa-file-o"></i> 记账
+                                    <!-- button type="button" class="btn btn-xs blue" onclick="itemsetting(this)"><i class="fa fa-file-o"></i> <?= Yii::t('import', '记账') ?>
                                     </button -->
                                     <button type="button" data-type="double" class="btn btn-xs"
-                                            onclick="itemsplit(this)">拆分
+                                            onclick="itemsplit(this)"><?= Yii::t('import', '拆分') ?>
                                     </button>
                                     <button type="button" data-type="delete" id="btn_del_<?= $key ?>" class="btn btn-xs"
-                                            onclick="itemclose(this)" disabled>删分
+                                            onclick="itemclose(this)" disabled><?= Yii::t('import', '删分') ?>
                                     </button>
                                 </div>
                                 <!--                                </div>-->
@@ -190,7 +190,7 @@ $tranDate = $this->getTransitionDate('post');
                 <p>
                     <button class="btn btn-default btn-sm" id="btnAdd" name="btnAdd" type="button"
                             onclick="addRow()"><span
-                            class="glyphicon glyphicon-add"></span> 插入新行
+                            class="glyphicon glyphicon-add"></span> <?= Yii::t('import', '插入新行') ?>
                     </button>
                 </p>
             </div>
@@ -203,9 +203,9 @@ $tranDate = $this->getTransitionDate('post');
 <div class="dataTables_wrapper no-footer">
     <div class="text-center">
         <button class="btn btn-warning" onclick="javascript:$('#first').click();"><span
-                class="glyphicon glyphicon-repeat"></span> 重新导入
+                class="glyphicon glyphicon-repeat"></span> <?= Yii::t('import', '重新导入') ?>
         </button>
-        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证
+        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> <?= Yii::t('import', '保存凭证') ?>
         </button>
     </div>
 </div>
@@ -223,10 +223,10 @@ $tranDate = $this->getTransitionDate('post');
                                 <div id="setting" class="itemsetting">
                                     <div class="options ">
                                         <button class="btn " type="button" onclick="chooseType(this,1)"
-                                                value="支出">支出
+                                                value="<?= Yii::t('import', '支出') ?>"><?= Yii::t('import', '支出') ?>
                                         </button>
                                         <button class="btn " type="button" onclick="chooseType(this,2)"
-                                                value="收入">收入
+                                                value="<?= Yii::t('import', '收入') ?>"><?= Yii::t('import', '收入') ?>
                                         </button>
                                     </div>
                                 </div>
@@ -240,9 +240,9 @@ $tranDate = $this->getTransitionDate('post');
             </div>
             <!-- .modal-body -->
             <div class="modal-footer">
-                <button class="btn btn-default blue" data-dismiss="modal" type="button" onclick="itemSet()">确定</button>
+                <button class="btn btn-default blue" data-dismiss="modal" type="button" onclick="itemSet()"><?= Yii::t('import', '确定') ?></button>
                 <button class="btn btn-default default" data-dismiss="modal" type="button"
-                ">取消
+                "><?= Yii::t('import', '取消') ?>
                 </button>
             </div>
         </div>

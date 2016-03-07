@@ -21,11 +21,11 @@ $dataProvider = new CActiveDataProvider('Stock', ['criteria' => ['condition' => 
     <div class="portlet-title">
         <div class="caption">
             <span class="font-green-sharp"><?= Yii::t('import', '在建工程') ?></span>
-            <span class="caption-helper"><?= Yii::t('import', '在建工程总计:') ?><?= $total ?></span>
+            <span class="caption-helper"><?= Yii::t('import', '总计:') ?><?= $total ?></span>
         </div>
         <div class="actions">
             <?php
-            echo CHtml::link('<i class="fa fa-plus"></i>'.Yii::t('import', '新建在建工程'), array('create'), array('class' => 'btn btn-circle btn-primary btn-sm'));
+            echo CHtml::link('<i class="fa fa-plus"></i> '.Yii::t('import', '新建在建工程'), array('create'), array('class' => 'btn btn-circle btn-primary btn-sm'));
             ?>
             <a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title=""
                data-original-title title="<?= Yii::t('import', '全屏') ?>"></a>
@@ -37,7 +37,7 @@ $dataProvider = new CActiveDataProvider('Stock', ['criteria' => ['condition' => 
                     <?php
                     $pros = ProjectB::model()->findAll();
                     $none = true;
-                    $str = '<h4><strong>'.Yii::t('import', '未开工项目 :').'</strong>';
+                    $str = '<h4><strong>'.Yii::t('import', '未开工项目').' :</strong>';
                     foreach ($pros as $pro) {
                         $sbj = Subjects::model()->findByAttributes(['sbj_name' => $pro->name], 'sbj_number like "1604%"');
                         if ($sbj) {
@@ -63,12 +63,12 @@ $dataProvider = new CActiveDataProvider('Stock', ['criteria' => ['condition' => 
                         'value' => 'addZero(ProjectB::getIdBySubject($data->entry_subject),4)'
                     ],
                     [
-                        'header' => Yii::t('import', '项目名称'),
+                        'header' => Yii::t('models/model', '项目名称'),
                         'name' => 'project',
                         'value' => 'Subjects::getName($data->entry_subject)'
                     ],
                     [
-                        'header' => Yii::t('import', '明细'),
+                        'header' => Yii::t('models/model', '明细'),
                         'name' => 'name'
                     ],
                     'in_price',

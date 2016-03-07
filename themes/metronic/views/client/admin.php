@@ -42,11 +42,11 @@ $left = $before + $unreceived - $received;
     </div>
     <div class="well well-sm">
         <div class="banner">
-            <div class="banner-balance col-sm-9"><?= Yii::t('import', '年初:') ?> ￥<?= $before ?>
-                <div class="banner-paid col-sm-4 banner-hover"><?= Yii::t('import', '本年已收:') ?> ￥<?= $received ?></div>
-                <div class="banner-in col-sm-4 banner-hover"><?= Yii::t('import', '本年增加:') ?> ￥<?= $unreceived ?></div>
+            <div class="banner-balance col-sm-9"><?= Yii::t('import', '年初') ?>: ￥<?= $before ?>
+                <div class="banner-paid col-sm-4 banner-hover"><?= Yii::t('import', '本年已收') ?>: ￥<?= $received ?></div>
+                <div class="banner-in col-sm-4 banner-hover"><?= Yii::t('import', '本年增加') ?>: ￥<?= $unreceived ?></div>
             </div>
-            <div class="banner-unpaid col-sm-3 banner-hover"><?= Yii::t('import', '未收:') ?> ￥<?= $left ?></div>
+            <div class="banner-unpaid col-sm-3 banner-hover"><?= Yii::t('import', '未收') ?>: ￥<?= $left ?></div>
         </div>
     </div>
     <div class="portlet-body">

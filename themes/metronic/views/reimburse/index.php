@@ -62,7 +62,7 @@ $('.search-form form').submit(function(){
                 ),
                 array(
                     'name' => 'entry_date',
-                    'value' => 'convertDate($data->entry_date, '.Yii::t('import', "Y年m月d日").')',
+                    'value' => 'convertDate($data->entry_date, "'.Yii::t('import', "Y年m月d日").'")',
                     'filter'=>CHtml::activeTextField($model, 'entry_date',array("class"=>"input_mid")),
                 ),
                 array(
@@ -70,12 +70,12 @@ $('.search-form form').submit(function(){
                     'value' => 'Employee::getName($data->employee_id)'
                 ),
                 array(
-                    'header' => Yii::t('import', '部门'),
+                    'header' => Yii::t('models/model', '部门'),
                     'value' => 'Employee::model()->getDepart($data->employee_id, "name")'
                 ),
                 'entry_memo',
                 array(
-                    'header' => Yii::t('import', '报销合计'),
+                    'header' => Yii::t('models/model', '报销合计'),
                     'value' => '$data->mountTotal()',
                 ),
                 array(

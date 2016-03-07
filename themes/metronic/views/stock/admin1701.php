@@ -40,15 +40,15 @@ $total = Stock::getTotal('1701','worth');
                     'in_price',
                     'value_month',
                     [
-                        'header' => Yii::t('import','折旧'),
+                        'header' => Yii::t('models/model','折旧'),
                         'value' => '$data->in_price - $data->getWorth()'
                     ],
                     [
-                        'header' => Yii::t('import','净值'),
+                        'header' => Yii::t('models/model','净值'),
                         'value' => '$data->getWorth()'
                     ],
                     [
-                        'header' => Yii::t('import','部门'),
+                        'header' => Yii::t('models/model','部门'),
                         'value' => 'Department::model()->getNameByOrderNo($data->order_no,$data->department_id)'
                     ],
                     [

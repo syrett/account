@@ -59,11 +59,11 @@ class Vendor extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'company' => '供应商',
-			'vat' => '税号',
-			'phone' => '联系电话',
-			'add' => '联系地址',
-			'memo' => '备注',
+			'company' => Yii::t('models/model', '供应商'),
+			'vat' => Yii::t('models/model', '税号'),
+			'phone' => Yii::t('models/model', '联系电话'),
+			'add' => Yii::t('models/model', '地址'),
+			'memo' => Yii::t('models/model', '备注'),
 		);
 	}
 

@@ -41,7 +41,7 @@ $balance_1405 = Subjects::get_balance('1405');
             </div>
             <div class="actions">
                 <div class="actions">
-                    <?php echo CHtml::link('<i class="glyphicon glyphicon-search"></i>'.Yii::t('import', '已导入数据'), array('/stock/balance','type'=>'1405'), array('class' => 'btn btn-circle btn-default')); ?>
+                    <?php echo CHtml::link('<i class="glyphicon glyphicon-search"></i> '.Yii::t('import', '已导入数据'), array('/stock/balance','type'=>'1405'), array('class' => 'btn btn-circle btn-default')); ?>
                 </div>
             </div>
         </div>
@@ -80,8 +80,8 @@ $balance_1405 = Subjects::get_balance('1405');
                             <th class="input_min"><input type="checkbox"></th>
                             <th class=""><?= $form->labelEx($sheetData[0][0], 'name', array('class' => 'control-label')); ?></th>
                             <th class=""><?= $form->labelEx($sheetData[0][0], 'model', array('class' => 'control-label')); ?></th>
-                            <th class=""><?= CHtml::label('数量','count',['class'=>'control-label'])?></th>
-                            <th class=""><?= CHtml::label('单价','count',['class'=>'control-label'])?></th>
+                            <th class=""><?= CHtml::label(Yii::t('import', '数量'),'count',['class'=>'control-label'])?></th>
+                            <th class=""><?= CHtml::label(Yii::t('import', '单价'),'count',['class'=>'control-label'])?></th>
                             <th class=""><?= $form->labelEx($sheetData[0][0], 'entry_subject', array('class' => 'control-label')); ?></th>
                         </tr>
                         <? foreach ($sheetData as $key => $row) {
@@ -107,13 +107,13 @@ $balance_1405 = Subjects::get_balance('1405');
 
     <div class="form-group">
         <div class="col-sm-2">
-            <span class=""><?= Yii::t('import', '库存商品期初余额:') ?><label id="balance"><?= $balance_1405 ?></label></span>
-            <span class=""><?= Yii::t('import', '当前合计:') ?><label id="total"></label></span>
+            <span class=""><?= Yii::t('import', '库存商品期初余额') ?>:<label id="balance"><?= $balance_1405 ?></label></span>
+            <span class=""><?= Yii::t('import', '合计') ?>:<label id="total"></label></span>
         </div>
     </div>
     <div class="form-group">
         <div class="col-sm-12 text-center">
-            <?php echo CHtml::submitButton('保 存', array('class' => 'btn btn btn-primary',)); ?>
+            <?php echo CHtml::submitButton(Yii::t('import', '保 存'), array('class' => 'btn btn btn-primary',)); ?>
         </div>
     </div>
 <?php $this->endWidget(); ?>

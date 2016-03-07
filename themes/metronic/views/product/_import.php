@@ -51,10 +51,10 @@ $this->pageTitle = Yii::app()->name;
             <table id="data_import" class="table table-bordered dataTable">
                 <tr>
                     <th class="input_min"><input type="checkbox"></th>
-                    <th class="input_mid"><?= Yii::t('import', '日期') ?></th>
-                    <th class="input_mid"><?= Yii::t('import', '名称') ?></th>
-                    <th class="input_mid"><?= Yii::t('import', '型号') ?></th>
-                    <th class="input_mid"><?= Yii::t('import', '盘点数量') ?></th>
+                    <th class="input_mid"><?= Yii::t('models/model', '日期') ?></th>
+                    <th class="input_mid"><?= Yii::t('models/model', '名称') ?></th>
+                    <th class="input_mid"><?= Yii::t('models/model', '型号') ?></th>
+                    <th class="input_mid"><?= Yii::t('models/model', '盘点数量') ?></th>
 <!--                    <th class="input-small">操作</th>-->
                     <th style="width: 10%"><?= Yii::t('import', '提示') ?></th>
                 </tr>

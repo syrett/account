@@ -54,9 +54,9 @@ if ($stocks)
     ?>
     <div class="portlet-title">
         <div class="caption">
-            <span class="font-green-sharp"><?= $type == '1405' ? Yii::t('import', '库存商品') : Yii::t('import', '长期资产') ?><?= Yii::t('import', '期初明细') ?></span>
-            <span class="caption-helper"><?= Yii::t('import', '总账期初余额:') ?><?= round2($balance) ?>
-                &nbsp;&nbsp;&nbsp;<?= Yii::t('import', '明细合计:') ?><?= round2($total) ?></span>
+            <span class="font-green-sharp"><?= $type == '1405' ? Yii::t('import', '库存商品') : Yii::t('import', '长期资产') ?> <?= Yii::t('import', '期初明细') ?></span>
+            <span class="caption-helper"><?= Yii::t('import', '总账期初余额') ?>:<?= round2($balance) ?>
+                &nbsp;&nbsp;&nbsp;<?= Yii::t('import', '明细合计') ?>:<?= round2($total) ?></span>
         </div>
 
         <div class="actions">
@@ -74,18 +74,18 @@ if ($stocks)
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                        <h4 class="modal-title"><?= Yii::t('import', '确认要清空期初明细？') ?></h4>
+                        <h4 class="modal-title"><?= Yii::t('import', '确认要清空期初明细') ?>？</h4>
                     </div>
                     <div class="modal-body">
                         <p>
-                            <?= Yii::t('import', '以下科目期初余额明细将清空！！！') ?>
+                            <?= Yii::t('import', '以下科目期初余额明细将清空') ?>！！！
                         </p>
                         <?
                         if ($type == '1601') {
                             $msg = Subjects::getName('1601') . ',' . Subjects::getName('1701') . ',' . Subjects::getName('1801');
                         } elseif ($type == '1405')
                             $msg = Subjects::getName('1403') . ',' . Subjects::getName('1405');
-                        echo Yii::t('import', "包含") ."$msg ";
+                        echo Yii::t('import', "包含") ." $msg ";
                         ?>
                     </div>
                     <div class="modal-footer">
@@ -113,7 +113,7 @@ if ($stocks)
                         'imageUrl' => false,
                     ),
                 ),
-                'header' => '操作',
+                'header' => Yii::t('import', "操作"),
                 'htmlOptions' => array('style' => 'min-width: 68px;'),
                 'template' => '<div class="btn-group">{update}</div>',
                 'deleteConfirmation' => Yii::t('import', '确定要删除该条记录？'),

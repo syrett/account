@@ -182,18 +182,18 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                 <h3><span class="bold"><?= Yii::t('home', '常见问题') ?></span></h3>
                             </li>
                             <li>
-                                <a href="#">
+                                <a href="http://www.ilaofashi.com/knowledgebase/手工录入凭证">
                                     <i class="icon-user"></i><?= Yii::t('home', '如何录入凭证') ?>？ </a>
                             </li>
                             <li>
-                                <a href="#">
+                                <a href="http://www.ilaofashi.com/knowledgebase/">
                                     <i class="icon-calendar"></i><?= Yii::t('home', '更多内容') ?></a>
                             </li>
                             <li class="external">
                                 <h3><span class="bold"><?= Yii::t('home', '专业培训') ?></span></h3>
                             </li>
                             <li>
-                                <a href="http://www.laofashigroup.com/contact-us/" target="_blank">
+                                <a href="http://www.laofashigroup.com/about/" target="_blank">
                                     <i class="icon-call-out"></i><?= Yii::t('home', '服务热线') ?> 400-821-0913 </a>
                             </li>
                         </ul>

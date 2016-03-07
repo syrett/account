@@ -24,16 +24,16 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/print.js', CCli
 <div class="portlet light">
     <div class="portlet-title">
         <div class="caption">
-            <span class="font-green-sharp">打印凭证</span>
+            <span class="font-green-sharp"><?= Yii::t('import', '打印凭证') ?></span>
         </div>
     </div>
     <div class="panel-body">
     <!-- search-form -->
 	<?php echo CHtml::beginForm($this->createUrl('transition/print'),'POST',array('class'=>'form-inline')); ?>
-        <div class="alert alert-info">提示：如果凭证比较多，生成的时间比较长，请耐心等待
+        <div class="alert alert-info"><?= Yii::t('import', '提示：如果凭证比较多，生成的时间比较长，请耐心等待') ?>
         </div>
 	<div class="form-group">
-        <label class="control-label" for="date">请选择报表日期：</label>
+        <label class="control-label" for="date"><?= Yii::t('import', '请选择日期') ?>：</label>
         <?php
         if(isset($_REQUEST['year']))
         {
@@ -66,7 +66,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/print.js', CCli
             'data' => $years,
         ));
         ?>
-        年
+        <?= Yii::t('import', '年') ?>
         <?php
         $this->widget('ESelect2', array(
             'name' => 'fm',
@@ -77,7 +77,8 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/print.js', CCli
             )
         ));
         ?>
-        月 至
+        <?= Yii::t('import', '月') ?>
+        <?= Yii::t('import', '至') ?>
         <?php
         $this->widget('ESelect2', array(
             'name' => 'tm',
@@ -94,18 +95,18 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/js/print.js', CCli
 		<div class="col-md-index">
 			<div class="thumbnail">
 				<img src="<?php echo Yii::app()->theme->baseUrl.'/assets/admin/layout/img/in1.jpg' ?>" alt="横向" /><br />
-				<input type="radio" name="style" value="1" checked="true" /> 横向
+				<input type="radio" name="style" value="1" checked="true" /> <?= Yii::t('import', '横向') ?>
 			</div>
 		</div>
 		<div class="col-md-index">
 			<div class="thumbnail">
 				<img src="<?php echo Yii::app()->theme->baseUrl.'/assets/admin/layout/img/in2.jpg' ?>" alt="纵向" /><br />
-				<input type="radio" name="style" value="2" /> 纵向
+				<input type="radio" name="style" value="2" /> <?= Yii::t('import', '纵向') ?>
 			</div>
 		</div>
 	</div>
-	<input type="submit" name="submit" class="btn btn-default" style="margin-left:25px;" value="打印凭证" />
-	<input type="submit" name="submit" class="btn btn-default" style="margin-left:25px;" value="下载凭证" />
+	<input type="submit" name="submit" class="btn btn-default" style="margin-left:25px;" value="<?= Yii::t('import', '打印凭证') ?>" />
+	<input type="submit" name="submit" class="btn btn-default" style="margin-left:25px;" value="<?= Yii::t('import', '下载凭证') ?>" />
 	<input type="button" style="display:none" id="preview" onclick="WebBrowser1.ExecWB(7,1)" />
 	<?php echo CHtml::endForm(); ?>
 	</div><!-- panel-body -->

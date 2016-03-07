@@ -35,6 +35,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         'itemsCssClass' => 'table table-striped table-hover',
         'columns'=>array(
             'name',
+//            'type',
             'memo',
              array(
                 'class'=>'CButtonColumn',

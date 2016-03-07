@@ -35,7 +35,7 @@ class Employee extends CActiveRecord
             array('name, position', 'length', 'max' => 100),
             array('name, position', 'filter', 'filter'=>'trim'),
             array('memo', 'length', 'max' => 200),
-            array('name', 'unique', 'message'=>'员工姓名不可重复'),
+            array('name', 'unique', 'message'=>Yii::t('import', '员工姓名不可重复')),
             array('base, base_2, departure_date, status', 'safe'),
             // The following rule is used by search().
             array('id, name, memo, department_id', 'safe', 'on' => 'search'),
@@ -60,15 +60,15 @@ class Employee extends CActiveRecord
     public function attributeLabels()
     {
         return array(
-            'id' => 'ID',
-            'name' => '员工姓名',
-            'department_id' => '部门',
-            'position' => '职位',
-            'base' => '社保基数',
-            'base_2' => '公积金基数',
-            'memo' => '备注',
-            'departure_date' => '离职日期',
-            'status' => '状态'
+            'id' => Yii::t('models/model','ID'),
+            'name' => Yii::t('models/model','员工姓名'),
+            'department_id' => Yii::t('models/model','部门'),
+            'position' => Yii::t('models/model','职位'),
+            'base' => Yii::t('models/model','社保基数'),
+            'base_2' => Yii::t('models/model','公积金基数'),
+            'memo' => Yii::t('models/model','备注'),
+            'departure_date' => Yii::t('models/model','离职日期'),
+            'status' => Yii::t('models/model','状态')
         );
     }
 
@@ -174,12 +174,12 @@ class Employee extends CActiveRecord
 
     public function getStatus(){
         switch($this->status){
-            case 0: $status = '离职';break;
-            case 1: $status = '正常';break;
-            case 2: $status = '兼职';break;   //停职
-//            case 3: $status = '兼职';break;
+            case 0: $status = Yii::t('models/model', '离职');break;
+            case 1: $status = Yii::t('models/model','在职');break;
+            case 2: $status = Yii::t('models/model','兼职');break;   //停职
+//            case 3: $status = Yii::t('models/model','兼职');break;
             default:
-                $status = '正常';
+                $status = Yii::t('models/model','在职');
         }
         return $status;
     }

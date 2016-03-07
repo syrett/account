@@ -36,7 +36,7 @@ $department_array = Employee::model()->listDepartment();
             </div>
             <div class="actions">
                 <?php
-                echo CHtml::link('<i class="fa fa-bars"></i>'.Yii::t('import', '员工列表'), array('admin'), array('class' => 'btn btn-circle btn-primary btn-sm'));
+                echo CHtml::link('<i class="fa fa-bars"></i> '.Yii::t('import', '员工列表'), array('admin'), array('class' => 'btn btn-circle btn-primary btn-sm'));
                 ?>
                 <a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen"
                    data-original-title=""
@@ -79,7 +79,7 @@ $department_array = Employee::model()->listDepartment();
                             <th class=""><?= $form->labelEx($sheetData[0], 'base_2', array('class' => 'control-label')); ?></th>
                             <th class=""><?= $form->labelEx($sheetData[0], 'position', array('class' => 'control-label')); ?></th>
                             <th class=""><?= $form->labelEx($sheetData[0], 'memo', array('class' => 'control-label')); ?></th>
-                            <th>提示</th>
+                            <th><?=Yii::t('import', '提示') ?></th>
                         </tr>
                         <? foreach ($sheetData as $key => $model) {
                             ?>

@@ -19,11 +19,11 @@ $dataProvider = new CActiveDataProvider('Stock', ['criteria' => ['condition' => 
     <div class="portlet-title">
         <div class="caption">
             <span class="font-green-sharp"><?= Yii::t('import', '长期待摊') ?></span>
-            <span class="caption-helper"><?= Yii::t('import', '长期待摊总计') ?>:<?= $total ?></span>
+            <span class="caption-helper"><?= Yii::t('import', '总计') ?>:<?= $total ?></span>
         </div>
         <div class="actions">
             <?php
-            echo CHtml::link('<i class="fa fa-plus"></i>'.Yii::t('import', '新建长期待摊'), array('create'), array('class' => 'btn btn-circle btn-primary btn-sm'));
+            echo CHtml::link('<i class="fa fa-plus"></i> '.Yii::t('import', '新建长期待摊'), array('create'), array('class' => 'btn btn-circle btn-primary btn-sm'));
             ?>
             <a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title=""
                data-original-title title="<?= Yii::t('import', '全屏') ?>"></a>
@@ -67,9 +67,9 @@ $dataProvider = new CActiveDataProvider('Stock', ['criteria' => ['condition' => 
                     array(
                         'name' => 'status',
                         'filter' => array('1' => Yii::t('import', '正常'), '2' => Yii::t('import', '完工')),
-                        'value' => '($data->getPStatus()=="1") ? ('.Yii::t('import', "正常").') : ('.Yii::t('import', "完工").')'
+                        'value' => '($data->getPStatus()=="1") ? ("'.Yii::t('import', "正常").'") : ("'.Yii::t('import', "完工").'")'
                     ),
-                    ['name' => 'in_date', 'value' => 'convertDate($data->in_date, '.Yii::t('import', "Y年m月d日").')'],
+                    ['name' => 'in_date', 'value' => 'convertDate($data->in_date, "'.Yii::t('import', "Y年m月d日").'")'],
                     array(
                         'class' => 'CButtonColumn',
                         'buttons' => array(

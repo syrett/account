@@ -31,15 +31,15 @@ $this->breadcrumbs=array(
             }
             ?>
         </div>
-		<div class="alert alert-info"><?= Yii::t('import', '注意:改变期初余额将会影响报表的准确性，所以修改期初余额时必须反结账！') ?></div>
+<!--		<div class="alert alert-info">--><?//= Yii::t('import', '注意:改变期初余额将会影响报表的准确性，所以修改期初余额时必须反结账！') ?><!--</div>-->
 		<form action="?r=subjects/balance" method="POST">
 		<table class="table table-bordered table-hover">
 		  <thead>
 		  <tr>
-		  <th class="col-md-3"><?= Yii::t('import', '科目编码') ?></th>
-		  <th class="col-md-3"><?= Yii::t('import', '科目名称') ?></th>
-		  <th class="col-md-1"><?= Yii::t('import', '科目类别') ?></th>
-		  <th class="col-md-2"><?= Yii::t('import', '期初余额') ?></th>
+		  <th class="col-md-3"><?= Yii::t('models/model', '科目编码') ?></th>
+		  <th class="col-md-3"><?= Yii::t('models/model', '科目名称') ?></th>
+		  <th class="col-md-1"><?= Yii::t('models/model', '科目类别') ?></th>
+		  <th class="col-md-2"><?= Yii::t('models/model', '期初余额') ?></th>
 		  </tr>
 		  </thead>
 		<?php
@@ -58,9 +58,9 @@ $this->breadcrumbs=array(
 			<td class="col-md-3">
 		<?php
 		 switch ($item["sbj_cat"]) {
-		 case "1":echo Yii::t('import', "资产");break;
-		 case "2":echo Yii::t('import', "负债");break;
-		 case "3":echo Yii::t('import', "权益");break;
+		 case "1":echo Yii::t('models/model', "资产");break;
+		 case "2":echo Yii::t('models/model', "负债");break;
+		 case "3":echo Yii::t('models/model', "权益");break;
 		 }
 		?>
 			</td>

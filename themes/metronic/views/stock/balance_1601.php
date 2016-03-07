@@ -51,7 +51,7 @@ if(!empty($departments))
             </div>
             <div class="actions">
                 <div class="actions">
-                    <?php echo CHtml::link('<i class="glyphicon glyphicon-search"></i>'.Yii::t('import', '已导入数据'), array('/stock/balance','type'=>'1601'), array('class' => 'btn btn-circle btn-default')); ?>
+                    <?php echo CHtml::link('<i class="glyphicon glyphicon-search"></i> '.Yii::t('import', '已导入数据'), array('/stock/balance','type'=>'1601'), array('class' => 'btn btn-circle btn-default')); ?>
                 </div>
             </div>
         </div>
@@ -90,10 +90,10 @@ if(!empty($departments))
                             <th class="input_min"><input type="checkbox"></th>
                             <th class=""><?= $form->labelEx($sheetData[0][0], 'name', array('class' => 'control-label')); ?></th>
                             <th class=""><?= $form->labelEx($sheetData[0][0], 'model', array('class' => 'control-label')); ?></th>
-                            <th class=""><?= CHtml::label(Yii::t('import', '数量'),'count',['class'=>'control-label'])?></th>
-                            <th class=""><?= CHtml::label(Yii::t('import', '单位原值'),'count',['class'=>'control-label'])?></th>
-                            <th class=""><?= CHtml::label(Yii::t('import', '净值'),'count',['class'=>'control-label'])?></th>
-                            <th class=""><?= CHtml::label(Yii::t('import', '剩余折旧月份'),'count',['class'=>'control-label'])?></th>
+                            <th class=""><?= CHtml::label(Yii::t('models/model', '数量'),'count',['class'=>'control-label'])?></th>
+                            <th class=""><?= CHtml::label(Yii::t('models/model', '单位原值'),'count',['class'=>'control-label'])?></th>
+                            <th class=""><?= CHtml::label(Yii::t('models/model', '净值'),'count',['class'=>'control-label'])?></th>
+                            <th class=""><?= CHtml::label(Yii::t('models/model', '剩余折旧月份'),'count',['class'=>'control-label'])?></th>
                             <th class=""><?= $form->labelEx($sheetData[0][0], 'value_rate', array('class' => 'control-label')); ?></th>
                             <th class=""><?= $form->labelEx($sheetData[0][0], 'entry_subject', array('class' => 'control-label')); ?></th>
                             <th class=""><?= $form->labelEx($sheetData[0][0], 'department_id', array('class' => 'control-label')); ?></th>
@@ -125,7 +125,7 @@ if(!empty($departments))
 
     <div class="form-group">
         <div class="col-sm-2">
-            <span class=""><?= Yii::t('import', '合计:') ?><label id="total"></label></span>
+            <span class=""><?= Yii::t('import', '合计') ?>:<label id="total"></label></span>
         </div>
     </div>
     <div class="form-group">

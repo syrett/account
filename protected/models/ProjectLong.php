@@ -58,11 +58,11 @@ class ProjectLong extends LFSModel
     public function attributeLabels()
     {
         return array(
-            'id' => 'ID',
-            'name' => '项目名称',
-            'memo' => '项目描述',
-            'status' => '状态',
-            'create_at' => '创建时间',
+            'id' => Yii::t('models/model','编号'),
+            'name' => Yii::t('models/model','项目名称'),
+            'memo' => Yii::t('models/model','项目描述'),
+            'status' => Yii::t('models/model','状态'),
+            'create_at' => Yii::t('models/model','创建时间'),
         );
     }
 

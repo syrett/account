@@ -1,11 +1,11 @@
 
 <?
-$select = '<option value="target_name" >交易对方名称</option>
-                <option value="name" >商品/服务</option>
-                <option value="date" >日期</option>
-                <option value="memo" >交易摘要</option>
-                <option value="amount" >金额</option>
-                <option value="none" >无效的列</option>';
+$select = '<option value="target_name" >' . Yii::t('import', '交易对方名称') . '</option>
+                <option value="name" >' . Yii::t('import', '商品/服务') . '</option>
+                <option value="date" >' . Yii::t('import', '日期') . '</option>
+                <option value="memo" >' . Yii::t('import', '交易摘要') . '</option>
+                <option value="amount" >' . Yii::t('import', '金额') . '</option>
+                <option value="none" >' . Yii::t('import', '无效的列') . '</option>';
 ?>
 
 <div class="modal fade bs-modal-lg" id="large" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
@@ -13,7 +13,7 @@ $select = '<option value="target_name" >交易对方名称</option>
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <h4 class="modal-title">导入交易</h4>
+                <h4 class="modal-title"><?= Yii::t('import', '导入交易') ?></h4>
             </div>
 
             <?
@@ -28,7 +28,7 @@ $select = '<option value="target_name" >交易对方名称</option>
                             </a>
 
                             <p>
-                                选择银行
+                                <?= Yii::t('import', '选择银行') ?>
                             </p>
                         </li>
                         <li class="stepwizard-step col-md-11 stepwizard-step-right">
@@ -37,7 +37,7 @@ $select = '<option value="target_name" >交易对方名称</option>
                             </a>
 
                             <p>
-                                导入数据
+                                <?= Yii::t('import', '导入数据') ?>
                             </p>
                         </li>
                     </ul>
@@ -80,7 +80,7 @@ $select = '<option value="target_name" >交易对方名称</option>
                                 </div>
                                 <span class="input-group-btn">
                                     <span class="btn btn-default btn-file">
-                                        选择文件<input onchange="readURL(this);" name="attachment" type="file"
+                                        <?= Yii::t('import', '选择文件') ?><input onchange="readURL(this);" name="attachment" type="file"
                                                    accept=".xls,.xlsx,.jpg">
                                     </span>
                                 </span>
@@ -92,13 +92,13 @@ $select = '<option value="target_name" >交易对方名称</option>
                             <div id="show_image" class="hidden">
                                 <div class="show_image_option">
                                     <div class="show_image_option_conf">
-                                        <input type="checkbox" checked name="image_row1_type"> <span>图片第一行无需导入</span>
+                                        <input type="checkbox" checked name="image_row1_type"> <span><?= Yii::t('import', '图片第一行无需导入') ?></span>
                                     </div>
                                     <div class="show_image_option_rows">
-                                        <a class="btn btn-default btn-xs" id="delCol" onclick="delCol()" title="删除列" href="#" id="yt0">
-                                            <span class="">删除列<i class="fa fa-hand-o-up"></i></span></a>
-                                        <a class="btn btn-default btn-xs" id="addCol" onclick="addCol()"  title="添加列" href="#" id="yt0">
-                                            <span class="">添加列<i class="fa fa-hand-o-down"></i></span></a>
+                                        <a class="btn btn-default btn-xs" id="delCol" onclick="delCol()" title="<?= Yii::t('import', '删除列') ?>" href="#" id="yt0">
+                                            <span class=""><?= Yii::t('import', '删除列') ?><i class="fa fa-hand-o-up"></i></span></a>
+                                        <a class="btn btn-default btn-xs" id="addCol" onclick="addCol()"  title="<?= Yii::t('import', '添加列') ?>" href="#" id="yt0">
+                                            <span class=""><?= Yii::t('import', '添加列') ?><i class="fa fa-hand-o-down"></i></span></a>
 
                                     </div>
                                 </div>
@@ -136,14 +136,14 @@ $select = '<option value="target_name" >交易对方名称</option>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn default" data-dismiss="modal"><?= Yii::t('import', '取消') ?></button>
                 <a href="javascript:;" class="btn default button-previous">
-                    <i class="m-icon-swapleft"></i> 上一步 </a>
+                    <i class="m-icon-swapleft"></i> <?= Yii::t('import', '上一步') ?> </a>
                 <a href="javascript:;" class="btn blue button-next">
-                    下一步 <i class="m-icon-swapright m-icon-white"></i>
+                    <?= Yii::t('import', '下一步') ?> <i class="m-icon-swapright m-icon-white"></i>
                 </a>
                 <a href="javascript:;" class="btn blue button-submit">
-                    导入 <i class="m-icon-swapright m-icon-white"></i>
+                    <?= Yii::t('import', '导入') ?> <i class="m-icon-swapright m-icon-white"></i>
                 </a>
 
             </div>

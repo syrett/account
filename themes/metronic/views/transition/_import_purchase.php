@@ -28,20 +28,20 @@ $this->pageTitle = Yii::app()->name;
             <table id="data_import" class="table table-bordered dataTable min">
                 <tr>
                     <th class="input_min"><input type="checkbox"></th>
-                    <th class="input_min">交易日期</th>
-                    <th class="input_min">交易摘要</th>
-                    <th class="input_mid">供应商名称</th>
-                    <th class="input_mid">商品/服务名称</th>
-                    <th class="input_mmmin">型号</th>
-                    <th class="input_mmin">单价</th>
-                    <th class="input_mmmin">数量</th>
-                    <th class="input_min">合计</th>
-                    <th class="input-small">税率</th>
-                    <th class="input-small">采购用途</th>
-                    <th class="input_mid hidden" id="department_id_th" >部门</th>
-                    <th class="input-small porder">预付款</th>
-                    <th class="input-small">操作</th>
-                    <th style="width: 10%">提示</th>
+                    <th class="input_min"><?= Yii::t('import', '交易日期') ?></th>
+                    <th class="input_min"><?= Yii::t('import', '交易摘要') ?></th>
+                    <th class="input_mid"><?= Yii::t('import', '供应商名称') ?></th>
+                    <th class="input_mid"><?= Yii::t('import', '商品') ?>/<?= Yii::t('import', '服务名称') ?></th>
+                    <th class="input_mmmin"><?= Yii::t('import', '型号') ?></th>
+                    <th class="input_mmin"><?= Yii::t('import', '单价') ?></th>
+                    <th class="input_mmmin"><?= Yii::t('import', '数量') ?></th>
+                    <th class="input_min"><?= Yii::t('import', '合计') ?></th>
+                    <th class="input-small"><?= Yii::t('import', '税率') ?></th>
+                    <th class="input-small"><?= Yii::t('import', '采购用途') ?></th>
+                    <th class="input_mid hidden" id="department_id_th" ><?= Yii::t('import', '部门') ?></th>
+                    <th class="input-small porder"><?= Yii::t('import', '预付款') ?></th>
+                    <th class="input-small"><?= Yii::t('import', '操作') ?></th>
+                    <th style="width: 10%"><?= Yii::t('import', '提示') ?></th>
                 </tr>
                 <?php
                 if (!empty($sheetData)) {
@@ -63,7 +63,7 @@ $this->pageTitle = Yii::app()->name;
                                        name="lists[<?= $key ?>][Transition][entry_date]"
                                        value="<?= $item['entry_date'] ?>">
                             </td>
-                            <td><input class="input_min" type="text" id="tran_memo_<?= $key ?>" placeholder="摘要"
+                            <td><input class="input_min" type="text" id="tran_memo_<?= $key ?>" placeholder="<?= Yii::t('import', '摘要') ?>"
                                        name="lists[<?= $key ?>][Transition][entry_memo]"
                                        value="<?= $item['entry_memo'] ?>">
                             </td>
@@ -92,15 +92,15 @@ $this->pageTitle = Yii::app()->name;
                                 ));
                                 ?>
                             </td>
-                            <td><input class="input_mmin" type="text" id="tran_model_<?= $key ?>" placeholder="型号"
+                            <td><input class="input_mmin" type="text" id="tran_model_<?= $key ?>" placeholder="<?= Yii::t('import', '型号') ?>"
                                        name="lists[<?= $key ?>][Transition][model]" value="<?= $item['model'] ?>">
                             </td>
-                            <td><input class="input_mmin" type="text" id="tran_price_<?= $key ?>" placeholder="单价"
+                            <td><input class="input_mmin" type="text" id="tran_price_<?= $key ?>" placeholder="<?= Yii::t('import', '单价') ?>"
                                        name="lists[<?= $key ?>][Transition][price]" onkeyup="checkinput1(this)"
                                        onblur="checkinput1(this)" value="<?= $item['price'] ?>">
                             </td>
                             <td><input class="input_mmmin" type="number" min="1" id="tran_count_<?= $key ?>"
-                                       placeholder="数量"
+                                       placeholder="<?= Yii::t('import', '数量') ?>"
                                        name="lists[<?= $key ?>][Transition][count]" onkeyup="checkinput2(this)"
                                        onblur="checkinput1(this)" value="<?= $item['count'] ?>">
                             </td>
@@ -190,11 +190,11 @@ $this->pageTitle = Yii::app()->name;
                                 <div>
 
                                     <button type="button" id="btn_confirm_<?= $key ?>" class="hidden btn btn-default"
-                                            onclick="itemSetDefault(this, '<?= $type ?>')">确认
+                                            onclick="itemSetDefault(this, '<?= $type ?>')"><?= Yii::t('import', '确认') ?>
                                     </button>
 
                                     <button type="button" id="btn_del_<?= $key ?>" class="btn btn-xs" disabled
-                                            onclick="itemclose(this)"><i class="fa fa-times"></i>删除
+                                            onclick="itemclose(this)"><i class="fa fa-times"></i><?= Yii::t('import', '删除') ?>
                                     </button>
                                 </div>
                             </td>
@@ -227,7 +227,7 @@ $this->pageTitle = Yii::app()->name;
                 <p>
                     <button class="btn btn-default btn-sm" id="btnAdd" name="btnAdd" type="button"
                             onclick="addPurchase()"><span
-                            class="glyphicon glyphicon-add"></span> 插入新行
+                            class="glyphicon glyphicon-add"></span> <?= Yii::t('import', '插入新行') ?>
                     </button>
                 </p>
             </div>
@@ -238,8 +238,8 @@ $this->pageTitle = Yii::app()->name;
 </div>
 <div class="panel-footer">
     <div class="text-center">
-        <button class="btn btn-warning" onclick="javascript:$('#first').click();"><span class="glyphicon glyphicon-repeat"></span> 重新导入
+        <button class="btn btn-warning" onclick="javascript:$('#first').click();"><span class="glyphicon glyphicon-repeat"></span> <?= Yii::t('import', '重新导入') ?>
         </button>
-        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证</button>
+        <button class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk"></span> <?= Yii::t('import', '保存凭证') ?></button>
     </div>
 </div>

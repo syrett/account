@@ -34,7 +34,6 @@ class User2 extends CActiveRecord
 			array('username, password, email', 'required'),
 			array('username, password, email', 'length', 'max'=>128),
 			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
 			array('id, username, password, email', 'safe', 'on'=>'search'),
 		);
 	}
@@ -57,10 +56,10 @@ class User2 extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => '编号',
-			'username' => '用户名',
-			'password' => 'Password',
-			'email' => '邮箱',
+			'id' => Yii::t('models/model','编号'),
+			'username' => Yii::t('models/model','用户名'),
+			'password' => Yii::t('models/model','密码'),
+			'email' => Yii::t('models/model','邮箱'),
 		);
 	}
 

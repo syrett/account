@@ -55,9 +55,9 @@ class Department extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'name' => '部门名称',
-			'type' => '部门属性',
-			'memo' => '部门描述',
+			'name' => Yii::t('models/model','部门名称'),
+			'type' => Yii::t('models/model','部门属性'),
+			'memo' => Yii::t('models/model','部门描述'),
 		);
 	}
 

@@ -9,7 +9,7 @@ $form = $this->beginWidget('CActiveForm', array(
     'enableAjaxValidation' => false,
     'htmlOptions' => array('class' => 'form-horizontal',),
 ));
-$statusArray = [Yii::t('import', '离职'), Yii::t('import', '正常'), Yii::t('import', '兼职')];
+$statusArray = [Yii::t('models/model', '离职'), Yii::t('models/model', '在职'), Yii::t('models/model', '兼职')];
 ?>
 <div class="form-group">
     <?php echo $form->labelEx($model, 'name', array('class' => 'col-sm-2 control-label')); ?>
