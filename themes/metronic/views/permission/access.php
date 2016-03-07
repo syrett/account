@@ -64,7 +64,7 @@ $checkStatus = AuthRelation::model()->findByAttributes(['user_id'=>$user_id])==n
 
                 ?>
                 <div class="form-group">
-                    <label class="col-md-2 control-label"><?= $cat ?>:
+                    <label class="col-md-2 control-label"><?= Yii::t('models/permission', $cat) ?>:
                     </label>
 
                     <div class="col-md-10">
@@ -80,7 +80,7 @@ $checkStatus = AuthRelation::model()->findByAttributes(['user_id'=>$user_id])==n
                                             <li>
                                                 <label>
                                                     <?php echo $form->checkBox($item, $item->id, array('checked' => AuthRelation::checkRelation($user_id, $item['id'])?true:$checkStatus)); ?>
-                                                    <?= $item->name ?></label>
+                                                    <?= Yii::t('models/permission', $item->name) ?></label>
                                             </li>
                                             <?
                                         }

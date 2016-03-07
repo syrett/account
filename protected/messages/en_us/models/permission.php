@@ -1,0 +1,62 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: jason
+ * Date: 2016/3/4
+ * Time: 15:37
+ */
+
+return [
+    '删除' => 'Delete',
+    '修改' => 'Edit',
+    '客户管理' => 'Client Management',
+    '部门管理' => 'Department Management',
+    '员工管理' => 'Employee Management',
+    '账套信息' => 'Account Information',
+    '修改权限' => 'Edit Permission',
+    '成本结转' => 'COGS',
+    '在建工程' => 'Construction in Progress',
+    '长期待摊管理' => 'Deferred Expense Management',
+    '资产负债表' => 'Balance sheet',
+    '损益表' => 'Income statement',
+    '损 益 表' => 'Income statement',
+    '科目余额表' => 'Trial Balance',
+    '明细表' => 'Subsidiary Ledger',
+    '现金流量表' => 'Cashflow Statement',
+    '部门表' => 'Statement of Departments',
+    '客户表' => 'Statement of Clients',
+    '供应商表' => 'Statement of Suppliers',
+    '现 金 流 量 表' => 'Cashflow Statement',
+    '员工工资' => 'Employee Salary',
+    '库存商品' => 'Inventory',
+    '固定资产' => 'Fixed Assets',
+    '无形资产' => 'Intangible Assets',
+    '期初明细' => 'Detail Opening Balance',
+    '科目表管理' => 'Subjects Management',
+    '总账期初余额' => 'Opening Balance',
+    '银行导入' => 'Import Bank Transaction',
+    '现金导入' => 'Import Cash Transaction',
+    '往来调整' => 'Adjustments',
+    '反结账' => 'Anti-closing',
+    '结账' => 'Closing Accounts',
+    '过账' => 'Posting Entry',
+    '整理凭证' => 'Clean Deleted Invoice',
+    '期末结转' => 'Closing Entry',
+    '打印凭证' => 'Print Invoice',
+    '导入' => 'Import',
+    '员工报销' => 'Employee Reimbursement',
+    '审核凭证' => 'Approve Voucher',
+    '取消审核' => 'Unapprove Voucher',
+    '供应商管理' => 'Vendor Management',
+
+    '总账模块' => 'General Ledger Module',
+    '银行模块' => 'Bank Module',
+    '现金模块' => 'Cash Module',
+    '报表模块' => 'Report Module',
+    '采购模块' => 'Purchasing Module',
+    '销售模块' => 'Distribution Module',
+    '凭证管理' => 'Certificate Management',
+    '长期资产' => 'Long-term Assets',
+    '员工模块' => 'Staff Module',
+    '权限设置' => 'Permission Settings',
+];
