@@ -110,3 +110,9 @@ if ($bank_money == 'cash')
 <input id="subject" type="hidden" value="">
 <input id="item_id" type="hidden" value="">
 <input id="action" type="hidden" value="<?=$type?>">
+
+<script>
+    //提示信息
+    var alertMsg1 = "<?= Yii::t('import', '在导入银行或现金前，请先完成其他模块'); ?>";
+    var alertMsg2 = "<?= Yii::t('import', '文件大小不超过500KB');?>";
+</script>

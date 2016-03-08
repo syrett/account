@@ -52,17 +52,17 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
     </div>
     <? } ?>
     <div class="transition_title">
-        <h2>记 账 凭 证</h2>
+        <h2><?= Yii::t('import', '记 账 凭 证');?></h2>
     </div>
     <div class="col-md-4">
-        凭证号：<span class="dotted" id="tranNumber_lable"><?php echo $transition_number; ?></span> 字
+        <?= Yii::t('import', '凭证号');?>：<span class="dotted" id="tranNumber_lable"><?php echo $transition_number; ?></span> <?= Yii::t('import', '字');?>
         <input type="hidden" name="transition_id" id="tranNumber" class="form-control" value="<?php
         echo $transition_number;
         ?>" readonly/>
     </div>
     <div class="col-md-4" id="transition_date">
         <div class="form-group">
-            <label class="control-label col-md-4">制单日期：</label>
+            <label class="control-label col-md-4"><?= Yii::t('import', '制单日期');?>：</label>
 
             <div class="col-md-3">
                 <div class="input-group input-small">
@@ -86,7 +86,7 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
     <?php
     //        if(isset($_REQUEST['id'])&&accessReview($_REQUEST['id'])&&accessSettle($_REQUEST['id'])) {
     if ($model[0]->entry_reviewed == 1)
-        echo '<div class="approved">已审核</div>';
+        echo '<div class="approved">'.Yii::t('import', '已审核').'</div>';
     //        }
     ?>
 
@@ -95,11 +95,11 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
 <table class="table table-bordered transition" id="transitionRows">
     <thead>
     <tr>
-        <th class="col-md-3">摘要</th>
-        <th class="col-md-3">科目名称</th>
-        <th class="col-md-1">借/贷</th>
-        <th class="col-md-2">金额</th>
-        <th class="col-md-3">附加</th>
+        <th class="col-md-3"><?= Yii::t('import', '摘要');?></th>
+        <th class="col-md-3"><?= Yii::t('import', '科目名称');?></th>
+        <th class="col-md-1"><?= Yii::t('import', '借/贷');?></th>
+        <th class="col-md-2"><?= Yii::t('import', '金额');?></th>
+        <th class="col-md-3"><?= Yii::t('import','附加');?></th>
     </tr>
     </thead>
     <?php
@@ -127,7 +127,7 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
                 <input type="hidden" value="<?= $i ?>"/>
             </td>
             <td class="col-md-1">
-                <?php echo CHtml::activeDropDownList($item, "[$i]entry_transaction", array(1 => '借', 2 => '贷'), array('class' => 'form-control')); ?>
+                <?php echo CHtml::activeDropDownList($item, "[$i]entry_transaction", array(1 => Yii::t('import', '借'), 2 => Yii::t('import', '贷')), array('class' => 'form-control')); ?>
             </td>
             <td class="col-md-2">
                 <?php echo CHtml::activeTextField($item, "[$i]entry_amount", array('class' => 'form-control', 'onkeyup' => 'checkInputAmount(this)',)); ?>
@@ -152,37 +152,37 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
     } ?>
 </table>
 <div class="transition_role">
-    <div class="col-md-3">记账：
+    <div class="col-md-3"><?= Yii::t('import', '记账');?>：
 
     </div>
-    <div class="col-md-3">审核：
+    <div class="col-md-3"><?= Yii::t('import', '审核');?>：
         <?php
 
         if ($model[0]->entry_reviewed == 1) {
             $user = User::model()->with('profile')->findByPk(array('id' => $model[0]->entry_reviewer));
-            echo $user?$user->profile->name:'已删除用户';
+            echo $user?$user->profile->name: Yii::t('import', '已删除用户');
         }
         ?>
     </div>
-    <div class="col-md-3">出纳：
+    <div class="col-md-3"><?= Yii::t('import', '出纳');?>：
 
     </div>
-    <div class="col-md-3">制单：
+    <div class="col-md-3"><?= Yii::t('import', '制单');?>：
         <?php
         $user = User::model()->with('profile')->findByPk($model[0]->entry_creater);
-        echo $user?$user->profile->name:'已删除用户';
+        echo $user?$user->profile->name: Yii::t('import', '已删除用户');
         ?>
     </div>
 </div>
 <div class="transition_action">
-    借贷方合计:<span id="sum" class="sum">0</span>
+    <?= Yii::t('import', '借贷方合计');?>:<span id="sum" class="sum">0</span>
 
     <p>
         <?php
         if ($model[0]->entry_reviewed == 0 && $model[0]->entry_settlement == 0) {
             ?>
             <button class="btn btn-default btn-sm" id="btnAdd" name="btnAdd" type="button" onclick="addRow()"><span
-                    class="glyphicon glyphicon-add"></span> 插入新行
+                    class="glyphicon glyphicon-add"></span> <?= Yii::t('import', '插入新行');?>
             </button>
         <?php
 
@@ -245,7 +245,7 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
             echo '</div>';
         }
         if ($model[0]->entry_reviewed == 0 && $model[0]->entry_settlement == 0 && $model[0]->data_type == '') {//手动录入的凭证才可以修改
-            echo CHtml::tag('button', array('encode' => false, 'class' => 'btn btn-circle btn-primary',), '<span class="glyphicon glyphicon-floppy-disk"></span> 保存凭证');
+            echo CHtml::tag('button', array('encode' => false, 'class' => 'btn btn-circle btn-primary',), '<span class="glyphicon glyphicon-floppy-disk"></span>'.Yii::t('import', '保存凭证'));
         } else
             echo '';
 //            echo '此凭证不可修改';

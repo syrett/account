@@ -266,7 +266,7 @@ $tranDate = $this->getTransitionDate('post');
                                 </span>
                             </div>
                             <div class="alert alert-block alert-info fade in alert-link">
-                                <p>可支持jpg格式的图片，文件大小不超过500KB；也可通过<a download href="/download/现金交易_模板.xlsx" >excel模板</a>导入。</p>
+                                <p><?= Yii::t('import', '支持jpg格式的图片，文件大小不超过500KB；也可通过');?><a download href="/download/<?= Yii::t('import', '银行交易_模板');?>.xlsx" ><?= Yii::t('import', 'excel模板');?></a><?= Yii::t('import', '导入。');?></p>
                             </div>
                             </p>
                             <div id="show_image" class="hidden">

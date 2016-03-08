@@ -86,8 +86,7 @@ $select = '<option value="target_name" >' . Yii::t('import', '交易对方名称
                                 </span>
                             </div>
                             <div class="alert alert-block alert-info fade in alert-link">
-                                <p>支持jpg格式的图片，文件大小不超过500KB；也可通过<a download href="/download/银行交易.xlsx" >excel模板</a>导入。</p>
-                            </div>
+                                <p><?= Yii::t('import', '支持jpg格式的图片，文件大小不超过500KB；也可通过');?><a download href="/download/<?= Yii::t('import', '银行交易_模板');?>.xlsx" ><?= Yii::t('import', 'excel模板');?></a><?= Yii::t('import', '导入。');?></p>                            </div>
                             </p>
                             <div id="show_image" class="hidden">
                                 <div class="show_image_option">

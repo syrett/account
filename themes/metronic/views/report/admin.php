@@ -25,51 +25,51 @@ var chart = AmCharts.makeChart("chartdiv-report", {
   },
 
   "dataProvider": [{
-    "month": "一月",
+    "month": "'.Yii::t('report', '一月').'",
     "income": 23.5,
     "expenses": 21.1
   }, {
-    "month": "二月",
+    "month": "'.Yii::t('report', '二月').'",
     "income": 26.2,
     "expenses": 30.5
   }, {
-    "month": "三月",
+    "month": "'.Yii::t('report', '三月').'",
     "income": 30.1,
     "expenses": 28.9
   }, {
-    "month": "四月",
+    "month": "'.Yii::t('report', '四月').'",
     "income": 29.5,
     "expenses": 28.1
   }, {
-    "month": "五月",
+    "month": "'.Yii::t('report', '五月').'",
     "income": 30.6,
     "expenses": 28.2,
   }, {
-    "month": "六月",
+    "month": "'.Yii::t('report', '六月').'",
     "income": 30.6,
     "expenses": 28.2,
   }, {
-    "month": "七月",
+    "month": "'.Yii::t('report', '七月').'",
     "income": 30.6,
     "expenses": 28.2,
   }, {
-    "month": "八月",
+    "month": "'.Yii::t('report', '八月').'",
     "income": 30.6,
     "expenses": 28.2,
   }, {
-    "month": "九月",
+    "month": "'.Yii::t('report', '九月').'",
     "income": 30.6,
     "expenses": 28.2,
   }, {
-    "month": "十月",
+    "month": "'.Yii::t('report', '十月').'",
     "income": 30.6,
     "expenses": 28.2,
   }, {
-    "month": "十一月",
+    "month": "'.Yii::t('report', '十一月').'",
     "income": 30.6,
     "expenses": 28.2,
   }, {
-    "month": "十二月",
+    "month": "'.Yii::t('report', '十二月').'",
     "income": 34.1,
     "expenses": 30.9,
     "dashLengthColumn": 5,
@@ -85,7 +85,7 @@ var chart = AmCharts.makeChart("chartdiv-report", {
     "alphaField": "alpha",
     "balloonText": "<span style='."font-size:12px;".'>[[category]][[title]]:<br><span style='."font-size:20px;".'>[[value]]</span> [[additional]]</span>",
     "fillAlphas": 1,
-    "title": "收入",
+    "title": "'.Yii::t('report', ' 收入').'",
     "type": "column",
     "valueField": "income",
     "dashLengthField": "dashLengthColumn"
@@ -101,7 +101,7 @@ var chart = AmCharts.makeChart("chartdiv-report", {
     "bulletBorderThickness": 3,
     "fillAlphas": 0,
     "lineAlpha": 1,
-    "title": "支出",
+    "title": "'.Yii::t('report', ' 支出').'",
     "valueField": "expenses"
   }],
   "categoryField": "month",
@@ -130,7 +130,7 @@ $cs->registerScript('ChartsFlotchartsInitPie',$expense_income_data, CClientScrip
 				<span class="caption-helper"><?= Yii::t('report', '单位：百万元') ?></span>
 			</div>
 			<div class="tools">
-				<a href="javascript:;" class="collapse" data-original-title="" title="">
+				<a href="javascript:;" class="collapse" data-original-title="" title="<?= Yii::t('report', '折叠'); ?>">
 				</a>
 			</div>
 		</div>
@@ -144,8 +144,8 @@ $cs->registerScript('ChartsFlotchartsInitPie',$expense_income_data, CClientScrip
 				<i class="fa fa-gift"></i><?= Yii::t('report', '全部报表') ?>
 			</div>
 			<div class="tools">
-				<a href="javascript:;" class="collapse" data-original-title="" title="折叠"></a>
-				<a href="javascript:;" class="fullscreen" data-original-title="" title="全屏"></a>
+				<a href="javascript:;" class="collapse" data-original-title="" title="<?= Yii::t('report', '折叠');?>"></a>
+				<a href="javascript:;" class="fullscreen" data-original-title="" title="<?= Yii::t('report', '全屏');?>"></a>
 			</div>
 		</div>
 		<div class="portlet-body">

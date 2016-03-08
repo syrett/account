@@ -232,6 +232,50 @@ return [
     '权限设置' => 'Permission Setting',
     '配置权限' => 'config permission',
     '全选' => 'Select All',
+
+    '对方名称' => 'reciprocal account name',
+    '在导入银行或现金前，请先完成其他模块' => 'Before the import bank or cash, Please complete the other modules',
+    '文件大小不超过500KB' => 'File size is less than 500 KB',
+
+    '支持jpg格式的图片，文件大小不超过500KB；也可通过' => 'Supports JPG format images, File size is less than 500 KB; Can also be through ',
+    '银行交易_模板' => 'bank_transcation_templates',
+    'excel模板' => ' excel templates ',
+    '导入。' => 'import',
+
+    '支出' => 'expense',
+    '收入' => 'earning',
+    '确定' => 'confirm',
+
+    '金额不能为空或为0' => 'The amount can\'t be empty or 0',
+    '金额格式不正确' => 'The amount of format is not correct',
+    '交易说明不能为空' => 'Transactions cannot be empty',
+    '日期不能为空' => 'The date can not be empty',
+    '该日期已经结账，或早于账套起始日期' => 'The date has been the invoicing, or earlier than start date',
+    '该数据生成凭证已经审核，无法修改' => 'The data generated credentials has been checked, cannot be modified',
+    '盘点数量不能大于等于' => 'Inventory quantity cannot be greater than or equal to ',
+    '保存失败!' => 'save failure !',
+    '保存成功!' => 'save successful !',
+
+
+    '录入凭证' => 'Entry voucher ',
+    '记 账 凭 证' => 'Account voucher',
+    '凭证号' => 'voucher num',
+    '字' => 'No.',
+    '制单日期' => 'Systemsingle date',
+    '已审核' => 'checked',
+    '科目名称' => 'subject name',
+    '借/贷' => 'debit/credit',
+    '附加' => 'addition',
+    '借' => 'debit',
+    '贷' => 'credit',
+    '审核' => 'audit',
+    '出纳' => 'cashier',
+    '制单' => 'Single',
+    '借贷方合计' => 'Total debits',
+    '已删除用户' => 'Deleted user',
+
+
+
 //    '返回前页' => 'Back',
 //    '返回前页' => 'Back',
 //    '返回前页' => 'Back',

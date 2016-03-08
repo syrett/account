@@ -210,7 +210,7 @@ class TransitionController extends Controller
                     foreach ($arr as $item) {
                         $data = Transition::getSheetData($item['data'], 'purchase');
                         if ($item['status'] == 0) {
-                            Yii::app()->user->setFlash('error', "保存失败!");
+                            Yii::app()->user->setFlash('error', Yii::t('import', "保存失败!"));
                             $sheetData[] = $data;
                         }
                         if ($item['status'] == 2) {
@@ -219,7 +219,7 @@ class TransitionController extends Controller
                         }
                     }
                 else {
-                    Yii::app()->user->setFlash('success', "保存成功!");
+                    Yii::app()->user->setFlash('success', Yii::t('import', "保存成功!"));
                     //跳转到历史数据管理页面
                     $this->redirect(Yii::app()->createUrl('purchase'));
                 }
@@ -262,7 +262,7 @@ class TransitionController extends Controller
                     foreach ($arr as $item) {
                         $data = Transition::getSheetData($item['data'], 'product');
                         if ($item['status'] == 0) {
-                            Yii::app()->user->setFlash('error', "保存失败!");
+                            Yii::app()->user->setFlash('error', Yii::t('import', "保存失败!"));
                             $sheetData[] = $data;
                         }
                         if ($item['status'] == 2) {
@@ -271,7 +271,7 @@ class TransitionController extends Controller
                         }
                     }
                 else {
-                    Yii::app()->user->setFlash('success', "保存成功!");
+                    Yii::app()->user->setFlash('success', Yii::t('import', "保存成功!"));
                     //跳转到历史数据管理页面
                     $this->redirect(Yii::app()->createUrl('product'));
                 }
@@ -324,7 +324,7 @@ class TransitionController extends Controller
                     foreach ($arr as $item) {
                         $data = Transition::getSheetData($item['data'], 'salary');
                         if ($item['status'] == 0) {
-                            Yii::app()->user->setFlash('error', "保存失败!");
+                            Yii::app()->user->setFlash('error', Yii::t('import', "保存失败!"));
                             $sheetData[] = $data;
                         }
                         if ($item['status'] == 2) {
@@ -333,7 +333,7 @@ class TransitionController extends Controller
                         }
                     }
                 else {
-                    Yii::app()->user->setFlash('success', "保存成功!");
+                    Yii::app()->user->setFlash('success', Yii::t('import', "保存成功!"));
                     //跳转到历史数据管理页面
                     $this->redirect(Yii::app()->createUrl('salary'));
                 }
@@ -384,7 +384,7 @@ class TransitionController extends Controller
                     foreach ($arr as $item) {
                         $data = Transition::getSheetData($item['data'], 'reimburse');
                         if ($item['status'] == 0) {
-                            Yii::app()->user->setFlash('error', "保存失败!");
+                            Yii::app()->user->setFlash('error', Yii::t('import',"保存失败!"));
                             $sheetData[] = $data;
                         }
                         if ($item['status'] == 2) {
@@ -393,7 +393,7 @@ class TransitionController extends Controller
                         }
                     }
                 else {
-                    Yii::app()->user->setFlash('success', "保存成功!");
+                    Yii::app()->user->setFlash('success', Yii::t('import', "保存成功!"));
                     //跳转到历史数据管理页面
                     $this->redirect(Yii::app()->createUrl('reimburse'));
                 }
@@ -488,7 +488,7 @@ class TransitionController extends Controller
                     foreach ($arr as $item) {
                         $data = Transition::getSheetData($item['data'], 'bank');
                         if ($item['status'] == 0) {
-                            Yii::app()->user->setFlash('error', "保存失败!");
+                            Yii::app()->user->setFlash('error', Yii::t('import', "保存失败!"));
                             $sheetData[] = $data;
                         }
                         if ($item['status'] == 2) {
@@ -497,7 +497,7 @@ class TransitionController extends Controller
                         }
                     }
                 else {
-                    Yii::app()->user->setFlash('success', "保存成功!");
+                    Yii::app()->user->setFlash('success', Yii::t('import', "保存成功!"));
                     //跳转到历史数据管理页面
                     $this->redirect(Yii::app()->createUrl('bank'));
                 }
@@ -584,7 +584,7 @@ class TransitionController extends Controller
                     foreach ($arr as $item) {
                         $data = Transition::getSheetData($item['data'], 'cash');
                         if ($item['status'] == 0) {
-                            Yii::app()->user->setFlash('error', "保存失败!");
+                            Yii::app()->user->setFlash('error', Yii::t('import', "保存失败!"));
                             $sheetData[] = $data;
                         }
                         if ($item['status'] == 2) {
@@ -593,7 +593,7 @@ class TransitionController extends Controller
                         }
                     }
                 else {
-                    Yii::app()->user->setFlash('success', "保存成功!");
+                    Yii::app()->user->setFlash('success', Yii::t('import', "保存成功!"));
                     //跳转到历史数据管理页面
                     $this->redirect(Yii::app()->createUrl('cash'));
 
@@ -2029,30 +2029,30 @@ class TransitionController extends Controller
             $arr['order_no'] = $model->order_no == '' ? $model->initOrderno() : $model->order_no;
             $newone++;
             if ($arr['price'] == "" || ($arr['price'] == 0 && !isset($arr['before_tax']))) {
-                $arr['error'] = ['金额不能为空或为0'];
+                $arr['error'] = [Yii::t('import', '金额不能为空或为0')];
                 $result[] = ['status' => 0, 'data' => $arr];
                 continue;
             } elseif (!checkAmount($arr['price'])) {
-                $arr['error'] = ['金额格式不正确'];
+                $arr['error'] = [Yii::t('import', '金额格式不正确')];
                 $result[] = ['status' => 0, 'data' => $arr];
                 continue;
             }
             if ($arr['entry_memo'] == "") {
-                $arr['error'] = ['交易说明不能为空'];
+                $arr['error'] = [Yii::t('import', '交易说明不能为空')];
                 $result[] = ['status' => 0, 'data' => $arr];
                 continue;
             }
             if ($arr['entry_date'] == "") {
-                $arr['error'] = ['日期不能为空'];
+                $arr['error'] = [Yii::t('import', '日期不能为空')];
                 $result[] = ['status' => 0, 'data' => $arr];
                 continue;
             } elseif (!Transition::createCheckDate($arr['entry_date'])) {   //该日期是否已经过账
-                $arr['error'] = ['该日期已经结账，或早于账套起始日期'];
+                $arr['error'] = [Yii::t('import', '该日期已经结账，或早于账套起始日期')];
                 $result[] = ['status' => 0, 'data' => $arr];
                 continue;
             }
             if (Transition::model()->checkReviewed($id, $type)) {
-                $arr['error'] = ['该数据生成凭证已经审核，无法修改'];
+                $arr['error'] = [Yii::t('import', '该数据生成凭证已经审核，无法修改')];
                 $result[] = ['status' => 0, 'data' => $arr];
                 continue;
             }
@@ -2072,7 +2072,7 @@ class TransitionController extends Controller
                     break;
                 $total = count($stock);
                 if ($arr['count'] >= $total) {
-                    $arr['error'] = ['盘点数量不能大于等于' . $total];
+                    $arr['error'] = [Yii::t('import', '盘点数量不能大于等于') . $total];
                     $result[] = ['status' => 0, 'data' => $arr];
                     continue;
                 } else

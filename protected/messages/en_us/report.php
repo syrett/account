@@ -424,4 +424,24 @@ return [
 	'勘探费用' => 'Exploration Expenditure',
 	'企业所得税费用' => 'Income Tax Expense',
 	'以前年度损益调整' => 'Prior Year Income Adjustment',
+
+
+    '折叠' => 'Collapse/Expand',
+    '全屏' => 'Full Screen',
+    '单位：百万元' => 'Unit: Million RMB',
+    ' 收入' => ' Earning',
+    ' 支出' => ' Expense',
+    '一月' => 'Jan',
+    '二月' => 'Feb',
+    '三月' => 'Mar',
+    '四月' => 'Apr',
+    '五月' => 'May',
+    '六月' => 'Jun',
+    '七月' => 'Jul',
+    '八月' => 'Aug',
+    '九月' => 'Sept',
+    '十月' => 'Oct',
+    '十一月' => 'Nov',
+    '十二月' => 'Dec',
+
 ];

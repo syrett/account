@@ -3,11 +3,19 @@
  */
 
 $(window).load(function () {
+
+    if(typeof alertMsg1 == "undefined") {
+        alertMsg1 = "在导入银行或现金前，请先完成其他模块";
+    }
+    if (typeof alertMsg2 == "undefined") {
+        alertMsg2 = "文件大小不超过500KB";
+    }
+
     Metronic.alert({
         container: '#portlet-info', // alerts parent container(by default placed after the page breadcrumbs)
         //place: $('#alert_place').val(), // append or prepent in container
         type: 'info',  // alert's type
-        message: '在导入银行或现金前，请先完成其他模块',  // alert's message
+        message: alertMsg1,  // alert's message
         close: 1, // make alert closable
         reset: 1, // close all previouse alerts first
         //focus: 1, // auto scroll to the alert after shown
@@ -22,7 +30,7 @@ function readURL(input) {
     if (input.files && input.files[0]) {
         if(input.files[0].size > 500*1024){  //不能大于500K
             $(input).val('');
-            alert('文件大小不超过500KB');
+            alert(alertMsg2);
             $("#show_image").hide();
             return true;
         }

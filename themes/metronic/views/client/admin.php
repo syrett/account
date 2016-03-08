@@ -37,12 +37,13 @@ $left = $before + $unreceived - $received;
             echo CHtml::link('<i class="fa fa-plus"></i>'.Yii::t('import', '添加客户'), array('create'), array('class' => 'btn btn-circle btn-primary btn-sm'));
             ?>
             <a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title=""
-               data-original-title title="<?= Yii::t('import', '全屏') ?>"></a>
+               data-original-title title="<?= Yii::t('import', '全屏'); ?>"></a>
         </div>
     </div>
     <div class="well well-sm">
         <div class="banner">
-            <div class="banner-balance col-sm-9"><?= Yii::t('import', '年初') ?>: ￥<?= $before ?>
+            <div class="banner-balance col-sm-9">
+                <div class="banner-year"><?= Yii::t('import', '年初') ?>: ￥<?= $before ?></div>
                 <div class="banner-paid col-sm-4 banner-hover"><?= Yii::t('import', '本年已收') ?>: ￥<?= $received ?></div>
                 <div class="banner-in col-sm-4 banner-hover"><?= Yii::t('import', '本年增加') ?>: ￥<?= $unreceived ?></div>
             </div>
