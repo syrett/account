@@ -43,7 +43,7 @@ $left = $before + $unpaid - $paid;
             <div class="banner-balance col-sm-9">
                 <div class="banner-year"><?= Yii::t('import', '年初') ?>: ￥<?=$before?></div>
                 <div class="banner-paid col-sm-4 banner-hover"><?= Yii::t('import', '本年已付') ?>: ￥<?=$paid?></div>
-                <div class="banner-in col-sm-4 banner-hover"><?= Yii::t('import', '本年增加') ?>: ￥<?=$unpaid?></div>
+                <div class="banner-in col-sm-4 banner-hover"><?= Yii::t('models/vendor', '本年增加') ?>: ￥<?=$unpaid?></div>
             </div>
             <div class="banner-unpaid col-sm-3 banner-hover"><?= Yii::t('import', '未付') ?>: ￥<?=$left?></div>
         </div>
