@@ -1810,13 +1810,13 @@ class TransitionController extends Controller
                     if ($vendor != null)
                         $sbj = Subjects::matchSubject($vendor->company, [2202]);
                     else {
-                        $arr['error'] = ['请选择供应商'];
+                        $arr['error'] = [Yii::t('import', '请选择供应商')];
                         $arr['id'] = isset($id) ? $id : '';
                         $result[] = ['status' => 0, 'data' => $arr];
                         continue 2;
                     }
                     if ($arr['entry_name'] == '0') {
-                        $arr['error'] = ['请商品或服务名称'];
+                        $arr['error'] = [Yii::t('import', '请选择商品或服务名称')];
                         $arr['id'] = isset($id) ? $id : '';
                         $result[] = ['status' => 0, 'data' => $arr];
                         continue 2;
@@ -1833,7 +1833,7 @@ class TransitionController extends Controller
                                 elseif ($porder['type'] == 'cash')
                                     $ordertmp = Cash::model()->findByPk($porder['pid']);
                                 if ($ordertmp['date'] > $arr['entry_date']) {
-                                    $arr['error'] = ['采购日期必须大于预付款日期'];
+                                    $arr['error'] = [Yii::t('import', '采购日期必须大于预付款日期')];
                                     $arr['id'] = isset($id) ? $id : '';
                                     $result[] = ['status' => 0, 'data' => $arr];
                                     continue 3;
