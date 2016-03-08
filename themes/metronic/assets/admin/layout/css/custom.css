@@ -764,5 +764,14 @@ div.flash-success a
 }
 .top-three li{
     float: left;
-    width: 30%;
+}
+.dropdown-menu li > a{
+    display: inline-flex;
+}
+.dropdown-menu li {
+    min-width: 80px;
+    padding: 0 25px;
+}
+.dropdown-menu h4 {
+    padding: 0 39px;
 }

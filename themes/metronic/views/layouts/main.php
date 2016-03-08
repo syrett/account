@@ -142,11 +142,17 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                 <a href="<?= $this->createUrl('permission/index') ?>">
                                     <i class="icon-lock-open"></i><?= Yii::t('home', '账套权限') ?></a>
                             </li>
-                            <li>
-                                <!-- <?= $this->createUrl('options/setting') ?> -->
-                                <a href="" data-target="#static" data-toggle="modal">
-                                    <i class="icon-equalizer"></i><?= Yii::t('home', '参数设置') ?></a>
-                            </li>
+                            <?
+                            if(Yii::app()->language == 'zh_cn') {
+                                ?>
+                                <li>
+                                    <!-- <?= $this->createUrl('options/setting') ?> -->
+                                    <a href="" data-target="#static" data-toggle="modal">
+                                        <i class="icon-equalizer"></i><?= Yii::t('home', '参数设置') ?></a>
+                                </li>
+                                <?php
+                            }
+                            ?>
                             <li>
                                 <a href="<?= $this->createUrl('subjects/balance') ?>">
                                     <i class="icon-grid"></i><?= Yii::t('home', '期初余额') ?> </a>
@@ -203,6 +209,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
             </div>
             <!-- END TOP NAVIGATION MENU -->
             <!-- BEGIN PAGE ACTIONS -->
+            <div class="clean" > </div>
             <div class="page-actions">
                 <ul class="nav navbar-nav">
                     <li class="mega-menu-dropdown">
@@ -253,7 +260,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                 <div class="portlet-body">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <h4><?= Yii::t('home', '组织') ?></h4>
+                                            <h4><strong><?= Yii::t('home', '组织') ?></strong></h4>
                                             <ul class="list-unstyled">
                                                 <? if (User2::model()->checkVIP()) {
                                                     ?>
@@ -276,7 +283,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                             </ul>
                                         </div>
                                         <div class="col-md-4">
-                                            <h4><?= Yii::t('home', '凭证') ?></h4>
+                                            <h4><strong><?= Yii::t('home', '凭证') ?></strong></h4>
                                             <ul class="list-unstyled">
                                                 <? if (User2::model()->checkVIP()) {
                                                     ?>
@@ -302,7 +309,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                             </ul>
                                         </div>
                                         <div class="col-md-4">
-                                            <h4><?= Yii::t('home', '其他') ?></h4>
+                                            <h4><strong><?= Yii::t('home', '其他') ?></strong></h4>
                                             <ul class="list-unstyled">
                                                 <li>
                                                     <a href="<?= $this->createUrl('subjects/create') ?>"><?= Yii::t('home', '会计科目') ?></a>

@@ -240,10 +240,6 @@ $cs->registerScript('ChartsFlotchartsInitPie',$expense_income_data, CClientScrip
                                         } else {
                                             ?>
                                             According to the general ledger balance to draw up the account balance sheet.
-                                            <br>
-                                            Asset subjects: The ending debit balance = the period of the beginning of the debit balance + the current debit amount of this period -the amount of credit in the current period;
-                                            <br/>
-                                            Liabilities and owners' equity subjects: The ending credit balance = the period of the beginning of the credit balance + the current credit amount of this period -the amount of debit in the current period;
                                             <?
                                         }
                                         ?>
