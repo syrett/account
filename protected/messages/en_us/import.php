@@ -231,7 +231,7 @@ return [
 
     '权限设置' => 'Permission Setting',
     '配置权限' => 'config permission',
-//    '返回前页' => 'Back',
+    '全选' => 'Select All',
 //    '返回前页' => 'Back',
 //    '返回前页' => 'Back',
 //    '返回前页' => 'Back',

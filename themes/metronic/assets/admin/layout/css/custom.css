@@ -717,7 +717,7 @@ div.flash-success a
 }
 .scroller .list-unstyled li{
     display: table-cell;
-    width: 140px;
+    min-width: 140px;
 }
 .form-horizontal .form-group{
     height: 50px;
