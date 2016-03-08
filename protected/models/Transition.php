@@ -1375,30 +1375,30 @@ class Transition extends CActiveRecord
         if($condom->taxpayer_t==2){//小规模纳税人
             if($type=='sale'){
                 return [
-                    '3'=>'3%增值税发票',
+                    '3'=>'3%'.Yii::t('import', '增值税发票'),
                 ];
             }elseif($type=='purchase'){
                 return [
-                    '0'=>'其他发票',
+                    '0'=>Yii::t('import', '其他发票'),
                 ];
             }
 
         }else{  //一般纳税人
             if($type=='sale'){
                 return [
-                    '3'=>'3%增值税发票',
-                    '5'=>'5%营业税发票',
-                    '6'=>'6%增值税发票',
-                    '13'=>'13%增值税发票',
-                    '17'=>'17%增值税发票',
+                    '3'=>'3%'.Yii::t('import', '增值税发票'),
+                    '5'=>'5%'.Yii::t('import', '营业税发票'),
+                    '6'=>'6%'.Yii::t('import', '增值税发票'),
+                    '13'=>'13%'.Yii::t('import', '增值税发票'),
+                    '17'=>'17%'.Yii::t('import', '增值税发票'),
                 ];
             }elseif($type=='purchase'){
                 return [
-                    '3'=>'3%增值税专用发票',
-                    '6'=>'6%增值税专用发票',
-                    '13'=>'13%增值税专用发票',
-                    '17'=>'17%增值税专用发票',
-                    '0'=>'其他发票',
+                    '3'=>'3%'.Yii::t('import', '增值税专用发票'),
+                    '6'=>'6%'.Yii::t('import', '增值税专用发票'),
+                    '13'=>'13%'.Yii::t('import', '增值税专用发票'),
+                    '17'=>'17%'.Yii::t('import', '增值税专用发票'),
+                    '0'=>Yii::t('import', '其他发票'),
                 ];
             }
         }
@@ -1412,7 +1412,12 @@ class Transition extends CActiveRecord
         $subject = new Subjects();
 //        ['reject' => ['工资', '社保', '公积金', '折旧费', '研发费'],'prefix'=>'_'
         if(empty($options))
-            $options = ['reject' => ['工资', '社保', '公积金', '折旧费', '研发费'],'prefix'=>'_'];
+            $options = ['reject' => [
+                            Yii::t('import', '工资'),
+                            Yii::t('import', '社保'),
+                            Yii::t('import', '公积金'),
+                            Yii::t('import', '折旧费'),
+                            Yii::t('import', '研发费')],'prefix'=>'_'];
         $result = $subject->getitem($arr, '', $options);
         return $result;
     }

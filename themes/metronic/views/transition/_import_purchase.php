@@ -21,7 +21,7 @@ $this->pageTitle = Yii::app()->name;
     </div>
     <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form']); ?>
     <?
-    $select = '<option value=1 >日期</option><option value=2 >交易说明</option><option value=3 >金额</option>';
+    $select = '<option value=1 >'.Yii::t('import', '日期').'</option><option value=2 >'.Yii::t('import', '交易说明').'</option><option value=3 >'.Yii::t('import', '金额').'</option>';
     ?>
     <div class="row import-tab" id="abc">
         <div class="box">
@@ -45,8 +45,8 @@ $this->pageTitle = Yii::app()->name;
                 </tr>
                 <?php
                 if (!empty($sheetData)) {
-                    $vendorArray = ['供应商选择'] + Vendor::model()->getVendorArray();
-                    $stockArray = ['选择或新建'] + Stock::model()->getStockArray();
+                    $vendorArray = [Yii::t('import', '供应商选择')] + Vendor::model()->getVendorArray();
+                    $stockArray = [Yii::t('import', '选择或新建')] + Stock::model()->getStockArray();
                     $taxArray = Transition::getTaxArray('purchase');
                     $arr = [1601, 1403, 1405, 6602, 6601, 6401, 1701];
                     $subjectArray = Transition::getSubjectArray($arr);

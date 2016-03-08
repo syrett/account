@@ -299,6 +299,25 @@ return [
     '借贷方合计' => 'Total debits',
     '已删除用户' => 'Deleted user',
 
+    '交易说明' => 'trade comment',
+    '供应商选择' =>'supplier selection',
+    '选择或新建' => 'select or create',
+
+    '请选择供应商' => 'Please select a supplier',
+    '请选择商品或服务名称' => 'Please select a commodity or service name',
+    '采购日期必须大于预付款日期' => 'Purchase date must be greater than the advance payment date',
+
+    '增值税发票' => 'VAT invoice',
+    '营业税发票' => 'Business tax invoice',
+    '增值税专用发票' => 'VAT special invoice',
+    '其他发票' => 'Other invoices',
+
+    '工资' => 'salary',
+    '社保' => 'social security',
+    '公积金' => 'accumulation fund',
+    '折旧费' => 'depreciation charge',
+    '研发费' => 'R & D expenses',
+
 
 
 //    '返回前页' => 'Back',
