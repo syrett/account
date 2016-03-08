@@ -16,28 +16,28 @@ $this->pageTitle = Yii::app()->name;
                     $title = Yii::t('import', '审核凭证');
                     break;
                 case 'listTransition' :
-                    $title = Yii::t('import','查询凭证');
+                    $title = Yii::t('import', '查询凭证');
                     break;
                 case 'listPost' :
-                    $title = Yii::t('import','凭证过账');
+                    $title = Yii::t('import', '凭证过账');
                     break;
                 case 'listSettlement' :
-                    $title = Yii::t('import','期末结转');
+                    $title = Yii::t('import', '期末结转');
                     break;
                 case 'listClosing' :
-                    $title = Yii::t('import','结账');
+                    $title = Yii::t('import', '结账');
                     break;
                 case 'listSettlementcloseing' :
-                    $title = Yii::t('import','结账');
+                    $title = Yii::t('import', '结账');
                     break;
                 case 'listAntiSettlement' :
-                    $title = Yii::t('import','反结账');
+                    $title = Yii::t('import', '反结账');
                     break;
                 case 'listReorganise' :
-                    $title = Yii::t('import','整理凭证');
+                    $title = Yii::t('import', '整理凭证');
                     break;
                 case 'listAssets' :
-                    $title = Yii::t('import','固定资产');
+                    $title = Yii::t('import', '固定资产');
                     break;
             }
             echo $title;
@@ -49,7 +49,7 @@ $this->pageTitle = Yii::app()->name;
         <!-- search-form -->
         <?php
         $status = $this->getTransitionDate('end');
-        echo Yii::t('import', "已结账至日期：") . $status['date'];
+        echo Yii::t('import', "已结账至日期") . ": " . $status['date'];
         $list = $this->listMonth($operation);
 
         if (empty($list) && $operation != 'listAssets') {

@@ -31,7 +31,7 @@ $this->breadcrumbs = array(
 		</div>
 		<div class="actions">
 		    <?php
-				echo CHtml::link('<i class="fa fa-edit"></i>'.Yii::t('import', '添加科目'), array('create'), array('class' => 'btn btn-circle btn-primary btn-sm'));
+				echo CHtml::link('<i class="fa fa-edit"></i> '.Yii::t('import', '添加科目'), array('create'), array('class' => 'btn btn-circle btn-primary btn-sm'));
     		?>
 			<a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title="" data-original-title title="<?= Yii::t('import', '全屏') ?>"></a>
 		</div>
@@ -56,7 +56,8 @@ $this->breadcrumbs = array(
 //							'name'=>'sbj_number',
 //							'filter'=>CHtml::tag('div',array('class'=>'select2-search'),CHtml::textField('sbj_number','',array('class'=>'select2-input'))),
 //							),
-                'sbj_name',
+				'sbj_name',
+				'sbj_name_en',
                 //                    array(
                 //                        'name'=>'sbj_cat',
                 //                            'filter'=>Select2::dropDownList('Subjects[sbj_cat]',$model->sbj_cat,CHtml::listData(Subjects::model()->findall(), 'sbj_cat', 'sbj_cat')),

@@ -106,7 +106,7 @@ return [
     '电话' => 'Phone',
     '密码' => 'Password',
 
-//    '部门' => 'Department',
+    '期初余额' => 'Opening balance',
 //    '部门' => 'Department',
 //    '部门' => 'Department',
 //    '部门' => 'Department',

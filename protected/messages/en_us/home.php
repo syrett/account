@@ -122,5 +122,8 @@ return [
     '其他支出' => 'Others',
     '供应商采购' => 'Purchasing',
     '利息手续费'=> 'Interest Charges',
+    '折旧或摊销年限(年)' => 'Depreciation or amortization period',
+    '残值率' => 'Salvage Value',
+    '附加税税率' => 'Additional tax rate',
 
 ];

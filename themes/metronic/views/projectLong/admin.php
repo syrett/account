@@ -69,7 +69,7 @@ $dataProvider = new CActiveDataProvider('Stock', ['criteria' => ['condition' => 
                         'filter' => array('1' => Yii::t('import', '正常'), '2' => Yii::t('import', '完工')),
                         'value' => '($data->getPStatus()=="1") ? ("'.Yii::t('import', "正常").'") : ("'.Yii::t('import', "完工").'")'
                     ),
-                    ['name' => 'in_date', 'value' => 'convertDate($data->in_date, "'.Yii::t('import', "Y年m月d日").'")'],
+                    ['name' => 'in_date', 'value' => 'convertDate($data->in_date, "'.Yii::t('import', "Y-m-d").'")'],
                     array(
                         'class' => 'CButtonColumn',
                         'buttons' => array(

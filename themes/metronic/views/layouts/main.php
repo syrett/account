@@ -111,7 +111,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                 <ul class="nav navbar-nav pull-right">
                     <li class="language-switch">
                         <?
-                        $url = removeStringAfter(Yii::app()->request->requestUri, '&');
+                        $url = removeLang(Yii::app()->request->requestUri);
                         if (!stripos($url, '?'))
                             $url .= '?';
                         ?>
@@ -497,7 +497,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                 </div><!-- .scroller -->
                 <div class="modal-footer">
                     <?php
-                    echo CHtml::tag('button', array('encode' => false, 'class' => 'btn btn-primary',), '<span class="glyphicon glyphicon-floppy-disk"></span> 保存');
+                    echo CHtml::tag('button', array('encode' => false, 'class' => 'btn btn-primary',), '<span class="glyphicon glyphicon-floppy-disk"></span> '. Yii::t('import', '保存'));
                     ?>
                 </div>
                 <?php echo CHtml::endForm(); ?>

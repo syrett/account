@@ -49,14 +49,15 @@ class Subjects extends CActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('sbj_number, sbj_name', 'required', 'message' => '{attribute}不能为空'),
-            array('sbj_number', 'unique', 'message' => '{attribute}:{value} 已经存在!'),
+            array('sbj_number, sbj_name', 'required'),
+            array('sbj_number', 'unique'),
             array('start_balance', 'numerical'),
             array('sbj_number', 'numerical', 'integerOnly' => true),
             array('sbj_name', 'length', 'max' => 512),
             array('sbj_cat', 'length', 'max' => 1),
+            array('sbj_name_en', 'safe'),
             // The following rule is used by search().
-            array('id, sbj_number, sbj_name, sbj_cat, sbj_table, has_sub', 'safe', 'on' => 'search'),
+            array('id, sbj_number, sbj_name, sbj_name_en, sbj_cat, sbj_table, has_sub', 'safe', 'on' => 'search'),
 
             array('sbj_name', 'checkSbjName', 'on' => 'create,update'),
         );
@@ -82,7 +83,8 @@ class Subjects extends CActiveRecord
         return array(
             'id' => 'ID',
             'sbj_number' => Yii::t('subjects', '科目编号'),
-            'sbj_name' => Yii::t('subjects', '科目名称'),
+            'sbj_name' => Yii::t('subjects', '中文名称'),
+            'sbj_name_en' => Yii::t('subjects', '英文名称'),
             'sbj_cat' => Yii::t('subjects', '科目类别'),
             'sbj_table' => Yii::t('subjects', '报表名称'),
             'sbj_balance' => Yii::t('subjects', '科目余额'),
@@ -109,6 +111,7 @@ class Subjects extends CActiveRecord
         $criteria->compare('id', $this->id);
         $criteria->compare('sbj_number', $this->sbj_number, true);
         $criteria->compare('sbj_name', $this->sbj_name, true);
+        $criteria->compare('sbj_name_en', $this->sbj_name_en, true);
         $criteria->compare('sbj_cat', $this->sbj_cat, true);
         $criteria->compare('sbj_table', $this->sbj_table, true);
         $criteria->compare('has_sub', $this->has_sub, true);

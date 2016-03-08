@@ -11,7 +11,7 @@ $this->menu=array(
 		  'url'=>array('create'),
 		  'linkOptions'=>array('class'=>'btn btn-inverse')
 		  ),
-	array('label'=>'<span class="glyphicon glyphicon-th-list"></span>'.Yii::t('import', '会计科目列表'),
+	array('label'=>'<span class="glyphicon glyphicon-th-list"></span>'.Yii::t('import', '科目列表'),
 		  'url'=>array('admin'),
 		  'linkOptions'=>array('class'=>'btn btn-inverse')
 		  ),	

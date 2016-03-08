@@ -20,6 +20,8 @@ return [
     '银行存款' => 'Cash in bank',
     '库存现金' => 'Cash on hand',
 
+    '中文名称' => 'Chinese Subject Name',
+    '英文名称' => 'English Subject Name',
 //    '交易性金融资产' => '',
 //    '应收分保账款' => '',
 //    '材料采购' => '',

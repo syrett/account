@@ -225,7 +225,7 @@ function round2($val){
     return sprintf("%.2f", $val);
 }
 
-function removeStringAfter($str, $key){
-    $pos = stripos($str, $key);
-    return $pos?substr($str, 0, $pos):$str;
+function removeLang($str){
+    $reg = '/&?lang=[^&]*/';
+    return preg_replace($reg, '', $str);
 }
