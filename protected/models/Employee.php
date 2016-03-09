@@ -131,7 +131,7 @@ class Employee extends CActiveRecord
         else
             return '无法查询的ID';
     }
-    public function getDepart($employee_id, $type = '')
+    public static function getDepart($employee_id, $type = '')
     {
         $model = Employee::model()->findByPk($employee_id);
         if($model){
