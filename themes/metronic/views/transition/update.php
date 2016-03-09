@@ -19,10 +19,10 @@ $this->breadcrumbs=array(
 <div class="portlet light">
 	<div class="portlet-title">
 		<div class="caption">
-		<span class="font-green-sharp">会计凭证</span>
+		<span class="font-green-sharp"><?= Yii::t('import', '会计凭证');?></span>
 		</div>
 		<div class="actions">
-			<a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title="" data-original-title title="全屏"></a>
+			<a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen" data-original-title="" data-original-title title="<?= Yii::t('import', '全屏');?>"></a>
 		</div>
 	</div>
 	<div class="portlet-body">

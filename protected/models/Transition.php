@@ -1245,10 +1245,16 @@ class Transition extends CActiveRecord
 
     /*
      * 列出科目，以分组的形式
+     * 默认 def 去除了银行部分？
      */
-    public function listSubjectsGrouped()
+    public function listSubjectsGrouped($def = 'def')
     {
-        $sel = "select * from subjects where has_sub=0 and sbj_number not like '1001%' and sbj_number not like '1002%' ";
+        if ($def == 'def') {
+            $sel = "select * from subjects where has_sub=0 and sbj_number not like '1001%' and sbj_number not like '1002%' ";
+        } else {
+            $sel = "select * from subjects where has_sub=0 ";
+        }
+
         $order = " order by concat(`sbj_number`) asc"; //
         $sbj_cat = 1;
         $arr = array();
@@ -1263,6 +1269,7 @@ class Transition extends CActiveRecord
         }
         return $arr;
     }
+
 
     public function hasSettlement($date)
     {

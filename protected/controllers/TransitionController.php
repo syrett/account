@@ -129,10 +129,13 @@ class TransitionController extends Controller
         }
         if (empty($items)) {
             $this->render('badre');
-        } else
+        } else {
+
             $this->render('update', array(
                 'model' => $items,
             ));
+        }
+
     }
 
     /**
@@ -362,6 +365,7 @@ class TransitionController extends Controller
     {
         $info = [];
         $option = 'empty';
+        $inexist_staff = '';
         Yii::import('ext.phpexcel.PHPExcel.PHPExcel_IOFactory');
         if (Yii::app()->request->isPostRequest) {
             $option = 'import';
@@ -373,8 +377,14 @@ class TransitionController extends Controller
                 array_shift($list);
                 foreach ($list as $item) {
                     $employee = Employee::model()->findByAttributes(['name' => trim($item['A'])]);
-                    if ($employee)
+                    if ($employee) {
                         $sheetData[] = Transition::getSheetData($item, 'reimburse');
+                    } else {
+                        $inexist_staff .= ',&nbsp;&nbsp;'.trim($item['A']);
+                    }
+                }
+                if ($inexist_staff != '') {
+                    Yii::app()->user->setFlash('error', Yii::t('import',"系统中不存在以下员工").'<br>'.substr($inexist_staff, 1));
                 }
             } elseif (!isset($_POST['submit_type'])) {
                 $option = 'save';

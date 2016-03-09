@@ -318,6 +318,10 @@ return [
     '折旧费' => 'depreciation charge',
     '研发费' => 'R & D expenses',
 
+    '系统中不存在以下员工' => 'Does not exist the following staff in the system',
+    '会计凭证' => 'Accounting voucher',
+    '提示：导入凭证不可修改' => 'Tip: import certificates cannot be modified',
+
 
 
 //    '返回前页' => 'Back',

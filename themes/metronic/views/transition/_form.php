@@ -13,7 +13,18 @@ $tranDate = $command->queryRow(); // execute a query SQL
   $model = array();
   $model[0]=new Transition();
   }*/
-$subjects = Transition::model()->listSubjectsGrouped();
+
+$import_type = false;
+foreach ($model as $v) {
+    if (isset($v['data_id']) && $v['data_id'] != 0) {
+        $import_type = true;
+    }
+}
+if ($import_type) {
+    $subjects = Transition::model()->listSubjectsGrouped('all');
+} else {
+    $subjects = Transition::model()->listSubjectsGrouped();
+}
 
 ?>
 
@@ -48,7 +59,7 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
     <?
     if ($model[0]->data_type != ''){
     ?>
-    <div class="alert alert-info">提示：导入凭证不可修改
+    <div class="alert alert-info"><?= Yii::t('import', '提示：导入凭证不可修改');?>
     </div>
     <? } ?>
     <div class="transition_title">
@@ -122,6 +133,7 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
                     'data' => $subjects,
                     'htmlOptions' => array('class' => 'form-control v-subject',)
                 ));
+
 //                echo CHtml::activeDropDownList($item, "[$i]entry_subject", $subjects, array('class' => 'form-control v-subject'));
                 ?>
                 <input type="hidden" value="<?= $i ?>"/>
