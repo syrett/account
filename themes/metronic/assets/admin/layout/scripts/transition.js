@@ -162,6 +162,7 @@ $(window).load(function() {
             url: url,
             type: "POST",
             datatype: "json",
+            data: {"import_type" :$("#J_ajax").val()},
             success: function (json) {
                 if(json!="") {
                     var obj = JSON.parse(json);

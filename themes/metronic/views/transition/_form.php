@@ -14,13 +14,13 @@ $tranDate = $command->queryRow(); // execute a query SQL
   $model[0]=new Transition();
   }*/
 
-$import_type = false;
+$import_type = "";
 foreach ($model as $v) {
     if (isset($v['data_id']) && $v['data_id'] != 0) {
-        $import_type = true;
+        $import_type = $v['data_type'];
     }
 }
-if ($import_type) {
+if ($import_type != "") {
     $subjects = Transition::model()->listSubjectsGrouped('all');
 } else {
     $subjects = Transition::model()->listSubjectsGrouped();
@@ -288,3 +288,4 @@ $transition_date = isset($model[0]->entry_num_prefix) ? date('Y-m-d', strtotime(
 </div>
 <?php $this->endWidget(); ?>
 <?php echo CHtml::endForm(); ?>
+<input type="hidden" name="" id="J_ajax" value="<?= $import_type; ?>" />

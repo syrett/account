@@ -1589,7 +1589,7 @@ class TransitionController extends Controller
     public function actionCreateExcel()
     {
         Yii::import('ext.phpexcel.PHPExcel');
-        $filename = '导出凭证';
+        $filename = Yii::t('transition', '导出凭证');
         $where = '1=1';
         if (isset($_REQUEST['s_day']) && trim($_REQUEST['s_day']) != '') {
             $filename .= $_REQUEST['s_day'];
@@ -1617,7 +1617,23 @@ class TransitionController extends Controller
          * @var string
          */
         $table = "<table><tr><td>$filename</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
-        $header = "<tr><td>凭证</td><td>凭证摘要</td><td>借贷</td><td>借贷科目</td><td>交易金额</td><td>附加信息</td><td>过账</td><td>凭证日期</td></tr> ";
+        $header = "<tr><td>"
+            .Yii::t('transition', '凭证')
+            ."</td><td>"
+            .Yii::t('transition', '凭证摘要')
+            ."</td><td>"
+            .Yii::t('transition', '借贷')
+            ."</td><td>"
+            .Yii::t('transition', '借贷科目')
+            ."</td><td>"
+            .Yii::t('transition', '交易金额')
+            ."</td><td>"
+            .Yii::t('transition', '附加信息')
+            ."</td><td>"
+            .Yii::t('transition', '过账')
+            ."</td><td>"
+            .Yii::t('transition', '凭证日期')
+            ."</td></tr> ";
         $rows = "";
         /**
          * All the data of the table in a formatted string

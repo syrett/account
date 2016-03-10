@@ -289,7 +289,13 @@ class SubjectsController extends Controller
     public function actionAjaxGetSubjects()
     {
         if (Yii::app()->request->isAjaxRequest) {
-            $sbj = Transition::model()->listSubjectsGrouped();
+            $import_type = isset($_REQUEST['import_type']) ? $_REQUEST['import_type'] : "";
+            if ($import_type == "") {
+                $sbj = Transition::model()->listSubjectsGrouped();
+            } else {
+                $sbj = Transition::model()->listSubjectsGrouped('all');
+            }
+
             //json数据前台会自动按number重新转换顺序，目前无更好解决办法
             $arr = [];
             foreach ($sbj as $cat => $items) {

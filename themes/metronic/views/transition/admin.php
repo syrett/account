@@ -2,9 +2,9 @@
 /* @var $this TransitionController */
 /* @var $model Transition */
 /* @var $operation Transition action */
-$this->pageTitle = Yii::app()->name . ' - 会计凭证管理';
+$this->pageTitle = Yii::app()->name . Yii::t('transition', ' - 会计凭证管理');
 $this->breadcrumbs = array(
-    '查询凭证'
+    Yii::t('transition', '查询凭证')
 );
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
@@ -19,7 +19,7 @@ $('.search-form form').submit(function(){
 });
 ");
 $this->menu = array(
-    array('label' => '<span class="glyphicon glyphicon-plus"></span> 添加',
+    array('label' => '<span class="glyphicon glyphicon-plus"></span>'.Yii::t('transition', '添加'),
         'url' => $this->createUrl('transition/create'),
         'linkOptions' => array('class' => 'btn btn-circle btn-default')
     ),
@@ -27,7 +27,7 @@ $this->menu = array(
 //		  'url'=>array('#'),
 //		  'linkOptions'=>array('class'=>'btn btn-default')
 //		  ),
-    array('label' => '<span class="glyphicon glyphicon-export"></span> 导出',
+    array('label' => '<span class="glyphicon glyphicon-export"></span>'.Yii::t('transition', '导出'),
         'url' => '#',
         'linkOptions' => array('class' => 'btn btn-circle btn-default', 'onclick' => 'tranToExcel()')
     ),
@@ -51,16 +51,16 @@ $cs->registerScript('ComponentsPickersInit', 'ComponentsPickers.init();', CClien
                 $operation = 'listTransition';
             switch ($operation) {
                 case 'listReview' :
-                    $title = '审核凭证';
+                    $title = Yii::t('transition', '审核凭证');
                     break;
                 case 'listTransition' :
-                    $title = '查询凭证';
+                    $title = Yii::t('transition', '查询凭证');
                     break;
                 case 'listReview' :
-                    $title = '凭证过账';
+                    $title = Yii::t('transition', '凭证过账');
                     break;
                 case 'listReview' :
-                    $title = '期末结账';
+                    $title = Yii::t('transition', '期末结账');
                     break;
             }
             echo $title;
@@ -71,11 +71,11 @@ $cs->registerScript('ComponentsPickersInit', 'ComponentsPickers.init();', CClien
             echo CHtml::beginForm($this->createUrl('/Transition/createexcel'), 'post', array('id' => 'export'));
             ?>
             <a href="<?= $this->createUrl('transition/create') ?>" class="btn btn-circle btn-sm btn-default"><i
-                    class="glyphicon glyphicon-plus"></i> 添加</a>
+                    class="glyphicon glyphicon-plus"></i><?= Yii::t('transition', '添加');?></a>
             <a href="javascript:;" onclick="tranToExcel()" class="btn btn-circle btn-sm btn-default"><i
-                    class="glyphicon glyphicon-export"></i> 导出</a>
+                    class="glyphicon glyphicon-export"></i><?= Yii::t('transition', '导出');?></a>
             <a href="javascript:;" class="btn btn-circle btn-default btn-sm btn-icon-only fullscreen"
-               data-original-title="" data-original-title title="全屏"></a>
+               data-original-title="" data-original-title title="<?= Yii::t('transition', '全屏');?>"></a>
         </div>
         <?php
         echo CHtml::endForm();
@@ -87,9 +87,9 @@ $cs->registerScript('ComponentsPickersInit', 'ComponentsPickers.init();', CClien
                 <?php
                 if ($operation != 'listReview') {
                     ?>
-                    背景颜色说明：
-                    <span class="reviewed">已审核</span>&nbsp;&nbsp;
-                    <span class="deleted">已删除</span>
+                    <?= Yii::t('transition', '背景颜色说明：');?>
+                    <span class="reviewed"><?= Yii::t('transition', '已审核');?></span>&nbsp;&nbsp;
+                    <span class="deleted"><?= Yii::t('transition', '已删除');?></span>
                     <?php
                 }
                 ?>
@@ -98,16 +98,16 @@ $cs->registerScript('ComponentsPickersInit', 'ComponentsPickers.init();', CClien
                 <?php echo CHtml::beginForm(); ?>
                 <div class="input-group input-large " >
                     <div class="input-group date-picker input-daterange" data-date-format="yyyy/mm/dd">
-                        <span class="input-group-addon">日期范围：</span>
+                        <span class="input-group-addon"><?= Yii::t('transition', '日期范围：');?></span>
                         <input type="text" class="form-control input-small" name="s_day" id="s_day" value="<?=isset($_POST['s_day'])?$_POST['s_day']:''?>">
-                        <span class="input-group-addon"> 至 </span>
+                        <span class="input-group-addon"><?= Yii::t('transition', '至');?> </span>
                         <input type="text" class="form-control input-small" name="e_day" id="e_day" value="<?=isset($_POST['e_day'])?$_POST['e_day']:''?>">
                     </div>
-                    <span class="input-group-addon"> 摘要 </span>
+                    <span class="input-group-addon"><?= Yii::t('transition', '摘要');?> </span>
                     <input type="text" class="form-control input-small" name="memo" id="memo" value="<?=isset($_POST['memo'])?$_POST['memo']:''?>">
 				<span class="input-group-btn">
 				<?php
-                echo CHtml::htmlButton('<span class="glyphicon glyphicon-search"></span> 查找', array('class' => 'btn btn-default', 'type' => 'submit'));
+                echo CHtml::htmlButton('<span class="glyphicon glyphicon-search"></span>'.Yii::t('transition', '查找'), array('class' => 'btn btn-default', 'type' => 'submit'));
                 ?>
 				</span>
                     <!-- search-form -->
@@ -119,12 +119,12 @@ $cs->registerScript('ComponentsPickersInit', 'ComponentsPickers.init();', CClien
 
         $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'subjects-grid',
-            'emptyText' => '暂无相关数据',
-            'dataProvider' => $model->search(),
+            'emptyText' => Yii::t('transition', '暂无相关数据'),
+            'dataProvider' => $model->multiSearch(),
             'rowCssClass' => array('row-odd', 'row-even'),
 //            'filter' => $model,
             'rowCssClassExpression' => '$data->getClass($row,$data->entry_reviewed,$data->entry_deleted)',
-            'pager' => array('class' => 'CLinkPager', 'header' => '', 'firstPageLabel' => '首页', 'lastPageLabel' => '末页', 'nextPageLabel' => '下一页', 'prevPageLabel' => '上一页'),
+            'pager' => array('class' => 'CLinkPager', 'header' => '', 'firstPageLabel' => Yii::t('transition', '首页'), 'lastPageLabel' => Yii::t('transition', '末页'), 'nextPageLabel' => Yii::t('transition', '下一页'), 'prevPageLabel' => Yii::t('transition', '上一页')),
             'itemsCssClass' => 'table table-striped table-bordered dataTable table-hover no-footer',
             'htmlOptions' => array('role' => 'grid'),
             'columns' => array(
@@ -166,7 +166,7 @@ $cs->registerScript('ComponentsPickersInit', 'ComponentsPickers.init();', CClien
                     'class' => 'CButtonColumn',
                     'buttons' => array(
                         'update' => array(
-                            'options' => array('class' => 'btn btn-default tip btn-xs', 'title' => '编辑'),
+                            'options' => array('class' => 'btn btn-default tip btn-xs', 'title' => Yii::t('transition', '编辑')),
                             'label' => '<span class="glyphicon glyphicon-pencil"></span>',
                             'imageUrl' => false,
                         )
@@ -178,18 +178,18 @@ $cs->registerScript('ComponentsPickersInit', 'ComponentsPickers.init();', CClien
             ),
         ));
         echo '<div class="transition_action" ><p>';
-        echo CHtml::htmlbutton('<span class="glyphicon glyphicon-ok"></span> 审核通过', array(
+        echo CHtml::htmlbutton('<span class="glyphicon glyphicon-ok"></span>'.Yii::t('transition', '审核通过'), array(
                 'onclick' => 'setreviewed()',
                 'name' => 'btnSetReview',
                 'class' => 'btn btn-default btn-sm',
-                'confirm' => '确认通过审核？',
+                'confirm' => Yii::t('transition', '确认通过审核？'),
             )
         );
-        echo CHtml::htmlbutton('<span class="glyphicon glyphicon-repeat"></span> 取消审核', array(
+        echo CHtml::htmlbutton('<span class="glyphicon glyphicon-repeat"></span>'.Yii::t('transition', '取消审核'), array(
                 'onclick' => 'unreviewed()',
                 'name' => 'btnUnReview',
                 'class' => 'btn btn-default btn-sm',
-                'confirm' => '确认取消审核？',
+                'confirm' => Yii::t('transition', '确认取消审核？'),
             )
         );
         echo '</p></div>';
@@ -212,13 +212,13 @@ $cs->registerScript('ComponentsPickersInit', 'ComponentsPickers.init();', CClien
                 var ret = $.parseJSON(data);
                 if (ret != null && ret.success != null) {
                     if (!ret.success)
-                        alert('部分凭证必须由他人审核');
+                        alert("<?= Yii::t('transition', '部分凭证必须由他人审核');?>");
                     $.fn.yiiGridView.update("subjects-grid", {async: false});
                     Metronic.initUniform('input:checkbox')
                 }
             });
         } else {
-            alert("请选择要操作的行!");
+            alert("<?= Yii::t('transition', '请选择要操作的行!');?>");
         }
     }
 
@@ -240,7 +240,7 @@ $cs->registerScript('ComponentsPickersInit', 'ComponentsPickers.init();', CClien
                 }
             });
         } else {
-            alert("请选择要操作的行!");
+            alert("<?= Yii::t('transition', '请选择要操作的行!');?>");
         }
 
     }
