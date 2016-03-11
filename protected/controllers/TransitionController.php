@@ -1293,7 +1293,7 @@ class TransitionController extends Controller
     }
 
     /*
-     * 反结账
+     * 结账
      */
     public function antiSettlement($date)
     {
@@ -1302,6 +1302,8 @@ class TransitionController extends Controller
         Transition::model()->deleteAllByAttributes(['entry_num_prefix' => $date], 'entry_memo like "附加税-' . $date . '%"');
 //        if (Transition::model()->findByAttributes(['entry_num_prefix' => $date], 'entry_closing=1') || $model) {
         $rows = Transition::model()->deleteAllByAttributes(['entry_num_prefix' => $date], 'entry_memo like "计提折旧-' . $date . '%"');
+        //删除12月结转时自动生成的 ‘本年利润结转到未分配利润’
+        $rows = Transition::model()->deleteAllByAttributes(['entry_num_prefix' => $date, 'entry_memo' => "结转本年利润到未分配利润"]);
 
         //还要判断是否是对已经结账的月份进行反结账，如果只是对过账的月份进行反结账，固定资产等的净值还保持不变
         //以，是否能找到未结账标识为判断依据

@@ -1186,12 +1186,25 @@ class Transition extends CActiveRecord
 
     /*
      * 本年利润过度到未分配利润
+     * 借本年利润，贷利润分配/未分配利润；
      */
     public function passProfit(){
         $entry_prefix = $this->entry_num_prefix;
         $entry_num = $this->tranSuffix($entry_prefix);
+        $tran = $this;
+        $tran->entry_num = $entry_num;
+        $tran->entry_memo = '结转本年利润到未分配利润';
         $tran1 = new Transition();
         $tran2 = new Transition();
+        $tran1->attributes = $tran->attributes;
+        $tran2->attributes = $tran->attributes;
+        $tran1->entry_transaction = 1;
+        $tran2->entry_transaction = 2;
+        $tran1->entry_subject = '4103';
+        $tran2->entry_subject = Subjects::matchSubject('未分配利润', '4104');
+        if($tran1->save() and $tran2->save()){
+
+        }
 
     }
 

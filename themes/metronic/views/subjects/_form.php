@@ -54,7 +54,7 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
 	<div class="form-group form-group-lg">
 <!--		--><?php //echo $form->label($model,'sbj_name', array('class'=>'col-sm-2 control-label')); ?>
         <label class="col-sm-2 control-label" ><?= Yii::t('import', '选择父科目') ?></label>
-        <div class="col-sm-10">
+        <div class="col-sm-10 control-label-2">
             <?php
             $data = Subjects::model()->listSubjects();
 
@@ -63,7 +63,7 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
                 'attribute' => 'sbj_number',
                 'value' => 1,
                 'data' => $data,
-                'htmlOptions' => array('class'=>'v-subject'),
+                'htmlOptions' => array('class'=>'control-form v-subject'),
             ));
             ?>
 		</div>

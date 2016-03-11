@@ -775,3 +775,7 @@ div.flash-success a
 .dropdown-menu h4 {
     padding: 0 39px;
 }
+.control-label-2{
+    text-align: left;
+    margin-top: 9px;
+}

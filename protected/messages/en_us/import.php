@@ -240,7 +240,7 @@ return [
     '注意：新建科目为所选科目“子科目”' => 'Notes: New subject is a sub-subject of which you choose',
     '科目列表' => 'Subjects List',
     '会计科目管理' => 'Subjects Management',
-    '选择父科目' => 'Choose parent subject',
+    '选择科目' => 'Choose subject',
     '提示：录入本模块前，请先完成总账期初余额设置。本模块必须一次性全部导入。' => 'Notes: Be sure you setting the opening balance. This module must be imported at once',
 //    '返回前页' => 'Back',
 //    '返回前页' => 'Back',
