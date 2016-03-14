@@ -29,7 +29,7 @@ $this->menu = array(
 //		  ),
     array('label' => '<span class="glyphicon glyphicon-export"></span>'.Yii::t('transition', '导出'),
         'url' => '#',
-        'linkOptions' => array('class' => 'btn btn-circle btn-default', 'onclick' => 'tranToExcel()')
+        'linkOptions' => array('class' => 'btn btn-circle btn-default', 'onclick' => 'tranToMultiExcel()')
     ),
 );
 $cs = Yii::app()->clientScript;
@@ -68,11 +68,11 @@ $cs->registerScript('ComponentsPickersInit', 'ComponentsPickers.init();', CClien
         </div>
         <div class="actions">
             <?php
-            echo CHtml::beginForm($this->createUrl('/Transition/createexcel'), 'post', array('id' => 'export'));
+            echo CHtml::beginForm($this->createUrl('/Transition/multicreateexcel'), 'post', array('id' => 'export'));
             ?>
             <a href="<?= $this->createUrl('transition/create') ?>" class="btn btn-circle btn-sm btn-default"><i
                     class="glyphicon glyphicon-plus"></i><?= Yii::t('transition', '添加');?></a>
-            <a href="javascript:;" onclick="tranToExcel()" class="btn btn-circle btn-sm btn-default"><i
+            <a href="javascript:;" onclick="tranToMultiExcel()" class="btn btn-circle btn-sm btn-default"><i
                     class="glyphicon glyphicon-export"></i><?= Yii::t('transition', '导出');?></a>
             <a href="javascript:;" class="btn btn-circle btn-default btn-sm btn-icon-only fullscreen"
                data-original-title="" data-original-title title="<?= Yii::t('transition', '全屏');?>"></a>

@@ -120,7 +120,7 @@ $cs->registerScript('ComponentsPickersInit', 'ComponentsPickers.init();', CClien
         $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'subjects-grid',
             'emptyText' => Yii::t('transition', '暂无相关数据'),
-            'dataProvider' => $model->multiSearch(),
+            'dataProvider' => $model->search(),
             'rowCssClass' => array('row-odd', 'row-even'),
 //            'filter' => $model,
             'rowCssClassExpression' => '$data->getClass($row,$data->entry_reviewed,$data->entry_deleted)',

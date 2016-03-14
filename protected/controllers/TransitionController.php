@@ -1382,12 +1382,9 @@ class TransitionController extends Controller
 
         if (isset($_GET['Subjects']))
             $model->attributes = $_GET['Subjects'];
-        $dataProvider = $model->multiSearch();
-        $dataProvider->pagination = array(
-            'pageSize' => 30
-        );
+
         $this->render('list_transition', array(
-            'dataProvider' => $dataProvider,
+
             'model' => $model,
         ));
     }
@@ -1588,25 +1585,137 @@ class TransitionController extends Controller
 
     }
 
+    public  function actionMultiCreateExcel()
+    {
+
+        Yii::import('ext.phpexcel.PHPExcel');
+        $filename = Yii::t('transition', '导出凭证');
+        $where = '';
+        $where_array = [];
+
+        if (isset($_REQUEST['multi_search']) && trim($_REQUEST['multi_search']) != "") {
+            $where .= 'OR entry_memo LIKE :p1 ';
+            $where_array[':p1'] = '%'.$_REQUEST['multi_search'].'%';
+
+            if(is_numeric($_REQUEST['multi_search']) && mb_strlen($_REQUEST['multi_search']) == 10) {
+                $a = substr($_REQUEST['multi_search'], 0, 6);
+                $b = substr($_REQUEST['multi_search'], 6) + 0;
+                $where .= 'OR (entry_num_prefix = :p2 AND entry_num = :p3) ';
+                $where_array[':p2'] = $a;
+                $where_array[':p3'] = $b;
+            }
+
+            $tmp_timestamp = strtotime($_REQUEST['multi_search']);
+            if ($tmp_timestamp !== false) {
+                $where .= 'OR entry_date = :p4 ';
+                $where_array[':p4'] = date('Y-m-d', $tmp_timestamp);
+            }
+        }
+
+        if ($where != '') {
+            $where = substr($where, 2);
+        }
+        $sql = "select * from transition where " . $where;
+
+        $command = Yii::app()->db
+            ->createCommand($sql)
+            ->bindValues($where_array);
+
+        $data = $command->queryAll();
+
+
+//        $model->unsetAttributes(); // clear any default values
+//        if (isset($_GET['Transition']))
+//            $model->attributes = $_GET['Transition'];
+
+        ob_end_clean();
+        header('Content-type: application/vnd.ms-excel, charset=utf-8');
+        header('Content-Disposition: attachment; filename=' . urlencode($filename) . '.xls');
+        /**
+         * The header of the table
+         * @var string
+         */
+        $table = "<table><tr><td>$filename</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
+        $header = "<tr><td>"
+            .Yii::t('transition', '凭证')
+            ."</td><td>"
+            .Yii::t('transition', '凭证摘要')
+            ."</td><td>"
+            .Yii::t('transition', '借贷')
+            ."</td><td>"
+            .Yii::t('transition', '借贷科目')
+            ."</td><td>"
+            .Yii::t('transition', '交易金额')
+            ."</td><td>"
+            .Yii::t('transition', '附加信息')
+            ."</td><td>"
+            .Yii::t('transition', '过账')
+            ."</td><td>"
+            .Yii::t('transition', '凭证日期')
+            ."</td></tr> ";
+        $rows = "";
+        /**
+         * All the data of the table in a formatted string
+         * @var string
+         */
+        foreach ($data as $row) {
+            $rows .= "<tr><td>" . $row['entry_num_prefix'] . $this->addZero($row['entry_num']) . "</td>
+            <td>" . $row['entry_memo'] . "</td>
+            <td>" . Transition::transaction($row['entry_transaction']) . "</td>
+            <td>" . Subjects::getSbjPath($row['entry_subject']) . "</td>
+            <td>" . $row['entry_amount'] . "</td>
+            <td>" . Transition::getAppendix($row['entry_appendix_type'], $row['entry_appendix_id']) . "</td>
+            <td>" . Transition::getPosting($row['entry_posting']) . "</td>
+            <td>" . $row['entry_date'] . "</td></tr>";
+        }
+        $data = $table . $header . $rows . '</table>';
+        $style = '<style type="text/css">
+            table{
+                border: 1px solid black;
+            }
+            td{
+                border: 1px solid black;
+            }
+            th{
+                border: 1px solid black;
+
+            }
+
+            </style>';
+        echo $style . $data;
+    }
+
     public function actionCreateExcel()
     {
         Yii::import('ext.phpexcel.PHPExcel');
         $filename = Yii::t('transition', '导出凭证');
         $where = '1=1';
+        $where_array = [];
+
         if (isset($_REQUEST['s_day']) && trim($_REQUEST['s_day']) != '') {
             $filename .= $_REQUEST['s_day'];
             $where .= " and entry_date>=:s_day";
+            $where_array[':s_day'] =  $_REQUEST['s_day'].' 00:00:00';
         }
         if (isset($_REQUEST['e_day']) && trim($_REQUEST['e_day']) != '') {
             $filename .= ' to ' . $_REQUEST['e_day'];
             $where .= " and entry_date<=:e_day";
+            $where_array[':e_day'] = $_REQUEST['e_day'].' 23:59:59';
+        }
+        if (isset($_REQUEST['memo']) && $_REQUEST['memo'] != "") {
+            $where .= " and entry_memo LIKE :memo ";
+            $where_array[':memo'] = '%'.$_REQUEST['memo'].'%';
         }
 
         $sql = "select * from transition where " . $where;
+
         $command = Yii::app()->db
             ->createCommand($sql)
-            ->bindValues(array(':s_day' => $_REQUEST['s_day'], ':e_day' => $_REQUEST['e_day']));
+            ->bindValues($where_array);
+
         $data = $command->queryAll();
+
+
 //        $model->unsetAttributes(); // clear any default values
 //        if (isset($_GET['Transition']))
 //            $model->attributes = $_GET['Transition'];

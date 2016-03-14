@@ -24,9 +24,18 @@ var tableToExcel = (function () {
 })
 
 var tranToExcel = (function () {
-    $("#data").val($(".panel").html())
-    $("#export").append('<input type="hidden" name="s_day" value="' + $("#s_day").val() + '" />')
-    $("#export").append('<input type="hidden" name="e_day" value="' + $("#e_day").val() + '" />')
-    $("#export").submit()
+    $("#data").val($(".panel").html());
+    $("#export").append('<input type="hidden" name="s_day" value="' +$("#s_day").val()+ '" />');
+    $("#export").append('<input type="hidden" name="e_day" value="' +$("#e_day").val()+ '" />');
+    $("#export").append('<input type="hidden" name="memo" value="'+$("#memo").val()+'" />');
+    $("#export").submit();
 
-})
+});
+
+var tranToMultiExcel = (function () {
+    $("#data").val($(".panel").html());
+    $("#export").append('<input type="hidden" name="multi_search" value="'+$("#multi_search").val()+'" />');
+    $("#export").submit();
+
+});
+
