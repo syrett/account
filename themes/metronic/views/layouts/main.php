@@ -514,6 +514,71 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
 </div>
 <!-- END SYSTEM CONFIGURATION BOX -->
 
+<!-- list Reorganise -->
+<div class="modal fade" id="operListReorganise" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+            </div>
+            <div class="modal-body">
+                <div class="portlet light">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <span class="font-green-sharp">
+                            <?php
+                            $title =  Yii::t('import', '整理凭证');
+                            echo $title;
+                            ?>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <!-- search-form -->
+                        <?php
+                        $status = $this->getTransitionDate('end');
+                        echo Yii::t('import', "已结账至日期") . ": " . $status['date'];
+                        $list = call_user_func(array('Transition', 'listReorganise'));
+
+                        if (empty($list)) {
+                            ?>
+                            <div class="unit-group">
+                                <?= Yii::t('import', '没有数据需要处理') ?>
+                            </div>
+                            <?php
+                        } else {
+                            foreach ($list as $year => $months) {
+
+                                echo CHtml::beginForm($this->createUrl('/Transition/listReorganise'), 'get');
+                                ?>
+                                <?= $year ?><?= Yii::t('import', '年') ?>
+                                <?php
+                                $data = array();
+                                foreach ($months as $month) {
+                                    $data[$year . $month] = $month;
+                                }
+                                $this->widget('ext.select2.ESelect2', array(
+                                    'name' => 'date',
+                                    'data' => $data,
+                                    'htmlOptions' => array('class' => 'action')
+                                ));
+                                ?>
+                                <input type="submit" class="btn btn-primary" value="<?= $title ?>"/>
+                                <?php
+
+                                echo CHtml::endForm();
+                            }
+                        }
+
+                        ?>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--  -->
 <!-- list post -->
 <div class="modal fade" id="operListPost" tabindex="-1" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
@@ -895,7 +960,8 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                 <?= Yii::t('home', '期初余额') ?></a>
                         </li>
                         <li>
-                            <a href="<?= $this->createUrl('Site/operation&operation=listReorganise') ?>">
+                            <!-- <a href="<?= $this->createUrl('Site/operation&operation=listReorganise') ?>"> -->
+                                <a href="" data-target="#operListReorganise" data-toggle="modal">
                                 <i class="glyphicon glyphicon-list"></i>
                                 <?= Yii::t('home', '整理凭证') ?></a>
                         </li>
