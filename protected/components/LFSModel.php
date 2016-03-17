@@ -146,4 +146,33 @@ class LFSModel extends CActiveRecord
         }
         return $name;
     }
+
+    //客户或供应商，计算账龄区间
+    public static function getZone($date)
+    {
+        $ctime = strtotime($date);
+        $qtime = time() - $ctime;
+        $time_30 = 3600 * 24 * 30;
+        $time_90 = 3600 * 24 * 90;
+        $time_180 = 3600 * 24 * 180;
+        $time_365 = 3600 * 24 * 365;
+        $time_2y = 3600 * 24 * 365 * 2;
+        $time_5y = 3600 * 24 * 365 * 5;
+        if ($qtime <= $time_30){
+            $qzone = '0-30天';
+        }elseif($qtime <= $time_90){
+            $qzone = '30-90天';
+        }elseif($qtime <= $time_180){
+            $qzone = '90-180天';
+        }elseif($qtime <= $time_365){
+            $qzone = '180-365天';
+        }elseif($qtime <= $time_2y){
+            $qzone = '1-2年';
+        }elseif($qtime <= $time_5y){
+            $qzone = '2-5年';
+        }else{
+            $qzone = '5年以上';
+        };
+        return $qzone;
+    }
 }

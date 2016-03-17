@@ -21,7 +21,7 @@ $type = 'product';
 
 <div class="portlet box blue">
     <div class="portlet-title">
-        <div class="caption"><?= Yii::t('import', '修改') ?><?= Yii::t('import', strtoupper($type)) ?></div>
+        <div class="caption"><?= Yii::t('import', '交易信息修改') ?></div>
     </div>
     <div class="portlet-body">
         <?php

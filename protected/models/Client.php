@@ -11,19 +11,19 @@
  * @property string $add
  * @property string $memo
  */
-class Client extends CActiveRecord
+class Client extends LFSModel
 {
     public $select; // search的时候，定义返回字段
 
-    public static $ageZone = [
-        '全部',
-        '0-30天',    //$fDate date('Ymd',time()-3600*24*30)
-        '30-90天',   //$fDate = date('Ymd',time()-3600*24*90), $tDate = date('Ymd',time()-3600*24*30)
-        '90-180天',
-        '180-365天',
-        '1-2年',
-        '2-5天',
-        '5年以上',
+    public $ageZone = [
+        '全部' => '0',
+        '0-30天' => '0',    //$fDate date('Ymd',time()-3600*24*30)
+        '30-90天' => '0',   //$fDate = date('Ymd',time()-3600*24*90), $tDate = date('Ymd',time()-3600*24*30)
+        '90-180天' => '0',
+        '180-365天' => '0',
+        '1-2年' => '0',
+        '2-5年' => '0',
+        '5年以上' => '0',
     ];
 
     /**
@@ -246,15 +246,6 @@ class Client extends CActiveRecord
                 $trans += Transition::model()->findAllByAttributes(['entry_subject' => $sbj->sbj_number, 'entry_settlement' => 0], $where);
         }
         return $trans;
-    }
-
-    public function getAge()
-    {
-        $data = $this->getClientAge();
-        if ($data['amount'] > 0)
-            return convertDate($data['ageDate'], 'Y-m');
-        else
-            return '';
     }
 
     /*

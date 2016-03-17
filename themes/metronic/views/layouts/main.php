@@ -1020,18 +1020,49 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                 <?
                 if (User2::model()->checkVIP()) {
                     ?>
-
                     <li>
-                        <a href="<?= $this->createUrl('client/admin') ?>">
+                        <a href="javascript:;">
                             <i class="icon-wallet"></i>
                             <span class="title"><?= Yii::t('home', '客户') ?></span>
+                            <span class="arrow "></span>
                         </a>
+                        <ul class="sub-menu">
+                            <li>
+                                <a href="<?= $this->createUrl('client/admin') ?>">
+                                    <i class="icon-wallet"></i>
+                                    <span class="title"><?= Yii::t('home', '客户数据') ?></span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="<?= $this->createUrl('client/age') ?>">
+                                    <i class="icon-calendar "></i>
+                                    <span class="title"><?= Yii::t('home', '客户账龄') ?></span>
+                                </a>
+                            </li>
+
+                        </ul>
                     </li>
                     <li>
-                        <a href="<?= $this->createUrl('vendor/admin') ?>">
+                        <a href="javascript:;">
                             <i class="icon-basket-loaded"></i>
                             <span class="title"><?= Yii::t('home', '供应商') ?></span>
+                            <span class="arrow "></span>
                         </a>
+                        <ul class="sub-menu">
+                            <li>
+                                <a href="<?= $this->createUrl('vendor/admin') ?>">
+                                    <i class="icon-basket-loaded"></i>
+                                    <span class="title"><?= Yii::t('home', '供应商数据') ?></span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="<?= $this->createUrl('vendor/age') ?>">
+                                    <i class="icon-calendar"></i>
+                                    <span class="title"><?= Yii::t('home', '供应商账龄') ?></span>
+                                </a>
+                            </li>
+
+                        </ul>
                     </li>
                 <? } ?>
                 <li>

@@ -70,7 +70,7 @@ $left = $before + $unpaid - $paid;
                 ],
                 [
                     'header' => Yii::t('import', '年初余额'),
-                    'value' => '$GLOBALS["a"] = $data->getAllMount(["type"=>"before","date"=>date("Y")."-01-01 00:00:00"])'
+                    'value' => '$GLOBALS["a"] = $data->getAllMount(["entry_transaction"=>2, "type"=>"before","date"=>date("Y")."-01-01 00:00:00"])'
                 ],
                 [
                     'header' => Yii::t('import', '本年增加'),
@@ -89,7 +89,7 @@ $left = $before + $unpaid - $paid;
                     'buttons' => array(
                         'update' => array(
                             'options' => array('class' => 'btn btn-default tip btn-xs', 'title' => Yii::t('import', '编辑')),
-                            'label' => '<span class="glyphicon glyphicon-pencil"></span>',
+                            'label' => Yii::t('import', '修改'),
                             'imageUrl' => false,
                         ),
                         'delete' => array(

@@ -161,7 +161,7 @@ class ProjectB extends CActiveRecord
     /*
      *  在建工程返回ID
      */
-    public function getIdBySubject($sbj){
+    public static function getIdBySubject($sbj){
         $name = Subjects::getName($sbj);
         if($name!='' && $name != '不存在的科目编号'){
             $prob = self::model()->findByAttributes(['name'=>$name]);

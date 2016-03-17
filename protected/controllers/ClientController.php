@@ -42,38 +42,38 @@ class ClientController extends Controller
         //查看所有凭证，并列出
         $model = $this->loadModel($id);
         foreach (Client::$ageZone as $tab => $item) {
-            switch($tab){
+            switch ($tab) {
                 case 0:
                     $fDate = '';
                     $tDate = '';
                     break;
                 case 1: //30天内
-                    $fDate = date('Ymd',time()-3600*24*30);
+                    $fDate = date('Ymd', time() - 3600 * 24 * 30);
                     $tDate = '';
                     break;
                 case 2: //30-90天
-                    $fDate = date('Ymd',time()-3600*24*90);
-                    $tDate = date('Ymd',time()-3600*24*30);
+                    $fDate = date('Ymd', time() - 3600 * 24 * 90);
+                    $tDate = date('Ymd', time() - 3600 * 24 * 30);
                     break;
                 case 3: //90-180天
-                    $fDate = date('Ymd',time()-3600*24*180);
-                    $tDate = date('Ymd',time()-3600*24*90);
+                    $fDate = date('Ymd', time() - 3600 * 24 * 180);
+                    $tDate = date('Ymd', time() - 3600 * 24 * 90);
                     break;
                 case 4: //180-365天
-                    $fDate = date('Ymd',time()-3600*24*365);
-                    $tDate = date('Ymd',time()-3600*24*180);
+                    $fDate = date('Ymd', time() - 3600 * 24 * 365);
+                    $tDate = date('Ymd', time() - 3600 * 24 * 180);
                     break;
                 case 5: //1-2年
-                    $fDate = date('Ymd',time()-3600*24*365*2);
-                    $tDate = date('Ymd',time()-3600*24*365);
+                    $fDate = date('Ymd', time() - 3600 * 24 * 365 * 2);
+                    $tDate = date('Ymd', time() - 3600 * 24 * 365);
                     break;
                 case 6: //2-5
-                    $fDate = date('Ymd',time()-3600*24*365*5);
-                    $tDate = date('Ymd',time()-3600*24*365*2);
+                    $fDate = date('Ymd', time() - 3600 * 24 * 365 * 5);
+                    $tDate = date('Ymd', time() - 3600 * 24 * 365 * 2);
                     break;
                 case 7: //5-
                     $fDate = '';
-                    $tDate = date('Ymd',time()-3600*24*365*5);
+                    $tDate = date('Ymd', time() - 3600 * 24 * 365 * 5);
                     break;
             }
             $trans = $model->getDetail($fDate, $tDate);
@@ -303,4 +303,72 @@ class ClientController extends Controller
         } else
             echo json_encode(['status' => 'failed', 'msg' => '无效的请求']);
     }
+
+    /*
+     * 账龄控制器
+     */
+    public function actionAge()
+    {
+        $clients = Client::model()->findAll();
+        foreach ($clients as $client) {
+            //检查应收、预收、其他应收
+            $sbjs = Subjects::model()->findAllByAttributes(['sbj_name' => $client->company, 'has_sub' => 0], 'sbj_number regexp "^1122" or sbj_number regexp "^2203" or sbj_number regexp "^1221"');
+            if (count($sbjs) > 0) {   //最多应该只有3个科目
+                $where = '';
+                foreach ($sbjs as $sbj) {
+                    $where .= $where == '' ? "(entry_subject='$sbj->sbj_number'" : " or entry_subject='$sbj->sbj_number'";
+                }
+                $where .= ')';
+                $orderby = ' order by entry_date';
+                //借方
+                $debits = Transition::model()->findAllByAttributes([], $where . ' and ((entry_transaction = 1 and entry_amount > 0) or (entry_transaction = 2 and entry_amount < 0))' . $orderby);
+                //贷方
+                $credits = Transition::model()->findAllByAttributes([], $where . ' and ((entry_transaction = 2 and entry_amount > 0) or (entry_transaction = 1 and entry_amount < 0))' . $orderby);
+                $debit_amount = 0;
+                foreach ($debits as $debit) {
+                    $debit_amount += abs($debit->entry_amount);
+                }
+                $credit_amount = 0;
+                foreach ($credits as $credit) {
+                    $credit_amount += abs($credit->entry_amount);
+                }
+//                $balance = $debit_amount - $credit_amount;
+                if ($debit_amount > $credit_amount) {   //借方大于0，客户需要付钱给公司
+                    foreach ($debits as $debit) {
+                        if ($credit_amount < $debit->entry_amount) {    //有钱未收完，把时间算出
+                            $client->ageZone[$client::getZone($debit->entry_date)] += $credit_amount <= 0 ? $debit->entry_amount : ($debit->entry_amount - $credit_amount);
+                            $client->ageZone['全部'] += $credit_amount <= 0 ? $debit->entry_amount : ($debit->entry_amount - $credit_amount);
+                        }
+                        $credit_amount -= $debit->entry_amount;
+                    }
+                }
+
+            }
+        }
+        $this->render('age', array(
+            'dataProvider' => $clients,
+        ));
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

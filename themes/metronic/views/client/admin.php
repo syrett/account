@@ -20,9 +20,9 @@ foreach($clients as $client) {
     $sbj2 = $sbj2?$sbj2->sbj_number:'';
     $balance += Subjects::get_balance($sbj1) + Subjects::get_balance($sbj2);
     $unreceived += Transition::getAllMount($sbj1,1) + Transition::getAllMount($sbj2,1);
-    $unreceived2 += Transition::getAllMount($sbj1,2,'before') + Transition::getAllMount($sbj2,2,'before');
+    $unreceived2 += Transition::getAllMount($sbj1,1,'before') + Transition::getAllMount($sbj2,1,'before');
     $received += Transition::getAllMount($sbj1,2) + Transition::getAllMount($sbj2,2);
-    $received2 += Transition::getAllMount($sbj1,1,'before') + Transition::getAllMount($sbj2,1,'before');
+    $received2 += Transition::getAllMount($sbj1,2,'before') + Transition::getAllMount($sbj2,2,'before');
 }
 $before = $balance + $unreceived2 - $received2;
 $left = $before + $unreceived - $received;
@@ -85,16 +85,12 @@ $left = $before + $unreceived - $received;
                     'header' => Yii::t('import', '未收'),
                     'value' => '$GLOBALS["d"] = $data->getUnreceived()',
                 ],
-                [
-                    'header' => Yii::t('import', '账期 / 账龄'),
-                    'value' => '$data->getAge()',
-                ],
                 array(
                     'class' => 'CButtonColumn',
                     'buttons' => array(
                         'update' => array(
-                            'options' => array('class' => 'btn btn-default tip btn-xs', 'title' => Yii::t('import', '编辑')),
-                            'label' => Yii::t('import', '编辑'),
+                            'options' => array('class' => 'btn btn-default tip btn-xs', 'title' => Yii::t('import', '修改')),
+                            'label' => Yii::t('import', '修改'),
                             'imageUrl' => false,
                         ),
                         'delete' => array(
@@ -125,7 +121,7 @@ $left = $before + $unreceived - $received;
                             'url' => 'Yii::app()->createUrl("/client/bad", ["client_id"=>$data->id,"amount"=>$GLOBALS["d"],"action"=>$data->hasDad()?"unbad":"bad"])'
                         ),
                     ),
-                    'template' => '<div class="btn-group">{update}{view}</div>',
+                    'template' => '<div class="btn-group">{update}</div>',
                     'deleteConfirmation' => Yii::t('import', '确定要删除该条记录？'),
                     'afterDelete' => 'function(link,success,data){if(success) alert(data);}'
                 ),

@@ -10,7 +10,7 @@
  * @property string $add
  * @property string $memo
  */
-class Vendor extends CActiveRecord
+class Vendor extends LFSModel
 {
 	/**
 	 * @return string the associated database table name
@@ -19,6 +19,17 @@ class Vendor extends CActiveRecord
 	{
 		return 'vendor';
 	}
+
+    public $ageZone = [
+        '全部' => '0',
+        '0-30天' => '0',    //$fDate date('Ymd',time()-3600*24*30)
+        '30-90天' => '0',   //$fDate = date('Ymd',time()-3600*24*90), $tDate = date('Ymd',time()-3600*24*30)
+        '90-180天' => '0',
+        '180-365天' => '0',
+        '1-2年' => '0',
+        '2-5年' => '0',
+        '5年以上' => '0',
+    ];
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -161,8 +172,8 @@ class Vendor extends CActiveRecord
             $sbj = $sbj?$sbj->sbj_number:'';
             if(isset($options['type'])&&$options['type']=='before'){
                 $balance = Subjects::get_balance($sbj);
-                $in = Transition::model()->getAllMount($sbj, 1, $options['type'], $options['date']);
-                $out = Transition::model()->getAllMount($sbj, 2, $options['type'], $options['date']);
+                $in = Transition::model()->getAllMount($sbj, 2, $options['type'], $options['date']);
+                $out = Transition::model()->getAllMount($sbj, 1, $options['type'], $options['date']);
                 $result += $balance + $in-$out;
             }else
                 $result += Transition::model()->getAllMount($sbj, $options['entry_transaction'], 'after', '');
