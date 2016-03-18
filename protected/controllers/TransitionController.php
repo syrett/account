@@ -1614,8 +1614,11 @@ class TransitionController extends Controller
 
         if ($where != '') {
             $where = substr($where, 2);
+            $sql = "select * from transition where " . $where;
+        } else {
+            $sql = 'SELECT * FROM `transition` ';
         }
-        $sql = "select * from transition where " . $where;
+
 
         $command = Yii::app()->db
             ->createCommand($sql)
