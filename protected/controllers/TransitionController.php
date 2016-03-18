@@ -1662,14 +1662,14 @@ class TransitionController extends Controller
          * @var string
          */
         foreach ($data as $row) {
-            $rows .= "<tr><td>" . $row['entry_num_prefix'] . $this->addZero($row['entry_num']) . "</td>
-            <td>" . $row['entry_memo'] . "</td>
-            <td>" . Transition::transaction($row['entry_transaction']) . "</td>
-            <td>" . Subjects::getSbjPath($row['entry_subject']) . "</td>
-            <td>" . $row['entry_amount'] . "</td>
-            <td>" . Transition::getAppendix($row['entry_appendix_type'], $row['entry_appendix_id']) . "</td>
-            <td>" . Transition::getPosting($row['entry_posting']) . "</td>
-            <td>" . $row['entry_date'] . "</td></tr>";
+            $rows .= '<tr><td>' . $row['entry_num_prefix'] . $this->addZero($row['entry_num']) . '</td>
+            <td>' . $row['entry_memo'] . '</td>
+            <td>' . Transition::transaction($row['entry_transaction']) . '</td>
+            <td>' . Subjects::getSbjPath($row['entry_subject']) . '</td>
+            <td>' . $row['entry_amount'] . '</td>
+            <td>' . Transition::getAppendix($row['entry_appendix_type'], $row['entry_appendix_id']) . '</td>
+            <td>' . Transition::getPosting($row['entry_posting']) . '</td>
+            <td>' . $row['entry_date'] . '</td></tr>';
         }
         $data = $table . $header . $rows . '</table>';
         $style = '<style type="text/css">

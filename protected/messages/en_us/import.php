@@ -322,9 +322,10 @@ return [
     '会计凭证' => 'Accounting voucher',
     '提示：导入凭证不可修改' => 'Tip: import certificates cannot be modified',
 
+    '坏账' => 'Bad debt',
+    '设置金额' => 'Configuration of amount',
 
-
-//    '返回前页' => 'Back',
+    '输入金额' => 'Input amount',
 //    '返回前页' => 'Back',
 //    '返回前页' => 'Back',
 //    '返回前页' => 'Back',

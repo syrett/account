@@ -221,44 +221,54 @@ class VendorController extends Controller
      */
 	public function actionAge()
 	{
-		$vendors = Vendor::model()->findAll();
-		foreach ($vendors as $vendor) {
-			//检查应付、预付、其他应付
-			$sbjs = Subjects::model()->findAllByAttributes(['sbj_name' => $vendor->company, 'has_sub' => 0], 'sbj_number regexp "^1123" or sbj_number regexp "^2202" or sbj_number regexp "^2241"');
-			if (count($sbjs) > 0) {   //最多应该只有3个科目
-				$where = '';
-				foreach ($sbjs as $sbj) {
-					$where .= $where == '' ? "(entry_subject='$sbj->sbj_number'" : " or entry_subject='$sbj->sbj_number'";
-				}
-				$where .= ')';
-				$orderby = ' order by entry_date';
-				//借方
-				$credits = Transition::model()->findAllByAttributes([], $where . ' and ((entry_transaction = 1 and entry_amount > 0) or (entry_transaction = 2 and entry_amount < 0))' . $orderby);
-				//贷方
-				$debits = Transition::model()->findAllByAttributes([], $where . ' and ((entry_transaction = 2 and entry_amount > 0) or (entry_transaction = 1 and entry_amount < 0))' . $orderby);
-				$debit_amount = 0;
-				foreach ($debits as $debit) {
-					$debit_amount += abs($debit->entry_amount);
-				}
-				$credit_amount = 0;
-				foreach ($credits as $credit) {
-					$credit_amount += abs($credit->entry_amount);
-				}
-//                $balance = $debit_amount - $credit_amount;
-				if ($debit_amount > $credit_amount) {   //借方大于0，公司需要值钱给供应商
-					foreach ($debits as $debit) {
-						if ($credit_amount < $debit->entry_amount) {    //有钱未付清，把时间算出
-							$vendor->ageZone[$vendor::getZone($debit->entry_date)] += $credit_amount <= 0 ? $debit->entry_amount : ($debit->entry_amount - $credit_amount);
-							$vendor->ageZone['全部'] += $credit_amount <= 0 ? $debit->entry_amount : ($debit->entry_amount - $credit_amount);
-						}
-						$credit_amount -= $debit->entry_amount;
-					}
-				}
 
+		$arr = [[1123, 2202], [2241]];
+		foreach ($arr as $key => $item) {
+			$vendors = Vendor::model()->findAll();
+			foreach ($vendors as $vendor) {
+				//检查应付、预付、其他应付
+				$regexp = '';
+				foreach ($item as $one => $sbj) {
+					$regexp .= $regexp == '' ? 'sbj_number regexp "^' . $sbj . '"' : ' or sbj_number regexp "^' . $sbj . '"';
+				}
+				$sbjs = Subjects::model()->findAllByAttributes(['sbj_name' => $vendor->company, 'has_sub' => 0], $regexp);
+				if (count($sbjs) > 0) {   //最多应该只有3个科目
+					$where = '';
+					foreach ($sbjs as $sbj) {
+						$where .= $where == '' ? "(entry_subject='$sbj->sbj_number'" : " or entry_subject='$sbj->sbj_number'";
+					}
+					$where .= ')';
+					$orderby = ' order by entry_date';
+					//借方
+					$credits = Transition::model()->findAllByAttributes([], $where . ' and ((entry_transaction = 1 and entry_amount > 0) or (entry_transaction = 2 and entry_amount < 0))' . $orderby);
+					//贷方
+					$debits = Transition::model()->findAllByAttributes([], $where . ' and ((entry_transaction = 2 and entry_amount > 0) or (entry_transaction = 1 and entry_amount < 0))' . $orderby);
+					$debit_amount = 0;
+					foreach ($debits as $debit) {
+						$debit_amount += abs($debit->entry_amount);
+					}
+					$credit_amount = 0;
+					foreach ($credits as $credit) {
+						$credit_amount += abs($credit->entry_amount);
+					}
+//                $balance = $debit_amount - $credit_amount;
+					if ($debit_amount > $credit_amount) {   //借方大于0，公司需要值钱给供应商
+						foreach ($debits as $debit) {
+							if ($credit_amount < $debit->entry_amount) {    //有钱未付清，把时间算出
+								$vendor->ageZone[$vendor::getZone($debit->entry_date)] += $credit_amount <= 0 ? $debit->entry_amount : ($debit->entry_amount - $credit_amount);
+								$vendor->ageZone['全部'] += $credit_amount <= 0 ? $debit->entry_amount : ($debit->entry_amount - $credit_amount);
+							}
+							$credit_amount -= $debit->entry_amount;
+						}
+					}
+
+				}
 			}
+			$dataProvider[$key] = $vendors;
 		}
 		$this->render('age', array(
-			'dataProvider' => $vendors,
+			'dataProvider0' => $dataProvider[0],
+			'dataProvider1' => $dataProvider[1],
 		));
 	}
 }

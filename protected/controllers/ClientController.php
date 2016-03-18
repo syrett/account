@@ -258,50 +258,50 @@ class ClientController extends Controller
     /*
      * 坏账处理
      */
-    public function actionBad($client_id, $amount, $action)
+    public function actionBad()
     {
-        if (Yii::app()->request->isAjaxRequest) {
-            $model = $this->loadModel($client_id);
-            if ($model) {
-                if ($action == 'bad') {
-                    if ($amount <= 0) {
-                        echo json_encode(['status' => 'failed', 'msg' => '金额为0，无需处理']);
-                        return true;
-                    }
-                    $tran1 = new Transition();
-                    $tran2 = new Transition();
-                    $tran1->entry_transaction = 1;
-                    $tran2->entry_transaction = 2;
-                    $tran1->entry_subject = Subjects::matchSubject('坏账损失', '6602');;
-                    $tran2->entry_subject = '1231';
-                    $date = Transition::getTransitionDate();
-                    $dates = Condom::model()->getStartTime();
-                    if ($date < $dates . '01')
-                        $date = $dates;
-                    $prefix = substr($date, 0, 6);
-                    $data = [
-                        'data_type' => 'bad_debts',
-                        'data_id' => $model->id,
-                        'entry_num_prefix' => $prefix,
-                        'entry_memo' => $model->company . '_坏账',
-                        'entry_date' => convertDate($date, 'Y-m-d 00:00:00'),
-                        'entry_num' => Transition::model()->tranSuffix($prefix),
-                        'entry_creater' => Yii::app()->user->id,
-                        'entry_editor' => Yii::app()->user->id,
-                        'entry_amount' => $amount,
-                    ];
-                    $tran1->attributes = $data;
-                    $tran2->attributes = $data;
-                    if ($tran1->save() && $tran2->save())
-                        echo json_encode(['status' => 'success', 'msg' => '坏账处理完成']);
-                } else {      //取消坏账
-                    Transition::model()->deleteAllByAttributes(['data_type' => 'bad_debts', 'data_id' => $client_id, 'entry_closing' => 0]);
-                    echo json_encode(['status' => 'success', 'msg' => '已经取消坏账']);
+        $client_id = $_POST['client_id'];
+        $amount = $_POST['bad-amount'];
+        $action = $_POST['action'];
+        $model = $this->loadModel($client_id);
+        if ($model) {
+            if ($action == 'bad') {
+                if ($amount <= 0) {
+                    echo json_encode(['status' => 'failed', 'msg' => '金额为0，无需处理']);
+                    return true;
                 }
-            } else
-                echo json_encode(['status' => 'failed', 'msg' => '无法找到该客户，刷新后重试']);
+                $tran1 = new Transition();
+                $tran2 = new Transition();
+                $tran1->entry_transaction = 1;
+                $tran2->entry_transaction = 2;
+                $tran1->entry_subject = Subjects::matchSubject('坏账损失', '6602');
+                $tran2->entry_subject = '1231';
+                $date = Transition::getTransitionDate();
+                $dates = Condom::model()->getStartTime();
+                if ($date < $dates . '01')
+                    $date = $dates;
+                $prefix = substr($date, 0, 6);
+                $data = [
+                    'data_type' => 'bad_debts',
+                    'data_id' => $model->id,
+                    'entry_num_prefix' => $prefix,
+                    'entry_memo' => $model->company . '_坏账',
+                    'entry_date' => convertDate($date, 'Y-m-d 00:00:00'),
+                    'entry_num' => Transition::model()->tranSuffix($prefix),
+                    'entry_creater' => Yii::app()->user->id,
+                    'entry_editor' => Yii::app()->user->id,
+                    'entry_amount' => $amount,
+                ];
+                $tran1->attributes = $data;
+                $tran2->attributes = $data;
+                if ($tran1->save() && $tran2->save())
+                    echo json_encode(['status' => 'success', 'msg' => '坏账处理完成']);
+            } else {      //取消坏账
+                Transition::model()->deleteAllByAttributes(['data_type' => 'bad_debts', 'data_id' => $client_id, 'entry_closing' => 0]);
+                echo json_encode(['status' => 'success', 'msg' => '已经取消坏账']);
+            }
         } else
-            echo json_encode(['status' => 'failed', 'msg' => '无效的请求']);
+            echo json_encode(['status' => 'failed', 'msg' => '无法找到该客户，刷新后重试']);
     }
 
     /*
@@ -309,44 +309,56 @@ class ClientController extends Controller
      */
     public function actionAge()
     {
-        $clients = Client::model()->findAll();
-        foreach ($clients as $client) {
-            //检查应收、预收、其他应收
-            $sbjs = Subjects::model()->findAllByAttributes(['sbj_name' => $client->company, 'has_sub' => 0], 'sbj_number regexp "^1122" or sbj_number regexp "^2203" or sbj_number regexp "^1221"');
-            if (count($sbjs) > 0) {   //最多应该只有3个科目
-                $where = '';
-                foreach ($sbjs as $sbj) {
-                    $where .= $where == '' ? "(entry_subject='$sbj->sbj_number'" : " or entry_subject='$sbj->sbj_number'";
-                }
-                $where .= ')';
-                $orderby = ' order by entry_date';
-                //借方
-                $debits = Transition::model()->findAllByAttributes([], $where . ' and ((entry_transaction = 1 and entry_amount > 0) or (entry_transaction = 2 and entry_amount < 0))' . $orderby);
-                //贷方
-                $credits = Transition::model()->findAllByAttributes([], $where . ' and ((entry_transaction = 2 and entry_amount > 0) or (entry_transaction = 1 and entry_amount < 0))' . $orderby);
-                $debit_amount = 0;
-                foreach ($debits as $debit) {
-                    $debit_amount += abs($debit->entry_amount);
-                }
-                $credit_amount = 0;
-                foreach ($credits as $credit) {
-                    $credit_amount += abs($credit->entry_amount);
-                }
-//                $balance = $debit_amount - $credit_amount;
-                if ($debit_amount > $credit_amount) {   //借方大于0，客户需要付钱给公司
-                    foreach ($debits as $debit) {
-                        if ($credit_amount < $debit->entry_amount) {    //有钱未收完，把时间算出
-                            $client->ageZone[$client::getZone($debit->entry_date)] += $credit_amount <= 0 ? $debit->entry_amount : ($debit->entry_amount - $credit_amount);
-                            $client->ageZone['全部'] += $credit_amount <= 0 ? $debit->entry_amount : ($debit->entry_amount - $credit_amount);
-                        }
-                        $credit_amount -= $debit->entry_amount;
-                    }
-                }
 
+        $arr = [[1122, 2203], [1221]];
+        foreach ($arr as $key => $item) {
+            $clients = Client::model()->findAll();
+
+
+            foreach ($clients as $client) {
+                //检查应收、预收、其他应收
+                $regexp = '';
+                foreach ($item as $one => $sbj) {
+                    $regexp .= $regexp == '' ? 'sbj_number regexp "^' . $sbj . '"' : ' or sbj_number regexp "^' . $sbj . '"';
+                }
+                $sbjs = Subjects::model()->findAllByAttributes(['sbj_name' => $client->company, 'has_sub' => 0], $regexp);
+                if (count($sbjs) > 0) {   //最多应该只有3个科目
+                    $where = '';
+                    foreach ($sbjs as $sbj) {
+                        $where .= $where == '' ? "(entry_subject='$sbj->sbj_number'" : " or entry_subject='$sbj->sbj_number'";
+                    }
+                    $where .= ')';
+                    $orderby = ' order by entry_date';
+                    //借方
+                    $debits = Transition::model()->findAllByAttributes([], $where . ' and ((entry_transaction = 1 and entry_amount > 0) or (entry_transaction = 2 and entry_amount < 0))' . $orderby);
+                    //贷方
+                    $credits = Transition::model()->findAllByAttributes([], $where . ' and ((entry_transaction = 2 and entry_amount > 0) or (entry_transaction = 1 and entry_amount < 0))' . $orderby);
+                    $debit_amount = 0;
+                    foreach ($debits as $debit) {
+                        $debit_amount += abs($debit->entry_amount);
+                    }
+                    $credit_amount = 0;
+                    foreach ($credits as $credit) {
+                        $credit_amount += abs($credit->entry_amount);
+                    }
+//                $balance = $debit_amount - $credit_amount;
+                    if ($debit_amount > $credit_amount) {   //借方大于0，客户需要付钱给公司
+                        foreach ($debits as $debit) {
+                            if ($credit_amount < $debit->entry_amount) {    //有钱未收完，把时间算出
+                                $client->ageZone[$client::getZone($debit->entry_date)] += $credit_amount <= 0 ? $debit->entry_amount : ($debit->entry_amount - $credit_amount);
+                                $client->ageZone['全部'] += $credit_amount <= 0 ? $debit->entry_amount : ($debit->entry_amount - $credit_amount);
+                            }
+                            $credit_amount -= $debit->entry_amount;
+                        }
+                    }
+
+                }
             }
+            $dataProvider[$key] = $clients;
         }
         $this->render('age', array(
-            'dataProvider' => $clients,
+            'dataProvider0' => $dataProvider[0],
+            'dataProvider1' => $dataProvider[1],
         ));
     }
 }
