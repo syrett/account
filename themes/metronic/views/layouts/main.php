@@ -372,7 +372,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
 <!-- END HEADER -->
 
 <!-- BEGIN SYSTEM CONFIGURATION BOX -->
-<div class="modal fade" id="static" tabindex="-1" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="static" tabindex="-1" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -515,7 +515,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
 <!-- END SYSTEM CONFIGURATION BOX -->
 
 <!-- list Reorganise -->
-<div class="modal fade" id="operListReorganise" tabindex="-1" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="operListReorganise" tabindex="-1" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -580,7 +580,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
 </div>
 <!--  -->
 <!-- list post -->
-<div class="modal fade" id="operListPost" tabindex="-1" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="operListPost" tabindex="-1" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -648,7 +648,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
     if (User2::model()->checkVIP()) {
     ?>
         <!-- list settlement -->
-        <div class="modal fade" id="operListSettlement" tabindex="-1" data-backdrop="static" data-keyboard="false">
+        <div class="modal fade" id="operListSettlement" tabindex="-1" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -714,7 +714,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
         <!--  -->
 
         <!-- list Closing -->
-        <div class="modal fade" id="operListClosing" tabindex="-1" data-backdrop="static" data-keyboard="false">
+        <div class="modal fade" id="operListClosing" tabindex="-1" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -782,7 +782,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
     } else {
         ?>
         <!--  -->
-        <div class="modal fade" id="operListSettlementcloseing" tabindex="-1" data-backdrop="static" data-keyboard="false">
+        <div class="modal fade" id="operListSettlementcloseing" tabindex="-1" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -851,7 +851,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
     ?>
 
 <!-- listAntiSettlement -->
-<div class="modal fade" id="operListAntiSettlement" tabindex="-1" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="operListAntiSettlement" tabindex="-1" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
