@@ -21,6 +21,11 @@ $this->breadcrumbs = array(
     </div>
     <div class="portlet-body">
 
+        <?
+        foreach (Yii::app()->user->getFlashes() as $key => $message) {
+            echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
+        }
+        ?>
         <div class="tabbable tabbable-tabdrop">
             <ul class="nav nav-tabs">
                 <li class="active">
@@ -90,13 +95,13 @@ $this->breadcrumbs = array(
                                             'client' => '$data->id',
                                             'label' => Yii::t('import', '计提坏账'),
                                             //'imageUrl' => false,
-//                            'url' => 'Yii::app()->createUrl("/client/bad", ["client_id"=>$data->id,"action"=>"bad"])',
+                                            'url' => '"#".$data->id',
 
                                             'click' => "function(){
                                 $('#bad-label').html('" . Yii::t('import', '计提坏账金额') . "');
-                                $('#bad-client').val('\$data->id');
+                                $('#bad-client').val($(this).attr('href').substr(1));
                                 $('#bad-action').val('bad');
-
+                                return false;
 
                             }"
                                         ),
@@ -109,17 +114,18 @@ $this->breadcrumbs = array(
                                             ),
                                             'label' => Yii::t('import', '确认坏账'),
                                             //'imageUrl' => false,
-//                            'url' => 'Yii::app()->createUrl("/client/bad", ["client_id"=>$data->id,"action"=>$data->hasDad()?"unbad":"bad"])',
+                                            'url' => '"#".$data->id',
 
                                             'click' => "function(){
                                 $('#bad-label').html('" . Yii::t('import', '确认坏账金额') . "');
-                                $('#bad-client').val('\$data->id');
+                                $('#bad-client').val($(this).attr('href').substr(1));
                                 $('#bad-action').val('s-bad');
+                                return false;
 
                             }"
                                         ),
                                     ),
-                                    'template' => '<div class="btn-group"></div>',
+                                    'template' => '<div class="btn-group">{bad}{s-bad}</div>',
                                     'deleteConfirmation' => Yii::t('import', '确定要删除该条记录？'),
                                     'afterDelete' => 'function(link,success,data){if(success) alert(data);}'
                                 ]

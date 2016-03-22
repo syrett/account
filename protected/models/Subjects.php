@@ -811,4 +811,16 @@ class Subjects extends CActiveRecord
         $result['unreceived'] = $unreceived;
         return $result;
     }
+
+    /*
+     * 获取期末余额
+     */
+    public function getBalance(){
+        $amount = 0;
+        $trans = Transition::model()->findAllByAttributes(['entry_subject' => $this->sbj_number]);
+        foreach ($trans as $tran) {
+            $amount += $tran->entry_transaction==1?$tran->entry_amount:(-$tran->entry_amount);
+        }
+        return $amount;
+    }
 }

@@ -266,10 +266,13 @@ class ClientController extends Controller
         $model = $this->loadModel($client_id);
         if ($model) {
             if ($action == 'bad') {
-                if ($amount <= 0) {
-                    echo json_encode(['status' => 'failed', 'msg' => '金额为0，无需处理']);
-                    return true;
+                if ($amount == 0 || $amount == '') {
+                    Yii::app()->user->setFlash('success', "金额为0，无需处理!");
+                    $this->redirect(['age']);
                 }
+                $uamount = $model->getUnreceived();
+                if ($amount > $uamount)
+                    $amount = $uamount;
                 $tran1 = new Transition();
                 $tran2 = new Transition();
                 $tran1->entry_transaction = 1;
@@ -282,8 +285,8 @@ class ClientController extends Controller
                     $date = $dates;
                 $prefix = substr($date, 0, 6);
                 $data = [
-                    'data_type' => 'bad_debts',
-                    'data_id' => $model->id,
+//                    'data_type' => 'bad_debts',
+//                    'data_id' => $model->id,
                     'entry_num_prefix' => $prefix,
                     'entry_memo' => $model->company . '_坏账',
                     'entry_date' => convertDate($date, 'Y-m-d 00:00:00'),
@@ -294,14 +297,51 @@ class ClientController extends Controller
                 ];
                 $tran1->attributes = $data;
                 $tran2->attributes = $data;
-                if ($tran1->save() && $tran2->save())
-                    echo json_encode(['status' => 'success', 'msg' => '坏账处理完成']);
-            } else {      //取消坏账
-                Transition::model()->deleteAllByAttributes(['data_type' => 'bad_debts', 'data_id' => $client_id, 'entry_closing' => 0]);
-                echo json_encode(['status' => 'success', 'msg' => '已经取消坏账']);
+                if ($tran1->save() && $tran2->save()) {
+                    Yii::app()->user->setFlash('success', "计提坏账成功!");
+                    $this->redirect(['age']);
+                }
+            } elseif ($action == 's-bad') {      //确认坏账
+                if ($amount == 0 || $amount == '') {
+                    Yii::app()->user->setFlash('success', "金额为0，无需处理!");
+                    $this->redirect(['age']);
+                }
+//                $uamount = $model->getBalance();
+//                if ($amount > $uamount)
+//                    $amount = $uamount;
+                $tran1 = new Transition();
+                $tran2 = new Transition();
+                $tran1->entry_transaction = 1;
+                $tran2->entry_transaction = 2;
+                $tran1->entry_subject = '1231';
+                $tran2->entry_subject = Subjects::matchSubject($model->company, '1122');
+                $date = Transition::getTransitionDate();
+                $dates = Condom::model()->getStartTime();
+                if ($date < $dates . '01')
+                    $date = $dates;
+                $prefix = substr($date, 0, 6);
+                $data = [
+//                    'data_type' => 'bad_debts',
+//                    'data_id' => $model->id,
+                    'entry_num_prefix' => $prefix,
+                    'entry_memo' => $model->company . '_确认坏账',
+                    'entry_date' => convertDate($date, 'Y-m-d 00:00:00'),
+                    'entry_num' => Transition::model()->tranSuffix($prefix),
+                    'entry_creater' => Yii::app()->user->id,
+                    'entry_editor' => Yii::app()->user->id,
+                    'entry_amount' => $amount,
+                ];
+                $tran1->attributes = $data;
+                $tran2->attributes = $data;
+                if ($tran1->save() && $tran2->save()) {
+                    Yii::app()->user->setFlash('success', "确认坏账成功!");
+                    $this->redirect(['age']);
+                }
+
             }
         } else
-            echo json_encode(['status' => 'failed', 'msg' => '无法找到该客户，刷新后重试']);
+            Yii::app()->user->setFlash('error', "无法找到该客户，刷新后重试!");
+        $this->redirect(['age']);
     }
 
     /*

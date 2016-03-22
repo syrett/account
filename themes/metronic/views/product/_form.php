@@ -33,8 +33,8 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                 <tr>
                     <th class="input_min"><input type="checkbox"></th>
                     <th class="input_mid"><?= Yii::t('import', '交易日期') ?></th>
-                    <th class="input_mid"><?= Yii::t('import', '交易摘要') ?></th>
                     <th class="input_mid"><?= Yii::t('import', '销售单号') ?></th>
+                    <th class="input_mid"><?= Yii::t('import', '交易摘要') ?></th>
                     <th class="input_mid"><?= Yii::t('import', '客户') ?></th>
                     <th class="input_mid"><?= Yii::t('import', '商品/服务名称') ?></th>
                     <th class="input_min"><?= Yii::t('import', '单价') ?></th>

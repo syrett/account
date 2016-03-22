@@ -31,7 +31,7 @@ $preOrder = Preparation::getOrderArray($type);
                 <tr>
                     <th class="input_min"><input type="checkbox"></th>
                     <th class="input_mid"><?= Yii::t('import', '交易日期') ?></th>
-                    <th class="input_mid"><?= Yii::t('import', '订单号') ?></th>
+                    <th class="input_mid"><?= Yii::t('import', '销售单号') ?></th>
                     <th class="input_mid2"><?= Yii::t('import', '交易摘要') ?></th>
                     <th class="input_mid"><?= Yii::t('import', '客户名称') ?></th>
                     <th class="input_mid"><?= Yii::t('import', '商品') ?>/<?= Yii::t('import', '服务名称') ?></th>
@@ -61,7 +61,7 @@ $preOrder = Preparation::getOrderArray($type);
                                        name="lists[<?= $key ?>][Transition][entry_date]"
                                        value="<?= $item['entry_date'] ?>">
                             </td>
-                            <td><input class="input_mid" type="text" id="tran_realorder_<?= $key ?>" placeholder="<?= Yii::t('import', '订单号') ?>"
+                            <td><input class="input_mid" type="text" id="tran_realorder_<?= $key ?>" placeholder="<?= Yii::t('import', '销售单号') ?>"
                                        name="lists[<?= $key ?>][Transition][realorder]"
                                        value="<?= $item['realorder'] ?>">
                             </td>

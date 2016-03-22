@@ -194,6 +194,7 @@ return [
     '销售类型' => 'Sales type',
     '客户名称' => 'Client',
     '订单号' => 'Order No.',
+    '销售单号' => 'Order No.',
     '摘要' => 'Memo',
     '员工工资' => 'Employee Salary',
     '员工报销' => 'Employee Reimburse',

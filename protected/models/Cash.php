@@ -185,6 +185,8 @@ class Cash extends LFSModel
     private static function getPay()
     {
         return [
+            '行政支出' => '行政支出',     // 1
+            '工资社保' => '工资社保',     // 1
             '支付押金' => '支付押金',   //  2
             '借出款项' => '借出款项',
             '归还借款' => '归还借款',
@@ -218,6 +220,19 @@ class Cash extends LFSModel
         ];
     }
 
+    private static function getFacility($key){
+
+        $subject = new Subjects();
+        $arr = [6602];
+        $result = $subject->getitem($arr, $key, ['reject'=>['工资', '社保']]);
+        return [
+            'data' => $result,
+            'new' => 'allow',
+            'newsbj' => 6602,
+            'newsbjname' => Subjects::getName(6602),
+            'target' => true,
+        ];
+    }
     private static function getSalary()
     {
         return [
@@ -729,6 +744,15 @@ eof;
         $a = new Bank();
         if ($type == 1) { //支出
             switch ($options[2]) {
+
+                case '行政支出'  :
+                    if (isset($options[3])) {
+//                        $sbj = Subjects::matchSubject($options[2], '6402');
+//                        return self::endOption($sbj);
+                        return self::endOption($options[3]);
+                    } else
+                        $result = self::getFacility($data[1]);
+                    break;
                 case '工资社保'  :
                     if($version==1){
                         if (isset($options[3])) {
@@ -749,8 +773,12 @@ eof;
                         } else
                             $result = self::getSalary();
                     } else{
-                        $result = Subjects::matchSubject('应付工资', 2211);
-                        return self::endOption($result);
+                        if(isset($options[3])){
+                            $result = Subjects::matchSubject($options[3], 2211);
+                            return self::endOption($result);
+                        }else{
+                            $result = self::getSalary();
+                        }
                     }
                     break;
                 case '支付押金'  :
