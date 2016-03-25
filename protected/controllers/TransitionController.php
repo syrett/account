@@ -2600,7 +2600,7 @@ class TransitionController extends Controller
                                     'entry_transaction' => 1,
                                 ]);
                                 $tran3->attributes = $data;
-                                $data = array_merge($data, ['entry_subject' => 222102, 'entry_transaction' => 2]);     //贷 应交税费/营业税
+                                $data = array_merge($data, ['entry_subject' => Subjects::matchSubject('营业税', 2221), 'entry_transaction' => 2]);     //贷 应交税费/营业税
                                 $tran4->attributes = $data;
                                 $tran3->save();
                                 $tran4->save();
