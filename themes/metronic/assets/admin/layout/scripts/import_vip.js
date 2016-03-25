@@ -184,7 +184,7 @@ function chooseOption(e) {
                     str += '<select id="droplist" class="selectSetting" ><option>请选择</option>';
 
                     $.each(data.data, function (key, value) {
-                        if (IsNum(key.toString().substring(1))) //json.parse会把数组重新排序，所以key为数字数组，key前面都添加了下划线'_'
+                        if (IsNum(key.toString().substring(1)) && !IsNum(key.toString())) //json.parse会把数组重新排序，所以key为数字数组，key前面都添加了下划线'_'
                             key = key.toString().substring(1)
                         str += '<option value="' + key + '">' + value + '</option>'
                     });
@@ -205,7 +205,7 @@ function chooseOption(e) {
                                 value = value[key][0];
                             }
                         }
-                        if (IsNum(key.toString().substring(1))) //json.parse会把数组重新排序，所以key为数字数组，key前面都添加了下划线'_'
+                        if (IsNum(key.toString().substring(1)) && !IsNum(key.toString())) //json.parse会把数组重新排序，所以key为数字数组，key前面都添加了下划线'_'
                             key = key.toString().substring(1)
                         str += ' <button class="btn popovers" data-trigger="hover" data-content="'+info+'" type="button" onclick="chooseOption(this)" value="' + key + '">' + value + '</button>'
                     });
