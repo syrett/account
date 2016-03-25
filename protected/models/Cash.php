@@ -216,6 +216,7 @@ class Cash extends LFSModel
             '材料销售' => '材料销售',           //  6
             '技术转让' => '技术转让',
             '资产租赁' => '资产租赁',
+            '收回坏账' => '收回坏账',
             '其他收入' => '其他收入',           //  7
         ];
     }
@@ -305,7 +306,8 @@ class Cash extends LFSModel
     {
         return [
             'data' => [],
-            'option' => [['checkbox', '是否含税']],
+//            'option' => [['checkbox', '是否含税']],
+            'option' => [['select', 'withtax', '税率', ['0'=> '不含税', '3' => '3%增值税', '5' => '5%营业税']]],
         ];
     }
 
@@ -826,7 +828,7 @@ eof;
                                     $result = self::genData($order);
                             }
                         }else{
-                            $vendors = Vendor::getVendors($data[1], 1, 2);
+                            $vendors = Vendor::getVendors($data[1]);
                             $result = ['data' => $vendors];
                         }
                     }
@@ -1146,6 +1148,9 @@ eof;
                 case '资产租赁'  :
                     $sbj = Subjects::matchSubject($options[2],'6051');
                     return self::endOption($sbj);
+                    break;
+                case '收回坏账'  :
+                    return self::endOption(1231);
                     break;
                 case '其他收入'  :
                     if (isset($options[3])) {

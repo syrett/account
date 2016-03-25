@@ -277,7 +277,7 @@ class ClientController extends Controller
                 $tran2 = new Transition();
                 $tran1->entry_transaction = 1;
                 $tran2->entry_transaction = 2;
-                $tran1->entry_subject = Subjects::matchSubject('坏账损失', '6602');
+                $tran1->entry_subject = Subjects::matchSubject('坏账损失', '6701');
                 $tran2->entry_subject = '1231';
                 $date = Transition::getTransitionDate();
                 $dates = Condom::model()->getStartTime();

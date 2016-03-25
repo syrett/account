@@ -38,7 +38,7 @@ $('.search-form form').submit(function(){
         ?>
         <!-- search-form -->
 
-        <input type="hidden" id="delall" value="<?= CHtml::normalizeUrl(array('/product/delall/'))?>"
+        <input type="hidden" id="delall" value="<?= CHtml::normalizeUrl(array('/product/delall/'))?>" />
         <?php
         $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'subjects-grid',

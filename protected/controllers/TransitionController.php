@@ -29,7 +29,7 @@ class TransitionController extends Controller
         $rules = parent::accessRules();
         $action = $this->getAction()->id;
         if ($rules[0]['actions'] == ['manage'])
-            $rules[0]['actions'] = ['create'];
+            $rules[0]['actions'] = ['create', 'delete'];
         if (in_array($action, ['salary', 'reimburse'])) {
             $permission = AuthRelation::model()->findByAttributes(['user_id' => Yii::app()->user->id, 'permission' => $action]);
             if ($permission)
@@ -181,6 +181,8 @@ class TransitionController extends Controller
         if (isset($_GET['Transition']))
             $model->attributes = $_GET['Transition'];
 
+        if (isset($_GET['entry_date']))
+            $model->entry_num_prefix = $_GET['entry_date'];
         $this->render('admin', array(
             'model' => $model,
         ));
@@ -380,11 +382,11 @@ class TransitionController extends Controller
                     if ($employee) {
                         $sheetData[] = Transition::getSheetData($item, 'reimburse');
                     } else {
-                        $inexist_staff .= ',&nbsp;&nbsp;'.trim($item['A']);
+                        $inexist_staff .= ',&nbsp;&nbsp;' . trim($item['A']);
                     }
                 }
                 if ($inexist_staff != '') {
-                    Yii::app()->user->setFlash('error', Yii::t('import',"系统中不存在以下员工").'<br>'.substr($inexist_staff, 1));
+                    Yii::app()->user->setFlash('error', Yii::t('import', "系统中不存在以下员工") . '<br>' . substr($inexist_staff, 1));
                 }
             } elseif (!isset($_POST['submit_type'])) {
                 $option = 'save';
@@ -394,7 +396,7 @@ class TransitionController extends Controller
                     foreach ($arr as $item) {
                         $data = Transition::getSheetData($item['data'], 'reimburse');
                         if ($item['status'] == 0) {
-                            Yii::app()->user->setFlash('error', Yii::t('import',"保存失败!"));
+                            Yii::app()->user->setFlash('error', Yii::t('import', "保存失败!"));
                             $sheetData[] = $data;
                         }
                         if ($item['status'] == 2) {
@@ -623,7 +625,7 @@ class TransitionController extends Controller
     {
         //整理按月为结点
         Transition::model()->reorganise($date);
-        $this->redirect("index.php?r=transition/index");
+        $this->redirect("index.php?r=transition/admin&entry_date=$date");
     }
 
     /**
@@ -1208,6 +1210,8 @@ class TransitionController extends Controller
             Yii::app()->user->setFlash('error', $entry_prefix . "结账失败! 凭证未结转");
         } elseif (!Transition::model()->isAllClosing($entry_prefix)) {
             Yii::app()->user->setFlash('error', $entry_prefix . "结账失败! 已经结账");
+        } elseif (Transition::model()->isAllClosing(getPrevMonth($entry_prefix, 'Ym'))&& $entry_prefix != Condom::getStartTime()) {
+            Yii::app()->user->setFlash('error', getPrevMonth($entry_prefix, 'Ym') . "需要先结账");
         } else
             $flag = true;
 
@@ -1585,7 +1589,7 @@ class TransitionController extends Controller
 
     }
 
-    public  function actionMultiCreateExcel()
+    public function actionMultiCreateExcel()
     {
 
         Yii::import('ext.phpexcel.PHPExcel');
@@ -1595,9 +1599,9 @@ class TransitionController extends Controller
 
         if (isset($_REQUEST['multi_search']) && trim($_REQUEST['multi_search']) != "") {
             $where .= 'OR entry_memo LIKE :p1 ';
-            $where_array[':p1'] = '%'.$_REQUEST['multi_search'].'%';
+            $where_array[':p1'] = '%' . $_REQUEST['multi_search'] . '%';
 
-            if(is_numeric($_REQUEST['multi_search']) && mb_strlen($_REQUEST['multi_search']) == 10) {
+            if (is_numeric($_REQUEST['multi_search']) && mb_strlen($_REQUEST['multi_search']) == 10) {
                 $a = substr($_REQUEST['multi_search'], 0, 6);
                 $b = substr($_REQUEST['multi_search'], 6) + 0;
                 $where .= 'OR (entry_num_prefix = :p2 AND entry_num = :p3) ';
@@ -1640,22 +1644,22 @@ class TransitionController extends Controller
          */
         $table = "<table><tr><td>$filename</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
         $header = "<tr><td>"
-            .Yii::t('transition', '凭证')
-            ."</td><td>"
-            .Yii::t('transition', '凭证摘要')
-            ."</td><td>"
-            .Yii::t('transition', '借贷')
-            ."</td><td>"
-            .Yii::t('transition', '借贷科目')
-            ."</td><td>"
-            .Yii::t('transition', '交易金额')
-            ."</td><td>"
-            .Yii::t('transition', '附加信息')
-            ."</td><td>"
-            .Yii::t('transition', '过账')
-            ."</td><td>"
-            .Yii::t('transition', '凭证日期')
-            ."</td></tr> ";
+            . Yii::t('transition', '凭证')
+            . "</td><td>"
+            . Yii::t('transition', '凭证摘要')
+            . "</td><td>"
+            . Yii::t('transition', '借贷')
+            . "</td><td>"
+            . Yii::t('transition', '借贷科目')
+            . "</td><td>"
+            . Yii::t('transition', '交易金额')
+            . "</td><td>"
+            . Yii::t('transition', '附加信息')
+            . "</td><td>"
+            . Yii::t('transition', '过账')
+            . "</td><td>"
+            . Yii::t('transition', '凭证日期')
+            . "</td></tr> ";
         $rows = "";
         /**
          * All the data of the table in a formatted string
@@ -1698,16 +1702,16 @@ class TransitionController extends Controller
         if (isset($_REQUEST['s_day']) && trim($_REQUEST['s_day']) != '') {
             $filename .= $_REQUEST['s_day'];
             $where .= " and entry_date>=:s_day";
-            $where_array[':s_day'] =  $_REQUEST['s_day'].' 00:00:00';
+            $where_array[':s_day'] = $_REQUEST['s_day'] . ' 00:00:00';
         }
         if (isset($_REQUEST['e_day']) && trim($_REQUEST['e_day']) != '') {
             $filename .= ' to ' . $_REQUEST['e_day'];
             $where .= " and entry_date<=:e_day";
-            $where_array[':e_day'] = $_REQUEST['e_day'].' 23:59:59';
+            $where_array[':e_day'] = $_REQUEST['e_day'] . ' 23:59:59';
         }
         if (isset($_REQUEST['memo']) && $_REQUEST['memo'] != "") {
             $where .= " and entry_memo LIKE :memo ";
-            $where_array[':memo'] = '%'.$_REQUEST['memo'].'%';
+            $where_array[':memo'] = '%' . $_REQUEST['memo'] . '%';
         }
 
         $sql = "select * from transition where " . $where;
@@ -1732,22 +1736,22 @@ class TransitionController extends Controller
          */
         $table = "<table><tr><td>$filename</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
         $header = "<tr><td>"
-            .Yii::t('transition', '凭证')
-            ."</td><td>"
-            .Yii::t('transition', '凭证摘要')
-            ."</td><td>"
-            .Yii::t('transition', '借贷')
-            ."</td><td>"
-            .Yii::t('transition', '借贷科目')
-            ."</td><td>"
-            .Yii::t('transition', '交易金额')
-            ."</td><td>"
-            .Yii::t('transition', '附加信息')
-            ."</td><td>"
-            .Yii::t('transition', '过账')
-            ."</td><td>"
-            .Yii::t('transition', '凭证日期')
-            ."</td></tr> ";
+            . Yii::t('transition', '凭证')
+            . "</td><td>"
+            . Yii::t('transition', '凭证摘要')
+            . "</td><td>"
+            . Yii::t('transition', '借贷')
+            . "</td><td>"
+            . Yii::t('transition', '借贷科目')
+            . "</td><td>"
+            . Yii::t('transition', '交易金额')
+            . "</td><td>"
+            . Yii::t('transition', '附加信息')
+            . "</td><td>"
+            . Yii::t('transition', '过账')
+            . "</td><td>"
+            . Yii::t('transition', '凭证日期')
+            . "</td></tr> ";
         $rows = "";
         /**
          * All the data of the table in a formatted string
@@ -1797,6 +1801,7 @@ class TransitionController extends Controller
      */
     public function saveAll($type, $id = '')
     {
+        $version = User2::model()->checkVIP() ? 2 : 1;
         $trans = $_POST['lists'];
         $result = [];
         $newone = 0;
@@ -2584,7 +2589,7 @@ class TransitionController extends Controller
                             foreach ($list as $item) {
                                 $item->save();
                             }
-                            if (isset($arr['tax']) && $arr['tax'] == 5) { //营业税需要生成2个凭证
+                            if (isset($arr['tax']) && $arr['tax'] == 5 && $version == 2) { //标准版营业税需要生成2个凭证，大众版不需要
                                 $tran3 = new Transition();
                                 $tran4 = new Transition();
                                 $data = array_merge($data, [

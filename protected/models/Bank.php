@@ -230,6 +230,7 @@ class Bank extends LFSModel
             '银行转账' => '银行转账',
             '存入现金' => '存入现金',
             '汇兑收益' => '汇兑收益',
+            '收回坏账' => '收回坏账',
             '其他收入' => '其他收入',           //  7
         ];
     }
@@ -320,7 +321,8 @@ class Bank extends LFSModel
     {
         return [
             'data' => [],
-            'option' => [['checkbox', 'withtax', '是否含税', '3%', '1']],
+//            'option' => [['checkbox', 'withtax', '是否含税', '3%', '1']],
+            'option' => [['select', 'withtax', '税率', ['0'=> '不含税', '3' => '3%增值税', '5' => '5%营业税']]],
         ];
     }
 
@@ -861,7 +863,7 @@ eof;
                                     $result = self::genData($order);
                             }
                         } else {
-                            $vendors = Vendor::getVendors($data[1], 1, 2);
+                            $vendors = Vendor::getVendors($data[1]);
                             $result = ['data' => $vendors];
                         }
                     }
@@ -1059,12 +1061,12 @@ eof;
                         //如果是，则将本金作为实收资本贷方，溢价金额作为资本公积4002贷方，形成会计分录，并返回步骤302
                         $result = [];
                         if ($options[3] == 2) {
-                            $result = self::shareholderIncome($data[1]);
+                            $result = self::shareholderIncome();
                         }
                         return self::endOption(4001, $result);
 
                     } else
-                        $result = self::getPremium($data[1]);
+                        $result = self::getPremium();
                     break;
                 case '收到押金'  :
                 case '收到借款'  :
@@ -1203,6 +1205,9 @@ eof;
                 case '汇兑收益'  :
                     $sbj = Subjects::matchSubject('汇兑损益', 6603);
                     return self::endOption($sbj);
+                    break;
+                case '收回坏账'  :
+                    return self::endOption(1231);
                     break;
                 case '其他收入'  :
                     if (isset($options[3])) {

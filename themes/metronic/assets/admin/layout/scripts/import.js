@@ -32,7 +32,7 @@ $(document).ready(function () {
     $('body').on('keyup', "input[name$='\[entry_memo\]']", function () {
         $(this).nextAll("span[class*='label-warning']").html("");
     })
-    $("div").delegate("#subject_b", "change",function () {
+    $("div").delegate("#subject_b", "change", function () {
         lockBank();
     });
 
@@ -154,7 +154,12 @@ function chooseOption(e) {
                         if (value[0] == 'text')
                             str += '<br ><input type="text" name="new-option" id="new-option" placeholder="' + value[1] + '" >'
                         if (value[0] == 'select') {
-
+                            var select = value[2] + ': <select name="new-option" id="' + value[1] + '" >'
+                            $.each(value[3], function (key, option) {
+                                select += '<option value="' + key + '">' + option + '</option>';
+                            })
+                            select += '</select>';
+                            str += select;
                         }
                         if (value[0] == 'checkbox') {
                             if (value[4] == "1")
@@ -300,16 +305,16 @@ function itemSet() {
             }
         })
         //设置含税，简单版可以这样设置，复杂版要重新设计
-        if ($("#withtax").is(":checked") == true)
-            $("#withtax_" + item_id).val(1);
-        else
-            $("#withtax_" + item_id).val(0);
+        //if ($("#withtax").val() != 0)
+        $("#withtax_" + item_id).val($("#withtax").val());
+        //else
+        //    $("#withtax_" + item_id).val(0);
 
-        if (sbj.substr(0, 4) == "6001" && $("#withtax_" + item_id).val() == 1){
-            //setTaxSubject(item_id);
-            $("#tax_" + item_id).val($("#withtax_" + item_id).val() == 1 ? 3 : 0);
+        //if (sbj.substr(0, 4) == "6001" && $("#withtax_" + item_id).val() != 0) {
+        //setTaxSubject(item_id);
+        $("#tax_" + item_id).val($("#withtax_" + item_id).val());
 
-        }
+        //}
         $("#path_" + item_id).val(str);
         e.html(str);
         e.addClass("path-success");
@@ -329,18 +334,18 @@ function itemSet() {
         if (typeof(path[1]) != 'undefined' && (path[1] == '供应商采购' || path[1] == '员工报销')) {
             if (in_array(sbj.substr(0, 4), ['1601', '1701', '1801'])) {
                 department_id_show = true;
-                $("#department_id_"+item_id).removeClass("hidden");
+                $("#department_id_" + item_id).removeClass("hidden");
                 $("[id='department_id_" + item_id + "']").show().select2();
-            }else{
-                $("#department_id_"+item_id).addClass("hidden");
+            } else {
+                $("#department_id_" + item_id).addClass("hidden");
                 $("select[id='department_id_" + item_id + "']").select2("destroy").hide();
             }
-        }else{
-            $("#department_id_"+item_id).addClass("hidden");
+        } else {
+            $("#department_id_" + item_id).addClass("hidden");
             $("select[id='department_id_" + item_id + "']").select2("destroy").hide();
         }
-        $.each($("[id^='subject_']:not(#subject_b)"),function (key, element) {
-            if(in_array(element.value.substr(0, 4), ['1601', '1701', '1801']))
+        $.each($("[id^='subject_']:not(#subject_b)"), function (key, element) {
+            if (in_array(element.value.substr(0, 4), ['1601', '1701', '1801']))
                 department_id_show = true;
         })
         if (department_id_show)
@@ -349,21 +354,21 @@ function itemSet() {
             $("#department_id_th,#department_id_td").addClass("hidden");
 
         var client_id_show = false;
-        if (typeof(path[1]) != 'undefined' && path[1] == '销售收入' ) {
+        if (typeof(path[1]) != 'undefined' && path[1] == '销售收入') {
             if (in_array(sbj.substr(0, 4), ['6001'])) {
                 client_id_show = true;
-                $("#client_id_"+item_id).removeClass("hidden");
+                $("#client_id_" + item_id).removeClass("hidden");
                 $("[id='client_id_" + item_id + "']").show().select2();
-            }else{
-                $("#client_id_"+item_id).addClass("hidden");
+            } else {
+                $("#client_id_" + item_id).addClass("hidden");
                 $("select[id='client_id_" + item_id + "']").select2("destroy").hide();
             }
-        }else{
-            $("#client_id_"+item_id).addClass("hidden");
+        } else {
+            $("#client_id_" + item_id).addClass("hidden");
             $("select[id='client_id_" + item_id + "']").select2("destroy").hide();
         }
-        $.each($("[id^='subject_']:not(#subject_b)"),function (key, element) {
-            if(in_array(element.value.substr(0, 4), ['6001']))
+        $.each($("[id^='subject_']:not(#subject_b)"), function (key, element) {
+            if (in_array(element.value.substr(0, 4), ['6001']))
                 client_id_show = true;
         })
         if (client_id_show)
@@ -389,11 +394,11 @@ function save() {
         var sbj = $("#subject_" + item_id).val();
         $("#invoice_" + item_id).val($("#new-invoice").val() == 2 ? 1 : 0);
         //主营业务收入才计算税率
-        if (sbj.substr(0, 4) == "6001" && $("#withtax_" + item_id).val() == 1){
+        if (sbj.substr(0, 4) == "6001" && $("#withtax_" + item_id).val() != 0 ) {
             setTaxAmount(item_id);    //设置税
             setTaxSubject(item_id);
         }
-        if ($("#overworth_" + item_id).val() != 0 && $("#overworth_" + item_id).val() != ''){
+        if ($("#overworth_" + item_id).val() != 0 && $("#overworth_" + item_id).val() != '') {
             $("#additional_sbj0_" + item_id).val(4002);//溢价金额作为资本公积4002贷方
             $("#additional_amount0_" + item_id).val(parseFloat($("#overworth_" + item_id).val()));
         }
@@ -497,26 +502,42 @@ function addNew(e) {
 }
 
 function setTaxSubject(item_id) {
-
-    $.ajax({
-        type: 'POST',
-        url: $("#get-subject").val(),
-        data: {"name": "增值税", "subject": 2221},
-        async: false,
-        success: function (msg) {
-            if (msg != 0) {
-                $.ajax({
-                    type: 'POST',
-                    url: $("#get-subject").val(),
-                    data: {"name": "销项", "subject": msg},
-                    async: false,
-                    success: function (sbj) {
-                        $("#additional_sbj0_" + item_id).val(sbj);//科目编号,应交税费2221的二级科目 进项（采购默认）参考gbl数据库
-                    }
-                });
+    //3%销项税 5%营业税，计入科目不同
+    var tax = $("#withtax_" + item_id).val();
+    var sbj_name = '';
+    if (tax == 5) {
+        sbj_name = '营业税';
+        $.ajax({
+            type: 'POST',
+            url: $("#get-subject").val(),
+            data: {"name": sbj_name, "subject": 2221},
+            async: false,
+            success: function (sbj) {
+                $("#additional_sbj0_" + item_id).val(sbj);
             }
-        }
-    });
+        });
+    } else if (tax == 3) {
+        $.ajax({
+            type: 'POST',
+            url: $("#get-subject").val(),
+            data: {"name": "增值税", "subject": 2221},
+            async: false,
+            success: function (msg) {
+                if (msg != 0) {
+                    $.ajax({
+                        type: 'POST',
+                        url: $("#get-subject").val(),
+                        data: {"name": "销项", "subject": msg},
+                        async: false,
+                        success: function (sbj) {
+                            $("#additional_sbj0_" + item_id).val(sbj);//科目编号,应交税费2221的二级科目 进项（采购默认）参考gbl数据库
+                        }
+                    });
+                }
+            }
+        });
+
+    }
 }
 function setTaxAmount(item_id) {
     //设置相关参数值，现在默认最多2个参数，如果过多要重新写函数
@@ -527,8 +548,11 @@ function setTaxAmount(item_id) {
     if ($("#tran_amount_" + item_id != ''))
         amount = parseFloat($("#tran_amount_" + item_id).val());
     //var tax = $("#new-category-3").val()    //税率
-    var tax = 3;
-    amount = amount - amount / (100 + parseFloat(tax)) * 100;
+    var tax = $("#withtax_" + item_id).val();
+    if (tax == 3)   //3%的增值税 5%营业税，计算方法不同
+        amount = amount - amount / (100 + parseFloat(tax)) * 100;
+    else if (tax == 5)
+        amount = amount * 5 / 100;
 
     $("#additional_amount0_" + item_id).val(amount);
 
@@ -585,6 +609,6 @@ function addRow() {
             startDate: getDate()
         });
     });
-    $(e).find("[id*='btn_del']").attr("disabled",false);
+    $(e).find("[id*='btn_del']").attr("disabled", false);
     $(e).children(':last-child').find("span").html('');
 }

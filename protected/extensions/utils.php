@@ -229,3 +229,9 @@ function removeLang($str){
     $reg = '/&?lang=[^&]*/';
     return preg_replace($reg, '', $str);
 }
+
+function getPrevMonth($date, $format = 'Y-m-d'){
+    $date = convertDate($date, 'Y-m-d');
+    return date($format, strtotime('-1 month', strtotime($date)));
+
+}
