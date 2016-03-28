@@ -35,7 +35,8 @@ class TransitionController extends Controller
             if ($permission)
                 $rules[0]['actions'] = [$action];
         }
-        $rules[0]['actions'] = array_merge($rules[0]['actions'], ['index', 'admin', 'settlement', 'listreview', 'update', 'listtransition', 'appendix']);
+        $rules[0]['actions'] = array_merge($rules[0]['actions'], ['index', 'admin', 'settlement', 'listreview', 'update', 'listtransition', 'appendix', 'setreviewedall', 'unreviewedall']);
+        //file_put_contents('r.txt', var_export($rules, true)."\n\n", FILE_APPEND);
         return $rules;
     }
 
@@ -1072,11 +1073,46 @@ class TransitionController extends Controller
         }
     }
 
-    /*
+     /*
      * 批量审核
      */
     public function actionSetReviewedAll()
     {
+        //检查权限
+        $action = [''];
+        $user = User::model()->findByPk(Yii::app()->user->id);
+        if($user->id == $user->group) //用户组组长，拥有所有权限
+            $action = [$this->getAction()->id];
+        else{
+            $access = AuthRelation::model()->findAllByAttributes(['user_id' => $user->id]);
+            if ($access) {
+                foreach ($access as $item) {
+                    $actions = explode('/', $item->permission);
+                    $controller = strtolower($this->getAction()->controller->id);
+                    $actiont = strtolower($this->getAction()->id);
+                    if (strtolower($actions[0]) == $controller) {
+                        if (count($actions) > 1) {
+                            //审核，取消审核权限控制，review同时控制审核和批量审核，unreview控制取消和批量取消
+                            if(($actiont=='review' || $actiont == 'setreviewedall') && end($actions) == 'review'){
+                                $action = end($actions)=='review'?[$actiont]:[''];
+                            }elseif(($actiont=='unreview' || $actiont == 'unreviewedall') && end($actions) == 'unreview'){
+                                $action = end($actions)=='unreview'?[$actiont]:[''];
+                            }else
+                                $action = strtolower(end($actions)) == strtolower($this->getAction()->id) ? [$this->getAction()->id] : $action;
+                        } else {
+                            $action = ['manage'];
+                        }
+                    }
+                }
+            } else
+                $action = [$this->getAction()->id];
+        }
+        if (!in_array('setreviewedall', $action)) {
+            echo CJSON::encode(array('success' => 'un_auth'));
+            exit;
+        }
+
+
         if (Yii::app()->request->isPostRequest) {
             $result = true;
             //凭证编号 ：2015050001
@@ -1111,6 +1147,40 @@ class TransitionController extends Controller
      */
     public function actionUnReviewedAll()
     {
+        //检查权限
+        $action = [''];
+        $user = User::model()->findByPk(Yii::app()->user->id);
+        if($user->id == $user->group) //用户组组长，拥有所有权限
+            $action = [$this->getAction()->id];
+        else{
+            $access = AuthRelation::model()->findAllByAttributes(['user_id' => $user->id]);
+            if ($access) {
+                foreach ($access as $item) {
+                    $actions = explode('/', $item->permission);
+                    $controller = strtolower($this->getAction()->controller->id);
+                    $actiont = strtolower($this->getAction()->id);
+                    if (strtolower($actions[0]) == $controller) {
+                        if (count($actions) > 1) {
+                            //审核，取消审核权限控制，review同时控制审核和批量审核，unreview控制取消和批量取消
+                            if(($actiont=='review' || $actiont == 'setreviewedall') && end($actions) == 'review'){
+                                $action = end($actions)=='review'?[$actiont]:[''];
+                            }elseif(($actiont=='unreview' || $actiont == 'unreviewedall') && end($actions) == 'unreview'){
+                                $action = end($actions)=='unreview'?[$actiont]:[''];
+                            }else
+                                $action = strtolower(end($actions)) == strtolower($this->getAction()->id) ? [$this->getAction()->id] : $action;
+                        } else {
+                            $action = ['manage'];
+                        }
+                    }
+                }
+            } else
+                $action = [$this->getAction()->id];
+        }
+        if (!in_array('unreviewedall', $action)) {
+            echo CJSON::encode(array('success' => 'un_auth'));
+            exit;
+        }
+
         if (Yii::app()->request->isPostRequest) {
             //凭证编号 ：2015050001
             foreach ($_POST['selectall'] as $item) {
