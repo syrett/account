@@ -606,7 +606,9 @@ var GetCheckbox = function () {
                     Metronic.initUniform('input:checkbox')
                 }
             }
-        });
+        }).error(function(xhr,ts,et,err) {
+                alert('响应错误！');
+            });
     } else {
         alert("请选择要删除的行!");
     }

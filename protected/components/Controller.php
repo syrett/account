@@ -86,8 +86,13 @@ class Controller extends CController
         $user = User::model()->findByPk(Yii::app()->user->id);
         Yii::app()->language = isset($user->lang)&&$user->lang!=''?$user->lang:Yii::app()->language;
         //以下controller才执行权限检验
-        $controllers = ['bank', 'cash', 'purchase', 'product', 'client', 'department', 'employee', 'options', 'post', 'project', 'report', 'subjects', 'transition', 'vendor'];
-        if (!in_array($this->uniqueId, $controllers) || User::model()->superAdmin())
+
+        if ('site' == $this->getAction()->controller->id && 'error' == $this->getAction()->id) {
+            return true;
+        }
+        //$controllers = [ 'bank', 'cash', 'purchase', 'product', 'client', 'department', 'employee', 'options', 'post', 'project', 'report', 'subjects', 'transition', 'vendor'];
+        //if (!in_array($this->uniqueId, $controllers) || User::model()->superAdmin())
+        if (User::model()->superAdmin())
             return true;
         else {
             $dbname = substr(SYSDB, 8);

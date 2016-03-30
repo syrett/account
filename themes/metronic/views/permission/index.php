@@ -9,6 +9,10 @@
             <span class="font-green-sharp"><?= Yii::t('import', '权限设置') ?></span>
         </div>
     </div>
+    <?php
+    foreach(Yii::app()->user->getFlashes() as $key => $message) {
+    echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
+    }?>
     <div class="portlet-body">
         <div class="panel-body">
             <?

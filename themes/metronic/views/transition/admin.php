@@ -211,15 +211,17 @@ $cs->registerScript('ComponentsPickersInit', 'ComponentsPickers.init();', CClien
             $.post('<?php echo CHtml::normalizeUrl(array('/transition/setreviewedall/'));?>', {'selectall[]': data}, function (data) {
                 var ret = $.parseJSON(data);
                 if (ret != null && ret.success != null) {
-                    if (ret.success == 'un_auth') {
-                        alert("<?= Yii::t('transition', '没有权限执行操作！');?>");
-                    }
-                    if (ret.success === false)
+                    if (!ret.success)
                         alert("<?= Yii::t('transition', '部分凭证必须由他人审核');?>");
                     $.fn.yiiGridView.update("subjects-grid", {async: false});
                     Metronic.initUniform('input:checkbox')
                 }
-            });
+            }).error(function(xhr,ts,et,err) {
+                if ('forbidden' == et.toLowerCase()) {
+                    alert('没有权限执行操作！');
+                } else {
+                    alert('错误！');
+                }});
         } else {
             alert("<?= Yii::t('transition', '请选择要操作的行!');?>");
         }
@@ -238,13 +240,15 @@ $cs->registerScript('ComponentsPickersInit', 'ComponentsPickers.init();', CClien
             $.post('<?php echo CHtml::normalizeUrl(array('/transition/unreviewedall/'));?>', {'selectall[]': data}, function (data) {
                 var ret = $.parseJSON(data);
                 if (ret != null && ret.success != null && ret.success) {
-                    if (ret.success == 'un_auth') {
-                        alert("<?= Yii::t('transition', '没有权限执行操作！');?>");
-                    }
                     $.fn.yiiGridView.update("subjects-grid", {async: false});
                     Metronic.initUniform('input:checkbox')
                 }
-            });
+            }).error(function(xhr,ts,et,err) {
+                if ('forbidden' == et.toLowerCase()) {
+                    alert('没有权限执行操作！');
+                } else {
+                    alert('错误！');
+                }});
         } else {
             alert("<?= Yii::t('transition', '请选择要操作的行!');?>");
         }

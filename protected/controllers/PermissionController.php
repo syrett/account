@@ -41,7 +41,37 @@ class PermissionController extends Controller
      */
     public function actionAccess($id)
     {
+
+        //不能修改所有者权限
+        $condom = Condom::model()->findByAttributes(['dbname'=>substr(SYSDB,8)]);
+        if ($condom->owner == $id) {
+            Yii::app()->user->setFlash('error', '不能修改账套所有者的权限！');
+            $this->redirect($this->createUrl('permission/index'), array());
+            return;
+        }
+
+        //不能修改自己
+        if (Yii::app()->user->id == $id) {
+            Yii::app()->user->setFlash('error', '不能修改自己的权限！');
+            $this->redirect($this->createUrl('permission/index'), array());
+            return;
+        }
+
+        //是否在同一个组
+        $user = User2::model()->findByPk(Yii::app()->user->id);
+        $g_users = User2::model()->findAllByAttributes(['group' => $user->group]);
+        $g_users_arr = [];
+        foreach ($g_users as $g_user) {
+            $g_users_arr[] = $g_user->id;
+        }
+        if(!in_array($id, $g_users_arr)) {
+            Yii::app()->user->setFlash('error', "该用户ID不在同一组中，请检查!");
+            $this->redirect($this->createUrl('permission/index'), array());
+            return;
+        }
+
         $model = AuthRelation::model()->findAllByAttributes(['user_id' => $id], ['order' => 'permission']);
+
         if (isset($_POST['AuthPermission'])) {
             AuthRelation::model()->deleteAllByAttributes(['user_id' => $id]);
             foreach ($_POST['AuthPermission'] as $item => $value) {
