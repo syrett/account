@@ -213,7 +213,8 @@ class Reimburse extends LFSModel
      * 获取报销中，所有员工的名字，报销有临时预支借款，所以不论员工是否有报销每个员工都要列出
      */
     public static function getEmployee($name, $type=1, $version=1){
-        $employees = Employee::model()->findAllByAttributes(['name'=>$name],'status>=1');
+        //$employees = Employee::model()->findAllByAttributes(['name'=>$name],'status>=1');
+        $employees = Employee::model()->findAllByAttributes([], "status = 1 and name like '%$name%'");
         if(!$employees)
             $employees = Employee::model()->findAll('status>=1');
 
