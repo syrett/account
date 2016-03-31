@@ -458,7 +458,8 @@ class Cash extends LFSModel
     private static function getDeposit($type, $key = '')
     {
         $subject = new Subjects();
-        $options['type'] = 2;
+        //$options['type'] = 2;
+        $options['type'] = 1;
         if ($type == 1) {   //支付押金
             $arr = [2202, 2241, 1221];      //1123
             $new = 'allow';
@@ -616,7 +617,8 @@ eof;
     private static function getIncomeItem($type, $key = '')
     {
         $subject = new Subjects();
-        $options['type'] = 2;
+        //$options['type'] = 2;
+        $options['type'] = 1;
         if ($type == 1) {//押金
             $arr = [1122, 1221, 2203, 1123, 2241];
             $new = 'allow';

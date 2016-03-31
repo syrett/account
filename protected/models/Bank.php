@@ -475,7 +475,8 @@ class Bank extends LFSModel
     private static function getDeposit($type, $key = '')
     {
         $subject = new Subjects();
-        $options['type'] = 2;
+        //$options['type'] = 2;
+        $options['type'] = 1;
         if ($type == 1) {   //支付押金
             $arr = [2202, 2241, 1221];      //1123
             $new = 'allow';
@@ -633,7 +634,8 @@ eof;
     private static function getIncomeItem($type, $key = '')
     {
         $subject = new Subjects();
-        $options['type'] = 2;
+        //$options['type'] = 2;
+        $options['type'] = 1;
         if ($type == 1) {//押金
             $arr = [1122, 1221, 2203, 1123, 2241];
             $new = 'allow';
@@ -678,7 +680,8 @@ eof;
     {
         $subject = new Subjects();
         $arr = [6001];
-        $result = $subject->getitem($arr, '', ['type' => 0, 'sbj_number' => 6001]);
+        //$result = $subject->getitem($arr, '', ['type' => 0, 'sbj_number' => 6001]);
+        $result = $subject->getitem($arr, '', ['type' => 1, 'sbj_number' => 6001]);
         return [
             'data' => array_flip(array_flip($result)),
             'new' => 'no',

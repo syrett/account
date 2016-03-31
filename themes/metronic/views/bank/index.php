@@ -59,6 +59,13 @@ $('.search-form form').submit(function(){
             'rowCssClassExpression' => '$data->getClass($row,$data->status_id)',
             'itemsCssClass' => 'table table-bordered',
             'htmlOptions' => array('role' => 'grid'),
+            'ajaxUpdateError' => 'function(xhr,ts,et,err){
+                if (\'forbidden\' == et.toLowerCase()) {
+                    alert(\'没有权限执行操作！\');
+                } else {
+                    alert(\'错误！\');
+                }
+            }',
             'columns' => array(
                 array(
                     'selectableRows' => 2,

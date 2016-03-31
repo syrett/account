@@ -73,11 +73,11 @@ $checkStatus = AuthRelation::model()->findByAttributes(['user_id'=>$user_id])==n
                                  style="position: relative; overflow: hidden; width: auto; ">
                                 <div class="scroller" style=" overflow: hidden; width: auto;"
                                      data-always-visible="1" data-initialized="1">
-                                    <ul class="list-unstyled">
+                                    <ul class="list-unstyled" style="clear: both;">
                                         <?
                                         foreach ($list as $item) {
                                             ?>
-                                            <li>
+                                            <li style="float: left;">
                                                 <label>
                                                     <?php echo $form->checkBox($item, $item->id, array('checked' => AuthRelation::checkRelation($user_id, $item['id'])?true:$checkStatus)); ?>
                                                     <?= Yii::t('models/permission', $item->name) ?></label>

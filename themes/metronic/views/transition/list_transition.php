@@ -211,7 +211,12 @@ $cs->registerScript('ComponentsPickersInit', 'ComponentsPickers.init();', CClien
                     $.fn.yiiGridView.update("subjects-grid", {async: false});
                     Metronic.initUniform('input:checkbox')
                 }
-            });
+            }).error(function(xhr,ts,et,err) {
+                if ('forbidden' == et.toLowerCase()) {
+                    alert('没有权限执行操作！');
+                } else {
+                    alert('错误！');
+                }});
         } else {
             alert("<?= Yii::t('transition', '请选择要操作的行!');?>");
         }
@@ -233,7 +238,12 @@ $cs->registerScript('ComponentsPickersInit', 'ComponentsPickers.init();', CClien
                     $.fn.yiiGridView.update("subjects-grid", {async: false});
                     Metronic.initUniform('input:checkbox')
                 }
-            });
+            }).error(function(xhr,ts,et,err) {
+                if ('forbidden' == et.toLowerCase()) {
+                    alert('没有权限执行操作！');
+                } else {
+                    alert('错误！');
+                }});
         } else {
             alert("<?= Yii::t('transition', '请选择要操作的行!');?>");
         }
