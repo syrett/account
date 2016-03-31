@@ -40,8 +40,9 @@ $cdb = clone $dataProvider->getCriteria();
 $stocks = Stock::model()->findAll($cdb);
 if ($stocks)
     foreach ($stocks as $item) {
-        $temp = explode(',', $item['worth']);
-        $total += $temp[0] != '' ? $temp[0] : $item['in_price'];
+//        $temp = explode(',', $item['worth']);
+//        $total += $temp[0] != '' ? $temp[0] : $item['in_price'];
+        $total += $item['in_price'];
     }
 
 ?>

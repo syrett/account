@@ -39,6 +39,9 @@ class Money extends CModel
                     $data = $this->normal($date,$data,$key,['材料销售','收入'],$type);
                     $data = $this->normal($date,$data,$key,['技术转让','收入'],$type);
                     $data = $this->normal($date,$data,$key,['资产租赁','收入'],$type);
+                    $data = $this->normal($date,$data,$key,['利息收入','收入', '利息费用'],$type);
+                    $data = $this->normal($date,$data,$key,['利息收入','收入', '手续费'],$type);
+//                    $temp2 = $this->normal($date,$data,$key,'利息收入',$type);
                     $data = $this->normal($date,$data,$key,'收回借款',$type);
                     break;
                 case 9:
@@ -213,9 +216,9 @@ class Money extends CModel
                     $data = $this->normal($date,$data,$key,'归还借款',$type);
                     break;
                 case 46:     //分配股利、利润或偿付利息所支付的现金
-                    $temp1 = $this->normal($date,$data,$key,'利息手续费',$type);
-                    $temp2 = $this->normal($date,$data,$key,'利息收入',$type);
-                    $data[$key]["end"] = $temp1[46]["end"]-$temp2[46]["end"];
+                    $data = $this->normal($date,$data,$key,'利息手续费',$type);
+//                    $temp2 = $this->normal($date,$data,$key,'利息收入',$type);
+//                    $data[$key]["end"] = $temp1[46]["end"]-$temp2[46]["end"];
                     break;
                 case 52:     //支付的其他与筹资活动有关的现金
                     $data = $this->normal($date,$data,$key,'利息手续费',$type);

@@ -327,9 +327,11 @@ return [
     '设置金额' => 'Configuration of amount',
 
     '输入金额' => 'Input amount',
-//    '返回前页' => 'Back',
-//    '返回前页' => 'Back',
-//    '返回前页' => 'Back',
+    '年终奖' => 'Year award',
+    '应缴税款' => 'Tax',
+    '税后收入' => 'After tax',
+
+
 //    '返回前页' => 'Back',
 //    '返回前页' => 'Back',
 ];

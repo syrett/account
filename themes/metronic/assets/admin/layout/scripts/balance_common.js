@@ -12,13 +12,13 @@ function sumAmount(){
     var total = 0;
     $.each($("[id*='count']"),function(key,obj){
         var count = $(obj).val();
-        var amount = $(obj.parentNode).nextAll().find("[id*='worth']").val();
-        if(typeof(amount)!="undefined")
-            amount = amount.replace(',', '');
-        else{
-            amount = $(obj.parentNode).nextAll().find("[id*='in_price']").val();
-            amount = amount.replace(',', '');
-        }
+        var amount = $(obj.parentNode).nextAll().find("[id*='in_price']").val();
+        //if(typeof(amount)!="undefined")
+        //    amount = amount.replace(',', '');
+        //else{
+        //    amount = $(obj.parentNode).nextAll().find("[id*='in_price']").val();
+        //    amount = amount.replace(',', '');
+        //}
         total += count*amount;
     })
     $("#total").html(total);

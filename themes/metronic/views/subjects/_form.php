@@ -88,14 +88,14 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
 	<div class="form-group form-group-lg">
 		<?php echo $form->labelEx($model,'sbj_name',array('class'=>'col-sm-2 control-label')); ?>
         <div class="col-sm-10" id="sbj_name_div">
-		<?php echo $form->textField($model,'sbj_name',array('class'=>'form-control','size'=>20,'maxlength'=>20)); ?>
+		<?php echo $form->textField($model,'sbj_name',array('class'=>'form-control','size'=>20,'maxlength'=>512)); ?>
 		<?php echo $form->error($model,'sbj_name',array('id'=>'sbj_name_msg')); ?>
             </div>
 	</div>
     <div class="form-group form-group-lg">
         <?php echo $form->labelEx($model,'sbj_name_en',array('class'=>'col-sm-2 control-label')); ?>
         <div class="col-sm-10" id="sbj_name_en_div">
-            <?php echo $form->textField($model,'sbj_name_en',array('class'=>'form-control','size'=>20,'maxlength'=>20)); ?>
+            <?php echo $form->textField($model,'sbj_name_en',array('class'=>'form-control','size'=>20,'maxlength'=>512)); ?>
             <?php echo $form->error($model,'sbj_name_en',array('id'=>'sbj_name_en_msg')); ?>
         </div>
     </div>

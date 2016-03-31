@@ -671,8 +671,9 @@ class Stock extends LFSModel
         $balance = 0;
         if (!empty($stocks)) {
             foreach ($stocks as $item) {
-                $worth = explode(',', $item['worth']);
-                $balance += $worth[0] > 0 ? $worth[0] : $item['in_price'];
+//                $worth = explode(',', $item['worth']);
+//                $balance += $worth[0] > 0 ? $worth[0] : $item['in_price'];
+                $balance += $item['in_price'];
             }
         }
         return $balance;
@@ -684,7 +685,7 @@ class Stock extends LFSModel
     public function check_balance($sbj)
     {
         $sbalance = $this->get_balance($sbj);
-        $tbalance = Subjects::get_balance($sbj);
+        $tbalance = Subjects::get_balance($sbj, 'accurate');
         if ((string)$sbalance == (string)$tbalance)
             return true;
         else

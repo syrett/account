@@ -408,7 +408,7 @@ class Bank extends LFSModel
     private static function getInterest($key = '')
     {
         $model = new Subjects();
-        $arr_subj = $model->list_sub(6603, $key);
+        $arr_subj = $model->list_sub(6603, $key, ['reject' => ['汇兑损益', '汇兑收益']]);
         if (empty($arr_subj))
             $arr_subj = $model->list_sub(6603);
         $list = [];
@@ -1203,7 +1203,7 @@ eof;
                     return self::endOption(1001);
                     break;
                 case '汇兑收益'  :
-                    $sbj = Subjects::matchSubject('汇兑损益', 6603);
+                    $sbj = Subjects::matchSubject('汇兑收益', 6603);
                     return self::endOption($sbj);
                     break;
                 case '收回坏账'  :

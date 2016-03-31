@@ -281,6 +281,7 @@ class ClientController extends Controller
                 $tran2->entry_subject = '1231';
                 $date = Transition::getTransitionDate();
                 $dates = Condom::model()->getStartTime();
+                $date = getNextMonth($date, 'Ymd');
                 if ($date < $dates . '01')
                     $date = $dates;
                 $prefix = substr($date, 0, 6);
@@ -317,6 +318,7 @@ class ClientController extends Controller
                 $tran2->entry_subject = Subjects::matchSubject($model->company, '1122');
                 $date = Transition::getTransitionDate();
                 $dates = Condom::model()->getStartTime();
+                $date = getNextMonth($date, 'Ymd');
                 if ($date < $dates . '01')
                     $date = $dates;
                 $prefix = substr($date, 0, 6);

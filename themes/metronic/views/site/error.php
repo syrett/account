@@ -7,7 +7,7 @@
         <div class="error">
             <?php
             if(isset($message))
-                echo CHtml::encode($message). '<br />';
+                echo '<i class="fa fa-frown-o error"></i> '. CHtml::encode($message). '<br />';
             ?>
             <?
             if(isset($code) && $code == 500){

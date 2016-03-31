@@ -68,7 +68,8 @@ class Employee extends CActiveRecord
             'base_2' => Yii::t('models/model','公积金基数'),
             'memo' => Yii::t('models/model','备注'),
             'departure_date' => Yii::t('models/model','离职日期'),
-            'status' => Yii::t('models/model','状态')
+            'status' => Yii::t('models/model','状态'),
+			'year_award' => Yii::t('import', '年终奖')
         );
     }
 

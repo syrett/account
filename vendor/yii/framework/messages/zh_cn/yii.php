@@ -226,7 +226,7 @@ return array (
   'Unrecognized locale "{locale}".' => '无法辨识的地区设定 "{locale}".',
   'View file "{file}" does not exist.' => '名为 "{file}" 的 View 档不存在.',
   'Yii application can only be created once.' => 'Yii 应用程序只能被产生一次.',
-  'You are not authorized to perform this action.' => '您未被授权执行这个动作',
+  'You are not authorized to perform this action.' => '您未被授权执行本次操作!',
   'Your request is not valid.' => '您的请求无效',
   '{attribute} "{value}" has already been taken.' => '{attribute} "{value}" 已被取用.',
   '{attribute} cannot be blank.' => '{attribute} 不可为空白.',

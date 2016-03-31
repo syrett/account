@@ -24,7 +24,7 @@ class StockController extends Controller
         $rules = parent::accessRules();
         if ($rules[0]['actions'] == ['manage'])
             $rules[0]['actions'] = ['admin'];
-        $rules[0]['actions'] = array_merge($rules[0]['actions'], ['excel']);
+        $rules[0]['actions'] = array_merge($rules[0]['actions'], ['excel', 'excel1601', 'balance', 'truncate']);
         return $rules;
     }
 
@@ -727,28 +727,51 @@ class StockController extends Controller
             } elseif($_FILES['attachment']['name']==''){
                 $lists = $_POST['Stock'];
                 //先判断每类科目金额是否和总账期初余额相等
-
+                //还要考虑固定资产折旧，无形资产指摊销
+                $balance1602 = 0;
+                $balance1702 = 0;
                 $subject_array = Subjects::model()->listSubjects('1601');
                 $subject_array += Subjects::model()->listSubjects('1701');
                 $subject_array += Subjects::model()->listSubjects('1801');
                 $subject_array += Subjects::model()->listSubjects('1604');
+                $row = [];
                 foreach ($subject_array as $item => $subject) {
                     //筛选分类和$item相同科目的行，然后计算金额是否与总账相等
                     $rows = array_filter($lists,function($v) use ($item){
-                        return $v['entry_subject']==$item;
+                        return $v['entry_subject']==$item?true:false;
                     });
                     $amount = 0;
+                    if(count($rows) > 0)
                     foreach ($rows as $row) {
-                        $amount += $row['worth']*$row['count'];
+                        $amount += $row['in_price']*$row['count'];
+                    }else{
+                        foreach($row as &$v)
+                            $v = 0;
                     }
                     //计算科目期初余额
                     $balance = Subjects::get_balance($item);
                     if($balance != $amount){
-                        Yii::app()->user->setFlash('error', Subjects::getSbjPath($item).' 金额与总账期初余额不相等');
+                        $status = ['status' => 'error', 'msg' => Subjects::getSbjPath($item).' 金额与总账期初余额不相等'];
                         foreach ($lists as $row) {
                             $sheetData[] = Stock::getSheetData('固定资产', $row);
                         }
                         break;
+                    }
+                    $balance1602 = substr($item, 0, 4)=='1601'?$balance1602 + ($row['in_price'] - $row['worth'])*$row['count']:$balance1602;
+                    $balance1702 = substr($item, 0, 4)=='1701'?$balance1702 + ($row['in_price'] - $row['worth'])*$row['count']:$balance1702;
+                }
+                if( Subjects::get_balance(1602) != $balance1602 ){
+                    $status = isset($status['status'])&&$status['status']!='error'? ['status' => 'error', 'msg' => '固定资产累计折旧 金额与总账期初余额不相等']:$status;
+                    $sheetData = [];
+                    foreach ($lists as $row) {
+                        $sheetData[] = Stock::getSheetData('固定资产', $row);
+                    }
+                }
+                if( Subjects::get_balance(1702) != $balance1702 ){
+                    $status = isset($status['status'])&&$status['status']!='error'? ['status' => 'error', 'msg' => '无形资产累计摊销 金额与总账期初余额不相等']:$status;
+                    $sheetData = [];
+                    foreach ($lists as $row) {
+                        $sheetData[] = Stock::getSheetData('固定资产', $row);
                     }
                 }
                 if(!isset($sheetData))
@@ -759,8 +782,11 @@ class StockController extends Controller
                             $sheetData[] = ['count'=>$item['count'], $stock];
                     }
                 if(empty($sheetData)){
-                    Yii::app()->user->setFlash('success', "添加成功!");
+                    $status = ['status' => 'success', 'msg' => '添加成功'];
                     $this->redirect(['balance','type'=>1601]);
+                }
+                if(isset($status['status'])){
+                    Yii::app()->user->setFlash($status['status'], $status['msg']);
                 }
 
             }

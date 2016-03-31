@@ -191,7 +191,7 @@ function checkAmount($amount)
  */
 function convertDate($date, $format='')
 {
-    $date = (string)$date;
+    $date = $date!= ''?(string)$date:date('Ymd');
     $date = str_replace('\/','',trim($date));
     $date = str_replace('\\','',$date);
     $date = str_replace('-','',$date);
@@ -202,7 +202,7 @@ function convertDate($date, $format='')
     if ($length < 5)   //2015
         return $date.'0101';
     elseif($length == 6)
-        $date .= $date. '01';
+        $date .= '01';
     try{
         $d = new DateTime($date);
     }catch (Exception $s){
@@ -233,5 +233,8 @@ function removeLang($str){
 function getPrevMonth($date, $format = 'Y-m-d'){
     $date = convertDate($date, 'Y-m-d');
     return date($format, strtotime('-1 month', strtotime($date)));
-
+}
+function getNextMonth($date, $format = 'Y-m-d'){
+    $date = convertDate($date, 'Y-m-d');
+    return date($format, strtotime('+1 month', strtotime($date)));
 }

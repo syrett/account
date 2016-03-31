@@ -27,7 +27,7 @@ class SalaryController extends Controller
     {
         $rules = parent::accessRules();
         if ($rules[0]['actions'] == ['manage'])
-            $rules[0]['actions'] = ['index'];
+            $rules[0]['actions'] = ['index', 'year'];
         $rules[0]['actions'] = array_merge($rules[0]['actions'], ['']);
         return $rules;
     }
@@ -240,4 +240,9 @@ class SalaryController extends Controller
 			Yii::app()->end();
 		}
 	}
+
+    public function actionYear(){
+        $employees = Employee::model()->findAllByAttributes(['status' => 1]);
+        $this->render('year',['employees' => $employees]);
+    }
 }

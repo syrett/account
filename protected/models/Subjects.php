@@ -377,8 +377,8 @@ class Subjects extends CActiveRecord
             if ($start_balance != 0)
                 switch ($sbj_cat) {
                     case 1:
-                        $cat_1 += (100 * $start_balance);
-                        $str1 .= '+' . $start_balance;
+                        $cat_1 = in_array(substr($sbj_id,0, 4), ['1602', '1702'])?$cat_1- (100 * $start_balance):$cat_1+ (100 * $start_balance);
+                        $str1 .= (in_array(substr($sbj_id,0, 4), ['1602', '1702'])? '-':'+' ). $start_balance;
                         break;
                     case 2:
                         $cat_2 += (100 * $start_balance);
@@ -728,11 +728,11 @@ class Subjects extends CActiveRecord
      * @sbj Integer 科目编号
      * @return Float 科目编号所有子科目下的期初余额总和
      */
-    public static function get_balance($sbj)
+    public static function get_balance($sbj, $type = '')
     {
         $result = 0;
         if ($sbj) {
-            if ($sbj == '1601') {    //1601为长期资产，包括固定资产1601，无形资产1701，长期待摊1801，在建工程1604
+            if ($sbj == '1601' && $type == '') {    //1601为长期资产，包括固定资产1601，无形资产1701，长期待摊1801，在建工程1604
                 $arr = ['1601', '1701', '1801', '1604'];
             } else
                 $arr = [$sbj];

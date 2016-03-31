@@ -37,6 +37,12 @@ if ($bank_money == 'cash')
 		<span class="font-green-sharp"><?= Yii::t('import', '导入') ?> <?= Yii::t('import', LFSModel::typeName($type)) ?></span>
 		</div>
 		<div class="actions">
+			<?
+            //标准版，员工工资部分，加入年终奖
+			if ($type == 'salary'){
+                echo CHtml::link('<i class="fa fa-cny"></i> '. Yii::t('import', '年终奖'), array('salary/year'), array('class' => 'btn btn-circle btn-default btn-sm'));
+            }
+			?>
 			<?php echo CHtml::link('<i class="glyphicon glyphicon-search"></i> '. Yii::t('import', '已导入数据'), array('/' . $type), array('class' => 'btn btn-circle btn-default')); ?>
 			<input type="hidden" id="dp_startdate" value="<?= Transition::getTransitionDate('post') ?>">
 		    <?php
