@@ -8,6 +8,7 @@ $cs = Yii::app()->getClientScript();
 $baseUrl = Yii::app()->theme->baseUrl;
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_common.js');
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_vip.js');
+$cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/function_common.js');
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/salary.js');
 $this->pageTitle = Yii::app()->name;
 

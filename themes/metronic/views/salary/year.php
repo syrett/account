@@ -21,6 +21,11 @@ $('.search-form form').submit(function(){
 ");
 $th = new Employee();
 $locale = Yii::app()->getLocale(Yii::app()->language);
+$cs = Yii::app()->getClientScript();
+$baseUrl = Yii::app()->theme->baseUrl;
+$cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scripts/checkinput.js', CClientScript::POS_END);
+$cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/function_common.js');
+$cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/year.js');
 ?>
 
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/main.css"/>
@@ -35,26 +40,28 @@ $locale = Yii::app()->getLocale(Yii::app()->language);
         }
         ?>
         <!-- search-form -->
-        <table class="table table-striped table-hover table-bordered table-middle" id="sample_editable_1">
+
+        <?php echo CHtml::beginForm('', 'post', ['enctype' => "multipart/form-data", 'id' => 'form']); ?>
+        <table class="table table-striped table-hover table-bordered table-middle table-center " id="sample_editable_1">
             <thead>
             <tr>
-                <th>
-                    <?= $th->getAttributeLabel('name') ?>
-                </th>
-                <th>
-                    <?= $th->getAttributeLabel('year_award') ?>
-                </th>
+                <th rowspan="2">
+                    <?= $th->getAttributeLabel('name') ?></th>
+                <th rowspan="2">
+                    <?= substr(Transition::getCondomDate(), 0, 4) . $th->getAttributeLabel('year_award') ?></th>
+                <th colspan="12">
+                    <?= Yii::t('import', '全年工资') ?></th>
+                <th rowspan="2">
+                    <?= Yii::t('import', '应缴税款') ?></th>
+                <th rowspan="2">
+                    <?= Yii::t('import', '税后收入') ?></th>
+            </tr>
+            <tr>
                 <?php
                 foreach ($locale->monthNames as $item) {
-                    echo "<th>$item</th>";
+                    echo "<th class='th-right'>$item</th>";
                 }
                 ?>
-                <th>
-                    <?= Yii::t('import', '应缴税款') ?>
-                </th>
-                <th>
-                    <?= Yii::t('import', '税后收入') ?>
-                </th>
             </tr>
             </thead>
             <tbody>
@@ -62,25 +69,27 @@ $locale = Yii::app()->getLocale(Yii::app()->language);
             foreach ($employees as $employee) {
                 ?>
                 <tr>
-                    <td>
-                        <label class="" ><?= $employee->name; ?></label>
-                        <input type="hidden" name="employee_id" value="<?= $employee->id ?>"/>
+                    <td class='text-center'>
+                        <label class=""><?= $employee->name; ?></label>
+                        <input type="hidden" id="employee_id_<?= $employee->id ?>" name="employee_id[]"
+                               value="<?= $employee->id ?>"/>
                     </td>
-                    <td>
-                        <input type="text" name="employee_year" class="input-small" value="" />
+                    <td class='text-center'>
+                        <input type="text" id="employee_year_<?= $employee->id ?>"
+                               name="employee_year[<?= $employee->id ?>][year]"
+                               class="input_full" value=""/>
                     </td>
                     <?php
-                    foreach ($locale->monthNames as $item) {
-                        echo "<th>$item</th>";
+                    foreach ($locale->monthNames as $key => $item) {
+                        echo "<td class='text-right'><label id=\"salary_$employee->id" . "_" . $key . "\" >" . $salary[$employee->id][$key]['before_tax'] . "</label>
+                        <input type='hidden' id='paidTax_$employee->id" . "_" . $key . "' value='" . $salary[$employee->id][$key]['tax'] . "' /></td>";
                     }
                     ?>
-                    <td>
-                        <a class="edit" href="javascript:;">
-                            <label id="tax" >0</label></a>
+                    <td class='text-right'>
+                        <input type="text" id="tax_<?= $employee->id ?>" name="employee_year[<?= $employee->id ?>][tax]" class="input_full" value="0"/>
                     </td>
-                    <td>
-                        <a class="delete" href="javascript:;">
-                            <label id="tax" >0</label></a>
+                    <td class='text-right'>
+                        <input id="afterTax_<?= $employee->id ?>" name="employee_year[<?= $employee->id ?>][afterTax]" class="input_full" value="0"/>
                     </td>
                 </tr>
                 <?php
@@ -89,5 +98,12 @@ $locale = Yii::app()->getLocale(Yii::app()->language);
             </tbody>
         </table>
 
+        <div class="panel-footer">
+            <div class="text-center">
+                <button class="btn btn-primary" onclick="save()"><span
+                        class="glyphicon glyphicon-floppy-disk"></span> <?= Yii::t('import', '保存凭证') ?></button>
+            </div>
+        </div>
+        <?php echo CHtml::endForm(); ?>
     </div>
 </div>

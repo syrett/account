@@ -830,6 +830,18 @@ div.flash-success a {
     font-size: 21px !important;
 }
 
-.table-middle > tbody > tr > td, .table-middle > tbody > tr > th {
+.table-middle > tbody > tr > td, .table-middle > thead > tr > th {
     vertical-align: middle;
+}
+.table-center > thead > tr > th {
+    text-align: center;
+}
+.table-right > tbody > tr > td {
+    text-align: right;
+}
+.th-right{
+    text-align: right !important;
+}
+.input_full {
+    width: 100%;
 }

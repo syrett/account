@@ -11,6 +11,11 @@
  * @property string $salary_amount
  * @property string $bonus_amount
  * @property string $benefit_amount
+ * @property string $social_personal
+ * @property string $provident_personal
+ * @property string $personal_tax
+ * @property string $social_company
+ * @property string $provident_company
  * @property integer $subject
  * @property string $subject_2
  * @property string $create_time
@@ -154,4 +159,12 @@ class Salary extends LFSModel
         }
         $this->setAttribute('employee_id', $employee->id);
     }
+
+	/*
+	 * load 年终奖数据
+	 * @return Array
+	 */
+	public static function loadYear($item){
+
+	}
 }

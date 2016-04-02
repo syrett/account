@@ -505,7 +505,9 @@ function setTaxSubject(item_id) {
     //3%销项税 5%营业税，计入科目不同
     var tax = $("#withtax_" + item_id).val();
     var sbj_name = '';
-    if (tax == 5) {
+    if (tax == 0){
+
+    } else if (tax == 5) {
         sbj_name = '营业税';
         $.ajax({
             type: 'POST',
@@ -516,7 +518,7 @@ function setTaxSubject(item_id) {
                 $("#additional_sbj0_" + item_id).val(sbj);
             }
         });
-    } else if (tax == 3) {
+    } else {
         $.ajax({
             type: 'POST',
             url: $("#get-subject").val(),
