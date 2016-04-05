@@ -551,10 +551,10 @@ function setTaxAmount(item_id) {
         amount = parseFloat($("#tran_amount_" + item_id).val());
     //var tax = $("#new-category-3").val()    //税率
     var tax = $("#withtax_" + item_id).val();
-    if (tax == 3)   //3%的增值税 5%营业税，计算方法不同
+    //if (tax == 3)   //3%的增值税 5%营业税，大众版，算法相同
         amount = amount - amount / (100 + parseFloat(tax)) * 100;
-    else if (tax == 5)
-        amount = amount * 5 / 100;
+    //else if (tax == 5)
+    //    amount = amount * 5 / 100;
 
     $("#additional_amount0_" + item_id).val(amount);
 

@@ -77,7 +77,7 @@ $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/year.js');
                     <td class='text-center'>
                         <input type="text" id="employee_year_<?= $employee->id ?>"
                                name="employee_year[<?= $employee->id ?>][year]"
-                               class="input_full" value=""/>
+                               class="input-full" value=""/>
                     </td>
                     <?php
                     foreach ($locale->monthNames as $key => $item) {
@@ -86,10 +86,10 @@ $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/year.js');
                     }
                     ?>
                     <td class='text-right'>
-                        <input type="text" id="tax_<?= $employee->id ?>" name="employee_year[<?= $employee->id ?>][tax]" class="input_full" value="0"/>
+                        <input type="text" id="tax_<?= $employee->id ?>" name="employee_year[<?= $employee->id ?>][tax]" class="input-full" value="0"/>
                     </td>
                     <td class='text-right'>
-                        <input id="afterTax_<?= $employee->id ?>" name="employee_year[<?= $employee->id ?>][afterTax]" class="input_full" value="0"/>
+                        <input id="afterTax_<?= $employee->id ?>" name="employee_year[<?= $employee->id ?>][afterTax]" class="input-full" value="0"/>
                     </td>
                 </tr>
                 <?php

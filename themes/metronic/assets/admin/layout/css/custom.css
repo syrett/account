@@ -842,6 +842,6 @@ div.flash-success a {
 .th-right{
     text-align: right !important;
 }
-.input_full {
-    width: 100%;
+.input-full {
+    /*width: 100%;*/
 }
