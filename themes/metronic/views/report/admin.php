@@ -155,10 +155,14 @@ $cs->registerScript('ChartsFlotchartsInitPie',$expense_income_data, CClientScrip
 						<a href="#tab_15_finance" data-toggle="tab" aria-expanded="true">
 							<?= Yii::t('report', '财务类') ?></a>
 					</li>
-					<li class="">
-						<a href="#tab_common" data-toggle="tab" aria-expanded="false">
-							<?= Yii::t('report', '行政类') ?></a>
-					</li>
+                    <li class="">
+                        <a href="#tab_common" data-toggle="tab" aria-expanded="false">
+                            <?= Yii::t('report', '行政类') ?></a>
+                    </li>
+                    <li class="">
+                        <a href="#tab_tax" data-toggle="tab" aria-expanded="false">
+                            <?= Yii::t('report', '税务类') ?></a>
+                    </li>
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane active" id="tab_15_finance">
@@ -394,6 +398,117 @@ $cs->registerScript('ChartsFlotchartsInitPie',$expense_income_data, CClientScrip
                                         } else {
                                             ?>
                                             The division of the transaction costs, so that you have a glance at the department of income and expenditure.
+                                            <?
+                                        }
+                                        ?>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div><div class="tab-pane" id="tab_tax">
+                        <h3><?= Yii::t('report', '税务报表') ?></h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="col-md-3 col-xs-3">
+                                    <a href="#">
+                                        <img
+                                            src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/tax1_report.jpg'; ?>"
+                                            class="img-responsive img-thumbnail"/>
+                                    </a>
+                                </div>
+                                <div class="col-md-9">
+                                    <h4 class="media-heading"><a
+                                            href="#"><?= Yii::t('report', '增值税纳税申报表') ?></a>
+                                    </h4>
+                                    <p>
+                                        <? if (Yii::app()->language == 'zh_cn') {
+                                            ?>
+                                            现金流量表的出现，主要是要反映出资产负债表中各个项目对现金流量的影响，并根据其用途划分为经营、投资及融资三个活动分类。
+                                            <?
+                                        } else {
+                                            ?>
+                                            The sub supplier lists the amount of the purchase transaction, the payment term and the unpaid amount.
+                                            <?
+                                        }
+                                        ?>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-md-3 col-xs-3">
+                                    <a href="#">
+                                        <img
+                                            src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/tax2_report.jpg'; ?>"
+                                            class="img-thumbnail"/>
+                                    </a>
+                                </div>
+                                <div class="col-md-9">
+                                    <h4 class="media-heading"><a
+                                            href="#"><?= Yii::t('report', '营业税纳税申报表') ?></a>
+                                    </h4>
+                                    <p>
+                                        <? if (Yii::app()->language == 'zh_cn') {
+                                            ?>
+                                            现金流量表的出现，主要是要反映出资产负债表中各个项目对现金流量的影响，并根据其用途划分为经营、投资及融资三个活动分类。
+                                            <?
+                                        } else {
+                                            ?>
+                                            The customer is listed in the current transaction, the amount of the transaction and received payment and unpaid amount.
+                                            <?
+                                        }
+                                        ?>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <p>&nbsp;</p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="col-md-3 col-xs-3">
+                                    <a href="#">
+                                        <img
+                                            src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/tax3_report.jpg'; ?>"
+                                            class="img-responsive img-thumbnail"/>
+                                    </a>
+                                </div>
+                                <div class="col-md-9">
+                                    <h4 class="media-heading"><a
+                                            href="#"><?= Yii::t('report', '个人所得税纳税申报表') ?></a>
+                                    </h4>
+                                    <p>
+                                        <? if (Yii::app()->language == 'zh_cn') {
+                                            ?>
+                                            现金流量表的出现，主要是要反映出资产负债表中各个项目对现金流量的影响，并根据其用途划分为经营、投资及融资三个活动分类。
+                                            <?
+                                        } else {
+                                            ?>
+                                            The sub supplier lists the amount of the purchase transaction, the payment term and the unpaid amount.
+                                            <?
+                                        }
+                                        ?>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-md-3 col-xs-3">
+                                    <a href="#">
+                                        <img
+                                            src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/tax4_report.jpg'; ?>"
+                                            class="img-thumbnail"/>
+                                    </a>
+                                </div>
+                                <div class="col-md-9">
+                                    <h4 class="media-heading"><a
+                                            href="#"><?= Yii::t('report', '企业所得税纳税申报表') ?></a>
+                                    </h4>
+                                    <p>
+                                        <? if (Yii::app()->language == 'zh_cn') {
+                                            ?>
+                                            现金流量表的出现，主要是要反映出资产负债表中各个项目对现金流量的影响，并根据其用途划分为经营、投资及融资三个活动分类。
+                                            <?
+                                        } else {
+                                            ?>
+                                            The customer is listed in the current transaction, the amount of the transaction and received payment and unpaid amount.
                                             <?
                                         }
                                         ?>

@@ -52,7 +52,7 @@ class Subjects extends CActiveRecord
             array('sbj_number, sbj_name', 'required'),
             array('sbj_number', 'unique'),
             array('start_balance', 'numerical'),
-            array('sbj_number', 'numerical', 'integerOnly' => true),
+            array('sbj_number', 'length', 'max' => 16),
             array('sbj_name', 'length', 'max' => 512),
             array('sbj_cat', 'length', 'max' => 1),
             array('sbj_name_en', 'safe'),

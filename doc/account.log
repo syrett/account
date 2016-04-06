@@ -952,15 +952,34 @@ DELETE FROM `subjects` WHERE `sbj_name` = '分出保费' and length(sbj_number) 
 DELETE FROM `subjects` WHERE `sbj_name` = '分保费用' and length(sbj_number) = 4;
 
 
+-- 2016年3月26日11:41:23
+ALTER TABLE `auth_category` ADD `status` INT NOT NULL AFTER `type`;
+UPDATE `auth_category` SET `type` = '1' WHERE `auth_category`.`id` = 5;
+UPDATE `auth_category` SET `type` = '1' WHERE `auth_category`.`id` = 6;
+ALTER TABLE `auth_permission` ADD `type` INT NOT NULL COMMENT '类型，区分只有标准版才有的功能' AFTER `category`;
+UPDATE `auth_permission` SET `type` = '1' WHERE `auth_permission`.`id` = 'transition/reimburse';
+
+ALTER TABLE `yii2_start_users` ADD `condom_id` VARCHAR(512) NOT NULL AFTER `token`;
+
+INSERT INTO `auth_permission` (`id`, `category`, `type`, `name`, `description`, `form`, `options`, `default_value`, `rule`, `sort_num`, `sort`) VALUES ('client/age', 'product', '1', '客户账龄', NULL, '1', NULL, NULL, NULL, '0', '0');
 
 
+ALTER TABLE cost DROP FOREIGN KEY cost_ibfk_2;
+ALTER TABLE `cost` CHANGE `subject` `subject` VARCHAR(16) NULL DEFAULT NULL;
+ALTER TABLE post DROP FOREIGN KEY fk_subject_id;
+ALTER TABLE `post` CHANGE `subject_id` `subject_id` VARCHAR(16) NOT NULL;
+ALTER TABLE options DROP FOREIGN KEY options_ibfk_1;
+ALTER TABLE `options` CHANGE `entry_subject` `entry_subject` VARCHAR(16) NOT NULL;
+ALTER TABLE product DROP FOREIGN KEY product_ibfk_2;
+ALTER TABLE `product` CHANGE `subject` `subject` VARCHAR(16) NULL DEFAULT NULL;
+ALTER TABLE purchase DROP FOREIGN KEY purchase_ibfk_2;
+ALTER TABLE `purchase` CHANGE `subject` `subject` VARCHAR(16) NULL DEFAULT NULL;
+ALTER TABLE salary DROP FOREIGN KEY salary_ibfk_1;
+ALTER TABLE `salary` CHANGE `subject` `subject` VARCHAR(16) NULL DEFAULT NULL;
+ALTER TABLE stock DROP FOREIGN KEY stock_ibfk_3;
+ALTER TABLE `stock` CHANGE `entry_subject` `entry_subject` VARCHAR(16) NOT NULL;
+ALTER TABLE  transition DROP FOREIGN KEY transition_ibfk_1;
+ALTER TABLE `transition` CHANGE `entry_subject` `entry_subject` VARCHAR(16) NOT NULL;
 
-
-
-
-
-
-
-
-
+ALTER TABLE `subjects` CHANGE `sbj_number` `sbj_number` VARCHAR(16) NOT NULL DEFAULT '0';
 
