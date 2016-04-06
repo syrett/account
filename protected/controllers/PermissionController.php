@@ -43,18 +43,22 @@ class PermissionController extends Controller
     {
 
         //不能修改所有者权限
+        $is_owner = false;
         $condom = Condom::model()->findByAttributes(['dbname'=>substr(SYSDB,8)]);
         if ($condom->owner == $id) {
-            Yii::app()->user->setFlash('error', '不能修改账套所有者的权限！');
-            $this->redirect($this->createUrl('permission/index'), array());
-            return;
+            //Yii::app()->user->setFlash('error', '不能修改账套所有者的权限！');
+            //$this->redirect($this->createUrl('permission/index'), array());
+            //return;
+            $is_owner = true;
         }
 
         //不能修改自己
+        $is_self = false;
         if (Yii::app()->user->id == $id) {
-            Yii::app()->user->setFlash('error', '不能修改自己的权限！');
-            $this->redirect($this->createUrl('permission/index'), array());
-            return;
+            //Yii::app()->user->setFlash('error', '不能修改自己的权限！');
+            //$this->redirect($this->createUrl('permission/index'), array());
+            //return;
+            $is_self = true;
         }
 
         //是否在同一个组
@@ -68,25 +72,34 @@ class PermissionController extends Controller
             Yii::app()->user->setFlash('error', "该用户ID不在同一组中，请检查!");
             $this->redirect($this->createUrl('permission/index'), array());
             return;
+        } else {
+            $user_info = User2::model()->findByPk($id);
         }
 
         $model = AuthRelation::model()->findAllByAttributes(['user_id' => $id], ['order' => 'permission']);
 
         if (isset($_POST['AuthPermission'])) {
-            AuthRelation::model()->deleteAllByAttributes(['user_id' => $id]);
-            foreach ($_POST['AuthPermission'] as $item => $value) {
-                if($value == 1){
-                    $auth = new AuthRelation();
-                    $auth->user_id = $id;
-                    $auth->permission = $item;
-                    $auth->role = '';
-                    $auth->save();
+            if($is_owner || $is_self) {
+                //不执行操作 一般不发生
+            } else {
+                AuthRelation::model()->deleteAllByAttributes(['user_id' => $id]);
+                foreach ($_POST['AuthPermission'] as $item => $value) {
+                    if ($value == 1) {
+                        $auth = new AuthRelation();
+                        $auth->user_id = $id;
+                        $auth->permission = $item;
+                        $auth->role = '';
+                        $auth->save();
 
+                    }
                 }
             }
         }
         $this->render('access', array(
             'model' => $model,
+            'is_owner' => $is_owner,
+            'is_self' => $is_self,
+            'user_info' => $user_info,
             'user_id' => $id
         ));
     }
