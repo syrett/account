@@ -9,6 +9,7 @@ $baseUrl = Yii::app()->theme->baseUrl;
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scripts/checkinput.js', CClientScript::POS_END);
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_common.js');
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/import_vip.js');
+$cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/function_common.js');
 $cs->registerScriptFile($baseUrl . '/assets/admin/layout/scripts/salary.js');
 $this->pageTitle = Yii::app()->name;
 $type = 'salary';
