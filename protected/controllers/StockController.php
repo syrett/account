@@ -757,8 +757,12 @@ class StockController extends Controller
                         }
                         break;
                     }
-                    $balance1602 = substr($item, 0, 4)=='1601'?$balance1602 + ($row['in_price'] - $row['worth'])*$row['count']:$balance1602;
-                    $balance1702 = substr($item, 0, 4)=='1701'?$balance1702 + ($row['in_price'] - $row['worth'])*$row['count']:$balance1702;
+                    //$row可能为空
+                    if($row != []){
+                        $balance1602 = substr($item, 0, 4)=='1601'?$balance1602 + ($row['in_price'] - $row['worth'])*$row['count']:$balance1602;
+                        $balance1702 = substr($item, 0, 4)=='1701'?$balance1702 + ($row['in_price'] - $row['worth'])*$row['count']:$balance1702;
+
+                    }
                 }
                 if( Subjects::get_balance(1602) != $balance1602 ){
                     $status = isset($status['status'])&&$status['status']!='error'? ['status' => 'error', 'msg' => '固定资产累计折旧 金额与总账期初余额不相等']:$status;
