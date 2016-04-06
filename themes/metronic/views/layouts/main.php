@@ -212,8 +212,8 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
             <div class="clean" > </div>
             <div class="page-actions">
                 <ul class="nav navbar-nav">
-                    <li class="mega-menu-dropdown">
-                        <a data-toggle="dropdown" href="javascript:;" class="btn blue-dark dropdown-toggle"
+                    <li class="mega-menu-dropdown" >
+                        <a id="dropSearch" data-toggle="dropdown" href="javascript:;" class="btn blue-dark dropdown-toggle"
                            aria-expanded="false">
                             <i class="fa fa-search fa-2x"></i>
                         </a>
@@ -235,7 +235,8 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                     <?php echo CHtml::endForm(); ?>
                                     <ul>
                                         <li>
-                                            <a href="<?= $this->createUrl('Site/operation&operation=listTransition') ?>"><?= Yii::t('home', '逐月查询') ?></a>
+                                            <!-- <a href="<?= $this->createUrl('Site/operation&operation=listTransition') ?>"><?= Yii::t('home', '逐月查询') ?></a>-->
+                                            <a href="#" id="mListTransition"><?= Yii::t('home', '逐月查询') ?></a>
                                         </li>
                                         <li>
                                             <a href="<?= $this->createUrl('transition/listreview') ?>"><?= Yii::t('home', '审核凭证') ?></a>
@@ -922,6 +923,72 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
 </div>
 <!--  -->
 
+<!-- listTransition -->
+<div class="modal fade" id="operListTransition" tabindex="-1" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+            </div>
+            <div class="modal-body">
+                <div class="portlet light">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <span class="font-green-sharp">
+                            <?php
+                            $title = Yii::t('import', '查询凭证');
+                            echo $title;
+                            ?>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <!-- search-form -->
+                        <?php
+                        $status = $this->getTransitionDate('end');
+                        echo Yii::t('import', "已结账至日期") . ": " . $status['date'];
+                        $list = call_user_func(array('Transition', 'listTransition'));
+
+                        if (empty($list)) {
+                            ?>
+                            <div class="unit-group">
+                                <?= Yii::t('import', '没有数据需要处理') ?>
+                            </div>
+                            <?php
+                        } else {
+                            foreach ($list as $year => $months) {
+
+                                echo CHtml::beginForm($this->createUrl('/Transition/listTransition'), 'get');
+                                ?>
+                                <?= $year ?><?= Yii::t('import', '年') ?>
+                                <?php
+                                $data = array();
+                                foreach ($months as $month) {
+                                    $data[$year . $month] = $month;
+                                }
+                                $this->widget('ext.select2.ESelect2', array(
+                                    'name' => 'date',
+                                    'id' => 'select2'.rand().rand(),
+                                    'data' => $data,
+                                    'htmlOptions' => array('class' => 'action')
+                                ));
+                                ?>
+                                <input type="submit" class="btn btn-primary" value="<?= $title ?>"/>
+                                <?php
+
+                                echo CHtml::endForm();
+                            }
+                        }
+
+                        ?>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <div class="clearfix">
 </div>
 
@@ -1247,6 +1314,14 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
 <script src="<?php echo $baseUrl; ?>/assets/admin/layout/scripts/layout.js" type="text/javascript"></script>
 <script src="<?php echo $baseUrl; ?>/assets/admin/pages/scripts/index.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
+<script>
+    $(function(){
+        $('#mListTransition').on('click', function(){
+            $('#dropSearch').dropdown('toggle');
+            $('#operListTransition').modal('toggle');
+        });
+    });
+</script>
 </body>
 <!-- END BODY -->
 </html>
