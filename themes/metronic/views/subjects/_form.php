@@ -53,7 +53,7 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
 <!--        </div>-->
 	<div class="form-group form-group-lg">
 <!--		--><?php //echo $form->label($model,'sbj_name', array('class'=>'col-sm-2 control-label')); ?>
-        <label class="col-sm-2 control-label" ><?= Yii::t('import', '选择父科目') ?></label>
+        <label class="col-sm-2 control-label" ><?= Yii::t('import', '选择科目') ?></label>
         <div class="col-sm-10 control-label-2">
             <?php
             $data = Subjects::model()->listSubjects();
