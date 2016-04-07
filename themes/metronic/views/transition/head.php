@@ -40,7 +40,7 @@ if ($bank_money == 'cash')
 			<?
             //标准版，员工工资部分，加入年终奖
 			if ($type == 'salary'){
-                echo CHtml::link('<i class="fa fa-cny"></i> '. Yii::t('import', '年终奖'), array('salary/year'), array('class' => 'btn btn-circle btn-default btn-sm'));
+                echo CHtml::link('<i class="fa fa-cny"></i> '. Yii::t('import', '年终奖金'), array('salary/year'), array('class' => 'btn btn-circle btn-default btn-sm'));
             }
 			?>
 			<?php echo CHtml::link('<i class="glyphicon glyphicon-search"></i> '. Yii::t('import', '已导入数据'), array('/' . $type), array('class' => 'btn btn-circle btn-default')); ?>

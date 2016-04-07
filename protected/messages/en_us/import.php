@@ -327,7 +327,7 @@ return [
     '设置金额' => 'Configuration of amount',
 
     '输入金额' => 'Input amount',
-    '年终奖' => 'Year award',
+    '年终奖金' => 'Year award',
     '应缴税款' => 'Tax',
     '税后收入' => 'After tax',
     '全年工资' => 'Monthly salary',
