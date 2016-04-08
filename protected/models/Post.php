@@ -123,10 +123,17 @@ class Post extends CActiveRecord
             //过账时，这里是重点，很容易出错
             if ($t['entry_settlement'] == 0) {
                 if ($t['entry_transaction'] == "1") { //1为借
-                    if ($t['entry_amount'] > 0)
-                        $tmp_debit = $tmp_debit + floatval($t['entry_amount']);
-                    else
-                        $tmp_credit = $tmp_credit - floatval($t['entry_amount']);
+                    //利息费用要特殊处理
+                    $sbj = Subjects::findSubject('利息费用', '6603', true);
+                    if ($t['entry_subject'] == $sbj[0]->sbj_number) {
+                            $tmp_debit = $tmp_debit + floatval($t['entry_amount']);
+                    }else{
+                        if ($t['entry_amount'] > 0)
+                            $tmp_debit = $tmp_debit + floatval($t['entry_amount']);
+                        else
+                            $tmp_credit = $tmp_credit - floatval($t['entry_amount']);
+                    }
+
                 } elseif ($t['entry_transaction'] == "2") { //2为贷
                     if ($t['entry_amount'] > 0)
                         $tmp_credit = $tmp_credit + floatval($t['entry_amount']);
@@ -141,17 +148,6 @@ class Post extends CActiveRecord
                 }
             }
 
-//            if($t['entry_settlement'] == 0){
-//                if ($t['entry_transaction']=="1") { //1为借
-//                    $tmp_debit = $tmp_debit + floatval($t['entry_amount']);
-//                }
-//                elseif($t['entry_transaction']=="2") { //2为贷
-//                    $tmp_credit = $tmp_credit + floatval($t['entry_amount']);
-//                }
-//            }else{
-//                $tmp_debit = $t['entry_amount'];
-//                $tmp_credit = $t['entry_amount'];
-//            }
             $balance[$t['entry_subject']]['debit'] = $tmp_debit;
             $balance[$t['entry_subject']]['credit'] = $tmp_credit;
         }
@@ -390,12 +386,11 @@ class Post extends CActiveRecord
                 break;
             case 5://费用类
                 foreach ($dataArray as $post) {
-                    //如果是利息费用，是取借方数字
-                    $sbj = Subjects::findSubject('利息费用', '6603', true);
-                    if (count($sbj) > 0 && ($sbj[0]->sbj_number == $post['subject_id']))
-                        $balance += $post['credit'];
-                    else
+                    if ($post['credit'] == $post['debit'])
                         $balance += $post['debit'];
+                    else
+                        $balance += $post['debit'] - $post['credit'];
+//                    $balance += $post['debit'];
                 };
                 break;
             case 3://
