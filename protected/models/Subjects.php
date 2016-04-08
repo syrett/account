@@ -569,7 +569,7 @@ class Subjects extends CActiveRecord
         } else
             $list[] = $sbj;
         if (!empty($list))
-            foreach ($sbj as $item) {
+            foreach ($list as $item) {
                 if (!$force) {
                     $a = Subjects::model()->find([
                         'condition' => 'sbj_name like :key and sbj_number like :sbj',
@@ -577,7 +577,7 @@ class Subjects extends CActiveRecord
 
                     $result[] = $a;
                 } else
-                    $result[] = Subjects::model()->findByAttributes(['sbj_name' => $key], 'sbj_number like ":sbj%"');
+                    $result[] = Subjects::model()->findByAttributes(['sbj_name' => $key], 'sbj_number like "'. $sbj. '%"');
             }
         return array_values(array_filter($result));
     }

@@ -373,9 +373,9 @@ class Post extends CActiveRecord
         $month = getMon($date);
         $sbj_cat = Subjects::model()->getCat($subject_id);
         if ($num == 1) { //得到某个月的发生额
-            $sql = "SELECT debit,credit FROM post WHERE year=:year AND month=:month AND subject_id REGEXP '^" . $subject_id . "'";
+            $sql = "SELECT * FROM post WHERE year=:year AND month=:month AND subject_id REGEXP '^" . $subject_id . "'";
         } else { //得到这年到某个月的发生额
-            $sql = "SELECT debit, credit FROM post WHERE year(post_date)=:year AND month(post_date)<=:month AND subject_id REGEXP  '^" . $subject_id . "'";
+            $sql = "SELECT * FROM post WHERE year(post_date)=:year AND month(post_date)<=:month AND subject_id REGEXP  '^" . $subject_id . "'";
         }
         $dataArray = Post::model()->findAllBySql($sql, array(':year' => $year,
             ':month' => $month));
@@ -390,7 +390,12 @@ class Post extends CActiveRecord
                 break;
             case 5://费用类
                 foreach ($dataArray as $post) {
-                    $balance += $post['debit'];
+                    //如果是利息费用，是取借方数字
+                    $sbj = Subjects::findSubject('利息费用', '6603', true);
+                    if (count($sbj) > 0 && ($sbj[0]->sbj_number == $post['subject_id']))
+                        $balance += $post['credit'];
+                    else
+                        $balance += $post['debit'];
                 };
                 break;
             case 3://
