@@ -126,8 +126,8 @@ class Post extends CActiveRecord
                     //利息费用要特殊处理
                     $sbj = Subjects::findSubject('利息费用', '6603', true);
                     if ($t['entry_subject'] == $sbj[0]->sbj_number) {
-                            $tmp_debit = $tmp_debit + floatval($t['entry_amount']);
-                    }else{
+                        $tmp_debit = $tmp_debit + floatval($t['entry_amount']);
+                    } else {
                         if ($t['entry_amount'] > 0)
                             $tmp_debit = $tmp_debit + floatval($t['entry_amount']);
                         else
@@ -140,6 +140,15 @@ class Post extends CActiveRecord
                     else
                         $tmp_debit = $tmp_debit - floatval($t['entry_amount']);
                 }
+                if ($tmp_debit != 0 && $tmp_credit != 0) {
+                    if ($tmp_debit > $tmp_credit) {
+                        $tmp_debit = $tmp_debit - $tmp_credit;
+                        $tmp_credit = 0;
+                    } else {
+                        $tmp_credit = $tmp_credit - $tmp_debit;
+                        $tmp_debit = 0;
+                    }
+                }
             } else {
                 if ($t['entry_transaction'] == "1") { //1为借
                     $tmp_debit = $tmp_debit + floatval($t['entry_amount']);
@@ -147,6 +156,7 @@ class Post extends CActiveRecord
                     $tmp_credit = $tmp_credit + floatval($t['entry_amount']);
                 }
             }
+
 
             $balance[$t['entry_subject']]['debit'] = $tmp_debit;
             $balance[$t['entry_subject']]['credit'] = $tmp_credit;
