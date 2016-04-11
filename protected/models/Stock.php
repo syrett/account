@@ -557,6 +557,8 @@ class Stock extends LFSModel
     public function checkDeprec($date)
     {
 
+        if ($this->month_left == 0)
+            return false;
         if (substr($this->entry_subject, 0, 4) == '1801') {
             $this['in_date'] = $this->date_a;
             if ($this->date_a != '' && $this->date_a != null)
