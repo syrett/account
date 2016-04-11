@@ -378,11 +378,14 @@ class TransitionController extends Controller
                 //去除第一行
                 array_shift($list);
                 foreach ($list as $item) {
-                    $employee = Employee::model()->findByAttributes(['name' => trim($item['A'])]);
-                    if ($employee) {
-                        $sheetData[] = Transition::getSheetData($item, 'reimburse');
-                    } else {
-                        $inexist_staff .= ',&nbsp;&nbsp;' . trim($item['A']);
+                    $col_name = trim($item['A']);
+                    if ($col_name != '') {
+                        $employee = Employee::model()->findByAttributes(['name' => $col_name]);
+                        if ($employee) {
+                            $sheetData[] = Transition::getSheetData($item, 'reimburse');
+                        } else {
+                            $inexist_staff .= ',&nbsp;&nbsp;' . $col_name;
+                        }
                     }
                 }
                 if ($inexist_staff != '') {
