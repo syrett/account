@@ -1810,14 +1810,13 @@ class TransitionController extends Controller
             $where_array[':memo'] = '%' . $session[$m_str.'_memo'] . '%';
         }
 
-        $sql = "select * from transition where " . $where;
+        $sql = "select * from transition where " . $where. ' ORDER BY entry_num_prefix desc , entry_num  DESC,  entry_transaction asc ';
 
         $command = Yii::app()->db
             ->createCommand($sql)
             ->bindValues($where_array);
 
         $data = $command->queryAll();
-
 
 
         Yii::import('ext.phpexcel.PHPExcel');
