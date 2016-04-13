@@ -32,6 +32,10 @@ class Transition extends CActiveRecord
     /*
      * custom params
      */
+    public $query_s_day;
+    public $query_e_day;
+    public $query_memo;
+
     public $check_entry_amount = 0; //是否验证过借贷相等 优化处理 待改进
     public $entry_number; //  entry_num_prefix. entry_num     完整凭证编号，供凭证管理、排序搜索使用
     public $entry_time;
@@ -252,21 +256,26 @@ class Transition extends CActiveRecord
     {
         $criteria = new CDbCriteria;
         $month = true;
-        if (isset($_REQUEST['s_day']) && $_REQUEST['s_day'] != "") {
-            $a = date('Y-m-d 00:00:01', strtotime($_REQUEST['s_day']));
-            $criteria->addCondition('t.entry_date>="' . $a . '"', 'AND');
+
+        if ($this->query_s_day != null) {
+            $criteria->addCondition('t.entry_date>="' . $this->query_s_day . '"', 'AND');
             $month = false;
         }
-        if (isset($_REQUEST['e_day']) && $_REQUEST['e_day'] != "") {
-            $a = date('Y-m-d 23:59:59', strtotime($_REQUEST['e_day']));
-            $criteria->addCondition('t.entry_date<="' . $a . '"', 'AND');
+        if ($this->query_e_day != null) {
+            $criteria->addCondition('t.entry_date<="' . $this->query_e_day . '"', 'AND');
             $month = false;
         }
-        if (isset($_REQUEST['memo']) && $_REQUEST['memo'] != "") {
-            $criteria->addCondition('t.entry_memo like "%' . $_REQUEST['memo'] . '%"');
+        if ($this->query_memo != null) {
+            $criteria->addCondition('t.entry_memo like "%' . $this->query_memo . '%"');
+            $month = false;
         }
+
+        //file_put_contents('m.txt', var_export($this->query_s_day, true), FILE_APPEND);
+
         $criteria->compare('id', $this->id);
-        $month?$criteria->compare('entry_num_prefix', $this->entry_num_prefix, true):'';
+        if ($month) {
+            $criteria->compare('entry_num_prefix', $this->entry_num_prefix, true);
+        }
         $criteria->compare('entry_num', $this->entry_num, true);
         $criteria->compare('entry_num_prefix', $this->entry_number, true);
         $criteria->compare('entry_date', $this->entry_date, true);

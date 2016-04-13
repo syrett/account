@@ -327,7 +327,7 @@ class ReportController extends Controller
     {
         Yii::import('ext.phpexcel.PHPExcel');
 
-        $filename = urlencode($_REQUEST['name']);
+        $filename = urldecode(urlencode($_REQUEST['name']));
         header('Content-type: application/vnd.ms-excel, charset=utf-8');
         header('Content-Disposition: attachment; filename=' . $filename);
         //echo "<table><tr><td>1</td><td>2</td></tr><tr><td>1</td><td>2</td></tr></table>";

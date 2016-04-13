@@ -178,13 +178,94 @@ class TransitionController extends Controller
     {
         $model = new Transition('search');
         $model->unsetAttributes(); // clear any default values
+        $q_s_day = '';
+        $q_e_day = '';
+        $q_memo = '';
+
+        $session = Yii::app()->session;
+
         if (isset($_GET['Transition']))
             $model->attributes = $_GET['Transition'];
 
-        if (isset($_GET['entry_date']))
-            $model->entry_num_prefix = $_GET['entry_date'];
+        if (isset($_GET['entry_date'])) {
+            //按月整理凭证
+
+            //$model->entry_num_prefix = $_GET['entry_date'];
+
+            $stamp_date_start = strtotime($_GET['entry_date'].'01');
+            if ($stamp_date_start === false) {
+                $_GET['entry_date'] = date('Ym');
+            }
+            $model->query_s_day = date('Y-m-d 00:00:00', $stamp_date_start);
+            $q_s_day = date('Y/m/d', $stamp_date_start);
+            $session[__METHOD__.'_s_day'] = $model->query_s_day;
+            $tmp_year = substr($_GET['entry_date'], 0, 4);
+            $tmp_month = substr($_GET['entry_date'], 4, 2);
+            if ($tmp_month == 12) {
+                $tmp_year += 1;
+                $tmp_month = 1;
+            } else {
+                $tmp_month += 1;
+            }
+            if ($tmp_month < 10) {
+                $tmp_month = '0'.$tmp_month;
+            }
+            $stamp_date_end = strtotime($tmp_year.$tmp_month.'01')-86399;
+            $model->query_e_day = date('Y-m-d 23:59:59', $stamp_date_end);
+            $q_e_day = date('Y/m/d', $stamp_date_end);
+            $session[__METHOD__.'_e_day'] = $model->query_e_day;
+            $session[__METHOD__.'_memo'] = '';
+
+        } else {
+            //post
+            $s_day = '';
+            if (isset($_POST['s_day'])) {
+                $stamp_date_start = strtotime($_POST['s_day']);
+                if ($stamp_date_start != false) {
+                    $s_day = date('Y-m-d 00:00:00', $stamp_date_start);
+                }
+            } elseif (isset($session[__METHOD__.'_s_day'])) {
+                $s_day = $session[__METHOD__.'_s_day'];
+            }
+            if ($s_day != '') {
+                $model->query_s_day = $s_day;
+                $q_s_day = date('Y/m/d', strtotime($s_day));
+            }
+            $session[__METHOD__.'_s_day'] = $s_day;
+
+            $e_day = '';
+            if (isset($_POST['e_day'])) {
+                $stamp_date_end = strtotime($_POST['e_day']);
+                if ($stamp_date_end != false) {
+                    $e_day = date('Y-m-d 23:59:59', $stamp_date_end);
+                }
+            } elseif (isset($session[__METHOD__.'_e_day'])) {
+                $e_day = $session[__METHOD__.'_e_day'];
+            }
+            if ($e_day != '') {
+                $model->query_e_day = $e_day;
+                $q_e_day = date('Y/m/d', strtotime($e_day));
+            }
+            $session[__METHOD__.'_e_day'] = $e_day;
+
+            $memo = '';
+            if (isset($_POST['memo'])) {
+                $memo = trim($_POST['memo']);
+            } elseif (isset($session[__METHOD__.'_memo'])) {
+                $memo = $session[__METHOD__.'_memo'];
+            }
+            if ($memo != '') {
+                $model->query_memo = $memo;
+                $q_memo = $memo;
+            }
+            $session[__METHOD__.'_memo'] = $memo;
+        }
+
         $this->render('admin', array(
             'model' => $model,
+            'q_s_day' => $q_s_day,
+            'q_e_day' => $q_e_day,
+            'q_memo' => $q_memo,
         ));
     }
 
@@ -1640,7 +1721,7 @@ class TransitionController extends Controller
 
         ob_end_clean();
         header('Content-type: application/vnd.ms-excel, charset=utf-8');
-        header('Content-Disposition: attachment; filename=' . urlencode($filename) . '.xls');
+        header('Content-Disposition: attachment; filename=' .urldecode(urlencode($filename)) . '.xls');
         /**
          * The header of the table
          * @var string
@@ -1695,6 +1776,128 @@ class TransitionController extends Controller
         echo $style . $data;
     }
 
+
+    public function actionCreateExcel1()
+    {
+
+        $xlsName = Yii::t('transition', '导出凭证');
+
+        $session = Yii::app()->session;
+        $m_str = 'TransitionController::actionAdmin';
+        $q_s_day = '';
+        $q_e_day = '';
+        $q_memo = '';
+
+        $where = '1=1';
+        $where_array = [];
+
+        if (isset($session[$m_str.'_s_day']) && $session[$m_str.'_s_day'] != '') {
+            $q_s_day = date('Y-m-d', strtotime($session[$m_str.'_s_day']));
+            $xlsName .= $q_s_day;
+            $where .= ' AND entry_date >= :s_day ';
+            $where_array[':s_day'] = $session[$m_str.'_s_day'];
+        }
+
+        if (isset($session[$m_str.'_e_day']) && $session[$m_str.'_e_day'] != '') {
+            $q_e_day = date('Y-m-d', strtotime($session[$m_str.'_e_day']));
+            $xlsName .= '-'.$q_e_day;
+            $where .= ' AND entry_date <= :e_day ';
+            $where_array[':e_day'] = $session[$m_str.'_e_day'];
+        }
+        if (isset($session[$m_str.'_memo']) && $session[$m_str.'_memo'] != '') {
+            $q_memo = $session[$m_str.'_memo'];
+            $where .= ' AND entry_memo LIKE :memo ';
+            $where_array[':memo'] = '%' . $session[$m_str.'_memo'] . '%';
+        }
+
+        $sql = "select * from transition where " . $where;
+
+        $command = Yii::app()->db
+            ->createCommand($sql)
+            ->bindValues($where_array);
+
+        $data = $command->queryAll();
+
+
+
+        Yii::import('ext.phpexcel.PHPExcel');
+        $oe = new PHPExcel();
+        $ow = new PHPExcel_Writer_Excel5($oe);
+
+        $os = $oe->getActiveSheet();
+
+        $os->setTitle('出入库列表');
+        $os->getDefaultStyle()->getFont()->setName('微软雅黑');
+        $os->getDefaultStyle()->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
+        $os->getDefaultStyle()->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $os->getDefaultStyle()->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+
+        $os->getColumnDimension('A')->setWidth(16);
+        $os->getColumnDimension('B')->setWidth(18);
+        $os->getColumnDimension('D')->setWidth(36);
+        $os->getColumnDimension('E')->setWidth(16);
+        $os->getColumnDimension('F')->setWidth(16);
+        $os->getColumnDimension('H')->setWidth(20);
+
+        $os->getRowDimension(1)->setRowHeight(36);
+        //$os->getRowDimension(2)->setRowHeight(10);
+
+        $os->getStyle('A1')->getAlignment()->setShrinkToFit(true);
+        $os->getStyle('A1')->getAlignment()->setWrapText(true);
+
+        $os->getStyle('A1')->getFont()->setSize(10);
+        $os->getStyle('A1')->getFont()->getColor()->setARGB('FF00A0FF');
+        $os->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+        $os->setCellValue('A1', "生成时刻：\n".date('Y-m-d H:i'));
+        $os->mergeCells('C1:H1');
+        $os->setCellValue('C1', "日期范围：".$q_s_day.' 至 '.$q_e_day.'    摘要：'.$q_memo);
+
+        $os->getStyle('A3:H3')->getFont()->setSize(12);
+        $os->getStyle('A3:H3')->getFill()->setFillType(PHPExcel_style_Fill::FILL_SOLID);
+        $os->getStyle('A3:H3')->getFill()->getStartColor()->setARGB('FF40B0D0');
+
+        $os->setCellValue('A3', "凭证编号");
+        $os->setCellValue('B3', "凭证摘要");
+        $os->setCellValue('C3', "借贷");
+        $os->setCellValue('D3', "借贷科目");
+        $os->setCellValue('E3', "交易金额");
+        $os->setCellValue('F3', "附加信息");
+        $os->setCellValue('G3', "过账");
+        $os->setCellValue('H3', "凭证日期");
+
+        $os->freezepane('A4');
+
+        $ri = 4;
+
+        foreach ($data as $row) {
+            $os->setCellValueExplicit('A'.$ri, $row['entry_num_prefix'] . $this->addZero($row['entry_num']),PHPExcel_Cell_DataType::TYPE_STRING);
+            //$os->setCellValue('A'.$ri, $row['entry_num_prefix'] . $this->addZero($row['entry_num']));
+            $os->setCellValue('B'.$ri, $row['entry_memo']);
+            $os->setCellValue('C'.$ri, Transition::transaction($row['entry_transaction']));
+            $os->setCellValue('D'.$ri, Subjects::getSbjPath($row['entry_subject']));
+            $os->setCellValueExplicit('E'.$ri, $row['entry_amount'], PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            //$os->setCellValue('E'.$ri, $row['entry_amount']);
+            $os->setCellValue('F'.$ri, Transition::getAppendix($row['entry_appendix_type'], $row['entry_appendix_id']));
+            $os->setCellValue('G'.$ri, Transition::getPosting($row['entry_posting']));
+            $os->setCellValue('H'.$ri, date('Y年m月d日', strtotime($row['entry_date'])));
+
+            $ri ++;
+        }
+
+        header('Content-Type: application/force-download');
+        header('Content-Type: application/octet-stream');
+        header('Content-Type: application/download');
+        header('Content-Disposition:inline;filename='
+            .urldecode(urlencode($xlsName))
+            .'.xls');
+        header('Content-Transfer-Encoding: binary');
+        header('Expires:Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified:'.gmdate('D, d M Y H:i:s').' GMT');
+        header('Cache-Control: myst-revalidate, post-check=0, pre-check=0');
+        header('Pragma: no-cache');
+        $ow->save('php://output');
+    }
+
     public function actionCreateExcel()
     {
         Yii::import('ext.phpexcel.PHPExcel');
@@ -1732,7 +1935,7 @@ class TransitionController extends Controller
 
         ob_end_clean();
         header('Content-type: application/vnd.ms-excel, charset=utf-8');
-        header('Content-Disposition: attachment; filename=' . urlencode($filename) . '.xls');
+        header('Content-Disposition: attachment; filename=' . urldecode(urlencode($filename)) . '.xls');
         /**
          * The header of the table
          * @var string
