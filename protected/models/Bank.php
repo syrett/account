@@ -597,6 +597,20 @@ select * from (select e.*,d.name as dname, case when e.name like '$key' then 1
             order by rn;
 eof;
         $list = Employee::model()->findAllBySql($sql);
+        if (empty($list)) {
+            $key = '';
+            $sql = <<<eof
+select * from (select e.*,d.name as dname, case when e.name like '$key' then 1
+            when e.name like '$key%' then 2
+            when e.name like '%$key%' then 3
+            when e.name like '%$key' then 4
+            end as rn
+            from $etable as e, $dtable as d
+            where e.name like '%$key%' and department_id= d.id ) as k
+            order by rn;
+eof;
+            $list = Employee::model()->findAllBySql($sql);
+        }
 
         foreach ($list as $item) {
             $result['_' . $item['id']] = $item['department']['name'] . '/' . $item['name'];
