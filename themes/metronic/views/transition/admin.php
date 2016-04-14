@@ -50,17 +50,17 @@ $cs->registerScript('ComponentsPickersInit', 'ComponentsPickers.init();', CClien
             if (!isset($operation))
                 $operation = 'listTransition';
             switch ($operation) {
-                case 'listReview' :
-                    $title = Yii::t('transition', '审核凭证');
-                    break;
                 case 'listTransition' :
                     $title = Yii::t('transition', '查询凭证');
                     break;
                 case 'listReview' :
-                    $title = Yii::t('transition', '凭证过账');
+                    $title = Yii::t('transition', '审核凭证');
                     break;
-                case 'listReview' :
-                    $title = Yii::t('transition', '期末结账');
+                case 'admin' :
+                    $title = Yii::t('transition', '凭证列表');
+                    break;
+                case 'mmquery' :
+                    $title = Yii::t('transition', '凭证列表');
                     break;
             }
             echo $title;
@@ -72,7 +72,7 @@ $cs->registerScript('ComponentsPickersInit', 'ComponentsPickers.init();', CClien
             ?>
             <a href="<?= $this->createUrl('transition/create') ?>" class="btn btn-circle btn-sm btn-default"><i
                     class="glyphicon glyphicon-plus"></i><?= Yii::t('transition', '添加');?></a>
-            <a href="/?r=transition/createexcel1" class="btn btn-circle btn-sm btn-default"><i
+            <a href="/?r=transition/createexcel1&type=<?= $operation;?>" class="btn btn-circle btn-sm btn-default"><i
                     class="glyphicon glyphicon-export"></i><?= Yii::t('transition', '导出');?></a>
             <a href="javascript:;" class="btn btn-circle btn-default btn-sm btn-icon-only fullscreen"
                data-original-title="" data-original-title title="<?= Yii::t('transition', '全屏');?>"></a>
@@ -95,16 +95,21 @@ $cs->registerScript('ComponentsPickersInit', 'ComponentsPickers.init();', CClien
                 ?>
             </div>
             <div class="col-md-6">
-                <?php echo CHtml::beginForm('/?r=transition/admin'); ?>
+                <?php echo CHtml::beginForm('/?r=transition/'.$operation); ?>
                 <div class="input-group input-large " >
+                    <?php if($operation == 'listTransition') { ?>
+                        <span class="input-group-addon"><?= Yii::t('transition', '快速查找');?> </span>
+                        <input  type="text" class="form-control " style="width: 200px" name="multi_search" id="multi_search" value="<?=isset($query_res['multi_search'])?$query_res['multi_search']:''?>" placeholder="凭证号，日期，内容等">
+                    <?php } else { ?>
                     <div class="input-group date-picker input-daterange" data-date-format="yyyy/mm/dd">
                         <span class="input-group-addon"><?= Yii::t('transition', '日期范围：');?></span>
-                        <input type="text" class="form-control input-small" name="s_day" id="s_day" value="<?= $q_s_day; ?>" autocomplete="off">
+                        <input type="text" class="form-control input-small" name="s_day" id="s_day" value="<?= isset($query_res['s_day']) ? $query_res['s_day'] : ''; ?>" autocomplete="off">
                         <span class="input-group-addon"><?= Yii::t('transition', '至');?> </span>
-                        <input type="text" class="form-control input-small" name="e_day" id="e_day" value="<?= $q_e_day;?>" autocomplete="off">
+                        <input type="text" class="form-control input-small" name="e_day" id="e_day" value="<?= isset($query_res['e_day']) ? $query_res['e_day'] : '';?>" autocomplete="off">
                     </div>
                     <span class="input-group-addon"><?= Yii::t('transition', '摘要');?> </span>
-                    <input type="text" class="form-control input-small" name="memo" id="memo" value="<?= $q_memo;?>" autocomplete="off">
+                    <input type="text" class="form-control input-small" name="memo" id="memo" value="<?= isset($query_res['memo']) ? $query_res['memo'] : '';?>">
+                    <?php } ?>
 				<span class="input-group-btn">
 				<?php
                 echo CHtml::htmlButton('<span class="glyphicon glyphicon-search"></span>'.Yii::t('transition', '查找'), array('class' => 'btn btn-default', 'type' => 'submit'));

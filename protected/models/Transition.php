@@ -36,6 +36,8 @@ class Transition extends CActiveRecord
     public $query_e_day;
     public $query_memo;
 
+    public $query_multi_str;
+
     public $check_entry_amount = 0; //是否验证过借贷相等 优化处理 待改进
     public $entry_number; //  entry_num_prefix. entry_num     完整凭证编号，供凭证管理、排序搜索使用
     public $entry_time;
@@ -255,27 +257,44 @@ class Transition extends CActiveRecord
     public function search()
     {
         $criteria = new CDbCriteria;
-        $month = true;
-
-        if ($this->query_s_day != null) {
-            $criteria->addCondition('t.entry_date>="' . $this->query_s_day . '"', 'AND');
-            $month = false;
-        }
-        if ($this->query_e_day != null) {
-            $criteria->addCondition('t.entry_date<="' . $this->query_e_day . '"', 'AND');
-            $month = false;
-        }
-        if ($this->query_memo != null) {
-            $criteria->addCondition('t.entry_memo like "%' . $this->query_memo . '%"');
-            $month = false;
-        }
-
-        //file_put_contents('m.txt', var_export($this->query_s_day, true), FILE_APPEND);
+        //$month = true;
 
         $criteria->compare('id', $this->id);
-        if ($month) {
+        if ($this->entry_num_prefix === null) {
+            if ($this->query_s_day != null) {
+                $criteria->addCondition('t.entry_date>="' . $this->query_s_day . '"', 'AND');
+                //$month = false;
+            }
+            if ($this->query_e_day != null) {
+                $criteria->addCondition('t.entry_date<="' . $this->query_e_day . '"', 'AND');
+                //$month = false;
+            }
+            if ($this->query_memo != null) {
+                //$criteria->addCondition('t.entry_memo like "%' . $this->query_memo . '%"');
+                //$month = false;
+                $this->entry_memo = $this->query_memo;
+            }
+        } else {
             $criteria->compare('entry_num_prefix', $this->entry_num_prefix, true);
         }
+
+        if ($this->query_multi_str !== null) {
+            if(is_numeric($this->query_multi_str) &&mb_strlen($this->query_multi_str) == 10) {
+                $a = substr($this->query_multi_str, 0, 6);
+                $b = intval(substr($this->query_multi_str, 6));
+                $criteria->addCondition('t.entry_num_prefix = "'.$a.'"');
+                $criteria->addCondition('t.entry_num = "'.$b.'"');
+            }
+
+            $tmp_timestamp = strtotime($this->query_multi_str);
+            if ($tmp_timestamp !== false) {
+                $criteria->addCondition('t.entry_date = "'.date('Y-m-d', $tmp_timestamp).'"', 'OR');
+            }
+            if ($this->query_multi_str != '')
+                $criteria->addCondition('t.entry_memo like "%' . $this->query_multi_str . '%"', 'OR');
+        }
+
+
         $criteria->compare('entry_num', $this->entry_num, true);
         $criteria->compare('entry_num_prefix', $this->entry_number, true);
         $criteria->compare('entry_date', $this->entry_date, true);
@@ -294,6 +313,7 @@ class Transition extends CActiveRecord
         $criteria->compare('entry_settlement', $this->entry_settlement);
         $criteria->compare('entry_forward', $this->entry_forward);
         $criteria->compare('entry_closing', $this->entry_closing);
+
 
         if ($this->select != null)
             $criteria->select = $this->select;

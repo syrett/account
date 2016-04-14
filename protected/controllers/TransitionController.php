@@ -178,97 +178,36 @@ class TransitionController extends Controller
     {
         $model = new Transition('search');
         $model->unsetAttributes(); // clear any default values
-        $q_s_day = '';
-        $q_e_day = '';
-        $q_memo = '';
-
-        $session = Yii::app()->session;
 
         if (isset($_GET['Transition']))
             $model->attributes = $_GET['Transition'];
 
-        if (isset($_GET['entry_date'])) {
-            //按月整理凭证
-
-            //$model->entry_num_prefix = $_GET['entry_date'];
-
-            $stamp_date_start = strtotime($_GET['entry_date'].'01');
-            if ($stamp_date_start === false) {
-                $_GET['entry_date'] = date('Ym');
-            }
-            $model->query_s_day = date('Y-m-d 00:00:00', $stamp_date_start);
-            $q_s_day = date('Y/m/d', $stamp_date_start);
-            $session[__METHOD__.'_s_day'] = $model->query_s_day;
-            $tmp_year = substr($_GET['entry_date'], 0, 4);
-            $tmp_month = substr($_GET['entry_date'], 4, 2);
-            if ($tmp_month == 12) {
-                $tmp_year += 1;
-                $tmp_month = 1;
-            } else {
-                $tmp_month += 1;
-            }
-            if ($tmp_month < 10) {
-                $tmp_month = '0'.$tmp_month;
-            }
-            $stamp_date_end = strtotime($tmp_year.$tmp_month.'01')-86399;
-            $model->query_e_day = date('Y-m-d 23:59:59', $stamp_date_end);
-            $q_e_day = date('Y/m/d', $stamp_date_end);
-            $session[__METHOD__.'_e_day'] = $model->query_e_day;
-            $session[__METHOD__.'_memo'] = '';
-
-        } else {
-            //post
-            $s_day = '';
-            if (isset($_POST['s_day'])) {
-                $stamp_date_start = strtotime($_POST['s_day']);
-                if ($stamp_date_start != false) {
-                    $s_day = date('Y-m-d 00:00:00', $stamp_date_start);
-                }
-            } elseif (isset($session[__METHOD__.'_s_day'])) {
-                $s_day = $session[__METHOD__.'_s_day'];
-            }
-            if ($s_day != '') {
-                $model->query_s_day = $s_day;
-                $q_s_day = date('Y/m/d', strtotime($s_day));
-            }
-            $session[__METHOD__.'_s_day'] = $s_day;
-
-            $e_day = '';
-            if (isset($_POST['e_day'])) {
-                $stamp_date_end = strtotime($_POST['e_day']);
-                if ($stamp_date_end != false) {
-                    $e_day = date('Y-m-d 23:59:59', $stamp_date_end);
-                }
-            } elseif (isset($session[__METHOD__.'_e_day'])) {
-                $e_day = $session[__METHOD__.'_e_day'];
-            }
-            if ($e_day != '') {
-                $model->query_e_day = $e_day;
-                $q_e_day = date('Y/m/d', strtotime($e_day));
-            }
-            $session[__METHOD__.'_e_day'] = $e_day;
-
-            $memo = '';
-            if (isset($_POST['memo'])) {
-                $memo = trim($_POST['memo']);
-            } elseif (isset($session[__METHOD__.'_memo'])) {
-                $memo = $session[__METHOD__.'_memo'];
-            }
-            if ($memo != '') {
-                $model->query_memo = $memo;
-                $q_memo = $memo;
-            }
-            $session[__METHOD__.'_memo'] = $memo;
-        }
+        $query_res = $this->dealTransCond($model, __METHOD__, 'entry_date');
 
         $this->render('admin', array(
             'model' => $model,
-            'q_s_day' => $q_s_day,
-            'q_e_day' => $q_e_day,
-            'q_memo' => $q_memo,
+            'operation' => 'admin',
+            'query_res' => $query_res,
         ));
     }
 
+    /**
+     * 逐月查询
+     *
+     */
+    public function actionMmquery()
+    {
+        $model = new Transition('search');
+        $model->unsetAttributes();  // clear any default values
+
+        $query_res = $this->dealTransCond($model, __METHOD__, 'date');
+
+        $this->render('admin', array(
+            'model' => $model,
+            'operation' => 'mmquery',
+            'query_res' => $query_res,
+        ));
+    }
     /**
      * 采购交易.
      */
@@ -1447,14 +1386,16 @@ class TransitionController extends Controller
 
         $model = new Transition('search');
         $model->unsetAttributes(); // clear any default values
-        if (isset($_REQUEST['date'])) {
-            $criteria = array('entry_reviewed' => 0, 'entry_num_prefix' => $_REQUEST['date']);
-        } else {
-            $criteria = array('entry_reviewed' => 0);
-        }
+
+        $criteria = array('entry_reviewed' => 0);
         $model->attributes = $criteria;
+
+        $query_res = $this->dealTransCond($model, __METHOD__, 'date');
+
         $this->render('admin', array(
-            'model' => $model, 'operation' => 'listReview'
+            'model' => $model,
+            'operation' => 'listReview',
+            'query_res' => $query_res,
         ));
     }
 
@@ -1462,6 +1403,7 @@ class TransitionController extends Controller
     {
         $model = new Transition('search');
         $model->unsetAttributes(); // clear any default values
+        /*
         if (isset($_POST['s_day']) && $_POST['s_day'] != '') {
 
         }
@@ -1470,10 +1412,15 @@ class TransitionController extends Controller
 
         if (isset($_GET['Subjects']))
             $model->attributes = $_GET['Subjects'];
+        */
 
-        $this->render('list_transition', array(
+        $query_res = $this->dealTransCond($model, __METHOD__, '--');
+
+        $this->render('admin', array(
 
             'model' => $model,
+            'operation' => 'listTransition',
+            'query_res' => $query_res,
         ));
     }
 
@@ -1781,36 +1728,91 @@ class TransitionController extends Controller
     {
 
         $xlsName = Yii::t('transition', '导出凭证');
+        $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : 'admin';
 
-        $session = Yii::app()->session;
-        $m_str = 'TransitionController::actionAdmin';
+
+        $m_str = '';
+        switch ($type) {
+            case 'admin':
+                $m_str = 'TransitionController::actionAdmin';
+                break;
+            case 'mmquery':
+                $m_str = 'TransitionController::actionMmquery';
+                break;
+            case 'listReview':
+                $m_str = 'TransitionController::actionListReview';
+                break;
+            case 'listTransition':
+                $m_str = 'TransitionController::actionListTransition';
+                break;
+        }
+
         $q_s_day = '';
         $q_e_day = '';
         $q_memo = '';
+        $q_multi_search = '';
 
-        $where = '1=1';
+        $where = '';
         $where_array = [];
 
-        if (isset($session[$m_str.'_s_day']) && $session[$m_str.'_s_day'] != '') {
-            $q_s_day = date('Y-m-d', strtotime($session[$m_str.'_s_day']));
-            $xlsName .= $q_s_day;
-            $where .= ' AND entry_date >= :s_day ';
-            $where_array[':s_day'] = $session[$m_str.'_s_day'];
+        $session = Yii::app()->session;
+
+        if ($type == 'listTransition') {
+            if (isset($session[$m_str.'_multi_str']) && trim($session[$m_str.'_multi_str']) != "") {
+                $q_multi_search = $session[$m_str.'_multi_str'];
+                $where .= ' OR entry_memo LIKE :p1 ';
+                $where_array[':p1'] = '%' . $session[$m_str.'_multi_str'] . '%';
+                if (is_numeric($session[$m_str.'_multi_str']) && mb_strlen($session[$m_str.'_multi_str']) == 10) {
+                    $a = substr($session[$m_str.'_multi_str'], 0, 6);
+                    $b = intval(substr($session[$m_str.'_multi_str'], 6));
+                    $where .= ' OR (entry_num_prefix = :p2 AND entry_num = :p3) ';
+                    $where_array[':p2'] = $a;
+                    $where_array[':p3'] = $b;
+                }
+                $tmp_timestamp = strtotime($session[$m_str.'_multi_str']);
+                if ($tmp_timestamp !== false) {
+                    $where .= ' OR entry_date = :p4 ';
+                    $where_array[':p4'] = date('Y-m-d', $tmp_timestamp);
+                }
+            }
+            if ($where != '') {
+                $where = substr($where, 3);
+            }
+        } else {
+            if (isset($session[$m_str.'_s_day']) && $session[$m_str.'_s_day'] != '') {
+                $q_s_day = date('Y-m-d', strtotime($session[$m_str.'_s_day']));
+                $xlsName .= $q_s_day;
+                $where .= 'AND entry_date >= :s_day ';
+                $where_array[':s_day'] = $session[$m_str.'_s_day'];
+            }
+
+            if (isset($session[$m_str.'_e_day']) && $session[$m_str.'_e_day'] != '') {
+                $q_e_day = date('Y-m-d', strtotime($session[$m_str.'_e_day']));
+                $xlsName .= '-'.$q_e_day;
+                $where .= 'AND entry_date <= :e_day ';
+                $where_array[':e_day'] = $session[$m_str.'_e_day'];
+            }
+            if (isset($session[$m_str.'_memo']) && $session[$m_str.'_memo'] != '') {
+                $q_memo = $session[$m_str.'_memo'];
+                $where .= 'AND entry_memo LIKE :memo ';
+                $where_array[':memo'] = '%' . $session[$m_str.'_memo'] . '%';
+            }
+
+            if ($type == 'listReview') {
+                $where .= 'AND entry_reviewed = :re ';
+                $where_array[':re'] = 0;
+            }
+
+            if ($where != '') {
+                $where = substr($where, 3);
+            }
         }
 
-        if (isset($session[$m_str.'_e_day']) && $session[$m_str.'_e_day'] != '') {
-            $q_e_day = date('Y-m-d', strtotime($session[$m_str.'_e_day']));
-            $xlsName .= '-'.$q_e_day;
-            $where .= ' AND entry_date <= :e_day ';
-            $where_array[':e_day'] = $session[$m_str.'_e_day'];
+        if ($where != '') {
+            $sql = "select * from transition where " . $where. ' ORDER BY entry_num_prefix desc , entry_num  DESC,  entry_transaction asc ';
+        } else {
+            $sql = 'SELECT * FROM `transition`  ORDER BY entry_num_prefix desc , entry_num  DESC,  entry_transaction asc ';
         }
-        if (isset($session[$m_str.'_memo']) && $session[$m_str.'_memo'] != '') {
-            $q_memo = $session[$m_str.'_memo'];
-            $where .= ' AND entry_memo LIKE :memo ';
-            $where_array[':memo'] = '%' . $session[$m_str.'_memo'] . '%';
-        }
-
-        $sql = "select * from transition where " . $where. ' ORDER BY entry_num_prefix desc , entry_num  DESC,  entry_transaction asc ';
 
         $command = Yii::app()->db
             ->createCommand($sql)
@@ -1849,7 +1851,13 @@ class TransitionController extends Controller
         $os->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
         $os->setCellValue('A1', "生成时刻：\n".date('Y-m-d H:i'));
         $os->mergeCells('C1:H1');
-        $os->setCellValue('C1', "日期范围：".$q_s_day.' 至 '.$q_e_day.'    摘要：'.$q_memo);
+
+        if ($type == 'listTransition') {
+            $os->setCellValue('C1', "快速查找：".$q_multi_search);
+        } else {
+            $os->setCellValue('C1', "日期范围：".$q_s_day.' 至 '.$q_e_day.'    摘要：'.$q_memo);
+
+        }
 
         $os->getStyle('A3:H3')->getFont()->setSize(12);
         $os->getStyle('A3:H3')->getFill()->setFillType(PHPExcel_style_Fill::FILL_SOLID);
@@ -2849,4 +2857,112 @@ class TransitionController extends Controller
         else
             return false;
     }
+
+
+    /**
+     * 处理查询条件
+     *
+     *
+     */
+    public function  dealTransCond($model, $mStr, $getP1 = '')
+    {
+        $res = [];
+        $session = Yii::app()->session;
+
+        if (isset($_GET[$getP1])) {
+            $gp1 = $_GET[$getP1];
+            $stamp_month_start = strtotime($gp1.'01');
+            if ($stamp_month_start === false) {
+                $gp1 = date('Ym');
+                $stamp_month_start = strtotime($gp1.'01');
+            }
+            $model->entry_num_prefix = $gp1;
+
+            $date_month_start = date('Y-m-d 00:00:00', $stamp_month_start);
+            $model->query_s_day = $date_month_start;
+            $res['s_day'] = date('Y/m/d', $stamp_month_start);
+            $session[$mStr.'_s_day'] = $date_month_start;
+
+            $tmp_year = intval(substr($gp1, 0, 4));
+            $tmp_month = intval(substr($gp1, 4));
+            if ($tmp_month == 12) {
+                $tmp_year += 1;
+                $tmp_month = 1;
+            } else {
+                $tmp_month += 1;
+            }
+            if ($tmp_month < 10) {
+                $tmp_month = '0'.$tmp_month;
+            }
+
+            $stamp_month_end = strtotime($tmp_year.$tmp_month.'01')-86399;
+            $date_month_end = date('Y-m-d 23:59:59', $stamp_month_end);
+            $model->query_e_day = $date_month_end;
+            $res['e_day'] = date('Y/m/d', $stamp_month_end);
+            $session[$mStr.'_e_day'] = $date_month_end;
+
+            $session[$mStr.'_memo'] = '';
+
+        } else {
+
+            $s_day = '';
+            if (isset($_POST['s_day'])) {
+                $stamp_date_start = strtotime($_POST['s_day']);
+                if ($stamp_date_start != false) {
+                    $s_day = date('Y-m-d 00:00:00', $stamp_date_start);
+                }
+            } elseif (isset($session[$mStr.'_s_day'])) {
+                $s_day = $session[$mStr.'_s_day'];
+            }
+            if ($s_day != '') {
+                $model->query_s_day = $s_day;
+                $res['s_day'] = date('Y/m/d', strtotime($s_day));
+            }
+            $session[$mStr.'_s_day'] = $s_day;
+
+            $e_day = '';
+            if (isset($_POST['e_day'])) {
+                $stamp_date_end = strtotime($_POST['e_day']);
+                if ($stamp_date_end != false) {
+                    $e_day = date('Y-m-d 23:59:59', $stamp_date_end);
+                }
+            } elseif (isset($session[$mStr.'_e_day'])) {
+                $e_day = $session[$mStr.'_e_day'];
+            }
+            if ($e_day != '') {
+                $model->query_e_day = $e_day;
+                $res['e_day'] = date('Y/m/d', strtotime($e_day));
+            }
+            $session[$mStr.'_e_day'] = $e_day;
+
+            $memo = '';
+            if (isset($_POST['memo'])) {
+                $memo = trim($_POST['memo']);
+            } elseif (isset($session[$mStr.'_memo']) && $session[$mStr.'_memo'] != '') {
+                $memo = $session[$mStr.'_memo'];
+            }
+            if ($memo != '') {
+                $model->query_memo = $memo;
+                $res['memo'] = $memo;
+            }
+            $session[$mStr.'_memo'] = $memo;
+
+            $multi_str = '';
+            if (isset($_REQUEST['multi_search'])) {
+                $multi_str = $_REQUEST['multi_search'];
+            } elseif (isset($session[$mStr.'_multi_str']) && $session[$mStr.'_multi_str'] != '') {
+                $multi_str = $session[$mStr.'_multi_str'];
+            }
+            if ($multi_str != '') {
+                $model->query_multi_str = $multi_str;
+                $res['multi_search'] = $multi_str;
+            }
+            $session[$mStr.'_multi_str'] = $multi_str;
+
+        }
+
+        return $res;
+
+    }
+
 }

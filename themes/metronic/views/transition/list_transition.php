@@ -99,7 +99,7 @@ $cs->registerScript('ComponentsPickersInit', 'ComponentsPickers.init();', CClien
                 <div class="input-group input-large " >
 
                     <span class="input-group-addon"><?= Yii::t('transition', '快速查找');?> </span>
-                    <input type="text" class="form-control input-small" name="multi_search" id="multi_search" value="<?=isset($_POST['multi_search'])?$_POST['multi_search']:''?>">
+                    <input type="text" class="form-control input-small" name="multi_search" id="multi_search" value="<?=isset($_POST['multi_search'])?$_POST['multi_search']:''?>" placeholder="凭证号，日期，内容等">
 				<span class="input-group-btn">
 				<?php
                 echo CHtml::htmlButton('<span class="glyphicon glyphicon-search"></span>'.Yii::t('transition', '查找'), array('class' => 'btn btn-default', 'type' => 'submit'));
