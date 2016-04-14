@@ -125,7 +125,8 @@ class Post extends CActiveRecord
                 if ($t['entry_transaction'] == "1") { //1为借
                     //利息费用要特殊处理
                     $sbj = Subjects::findSubject('利息费用', '6603', true);
-                    if ($t['entry_subject'] == $sbj[0]->sbj_number) {
+
+                    if ($sbj != null && $t['entry_subject'] == $sbj[0]->sbj_number) {
                         $tmp_debit = $tmp_debit + floatval($t['entry_amount']);
                     } else {
                         if ($t['entry_amount'] > 0)
@@ -150,10 +151,14 @@ class Post extends CActiveRecord
                     }
                 }
             } else {
-                if ($t['entry_transaction'] == "1") { //1为借
-                    $tmp_debit = $tmp_debit + floatval($t['entry_amount']);
-                } elseif ($t['entry_transaction'] == "2") { //2为贷
-                    $tmp_credit = $tmp_credit + floatval($t['entry_amount']);
+                //结转凭证，只有未分配利润才把金额过到post表
+                if (substr($t['entry_subject'], 0, 4)== '4103'){
+                    if ($t['entry_transaction'] == "1") { //1为借
+                        $tmp_debit = $tmp_debit + floatval($t['entry_amount']);
+                    } elseif ($t['entry_transaction'] == "2") { //2为贷
+                        $tmp_credit = $tmp_credit + floatval($t['entry_amount']);
+                    }
+
                 }
             }
 
