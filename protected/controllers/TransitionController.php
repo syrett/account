@@ -1296,7 +1296,7 @@ class TransitionController extends Controller
         } elseif ($date < Condom::model()->getStartTime())
             throw new CHttpException(400, "已经反结账至账套起始日期");
         else
-            throw new CHttpException(400, $lastdate . " 反结账失败");
+            throw new CHttpException(400, $edate . " 反结账失败");
     }
 
     /*
@@ -1310,7 +1310,7 @@ class TransitionController extends Controller
 //        if (Transition::model()->findByAttributes(['entry_num_prefix' => $date], 'entry_closing=1') || $model) {
         $rows = Transition::model()->deleteAllByAttributes(['entry_num_prefix' => $date], 'entry_memo like "计提折旧-' . $date . '%"');
         //删除12月结转时自动生成的 ‘本年利润结转到未分配利润’
-        $rows = Transition::model()->deleteAllByAttributes(['entry_num_prefix' => $date, 'entry_memo' => "结转本年利润到未分配利润"]);
+        $rows += Transition::model()->deleteAllByAttributes(['entry_num_prefix' => $date, 'entry_memo' => "结转本年利润到未分配利润"]);
 
         //还要判断是否是对已经结账的月份进行反结账，如果只是对过账的月份进行反结账，固定资产等的净值还保持不变
         //以，是否能找到未结账标识为判断依据
@@ -2063,7 +2063,9 @@ class TransitionController extends Controller
                     $model = new Cost();
                     break;
                 case 'salary':
+                    //工资要根据不同部分，计入不同费用
                     $employee = Employee::model()->findByAttributes(['name' => $arr['employee_name']]);
+                    $arr['entry_subject'] = Department::matchSubject(Employee::getDepart($employee->id), '工资');
                     $arr['entry_memo'] = '个人工资-' . $arr['employee_name'] . '-' . convertDate($arr['entry_date'], 'Y年m月');
                     $model = new Salary();
                     $sbj_arr = [];
@@ -2087,6 +2089,30 @@ class TransitionController extends Controller
                         $model = $salary;
                         $model->load($arr);
                     }
+                        //工资借方金额要加上公司需要支付的那部分
+
+                        $tran_extends = [
+                            [
+                                [
+                                    'entry_subject' => Department::matchSubject(Employee::getDepart($employee->id),'社保公积金'),
+                                    'entry_amount' => (float)$arr['social_company'] + (float)$arr['provident_company'],
+                                    'entry_memo' => '社保公积金公司部分',
+                                    'entry_transaction' => 1
+                                ],
+                                [
+                                    'entry_subject' => Subjects::matchSubject('应付社保', '2241'),
+                                    'entry_amount' => $arr['social_company'],
+                                    'entry_memo' => '社保公司部分',
+                                    'entry_transaction' => 2
+                                ],
+                                [
+                                    'entry_subject' => Subjects::matchSubject('应付公积金', '2241'),
+                                    'entry_amount' => $arr['provident_company'],
+                                    'entry_memo' => '公积金公司部分',
+                                    'entry_transaction' => 2
+                                ]
+                            ]
+                        ];
                     break;
                 case 'reimburse':
                     $lists = [
@@ -2607,6 +2633,20 @@ class TransitionController extends Controller
                                 $tran4->attributes = $data;
                                 $tran3->save();
                                 $tran4->save();
+                            }
+
+                            if (!empty($tran_extends)) {
+                                $data_tmp = $data;
+                                foreach ($tran_extends as $key => $tran_extend) {
+                                    $data_tmp['entry_num'] = $this->tranSuffix($prefix);
+                                    foreach ($tran_extend as $item) {
+                                        $tran_tmp_1 = new Transition();
+                                        $tran_tmp_1->attributes = $arr;
+                                        $tran_tmp_1->setAttributes($data_tmp);
+                                        $tran_tmp_1->setAttributes($item);
+                                        $tran_tmp_1->save();
+                                    }
+                                }
                             }
                             //设置该记录已经生成凭证
                             $model->status_id = 1;

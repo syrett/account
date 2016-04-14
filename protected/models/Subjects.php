@@ -244,7 +244,7 @@ class Subjects extends CActiveRecord
      */
     static public function getName($sbj_id)
     {
-        $sbj_name = Yii::app()->language=='en_us'?'sbj_name_en':'sbj_name';
+        $sbj_name = Yii::app()->language == 'en_us' ? 'sbj_name_en' : 'sbj_name';
         $sql = "SELECT $sbj_name as `sbj_name` FROM subjects WHERE sbj_number=:sbj_id";
         $data = Subjects::model()->findBySql($sql, array(':sbj_id' => $sbj_id));
         if ($data)
@@ -284,9 +284,9 @@ class Subjects extends CActiveRecord
      * @options Array   参数，$rej=[], $level=2, $level=0 无匹配返回原科目 $type=1 无匹配返回所有 $type=2 无匹配返回父科目
      * @return Array 子科目数组
      */
-    public function list_sub($sbj_id='', $key = '', $options = [])
+    public function list_sub($sbj_id = '', $key = '', $options = [])
     {
-        $sbj_id = $sbj_id==''?$this->sbj_number:$sbj_id;
+        $sbj_id = $sbj_id == '' ? $this->sbj_number : $sbj_id;
         $level = isset($options['level']) ? $options['level'] : 2;
         $type = isset($options['type']) ? $options['type'] : 1;
         $reject = isset($options['reject']) ? $options['reject'] : [];
@@ -307,7 +307,7 @@ class Subjects extends CActiveRecord
         $where .= " AND sbj_number<='$sbj_max'";
         $where .= $rejSbj != "" ? $rejSbj : "";
         $keywhere = " AND sbj_name like '%" . $key . "%'";
-        $orderby = " order by INSTR(sbj_name,'$key') desc";
+        $orderby = " order by sbj_number";
         $data_1 = self::findAllBySql($sql_1 . $where . $sbjwhere . $keywhere . $orderby, array());
         if (empty($data_1) && $type == 1) {
             $data_1 = self::findAllBySql($sql_1 . $where . $sbjwhere . $orderby, array());
@@ -328,6 +328,7 @@ class Subjects extends CActiveRecord
         foreach ($data_1 as $key => $item) {
             array_push($data, $item->attributes);
 //            if ($item["has_sub"] == 1 && isset($GLOBALS['level']) && $GLOBALS['level']>0) {
+            /*
             if ($item["has_sub"] == 1) {
                 $data_sub = $this->list_sub($item["sbj_number"], $key, $options);
                 foreach ($data_sub as $key => $item_sub) {
@@ -335,6 +336,7 @@ class Subjects extends CActiveRecord
                 }
 //                $GLOBALS['level'] -= 1;
             }
+            */
         }
 
         return $data;
@@ -377,8 +379,8 @@ class Subjects extends CActiveRecord
             if ($start_balance != 0)
                 switch ($sbj_cat) {
                     case 1:
-                        $cat_1 = in_array(substr($sbj_id,0, 4), ['1602', '1702'])?$cat_1- (100 * $start_balance):$cat_1+ (100 * $start_balance);
-                        $str1 .= (in_array(substr($sbj_id,0, 4), ['1602', '1702'])? '-':'+' ). $start_balance;
+                        $cat_1 = in_array(substr($sbj_id, 0, 4), ['1602', '1702']) ? $cat_1 - (100 * $start_balance) : $cat_1 + (100 * $start_balance);
+                        $str1 .= (in_array(substr($sbj_id, 0, 4), ['1602', '1702']) ? '-' : '+') . $start_balance;
                         break;
                     case 2:
                         $cat_2 += (100 * $start_balance);
@@ -518,43 +520,75 @@ class Subjects extends CActiveRecord
     }
 
     /*
-     * 根据关键字匹配科目表
+     * 根据关键字匹配科目表，如果匹配到的科目有子科目，则需要继续往下级匹配，直到没有子科目为至，否则查看凭证时，无法正确显示
      * @key Integer 关键字
      * @subject Array   科目编号数组
      * @level Integer 层数，0代表科目编号下所有子科目，1代表当前科目编号的子科目，子科目的子科目不包含
      * @option Integer 如果没有则自动添加，此时的subjects必须为单一数组
      */
-    public static function matchSubject($key, $subjects, $level = 0, $option = 1, $return = 'str')
+    public static function matchSubject($sbjname, $subjects, $level = 0, $option = 1, $return = 'str')
     {
+        $where = '';
         if (!is_array($subjects))
             $subjects = [$subjects];
         if (empty($subjects)) {
-            $all = Yii::app()->db->createCommand("select sbj_number from " . self::model()->tableSchema->name . " where length(sbj_number) < 5 ")->queryAll();
+            $all = Yii::app()->db->createCommand("select * from " . self::model()->tableSchema->name . " where length(sbj_number) < 5 ")->queryAll();
             foreach ($all as $item) {
                 $subjects[] = $item['sbj_number'];
             }
+        }else{
+            $where .= ' and (';
+            foreach ($subjects as $key => $subject) {
+                $where .= $key == 0?" sbj_number regexp '^$subject'":'';
+                $where .= " or sbj_number regexp '^$subject' ";
+            }
+            $where .= ')';
         }
         //似乎应该完成匹配
-        $data = Subjects::model()->findAllByAttributes([], "sbj_name like '%$key%'");
+
+        $data = Subjects::model()->findAllByAttributes([], "sbj_name like '%$sbjname%'". $where);
 //        $data = Yii::app()->db->createCommand("select * from " . self::model()->tableSchema->name . " where sbj_name like '%$key%'")->queryAll();
         if ($return == 'str')
             $sbj = 0;
         else
             $sbj = [];
         $percent = 100;
-        if (count($data) > 0)
-            foreach ($data as $item) {
-                $per = levenshtein($key, $item['sbj_name']);
-                if ($percent > $per && in_array(substr($item['sbj_number'], 0, 4), $subjects)) {
-                    if ($level != 0 && strlen($item['sbj_number']) <= (4 + $level * 2)) {
+        if (count($data) > 0) {
+            if ($return == 'str')
+                $sbj = Subjects::getTranSubject($data[0]['sbj_number']);
+            else
+                foreach ($data as $item) {
+                    $per = levenshtein($sbjname, $item['sbj_name']);
+                    if ($percent > $per && in_array(substr($item['sbj_number'], 0, 4), $subjects)) {
+                        if ($item['has_sub'] == 1)
+                            $item['sbj_number'] = Subjects::getTranSubject($item['sbj_number']);
                         $sbj += $item['sbj_number'];
                         $percent = $per;
                     }
                 }
-            }
+        }
         if (($sbj == 0 || empty($sbj)) && $option == 1)
-            $sbj = Subjects::createSubject($key, $subjects[0]);
+            $sbj = Subjects::createSubject($sbjname, $subjects[0]);
+
         return $sbj;
+    }
+
+    public static function getTranSubject($sbj_number)
+    {
+        $sbj = Subjects::model()->findByAttributes(['sbj_number' => $sbj_number]);
+        if ($sbj !== null) {
+            if ($sbj->has_sub == 0)
+                return $sbj_number;
+            else {
+                $sub = Subjects::model()->listSubjects($sbj_number);
+                if (count($sub) == 0)
+                    return $sbj_number;
+                else {
+                    return key($sub);
+                }
+            }
+        } else
+            return $sbj_number;
     }
 
     /*
@@ -577,7 +611,7 @@ class Subjects extends CActiveRecord
 
                     $result[] = $a;
                 } else
-                    $result[] = Subjects::model()->findByAttributes(['sbj_name' => $key], 'sbj_number like "'. $sbj. '%"');
+                    $result[] = Subjects::model()->findByAttributes(['sbj_name' => $key], 'sbj_number like "' . $sbj . '%"');
             }
         return array_values(array_filter($result));
     }
@@ -815,11 +849,12 @@ class Subjects extends CActiveRecord
     /*
      * 获取期末余额
      */
-    public function getBalance(){
+    public function getBalance()
+    {
         $amount = 0;
         $trans = Transition::model()->findAllByAttributes(['entry_subject' => $this->sbj_number]);
         foreach ($trans as $tran) {
-            $amount += $tran->entry_transaction==1?$tran->entry_amount:(-$tran->entry_amount);
+            $amount += $tran->entry_transaction == 1 ? $tran->entry_amount : (-$tran->entry_amount);
         }
         return $amount;
     }

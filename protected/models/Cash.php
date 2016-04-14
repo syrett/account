@@ -307,7 +307,7 @@ class Cash extends LFSModel
         return [
             'data' => [],
 //            'option' => [['checkbox', '是否含税']],
-            'option' => [['select', 'withtax', '税率', ['0'=> '不含税', '3' => '3%增值税', '5' => '5%营业税']]],
+            'option' => [['select', 'withtax', '税率', ['0'=> '不含税', '3' => '3%增值税']]],
         ];
     }
 

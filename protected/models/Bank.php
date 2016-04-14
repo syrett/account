@@ -322,7 +322,7 @@ class Bank extends LFSModel
         return [
             'data' => [],
 //            'option' => [['checkbox', 'withtax', '是否含税', '3%', '1']],
-            'option' => [['select', 'withtax', '税率', ['0'=> '不含税', '3' => '3%增值税', '5' => '5%营业税']]],
+            'option' => [['select', 'withtax', '税率', ['0'=> '不含税', '3' => '3%增值税']]],
         ];
     }
 

@@ -959,7 +959,6 @@ UPDATE `auth_category` SET `type` = '1' WHERE `auth_category`.`id` = 6;
 ALTER TABLE `auth_permission` ADD `type` INT NOT NULL COMMENT '类型，区分只有标准版才有的功能' AFTER `category`;
 UPDATE `auth_permission` SET `type` = '1' WHERE `auth_permission`.`id` = 'transition/reimburse';
 
-ALTER TABLE `yii2_start_users` ADD `condom_id` VARCHAR(512) NOT NULL AFTER `token`;
 
 INSERT INTO `auth_permission` (`id`, `category`, `type`, `name`, `description`, `form`, `options`, `default_value`, `rule`, `sort_num`, `sort`) VALUES ('client/age', 'product', '1', '客户账龄', NULL, '1', NULL, NULL, NULL, '0', '0');
 

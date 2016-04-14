@@ -26,7 +26,9 @@ class Controller extends CController
     {
         $action = [''];
         $user = User::model()->findByPk(Yii::app()->user->id);
-        if($user->id == $user->group) //用户组组长，拥有所有权限
+        if($user== null)
+            $action = [];
+        elseif($user->id == $user->group) //用户组组长，拥有所有权限
             $action = [$this->getAction()->id];
         else{
             $access = AuthRelation::model()->findAllByAttributes(['user_id' => $user->id]);
