@@ -958,7 +958,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                         } else {
                             foreach ($list as $year => $months) {
 
-                                echo CHtml::beginForm($this->createUrl('/Transition/listTransition'), 'get');
+                                echo CHtml::beginForm($this->createUrl('/Transition/mmquery'), 'get');
                                 ?>
                                 <?= $year ?><?= Yii::t('import', '年') ?>
                                 <?php
