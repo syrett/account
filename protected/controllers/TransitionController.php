@@ -35,7 +35,7 @@ class TransitionController extends Controller
             if ($permission)
                 $rules[0]['actions'] = [$action];
         }
-        $rules[0]['actions'] = array_merge($rules[0]['actions'], ['index', 'admin', 'settlement', 'listreview', 'update', 'mmquery', 'listtransition', 'appendix', 'getTranSuffix']);
+        $rules[0]['actions'] = array_merge($rules[0]['actions'], ['index', 'admin', 'settlement', 'listreview', 'update', 'mmquery', 'createexcel1', 'listtransition', 'appendix', 'getTranSuffix']);
         return $rules;
     }
 
