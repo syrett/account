@@ -206,19 +206,19 @@ class Product extends LFSModel
         $where = '1=1';
         if(count($tax_A) > 0){
             foreach ($tax_A as $item) {
-                $where .= $where = '1=1'?" and (subject = '$item->sbj_number'":" or subject = '$item->sbj_number'";
+                $where .= $where == '1=1'?" and (subject = '$item->sbj_number'":" or subject = '$item->sbj_number'";
             }
             $where .= ')';
-            $products = Product::model()->findAllByAttributes([''], $where);
+            $products = Product::model()->findAllByAttributes([], $where);
             if(count($products)){
 
             }
 
         }
-        $data[1]['zone']['A'] = 111;
-        $data[1]['zone']['B'] = 3333;
-        $data[1]['year']['A'] = 111;
-        $data[1]['year']['B'] = 3333;
+        $data[1]['zone']['A'] = 0;
+        $data[1]['zone']['B'] = 0;
+        $data[1]['year']['A'] = 0;
+        $data[1]['year']['B'] = 0;
         return $data;
     }
 }
