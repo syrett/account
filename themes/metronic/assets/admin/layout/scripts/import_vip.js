@@ -32,7 +32,7 @@ $(document).ready(function () {
         $(this).nextAll("span[class*='label-warning']").html("");
     })
 
-    $("div").delegate("#subject_b", "change", function () {
+    $("#tab_step_1").delegate("#subject_b", "change", function () {
         lockBank();
     });
 });

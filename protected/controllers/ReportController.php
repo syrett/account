@@ -323,6 +323,24 @@ class ReportController extends Controller
 
     }
 
+    public function actionTax1(){
+
+        if (isset($_REQUEST['date']) && $_REQUEST['date'] != '' && $_POST['type'] != '') {
+            $type = $_POST['type'];
+            $date = $_REQUEST['date'];
+        } else {
+            $type = 1;
+            $date = date('Ymt', strtotime("-1 months"));
+        }
+        $model = new Money();
+        $model->is_closed = 1;
+        $model->date = $date;
+        $data = $model->genMoneyData('', $type);
+
+        $this->render("tax1", array("data" => $data,
+            "date" => $date));
+    }
+
     public function actionCreateExcel()
     {
         Yii::import('ext.phpexcel.PHPExcel');

@@ -410,7 +410,7 @@ $cs->registerScript('ChartsFlotchartsInitPie',$expense_income_data, CClientScrip
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="col-md-3 col-xs-3">
-                                    <a href="#">
+                                    <a href="<?= $this->createUrl('report/tax1') ?>">
                                         <img
                                             src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/tax1_report.jpg'; ?>"
                                             class="img-responsive img-thumbnail"/>
@@ -418,7 +418,7 @@ $cs->registerScript('ChartsFlotchartsInitPie',$expense_income_data, CClientScrip
                                 </div>
                                 <div class="col-md-9">
                                     <h4 class="media-heading"><a
-                                            href="#"><?= Yii::t('report', '增值税纳税申报表') ?></a>
+                                            href="<?= $this->createUrl('report/tax1') ?>"><?= Yii::t('report', '增值税纳税申报表') ?></a>
                                     </h4>
                                     <p>
                                         <? if (Yii::app()->language == 'zh_cn') {

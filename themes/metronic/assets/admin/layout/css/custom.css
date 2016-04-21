@@ -845,3 +845,65 @@ div.flash-success a {
 .input-full {
     /*width: 100%;*/
 }
+
+.float-left {
+    float: left;
+    margin-left: 15px;
+}
+.float-right {
+    float: right;
+    margin-right: 15px;
+}
+.left {
+    text-align: left;
+}
+
+.right {
+    text-align: right;
+}
+
+.tax-table > tbody > tr > th {
+    vertical-align: middle;
+    text-align: center;
+}
+.tax-min{
+    width: 50px;
+}
+.tax-mid{
+    width: 100px;
+}
+.tax-table-1 td:nth-child(1){
+    text-align: left;
+}
+.tax-table-1 td:nth-child(2){
+    text-align: center;
+}
+.tax-table-1 td:nth-child(3){
+    text-align: right;
+}
+.tax-table-1 td:nth-child(4){
+    text-align: right;
+}
+.tax-table-1 td:nth-child(5){
+    text-align: right;
+}
+.tax-table-1 td:nth-child(6){
+    text-align: right;
+}
+.tax-table-1 td:nth-child(7){
+    text-align: right;
+}
+
+.tax-table {
+    margin: 0;
+}
+
+.tax-table-m{
+    width: 15%;
+    vertical-align: middle !important;
+    text-align: center !important;
+}
+.tax1_footer div{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

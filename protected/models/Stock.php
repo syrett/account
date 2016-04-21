@@ -135,6 +135,7 @@ class Stock extends LFSModel
         else
             $sbj = '1405';
         $where .= " and entry_subject like '$sbj%'";
+        $year = date('Y') . '0101';
         if (isset($options['id']) && isset($options['name'])) {
             $stock = $this->findByPk($options['id']);
             if ($action == 'order')
@@ -143,7 +144,7 @@ class Stock extends LFSModel
                 $where .= " and name = '$stock->name'";
             $groupby = " group by order_no";
             $year = date('Y') . '0101';
-            $sql = "select *, count(if(status=1 and in_date<'$year',1,NULL)) `before`, count(if(in_date>='$year',1,NULL)) `count`,count(if(status=2,1,NULL)) `out`,count(if(status=1,1,NULL)) `left` from $tablename $where $groupby";
+            $sql = "select *, count(if( in_date<'$year' and (out_date='' or out_date > $year),1,NULL)) `before`, count(if(in_date>='$year',1,NULL)) `count`,count(if(status=2 and out_date > $year,1,NULL)) `out`,count(if(status=1,1,NULL)) `left` from $tablename $where $groupby";
         } elseif (isset($options['action'])) {
             if ($options['action'] == 'order') {
                 $groupby = " group by order_no";
@@ -153,10 +154,10 @@ class Stock extends LFSModel
             $time = date("Ym") . '01';
             $groupby = " group by name";
             $month_in = " sum(if(`in_date`>='$time',1,0)) `month_in`";
-            $month_out = "sum(if(`status`=2 and `out_date` >= '$time',1,0)) `month_out`";
+            $month_out = "sum(if(`status`=2 and `cost_date` >= '$time',1,0)) `month_out`";
             $left = "sum(if(`status`=1,1,0)) `left`";
-            $year = date('Y') . '0101';
-            $year_before = "sum(if(`status`=1 and `in_date` < '$year',1,0)) `year_before`";
+//            $year_before = "sum(if(`status`=1 and `in_date` < '$year',1,0)) `year_before`";
+            $year_before = "sum(if(`in_date` < '$year',1,0)) `year_before`";
             $sql = "select `id`,`hs_no`, name, $year_before, $month_in, $month_out, $left from $tablename $where $groupby";
         }
         return $sql;
@@ -228,7 +229,7 @@ class Stock extends LFSModel
      * get number of stock
      *
      */
-    public function getNumber($options)
+    public function getNumber($options, $and = '1=1')
     {
         if (!isset($options['entry_subject']))
             $sbj = '1405';
@@ -239,7 +240,7 @@ class Stock extends LFSModel
         else
             return 0;
         if ($model != null) {
-            $where = "1=1 and name='$model->name' and entry_subject like '$sbj%'";
+            $where = "$and and name='$model->name' and entry_subject like '$sbj%'";
             if (isset($options['status']))
                 $where .= " and status=" . $options['status'];
             if (isset($options['date']) && $options['date'] == 'year') {
@@ -249,7 +250,9 @@ class Stock extends LFSModel
             }
             $action = isset($options['type']) && $options['type'] == 'before' ? '<' : '>';
             $time = date("Y-m-d H:i:s", $date);
-            $models = $this->findAll($where . " and in_date $action '$time'");
+            if(isset($options['type']))
+                $where .= " and in_date $action '$time'";
+                $models = $this->findAll($where);
             return count($models);
         } else
             return 0;

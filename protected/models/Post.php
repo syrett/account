@@ -353,7 +353,7 @@ class Post extends CActiveRecord
     {
         $year = getYear($date);
         $month = getMon($date);
-        $sql = "select year,month from post where post_date<='$year-$month-31' and subject_id regexp '^" . $subject_id . "' order by post_date desc";
+        $sql = "select year,month from post where  ((year < $year) or( year = $year and month <= $month)) and subject_id regexp '^" . $subject_id . "' order by year desc, month desc";
         $data = Post::model()->findBySql($sql, array(':year' => $year,
             ':month' => $month));
         if ($data == null) {

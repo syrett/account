@@ -1425,6 +1425,7 @@ class Transition extends CActiveRecord
             if($type=='sale'){
                 return [
                     '3'=>'3%'.Yii::t('import', '增值税发票'),
+                    '5'=>'5%'.Yii::t('import', '营业税发票'),
                 ];
             }elseif($type=='purchase'){
                 return [

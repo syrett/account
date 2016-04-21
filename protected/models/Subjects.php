@@ -13,6 +13,23 @@
  */
 class Subjects extends CActiveRecord
 {
+    public $typeArray = [
+        '非免税商品',
+        '非免税服务',
+        '非出口免税商品',
+        '非出口免税服务',
+        '出口免税商品',
+        '出口免税服务'
+    ];
+
+    public $taxArray = [
+        0 => '免税',
+        3 => '3%增值税',
+        5 => '5%营业税',
+        6 => '6%增值税',
+        13 => '13%增值税',
+        17 => '17%增值税',
+    ];
 
     public $select; // search的时候，定义返回字段
 
@@ -51,11 +68,11 @@ class Subjects extends CActiveRecord
         return array(
             array('sbj_number, sbj_name', 'required'),
             array('sbj_number', 'unique'),
-            array('start_balance', 'numerical'),
+            array('start_balance, sbj_tax', 'numerical'),
             array('sbj_number', 'length', 'max' => 16),
             array('sbj_name', 'length', 'max' => 512),
             array('sbj_cat', 'length', 'max' => 1),
-            array('sbj_name_en', 'safe'),
+            array('sbj_name_en, sbj_type', 'safe'),
             // The following rule is used by search().
             array('id, sbj_number, sbj_name, sbj_name_en, sbj_cat, sbj_table, has_sub', 'safe', 'on' => 'search'),
 
@@ -86,6 +103,8 @@ class Subjects extends CActiveRecord
             'sbj_name' => Yii::t('subjects', '中文名称'),
             'sbj_name_en' => Yii::t('subjects', '英文名称'),
             'sbj_cat' => Yii::t('subjects', '科目类别'),
+            'sbj_type' => Yii::t('subjects', '商品或服务'),
+            'sbj_tax' => Yii::t('subjects', '销售税率 (%)'),
             'sbj_table' => Yii::t('subjects', '报表名称'),
             'sbj_balance' => Yii::t('subjects', '科目余额'),
         );
@@ -529,6 +548,8 @@ class Subjects extends CActiveRecord
     public static function matchSubject($sbjname, $subjects, $level = 0, $option = 1, $return = 'str')
     {
         $where = '';
+        $length = '';
+
         if (!is_array($subjects))
             $subjects = [$subjects];
         if (empty($subjects)) {
@@ -536,17 +557,19 @@ class Subjects extends CActiveRecord
             foreach ($all as $item) {
                 $subjects[] = $item['sbj_number'];
             }
-        }else{
+        } else {
             $where .= ' and (';
             foreach ($subjects as $key => $subject) {
-                $where .= $key == 0?" sbj_number regexp '^$subject'":'';
+                $where .= $key == 0 ? " sbj_number regexp '^$subject'" : '';
                 $where .= " or sbj_number regexp '^$subject' ";
+                if ($level > 0)
+                    $length = ' and length(sbj_number) <= ' . (strlen($subject) + 2 * ($level)) . '';
             }
-            $where .= ')';
+            $where .= ')' . $length;
         }
         //似乎应该完成匹配
 
-        $data = Subjects::model()->findAllByAttributes([], "sbj_name like '%$sbjname%'". $where);
+        $data = Subjects::model()->findAllByAttributes([], "sbj_name like '%$sbjname%'" . $where);
 //        $data = Yii::app()->db->createCommand("select * from " . self::model()->tableSchema->name . " where sbj_name like '%$key%'")->queryAll();
         if ($return == 'str')
             $sbj = 0;

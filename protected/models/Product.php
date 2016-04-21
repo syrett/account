@@ -196,4 +196,29 @@ class Product extends LFSModel
             }
         return round($amount, 2);
     }
+
+    /*
+     * 小规模纳税人 纳税申报表数据
+     */
+    public static function getTax1_1(){
+        $data = [];
+        $tax_A = Subjects::model()->findAllByAttributes(['sbj_type' => 0, 'has_sub' => 0], "sbj_number like '6001%'");
+        $where = '1=1';
+        if(count($tax_A) > 0){
+            foreach ($tax_A as $item) {
+                $where .= $where = '1=1'?" and (subject = '$item->sbj_number'":" or subject = '$item->sbj_number'";
+            }
+            $where .= ')';
+            $products = Product::model()->findAllByAttributes([''], $where);
+            if(count($products)){
+
+            }
+
+        }
+        $data[1]['zone']['A'] = 111;
+        $data[1]['zone']['B'] = 3333;
+        $data[1]['year']['A'] = 111;
+        $data[1]['year']['B'] = 3333;
+        return $data;
+    }
 }

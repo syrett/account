@@ -27,7 +27,7 @@ class Options extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, year, value', 'numerical', 'integerOnly'=>true),
+			array('year', 'numerical', 'integerOnly'=>true),
 			array('name, support', 'length', 'max'=>100),
 			array('value', 'length', 'max'=>512),
             array('entry_subject, year', 'safe'),

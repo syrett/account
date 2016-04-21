@@ -85,6 +85,7 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
     }
     ?>
 
+
 	<div class="form-group form-group-lg">
 		<?php echo $form->labelEx($model,'sbj_name',array('class'=>'col-sm-2 control-label')); ?>
         <div class="col-sm-10" id="sbj_name_div">
@@ -98,6 +99,22 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
             <?php echo $form->textField($model,'sbj_name_en',array('class'=>'form-control','size'=>20,'maxlength'=>512)); ?>
             <?php echo $form->error($model,'sbj_name_en',array('id'=>'sbj_name_en_msg')); ?>
         </div>
+    </div>
+    <div class="form-group">
+        <?php echo $form->labelEx($model, 'sbj_type', array('class' => 'col-sm-2 control-label')); ?>
+        <div class="col-sm-10">
+            <?php echo $form->dropDownList($model, 'sbj_type', $model->typeArray, array('class' => 'form-control')); ?>
+        </div>
+        <div class="col-sm-2"></div>
+        <?php echo $form->error($model, 'sbj_type',array('class' => 'col-sm-10')); ?>
+    </div>
+    <div class="form-group">
+        <?php echo $form->labelEx($model, 'sbj_tax', array('class' => 'col-sm-2 control-label')); ?>
+        <div class="col-sm-10">
+            <?php echo $form->dropDownList($model, 'sbj_tax', $model->taxArray, array('class' => 'form-control')); ?>
+        </div>
+        <div class="col-sm-2"></div>
+        <?php echo $form->error($model, 'sbj_tax',array('class' => 'col-sm-10')); ?>
     </div>
     <?php
     if($model->hasErrors()){

@@ -115,7 +115,7 @@ class CostController extends Controller
 		//删除凭证
         Transition::model()->deleteAllByAttributes(['data_type'=>'stock', 'data_id'=>$id]);
         //修改stock
-        Stock::model()->updateAll(['cost_date'=>'', 'status'=>1],"name = '$model->entry_name' and model = '$model->model' and ".'cost_date like "'. substr($model->entry_date,0,4). '%"');
+        Stock::model()->updateAll(['cost_date'=>'', 'out_date'=>'', 'status'=>1],"name = '$model->entry_name' and model = '$model->model' and ".'cost_date like "'. substr($model->entry_date,0,4). '%"');
 		$this->loadModel($id)->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser

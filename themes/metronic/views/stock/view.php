@@ -10,9 +10,9 @@ $this->breadcrumbs = array(
 if ($action == 'order') {
 
 } elseif ($action == '') {
-    $before = $model->getNumber(['id' => $model->id, 'date' => 'year', 'type' => 'before', 'status' => 1]);
-    $in = $model->getNumber(['id' => $model->id, 'date' => 'year',]);   //入库
-    $out = $model->getNumber(['id' => $model->id, 'date' => 'year', 'status' => 2]);   //出库
+    $before = $model->getNumber(['id' => $model->id, 'date' => 'year', 'type' => 'before'], '(out_date = "" or out_date >'. date('Y0101', time()). ')');
+    $in = $model->getNumber(['id' => $model->id, 'date' => 'year', 'type' => 'after']);   //入库
+    $out = $model->getNumber(['id' => $model->id, 'status' => 2], ' cost_date >= '. date('Y0101', time()));   //出库
     $return = $model->getNumber(['id' => $model->id, 'date' => 'year', 'status' => 3]);    //退货
     $total = $before + $in;
     $left = $before + $in - $out - $return;
@@ -60,7 +60,7 @@ if ($action == 'order') {
                 array(
                     'header' => Yii::t('import', '供应商'),
                     'name' => 'vendor_id',
-                    'value' => 'Vendor::model()->getName($data["vendor_id"])',
+                    'value' => 'Vendor::model()->getName($data["vendor_id"], 2)',
                 ),
                 array(
                     'header' => Yii::t('import', '日期'),
