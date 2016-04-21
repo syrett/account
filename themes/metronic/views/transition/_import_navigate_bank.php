@@ -70,6 +70,44 @@ $select = '<option value="target_name" >' . Yii::t('import', '交易对方名称
 
                             </p>
 
+                            <div class="row" style="margin: 2.5em 0 auto 0;">
+                                <div class="pull-left"><input type="text" class="form-control" id="J_bankName" placeholder="银行名称"></div>
+                                <div class="pull-left"><button type="button" class="btn default" id="J_bankSbjAdd" ><?= Yii::t('import', '添加') ?></button></div>
+                            </div>
+
+                            <script>
+                                $(function(){
+                                    $("#J_bankSbjAdd").on("click", function(event){
+                                        event.preventDefault();
+                                        var bankName = $.trim($("#J_bankName").val());
+                                        if (bankName != '') {
+                                            var isNotExist = true;
+                                            $("#subject_b option" ).each(function(index){
+                                                if ($(this).text() == bankName) {
+                                                    isNotExist = false;
+                                                    $('#subject_b').select2().val($(this).val()).trigger("change");
+                                                    return false;
+                                                }
+                                            });
+                                            if (isNotExist) {
+                                                $.ajax({
+                                                    type: 'post',
+                                                    url: '/?r=subjects/ajaxcreatebanksub',
+                                                    dataType: 'json',
+                                                    data: {'bank_name': bankName},
+                                                    success: function(data) {
+                                                        if (data['is_succ']) {
+                                                            $('<option />',{"value":data['sbj_number'], "text": data['sbj_name']}).appendTo($("#subject_b"));
+                                                            $('#subject_b').select2().val(data['sbj_number']).trigger("change");
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    });
+                                });
+                            </script>
+
                         </div>
                         <div class="tab-pane stepwizard-step-center" id="tab_step_2">
                             <p>

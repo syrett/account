@@ -29,7 +29,7 @@ class SubjectsController extends Controller
         $rules = parent::accessRules();
         if ($rules[0]['actions'] == ['manage'])
             $rules[0]['actions'] = ['admin', 'update', 'delete', 'view', 'create'];
-        $rules[0]['actions'] = array_merge($rules[0]['actions'], ['getuserfor','createsubject', 'AjaxGetSubjects', 'matchSubject']);
+        $rules[0]['actions'] = array_merge($rules[0]['actions'], ['getuserfor','createsubject', 'AjaxGetSubjects', 'matchSubject', 'AjaxCreateBankSub']);
         return $rules;
     }
 
@@ -308,6 +308,64 @@ class SubjectsController extends Controller
             echo json_encode($arr);
         } else
             throw new CHttpException(403, "无效的请求");
+    }
+
+    /*
+     * ajax  创建银行科目
+     *
+     */
+    public function actionAjaxCreateBankSub()
+    {
+        if (Yii::app()->request->isAjaxRequest) {
+            $bank_name = isset($_REQUEST['bank_name']) ? trim($_REQUEST['bank_name']) : '';
+            $arr = [];
+            if ($bank_name != '') {
+                $sbj = Subjects::model()->findByAttributes(['sbj_name' => $bank_name, 'sbj_cat'=>1]);
+                if ($sbj === null) {
+                    //
+                    $subject_yinhang = 1002;
+                    $sbj_type = 2;
+
+                    $model = new Subjects;
+
+                    $new_sbj = Subjects::model()->init_new_sbj_number($subject_yinhang, $sbj_type);
+                    $pmodel = Subjects::model()->findByAttributes(['sbj_number' => $subject_yinhang]);
+
+                    $val['sbj_number'] = $new_sbj[0];
+                    $val['sbj_cat'] = $pmodel->sbj_cat;
+                    $val['start_balance'] = $pmodel->start_balance;
+                    $val['sbj_name'] = $bank_name;
+                    $val['sbj_name_en'] = '';
+
+                    $model->attributes = $val;
+                    if ($model->save()) {
+                        $pmodel->start_balance = 0;
+                        $pmodel->save();
+                        $sbj_id = $new_sbj[0];
+                        if (strlen($sbj_id) > 4 && $sbj_type == 2) {
+                            Post::model()->tranPost($sbj_id);
+                            Transition::model()->updateSubject($subject_yinhang, $sbj_id);
+                            Subjects::model()->hasSub($sbj_id);
+                        }
+                    }
+                    $arr['is_succ'] = true;
+                    $arr['sbj_name'] = $bank_name;
+                    $arr['sbj_number'] = $new_sbj[0];
+
+                } else {
+                    //已经存在  不处理 前端js
+                    $arr['is_succ'] = false;
+                }
+
+            } else {
+                //空 不处理 前端js
+                $arr['is_succ'] = false;
+            }
+
+            echo json_encode($arr);
+        } else {
+            throw new CHttpException(403, "无效的请求");
+        }
     }
 
     /*
