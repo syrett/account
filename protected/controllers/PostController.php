@@ -129,7 +129,19 @@ class PostController extends Controller
             }
 
         }
-      $transition = new Transition;
+        $transition = new Transition;
+
+        //检查上月有没有过账
+        $date_timestamp = strtotime($date.'01');
+        if ($date_timestamp === false) {
+            throw new CHttpException(400, '过账月分格式错误!');
+        } else {
+            $last_month = date('Ym', $date_timestamp - 86399);
+            if(!$transition->isAllPosted($last_month)) {
+                //假如 上月的数据 还没做凭证的情况 会有问题
+                throw new CHttpException(400, $last_month.'需要先过账!');
+            }
+        }
 
       if($transition->isAllPosted($date))
       {

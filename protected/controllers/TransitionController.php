@@ -1199,7 +1199,7 @@ class TransitionController extends Controller
             while ($lastdate > Condom::model()->getStartTime()) {
                 if (Transition::model()->hasTransition($lastdate)) {
                     if (!Transition::model()->tranSettlement($lastdate))
-                        throw new CHttpException(400, $lastdate . "需要先结账");
+                        throw new CHttpException(400, $lastdate . "需要先结账!");
                     else
                         $lastdate = date('Ym', strtotime('-1 months', strtotime($lastdate . '01')));
                 } else
@@ -1226,15 +1226,20 @@ class TransitionController extends Controller
         $flag = false;
 
         if (!Transition::model()->isAllReviewed($entry_prefix)) {
-            Yii::app()->user->setFlash('error', $entry_prefix . "结账失败! 凭证未审核");
+            throw new CHttpException(400,  $entry_prefix . "结账失败,凭证未审核!");
+            //Yii::app()->user->setFlash('error', $entry_prefix . "结账失败! 凭证未审核");
         } elseif (!Transition::model()->isAllPosted($entry_prefix)) {
-            Yii::app()->user->setFlash('error', $entry_prefix . "结账失败! 凭证未过账");
+            throw new CHttpException(400,  $entry_prefix . "结账失败,凭证未过账!");
+            //Yii::app()->user->setFlash('error', $entry_prefix . "结账失败! 凭证未过账");
         } elseif (!Transition::model()->isAllForward($entry_prefix)) {
-            Yii::app()->user->setFlash('error', $entry_prefix . "结账失败! 凭证未结转");
+            throw new CHttpException(400, $entry_prefix . "结账失败,凭证未结转!");
+            //Yii::app()->user->setFlash('error', $entry_prefix . "结账失败! 凭证未结转");
         } elseif (!Transition::model()->isAllClosing($entry_prefix)) {
-            Yii::app()->user->setFlash('error', $entry_prefix . "结账失败! 已经结账");
+            throw new CHttpException(400, $entry_prefix . "结账失败,已经结账!");
+            //Yii::app()->user->setFlash('error', $entry_prefix . "结账失败! 已经结账");
         } elseif (Transition::model()->isAllClosing(getPrevMonth($entry_prefix, 'Ym'))&& $entry_prefix != Condom::getStartTime()) {
-            Yii::app()->user->setFlash('error', getPrevMonth($entry_prefix, 'Ym') . "需要先结账");
+            throw new CHttpException(400, getPrevMonth($entry_prefix, 'Ym') . "需要先结账!");
+            //Yii::app()->user->setFlash('error', getPrevMonth($entry_prefix, 'Ym') . "需要先结账");
         } else
             $flag = true;
 

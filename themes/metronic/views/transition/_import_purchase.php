@@ -97,7 +97,7 @@ $this->pageTitle = Yii::app()->name;
                             </td>
                             <td><input class="input_mmin" type="text" id="tran_price_<?= $key ?>" placeholder="<?= Yii::t('import', '单价') ?>"
                                        name="lists[<?= $key ?>][Transition][price]" onkeyup="checkinput1(this)"
-                                       onblur="checkinput1(this)" value="<?= $item['price'] ?>">
+                                       onblur="checkinput1(this)" value="<?= is_numeric($item['price']) ? $item['price'] : ''; ?>">
                             </td>
                             <td><input class="input_mmmin" type="number" min="1" id="tran_count_<?= $key ?>"
                                        placeholder="<?= Yii::t('import', '数量') ?>"
