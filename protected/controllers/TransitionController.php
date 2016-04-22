@@ -1306,7 +1306,7 @@ class TransitionController extends Controller
      */
     public function actionAntiSettlement($edate = '')
     {
-        $date = date('Ym', time());
+        $date = substr(Transition::getCondomDate(), 0, 6);
 //        $date = '201509';
         $result = false;
         while ($date >= Condom::model()->getStartTime() && $date >= $edate) {
