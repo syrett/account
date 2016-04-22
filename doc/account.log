@@ -982,3 +982,14 @@ ALTER TABLE `transition` CHANGE `entry_subject` `entry_subject` VARCHAR(16) NOT 
 
 ALTER TABLE `subjects` CHANGE `sbj_number` `sbj_number` VARCHAR(16) NOT NULL DEFAULT '0';
 
+
+-- 2016年4月19日16:49:38
+ALTER TABLE `subjects` ADD `sbj_type` INT NOT NULL COMMENT '纳税申报时，销售商品是商品还是服务，要分开' AFTER `sbj_cat`;
+ALTER TABLE `subjects` ADD `sbj_tax` VARCHAR(8) NOT NULL COMMENT '销售时的税率' AFTER `sbj_type`;
+update`stock` set out_date = cost_date;
+
+
+
+
+
+
