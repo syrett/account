@@ -113,7 +113,7 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'sbj_tax', array('class' => 'col-sm-2 control-label')); ?>
                 <div class="col-sm-10">
-                    <?php echo $form->dropDownList($model, 'sbj_tax', $model->taxArray, array('class' => 'form-control')); ?>
+                    <?php echo $form->dropDownList($model, 'sbj_tax', Subjects::getTaxArray(), array('class' => 'form-control')); ?>
                 </div>
                 <div class="col-sm-2"></div>
                 <?php echo $form->error($model, 'sbj_tax',array('class' => 'col-sm-10')); ?>
