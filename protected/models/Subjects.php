@@ -33,6 +33,8 @@ class Subjects extends CActiveRecord
 
     public $select; // search的时候，定义返回字段
 
+    public $is_ext = false; //是否有附加选项 商品或服务 税率
+
     public function listunposted($year, $month)
     {
         $subjects = new CDbCriteria;

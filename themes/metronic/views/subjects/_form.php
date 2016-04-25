@@ -100,22 +100,47 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
             <?php echo $form->error($model,'sbj_name_en',array('id'=>'sbj_name_en_msg')); ?>
         </div>
     </div>
-    <div class="form-group">
-        <?php echo $form->labelEx($model, 'sbj_type', array('class' => 'col-sm-2 control-label')); ?>
-        <div class="col-sm-10">
-            <?php echo $form->dropDownList($model, 'sbj_type', $model->typeArray, array('class' => 'form-control')); ?>
+    <div style="min-height: 140px;">
+        <div class="J_extSbjOptDiv" <?php if ($model->is_ext !== true) {?> style="display: none;"<?php }?> >
+            <div class="form-group">
+                <?php echo $form->labelEx($model, 'sbj_type', array('class' => 'col-sm-2 control-label')); ?>
+                <div class="col-sm-10">
+                    <?php echo $form->dropDownList($model, 'sbj_type', $model->typeArray, array('class' => 'form-control')); ?>
+                </div>
+                <div class="col-sm-2"></div>
+                <?php echo $form->error($model, 'sbj_type',array('class' => 'col-sm-10')); ?>
+            </div>
+            <div class="form-group">
+                <?php echo $form->labelEx($model, 'sbj_tax', array('class' => 'col-sm-2 control-label')); ?>
+                <div class="col-sm-10">
+                    <?php echo $form->dropDownList($model, 'sbj_tax', $model->taxArray, array('class' => 'form-control')); ?>
+                </div>
+                <div class="col-sm-2"></div>
+                <?php echo $form->error($model, 'sbj_tax',array('class' => 'col-sm-10')); ?>
+            </div>
         </div>
-        <div class="col-sm-2"></div>
-        <?php echo $form->error($model, 'sbj_type',array('class' => 'col-sm-10')); ?>
     </div>
-    <div class="form-group">
-        <?php echo $form->labelEx($model, 'sbj_tax', array('class' => 'col-sm-2 control-label')); ?>
-        <div class="col-sm-10">
-            <?php echo $form->dropDownList($model, 'sbj_tax', $model->taxArray, array('class' => 'form-control')); ?>
-        </div>
-        <div class="col-sm-2"></div>
-        <?php echo $form->error($model, 'sbj_tax',array('class' => 'col-sm-10')); ?>
-    </div>
+
+    <script>
+        $(function(){
+            $('#Subjects_sbj_number').on('change', function() {
+                //主营业务收入、其他业务收入、营业外收入 三种科目
+                var extArr = [6001, 6051, 6301];
+
+                var sbjNum = parseInt($(this).val().substr(0, 4));
+
+                $('#Subjects_sbj_type').val(0);
+                $('#Subjects_sbj_tax').val(0);
+
+                if ($.inArray(sbjNum, extArr) == -1) {
+                    $('.J_extSbjOptDiv').fadeOut();
+                } else {
+                    $('.J_extSbjOptDiv').fadeIn();
+                }
+
+            });
+        });
+    </script>
     <?php
     if($model->hasErrors()){
         echo '<div class="alert alert-danger text-left">';

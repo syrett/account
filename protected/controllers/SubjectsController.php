@@ -120,6 +120,10 @@ class SubjectsController extends Controller
 
             $model->save();
 
+            $sbj4C = substr($model->sbj_number, 0, 4);
+            if (in_array($sbj4C, [6001, 6051, 6301])){
+                $model->is_ext = true;
+            }
             Yii::app()->user->setFlash('success', "操作成功!");
             $this->render('update', array(
                 'model' => $model,
@@ -127,6 +131,10 @@ class SubjectsController extends Controller
 
         } else {
 
+            $sbj4C = substr($model->sbj_number, 0, 4);
+            if (in_array($sbj4C, [6001, 6051, 6301])){
+                $model->is_ext = true;
+            }
             $this->render('update', array(
                 'model' => $model,
             ));
