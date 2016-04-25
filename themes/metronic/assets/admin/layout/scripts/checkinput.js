@@ -23,7 +23,7 @@ function checkInputAmount(ob) {
     }
 }
 //没有负数
-function checkInputPrice(ob) {
+var checkInputPrice = function(ob) {
     var invalidChars = /^[1-9]+\.?\d?\d?$|^0\.\d?\d?$/;
     if(!invalidChars.test(ob.value)) {
         var b = /[1-9]?\d*\.?\d?\d?|0\.\d?\d?/;

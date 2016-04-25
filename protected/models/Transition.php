@@ -1436,7 +1436,7 @@ class Transition extends CActiveRecord
         }else{  //一般纳税人
             if($type=='sale'){
                 return [
-                    '3'=>'3%'.Yii::t('import', '增值税发票'),
+//                    '3'=>'3%'.Yii::t('import', '增值税发票'),
                     '5'=>'5%'.Yii::t('import', '营业税发票'),
                     '6'=>'6%'.Yii::t('import', '增值税发票'),
                     '13'=>'13%'.Yii::t('import', '增值税发票'),

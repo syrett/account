@@ -1058,7 +1058,7 @@ eof;
                                 if ($options[4] == 0)
                                     return self::endOption(6711);
                                 else {
-                                    return self::endOption(1901);
+                                    return self::endOption(1606);
                                 }
                             } else
                                 $result = self::getAssets($data[1]);
@@ -1233,7 +1233,7 @@ eof;
                                 if ($options[4] == 0)
                                     return self::endOption(6301);
                                 else {
-                                    return self::endOption(1901);
+                                    return self::endOption(1606);
                                 }
                             } else
                                 $result = self::getAssets($data[1]);

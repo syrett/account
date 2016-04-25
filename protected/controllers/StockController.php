@@ -122,7 +122,7 @@ class StockController extends Controller
                     $tran1->entry_transaction = 1;
                     $tran2->entry_transaction = 1;
                     $tran3->entry_transaction = 2;
-                    $tran1->entry_subject = '1901';
+                    $tran1->entry_subject = '1606';
                     $tran2->entry_subject = Subjects::matchSubject($type, '1602');
                     $tran3->entry_subject = $model->entry_subject;
                     $tran1->entry_amount = $model->getWorth();
@@ -138,7 +138,7 @@ class StockController extends Controller
                         'entry_creater' => Yii::app()->user->id,
                         'entry_editor' => Yii::app()->user->id,
                     ];
-                    //待处理财产损1901,累计折旧1602，固定资产、库存商品或原材料，无形资产
+                    //1606固定资产清理,累计折旧1602，固定资产、库存商品或原材料，无形资产
                     $tran1->attributes = $data;
                     $tran2->attributes = $data;
                     $tran3->attributes = $data;

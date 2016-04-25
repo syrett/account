@@ -238,3 +238,36 @@ function getNextMonth($date, $format = 'Y-m-d'){
     $date = convertDate($date, 'Y-m-d');
     return date($format, strtotime('+1 month', strtotime($date)));
 }
+
+/*
+ * 根据日期获取季度的起始日期和结束日期
+ */
+function getQuarter($date){
+    switch(substr($date, 4, 2)){
+        case '01' :
+        case '02' :
+        case '03' :
+            $result['start'] = substr($date, 0, 4). '0101';
+            $result['end'] = substr($date, 0, 4). '0331';
+            break;
+        case '04' :
+        case '05' :
+        case '06' :
+            $result['start'] = substr($date, 0, 4). '0401';
+            $result['end'] = substr($date, 0, 4). '0630';
+            break;
+        case '07' :
+        case '08' :
+        case '09' :
+            $result['start'] = substr($date, 0, 4). '0701';
+            $result['end'] = substr($date, 0, 4). '0930';
+            break;
+        case '10' :
+        case '11' :
+        case '12' :
+            $result['start'] = substr($date, 0, 4). '1001';
+            $result['end'] = substr($date, 0, 4). '1231';
+            break;
+    }
+    return $result;
+}

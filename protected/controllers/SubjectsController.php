@@ -29,7 +29,7 @@ class SubjectsController extends Controller
         $rules = parent::accessRules();
         if ($rules[0]['actions'] == ['manage'])
             $rules[0]['actions'] = ['admin', 'update', 'delete', 'view', 'create'];
-        $rules[0]['actions'] = array_merge($rules[0]['actions'], ['getuserfor','createsubject', 'AjaxGetSubjects', 'matchSubject', 'AjaxCreateBankSub']);
+        $rules[0]['actions'] = array_merge($rules[0]['actions'], ['getuserfor', 'createsubject', 'AjaxGetSubjects', 'matchSubject', 'AjaxCreateBankSub', 'AjaxGetSubject']);
         return $rules;
     }
 
@@ -255,7 +255,7 @@ class SubjectsController extends Controller
                 }
                 $model = new Subjects();
                 $str = $model->check_start_balance($p_data);
-                if ($str=='') {
+                if ($str == '') {
                     Subjects::model()->set_start_balance($p_data);
                     $this->redirect("?r=subjects/balance");
                 } else {
@@ -320,7 +320,7 @@ class SubjectsController extends Controller
             $bank_name = isset($_REQUEST['bank_name']) ? trim($_REQUEST['bank_name']) : '';
             $arr = [];
             if ($bank_name != '') {
-                $sbj = Subjects::model()->findByAttributes(['sbj_name' => $bank_name, 'sbj_cat'=>1]);
+                $sbj = Subjects::model()->findByAttributes(['sbj_name' => $bank_name, 'sbj_cat' => 1]);
                 if ($sbj === null) {
                     //
                     $subject_yinhang = 1002;
@@ -416,6 +416,18 @@ class SubjectsController extends Controller
         if (Yii::app()->request->isAjaxRequest) {
             $sbj = Subjects::matchSubject($_POST['name'], [$_POST['subject']]);
             echo $sbj;
+        } else
+            throw new CHttpException(403, "无效的请求");
+    }
+
+    public function actionAjaxGetSubject()
+    {
+        if (Yii::app()->request->isAjaxRequest) {
+            $sbj = Subjects::model()->findByAttributes(['sbj_number' => str_replace('_', '', $_REQUEST['sbj_number'])]);
+            if ($sbj != null)
+                echo json_encode(['status' => 'success', 'sbj' => $sbj->attributes]);
+            else
+                echo json_encode(['status' => 'error']);
         } else
             throw new CHttpException(403, "无效的请求");
     }

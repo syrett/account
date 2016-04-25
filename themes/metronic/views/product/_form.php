@@ -40,7 +40,7 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                     <th class="input_min"><?= Yii::t('import', '单价') ?></th>
                     <th class="input_min"><?= Yii::t('import', '数量') ?></th>
                     <th class="input_min"><?= Yii::t('import', '合计') ?></th>
-                    <th class="input-xsmall"><?= Yii::t('import', '税率') ?></th>
+<!--                    <th class="input-xsmall">--><?//= Yii::t('import', '税率') ?><!--</th>-->
                     <th class="input-small"><?= Yii::t('import', '销售类型') ?></th>
                     <?
                     if (!empty($preOrder)) {
@@ -55,7 +55,7 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                     $key = 1;
                     $clientArray = Client::model()->getClientArray();
                     $stockArray = Stock::model()->getStockArray();
-                    $taxArray = Transition::getTaxArray('sale');
+//                    $taxArray = Transition::getTaxArray('sale');
                     $arr = [6001, 6301, 6051];
                     $subjectArray = Transition::getSubjectArray($arr);
                     ?>
@@ -113,16 +113,16 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                         <td>
                             <label id="tran_amount_<?= $key ?>"><?= $item['price'] * $item['count'] ?></label>
                         </td>
-                        <td><?
-                            $this->widget('ext.select2.ESelect2', array(
-                                'name' => 'lists[' . $key . '][Transition][tax]',
-                                'id' => 'tran_tax_' . $key,
-                                'value' => $item['tax'],
-                                'data' => $taxArray,
-                                'htmlOptions' => array('class' => 'select-full')
-                            ));
-                            ?>
-                        </td>
+<!--                        <td>--><?//
+//                            $this->widget('ext.select2.ESelect2', array(
+//                                'name' => 'lists[' . $key . '][Transition][tax]',
+//                                'id' => 'tran_tax_' . $key,
+//                                'value' => $item['tax'],
+//                                'data' => $taxArray,
+//                                'htmlOptions' => array('class' => 'select-full')
+//                            ));
+//                            ?>
+<!--                        </td>-->
                         <td><?
                             $this->widget('ext.select2.ESelect2', array(
                                 'name' => 'lists[' . $key . '][Transition][subject]',
@@ -133,6 +133,7 @@ $relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$mod
                                 'htmlOptions' => array('class' => 'select-full',)
                             ));
                             ?>
+                            <input type="hidden" name="lists[<?= $key ?>][Transition][tax]" id="tran_tax_<?= $key?>" value="<?= $item['tax'] ?>" />
                         </td>
                         <?
                         if (!empty($preOrder)) {

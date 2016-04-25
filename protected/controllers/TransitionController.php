@@ -2049,7 +2049,7 @@ class TransitionController extends Controller
                                     $stock = Stock::model()->findByAttributes(['hs_no' => $hs_no]);
                                     $tran_old = Transition::model()->findByAttributes([
                                         'data_type' => 'scrap', 'data_id' => $stock->id],
-                                        'entry_subject like "1901%"');
+                                        'entry_subject like "1606%"');
                                     $amount_pre = $tran_old ? $tran_old->entry_amount : 0;
                                     $where = 'path like "%' . $matches[0] . '%" and path like "%支出%" and path like "%处置长期资产%"';
                                     $temp1 = Bank::model()->findAllByAttributes([], $where);
@@ -2270,6 +2270,9 @@ class TransitionController extends Controller
                     }
                     $arr['entry_subject'] = substr($arr['entry_subject'], 1);
                     $arr['entry_appendix_type'] = 2;
+                    //设置税
+                    $sbj = Subjects::model()->findByAttributes(['sbj_number'=> $arr['entry_subject']]);
+//                    $arr['tax'] = $sbj->sbj_tax;
                     $model = new Product();
                     break;
                 case 'stock':

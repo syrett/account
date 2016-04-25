@@ -38,7 +38,7 @@ $preOrder = Preparation::getOrderArray($type);
                     <th class="input_money"><?= Yii::t('import', '单价') ?></th>
                     <th class="input_number"><?= Yii::t('import', '数量') ?></th>
                     <th class="input_min"><?= Yii::t('import', '合计') ?></th>
-                    <th class="input-small"><?= Yii::t('import', '税率') ?></th>
+<!--                    <th class="input-small">--><?//= Yii::t('import', '税率') ?><!--</th>-->
                     <th class="input-small"><?= Yii::t('import', '销售类型') ?></th>
                     <th class="input-small porder"><?= Yii::t('import', '预收款') ?></th>
                     <th class="input-small"><?= Yii::t('import', '操作') ?></th>
@@ -48,7 +48,7 @@ $preOrder = Preparation::getOrderArray($type);
                 if (!empty($sheetData)) {
                     $clientArray = ['客户选择'] + Client::model()->getClientArray();
                     $stockArray = ['商品选择'] + Stock::model()->getStockArray();
-                    $taxArray = Transition::getTaxArray('sale');
+//                    $taxArray = Transition::getTaxArray('sale');
                     $arr = [6001, 6301, 6051];
                     $subjectArray = Transition::getSubjectArray($arr);
 //                    $preOrder = ['PSO201501' => '{"amount":200,"memo":"说明1"}', 'PSO201502' => '{"amount":400,"memo":"说明2"}'];
@@ -97,16 +97,16 @@ $preOrder = Preparation::getOrderArray($type);
                             <td>
                                 <label id="tran_amount_<?= $key ?>"><?= $item['price'] * $item['count'] ?></label>
                             </td>
-                            <td><?
-                                $this->widget('ext.select2.ESelect2', array(
-                                    'name' => 'lists[' . $key . '][Transition][tax]',
-                                    'id' => 'tran_tax_' . $key,
-                                    'value' => $item['tax'],
-                                    'data' => $taxArray,
-                                    'htmlOptions' => array('class' => 'select-full')
-                                ));
-                                ?>
-                            </td>
+<!--                            <td>--><?//
+//                                $this->widget('ext.select2.ESelect2', array(
+//                                    'name' => 'lists[' . $key . '][Transition][tax]',
+//                                    'id' => 'tran_tax_' . $key,
+//                                    'value' => $item['tax'],
+//                                    'data' => $taxArray,
+//                                    'htmlOptions' => array('class' => 'select-full')
+//                                ));
+//                                ?>
+<!--                            </td>-->
                             <td><?
                                 $this->widget('ext.select2.ESelect2', array(
                                     'name' => 'lists[' . $key . '][Transition][subject]',
@@ -116,6 +116,7 @@ $preOrder = Preparation::getOrderArray($type);
                                     'htmlOptions' => array('class' => 'select-full',)
                                 ));
                                 ?>
+                                <input type="hidden" name="lists[<?= $key ?>][Transition][tax]" id="tran_tax_<?= $key ?>" value="<?= $item['tax']?>" />
                             </td>
 
                             <td class="porder">

@@ -368,10 +368,7 @@ function itemSetDefault(e, type) {
     }
     sbj = createSubject(data);
     $("#subject_2_" + id).val(sbj);
-    if ($("#tran_tax_" + id).val() != 0)
-        setTax(id, type);
-    else
-        removeTax(id, type);
+    setTax(id, type);
     $("#info_" + id).html('已确认');
     $("#info_" + id).attr('class', 'label-success');
 }
@@ -499,7 +496,28 @@ function addNew(e) {
 function setTax(item_id, type) {
     //设置相关参数值，现在默认最多2个参数，如果过多要重新写函数
     //设置税费，目前只设置税费
-    var tax = $("#tran_tax_" + item_id).val();
+    var tax = 0;
+    $.ajax({
+        type: "POST",
+        url: $("#model-subject").val(),
+        async: false,
+        data: {
+            sbj_number: $("#tran_subject_" + item_id).val()
+        },
+        success: function (data) {
+            data = JSON.parse(data);
+            if(data.status == 'success'){
+                tax = data.sbj.sbj_tax;
+            }
+            else{
+                removeTax(id, type);
+            }
+            $("#tran_tax_" + item_id).val(tax)
+        },
+        error: function (data){
+            var data = data;
+        }
+    });
     var sbj;
     var name = '';
     if (type == 'product')
@@ -511,7 +529,7 @@ function setTax(item_id, type) {
         name: name,
         subject: sbj2221
     }
-    if (tax == 5) //  5% 为营业税专有税率，借营业税金及附加/营业税，贷应交税金/营业税，不需要单独再计算税
+    if (tax == 5 || tax == 0) //  5% 为营业税专有税率，借营业税金及附加/营业税，贷应交税金/营业税，不需要单独再计算税
         $("#withtax_" + item_id).val(0);
     else {
         $("#withtax_" + item_id).val(1);

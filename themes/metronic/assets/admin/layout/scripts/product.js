@@ -52,3 +52,7 @@ function addProduct(){
     var item = $("#data_import tr[id!='trSetting']:last input[id^='id_']").val();
     $("#preOrder_" + item).select2("destroy").hide();
 }
+
+function setTransaction(id) {
+    $("#status_id_" + id).val("1")
+}

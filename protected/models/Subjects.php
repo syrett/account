@@ -8,28 +8,46 @@
  * @property integer $sbj_number
  * @property string $sbj_name
  * @property string $sbj_cat
+ * @property string $sbj_type
+ * @property string $sbj_tax
  * @property string $sbj_table
  * @property string $has_sub
  */
 class Subjects extends CActiveRecord
 {
     public $typeArray = [
-        '非免税商品',
-        '非免税服务',
-        '非出口免税商品',
-        '非出口免税服务',
-        '出口免税商品',
-        '出口免税服务'
+        '商品',
+        '服务',
+        '出口商品',
+        '出口服务'
     ];
 
-    public $taxArray = [
-        0 => '免税',
-        3 => '3%增值税',
-        5 => '5%营业税',
-        6 => '6%增值税',
-        13 => '13%增值税',
-        17 => '17%增值税',
-    ];
+
+    /*
+     * 税率
+     */
+    public static function getTaxArray($type = 'sale')
+    {
+        $dbname = substr(SYSDB, 8);
+        $condom = Condom::model()->findByAttributes(["dbname" => $dbname]);
+        if ($condom->taxpayer_t == 2) {//小规模纳税人
+            return [
+                '0' => Yii::t('import', '免税'),
+                '3' => '3%' . Yii::t('import', '增值税发票'),
+                '5' => '5%' . Yii::t('import', '营业税发票'),
+            ];
+
+        } else {  //一般纳税人
+            return [
+                '0' => Yii::t('import', '免税'),
+                '5' => '5%' . Yii::t('import', '营业税发票'),
+                '6' => '6%' . Yii::t('import', '增值税发票'),
+                '13' => '13%' . Yii::t('import', '增值税发票'),
+                '17' => '17%' . Yii::t('import', '增值税发票'),
+            ];
+        }
+
+    }
 
     public $select; // search的时候，定义返回字段
 

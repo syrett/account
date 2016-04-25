@@ -898,6 +898,9 @@ div.flash-success a {
     margin: 0;
 }
 
+.tax-table input{
+    text-align: right;
+}
 .tax-table-m{
     width: 15%;
     vertical-align: middle !important;

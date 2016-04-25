@@ -61,6 +61,9 @@ $type = 'product';
 <input id="employee" type="hidden" value="<?= $this->createUrl(
     '/employee/createemployee'
 ) ?>">
+<input id="model-subject" type="hidden" value="<?= $this->createUrl(
+    '/subjects/ajaxgetsubject'
+) ?>">
 <input id="new-url" type="hidden" value="<?= $this->createUrl(
     '/subjects/createsubject'
 ) ?>">
