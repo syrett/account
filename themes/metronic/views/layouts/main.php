@@ -400,6 +400,11 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                     <i class="fa fa-cogs"></i><?= Yii::t('home', '附加税税率') ?>(%)
                                 </a>
                             </li>
+                            <li>
+                                <a href="#tab_15_4" data-toggle="tab" aria-expanded="true">
+                                    <i class="fa fa-cogs"></i><?= Yii::t('home', '企业所得税税率'); ?>(%)
+                                </a>
+                            </li>
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane active" id="tab_15_1">
@@ -500,6 +505,35 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                 }
                                 ?>
                             </div>
+                            <div class="tab-pane" id="tab_15_4" style="min-height: 300px;">
+                                <?
+                                $arr = ['6801'];
+
+                                foreach ($arr as $item) {
+                                    $sbj = Subjects::model()->findByAttributes(['sbj_number' => $item]);
+                                    if ($sbj->has_sub == 1) {
+                                        $lists = Subjects::model()->list_sub($item);
+                                    } else
+                                        $lists = [$sbj->attributes];
+                                    foreach ($lists as $list) {
+                                        $option = Options::model()->findByAttributes(['entry_subject' => $list['sbj_number']]);
+                                        $value = $option == null ? 0 : $option->value;
+                                        ?>
+                                        <div class="form-group form-horizontal">
+                                            <label class="col-sm-3 control-label"><?= $list['sbj_name'] ?></label>
+
+                                            <div class="input-group col-sm-4">
+                                                <input type="text" class="form-control"
+                                                       name="Options[<?= $list['sbj_number'] ?>][value]"
+                                                       value="<?= $value ?>">
+                                            </div>
+                                        </div>
+                                        <?
+
+                                    }
+                                }
+                                ?>
+                            </div>
                         </div>
                     </div>
                 </div><!-- .scroller -->
@@ -548,6 +582,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                             </div>
                             <?php
                         } else {
+                            $tmp_index = 0;
                             foreach ($list as $year => $months) {
 
                                 echo CHtml::beginForm($this->createUrl('/Transition/listReorganise'), 'get');
@@ -560,7 +595,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                 }
                                 $this->widget('ext.select2.ESelect2', array(
                                     'name' => 'date',
-                                    'id' => 'select2'.rand().rand(),
+                                    'id' => 'select2'.'_a'.$tmp_index++,
                                     'data' => $data,
                                     'htmlOptions' => array('class' => 'action')
                                 ));
@@ -614,6 +649,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                             </div>
                             <?php
                         } else {
+                            $tmp_index = 0;
                             foreach ($list as $year => $months) {
 
                                 echo CHtml::beginForm($this->createUrl('/Transition/listPost'), 'get');
@@ -626,7 +662,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                 }
                                 $this->widget('ext.select2.ESelect2', array(
                                     'name' => 'date',
-                                    'id' => 'select2'.rand().rand(),
+                                    'id' => 'select2'.'_b'.$tmp_index++,
                                     'data' => $data,
                                     'htmlOptions' => array('class' => 'action')
                                 ));
@@ -683,6 +719,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                     </div>
                                     <?php
                                 } else {
+                                    $tmp_index = 0;
                                     foreach ($list as $year => $months) {
 
                                         echo CHtml::beginForm($this->createUrl('/Transition/listSettlement'), 'get');
@@ -695,7 +732,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                         }
                                         $this->widget('ext.select2.ESelect2', array(
                                             'name' => 'date',
-                                            'id' => 'select2'.rand().rand(),
+                                            'id' => 'select2'.'_c'.$tmp_index++,
                                             'data' => $data,
                                             'htmlOptions' => array('class' => 'action')
                                         ));
@@ -750,6 +787,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                     </div>
                                     <?php
                                 } else {
+                                    $tmp_index = 0;
                                     foreach ($list as $year => $months) {
 
                                         echo CHtml::beginForm($this->createUrl('/Transition/listClosing'), 'get');
@@ -762,7 +800,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                         }
                                         $this->widget('ext.select2.ESelect2', array(
                                             'name' => 'date',
-                                            'id' => 'select2'.rand().rand(),
+                                            'id' => 'select2'.'_d'.$tmp_index++,
                                             'data' => $data,
                                             'htmlOptions' => array('class' => 'action')
                                         ));
@@ -819,6 +857,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                     </div>
                                     <?php
                                 } else {
+                                    $tmp_index = 0;
                                     foreach ($list as $year => $months) {
 
                                         echo CHtml::beginForm($this->createUrl('/Transition/listSettlementcloseing'), 'get');
@@ -831,7 +870,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                         }
                                         $this->widget('ext.select2.ESelect2', array(
                                             'name' => 'date',
-                                            'id' => 'select2'.rand().rand(),
+                                            'id' => 'select2'.'_e'.$tmp_index++,
                                             'data' => $data,
                                             'htmlOptions' => array('class' => 'action')
                                         ));
@@ -889,6 +928,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                             </div>
                             <?php
                         } else {
+                            $tmp_index = 0;
                             foreach ($list as $year => $months) {
 
                                 echo CHtml::beginForm($this->createUrl('/Transition/listAntiSettlement'), 'get');
@@ -901,7 +941,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                 }
                                 $this->widget('ext.select2.ESelect2', array(
                                     'name' => 'date',
-                                    'id' => 'select2'.rand().rand(),
+                                    'id' => 'select2'.'_f'.$tmp_index++,
                                     'data' => $data,
                                     'htmlOptions' => array('class' => 'action')
                                 ));
@@ -956,6 +996,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                             </div>
                             <?php
                         } else {
+                            $tmp_index = 0;
                             foreach ($list as $year => $months) {
 
                                 echo CHtml::beginForm($this->createUrl('/Transition/mmquery'), 'get');
@@ -968,7 +1009,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                 }
                                 $this->widget('ext.select2.ESelect2', array(
                                     'name' => 'date',
-                                    'id' => 'select2'.rand().rand(),
+                                    'id' => 'select2'.'_g'.$tmp_index++,
                                     'data' => $data,
                                     'htmlOptions' => array('class' => 'action')
                                 ));
