@@ -75,7 +75,10 @@ $this->breadcrumbs = array(
                 //                    ),
                 //                    array('name'=>'sbj_cat','header'=>'Active','filter'=>array('1'=>'a','2'=>'b'),'value'=>'$data->sbj_cat'),
                 //                    'sbj_table',
-                'sbj_tax',
+                array(
+                    'name'=>'sbj_tax',
+                    'value'=> 'in_array(substr($data->sbj_number, 0, 4), array(6001, 6051, 6301)) ? $data->sbj_tax : "" '
+                ),
                 array(
                     'class' => 'CButtonColumn',
                     'buttons' => array(
