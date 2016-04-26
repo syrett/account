@@ -213,6 +213,17 @@ $cs->registerScript('ChartsFlotchartsInitPie', $js_str, CClientScript::POS_READY
 <div class="clearfix">
 </div>
 <!-- BEGIN DASHBOARD STATS -->
+
+<?php if (isset($need_chg_tax) && $need_chg_tax) { ?>
+<div class="row">
+    <div class="col-md-12">
+        <div class="flash-error">
+            作为一般纳税人，科目表中不能存在3%税率，请修改！
+        </div>
+    </div>
+</div>
+<?php } ?>
+
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light">

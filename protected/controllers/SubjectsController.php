@@ -238,9 +238,18 @@ class SubjectsController extends Controller
         $dataProvider->pagination = array(
             'pageSize' => 30
         );
+        $condom = Condom::model()->findByAttributes(['dbname'=>substr(SYSDB,8)]);
+        $need_chg_tax = false;
+        if ($condom->taxpayer_t == 1) {
+            $subjects = Subjects::model()->findByAttributes(['sbj_tax' => 3]);
+            if ($subjects !== null) {
+                $need_chg_tax = true;
+            }
+        }
         $this->render('admin', array(
             'dataProvider' => $dataProvider,
             'model' => $model,
+            'need_chg_tax' => $need_chg_tax,
         ));
     }
 

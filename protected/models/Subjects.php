@@ -155,6 +155,8 @@ class Subjects extends CActiveRecord
         $criteria->compare('sbj_table', $this->sbj_table, true);
         $criteria->compare('has_sub', $this->has_sub, true);
 
+        $criteria->compare('sbj_tax', $this->sbj_tax, true);
+
         if ($this->select != null)
             $criteria->select = $this->select;
         $criteria->order = 'concat(sbj_number) ASC';

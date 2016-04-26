@@ -24,6 +24,17 @@ $this->breadcrumbs = array(
 );
 
 ?>
+
+<?php if (isset($need_chg_tax) && $need_chg_tax) { ?>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="flash-error">
+                作为一般纳税人，科目表中不能存在3%税率，请修改！
+            </div>
+        </div>
+    </div>
+<?php } ?>
+
 <div class="portlet light">
 	<div class="portlet-title">
 		<div class="caption">
@@ -64,6 +75,7 @@ $this->breadcrumbs = array(
                 //                    ),
                 //                    array('name'=>'sbj_cat','header'=>'Active','filter'=>array('1'=>'a','2'=>'b'),'value'=>'$data->sbj_cat'),
                 //                    'sbj_table',
+                'sbj_tax',
                 array(
                     'class' => 'CButtonColumn',
                     'buttons' => array(
