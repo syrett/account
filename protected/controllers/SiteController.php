@@ -63,7 +63,15 @@ class SiteController extends Controller
     {
         // renders the view file 'protected/views/site/index.php'
         // using the default layout 'protected/views/layouts/main.php'
-        $this->render('index');
+        $condom = Condom::model()->findByAttributes(['dbname'=>substr(SYSDB,8)]);
+        $need_chg_tax = false;
+        if ($condom->taxpayer_t == 1) {
+            $subjects = Subjects::model()->findByAttributes(['sbj_tax' => 3]);
+            if ($subjects !== null) {
+                $need_chg_tax = true;
+            }
+        }
+        $this->render('index', ['need_chg_tax' => $need_chg_tax]);
 //        $this->redirect($this->createUrl('transition/create'));
     }
 
