@@ -608,9 +608,11 @@ class Stock extends LFSModel
 //                    $date = date('Ymd', $date);
                     //
                     if ($item->checkDeprec($entry_prefix)) {
-                        $price = $item->getWorth();
-                        $month_left = $item->getMonthLeft();
-                        $worth = $price - $price * (100 - $item->value_rate) / $month_left / 100;
+//                        $price = $item->getWorth();
+                        $price = $item->in_price;
+//                        $month_left = $item->getMonthLeft();
+                        $month_left = $item->value_month;
+                        $worth = $item->getWorth() - $price * (100 - $item->value_rate) / $month_left / 100;
                         $arr = explode(',', $item->worth);
                         $arr[] = round2($worth);
                         $item->worth = implode(',', $arr);
