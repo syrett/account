@@ -270,9 +270,9 @@ class Product extends LFSModel
 
         //本期应纳税额    栏次 10
         $data[10]['A'] = ($data[1]['A'] + $data[4]['A']) * 0.03; //小规模纳税人
-        $data[10]['B'] = ($data[1]['B'] ) * 0.03;
+        $data[10]['B'] = ($data[1]['B']) * 0.03;
         $data[10]['C'] = ($data[1]['C'] + $data[4]['C']) * 0.03;
-        $data[10]['D'] = ($data[1]['D'] ) * 0.03;
+        $data[10]['D'] = ($data[1]['D']) * 0.03;
 
         $data[12]['A'] = $data[10]['A'];
         $data[12]['B'] = $data[10]['B'];
@@ -288,7 +288,7 @@ class Product extends LFSModel
         return $data;
     }
 
-    protected function getTax($sbj, $type, $date, $option = 'A')
+    protected function getTax($sbj, $type, $date, $option = 'A', $model = 'Product', $ext = '')
     {
         $amount = 0;
         if ($option == 'A') {
@@ -299,28 +299,39 @@ class Product extends LFSModel
             $data['D'] = 0;
         }
         if (!is_array($sbj))
-            $sbj[] = $sbj;
+            $sbj = [$sbj];
         $where = '1=1';
         $date = isset($date) ? $date : Transition::getCondomDate();
+        $format = $model == 'Product' ? 'Ymd' : 'Y-m-d';
         if (count($sbj) > 0) {
             foreach ($sbj as $item) {
-                $where .= $where == '1=1' ? " and (subject = '$item->sbj_number'" : " or subject = '$item->sbj_number'";
+                $subject = $model == 'Product' ? 'subject' : 'entry_subject';     //表字段不一样
+                $where .= $where == '1=1' ? " and ($subject = '$item->sbj_number'" : " or $subject = '$item->sbj_number'";
             }
             $where .= ')';
-            $where_year = $where . " and entry_date >= '" . substr($date, 0, 4) . "0101'" . " and entry_date < '" . substr($date, 0, 4) . "1232'";
+            $where .= $ext;
+            $where_year = $where . " and entry_date >= '" . date($format, strtotime(substr($date, 0, 4) . "0101")) . "' and entry_date <= '" . date($format, strtotime(substr($date, 0, 4) . "1231")) . "'";
             if (!isset($type) || $type == 'month')    //按月查看
             {
-                $where .= " and entry_date >= '" . substr($date, 0, 6) . "01'" . " and entry_date < '" . substr($date, 0, 6) . "32'";
+                $where .= " and entry_date >= '" . date($format, strtotime(substr($date, 0, 6) . "01")) . "' and entry_date <= '" . date($format, strtotime(substr($date, 0, 6) . "31")) . "'";
             } elseif ($type == 'quarter')     //按季度查看
             {
                 $quarter = getQuarter($date);
                 $where .= " and entry_date >= '" . $quarter['start'] . "' and entry_date <= '" . $quarter['end'] . "'";
             }
 
-            $products = Product::model()->findAllByAttributes([], $where);
+            if ($model == 'Product')
+                $model2 = new Product();
+            elseif ($model == 'Transition'){
+                $model2 = new Transition();
+            }
+            $products = $model2->findAllByAttributes([], $where);
             if (count($products)) {
                 foreach ($products as $product) {
-                    $amount += $product->price * $product->count;
+                    if ($model == 'Product')
+                        $amount += $product->price * $product->count;
+                    else
+                        $amount += $product->entry_amount;
                 }
             }
             if ($option == 'A')
@@ -330,10 +341,13 @@ class Product extends LFSModel
             //本年累计 货物
             $amount = 0;
 
-            $products = Product::model()->findAllByAttributes([], $where_year);
+            $products = $model2->findAllByAttributes([], $where_year);
             if (count($products)) {
                 foreach ($products as $product) {
-                    $amount += $product->price * $product->count;
+                    if ($model == 'Product')
+                        $amount += $product->price * $product->count;
+                    else
+                        $amount += $product->entry_amount;
                 }
             }
 
@@ -342,6 +356,107 @@ class Product extends LFSModel
             else
                 $data['D'] = $amount;
         }
+        return $data;
+    }
+
+    /*
+     * 一般纳税人    纳税申报表数据
+     */
+    public static function getTax1_a()
+    {
+
+        $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : 'month';
+        $date = isset($_REQUEST['date']) ? $_REQUEST['date'] : date('Ymt', strtotime("-1 months"));
+        $data = [];
+        //(一)按适用税率征税货物及劳务销售额
+        $sbj = Subjects::model()->findAllByAttributes([], '(sbj_number like "6001%" or sbj_number like "6051%" or sbj_number like "6301%") and sbj_tax > 0 and sbj_tax <> 5');
+        $data[1] = Product::model()->getTax($sbj, $type, $date);
+
+        //应税货物销售额
+        $sbj = Subjects::model()->findAllByAttributes([], '(sbj_number like "6001%" or sbj_number like "6051%" or sbj_number like "6301%") and sbj_tax > 0 and sbj_tax <> 5 and (sbj_type = 0 or sbj_type = 2)');
+        $data[2] = Product::model()->getTax($sbj, $type, $date);
+        //应税劳务销售额
+        $sbj = Subjects::model()->findAllByAttributes([], '(sbj_number like "6001%" or sbj_number like "6051%" or sbj_number like "6301%") and sbj_tax > 0 and sbj_tax <> 5 and (sbj_type = 1 or sbj_type = 3)');
+        $data[3] = Product::model()->getTax($sbj, $type, $date);
+
+        //(四)免税货物及劳务销售额     栏次  8
+        $sbj = Subjects::model()->findAllByAttributes(['sbj_tax' => 0], '(sbj_number like "6001%" or sbj_number like "6051%" or sbj_number like "6301%")');
+        $data[8] = Product::model()->getTax($sbj, $type, $date);
+
+        //免税货物销售额
+        $sbj = Subjects::model()->findAllByAttributes(['sbj_tax' => 0], '(sbj_number like "6001%" or sbj_number like "6051%" or sbj_number like "6301%") and (sbj_type = 0 or sbj_type = 2)');
+        $data[9] = Product::model()->getTax($sbj, $type, $date);
+        //免税劳务销售额
+        $sbj = Subjects::model()->findAllByAttributes(['sbj_tax' => 0], '(sbj_number like "6001%" or sbj_number like "6051%" or sbj_number like "6301%") and (sbj_type = 1 or sbj_type = 3)');
+        $data[10] = Product::model()->getTax($sbj, $type, $date);
+
+        //销项税额      栏次      11
+        $sbjz = Subjects::model()->findByAttributes([], "sbj_name like'%增值税%' and sbj_number regexp '^2221'");
+        if ($sbj == null) {
+            $data[11] = ['A' => 0, 'C' => 0];
+            $data[12] = ['A' => 0, 'C' => 0];
+
+        } else {
+            //销项税额      栏次      11
+            $sbj = Subjects::model()->findByAttributes([], "sbj_name like '%销%' and sbj_number regexp '^$sbjz->sbj_number'");
+            if ($sbj != null)
+                $data[11] = Product::model()->getTax([$sbj], $type, $date, 'A', 'Transition', ' and entry_transaction = 1');
+            else {
+                $data[11] = ['A' => 0, 'C' => 0];
+                $data[12] = ['A' => 0, 'C' => 0];
+            }
+            //进项税额      栏次      12
+            $sbj = Subjects::model()->findByAttributes([], "sbj_name like '%进%' and sbj_number regexp '^$sbjz->sbj_number'");
+            if ($sbj != null)
+                $data[12] = Product::model()->getTax([$sbj], $type, $date, 'A', 'Transition', ' and entry_transaction = 1');
+            else {
+                $data[11] = ['A' => 0, 'C' => 0];
+                $data[12] = ['A' => 0, 'C' => 0];
+            }
+        }
+
+        //应抵扣税额合计       栏次      17=12+13-14-15+16
+        $data[17]['A'] = $data[12]['A'];
+
+        //实际抵扣税额        栏次      18(如17<11,则为17, 否则为11)
+        $data[18]['A'] = $data[17]['A']< $data[11]['A']?$data[17]['A']:$data[11]['A'];
+        $data[18]['C'] = $data[12]['C'];
+
+        //应纳税额      栏次      19=11-18
+        $data[19]['A'] = $data[11]['A'] - $data[18]['A'];
+        $data[19]['C'] = $data[11]['C'] - $data[18]['C'];
+
+        //期末留抵税额      栏次      20=17-18
+        $data[20]['A'] = $data[17]['A'] - $data[18]['A'];
+//        $data[20]['C'] = - $data[18]['C'];
+
+        //应纳税额合计      栏次      24=19+21-23
+        $data[24]['A'] = $data[19]['A'];
+        $data[24]['C'] = $data[19]['C'];
+
+        //本期缴纳上期应纳税额       栏次       30
+        //222101增值税子科目，未交增值税 或
+        $sbj = Subjects::model()->findByAttributes(['sbj_name'=>'未交增值税'], 'sbj_number regexp "^222101"');
+        $data[30] = Product::model()->getTax($sbj, $type, $date, 'A', 'Transition', ' and entry_transaction = 1');
+
+        //本期已缴税额    栏次      27=28+29+30+31
+        $data[27] = $data[30];
+
+        //期末未缴税额（多缴为负数      栏次      32=24+25+26-27
+        $data[32]['A'] = $data[24]['A'] - $data[27]['A'];
+        $data[32]['C'] = $data[24]['C'] - $data[27]['C'];
+
+        //其中：欠缴税额（≥0    栏次      33=25+26-27
+        $data[33]['A'] = - $data[27]['A'];
+        $data[33]['C'] = - $data[27]['C'];
+
+        //本期应补(退)税额     栏次      34=24-28-29
+        $data[34]['A'] = $data[24]['A'];
+        $data[34]['C'] = $data[24]['C'];
+
+        //期末未缴查补税    栏次       38=16+22+36-37
+        $data[38] = ['A'=> 0, 'C'=> 0];
+
         return $data;
     }
 }

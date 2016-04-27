@@ -606,7 +606,7 @@ class Transition extends CActiveRecord
         else {
             $date = Condom::model()->getStartTime();
             $date = new DateTime($date . '01');
-            $date->modify('last month');
+//            $date->modify('last month');
             return $date->format('Ymd');
         }
     }

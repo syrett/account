@@ -17,7 +17,7 @@ $preOrder = Preparation::getPreOrder('vendor', $item['vendor_id']);
 $item['preorder'] = Preparation::getOrderArray($type, $item['id']);
 $preOrder = $item['preorder'] + $preOrder;
 //{"purchase":"1"}
-$relation = Bank::model()->findByAttributes([],"relation like '%\"$type\":\"$model->id\"%'");
+$relation = Bank::model()->findByAttributes([],"relation like '%$type:$model->id%'");
 ?>
 <div class="panel-body">
     <div class="row import-tab" id="abc">

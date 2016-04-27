@@ -337,8 +337,17 @@ class ReportController extends Controller
         $model->date = $date;
         $data = $model->genMoneyData('', $type);
 
-        $this->render("tax1", array("data" => $data,
-            "date" => $date));
+        //小规模纳税人和一般纳税人的申报表不一样
+        $condom = Condom::getCondom();
+        if($condom->taxpayer_t == 1) {    //一般纳税人
+            $this->render("tax1a", array("data" => $data,
+                "date" => $date));
+
+        }elseif($condom->taxpayer_t == 2){
+            $this->render("tax1", array("data" => $data,
+                "date" => $date));
+
+        }
     }
 
     public function actionCreateExcel()

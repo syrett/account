@@ -60,7 +60,7 @@ class ProductController extends Controller
             else {
                 Yii::app()->user->setFlash('success', "保存成功!");
                 $model = $this->loadModel($id);
-                $tran = Transition::model()->find(['condition' => 'data_id=:data_id', 'params' => [':data_id' => $id]]);
+                $tran = Transition::model()->find(['condition' => 'data_id=:data_id and data_type=:data_type', 'params' => [':data_id' => $id, ':data_type' => 'purchase']]);
                 $sheetData[0]['data'] = Transition::getSheetData($model->attributes, 'product');
                 if ($tran != null)
                     $sheetData[0]['data']['entry_reviewed'] = $tran->entry_reviewed;
