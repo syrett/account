@@ -275,15 +275,15 @@ class Product extends LFSModel
         $data[10]['D'] = ($data[1]['D'] ) * 0.03;
 
         $data[12]['A'] = $data[10]['A'];
-        $data[12]['B'] = $data[10]['A'];
-        $data[12]['C'] = $data[10]['A'];
-        $data[12]['D'] = $data[10]['A'];
+        $data[12]['B'] = $data[10]['B'];
+        $data[12]['C'] = $data[10]['C'];
+        $data[12]['D'] = $data[10]['D'];
 
 
         $data[14]['A'] = $data[10]['A'];
-        $data[14]['B'] = $data[10]['A'];
-        $data[14]['C'] = $data[10]['A'];
-        $data[14]['D'] = $data[10]['A'];
+        $data[14]['B'] = $data[10]['B'];
+        $data[14]['C'] = $data[10]['C'];
+        $data[14]['D'] = $data[10]['D'];
 
         return $data;
     }
