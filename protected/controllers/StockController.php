@@ -579,9 +579,11 @@ class StockController extends Controller
             foreach ($stocks as $item2) {
                 if (!$item2->overPeriod($date)) {
                     if($item2->checkDeprec($date)){
-                        $price = $item2->getWorth();
+//                        $price = $item2->getWorth();
+                        $price = $item2->in_price;
                         $month = $item2->worth==''?0:count(explode(',', $item2->worth))-1;
-                        $month_left = $item2->getMonthLeft();
+//                        $month_left = $item2->getMonthLeft();
+                        $month_left = $item2->value_month;
                         $price = $price * (100 - $item2->value_rate) / $month_left / 100;
                         $amount += $price;
                         if (isset($list[$key]['entry_amount']))

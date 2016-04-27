@@ -13,6 +13,15 @@
  * @property double $in_price
  * @property string $out_date
  * @property double $out_price
+ * @property double $worth
+ * @property double $enable_date
+ * @property double $cost_role
+ * @property double $value_month
+ * @property double $month_left
+ * @property double $value_rate
+ * @property double $cost_date
+ * @property double $status_scrap
+ * @property double $date_a
  * @property string $create_time
  * @property integer $status
  *
@@ -560,7 +569,7 @@ class Stock extends LFSModel
     public function checkDeprec($date)
     {
 
-        if ($this->month_left == 0)
+        if ($this->month_left === 0)
             return false;
         if (substr($this->entry_subject, 0, 4) == '1801') {
             $this['in_date'] = $this->date_a;
