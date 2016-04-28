@@ -1278,7 +1278,7 @@ class TransitionController extends Controller
                     $item->save();
                 }
             }
-            //生成的结转凭证需要过账
+            //生成的结转凭证需要过账，如果没有生成结转凭证，不需要再过账
 
             Yii::import('application.controllers.PostController');
             $postctrl = new PostController();
@@ -1306,7 +1306,11 @@ class TransitionController extends Controller
      */
     public function actionAntiSettlement($edate = '')
     {
-        $date = substr(Transition::getCondomDate(), 0, 6);
+        $tran = Transition::model()->findByAttributes([], ' 1=1 order by entry_date desc');
+        if($tran != null)
+            $date = substr(date('Ym', strtotime($tran->entry_date)), 0, 6);
+        else
+            $date = Condom::model()->getStartTime();
 //        $date = '201509';
         $result = false;
         while ($date >= Condom::model()->getStartTime() && $date >= $edate) {

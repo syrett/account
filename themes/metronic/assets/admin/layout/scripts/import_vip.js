@@ -497,27 +497,32 @@ function setTax(item_id, type) {
     //设置相关参数值，现在默认最多2个参数，如果过多要重新写函数
     //设置税费，目前只设置税费
     var tax = 0;
-    $.ajax({
-        type: "POST",
-        url: $("#model-subject").val(),
-        async: false,
-        data: {
-            sbj_number: $("#tran_subject_" + item_id).val()
-        },
-        success: function (data) {
-            data = JSON.parse(data);
-            if(data.status == 'success'){
-                tax = data.sbj.sbj_tax;
+    //销售才以科目税率来计算，采购，是根据对方企业类型，所以不同的科目也会有不同的税率，用户自己手动选择税率
+    if (type == 'product'){
+        $.ajax({
+            type: "POST",
+            url: $("#model-subject").val(),
+            async: false,
+            data: {
+                sbj_number: $("#tran_subject_" + item_id).val()
+            },
+            success: function (data) {
+                data = JSON.parse(data);
+                if(data.status == 'success'){
+                    tax = data.sbj.sbj_tax;
+                }
+                else{
+                    removeTax(id, type);
+                }
+                $("#tran_tax_" + item_id).val(tax)
+            },
+            error: function (data){
+                var data = data;
             }
-            else{
-                removeTax(id, type);
-            }
-            $("#tran_tax_" + item_id).val(tax)
-        },
-        error: function (data){
-            var data = data;
-        }
-    });
+        });
+    }else{
+        tax = $("#tran_tax_" + item_id).val();
+    }
     var sbj;
     var name = '';
     if (type == 'product')

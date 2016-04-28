@@ -143,10 +143,10 @@ class PostController extends Controller
             }
         }
 
-      if($transition->isAllPosted($date))
-      {
-          throw new CHttpException(400, $date . "已经过账");
-      }
+//      if($transition->isAllPosted($date))
+//      {
+//          throw new CHttpException(400, $date . "已经过账");
+//      }
       $transition->entry_num_prefix = $date;
       
       if (!Transition::model()->isReorganised($date))

@@ -833,15 +833,19 @@ div.flash-success a {
 .table-middle > tbody > tr > td, .table-middle > thead > tr > th {
     vertical-align: middle;
 }
+
 .table-center > thead > tr > th {
     text-align: center;
 }
+
 .table-right > tbody > tr > td {
     text-align: right;
 }
-.th-right{
+
+.th-right {
     text-align: right !important;
 }
+
 .input-full {
     /*width: 100%;*/
 }
@@ -850,10 +854,12 @@ div.flash-success a {
     float: left;
     margin-left: 15px;
 }
+
 .float-right {
     float: right;
     margin-right: 15px;
 }
+
 .left {
     text-align: left;
 }
@@ -862,35 +868,49 @@ div.flash-success a {
     text-align: right;
 }
 
+.center {
+    text-align: center;
+}
+
 .tax-table > tbody > tr > th {
     vertical-align: middle;
     text-align: center;
 }
-.tax-min{
+
+.tax-min {
     width: 50px;
 }
-.tax-mid{
-    width: 100px;
+
+.tax-mid {
+    width: 120px;
 }
-.tax-table-1 td:nth-child(1){
+
+/*小规模纳税人纳税申报表*/
+.tax-table-1 td:nth-child(1) {
     text-align: left;
 }
-.tax-table-1 td:nth-child(2){
+
+.tax-table-1 td:nth-child(2) {
     text-align: center;
 }
-.tax-table-1 td:nth-child(3){
+
+.tax-table-1 td:nth-child(3) {
     text-align: right;
 }
-.tax-table-1 td:nth-child(4){
+
+.tax-table-1 td:nth-child(4) {
     text-align: right;
 }
-.tax-table-1 td:nth-child(5){
+
+.tax-table-1 td:nth-child(5) {
     text-align: right;
 }
-.tax-table-1 td:nth-child(6){
+
+.tax-table-1 td:nth-child(6) {
     text-align: right;
 }
-.tax-table-1 td:nth-child(7){
+
+.tax-table-1 td:nth-child(7) {
     text-align: right;
 }
 
@@ -898,15 +918,24 @@ div.flash-success a {
     margin: 0;
 }
 
-.tax-table input{
+.tax-table input {
     text-align: right;
 }
-.tax-table-m{
+
+.tax-table-m {
     width: 15%;
     vertical-align: middle !important;
     text-align: center !important;
 }
-.tax1_footer div{
+
+.tax1_footer div {
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+.tax1_body {
+}
+
+.tax-table-head {
+    text-align: left;
 }
