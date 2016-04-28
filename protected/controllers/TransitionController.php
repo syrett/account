@@ -208,6 +208,7 @@ class TransitionController extends Controller
             'query_res' => $query_res,
         ));
     }
+
     /**
      * 采购交易.
      */
@@ -1194,28 +1195,44 @@ class TransitionController extends Controller
      */
     public function actionSettlement($entry_prefix)
     {
+        $status = $this->settlementTran($entry_prefix);
+        if ($status['status'] === 'success')
+            $this->render('/site/success');
+        else {
+            throw new CHttpException(400, $status['msg']);
+        }
+    }
+
+    public function settlementTran($entry_prefix)
+    {
+        $result['status'] = 'success';
         if ($entry_prefix > Condom::model()->getStartTime()) {
             $lastdate = date('Ym', strtotime('-1 months', strtotime($entry_prefix . '01')));
             while ($lastdate > Condom::model()->getStartTime()) {
                 if (Transition::model()->hasTransition($lastdate)) {
-                    if (!Transition::model()->tranSettlement($lastdate))
-                        throw new CHttpException(400, $lastdate . "需要先结账!");
-                    else
+                    if (!Transition::model()->tranSettlement($lastdate)) {
+                        $result['status'] = 'failed';
+                        $result['msg'] = $lastdate." 需要先结账!";
+                        return $result;
+                    } else
                         $lastdate = date('Ym', strtotime('-1 months', strtotime($lastdate . '01')));
                 } else
                     $lastdate = date('Ym', strtotime('-1 months', strtotime($lastdate . '01')));
             }
         }
 
-        if (!Transition::model()->checkSettlement($entry_prefix))
-            throw new CHttpException(400, $entry_prefix . "结转失败");
-        if (Transition::model()->isAllForward($entry_prefix))
-            throw new CHttpException(400, $entry_prefix . "已经结转");
+        if (!Transition::model()->checkSettlement($entry_prefix)) {
+            $result['status'] = 'failed';
+            $result['msg'] = "结转失败!";
+        }
+        if (Transition::model()->isAllForward($entry_prefix)) {
+            $result['status'] = 'failed';
+            $result['msg'] = "已经结转!";
+        }
         Transition::model()->settlement($entry_prefix);
         if (SYSDB != 'account_testabxc' && SYSDB != 'account_gbl' && SYSDB != 'account_201508089731')
             Stock::model()->saveWorth($entry_prefix);    //过账时的计提折旧操作，在结账时保存净值
-        Yii::app()->user->setFlash('success', $entry_prefix . "结转成功!");
-        $this->render('/site/success');
+        return $result;
     }
 
     /*
@@ -1226,10 +1243,10 @@ class TransitionController extends Controller
         $flag = false;
 
         if (!Transition::model()->isAllReviewed($entry_prefix)) {
-            throw new CHttpException(400,  $entry_prefix . "结账失败,凭证未审核!");
+            throw new CHttpException(400, $entry_prefix . "结账失败,凭证未审核!");
             //Yii::app()->user->setFlash('error', $entry_prefix . "结账失败! 凭证未审核");
         } elseif (!Transition::model()->isAllPosted($entry_prefix)) {
-            throw new CHttpException(400,  $entry_prefix . "结账失败,凭证未过账!");
+            throw new CHttpException(400, $entry_prefix . "结账失败,凭证未过账!");
             //Yii::app()->user->setFlash('error', $entry_prefix . "结账失败! 凭证未过账");
         } elseif (!Transition::model()->isAllForward($entry_prefix)) {
             throw new CHttpException(400, $entry_prefix . "结账失败,凭证未结转!");
@@ -1237,7 +1254,7 @@ class TransitionController extends Controller
         } elseif (!Transition::model()->isAllClosing($entry_prefix)) {
             throw new CHttpException(400, $entry_prefix . "结账失败,已经结账!");
             //Yii::app()->user->setFlash('error', $entry_prefix . "结账失败! 已经结账");
-        } elseif (Transition::model()->isAllClosing(getPrevMonth($entry_prefix, 'Ym'))&& $entry_prefix != Condom::getStartTime()) {
+        } elseif (Transition::model()->isAllClosing(getPrevMonth($entry_prefix, 'Ym')) && $entry_prefix != Condom::getStartTime()) {
             throw new CHttpException(400, getPrevMonth($entry_prefix, 'Ym') . "需要先结账!");
             //Yii::app()->user->setFlash('error', getPrevMonth($entry_prefix, 'Ym') . "需要先结账");
         } else
@@ -1268,7 +1285,15 @@ class TransitionController extends Controller
             $flag = true;
 
         if ($flag) {    //生成结转凭证，计提固定资产等,并自动审核过账
-            $this->actionSettlement($entry_prefix);
+            $status = $this->settlementTran($entry_prefix);
+            if ($status['status'] === 'success')
+                $flag = true;
+            else {
+                Yii::app()->user->setFlash('error', $status['msg']);
+                $flag = false;
+            }
+        }
+        if ($flag) {
             $trans = Transition::model()->findAllByAttributes(['entry_reviewed' => 0, 'entry_num_prefix' => $entry_prefix]);
             if (!empty($trans)) {
                 foreach ($trans as $item) {
@@ -1282,7 +1307,7 @@ class TransitionController extends Controller
 
             Yii::import('application.controllers.PostController');
             $postctrl = new PostController();
-            $postctrl->actionPost($entry_prefix);
+            $postctrl->postTran($entry_prefix);
         }
         if ($flag) {
             $tran = Transition::model()->findByAttributes(['entry_num_prefix' => $entry_prefix]);
@@ -1307,7 +1332,7 @@ class TransitionController extends Controller
     public function actionAntiSettlement($edate = '')
     {
         $tran = Transition::model()->findByAttributes([], ' 1=1 order by entry_date desc');
-        if($tran != null)
+        if ($tran != null)
             $date = substr(date('Ym', strtotime($tran->entry_date)), 0, 6);
         else
             $date = Condom::model()->getStartTime();
@@ -1677,7 +1702,7 @@ class TransitionController extends Controller
 
         ob_end_clean();
         header('Content-type: application/vnd.ms-excel, charset=utf-8');
-        header('Content-Disposition: attachment; filename=' .urldecode(urlencode($filename)) . '.xls');
+        header('Content-Disposition: attachment; filename=' . urldecode(urlencode($filename)) . '.xls');
         /**
          * The header of the table
          * @var string
@@ -1767,18 +1792,18 @@ class TransitionController extends Controller
         $session = Yii::app()->session;
 
         if ($type == 'listTransition') {
-            if (isset($session[$m_str.'_multi_str']) && trim($session[$m_str.'_multi_str']) != "") {
-                $q_multi_search = $session[$m_str.'_multi_str'];
+            if (isset($session[$m_str . '_multi_str']) && trim($session[$m_str . '_multi_str']) != "") {
+                $q_multi_search = $session[$m_str . '_multi_str'];
                 $where .= ' OR entry_memo LIKE :p1 ';
-                $where_array[':p1'] = '%' . $session[$m_str.'_multi_str'] . '%';
-                if (is_numeric($session[$m_str.'_multi_str']) && mb_strlen($session[$m_str.'_multi_str']) == 10) {
-                    $a = substr($session[$m_str.'_multi_str'], 0, 6);
-                    $b = intval(substr($session[$m_str.'_multi_str'], 6));
+                $where_array[':p1'] = '%' . $session[$m_str . '_multi_str'] . '%';
+                if (is_numeric($session[$m_str . '_multi_str']) && mb_strlen($session[$m_str . '_multi_str']) == 10) {
+                    $a = substr($session[$m_str . '_multi_str'], 0, 6);
+                    $b = intval(substr($session[$m_str . '_multi_str'], 6));
                     $where .= ' OR (entry_num_prefix = :p2 AND entry_num = :p3) ';
                     $where_array[':p2'] = $a;
                     $where_array[':p3'] = $b;
                 }
-                $tmp_timestamp = strtotime($session[$m_str.'_multi_str']);
+                $tmp_timestamp = strtotime($session[$m_str . '_multi_str']);
                 if ($tmp_timestamp !== false) {
                     $where .= ' OR entry_date = :p4 ';
                     $where_array[':p4'] = date('Y-m-d', $tmp_timestamp);
@@ -1788,23 +1813,23 @@ class TransitionController extends Controller
                 $where = substr($where, 3);
             }
         } else {
-            if (isset($session[$m_str.'_s_day']) && $session[$m_str.'_s_day'] != '') {
-                $q_s_day = date('Y-m-d', strtotime($session[$m_str.'_s_day']));
+            if (isset($session[$m_str . '_s_day']) && $session[$m_str . '_s_day'] != '') {
+                $q_s_day = date('Y-m-d', strtotime($session[$m_str . '_s_day']));
                 $xlsName .= $q_s_day;
                 $where .= 'AND entry_date >= :s_day ';
-                $where_array[':s_day'] = $session[$m_str.'_s_day'];
+                $where_array[':s_day'] = $session[$m_str . '_s_day'];
             }
 
-            if (isset($session[$m_str.'_e_day']) && $session[$m_str.'_e_day'] != '') {
-                $q_e_day = date('Y-m-d', strtotime($session[$m_str.'_e_day']));
-                $xlsName .= '-'.$q_e_day;
+            if (isset($session[$m_str . '_e_day']) && $session[$m_str . '_e_day'] != '') {
+                $q_e_day = date('Y-m-d', strtotime($session[$m_str . '_e_day']));
+                $xlsName .= '-' . $q_e_day;
                 $where .= 'AND entry_date <= :e_day ';
-                $where_array[':e_day'] = $session[$m_str.'_e_day'];
+                $where_array[':e_day'] = $session[$m_str . '_e_day'];
             }
-            if (isset($session[$m_str.'_memo']) && $session[$m_str.'_memo'] != '') {
-                $q_memo = $session[$m_str.'_memo'];
+            if (isset($session[$m_str . '_memo']) && $session[$m_str . '_memo'] != '') {
+                $q_memo = $session[$m_str . '_memo'];
                 $where .= 'AND entry_memo LIKE :memo ';
-                $where_array[':memo'] = '%' . $session[$m_str.'_memo'] . '%';
+                $where_array[':memo'] = '%' . $session[$m_str . '_memo'] . '%';
             }
 
             if ($type == 'listReview') {
@@ -1818,7 +1843,7 @@ class TransitionController extends Controller
         }
 
         if ($where != '') {
-            $sql = "select * from transition where " . $where. ' ORDER BY entry_num_prefix desc , entry_num  DESC,  entry_transaction asc ';
+            $sql = "select * from transition where " . $where . ' ORDER BY entry_num_prefix desc , entry_num  DESC,  entry_transaction asc ';
         } else {
             $sql = 'SELECT * FROM `transition`  ORDER BY entry_num_prefix desc , entry_num  DESC,  entry_transaction asc ';
         }
@@ -1858,13 +1883,13 @@ class TransitionController extends Controller
         $os->getStyle('A1')->getFont()->setSize(10);
         $os->getStyle('A1')->getFont()->getColor()->setARGB('FF00A0FF');
         $os->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
-        $os->setCellValue('A1', "生成时刻：\n".date('Y-m-d H:i'));
+        $os->setCellValue('A1', "生成时刻：\n" . date('Y-m-d H:i'));
         $os->mergeCells('C1:H1');
 
         if ($type == 'listTransition') {
-            $os->setCellValue('C1', "快速查找：".$q_multi_search);
+            $os->setCellValue('C1', "快速查找：" . $q_multi_search);
         } else {
-            $os->setCellValue('C1', "日期范围：".$q_s_day.' 至 '.$q_e_day.'    摘要：'.$q_memo);
+            $os->setCellValue('C1', "日期范围：" . $q_s_day . ' 至 ' . $q_e_day . '    摘要：' . $q_memo);
 
         }
 
@@ -1886,29 +1911,29 @@ class TransitionController extends Controller
         $ri = 4;
 
         foreach ($data as $row) {
-            $os->setCellValueExplicit('A'.$ri, $row['entry_num_prefix'] . $this->addZero($row['entry_num']),PHPExcel_Cell_DataType::TYPE_STRING);
+            $os->setCellValueExplicit('A' . $ri, $row['entry_num_prefix'] . $this->addZero($row['entry_num']), PHPExcel_Cell_DataType::TYPE_STRING);
             //$os->setCellValue('A'.$ri, $row['entry_num_prefix'] . $this->addZero($row['entry_num']));
-            $os->setCellValue('B'.$ri, $row['entry_memo']);
-            $os->setCellValue('C'.$ri, Transition::transaction($row['entry_transaction']));
-            $os->setCellValue('D'.$ri, Subjects::getSbjPath($row['entry_subject']));
-            $os->setCellValueExplicit('E'.$ri, $row['entry_amount'], PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $os->setCellValue('B' . $ri, $row['entry_memo']);
+            $os->setCellValue('C' . $ri, Transition::transaction($row['entry_transaction']));
+            $os->setCellValue('D' . $ri, Subjects::getSbjPath($row['entry_subject']));
+            $os->setCellValueExplicit('E' . $ri, $row['entry_amount'], PHPExcel_Cell_DataType::TYPE_NUMERIC);
             //$os->setCellValue('E'.$ri, $row['entry_amount']);
-            $os->setCellValue('F'.$ri, Transition::getAppendix($row['entry_appendix_type'], $row['entry_appendix_id']));
-            $os->setCellValue('G'.$ri, Transition::getPosting($row['entry_posting']));
-            $os->setCellValue('H'.$ri, date('Y年m月d日', strtotime($row['entry_date'])));
+            $os->setCellValue('F' . $ri, Transition::getAppendix($row['entry_appendix_type'], $row['entry_appendix_id']));
+            $os->setCellValue('G' . $ri, Transition::getPosting($row['entry_posting']));
+            $os->setCellValue('H' . $ri, date('Y年m月d日', strtotime($row['entry_date'])));
 
-            $ri ++;
+            $ri++;
         }
 
         header('Content-Type: application/force-download');
         header('Content-Type: application/octet-stream');
         header('Content-Type: application/download');
         header('Content-Disposition:inline;filename='
-            .urldecode(urlencode($xlsName))
-            .'.xls');
+            . urldecode(urlencode($xlsName))
+            . '.xls');
         header('Content-Transfer-Encoding: binary');
         header('Expires:Mon, 26 Jul 1997 05:00:00 GMT');
-        header('Last-Modified:'.gmdate('D, d M Y H:i:s').' GMT');
+        header('Last-Modified:' . gmdate('D, d M Y H:i:s') . ' GMT');
         header('Cache-Control: myst-revalidate, post-check=0, pre-check=0');
         header('Pragma: no-cache');
         $ow->save('php://output');
@@ -2275,7 +2300,7 @@ class TransitionController extends Controller
                     $arr['entry_subject'] = substr($arr['entry_subject'], 1);
                     $arr['entry_appendix_type'] = 2;
                     //设置税
-                    $sbj = Subjects::model()->findByAttributes(['sbj_number'=> $arr['entry_subject']]);
+                    $sbj = Subjects::model()->findByAttributes(['sbj_number' => $arr['entry_subject']]);
 //                    $arr['tax'] = $sbj->sbj_tax;
                     $model = new Product();
                     break;
@@ -2311,30 +2336,30 @@ class TransitionController extends Controller
                         $model = $salary;
                         $model->load($arr);
                     }
-                        //工资借方金额要加上公司需要支付的那部分
+                    //工资借方金额要加上公司需要支付的那部分
 
-                        $tran_extends = [
+                    $tran_extends = [
+                        [
                             [
-                                [
-                                    'entry_subject' => Department::matchSubject(Employee::getDepart($employee->id),'社保公积金'),
-                                    'entry_amount' => (float)$arr['social_company'] + (float)$arr['provident_company'],
-                                    'entry_memo' => '社保公积金公司部分',
-                                    'entry_transaction' => 1
-                                ],
-                                [
-                                    'entry_subject' => Subjects::matchSubject('应付社保', '2241'),
-                                    'entry_amount' => $arr['social_company'],
-                                    'entry_memo' => '社保公司部分',
-                                    'entry_transaction' => 2
-                                ],
-                                [
-                                    'entry_subject' => Subjects::matchSubject('应付公积金', '2241'),
-                                    'entry_amount' => $arr['provident_company'],
-                                    'entry_memo' => '公积金公司部分',
-                                    'entry_transaction' => 2
-                                ]
+                                'entry_subject' => Department::matchSubject(Employee::getDepart($employee->id), '社保公积金'),
+                                'entry_amount' => (float)$arr['social_company'] + (float)$arr['provident_company'],
+                                'entry_memo' => '社保公积金公司部分',
+                                'entry_transaction' => 1
+                            ],
+                            [
+                                'entry_subject' => Subjects::matchSubject('应付社保', '2241'),
+                                'entry_amount' => $arr['social_company'],
+                                'entry_memo' => '社保公司部分',
+                                'entry_transaction' => 2
+                            ],
+                            [
+                                'entry_subject' => Subjects::matchSubject('应付公积金', '2241'),
+                                'entry_amount' => $arr['provident_company'],
+                                'entry_memo' => '公积金公司部分',
+                                'entry_transaction' => 2
                             ]
-                        ];
+                        ]
+                    ];
                     break;
                 case 'reimburse':
                     $lists = [
@@ -2916,24 +2941,24 @@ class TransitionController extends Controller
      *
      *
      */
-    public function  dealTransCond($model, $mStr, $getP1 = '')
+    public function dealTransCond($model, $mStr, $getP1 = '')
     {
         $res = [];
         $session = Yii::app()->session;
 
         if (isset($_GET[$getP1])) {
             $gp1 = $_GET[$getP1];
-            $stamp_month_start = strtotime($gp1.'01');
+            $stamp_month_start = strtotime($gp1 . '01');
             if ($stamp_month_start === false) {
                 $gp1 = date('Ym');
-                $stamp_month_start = strtotime($gp1.'01');
+                $stamp_month_start = strtotime($gp1 . '01');
             }
             $model->entry_num_prefix = $gp1;
 
             $date_month_start = date('Y-m-d 00:00:00', $stamp_month_start);
             $model->query_s_day = $date_month_start;
             $res['s_day'] = date('Y/m/d', $stamp_month_start);
-            $session[$mStr.'_s_day'] = $date_month_start;
+            $session[$mStr . '_s_day'] = $date_month_start;
 
             $tmp_year = intval(substr($gp1, 0, 4));
             $tmp_month = intval(substr($gp1, 4));
@@ -2944,16 +2969,16 @@ class TransitionController extends Controller
                 $tmp_month += 1;
             }
             if ($tmp_month < 10) {
-                $tmp_month = '0'.$tmp_month;
+                $tmp_month = '0' . $tmp_month;
             }
 
-            $stamp_month_end = strtotime($tmp_year.$tmp_month.'01')-86399;
+            $stamp_month_end = strtotime($tmp_year . $tmp_month . '01') - 86399;
             $date_month_end = date('Y-m-d 23:59:59', $stamp_month_end);
             $model->query_e_day = $date_month_end;
             $res['e_day'] = date('Y/m/d', $stamp_month_end);
-            $session[$mStr.'_e_day'] = $date_month_end;
+            $session[$mStr . '_e_day'] = $date_month_end;
 
-            $session[$mStr.'_memo'] = '';
+            $session[$mStr . '_memo'] = '';
 
         } else {
 
@@ -2963,14 +2988,14 @@ class TransitionController extends Controller
                 if ($stamp_date_start != false) {
                     $s_day = date('Y-m-d 00:00:00', $stamp_date_start);
                 }
-            } elseif (isset($session[$mStr.'_s_day'])) {
-                $s_day = $session[$mStr.'_s_day'];
+            } elseif (isset($session[$mStr . '_s_day'])) {
+                $s_day = $session[$mStr . '_s_day'];
             }
             if ($s_day != '') {
                 $model->query_s_day = $s_day;
                 $res['s_day'] = date('Y/m/d', strtotime($s_day));
             }
-            $session[$mStr.'_s_day'] = $s_day;
+            $session[$mStr . '_s_day'] = $s_day;
 
             $e_day = '';
             if (isset($_POST['e_day'])) {
@@ -2978,38 +3003,38 @@ class TransitionController extends Controller
                 if ($stamp_date_end != false) {
                     $e_day = date('Y-m-d 23:59:59', $stamp_date_end);
                 }
-            } elseif (isset($session[$mStr.'_e_day'])) {
-                $e_day = $session[$mStr.'_e_day'];
+            } elseif (isset($session[$mStr . '_e_day'])) {
+                $e_day = $session[$mStr . '_e_day'];
             }
             if ($e_day != '') {
                 $model->query_e_day = $e_day;
                 $res['e_day'] = date('Y/m/d', strtotime($e_day));
             }
-            $session[$mStr.'_e_day'] = $e_day;
+            $session[$mStr . '_e_day'] = $e_day;
 
             $memo = '';
             if (isset($_POST['memo'])) {
                 $memo = trim($_POST['memo']);
-            } elseif (isset($session[$mStr.'_memo']) && $session[$mStr.'_memo'] != '') {
-                $memo = $session[$mStr.'_memo'];
+            } elseif (isset($session[$mStr . '_memo']) && $session[$mStr . '_memo'] != '') {
+                $memo = $session[$mStr . '_memo'];
             }
             if ($memo != '') {
                 $model->query_memo = $memo;
                 $res['memo'] = $memo;
             }
-            $session[$mStr.'_memo'] = $memo;
+            $session[$mStr . '_memo'] = $memo;
 
             $multi_str = '';
             if (isset($_REQUEST['multi_search'])) {
                 $multi_str = $_REQUEST['multi_search'];
-            } elseif (isset($session[$mStr.'_multi_str']) && $session[$mStr.'_multi_str'] != '') {
-                $multi_str = $session[$mStr.'_multi_str'];
+            } elseif (isset($session[$mStr . '_multi_str']) && $session[$mStr . '_multi_str'] != '') {
+                $multi_str = $session[$mStr . '_multi_str'];
             }
             if ($multi_str != '') {
                 $model->query_multi_str = $multi_str;
                 $res['multi_search'] = $multi_str;
             }
-            $session[$mStr.'_multi_str'] = $multi_str;
+            $session[$mStr . '_multi_str'] = $multi_str;
 
         }
 
