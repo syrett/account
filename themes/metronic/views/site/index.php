@@ -36,33 +36,52 @@ $amount_out = Transition::model()->findAllByAttributes(['entry_transaction' => 2
 foreach ($amount_out as $item) {
     $amount_3 += $item['entry_amount'];
 }
+
+
 //饼图
-$data = [];
+//运营支出
+$data_out = [];
+$pie_out_total = 0;
+//运营收入
+$data_in = [];
+$pie_in_total = 0;
+//管理费用
+$data_manage = [];
+$pie_manage_total = 0;
+
+
+//--支出
 //银行
 $bank_out = Bank::model()->findAllByAttributes([], "path like '%>支出=%'");
 foreach ($bank_out as $item) {
     $path = explode('=>', $item['path']);
     if (count($path) > 1) {
+        if ($path[2] == '行政支出') {
+            //管理费用
+            $tmp_key = isset($path[3]) ? $path[3] : '';
+            $data_manage[$tmp_key] = isset( $data_manage[$tmp_key]) ?  $data_manage[$tmp_key] + $item['amount'] : $item['amount'];
+            $pie_manage_total += $item['amount'];
+        }
         if ($path[2] == '供应商采购') {
             if (end($path) != '预付款') {
                 $purchase = Purchase::model()->findByAttributes(['order_no' => end($path)]);
                 if ($purchase) {
                     switch (substr($purchase['subject'], 0, 4)) {
                         case 1601:
-                            $data[Yii::t('home', '固定资产')] = isset($data[Yii::t('home', '固定资产')]) ? $data[Yii::t('home', '固定资产')] + $item['amount'] : $item['amount'];
+                            $data_out[Yii::t('home', '固定资产')] = isset($data_out[Yii::t('home', '固定资产')]) ? $data_out[Yii::t('home', '固定资产')] + $item['amount'] : $item['amount'];
                             break;
                         case 1701:
-                            $data[Yii::t('home', '无形资产')] = isset($data[Yii::t('home', '无形资产')]) ? $data[Yii::t('home', '无形资产')] + $item['amount'] : $item['amount'];
+                            $data_out[Yii::t('home', '无形资产')] = isset($data_out[Yii::t('home', '无形资产')]) ? $data_out[Yii::t('home', '无形资产')] + $item['amount'] : $item['amount'];
                             break;
                         case 1801:
-                            $data[Yii::t('home', '长期待摊')] = isset($data[Yii::t('home', '长期待摊')]) ? $data[Yii::t('home', '长期待摊')] + $item['amount'] : $item['amount'];
+                            $data_out[Yii::t('home', '长期待摊')] = isset($data_out[Yii::t('home', '长期待摊')]) ? $data_out[Yii::t('home', '长期待摊')] + $item['amount'] : $item['amount'];
                             break;
                         case 1403:
                         case 1405:
-                            $data[Yii::t('home', '存货采购')] = isset($data[Yii::t('home', '存货采购')]) ? $data[Yii::t('home', '存货采购')] + $item['amount'] : $item['amount'];
+                            $data_out[Yii::t('home', '存货采购')] = isset($data_out[Yii::t('home', '存货采购')]) ? $data_out[Yii::t('home', '存货采购')] + $item['amount'] : $item['amount'];
                             break;
                         default :
-                            $data[Yii::t('home', '其他采购')] = isset($data[Yii::t('home', '其他采购')]) ? $data[Yii::t('home', '其他采购')] + $item['amount'] : $item['amount'];
+                            $data_out[Yii::t('home', '其他采购')] = isset($data_out[Yii::t('home', '其他采购')]) ? $data_out[Yii::t('home', '其他采购')] + $item['amount'] : $item['amount'];
                     }
                 }
             } else {
@@ -75,20 +94,20 @@ foreach ($bank_out as $item) {
                             if ($purchase) {
                                 switch (substr($purchase['subject'], 0, 4)) {
                                     case 1601:
-                                        $data[Yii::t('home', '固定资产')] = isset($data[Yii::t('home', '固定资产')]) ? $data[Yii::t('home', '固定资产')] + $amount : $amount;
+                                        $data_out[Yii::t('home', '固定资产')] = isset($data_out[Yii::t('home', '固定资产')]) ? $data_out[Yii::t('home', '固定资产')] + $amount : $amount;
                                         break;
                                     case 1701:
-                                        $data[Yii::t('home', '无形资产')] = isset($data[Yii::t('home', '无形资产')]) ? $data[Yii::t('home', '无形资产')] + $amount : $amount;
+                                        $data_out[Yii::t('home', '无形资产')] = isset($data_out[Yii::t('home', '无形资产')]) ? $data_out[Yii::t('home', '无形资产')] + $amount : $amount;
                                         break;
                                     case 1801:
-                                        $data[Yii::t('home', '长期待摊')] = isset($data[Yii::t('home', '长期待摊')]) ? $data[Yii::t('home', '长期待摊')] + $amount : $amount;
+                                        $data_out[Yii::t('home', '长期待摊')] = isset($data_out[Yii::t('home', '长期待摊')]) ? $data_out[Yii::t('home', '长期待摊')] + $amount : $amount;
                                         break;
                                     case 1403:
                                     case 1405:
-                                        $data[Yii::t('home', '存货采购')] = isset($data[Yii::t('home', '存货采购')]) ? $data[Yii::t('home', '存货采购')] + $amount : $amount;
+                                        $data_out[Yii::t('home', '存货采购')] = isset($data_out[Yii::t('home', '存货采购')]) ? $data_out[Yii::t('home', '存货采购')] + $amount : $amount;
                                         break;
                                     default :
-                                        $data[Yii::t('home', '其他采购')] = isset($data[Yii::t('home', '其他采购')]) ? $data[Yii::t('home', '其他采购')] + $amount : $amount;
+                                        $data_out[Yii::t('home', '其他采购')] = isset($data_out[Yii::t('home', '其他采购')]) ? $data_out[Yii::t('home', '其他采购')] + $amount : $amount;
                                 }
                             }
                         }
@@ -96,7 +115,9 @@ foreach ($bank_out as $item) {
                 }
             }
         } else
-            $data[Yii::t('home', $path[2])] = isset($data[Yii::t('home', $path[2])]) ? $data[Yii::t('home', $path[2])] + $item['amount'] : $item['amount'];
+            $data_out[Yii::t('home', $path[2])] = isset($data_out[Yii::t('home', $path[2])]) ? $data_out[Yii::t('home', $path[2])] + $item['amount'] : $item['amount'];
+
+        $pie_out_total += $item['amount'];
     }
 }
 //现金
@@ -104,26 +125,32 @@ $cash_out = Cash::model()->findAllByAttributes([], "path like '%>支出=%'");
 foreach ($cash_out as $item) {
     $path = explode('=>', $item['path']);
     if (count($path) > 1) {
+        if ($path[2] == '行政支出') {
+            //管理费用
+            $tmp_key = isset($path[3]) ? $path[3] : '';
+            $data_manage[$tmp_key] = isset( $data_manage[$tmp_key]) ?  $data_manage[$tmp_key] + $item['amount'] : $item['amount'];
+            $pie_manage_total += $item['amount'];
+        }
         if ($path[2] == '供应商采购') {
             if (end($path) != '预付款') {
                 $purchase = Purchase::model()->findByAttributes(['order_no' => end($path)]);
                 if ($purchase) {
                     switch (substr($purchase['subject'], 0, 4)) {
                         case 1601:
-                            $data[Yii::t('home', '固定资产')] = isset($data[Yii::t('home', '固定资产')]) ? $data[Yii::t('home', '固定资产')] + $item['amount'] : $item['amount'];
+                            $data_out[Yii::t('home', '固定资产')] = isset($data_out[Yii::t('home', '固定资产')]) ? $data_out[Yii::t('home', '固定资产')] + $item['amount'] : $item['amount'];
                             break;
                         case 1701:
-                            $data[Yii::t('home', '无形资产')] = isset($data[Yii::t('home', '无形资产')]) ? $data[Yii::t('home', '无形资产')] + $item['amount'] : $item['amount'];
+                            $data_out[Yii::t('home', '无形资产')] = isset($data_out[Yii::t('home', '无形资产')]) ? $data_out[Yii::t('home', '无形资产')] + $item['amount'] : $item['amount'];
                             break;
                         case 1801:
-                            $data[Yii::t('home', '长期待摊')] = isset($data[Yii::t('home', '长期待摊')]) ? $data[Yii::t('home', '长期待摊')] + $item['amount'] : $item['amount'];
+                            $data_out[Yii::t('home', '长期待摊')] = isset($data_out[Yii::t('home', '长期待摊')]) ? $data_out[Yii::t('home', '长期待摊')] + $item['amount'] : $item['amount'];
                             break;
                         case 1403:
                         case 1405:
-                            $data[Yii::t('home', '存货采购')] = isset($data[Yii::t('home', '存货采购')]) ? $data[Yii::t('home', '存货采购')] + $item['amount'] : $item['amount'];
+                            $data_out[Yii::t('home', '存货采购')] = isset($data_out[Yii::t('home', '存货采购')]) ? $data_out[Yii::t('home', '存货采购')] + $item['amount'] : $item['amount'];
                             break;
                         default :
-                            $data[Yii::t('home', '其他采购')] = isset($data[Yii::t('home', '其他采购')]) ? $data[Yii::t('home', '其他采购')] + $item['amount'] : $item['amount'];
+                            $data_out[Yii::t('home', '其他采购')] = isset($data_out[Yii::t('home', '其他采购')]) ? $data_out[Yii::t('home', '其他采购')] + $item['amount'] : $item['amount'];
                     }
                 }
             } else {
@@ -136,20 +163,20 @@ foreach ($cash_out as $item) {
                             if ($purchase) {
                                 switch (substr($purchase['subject'], 0, 4)) {
                                     case 1601:
-                                        $data[Yii::t('home', '固定资产')] = isset($data[Yii::t('home', '固定资产')]) ? $data[Yii::t('home', '固定资产')] + $amount : $amount;
+                                        $data_out[Yii::t('home', '固定资产')] = isset($data_out[Yii::t('home', '固定资产')]) ? $data_out[Yii::t('home', '固定资产')] + $amount : $amount;
                                         break;
                                     case 1701:
-                                        $data[Yii::t('home', '无形资产')] = isset($data[Yii::t('home', '无形资产')]) ? $data[Yii::t('home', '无形资产')] + $amount : $amount;
+                                        $data_out[Yii::t('home', '无形资产')] = isset($data_out[Yii::t('home', '无形资产')]) ? $data_out[Yii::t('home', '无形资产')] + $amount : $amount;
                                         break;
                                     case 1801:
-                                        $data[Yii::t('home', '长期待摊')] = isset($data[Yii::t('home', '长期待摊')]) ? $data[Yii::t('home', '长期待摊')] + $amount : $amount;
+                                        $data_out[Yii::t('home', '长期待摊')] = isset($data_out[Yii::t('home', '长期待摊')]) ? $data_out[Yii::t('home', '长期待摊')] + $amount : $amount;
                                         break;
                                     case 1403:
                                     case 1405:
-                                        $data[Yii::t('home', '存货采购')] = isset($data[Yii::t('home', '存货采购')]) ? $data[Yii::t('home', '存货采购')] + $amount : $amount;
+                                        $data_out[Yii::t('home', '存货采购')] = isset($data_out[Yii::t('home', '存货采购')]) ? $data_out[Yii::t('home', '存货采购')] + $amount : $amount;
                                         break;
                                     default :
-                                        $data[Yii::t('home', '其他采购')] = isset($data[Yii::t('home', '其他采购')]) ? $data[Yii::t('home', '其他采购')] + $amount : $amount;
+                                        $data_out[Yii::t('home', '其他采购')] = isset($data_out[Yii::t('home', '其他采购')]) ? $data_out[Yii::t('home', '其他采购')] + $amount : $amount;
                                 }
                             }
                         }
@@ -159,21 +186,66 @@ foreach ($cash_out as $item) {
                 }
             }
         } else
-            $data[Yii::t('home', $path[2])] = isset($data[Yii::t('home', $path[2])]) ? $data[Yii::t('home', $path[2])] + $item['amount'] : $item['amount'];
+            $data_out[Yii::t('home', $path[2])] = isset($data_out[Yii::t('home', $path[2])]) ? $data_out[Yii::t('home', $path[2])] + $item['amount'] : $item['amount'];
+
+        $pie_out_total += $item['amount'];
     }
 }
-$data_chart = [];
-if (!empty($data))
-    foreach ($data as $cat => $value) {
-        $data_chart[] = ['category' => $cat, 'value' => $value];
+
+//--收入
+//银行
+$bank_in = Bank::model()->findAllByAttributes([], "path like '%>收入=%'");
+foreach ($bank_in as $item) {
+    $path = explode('=>', $item['path']);
+    if (count($path) > 1) {
+        $data_in[Yii::t('home', $path[2])] = isset($data_in[Yii::t('home', $path[2])]) ? $data_in[Yii::t('home', $path[2])] + $item['amount'] : $item['amount'];
+        $pie_in_total += $item['amount'];
+    }
+}
+//现金
+$cash_in = Cash::model()->findAllByAttributes([], "path like '%>收入=%'");
+foreach ($cash_in as $item) {
+    $path = explode('=>', $item['path']);
+    if (count($path) > 1) {
+        $data_in[Yii::t('home', $path[2])] = isset($data_in[Yii::t('home', $path[2])]) ? $data_in[Yii::t('home', $path[2])] + $item['amount'] : $item['amount'];
+        $pie_in_total += $item['amount'];
+    }
+}
+
+//支出
+$data_out_chart = [];
+if (!empty($data_out))
+    foreach ($data_out as $cat => $value) {
+        $data_out_chart[] = ['category' => $cat, 'value' => $value];
     }
 else
-    $data_chart[] = ['category' => Yii::t('home', '银行现金'), 'value' => '1'];
-$data_str = json_encode($data_chart);
-$js_str = 'var chart = AmCharts.makeChart( "chartdiv-homepage-3d-pie", {
+    $data_out_chart[] = ['category' => Yii::t('home', '银行现金'), 'value' => '1'];
+$data_out_str = json_encode($data_out_chart);
+
+//收入
+$data_in_chart = [];
+if (!empty($data_in))
+    foreach ($data_in as $cat => $value) {
+        $data_in_chart[] = ['category' => $cat, 'value' => $value];
+    }
+else
+    $data_in_chart[] = ['category' => Yii::t('home', '银行现金'), 'value' => '1'];
+$data_in_str = json_encode($data_in_chart);
+
+//管理费用
+$data_manage_chart = [];
+if (!empty($data_manage))
+    foreach ($data_manage as $cat => $value) {
+        $data_manage_chart[] = ['category' => $cat, 'value' => $value];
+    }
+else
+    $data_manage_chart[] = ['category' => Yii::t('home', '管理费用'), 'value' => '0'];
+$data_manage_str = json_encode($data_manage_chart);
+
+$js_in_str = 'AmCharts.makeChart( "pie-in-div", {
   "type": "pie",
   "theme": "light",
-  "dataProvider": ' . $data_str . ',
+  "dataProvider": ' . $data_in_str . ',
   "valueField": "value",
   "titleField": "category",
   "startEffect": "elastic",
@@ -186,7 +258,47 @@ $js_str = 'var chart = AmCharts.makeChart( "chartdiv-homepage-3d-pie", {
   "export": {
     "enabled": true
   }
-} );
+} );';
+
+$js_out_str = ' AmCharts.makeChart( "pie-out-div", {
+  "type": "pie",
+  "theme": "light",
+  "dataProvider": ' . $data_out_str . ',
+  "valueField": "value",
+  "titleField": "category",
+  "startEffect": "elastic",
+  "startDuration": 2,
+  "labelRadius": 15,
+  "innerRadius": "50%",
+  "depth3D": 10,
+  "balloonText": "[[title]]<br><span style=font-size:14px><b>[[value]]</b> ([[percents]]%)</span>",
+  "angle": 15,
+  "export": {
+    "enabled": true
+  }
+} );';
+
+
+$js_manage_str = ' AmCharts.makeChart( "pie-manage-div", {
+  "type": "pie",
+  "theme": "light",
+  "dataProvider": ' . $data_manage_str . ',
+  "valueField": "value",
+  "titleField": "category",
+  "startEffect": "elastic",
+  "startDuration": 2,
+  "labelRadius": 15,
+  "innerRadius": "50%",
+  "depth3D": 10,
+  "balloonText": "[[title]]<br><span style=font-size:14px><b>[[value]]</b> ([[percents]]%)</span>",
+  "angle": 15,
+  "export": {
+    "enabled": true
+  }
+} );';
+
+
+/*
 jQuery( ".chart-input" ).off().on( "input change", function() {
   var property = jQuery( this ).data( "property" );
   var target = chart;
@@ -200,8 +312,12 @@ jQuery( ".chart-input" ).off().on( "input change", function() {
   target[ property ] = value;
   chart.validateNow();
 } );';
+*/
 
-$cs->registerScript('ChartsFlotchartsInitPie', $js_str, CClientScript::POS_READY);
+$cs->registerScript('pieIn', $js_in_str, CClientScript::POS_READY);
+$cs->registerScript('pieOut', $js_out_str, CClientScript::POS_READY);
+$cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
+
 
 ?>
 <!-- BEGIN PAGE HEADER-->
@@ -287,62 +403,119 @@ $cs->registerScript('ChartsFlotchartsInitPie', $js_str, CClientScript::POS_READY
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light">
-            <div class="portlet-title">
-                <div class="caption">
-                    <span class="caption-subject font-green-sharp bold uppercase"><?= Yii::t('home', '运营支出') ?></span>
-                </div>
-                <div class="actions">
-                    <div class="btn-group">
-                        <!--                        <a class="btn btn-sm green dropdown-toggle" href="javascript:;" data-toggle="dropdown"-->
-                        <!--                           aria-expanded="false"><span class="md-click-circle md-click-animate"-->
-                        <!--                                                       style="height: 95px; width: 95px; top: -38.5px; left: 23px;"></span>-->
-                        <!--                            本月 <i class="fa fa-angle-down"></i>-->
-                        <!--                        </a>-->
-                        <!--                        <ul class="dropdown-menu pull-right">-->
-                        <!--                            <li>-->
-                        <!--                                <a href="javascript:;">-->
-                        <!--                                    过去30天</a>-->
-                        <!--                            </li>-->
-                        <!--                            <li>-->
-                        <!--                                <a href="javascript:;">-->
-                        <!--                                    本月</a>-->
-                        <!--                            </li>-->
-                        <!--                            <li>-->
-                        <!--                                <a href="javascript:;">-->
-                        <!--                                    本季度</a>-->
-                        <!--                            </li>-->
-                        <!--                            <li>-->
-                        <!--                                <a href="javascript:;">-->
-                        <!--                                    今年</a>-->
-                        <!--                            </li>-->
-                        <!--                            <li class="divider"></li>-->
-                        <!--                            <li>-->
-                        <!--                                <a href="javascript:;">-->
-                        <!--                                    上月</a>-->
-                        <!--                            </li>-->
-                        <!--                            <li>-->
-                        <!--                                <a href="javascript:;">-->
-                        <!--                                    上季度</a>-->
-                        <!--                            </li>-->
-                        <!--                            <li>-->
-                        <!--                                <a href="javascript:;">-->
-                        <!--                                    去年</a>-->
-                        <!--                            </li>-->
-                        <!--                        </ul>-->
-                    </div>
-                </div>
-            </div>
             <div class="portlet-body">
-                <div class="col-md-3">
-                    <h1><?= $amount_3 ?></h1>
-                </div>
-                <div class="col-md-9">
-                    <div id="chartdiv-homepage-3d-pie">
+                <div class="tabbable-line">
+                    <ul class="nav nav-tabs ">
+                        <li class="">
+                            <a href="#tab_info_cent" data-toggle="tab" aria-expanded="false">
+                                <?= Yii::t('report', '信息中心') ?></a>
+                        </li>
+                        <li class="active">
+                            <a href="#tab_finan_sum" data-toggle="tab" aria-expanded="true">
+                                <?= Yii::t('report', '财务汇总') ?></a>
+                        </li>
+                        <li class="">
+                            <a href="#tab_tax_cent" data-toggle="tab" aria-expanded="false">
+                                <?= Yii::t('report', '税务中心') ?></a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane" id="tab_info_cent">
+1
+                        </div>
+                        <div class="tab-pane active" id="tab_finan_sum">
+
+
+
+                            <div>
+                                <div class="portlet light">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <span class="caption-subject font-green-sharp bold uppercase"><?= Yii::t('home', '运营收入') ?></span>
+                                        </div>
+                                        <div class="actions">
+                                            <div class="btn-group">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        <div class="col-md-3">
+                                            <h1><?= $pie_in_total; ?>元</h1>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div id="pie-in-div">
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="portlet light">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <span class="caption-subject font-green-sharp bold uppercase"><?= Yii::t('home', '运营支出') ?></span>
+                                        </div>
+                                        <div class="actions">
+                                            <div class="btn-group">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        <div class="col-md-3">
+                                            <h1><?= $pie_out_total; ?>元</h1>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div id="pie-out-div">
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div>
+                                <div class="portlet light">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <span class="caption-subject font-green-sharp bold uppercase"><?= Yii::t('home', '管理费用') ?></span>
+                                        </div>
+                                        <div class="actions">
+                                            <div class="btn-group">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        <div class="col-md-3">
+                                            <h1><?= $pie_manage_total; ?>元</h1>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div id="pie-manage-div">
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+
+                        <div class="tab-pane" id="tab_tax_cent">
+3
+                        </div>
                     </div>
                 </div>
-                <div class="clearfix"></div>
             </div>
         </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+
     </div>
 </div>
 
