@@ -1102,7 +1102,7 @@ class Transition extends CActiveRecord
         $entry_settlement = 1;
         $arr = Subjects::model()->actionListFirst();
         $sum = 0;
-        $hasDate = false;
+        $hasData = false;
         $year = getYear($entry_prefix);
         $month = getMon($entry_prefix);
         $day = date('t', strtotime("01.$month.$year"));
@@ -1127,10 +1127,10 @@ class Transition extends CActiveRecord
 //          $trans[] = $tran;
             if ($amount != 0) {
                 $tran->save();
-                $hasDate = true;
+                $hasData = true;
             }
         }
-        if ($hasDate > 0) {
+        if ($hasData > 0) {
             $tran = new Transition();
             $tran->entry_num_prefix = $entry_prefix;
             $tran->entry_num = $entry_num;
