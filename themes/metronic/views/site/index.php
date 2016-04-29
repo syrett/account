@@ -406,107 +406,121 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
             <div class="portlet-body">
                 <div class="tabbable-line">
                     <ul class="nav nav-tabs ">
-                        <li class="">
-                            <a href="#tab_info_cent" data-toggle="tab" aria-expanded="false">
-                                <?= Yii::t('report', '信息中心') ?></a>
-                        </li>
-                        <li class="active">
-                            <a href="#tab_finan_sum" data-toggle="tab" aria-expanded="true">
+                        <li class="active" >
+                            <a href="#tab_finan_sum" data-toggle="tab" aria-expanded="true" style="padding: 10px 25px;">
                                 <?= Yii::t('report', '财务汇总') ?></a>
                         </li>
+                        <li class="" >
+                            <a href="#tab_info_cent" data-toggle="tab" aria-expanded="false" style="padding: 10px 25px;">
+                                <?= Yii::t('report', '信息中心') ?></a>
+                        </li>
                         <li class="">
-                            <a href="#tab_tax_cent" data-toggle="tab" aria-expanded="false">
+                            <a href="#tab_tax_cent" data-toggle="tab" aria-expanded="false" style="padding: 10px 25px;">
                                 <?= Yii::t('report', '税务中心') ?></a>
+                        </li>
+                        <li class="">
+                            <a href="#tab_tax_law" data-toggle="tab" aria-expanded="false" style="padding: 10px 25px;">
+                                <?= Yii::t('report', '法律法规') ?></a>
                         </li>
                     </ul>
                     <div class="tab-content">
-                        <div class="tab-pane" id="tab_info_cent">
-1
-                        </div>
+
                         <div class="tab-pane active" id="tab_finan_sum">
 
-
-
-                            <div>
-                                <div class="portlet light">
-                                    <div class="portlet-title">
-                                        <div class="caption">
-                                            <span class="caption-subject font-green-sharp bold uppercase"><?= Yii::t('home', '运营收入') ?></span>
-                                        </div>
-                                        <div class="actions">
-                                            <div class="btn-group">
-                                            </div>
+                            <div class="row pie-m-height">
+                                <div class="pull-left pie-block">
+                                    <div class="pie-block-header">
+                                        <div><span class="caption-subject font-green-sharp bold uppercase"><?= Yii::t('home', '运营收入') ?></span></div>
+                                        <div><?= $pie_in_total; ?>元</div>
+                                    </div>
+                                    <div class="pie-block-body">
+                                        <div id="pie-in-div">
                                         </div>
                                     </div>
-                                    <div class="portlet-body">
-                                        <div class="col-md-3">
-                                            <h1><?= $pie_in_total; ?>元</h1>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <div id="pie-in-div">
-                                            </div>
-                                        </div>
-                                        <div class="clearfix"></div>
+                                    <div>&nbsp;</div>
+                                </div>
+                                <div class="pull-left pie-block">
+                                    <div class="pie-block-header">
+                                        <div><span class="caption-subject font-green-sharp bold uppercase"><?= Yii::t('home', '运营支出') ?></span></div>
+                                        <div><?= $pie_out_total; ?>元</div>
                                     </div>
+                                    <div class="pie-block-body">
+                                        <div id="pie-out-div">
+                                        </div>
+                                    </div>
+                                    <div>&nbsp;</div>
+                                </div>
+                                <div class="pull-left pie-block">
+                                    <div class="pie-block-header">
+                                        <div><span class="caption-subject font-green-sharp bold uppercase"><?= Yii::t('home', '管理费用') ?></span></div>
+                                        <div><?= $pie_manage_total; ?>元</div>
+                                    </div>
+                                    <div class="pie-block-body">
+                                        <div id="pie-manage-div">
+                                        </div>
+                                    </div>
+                                    <div>&nbsp;</div>
                                 </div>
                             </div>
 
-                            <div>
-                                <div class="portlet light">
-                                    <div class="portlet-title">
-                                        <div class="caption">
-                                            <span class="caption-subject font-green-sharp bold uppercase"><?= Yii::t('home', '运营支出') ?></span>
-                                        </div>
-                                        <div class="actions">
-                                            <div class="btn-group">
-                                            </div>
-                                        </div>
+                        </div>
+
+                        <div class="tab-pane" id="tab_info_cent">
+                            <div class="portlet light">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <span class="caption-subject "><?= Yii::t('home', '操作日志') ?></span>
                                     </div>
-                                    <div class="portlet-body">
-                                        <div class="col-md-3">
-                                            <h1><?= $pie_out_total; ?>元</h1>
+                                    <div class="actions">
+                                        <div class="btn-group">
                                         </div>
-                                        <div class="col-md-9">
-                                            <div id="pie-out-div">
-                                            </div>
-                                        </div>
-                                        <div class="clearfix"></div>
                                     </div>
                                 </div>
-                            </div>
+                                <div class="portlet-body">
+                                    <div class="col-md-12">
+                                        <table class="table table-striped table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th id="subjects-grid_c0">
+                                                    时间
+                                                </th>
+                                                <th id="subjects-grid_c1">
+                                                    用户
+                                                </th>
+                                                <th id="subjects-grid_c2">
+                                                    操作信息
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php foreach ($logs as $log) { ?>
+                                                <tr>
+                                                    <td> <?= date('m月d日 H:i', $log['created_at']);?></td>
+                                                    <td>
+                                                        <?php if($log->user_info !== null){
+                                                            echo $log->user_info->username;
+                                                        }; ?>
+                                                    </td>
+                                                    <td><?= $log['message']; ?></td>
+                                                </tr>
+                                            <?php } ?>
+                                            </tbody>
+                                        </table>
 
-
-                            <div>
-                                <div class="portlet light">
-                                    <div class="portlet-title">
-                                        <div class="caption">
-                                            <span class="caption-subject font-green-sharp bold uppercase"><?= Yii::t('home', '管理费用') ?></span>
-                                        </div>
-                                        <div class="actions">
-                                            <div class="btn-group">
-                                            </div>
-                                        </div>
                                     </div>
-                                    <div class="portlet-body">
-                                        <div class="col-md-3">
-                                            <h1><?= $pie_manage_total; ?>元</h1>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <div id="pie-manage-div">
-                                            </div>
-                                        </div>
-                                        <div class="clearfix"></div>
-                                    </div>
+                                    <div class="clearfix"></div>
                                 </div>
                             </div>
-
-
-
                         </div>
 
                         <div class="tab-pane" id="tab_tax_cent">
-3
+                            3
                         </div>
+
+                        <div class="tab-pane" id="tab_tax_law">
+                            4
+                        </div>
+
                     </div>
                 </div>
             </div>

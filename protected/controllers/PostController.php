@@ -174,6 +174,7 @@ class PostController extends Controller
             //生成附加税凭证
             Transition::createSurtax($date);
             Post::model()->postTransition($date);
+            OperatingRecords::insertLog(['msg'=>'过账：'.$date]);
             Yii::app()->user->setFlash('success', $date . "过账成功!");
             $result['status'] = 'success';
         } else{

@@ -93,6 +93,7 @@ class SubjectsController extends Controller
                     Transition::model()->updateSubject($old_sbj_number, $sbj_id);
                     Subjects::model()->hasSub($sbj_id);
                 }
+                OperatingRecords::insertLog(['msg'=>'添加科目：'.$model->sbj_number.', '.$model->sbj_name]);
                 Yii::app()->user->setFlash('success', "添加成功!");
                 $this->redirect(array('update', 'id' => $model->id));
             }
@@ -365,6 +366,7 @@ class SubjectsController extends Controller
                             Subjects::model()->hasSub($sbj_id);
                         }
                     }
+                    OperatingRecords::insertLog(['msg'=>'添加科目：'.$model->sbj_number.', '.$model->sbj_name]);
                     $arr['is_succ'] = true;
                     $arr['sbj_name'] = $bank_name;
                     $arr['sbj_number'] = $new_sbj[0];

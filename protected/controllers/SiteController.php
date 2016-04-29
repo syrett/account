@@ -71,7 +71,11 @@ class SiteController extends Controller
                 $need_chg_tax = true;
             }
         }
-        $this->render('index', ['need_chg_tax' => $need_chg_tax]);
+
+        //日志
+        $logs = OperatingRecords::model()->recently()->findAll();
+
+        $this->render('index', ['need_chg_tax' => $need_chg_tax, 'logs' => $logs]);
 //        $this->redirect($this->createUrl('transition/create'));
     }
 

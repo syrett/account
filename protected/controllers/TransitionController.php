@@ -1103,6 +1103,8 @@ class TransitionController extends Controller
     {
         if (Yii::app()->request->isPostRequest) {
             $result = true;
+            $has_reviewed = false;
+            $has_part = false;
             //凭证编号 ：2015050001
             foreach ($_POST['selectall'] as $item) {
                 $criteria = new CDbCriteria;
@@ -1115,10 +1117,26 @@ class TransitionController extends Controller
                 $trans = Transition::model()->findAll($criteria);
                 if (!empty($trans)) {
                     foreach ($trans as $item) {
+                        $tmp_re = $item->entry_reviewed;
                         $result = $item->setReviewed() ? $result : false;
+                        if ($tmp_re == 0 && $result) {
+                            //有审核
+                            $has_reviewed = true;
+                        } else {
+                            //只是部分审核了
+                            $has_part = true;
+                        }
                     }
                 }
             }
+            if ($has_reviewed) {
+                if ($has_part) {
+                    OperatingRecords::insertLog(['msg'=>'批量审核凭证（部分）']);
+                } else {
+                    OperatingRecords::insertLog(['msg'=>'批量审核凭证（全部）']);
+                }
+            }
+
             if (isset(Yii::app()->request->isAjaxRequest)) {
                 if ($result)
                     echo CJSON::encode(array('success' => true));
@@ -1136,6 +1154,8 @@ class TransitionController extends Controller
     public function actionUnReviewedAll()
     {
         if (Yii::app()->request->isPostRequest) {
+            $has_reviewed = false;
+            $has_part = false;
             //凭证编号 ：2015050001
             foreach ($_POST['selectall'] as $item) {
                 $criteria = new CDbCriteria;
@@ -1148,10 +1168,26 @@ class TransitionController extends Controller
                 $trans = Transition::model()->findAll($criteria);
                 if (!empty($trans)) {
                     foreach ($trans as $item) {
+                        if ($item->entry_reviewed == 1) {
+                            //有审核
+                            $has_reviewed = true;
+                        } else {
+                            //只是部分审核了
+                            $has_part = true;
+                        }
                         $item->unReviewed();
                     }
                 }
             }
+
+            if ($has_reviewed) {
+                if ($has_part) {
+                    OperatingRecords::insertLog(['msg'=>'取消审核凭证（部分）']);
+                } else {
+                    OperatingRecords::insertLog(['msg'=>'取消审核凭证（全部）']);
+                }
+            }
+
             if (isset(Yii::app()->request->isAjaxRequest)) {
                 echo CJSON::encode(array('success' => true));
             } else
@@ -1232,6 +1268,7 @@ class TransitionController extends Controller
         Transition::model()->settlement($entry_prefix);
         if (SYSDB != 'account_testabxc' && SYSDB != 'account_gbl' && SYSDB != 'account_201508089731')
             Stock::model()->saveWorth($entry_prefix);    //过账时的计提折旧操作，在结账时保存净值
+        OperatingRecords::insertLog(['msg'=>'期末结转：'.$entry_prefix]);
         return $result;
     }
 
@@ -1263,6 +1300,7 @@ class TransitionController extends Controller
         if ($flag) {
             $tran = Transition::model()->findByAttributes(['entry_num_prefix' => $entry_prefix]);
             $tran->setClosing(1);
+            OperatingRecords::insertLog(['msg'=>'结账：'.$entry_prefix]);
             Yii::app()->user->setFlash('success', $entry_prefix . "结账成功!");
         }
         $this->render('/site/' . ($flag ? 'success' : 'error'));
@@ -1312,6 +1350,7 @@ class TransitionController extends Controller
         if ($flag) {
             $tran = Transition::model()->findByAttributes(['entry_num_prefix' => $entry_prefix]);
             $tran->setClosing(1);
+            OperatingRecords::insertLog(['msg'=>'结账：'.$entry_prefix]);
             Yii::app()->user->setFlash('success', $entry_prefix . "结账成功!");
         }
         $this->render('/site/' . ($flag ? 'success' : 'error'));
@@ -1345,6 +1384,7 @@ class TransitionController extends Controller
         }
 
         if ($result) {
+            OperatingRecords::insertLog(['msg'=>'反结账：'.$edate]);
             Yii::app()->user->setFlash('success', $lastdate . "反结账成功!");
             $this->render('/site/success');
         } elseif ($date < Condom::model()->getStartTime())

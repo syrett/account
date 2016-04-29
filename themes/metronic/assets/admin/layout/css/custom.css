@@ -368,7 +368,7 @@ table#money .left {
 
 #chartdiv-homepage-3d-pie, #pie-out-div, #pie-in-div, #pie-manage-div {
     width: 100%;
-    height: 360px;
+    height: 400px;
     font-size: 11px;
 }
 
@@ -938,4 +938,25 @@ div.flash-success a {
 
 .tax-table-head {
     text-align: left;
+}
+
+.pie-m-height {
+    min-height: 380px;
+}
+
+.pie-block {
+    position:relative;
+    width: 360px;
+}
+
+.pie-block-header {
+    position:absolute;
+    top: 2em;
+    left: 2em;
+}
+
+.pie-block-body {
+    width: 480px;
+    position: absolute;
+    left: -60px;
 }
