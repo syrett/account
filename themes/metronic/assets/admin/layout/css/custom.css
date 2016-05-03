@@ -946,7 +946,7 @@ div.flash-success a {
 
 .pie-block {
     position:relative;
-    width: 360px;
+    width: 32%;
 }
 
 .pie-block-header {
@@ -956,7 +956,7 @@ div.flash-success a {
 }
 
 .pie-block-body {
-    width: 480px;
+    width: 136%;
     position: absolute;
-    left: -60px;
+    left: -18%;
 }

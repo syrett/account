@@ -219,7 +219,7 @@ if (!empty($data_out))
         $data_out_chart[] = ['category' => $cat, 'value' => $value];
     }
 else
-    $data_out_chart[] = ['category' => Yii::t('home', '银行现金'), 'value' => '1'];
+    $data_out_chart[] = ['category' => Yii::t('home', '无数据'), 'value' => '1'];
 $data_out_str = json_encode($data_out_chart);
 
 //收入
@@ -229,7 +229,7 @@ if (!empty($data_in))
         $data_in_chart[] = ['category' => $cat, 'value' => $value];
     }
 else
-    $data_in_chart[] = ['category' => Yii::t('home', '银行现金'), 'value' => '1'];
+    $data_in_chart[] = ['category' => Yii::t('home', '无数据'), 'value' => '1'];
 $data_in_str = json_encode($data_in_chart);
 
 //管理费用
@@ -239,7 +239,7 @@ if (!empty($data_manage))
         $data_manage_chart[] = ['category' => $cat, 'value' => $value];
     }
 else
-    $data_manage_chart[] = ['category' => Yii::t('home', '管理费用'), 'value' => '0'];
+    $data_manage_chart[] = ['category' => Yii::t('home', '无数据'), 'value' => '1'];
 $data_manage_str = json_encode($data_manage_chart);
 
 $js_in_str = 'AmCharts.makeChart( "pie-in-div", {
@@ -431,7 +431,7 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
                                 <div class="pull-left pie-block">
                                     <div class="pie-block-header">
                                         <div><span class="caption-subject font-green-sharp bold uppercase"><?= Yii::t('home', '运营收入') ?></span></div>
-                                        <div><?= $pie_in_total; ?>元</div>
+                                        <div><?php  if($pie_in_total != 0) {echo $pie_in_total.'元';} ?></div>
                                     </div>
                                     <div class="pie-block-body">
                                         <div id="pie-in-div">
@@ -442,7 +442,7 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
                                 <div class="pull-left pie-block">
                                     <div class="pie-block-header">
                                         <div><span class="caption-subject font-green-sharp bold uppercase"><?= Yii::t('home', '运营支出') ?></span></div>
-                                        <div><?= $pie_out_total; ?>元</div>
+                                        <div><?php if($pie_out_total != 0) {echo $pie_out_total.'元';} ?></div>
                                     </div>
                                     <div class="pie-block-body">
                                         <div id="pie-out-div">
@@ -453,7 +453,7 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
                                 <div class="pull-left pie-block">
                                     <div class="pie-block-header">
                                         <div><span class="caption-subject font-green-sharp bold uppercase"><?= Yii::t('home', '管理费用') ?></span></div>
-                                        <div><?= $pie_manage_total; ?>元</div>
+                                        <div><?php if($pie_manage_total != 0) {echo $pie_manage_total.'元';} ?></div>
                                     </div>
                                     <div class="pie-block-body">
                                         <div id="pie-manage-div">
