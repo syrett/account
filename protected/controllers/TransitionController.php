@@ -1319,6 +1319,8 @@ class TransitionController extends Controller
             Yii::app()->user->setFlash('error', $entry_prefix . "结账失败! 凭证未过账");
         } elseif (!Transition::model()->isAllClosing($entry_prefix)) {
             Yii::app()->user->setFlash('error', $entry_prefix . "结账失败! 已经结账");
+        } elseif (Transition::model()->isAllClosing(getPrevMonth($entry_prefix, 'Ym')) && $entry_prefix != Condom::getStartTime()) {
+            throw new CHttpException(400, getPrevMonth($entry_prefix, 'Ym') . "需要先结账!");
         } else
             $flag = true;
 
