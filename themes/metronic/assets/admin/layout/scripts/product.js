@@ -53,6 +53,6 @@ function addProduct(){
     $("#preOrder_" + item).select2("destroy").hide();
 }
 
-function setTransaction(id) {
-    $("#status_id_" + id).val("1")
-}
+//function setTransaction(id) {
+//    $("#status_id_" + id).val("2")
+//}
