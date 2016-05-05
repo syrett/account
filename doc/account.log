@@ -988,6 +988,19 @@ ALTER TABLE `subjects` ADD `sbj_type` INT NOT NULL COMMENT '纳税申报时，�
 ALTER TABLE `subjects` ADD `sbj_tax` VARCHAR(8) NOT NULL COMMENT '销售时的税率' AFTER `sbj_type`;
 update`stock` set out_date = cost_date;
 
+-- 2016年4月29日15:12:27
+CREATE TABLE `operating_records` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `created_at` int(10) UNSIGNED NOT NULL,
+  `type` tinyint(3) UNSIGNED NOT NULL,
+  `message` varchar(255) CHARACTER SET utf8 NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='logs';
+DELETE FROM `operating_records`;
+ALTER TABLE `operating_records` ADD PRIMARY KEY(`id`);
+ALTER TABLE `operating_records` CHANGE `id` `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+update subjects set sbj_name='教育费附加' where sbj_number regexp '^2221' and sbj_name='教育附加税';
 
 
 
