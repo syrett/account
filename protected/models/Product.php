@@ -440,8 +440,10 @@ class Product extends LFSModel
         //本期缴纳上期应纳税额       栏次       30
         //222101增值税子科目，未交增值税 或
         $sbj = Subjects::model()->findByAttributes(['sbj_name'=>'未交增值税'], 'sbj_number regexp "^222101"');
-        $data[30] = Product::model()->getTax($sbj, $type, $date, 'A', 'Transition', ' and entry_transaction = 1');
-
+        if($sbj != null)
+            $data[30] = Product::model()->getTax($sbj, $type, $date, 'A', 'Transition', ' and entry_transaction = 1');
+        else
+            $data[30] = ['A'=>0, 'C'=>0];
         //本期已缴税额    栏次      27=28+29+30+31
         $data[27] = $data[30];
 
@@ -504,6 +506,8 @@ class Product extends LFSModel
         $sbj = Subjects::model()->findByAttributes([], 'sbj_number regexp "^2221" and sbj_name like "%企业所得税%"');
         if($sbj)
             $data[13] = Product::getTax($sbj, $type, $date, '','Transition');
+        else
+            $data[13] = ['A'=>0, 'C'=>0];
 
         //应补（退）所得税额（11行-12行-13行-14行）        15
         $data[15]['C'] = $data[11]['C'] - $data[13]['C'];
