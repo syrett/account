@@ -143,7 +143,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                     <i class="icon-lock-open"></i><?= Yii::t('home', '账套权限') ?></a>
                             </li>
                             <?
-                            if(Yii::app()->language == 'zh_cn') {
+                            if (Yii::app()->language == 'zh_cn') {
                                 ?>
                                 <li>
                                     <!-- <?= $this->createUrl('options/setting') ?> -->
@@ -209,11 +209,12 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
             </div>
             <!-- END TOP NAVIGATION MENU -->
             <!-- BEGIN PAGE ACTIONS -->
-            <div class="clean" > </div>
+            <div class="clean"></div>
             <div class="page-actions">
                 <ul class="nav navbar-nav">
-                    <li class="mega-menu-dropdown" >
-                        <a id="dropSearch" data-toggle="dropdown" href="javascript:;" class="btn blue-dark dropdown-toggle"
+                    <li class="mega-menu-dropdown">
+                        <a id="dropSearch" data-toggle="dropdown" href="javascript:;"
+                           class="btn blue-dark dropdown-toggle"
                            aria-expanded="false">
                             <i class="fa fa-search fa-2x"></i>
                         </a>
@@ -402,7 +403,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                             </li>
                             <li>
                                 <a href="#tab_15_4" data-toggle="tab" aria-expanded="true">
-                                    <i class="fa fa-cogs"></i><?= Yii::t('home', '企业所得税税率'); ?>(%)
+                                    <i class="fa fa-cogs"></i><?= Yii::t('home', '企业所得税'); ?>(%)
                                 </a>
                             </li>
                         </ul>
@@ -474,9 +475,9 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                 foreach ($list as $key => $item) {
                                     $keys = explode(',', $item);
                                     foreach ($keys as $name) {
-                                        $sbj = Subjects::matchSubject($name, $key);
-                                        if ($sbj)
-                                            $arr[] = $sbj;
+                                        $sbj = Subjects::findSubject($name, $key, true);
+                                        if (count($sbj) != 0)
+                                            $arr[] = $sbj[0]->sbj_number;
                                     }
                                 }
 
@@ -507,31 +508,46 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                             </div>
                             <div class="tab-pane" id="tab_15_4" style="min-height: 300px;">
                                 <?
-                                $arr = ['6801'];
+                                $sbj = Subjects::model()->findByAttributes(['sbj_number' => 6801]);
+                                if ($sbj->has_sub == 1) {
+                                    $lists = Subjects::model()->list_sub($item);
+                                } else
+                                    $lists = [$sbj->attributes];
+                                foreach ($lists as $list) {
+                                    $option = Options::model()->findByAttributes(['entry_subject' => $list['sbj_number']]);
+                                    $value = $option == null ? 0 : $option->value;
+                                    $year = $option == null ? 0 : $option->year;
+                                    ?>
+                                    <div class="form-group form-horizontal">
+                                        <label class="col-sm-3 control-label"><?= Yii::t('import', '企业所得税税率') ?></label>
 
-                                foreach ($arr as $item) {
-                                    $sbj = Subjects::model()->findByAttributes(['sbj_number' => $item]);
-                                    if ($sbj->has_sub == 1) {
-                                        $lists = Subjects::model()->list_sub($item);
-                                    } else
-                                        $lists = [$sbj->attributes];
-                                    foreach ($lists as $list) {
-                                        $option = Options::model()->findByAttributes(['entry_subject' => $list['sbj_number']]);
-                                        $value = $option == null ? 0 : $option->value;
-                                        ?>
-                                        <div class="form-group form-horizontal">
-                                            <label class="col-sm-3 control-label"><?= $list['sbj_name'] ?></label>
-
-                                            <div class="input-group col-sm-4">
-                                                <input type="text" class="form-control"
-                                                       name="Options[<?= $list['sbj_number'] ?>][value]"
-                                                       value="<?= $value ?>">
-                                            </div>
+                                        <div class="input-group col-sm-4">
+                                            <input type="text" class="form-control"
+                                                   name="Options[<?= $list['sbj_number'] ?>][value]"
+                                                   value="<?= $value ?>">
                                         </div>
-                                        <?
+                                    </div>
+                                    <br />
 
-                                    }
+                                    <div class="form-group form-horizontal">
+                                        <label class="col-sm-3 control-label"></label>
+
+                                        <div class="input-group col-sm-6">
+                                            应税所得率A类请填0，B类按照实际应税所得率填写
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-horizontal">
+                                        <label class="col-sm-3 control-label"><?= Yii::t('import', '税务机关核定的应税所得率') ?></label>
+
+                                        <div class="input-group col-sm-4">
+                                            <input type="text" class="form-control"
+                                                   name="Options[<?= $list['sbj_number'] ?>][year]"
+                                                   value="<?= $year ?>">
+                                        </div>
+                                    </div>
+                                    <?
                                 }
+
                                 ?>
                             </div>
                         </div>
@@ -539,7 +555,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                 </div><!-- .scroller -->
                 <div class="modal-footer">
                     <?php
-                    echo CHtml::tag('button', array('encode' => false, 'class' => 'btn btn-primary',), '<span class="glyphicon glyphicon-floppy-disk"></span> '. Yii::t('import', '保存'));
+                    echo CHtml::tag('button', array('encode' => false, 'class' => 'btn btn-primary',), '<span class="glyphicon glyphicon-floppy-disk"></span> ' . Yii::t('import', '保存'));
                     ?>
                 </div>
                 <?php echo CHtml::endForm(); ?>
@@ -562,7 +578,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                         <div class="caption">
                             <span class="font-green-sharp">
                             <?php
-                            $title =  Yii::t('import', '整理凭证');
+                            $title = Yii::t('import', '整理凭证');
                             echo $title;
                             ?>
                             </span>
@@ -595,7 +611,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                 }
                                 $this->widget('ext.select2.ESelect2', array(
                                     'name' => 'date',
-                                    'id' => 'select2'.'_a'.$tmp_index++,
+                                    'id' => 'select2' . '_a' . $tmp_index++,
                                     'data' => $data,
                                     'htmlOptions' => array('class' => 'action')
                                 ));
@@ -629,7 +645,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                         <div class="caption">
                             <span class="font-green-sharp">
                             <?php
-                            $title =  Yii::t('import', '凭证过账');
+                            $title = Yii::t('import', '凭证过账');
                             echo $title;
                             ?>
                             </span>
@@ -662,7 +678,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                 }
                                 $this->widget('ext.select2.ESelect2', array(
                                     'name' => 'date',
-                                    'id' => 'select2'.'_b'.$tmp_index++,
+                                    'id' => 'select2' . '_b' . $tmp_index++,
                                     'data' => $data,
                                     'htmlOptions' => array('class' => 'action')
                                 ));
@@ -683,217 +699,217 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
     </div>
 </div>
 <!--  -->
-    <?php
-    if (User2::model()->checkVIP()) {
+<?php
+if (User2::model()->checkVIP()) {
     ?>
-        <!-- list settlement -->
-        <div class="modal fade" id="operListSettlement" tabindex="-1" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="portlet light">
-                            <div class="portlet-title">
-                                <div class="caption">
+    <!-- list settlement -->
+    <div class="modal fade" id="operListSettlement" tabindex="-1" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="portlet light">
+                        <div class="portlet-title">
+                            <div class="caption">
                             <span class="font-green-sharp">
                             <?php
                             $title = Yii::t('import', '期末结转');
                             echo $title;
                             ?>
                             </span>
-                                </div>
-                            </div>
-                            <div class="portlet-body">
-                                <!-- search-form -->
-                                <?php
-                                $status = $this->getTransitionDate('end');
-                                echo Yii::t('import', "已结账至日期") . ": " . $status['date'];
-                                $list = call_user_func(array('Transition', 'listSettlement'));
-
-                                if (empty($list)) {
-                                    ?>
-                                    <div class="unit-group">
-                                        <?= Yii::t('import', '没有数据需要处理') ?>
-                                    </div>
-                                    <?php
-                                } else {
-                                    $tmp_index = 0;
-                                    foreach ($list as $year => $months) {
-
-                                        echo CHtml::beginForm($this->createUrl('/Transition/listSettlement'), 'get');
-                                        ?>
-                                        <?= $year ?><?= Yii::t('import', '年') ?>
-                                        <?php
-                                        $data = array();
-                                        foreach ($months as $month) {
-                                            $data[$year . $month] = $month;
-                                        }
-                                        $this->widget('ext.select2.ESelect2', array(
-                                            'name' => 'date',
-                                            'id' => 'select2'.'_c'.$tmp_index++,
-                                            'data' => $data,
-                                            'htmlOptions' => array('class' => 'action')
-                                        ));
-                                        ?>
-                                        <input type="submit" class="btn btn-primary" value="<?= $title ?>"/>
-                                        <?php
-
-                                        echo CHtml::endForm();
-                                    }
-                                }
-
-                                ?>
                             </div>
                         </div>
-                    </div>
+                        <div class="portlet-body">
+                            <!-- search-form -->
+                            <?php
+                            $status = $this->getTransitionDate('end');
+                            echo Yii::t('import', "已结账至日期") . ": " . $status['date'];
+                            $list = call_user_func(array('Transition', 'listSettlement'));
 
+                            if (empty($list)) {
+                                ?>
+                                <div class="unit-group">
+                                    <?= Yii::t('import', '没有数据需要处理') ?>
+                                </div>
+                                <?php
+                            } else {
+                                $tmp_index = 0;
+                                foreach ($list as $year => $months) {
+
+                                    echo CHtml::beginForm($this->createUrl('/Transition/listSettlement'), 'get');
+                                    ?>
+                                    <?= $year ?><?= Yii::t('import', '年') ?>
+                                    <?php
+                                    $data = array();
+                                    foreach ($months as $month) {
+                                        $data[$year . $month] = $month;
+                                    }
+                                    $this->widget('ext.select2.ESelect2', array(
+                                        'name' => 'date',
+                                        'id' => 'select2' . '_c' . $tmp_index++,
+                                        'data' => $data,
+                                        'htmlOptions' => array('class' => 'action')
+                                    ));
+                                    ?>
+                                    <input type="submit" class="btn btn-primary" value="<?= $title ?>"/>
+                                    <?php
+
+                                    echo CHtml::endForm();
+                                }
+                            }
+
+                            ?>
+                        </div>
+                    </div>
                 </div>
+
             </div>
         </div>
-        <!--  -->
+    </div>
+    <!--  -->
 
-        <!-- list Closing -->
-        <div class="modal fade" id="operListClosing" tabindex="-1" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="portlet light">
-                            <div class="portlet-title">
-                                <div class="caption">
+    <!-- list Closing -->
+    <div class="modal fade" id="operListClosing" tabindex="-1" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="portlet light">
+                        <div class="portlet-title">
+                            <div class="caption">
                             <span class="font-green-sharp">
                             <?php
                             $title = Yii::t('import', '结账');
                             echo $title;
                             ?>
                             </span>
-                                </div>
-                            </div>
-                            <div class="portlet-body">
-                                <!-- search-form -->
-                                <?php
-                                $status = $this->getTransitionDate('end');
-                                echo Yii::t('import', "已结账至日期") . ": " . $status['date'];
-                                $list = call_user_func(array('Transition', 'listClosing'));
-
-                                if (empty($list)) {
-                                    ?>
-                                    <div class="unit-group">
-                                        <?= Yii::t('import', '没有数据需要处理') ?>
-                                    </div>
-                                    <?php
-                                } else {
-                                    $tmp_index = 0;
-                                    foreach ($list as $year => $months) {
-
-                                        echo CHtml::beginForm($this->createUrl('/Transition/listClosing'), 'get');
-                                        ?>
-                                        <?= $year ?><?= Yii::t('import', '年') ?>
-                                        <?php
-                                        $data = array();
-                                        foreach ($months as $month) {
-                                            $data[$year . $month] = $month;
-                                        }
-                                        $this->widget('ext.select2.ESelect2', array(
-                                            'name' => 'date',
-                                            'id' => 'select2'.'_d'.$tmp_index++,
-                                            'data' => $data,
-                                            'htmlOptions' => array('class' => 'action')
-                                        ));
-                                        ?>
-                                        <input type="submit" class="btn btn-primary" value="<?= $title ?>"/>
-                                        <?php
-
-                                        echo CHtml::endForm();
-                                    }
-                                }
-
-                                ?>
                             </div>
                         </div>
-                    </div>
+                        <div class="portlet-body">
+                            <!-- search-form -->
+                            <?php
+                            $status = $this->getTransitionDate('end');
+                            echo Yii::t('import', "已结账至日期") . ": " . $status['date'];
+                            $list = call_user_func(array('Transition', 'listClosing'));
 
+                            if (empty($list)) {
+                                ?>
+                                <div class="unit-group">
+                                    <?= Yii::t('import', '没有数据需要处理') ?>
+                                </div>
+                                <?php
+                            } else {
+                                $tmp_index = 0;
+                                foreach ($list as $year => $months) {
+
+                                    echo CHtml::beginForm($this->createUrl('/Transition/listClosing'), 'get');
+                                    ?>
+                                    <?= $year ?><?= Yii::t('import', '年') ?>
+                                    <?php
+                                    $data = array();
+                                    foreach ($months as $month) {
+                                        $data[$year . $month] = $month;
+                                    }
+                                    $this->widget('ext.select2.ESelect2', array(
+                                        'name' => 'date',
+                                        'id' => 'select2' . '_d' . $tmp_index++,
+                                        'data' => $data,
+                                        'htmlOptions' => array('class' => 'action')
+                                    ));
+                                    ?>
+                                    <input type="submit" class="btn btn-primary" value="<?= $title ?>"/>
+                                    <?php
+
+                                    echo CHtml::endForm();
+                                }
+                            }
+
+                            ?>
+                        </div>
+                    </div>
                 </div>
+
             </div>
         </div>
-        <!--  -->
+    </div>
+    <!--  -->
     <?php
-    } else {
-        ?>
-        <!--  -->
-        <div class="modal fade" id="operListSettlementcloseing" tabindex="-1" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="portlet light">
-                            <div class="portlet-title">
-                                <div class="caption">
+} else {
+    ?>
+    <!--  -->
+    <div class="modal fade" id="operListSettlementcloseing" tabindex="-1" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="portlet light">
+                        <div class="portlet-title">
+                            <div class="caption">
                             <span class="font-green-sharp">
                             <?php
                             $title = Yii::t('import', '结账');
                             echo $title;
                             ?>
                             </span>
-                                </div>
-                            </div>
-                            <div class="portlet-body">
-                                <!-- search-form -->
-                                <?php
-                                $status = $this->getTransitionDate('end');
-                                echo Yii::t('import', "已结账至日期") . ": " . $status['date'];
-                                $list = call_user_func(array('Transition', 'listSettlementcloseing'));
-
-                                if (empty($list)) {
-                                    ?>
-                                    <div class="unit-group">
-                                        <?= Yii::t('import', '没有数据需要处理') ?>
-                                    </div>
-                                    <?php
-                                } else {
-                                    $tmp_index = 0;
-                                    foreach ($list as $year => $months) {
-
-                                        echo CHtml::beginForm($this->createUrl('/Transition/listSettlementcloseing'), 'get');
-                                        ?>
-                                        <?= $year ?><?= Yii::t('import', '年') ?>
-                                        <?php
-                                        $data = array();
-                                        foreach ($months as $month) {
-                                            $data[$year . $month] = $month;
-                                        }
-                                        $this->widget('ext.select2.ESelect2', array(
-                                            'name' => 'date',
-                                            'id' => 'select2'.'_e'.$tmp_index++,
-                                            'data' => $data,
-                                            'htmlOptions' => array('class' => 'action')
-                                        ));
-                                        ?>
-                                        <input type="submit" class="btn btn-primary" value="<?= $title ?>"/>
-                                        <?php
-
-                                        echo CHtml::endForm();
-                                    }
-                                }
-
-                                ?>
                             </div>
                         </div>
-                    </div>
+                        <div class="portlet-body">
+                            <!-- search-form -->
+                            <?php
+                            $status = $this->getTransitionDate('end');
+                            echo Yii::t('import', "已结账至日期") . ": " . $status['date'];
+                            $list = call_user_func(array('Transition', 'listSettlementcloseing'));
 
+                            if (empty($list)) {
+                                ?>
+                                <div class="unit-group">
+                                    <?= Yii::t('import', '没有数据需要处理') ?>
+                                </div>
+                                <?php
+                            } else {
+                                $tmp_index = 0;
+                                foreach ($list as $year => $months) {
+
+                                    echo CHtml::beginForm($this->createUrl('/Transition/listSettlementcloseing'), 'get');
+                                    ?>
+                                    <?= $year ?><?= Yii::t('import', '年') ?>
+                                    <?php
+                                    $data = array();
+                                    foreach ($months as $month) {
+                                        $data[$year . $month] = $month;
+                                    }
+                                    $this->widget('ext.select2.ESelect2', array(
+                                        'name' => 'date',
+                                        'id' => 'select2' . '_e' . $tmp_index++,
+                                        'data' => $data,
+                                        'htmlOptions' => array('class' => 'action')
+                                    ));
+                                    ?>
+                                    <input type="submit" class="btn btn-primary" value="<?= $title ?>"/>
+                                    <?php
+
+                                    echo CHtml::endForm();
+                                }
+                            }
+
+                            ?>
+                        </div>
+                    </div>
                 </div>
+
             </div>
         </div>
-        <!--  -->
-        <?php
-    }
-    ?>
+    </div>
+    <!--  -->
+    <?php
+}
+?>
 
 <!-- listAntiSettlement -->
 <div class="modal fade" id="operListAntiSettlement" tabindex="-1" data-keyboard="false">
@@ -941,7 +957,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                 }
                                 $this->widget('ext.select2.ESelect2', array(
                                     'name' => 'date',
-                                    'id' => 'select2'.'_f'.$tmp_index++,
+                                    'id' => 'select2' . '_f' . $tmp_index++,
                                     'data' => $data,
                                     'htmlOptions' => array('class' => 'action')
                                 ));
@@ -1009,7 +1025,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                 }
                                 $this->widget('ext.select2.ESelect2', array(
                                     'name' => 'date',
-                                    'id' => 'select2'.'_g'.$tmp_index++,
+                                    'id' => 'select2' . '_g' . $tmp_index++,
                                     'data' => $data,
                                     'htmlOptions' => array('class' => 'action')
                                 ));
@@ -1075,7 +1091,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                         </li>
                         <li>
                             <!-- <a href="<?= $this->createUrl('Site/operation&operation=listReorganise') ?>"> -->
-                                <a href="" data-target="#operListReorganise" data-toggle="modal">
+                            <a href="" data-target="#operListReorganise" data-toggle="modal">
                                 <i class="glyphicon glyphicon-list"></i>
                                 <?= Yii::t('home', '整理凭证') ?></a>
                         </li>
@@ -1086,7 +1102,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                         </li>
                         <li>
                             <!--<a href="<?= $this->createUrl('Site/operation&operation=listPost') ?>">-->
-                                <a href="" data-target="#operListPost" data-toggle="modal">
+                            <a href="" data-target="#operListPost" data-toggle="modal">
                                 <i class="glyphicon glyphicon-import"></i>
                                 <?= Yii::t('home', '过账') ?></a>
                         </li>
@@ -1095,13 +1111,13 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                             ?>
                             <li>
                                 <!-- <a href="<?= $this->createUrl('Site/operation&operation=listSettlement') ?>">-->
-                                    <a href="" data-target="#operListSettlement" data-toggle="modal">
+                                <a href="" data-target="#operListSettlement" data-toggle="modal">
                                     <i class="glyphicon glyphicon-random"></i>
                                     <?= Yii::t('home', '期末结转') ?></a>
                             </li>
                             <li>
                                 <!-- <a href="<?= $this->createUrl('Site/operation&operation=listClosing') ?>"> -->
-                                    <a href="" data-target="#operListClosing" data-toggle="modal">
+                                <a href="" data-target="#operListClosing" data-toggle="modal">
                                     <i class="glyphicon glyphicon-check"></i>
                                     <?= Yii::t('home', '结账') ?></a>
                             </li>
@@ -1110,7 +1126,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                             ?>
                             <li>
                                 <!--<a href="<?= $this->createUrl('Site/operation&operation=listSettlementcloseing') ?>">-->
-                                    <a href="" data-target="#operListSettlementcloseing" data-toggle="modal">
+                                <a href="" data-target="#operListSettlementcloseing" data-toggle="modal">
                                     <i class="glyphicon glyphicon-check"></i>
                                     <?= Yii::t('home', '结账') ?></a>
                             </li>
@@ -1119,7 +1135,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                         ?>
                         <li>
                             <!-- <a href="<?= $this->createUrl('Site/operation&operation=listAntiSettlement') ?>"> -->
-                                <a href="" data-target="#operListAntiSettlement" data-toggle="modal">
+                            <a href="" data-target="#operListAntiSettlement" data-toggle="modal">
                                 <i class="glyphicon glyphicon-repeat"></i>
                                 <?= Yii::t('home', '反结账') ?></a>
                         </li>
@@ -1356,8 +1372,8 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
 <script src="<?php echo $baseUrl; ?>/assets/admin/pages/scripts/index.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 <script>
-    $(function(){
-        $('#mListTransition').on('click', function(){
+    $(function () {
+        $('#mListTransition').on('click', function () {
             $('#dropSearch').dropdown('toggle');
             $('#operListTransition').modal('toggle');
         });

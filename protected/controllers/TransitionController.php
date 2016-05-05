@@ -1232,8 +1232,10 @@ class TransitionController extends Controller
     public function actionSettlement($entry_prefix)
     {
         $status = $this->settlementTran($entry_prefix);
-        if ($status['status'] === 'success')
+        if ($status['status'] === 'success'){
+            Yii::app()->user->setFlash('success', $entry_prefix . "结转成功!");
             $this->render('/site/success');
+        }
         else {
             throw new CHttpException(400, $status['msg']);
         }
@@ -1265,7 +1267,8 @@ class TransitionController extends Controller
             $result['status'] = 'failed';
             $result['msg'] = "已经结转!";
         }
-        Transition::model()->settlement($entry_prefix);
+        if($result['status'] == 'success')
+            Transition::model()->settlement($entry_prefix);
         if (SYSDB != 'account_testabxc' && SYSDB != 'account_gbl' && SYSDB != 'account_201508089731')
             Stock::model()->saveWorth($entry_prefix);    //过账时的计提折旧操作，在结账时保存净值
         OperatingRecords::insertLog(['msg'=>'期末结转：'.$entry_prefix]);

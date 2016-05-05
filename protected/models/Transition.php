@@ -112,6 +112,7 @@ class Transition extends CActiveRecord
         "status_id" => "1",
 
     ];
+
     /**
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
@@ -122,6 +123,7 @@ class Transition extends CActiveRecord
     {
         return parent::model($className);
     }
+
     /**
      * @return array validation rules for model attributes.
      */
@@ -220,11 +222,12 @@ class Transition extends CActiveRecord
         $transition = $dataProvider->getData();
         return empty($transition);
     }
+
     public function isAllForward($date)
     {
         $this->unsetAttributes();
         $this->entry_forward = 0;
-        $this->entry_num_prefix = substr($date,0,6);
+        $this->entry_num_prefix = substr($date, 0, 6);
         $this->select = "entry_num_prefix,entry_num,entry_forward";
         $dataProvider = $this->search();
         $transition = $dataProvider->getData();
@@ -235,7 +238,7 @@ class Transition extends CActiveRecord
     {
         $this->unsetAttributes();
         $this->entry_closing = 1;
-        $this->entry_num_prefix = substr($date,0,6);
+        $this->entry_num_prefix = substr($date, 0, 6);
         $this->select = "entry_num_prefix,entry_num,entry_forward";
         $dataProvider = $this->search();
         $transition = $dataProvider->getData();
@@ -279,16 +282,16 @@ class Transition extends CActiveRecord
         }
 
         if ($this->query_multi_str !== null) {
-            if(is_numeric($this->query_multi_str) &&mb_strlen($this->query_multi_str) == 10) {
+            if (is_numeric($this->query_multi_str) && mb_strlen($this->query_multi_str) == 10) {
                 $a = substr($this->query_multi_str, 0, 6);
                 $b = intval(substr($this->query_multi_str, 6));
-                $criteria->addCondition('t.entry_num_prefix = "'.$a.'"');
-                $criteria->addCondition('t.entry_num = "'.$b.'"');
+                $criteria->addCondition('t.entry_num_prefix = "' . $a . '"');
+                $criteria->addCondition('t.entry_num = "' . $b . '"');
             }
 
             $tmp_timestamp = strtotime($this->query_multi_str);
             if ($tmp_timestamp !== false) {
-                $criteria->addCondition('t.entry_date = "'.date('Y-m-d', $tmp_timestamp).'"', 'OR');
+                $criteria->addCondition('t.entry_date = "' . date('Y-m-d', $tmp_timestamp) . '"', 'OR');
             }
             if ($this->query_multi_str != '')
                 $criteria->addCondition('t.entry_memo like "%' . $this->query_multi_str . '%"', 'OR');
@@ -351,26 +354,26 @@ class Transition extends CActiveRecord
 
         if (isset($_REQUEST['multi_search'])) {
 
-            if(is_numeric($_REQUEST['multi_search']) &&mb_strlen($_REQUEST['multi_search']) == 10) {
+            if (is_numeric($_REQUEST['multi_search']) && mb_strlen($_REQUEST['multi_search']) == 10) {
                 $a = substr($_REQUEST['multi_search'], 0, 6);
-                $b = substr($_REQUEST['multi_search'], 6)+0;
-                $criteria->addCondition('t.entry_num_prefix = "'.$a.'"');
-                $criteria->addCondition('t.entry_num = "'.$b.'"');
+                $b = substr($_REQUEST['multi_search'], 6) + 0;
+                $criteria->addCondition('t.entry_num_prefix = "' . $a . '"');
+                $criteria->addCondition('t.entry_num = "' . $b . '"');
             }
 
             $tmp_timestamp = strtotime($_REQUEST['multi_search']);
             if ($tmp_timestamp !== false) {
-                $criteria->addCondition('t.entry_date = "'.date('Y-m-d', $tmp_timestamp).'"', 'OR');
+                $criteria->addCondition('t.entry_date = "' . date('Y-m-d', $tmp_timestamp) . '"', 'OR');
                 $month = false;
             }
             if ($_REQUEST['multi_search'] != '')
-            $criteria->addCondition('t.entry_memo like "%' . $_REQUEST['multi_search'] . '%"', 'OR');
+                $criteria->addCondition('t.entry_memo like "%' . $_REQUEST['multi_search'] . '%"', 'OR');
 
         }
 
 
         $criteria->compare('id', $this->id);
-        $month?$criteria->compare('entry_num_prefix', $this->entry_num_prefix, true):'';
+        $month ? $criteria->compare('entry_num_prefix', $this->entry_num_prefix, true) : '';
         $criteria->compare('entry_num', $this->entry_num, true);
         $criteria->compare('entry_num_prefix', $this->entry_number, true);
         $criteria->compare('entry_date', $this->entry_date, true);
@@ -427,7 +430,7 @@ class Transition extends CActiveRecord
     /*
      * 有凭证的日期
      */
-    public static function listDate($arr=array(), $options = [])
+    public static function listDate($arr = array(), $options = [])
     {
         $options['group'] = 'entry_num_prefix';
         $criteria = new CDbCriteria($options);
@@ -448,11 +451,12 @@ class Transition extends CActiveRecord
         }
         return $arr;
     }
-    public static function listDate2($arr=array(), $sbj_arr=[])
+
+    public static function listDate2($arr = array(), $sbj_arr = [])
     {
         $criteria = new CDbCriteria(array('group' => 'entry_num_prefix'));
-        if(!empty($sbj_arr)){
-            foreach($sbj_arr as $key => $item){
+        if (!empty($sbj_arr)) {
+            foreach ($sbj_arr as $key => $item) {
                 $sbj_arr[$key] = "entry_subject like '$item%'";
             }
             $sbj = implode(' OR ', $sbj_arr);
@@ -524,13 +528,14 @@ class Transition extends CActiveRecord
         $tran = new Transition();
         return $tran->listDate(array('entry_closing' => 0));
     }
+
     /*
      * 可反结账日期
      */
     public static function listAntiSettlement()
     {
         $tran = new Transition();
-        return $tran->listDate(['entry_posting' => 1], ['order'=> 'entry_num_prefix desc']);
+        return $tran->listDate(['entry_posting' => 1], ['order' => 'entry_num_prefix desc']);
     }
 
     /*
@@ -541,6 +546,7 @@ class Transition extends CActiveRecord
 //        $tran = new Transition();
 //        return $tran->listDate2([],['1601']);
     }
+
     /*
      * 列出无形资产
      */
@@ -549,6 +555,7 @@ class Transition extends CActiveRecord
 //        $tran = new Transition();
 //        return $tran->listDate2([],['1601']);
     }
+
     /*
      * 列出在建工程
      */
@@ -557,6 +564,7 @@ class Transition extends CActiveRecord
 //        $tran = new Transition();
 //        return $tran->listDate2([],['1601']);
     }
+
     /*
      * 列出长期待摊
      */
@@ -584,8 +592,8 @@ class Transition extends CActiveRecord
     {
         $sql = 'select date from `transitiondate` ';
         $date = Yii::app()->db->createCommand($sql)->queryRow();
-        if ($date['date']!=null)
-            return $date['date'].'01';
+        if ($date['date'] != null)
+            return $date['date'] . '01';
         else {
             $date = Condom::model()->getStartTime();
             $date = new DateTime($date . '01');
@@ -602,7 +610,7 @@ class Transition extends CActiveRecord
         $sql = 'select date from `condomdate` ';
         $date = Yii::app()->db->createCommand($sql)->queryRow();
         if (!empty($date['date']))
-            return $date['date'].'01';
+            return $date['date'] . '01';
         else {
             $date = Condom::model()->getStartTime();
             $date = new DateTime($date . '01');
@@ -639,22 +647,22 @@ class Transition extends CActiveRecord
         return $date['date'];
     }
 
-    public static function setReviewedMul($date,$type=1)
+    public static function setReviewedMul($date, $type = 1)
     {
         $command = Yii::app()->db->createCommand();
         $tran = new Transition();
-        if($type==1)
-        $command->update($tran->tableName(), ['entry_reviewed' => 1, 'entry_reviewer' => Yii::app()->user->id],
-                'entry_num_prefix=:date and '.
-                'entry_reviewed!=:reviewed and '.
+        if ($type == 1)
+            $command->update($tran->tableName(), ['entry_reviewed' => 1, 'entry_reviewer' => Yii::app()->user->id],
+                'entry_num_prefix=:date and ' .
+                'entry_reviewed!=:reviewed and ' .
                 'entry_creater!=:creator'
-            ,
-            [
-                ':date' => $date,
-                ':reviewed' => 0,
-                ':creator' => Yii::app()->user->id,
-            ]);
-        elseif($type==2)    //生成的结账凭证，审核人可以是创建人
+                ,
+                [
+                    ':date' => $date,
+                    ':reviewed' => 0,
+                    ':creator' => Yii::app()->user->id,
+                ]);
+        elseif ($type == 2)    //生成的结账凭证，审核人可以是创建人
             $command->update($tran->tableName(), ['entry_reviewed' => 1, 'entry_reviewer' => Yii::app()->user->id],
                 'entry_num_prefix=:date',
                 [
@@ -694,22 +702,22 @@ class Transition extends CActiveRecord
         $arr['entry_date'] = $starttime;
         if (is_array($items)) {
             $arr = array_merge($arr, $items);
-            if (isset($items['A'])||isset($items['B'])) { //未严格限制必须某一列必须有数据才可
+            if (isset($items['A']) || isset($items['B'])) { //未严格限制必须某一列必须有数据才可
                 $excel = range('A', 'I');
-                foreach($excel as $item){
-                    if(!isset($items[$item]))
+                foreach ($excel as $item) {
+                    if (!isset($items[$item]))
                         $items[$item] = '';
                 }
 
-                switch($type){
+                switch ($type) {
                     case 'bank':
                     case 'cash':
                         $arr['target'] = trim($items['A']);
-                        if(User2::checkVIP()){
+                        if (User2::checkVIP()) {
                             $arr['entry_date'] = convertDate($items['B']);
                             $arr['entry_memo'] = trim($items['C']);
                             $amount = trim($items['D']) != '' ? $items['D'] : $items['E'];
-                        }else{
+                        } else {
                             $arr['entry_name'] = trim($items['B']);
                             $arr['entry_date'] = convertDate($items['C']);
                             $arr['entry_memo'] = trim($items['D']);
@@ -721,10 +729,10 @@ class Transition extends CActiveRecord
                         $arr['entry_memo'] = trim($items['B']);
                         $arr['entry_appendix_id'] = Vendor::model()->matchName(trim($items['C']));
                         $arr['entry_name'] = Stock::model()->matchName(trim($items['D']));
-                        $arr['model'] = trim(isset($items['E'])?$items['E']:'');
-                        $amount = trim(isset($items['F'])?$items['F']:'');
-                        $arr['count'] = trim(isset($items['G'])?$items['G']:'');
-                        $arr['department_id'] = Department::model()->matchName(trim(isset($items['H'])?$items['H']:''));
+                        $arr['model'] = trim(isset($items['E']) ? $items['E'] : '');
+                        $amount = trim(isset($items['F']) ? $items['F'] : '');
+                        $arr['count'] = trim(isset($items['G']) ? $items['G'] : '');
+                        $arr['department_id'] = Department::model()->matchName(trim(isset($items['H']) ? $items['H'] : ''));
                         break;
                     case 'product':
                         $arr['entry_date'] = convertDate($items['A']);
@@ -736,23 +744,23 @@ class Transition extends CActiveRecord
                         $arr['count'] = trim($items['G']);
                         break;
                     case 'cost':    //成本结转
-                        $arr['entry_date'] = convertDate($items['A'],'Ymd');
+                        $arr['entry_date'] = convertDate($items['A'], 'Ymd');
                         $arr['entry_name'] = trim($items['B']);
                         $arr['model'] = trim($items['C']);
                         $arr['count'] = trim($items['D']);
-                        $stock = Stock::model()->findAllByAttributes(['name'=>$arr['entry_name'],'model'=>$arr['model']],
-                            ['condition'=>'cost_date = "" or cost_date like "'.$arr['entry_date'].'%"','order'=>'in_date']);
+                        $stock = Stock::model()->findAllByAttributes(['name' => $arr['entry_name'], 'model' => $arr['model']],
+                            ['condition' => 'cost_date = "" or cost_date like "' . $arr['entry_date'] . '%"', 'order' => 'in_date']);
                         $amount = 0;
-                        if(empty($stock))
+                        if (empty($stock))
                             return;
-                        $count = $arr['count']>=count($stock)?count($stock):count($stock)-$arr['count'];
-                        foreach($stock as $sto){
-                            if($count>0)
+                        $count = $arr['count'] >= count($stock) ? count($stock) : count($stock) - $arr['count'];
+                        foreach ($stock as $sto) {
+                            if ($count > 0)
                                 $amount += $sto['in_price'];
                             $count--;
                         }
                         $sbjname = Subjects::getName($sto['entry_subject']);
-                        $arr['entry_subject'] = Subjects::model()->matchSubject($sbjname,[6401]);
+                        $arr['entry_subject'] = Subjects::model()->matchSubject($sbjname, [6401]);
                         $arr['entry_transaction'] = 1;
                         $arr['subject_2'] = $sto['entry_subject'];
 //                        $arr['order_no'] = trim($items['A']);
@@ -794,11 +802,11 @@ class Transition extends CActiveRecord
 //                        $arr['stocks_price'] = implode("\r\n",$stocks_price);
                         break;
                     case 'salary':
-                        $date = convertDate($items['D'],'Ymd');
-                        $arr['entry_date'] = strlen($date)>6?$date:$date.'01';
+                        $date = convertDate($items['D'], 'Ymd');
+                        $arr['entry_date'] = strlen($date) > 6 ? $date : $date . '01';
                         $arr['employee_name'] = trim($items['B']);
-                        $employee = Employee::model()->findByAttributes(['name'=>$arr['employee_name']]);
-                        $employee_id = $employee?$employee->id:0;
+                        $employee = Employee::model()->findByAttributes(['name' => $arr['employee_name']]);
+                        $employee_id = $employee ? $employee->id : 0;
                         $arr['department_name'] = Department::model()->getName(Employee::model()->getDepart($employee_id));
                         $arr['salary_amount'] = round2(str_replace(",", "", trim($items['E'])));
                         $arr['bonus_amount'] = round2(str_replace(",", "", trim($items['F'])));
@@ -806,28 +814,28 @@ class Transition extends CActiveRecord
                         $payment = $arr['salary_amount'] + $arr['bonus_amount'] + $arr['benefit_amount'];
                         $arr['base_amount'] = round2($employee->base);
                         $arr['base_2_amount'] = round2($employee->base_2);
-                        $arr['social_personal'] = round2(ceil($employee->base*10.5/10)/10); //有分，直接进角
-                        $arr['provident_personal'] = round2(ceil($employee->base_2*7/100));   //有角，直接进分
+                        $arr['social_personal'] = round2(ceil($employee->base * 10.5 / 10) / 10); //有分，直接进角
+                        $arr['provident_personal'] = round2(ceil($employee->base_2 * 7 / 100));   //有角，直接进分
                         $arr['before_tax'] = round2($payment - $arr['social_personal'] - $arr['provident_personal']);
                         $arr['personal_tax'] = round2(Employee::getPersonalTax($arr['before_tax']));
                         $arr['after_tax'] = round2($arr['before_tax'] - $arr['personal_tax']);
-                        $arr['social_company'] = round2(ceil($employee->base*35/10)/10);
-                        $arr['provident_company'] = round2(ceil($employee->base_2*7/100));
+                        $arr['social_company'] = round2(ceil($employee->base * 35 / 10) / 10);
+                        $arr['provident_company'] = round2(ceil($employee->base_2 * 7 / 100));
                         //根据员工部门判断属于什么费用
                         $arr['entry_subject'] = Department::matchSubject($employee->department_id, '工资');
                         //查看是否已经导入过该月工资
-                        $salary = Salary::model()->findByAttributes(['employee_id'=>$employee->id,'entry_date'=>$arr['entry_date']]);
-                        if($salary)
+                        $salary = Salary::model()->findByAttributes(['employee_id' => $employee->id, 'entry_date' => $arr['entry_date']]);
+                        if ($salary)
                             $arr['error'][] = '已经导入过该月工资';
                         $amount = $payment;
                         break;
                     case 'reimburse':
-                        $date = convertDate($items['B'],'Ymd');
-                        $arr['entry_date'] = strlen($date)>6?$date:$date.'01';
+                        $date = convertDate($items['B'], 'Ymd');
+                        $arr['entry_date'] = strlen($date) > 6 ? $date : $date . '01';
                         $arr['entry_memo'] = trim($items['C']);
                         $arr['employee_name'] = trim($items['A']);
-                        $employee = Employee::model()->findByAttributes(['name'=>$arr['employee_name']]);
-                        $employee_id = $employee?$employee->id:0;
+                        $employee = Employee::model()->findByAttributes(['name' => $arr['employee_name']]);
+                        $employee_id = $employee ? $employee->id : 0;
                         $arr['department_name'] = Department::model()->getName(Employee::model()->getDepart($employee_id));
                         $arr['travel_amount'] = str_replace(",", "", trim($items['D']));
                         $arr['benefit_amount'] = str_replace(",", "", trim($items['E']));
@@ -841,8 +849,8 @@ class Transition extends CActiveRecord
                         $arr['service_amount'] = str_replace(",", "", trim($items['M']));
                         $arr['stamping_amount'] = str_replace(",", "", trim($items['N']));
                         $total = 0;
-                        foreach($arr as $key => $item){
-                            if(substr($key,-7)=='_amount')
+                        foreach ($arr as $key => $item) {
+                            if (substr($key, -7) == '_amount')
                                 $total += $item;
                         }
                         //根据员工部门判断属于什么费用
@@ -865,18 +873,18 @@ class Transition extends CActiveRecord
                             $arr[$key] = convertDate($item);
                     }
                 }
-                $arr['entry_name'] = isset($items['name']) ? $items['name'] : (isset($items['entry_name'])?$items['entry_name']:'');
-                $arr['target'] = isset($items['target'])?$items['target']:$arr['entry_name'];
-                $arr['entry_date'] = isset($items['date']) ? $items['date'] : (isset($items['entry_date'])?$items['entry_date']:$arr['entry_date']);
+                $arr['entry_name'] = isset($items['name']) ? $items['name'] : (isset($items['entry_name']) ? $items['entry_name'] : '');
+                $arr['target'] = isset($items['target']) ? $items['target'] : $arr['entry_name'];
+                $arr['entry_date'] = isset($items['date']) ? $items['date'] : (isset($items['entry_date']) ? $items['entry_date'] : $arr['entry_date']);
                 $arr['entry_memo'] = isset($items['memo']) ? $items['memo'] : $arr['entry_memo'];
                 $arr['realorder'] = isset($items['realorder']) ? $items['realorder'] : '';
                 $arr['entry_amount'] = str_replace(",", "", trim(isset($items['amount']) ? $items['amount'] : $arr['entry_amount']));
                 $arr['entry_subject'] = isset($items['subject']) ? $items['subject'] : $arr['entry_subject'];
-                if(!empty($items['client_id']))
+                if (!empty($items['client_id']))
                     $arr['entry_appendix_id'] = $items['client_id'];
-                if(!empty($items['vendor_id']))
+                if (!empty($items['vendor_id']))
                     $arr['entry_appendix_id'] = $items['vendor_id'];
-                if(!empty($items['employee_id'])){
+                if (!empty($items['employee_id'])) {
                     $employee = Employee::model()->findByPk($items['employee_id']);
                     $arr['employee_name'] = Employee::getName($items['employee_id']);
                     $arr['department_name'] = Employee::model()->getDepart($items['employee_id'], 'name');
@@ -889,35 +897,41 @@ class Transition extends CActiveRecord
         return $arr;
     }
 
-    public static function getSheetDataFromImage($data,$conf){
+    public static function getSheetDataFromImage($data, $conf)
+    {
         $arr = [];
         foreach ($data as $key => $item) {
             $rowsData = json_decode($item);
-            if($rowsData->errNum == '0'){   //匹配成功
+            if ($rowsData->errNum == '0') {   //匹配成功
                 $rows = $rowsData->retData;
-                if($conf[0]==true)      //第一行不需要，直接跳过
+                if ($conf[0] == true)      //第一行不需要，直接跳过
                     array_shift($rows);
                 foreach ($rows as $row => $api) {
-                    if(empty($arr[$row]))
+                    if (empty($arr[$row]))
                         $arr[$row] = Transition::$input_arr;
-                    switch($conf[1][$key]){
+                    switch ($conf[1][$key]) {
                         case 'target_name':
-                            $arr[$row]['target'] = $api->word;break;
+                            $arr[$row]['target'] = $api->word;
+                            break;
                         case 'memo':
-                            $arr[$row]['entry_memo'] = $api->word;break;
+                            $arr[$row]['entry_memo'] = $api->word;
+                            break;
                         case 'name':
-                            $arr[$row]['entry_name'] = $api->word;break;
+                            $arr[$row]['entry_name'] = $api->word;
+                            break;
                         case 'date':
-                            $arr[$row]['entry_date'] = $api->word;break;
+                            $arr[$row]['entry_date'] = $api->word;
+                            break;
                         case 'amount':
-                            $arr[$row]['entry_amount'] = $api->word;break;
+                            $arr[$row]['entry_amount'] = $api->word;
+                            break;
                         default:
                             break;
                     }
 
                 }
 
-            }else{
+            } else {
 
             }
         }
@@ -1093,6 +1107,7 @@ class Transition extends CActiveRecord
      */
     public function settlement($entry_prefix)
     {
+
         $this->reorganise($entry_prefix); //结账前先整理
         $entry_num = $this->tranSuffix($entry_prefix);
         $entry_memo = '结转凭证';
@@ -1102,12 +1117,80 @@ class Transition extends CActiveRecord
         $entry_settlement = 1;
         $arr = Subjects::model()->actionListFirst();
         $sum = 0;
+        $amount = 0;
         $hasData = false;
         $year = getYear($entry_prefix);
         $month = getMon($entry_prefix);
         $day = date('t', strtotime("01.$month.$year"));
         $date = "$year-$month-$day 23:59:59";
         $date = date('Y-m-d H:i:s', strtotime($date));
+        //企业所得税按季度计提
+        //还需要生成企业所得税凭证
+        if ($month == '03' || $month == '06' || $month == '09' || $month == '12') {
+            //根据损益表，3个月的本期净利润，
+            $profit = new Profit();
+            if ($month == '03') {
+                $profit->date = $entry_prefix;  //日期有可能需要多少号
+                $data = $profit->genProfitData();
+                $amount = $data['net_profit']['sum_year'];
+            } else {
+                $profit->date = $entry_prefix;
+                $data = $profit->genProfitData();
+
+                $lastdate = '0' . intval($month) - 3;    //上一个季度的利润
+                $profit->date = $lastdate;
+                $data1 = $profit->genProfitData();
+                $amount = $data['net_profit']['sum_year'] - $data1['net_profit']['sum_year'];
+            }
+
+            if ($amount > 0) {    //利润大于0才需要交企业所得税
+                $option = Options::model()->findByAttributes([], 'entry_subject regexp "^6801"');
+                if ($option != null)
+                    $amount = $amount * $option->value / 100;
+                else
+                    $amount = $amount * 0.25;   //企业所得税税率默认25%；
+                $tran = new Transition();
+                $tran->entry_num_prefix = $entry_prefix;
+                $tran->entry_num = $entry_num;
+                $tran->entry_memo = '企业所得税';
+                $tran->entry_date = $date;
+                $tran->entry_transaction = 1;
+                $tran->entry_creater = $entry_creater;
+                $tran->entry_editor = $entry_editor;
+                $tran->entry_settlement = $entry_settlement;
+                $tran->entry_reviewer = $entry_reviewer;
+                $tran->entry_subject = '6801';              //本年利润
+                $tran->entry_amount = $amount;
+
+                $tran2 = clone $tran;
+                $tran->save();
+
+                $tran2->entry_num = $entry_num;
+
+                $tran2->entry_transaction = 2;
+                $tran2->entry_subject = Subjects::matchSubject('企业所得税', '2221');
+                $tran2->save();
+            }
+        }
+        $profit = new Profit();
+        if ($month == '01') {
+            $profit->date = $entry_prefix;  //日期有可能需要多少号
+            $data = $profit->genProfitData();
+            $amount = $data['net_profit']['sum_year'];
+        } else {
+            $profit->date = $entry_prefix;
+            $data = $profit->genProfitData();
+
+            $lastdate = '0' . intval($month) - 1;    //上一个季度的利润
+            $profit->date = $lastdate;
+            $data1 = $profit->genProfitData();
+            $amount = $data['net_profit']['sum_year'] - $data1['net_profit']['sum_year'];
+        }
+
+        //结转凭证
+
+        $amount = 0;
+        $entry_num++;
         foreach ($arr as $sub) {
             $tran = new Transition();
             $tran->entry_num_prefix = $entry_prefix;
@@ -1121,7 +1204,7 @@ class Transition extends CActiveRecord
             $tran->entry_reviewer = $entry_reviewer;
             $tran->entry_subject = $sub['id'];
             $amount = $this->getEntry_amount($entry_prefix, $sub['id']);
-            $amount = $sub['sbj_cat'] == '4'?-$amount:$amount;
+            $amount = $sub['sbj_cat'] == '4' ? -$amount : $amount;
             $tran->entry_amount = $amount;
             $sum = $sub['sbj_cat'] == '4' ? $sum + $amount : $sum - $amount;     //该科目合计多少
 //          $trans[] = $tran;
@@ -1145,9 +1228,11 @@ class Transition extends CActiveRecord
             $tran->entry_amount = $sum;
             $tran->save();
             //如果是12月，将本年利润过到，未分配利润下
-            if(substr($entry_prefix,4,6) == 12)
+            if (substr($entry_prefix, 4, 6) == '12')
                 $tran->passProfit();
         }
+
+
 //        if ($sum == 0)
         $tran->setForward(1);
     }
@@ -1179,7 +1264,7 @@ class Transition extends CActiveRecord
             $last = $row['entry_num'];
             $num++;
         }
-        OperatingRecords::insertLog(['msg'=>'整理凭证：'.$prefix]);
+        OperatingRecords::insertLog(['msg' => '整理凭证：' . $prefix]);
     }
 
     public static function delData($prefix)
@@ -1218,7 +1303,8 @@ class Transition extends CActiveRecord
      * 本年利润过度到未分配利润
      * 借本年利润，贷利润分配/未分配利润；
      */
-    public function passProfit(){
+    public function passProfit()
+    {
         $entry_prefix = $this->entry_num_prefix;
         $entry_num = $this->tranSuffix($entry_prefix);
         $tran = $this;
@@ -1232,7 +1318,7 @@ class Transition extends CActiveRecord
         $tran2->entry_transaction = 2;
         $tran1->entry_subject = '4103';
         $tran2->entry_subject = Subjects::matchSubject('未分配利润', '4104');
-        if($tran1->save() and $tran2->save()){
+        if ($tran1->save() and $tran2->save()) {
 
         }
 
@@ -1256,7 +1342,8 @@ class Transition extends CActiveRecord
             return 0;
     }
 
-    public function setForward($bool = 1){
+    public function setForward($bool = 1)
+    {
         return Transition::model()->updateAll(array('entry_forward' => $bool),
             'entry_num_prefix=:prefix',
             array(':prefix' => $this->entry_num_prefix));
@@ -1274,9 +1361,9 @@ class Transition extends CActiveRecord
      */
     public function listSubjects($type = '')
     {
-        if($type == '')
+        if ($type == '')
             $sql = "select * from subjects where has_sub=0 order by concat(`sbj_number`) asc"; //
-        elseif($type == 'all')
+        elseif ($type == 'all')
             $sql = "select * from subjects order by concat(`sbj_number`) asc"; //
         $First = Subjects::model()->findAllBySql($sql);
         $arr = array();
@@ -1357,9 +1444,9 @@ class Transition extends CActiveRecord
         if ($this->reviewAccess()) {
             $this->entry_reviewed = 1;
             $this->entry_reviewer = Yii::app()->user->id;
-            if($this->save())
+            if ($this->save())
                 return true;
-        }else
+        } else
             return false;
     }
 
@@ -1410,46 +1497,48 @@ class Transition extends CActiveRecord
     /*
      * 修改科目凭证科目为父科目
      */
-    public static function updateSubject($sbj, $sbj2){
+    public static function updateSubject($sbj, $sbj2)
+    {
         $criteria = new CDbCriteria();
-        $criteria->addCondition('entry_subject='. $sbj);
+        $criteria->addCondition('entry_subject=' . $sbj);
         $rows = Transition::model()->updateAll(['entry_subject' => $sbj2], $criteria);
     }
 
     /*
      * 税率
      */
-    public static function getTaxArray($type='sale'){
+    public static function getTaxArray($type = 'sale')
+    {
         $dbname = substr(SYSDB, 8);
-        $condom = Condom::model()->findByAttributes(["dbname"=>$dbname]);
-        if($condom->taxpayer_t==2){//小规模纳税人
-            if($type=='sale'){
+        $condom = Condom::model()->findByAttributes(["dbname" => $dbname]);
+        if ($condom->taxpayer_t == 2) {//小规模纳税人
+            if ($type == 'sale') {
                 return [
-                    '3'=>'3%'.Yii::t('import', '增值税发票'),
-                    '5'=>'5%'.Yii::t('import', '营业税发票'),
+                    '3' => '3%' . Yii::t('import', '增值税发票'),
+                    '5' => '5%' . Yii::t('import', '营业税发票'),
                 ];
-            }elseif($type=='purchase'){
+            } elseif ($type == 'purchase') {
                 return [
-                    '0'=>Yii::t('import', '其他发票'),
+                    '0' => Yii::t('import', '其他发票'),
                 ];
             }
 
-        }else{  //一般纳税人
-            if($type=='sale'){
+        } else {  //一般纳税人
+            if ($type == 'sale') {
                 return [
 //                    '3'=>'3%'.Yii::t('import', '增值税发票'),
-                    '5'=>'5%'.Yii::t('import', '营业税发票'),
-                    '6'=>'6%'.Yii::t('import', '增值税发票'),
-                    '13'=>'13%'.Yii::t('import', '增值税发票'),
-                    '17'=>'17%'.Yii::t('import', '增值税发票'),
+                    '5' => '5%' . Yii::t('import', '营业税发票'),
+                    '6' => '6%' . Yii::t('import', '增值税发票'),
+                    '13' => '13%' . Yii::t('import', '增值税发票'),
+                    '17' => '17%' . Yii::t('import', '增值税发票'),
                 ];
-            }elseif($type=='purchase'){
+            } elseif ($type == 'purchase') {
                 return [
-                    '3'=>'3%'.Yii::t('import', '增值税专用发票'),
-                    '6'=>'6%'.Yii::t('import', '增值税专用发票'),
-                    '13'=>'13%'.Yii::t('import', '增值税专用发票'),
-                    '17'=>'17%'.Yii::t('import', '增值税专用发票'),
-                    '0'=>Yii::t('import', '其他发票'),
+                    '3' => '3%' . Yii::t('import', '增值税专用发票'),
+                    '6' => '6%' . Yii::t('import', '增值税专用发票'),
+                    '13' => '13%' . Yii::t('import', '增值税专用发票'),
+                    '17' => '17%' . Yii::t('import', '增值税专用发票'),
+                    '0' => Yii::t('import', '其他发票'),
                 ];
             }
         }
@@ -1459,16 +1548,17 @@ class Transition extends CActiveRecord
     /*
      * 科目数组
      */
-    public static function getSubjectArray($arr, $options=[]){
+    public static function getSubjectArray($arr, $options = [])
+    {
         $subject = new Subjects();
 //        ['reject' => ['工资', '社保', '公积金', '折旧费', '研发费'],'prefix'=>'_'
-        if(empty($options))
+        if (empty($options))
             $options = ['reject' => [
-                            Yii::t('import', '工资'),
-                            Yii::t('import', '社保'),
-                            Yii::t('import', '公积金'),
-                            Yii::t('import', '折旧费'),
-                            Yii::t('import', '研发费')],'prefix'=>'_'];
+                Yii::t('import', '工资'),
+                Yii::t('import', '社保'),
+                Yii::t('import', '公积金'),
+                Yii::t('import', '折旧费'),
+                Yii::t('import', '研发费')], 'prefix' => '_'];
         $result = $subject->getitem($arr, '', $options);
         return $result;
     }
@@ -1476,48 +1566,51 @@ class Transition extends CActiveRecord
     /*
      *
      */
-    public static function getAllMount($sbj,$transaction,$type='',$date=''){
+    public static function getAllMount($sbj, $transaction, $type = '', $date = '')
+    {
         $arr = Subjects::model()->get_sub($sbj, 2);
         $result = 0;
-        foreach($arr as $item){
-            $result += self::getMount($item['sbj_number'],$transaction,$type,$date);
+        foreach ($arr as $item) {
+            $result += self::getMount($item['sbj_number'], $transaction, $type, $date);
         }
         return $result;
     }
+
     /*
      *
      */
-    public static function getMount($sbj,$transaction,$type='',$date=''){
-        $attributes = ['entry_subject'=>$sbj,'entry_transaction'=>$transaction];
+    public static function getMount($sbj, $transaction, $type = '', $date = '')
+    {
+        $attributes = ['entry_subject' => $sbj, 'entry_transaction' => $transaction];
         $where = '1=1';
-        if($date=='')
-            $date = date('Y'). '-01-01 00:00:00';
-        if($type == 'before')
+        if ($date == '')
+            $date = date('Y') . '-01-01 00:00:00';
+        if ($type == 'before')
             $where .= " and entry_date < '$date'";
         else
             $where .= " and entry_date >= '$date'";
         $models = Transition::model()->findAllByAttributes($attributes, $where);
         $mount = 0;
-        if(!empty($models)){
-            foreach($models as $item){
+        if (!empty($models)) {
+            foreach ($models as $item) {
                 $mount += $item->entry_amount;
             }
             return $mount;
-        }
-        else
+        } else
             return 0;
     }
 
     /*
      * 快速生成model，
      */
-    public function copyModel($sbj, $amount=[]){
-        foreach($sbj as $key => $item){
+    public function copyModel($sbj, $amount = [])
+    {
+        foreach ($sbj as $key => $item) {
             $model = new Transition();
             $model->attributes = $this->attributes;
             $model->entry_subject = $item;
-            if(isset($amount[$key]))
-            $model->entry_amount = $amount[$key];
+            if (isset($amount[$key]))
+                $model->entry_amount = $amount[$key];
             $temp[] = $model;
         }
         return $temp;
@@ -1526,60 +1619,61 @@ class Transition extends CActiveRecord
     /*
      * 生成附加税凭证
      */
-    public static function createSurtax($date){
+    public static function createSurtax($date)
+    {
         $tran1 = new Transition();
         $tran1->entry_num_prefix = $date;
         $tran1->entry_num = Transition::model()->tranSuffix($date);
         $tran1->entry_date = date('Y-m-d 00:00:00', strtotime($date . '01'));
-        $date2 = substr($date,0,4). '-'. substr($date,4);
+        $date2 = substr($date, 0, 4) . '-' . substr($date, 4);
         $memo = "附加税-$date";
         $tran1->entry_name = $memo;
         $tran1->entry_memo = $memo;
         $tran1->entry_transaction = 1;
         $tran1->entry_subject = 6403;
         //根据企业类型，小规模纳税人或一般纳税人
-        $old = Transition::model()->findByAttributes(['entry_memo'=>$memo, 'entry_name' => $memo, 'entry_transaction' => 1]);
-        $con = Condom::model()->findByAttributes(['dbname'=>substr(SYSDB,8)]);
-        if($con==null)
+        $old = Transition::model()->findByAttributes(['entry_memo' => $memo, 'entry_name' => $memo, 'entry_transaction' => 1]);
+        $con = Condom::model()->findByAttributes(['dbname' => substr(SYSDB, 8)]);
+        if ($con == null)
             throw new CException(404, '当前账套已不存在');
         $sbj2221 = Subjects::matchSubject('营业税', '2221');
-        $command=Yii::app()->db->createCommand();
+        $command = Yii::app()->db->createCommand();
         $command->select('SUM(entry_amount) AS amount');
         $command->from($tran1->tableName());
         $command->where("entry_subject like '$sbj2221%' and entry_transaction = 2 and entry_date like '$date2%'");
         $amount2221 = $command->queryRow();
-        $amount2221 = isset($amount2221['amount'])?$amount2221['amount']:0;
+        $amount2221 = isset($amount2221['amount']) ? $amount2221['amount'] : 0;
 
-        if($con->taxpayer_t == 1){  //一般纳税人
+        if ($con->taxpayer_t == 1) {  //一般纳税人
             //应交税费/营业税 贷方 + a(应交税费/增值税/销项-进项)，a<=0不计算，
             $sbjVat = Subjects::matchSubject('增值税', 2221);
             $sbjSal = Subjects::matchSubject('销项', $sbjVat);
             $sbjPur = Subjects::matchSubject('进项', $sbjVat);
-            $command=Yii::app()->db->createCommand();
+            $command = Yii::app()->db->createCommand();
             $command->select('SUM(entry_amount) AS amount');
             $command->from($tran1->tableName());
             $command->where("entry_subject like '$sbjSal%' and entry_transaction = 2 and entry_date like '$date2%'");
             $amountSal = $command->queryRow();
-            $amountSal = isset($amountSal['amount'])?$amountSal['amount']:0;
+            $amountSal = isset($amountSal['amount']) ? $amountSal['amount'] : 0;
 
-            $command=Yii::app()->db->createCommand();
+            $command = Yii::app()->db->createCommand();
             $command->select('SUM(entry_amount) AS amount');
             $command->from($tran1->tableName());
             $command->where("entry_subject like '$sbjPur%' and entry_transaction = 1 and entry_date like '$date2%'");
             $amountPur = $command->queryRow();
-            $amountPur = isset($amountPur['amount'])?$amountPur['amount']:0;
+            $amountPur = isset($amountPur['amount']) ? $amountPur['amount'] : 0;
 
             $amountVat = $amountSal - $amountPur;
-            $base = $amountVat>0?round2($amount2221 + $amountVat):round2($amount2221);
-        }elseif($con->taxpayer_t ==2 ){ //小规模纳税人
+            $base = $amountVat > 0 ? round2($amount2221 + $amountVat) : round2($amount2221);
+        } elseif ($con->taxpayer_t == 2) { //小规模纳税人
             //应交税费/营业税 贷方 + a(应交税费/增值税 贷方)
             $sbjVat = Subjects::matchSubject('增值税', $sbj2221);
-            $command=Yii::app()->db->createCommand();
+            $command = Yii::app()->db->createCommand();
             $command->select('SUM(entry_amount) AS amount');
             $command->from($tran1->tableName());
             $command->where("entry_subject like '$sbjVat%' and entry_transaction = 2 and entry_date like '$date2%'");
             $amountVat = $command->queryRow();
-            $amountVat = isset($amountVat['amount'])?$amountVat['amount']:0;
+            $amountVat = isset($amountVat['amount']) ? $amountVat['amount'] : 0;
 
             $base = round2($amount2221 + $amountVat);
         }
@@ -1593,23 +1687,23 @@ class Transition extends CActiveRecord
             $tax[] = $option;
             $taxAll += $option['value'];
         }
-        $amount = round2($base * $taxAll/100);
+        $amount = round2($base * $taxAll / 100);
         //如果之前有附加税，且借方金额和现在的凭证相等，则不再重新计算附加税
-        if($old==null || $old['entry_amount'] != $amount){
+        if ($old == null || $old['entry_amount'] != $amount) {
             Transition::model()->deleteAllByAttributes(['entry_memo' => $memo, 'entry_name' => $memo]);
-            if($amount > 0){
+            if ($amount > 0) {
                 $tran1->entry_creater = Yii::app()->user->id;
                 $tran1->entry_editor = Yii::app()->user->id;
                 $tran1->entry_reviewed = 1;
                 $tran1->entry_reviewer = 1;
                 $amount = 0;
-                foreach($tax as $item){
+                foreach ($tax as $item) {
                     $tran = new Transition();
                     $tran->attributes = $tran1->attributes;
                     $tran->entry_transaction = 2;
                     $tran->entry_subject = $item['entry_subject'];
-                    $tran->entry_amount = round2($base * $item['value']/100);
-                    if($tran->entry_amount > 0){
+                    $tran->entry_amount = round2($base * $item['value'] / 100);
+                    if ($tran->entry_amount > 0) {
                         $tran->save();
                         $amount += $tran->entry_amount;
                     }

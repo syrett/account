@@ -1337,4 +1337,40 @@ eof;
         else
             return $this->order_no;
     }
+
+    /*
+     * 获取支出或收入的金额
+     * @type 支出或收入
+     * @keys    类别
+     * @sbj     具体到某个科目
+     * @option  是否含税
+     */
+    public function getAmount($type, $zone, $date, $keys='', $option= '', $sbj = '')
+    {
+        $amount = 0;
+        if($keys == '')
+            $keys = Bank::getIncome();
+        if(!is_array($keys))
+            $keys = [$keys];
+        $where = $option==1?'entry_subject like "1002%"': 'entry_subject not like "1002%" and entry_subject not like "2221%"';
+        foreach ($keys as $key) {
+            if($zone=='month')
+                $whereBank = ' date <= "'. substr($date, 0, 6). '31" and date >= "'. substr($date, 0, 6). '01"';
+            else{
+                $quarter = getQuarter($date);
+                $whereBank = " date >= '" . $quarter['start'] . "' and date <= '" . $quarter['end'] . "'";
+            }
+            $banks = Bank::model()->findAllByAttributes(['status_id'=> 1, 'entry_transaction'=> $type=='支出'?1:2], "$whereBank and path like '%$type%' and path like '%$key%'");//已经生成凭证的记录才需要统计金额
+            if($banks != null){
+                foreach ($banks as $bank) {
+                    $tran = Transition::model()->findByAttributes(['data_type'=>'bank', 'data_id'=>$bank->id], $where);
+                    if($tran != null){
+                        $amount += $tran->entry_amount;
+                    }
+                }
+            }
+        }
+
+        return $amount;
+    }
 }

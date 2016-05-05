@@ -90,6 +90,6 @@ $(document).ready(function () {
 
 $(window).bind("load", function () {
     $('table input').bind('keyup', function () {
-        checkInputPrice(this)
+        checkInputPrice2(this)
     });
 });

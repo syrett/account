@@ -378,8 +378,8 @@ class Stock extends LFSModel
             'in_date' => $this->in_date ? $this->in_date : Condom::model()->getStartTime() . '01',
             'in_price' => str_replace(',', '', $this->in_price),
             'worth' => str_replace(',', '', $this->worth),
-            'value_month' => $this->value_month,
-            'value_rate' => $this->value_rate,
+            'value_month' => getNum($this->value_month),
+            'value_rate' => getNum($this->value_rate),
         ];
         while ($count-- > 0) {
             $model = new Stock();

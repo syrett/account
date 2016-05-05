@@ -271,3 +271,7 @@ function getQuarter($date){
     }
     return $result;
 }
+
+function getNum($str){
+    return preg_replace('/[^\.0123456789]/s', '', $str);
+}

@@ -709,6 +709,7 @@ class StockController extends Controller
      * 固定资产期初余额
      */
     public function actionBalance_1601(){
+        $status = [];
         //检查是否导入过固定资产的期初，已经导入过就直接跳转到查看页面
         $stocks = Stock::model()->find(['condition'=>'order_no is null and (entry_subject like "1601%" or entry_subject like "1701%" or entry_subject like "1801%")']);
         if($stocks)

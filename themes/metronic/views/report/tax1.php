@@ -10,7 +10,6 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scrip
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scripts/tax1.js', CClientScript::POS_HEAD);
 $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scripts/excel_export.js', CClientScript::POS_HEAD);
 
-$data = Product::getTax1_1();
 ?>
 
 <div class="alert alert-info">

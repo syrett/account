@@ -436,62 +436,7 @@ $cs->registerScript('ChartsFlotchartsInitPie',$expense_income_data, CClientScrip
                             </div>
                             <div class="col-md-6">
                                 <div class="col-md-3 col-xs-3">
-                                    <a href="#">
-                                        <img
-                                            src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/tax2_report.jpg'; ?>"
-                                            class="img-thumbnail"/>
-                                    </a>
-                                </div>
-                                <div class="col-md-9">
-                                    <h4 class="media-heading"><a
-                                            href="#"><?= Yii::t('report', '营业税纳税申报表') ?></a>
-                                    </h4>
-                                    <p>
-                                        <? if (Yii::app()->language == 'zh_cn') {
-                                            ?>
-                                            现金流量表的出现，主要是要反映出资产负债表中各个项目对现金流量的影响，并根据其用途划分为经营、投资及融资三个活动分类。
-                                            <?
-                                        } else {
-                                            ?>
-                                            The customer is listed in the current transaction, the amount of the transaction and received payment and unpaid amount.
-                                            <?
-                                        }
-                                        ?>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <p>&nbsp;</p>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="col-md-3 col-xs-3">
-                                    <a href="#">
-                                        <img
-                                            src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/tax3_report.jpg'; ?>"
-                                            class="img-responsive img-thumbnail"/>
-                                    </a>
-                                </div>
-                                <div class="col-md-9">
-                                    <h4 class="media-heading"><a
-                                            href="#"><?= Yii::t('report', '个人所得税纳税申报表') ?></a>
-                                    </h4>
-                                    <p>
-                                        <? if (Yii::app()->language == 'zh_cn') {
-                                            ?>
-                                            现金流量表的出现，主要是要反映出资产负债表中各个项目对现金流量的影响，并根据其用途划分为经营、投资及融资三个活动分类。
-                                            <?
-                                        } else {
-                                            ?>
-                                            The sub supplier lists the amount of the purchase transaction, the payment term and the unpaid amount.
-                                            <?
-                                        }
-                                        ?>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="col-md-3 col-xs-3">
-                                    <a href="#">
+                                    <a href="<?= $this->createUrl('report/tax4') ?>">
                                         <img
                                             src="<?php echo Yii::app()->theme->baseUrl . '/assets/custom/tax4_report.jpg'; ?>"
                                             class="img-thumbnail"/>
@@ -499,7 +444,7 @@ $cs->registerScript('ChartsFlotchartsInitPie',$expense_income_data, CClientScrip
                                 </div>
                                 <div class="col-md-9">
                                     <h4 class="media-heading"><a
-                                            href="#"><?= Yii::t('report', '企业所得税纳税申报表') ?></a>
+                                            href="<?= $this->createUrl('report/tax4') ?>"><?= Yii::t('report', '企业所得税纳税申报表') ?></a>
                                     </h4>
                                     <p>
                                         <? if (Yii::app()->language == 'zh_cn') {

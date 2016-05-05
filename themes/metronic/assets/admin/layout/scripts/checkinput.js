@@ -30,6 +30,14 @@ var checkInputPrice = function(ob) {
         ob.value = b.exec(ob.value);
     }
 }
+//有负数
+var checkInputPrice2 = function(ob) {
+    var invalidChars = /^-?[1-9]+\.?\d?\d?$|^0\.\d?\d?$/;
+    if(!invalidChars.test(ob.value)) {
+        var b = /-?[1-9]?\d*\.?\d?\d?|0\.\d?\d?/;
+        ob.value = b.exec(ob.value);
+    }
+}
 function checkinput1(ob){
     checkInputPrice(ob);
     sumAmount(ob);

@@ -142,21 +142,21 @@ class ReportController extends Controller
         $subject_name = "";
         $data_array = [];
         if ($subject_id != '') {
-            $sbj = Subjects::model()->findByAttributes(['sbj_number'=>$subject_id]);
+            $sbj = Subjects::model()->findByAttributes(['sbj_number' => $subject_id]);
             $subject_name = $sbj->sbj_name;
-            if($sbj->has_sub == 1){
+            if ($sbj->has_sub == 1) {
                 $list = $sbj->list_sub();
                 foreach ($list as $item) {
                     $data_array[] = $model->genData($item['sbj_number'], $year, $fm, $tm);
                 }
-            }else
+            } else
                 $data = $model->genData($subject_id, $year, $fm, $tm);
         } else {
             $data = array();
         }
 
         $company = Condom::model()->getName();
-        $this->render("detail", array("dataProviderArray" => count($data_array) == 0?[$data]:$data_array,
+        $this->render("detail", array("dataProviderArray" => count($data_array) == 0 ? [$data] : $data_array,
             "subject_name" => $subject_name,
             "company" => $company,
             "fromMonth" => $year . '-' . $fm,
@@ -197,20 +197,20 @@ class ReportController extends Controller
 
         $data = [];
         $clients = Client::model()->findAll();
-        if(!empty($clients)){
+        if (!empty($clients)) {
             foreach ($clients as $client) {
-                $data[$client->company] = ['before'=>0,'unreceived'=>0,'received'=>0,'left'=>0];
-                $sbj = Subjects::model()->findByAttributes(['sbj_name'=>$client->company], 'sbj_number like "1122%"');
-                if($sbj)
-                    $data[$client->company] = Subjects::model()->getReport($sbj->sbj_number,convertDate($date.'01', 'Y-m-01 00:00:00'));
-                $sbj = Subjects::model()->findByAttributes(['sbj_name'=>$client->company], 'sbj_number like "2203%"');
-                if($sbj){
-                    $data2 = Subjects::model()->getReport($sbj->sbj_number,convertDate($date.'01', 'Y-m-01 00:00:00'));
-                    if(!empty($data2) && !empty($data[$client->company])){
+                $data[$client->company] = ['before' => 0, 'unreceived' => 0, 'received' => 0, 'left' => 0];
+                $sbj = Subjects::model()->findByAttributes(['sbj_name' => $client->company], 'sbj_number like "1122%"');
+                if ($sbj)
+                    $data[$client->company] = Subjects::model()->getReport($sbj->sbj_number, convertDate($date . '01', 'Y-m-01 00:00:00'));
+                $sbj = Subjects::model()->findByAttributes(['sbj_name' => $client->company], 'sbj_number like "2203%"');
+                if ($sbj) {
+                    $data2 = Subjects::model()->getReport($sbj->sbj_number, convertDate($date . '01', 'Y-m-01 00:00:00'));
+                    if (!empty($data2) && !empty($data[$client->company])) {
                         foreach ($data2 as $key => $item) {
                             $data[$client->company][$key] = $data[$client->company][$key] + $item;
                         }
-                    }else
+                    } else
                         $data[$client->company] = $data2;
                 }
             }
@@ -235,20 +235,20 @@ class ReportController extends Controller
 
         $data = [];
         $vendors = Vendor::model()->findAll();
-        if(!empty($vendors)){
+        if (!empty($vendors)) {
             foreach ($vendors as $vendor) {
-                $data[$vendor->company] = ['before'=>0,'unreceived'=>0,'received'=>0,'left'=>0];
-                $sbj = Subjects::model()->findByAttributes(['sbj_name'=>$vendor->company], 'sbj_number like "2202%"');
-                if($sbj)
-                    $data[$vendor->company] = Subjects::model()->getReport($sbj->sbj_number,convertDate($date.'01', 'Y-m-01 00:00:00'));
-                $sbj = Subjects::model()->findByAttributes(['sbj_name'=>$vendor->company], 'sbj_number like "1123%"');
-                if($sbj){
-                    $data2 = Subjects::model()->getReport($sbj->sbj_number,convertDate($date.'01', 'Y-m-01 00:00:00'));
-                    if(!empty($data2) && !empty($data[$vendor->company])){
+                $data[$vendor->company] = ['before' => 0, 'unreceived' => 0, 'received' => 0, 'left' => 0];
+                $sbj = Subjects::model()->findByAttributes(['sbj_name' => $vendor->company], 'sbj_number like "2202%"');
+                if ($sbj)
+                    $data[$vendor->company] = Subjects::model()->getReport($sbj->sbj_number, convertDate($date . '01', 'Y-m-01 00:00:00'));
+                $sbj = Subjects::model()->findByAttributes(['sbj_name' => $vendor->company], 'sbj_number like "1123%"');
+                if ($sbj) {
+                    $data2 = Subjects::model()->getReport($sbj->sbj_number, convertDate($date . '01', 'Y-m-01 00:00:00'));
+                    if (!empty($data2) && !empty($data[$vendor->company])) {
                         foreach ($data2 as $key => $item) {
                             $data[$vendor->company][$key] = $data[$vendor->company][$key] + $item;
                         }
-                    }else
+                    } else
                         $data[$vendor->company] = $data2;
                 }
             }
@@ -323,31 +323,53 @@ class ReportController extends Controller
 
     }
 
-    public function actionTax1(){
+    /*
+     * 增值税纳税申报表
+     */
+    public function actionTax1()
+    {
 
         if (isset($_REQUEST['date']) && $_REQUEST['date'] != '' && $_POST['type'] != '') {
-            $type = $_POST['type'];
             $date = $_REQUEST['date'];
         } else {
-            $type = 1;
             $date = date('Ymt', strtotime("-1 months"));
         }
-        $model = new Money();
-        $model->is_closed = 1;
-        $model->date = $date;
-        $data = $model->genMoneyData('', $type);
-
         //小规模纳税人和一般纳税人的申报表不一样
         $condom = Condom::getCondom();
-        if($condom->taxpayer_t == 1) {    //一般纳税人
-            $this->render("tax1a", array("data" => $data,
-                "date" => $date));
+        if ($condom->taxpayer_t == 1) {    //一般纳税人
+            $data = Product::getTax1_a();
+            $this->render("tax1a", ['data' => $data, 'date' => $date]);
 
-        }elseif($condom->taxpayer_t == 2){
-            $this->render("tax1", array("data" => $data,
-                "date" => $date));
+        } elseif ($condom->taxpayer_t == 2) {
+            $data = Product::getTax1_1();
+            $this->render("tax1", ['data' => $data]);
 
         }
+    }
+
+    /*
+     * 企业所得税纳税申报表
+     */
+    public function actionTax4()
+    {
+        if (isset($_REQUEST['date']) && $_REQUEST['date'] != '' && $_POST['type'] != '') {
+            $date = $_REQUEST['date'];
+        } else {
+            $date = date('Ymt', strtotime("-1 months"));
+        }
+        $type = 'A';
+        $option = Options::model()->findByAttributes(['entry_subject' => '6801']);
+        if ($option != null)
+            $type = $option->year != '' && $option->year != 0 ? 'B' : $type;
+
+        if ($type == 'A')
+            $data = Product::getTax4_a($type);
+        else
+            $data = Product::getTax4_b($type);
+        $this->render("tax4", array("data" => $data,
+            "date" => $date,
+            "type" => $type,
+            "zone" => isset($_REQUEST['type'])?$_REQUEST['type']:'month'));
     }
 
     public function actionCreateExcel()

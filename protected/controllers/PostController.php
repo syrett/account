@@ -151,7 +151,8 @@ class PostController extends Controller
             if (!$transition->isAllPosted($last_month)) {
                 //假如 上月的数据 还没做凭证的情况 会有问题
                 $result['status'] = 'failed';
-                $result['msg'] = "需要先过账!";
+                $result['msg'] = "$last_month 需要先过账!";
+                return $result;
             }
         }
 
@@ -164,6 +165,7 @@ class PostController extends Controller
         if (!Transition::model()->isReorganised($date)) {
             $result['status'] = 'failed';
             $result['msg'] = "还有凭证未整理";
+            return $result;
         }
         if ($transition->isAllReviewed($date)) {
             //过账成功后，要计提固定资产折旧
