@@ -1002,6 +1002,7 @@ ALTER TABLE `operating_records` CHANGE `id` `id` BIGINT(20) UNSIGNED NOT NULL AU
 
 update subjects set sbj_name='教育费附加' where sbj_number regexp '^2221' and sbj_name='教育附加税';
 
+ALTER TABLE `operating_records` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
 
