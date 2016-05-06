@@ -97,6 +97,7 @@ class Subjects extends CActiveRecord
             array('id, sbj_number, sbj_name, sbj_name_en, sbj_cat, sbj_table, has_sub', 'safe', 'on' => 'search'),
 
             array('sbj_name', 'checkSbjName', 'on' => 'create,update'),
+            array('lv_rank', 'numerical')
         );
     }
 
@@ -225,6 +226,48 @@ class Subjects extends CActiveRecord
 
             $arr += array($row['sbj_number'] => $row['sbj_number'] . Subjects::getSbjPath($row['sbj_number']));
         };
+        return $arr;
+    }
+
+    /**
+     * 获取is_final字段 数组
+     */
+    public function getFinalArr($sbj = '')
+    {
+        if ($sbj == '')
+            $sql = "select * from subjects order by concat(`sbj_number`) asc"; //
+        else
+            $sql = "select * from subjects where sbj_number like '$sbj%' and sbj_number <> '$sbj' order by concat(`sbj_number`) asc";
+        $First = Subjects::model()->findAllBySql($sql);
+        if (!$First) {
+            $sql = "select * from subjects where sbj_number = '$sbj' ";
+            $First = Subjects::model()->findAllBySql($sql);
+        }
+        $arr = array();
+        foreach ($First as $row) {
+            $arr[$row['sbj_number']] = $row['is_final'];
+        }
+        return $arr;
+    }
+
+    /**
+     * 获取lv_rank字段 数组
+     */
+    public function getRankArr($sbj = '')
+    {
+        if ($sbj == '')
+            $sql = "select * from subjects order by concat(`sbj_number`) asc"; //
+        else
+            $sql = "select * from subjects where sbj_number like '$sbj%' and sbj_number <> '$sbj' order by concat(`sbj_number`) asc";
+        $First = Subjects::model()->findAllBySql($sql);
+        if (!$First) {
+            $sql = "select * from subjects where sbj_number = '$sbj' ";
+            $First = Subjects::model()->findAllBySql($sql);
+        }
+        $arr = array();
+        foreach ($First as $row) {
+            $arr[$row['sbj_number']] = $row['lv_rank'];
+        }
         return $arr;
     }
 

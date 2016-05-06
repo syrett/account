@@ -941,7 +941,9 @@ div.flash-success a {
 }
 
 .pie-m-height {
+    width: 100%;
     min-height: 380px;
+    overflow: hidden;
 }
 
 .pie-block {

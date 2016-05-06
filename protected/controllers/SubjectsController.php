@@ -71,31 +71,15 @@ class SubjectsController extends Controller
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Subjects'])) {
-            $old_sbj_number = $_POST['Subjects']['sbj_number'];
-//            $sbj_type = $_POST['sbj_type'];
-            $sbj_type = 2;
-            $new_sbj = Subjects::model()->init_new_sbj_number($old_sbj_number, $sbj_type);
-            $pmodel = Subjects::model()->findByAttributes(['sbj_number' => $old_sbj_number]);
 
-            $_POST['Subjects']['sbj_number'] = $new_sbj[0];
-            $_POST['Subjects']['sbj_cat'] = $pmodel->sbj_cat;
-            $_POST['Subjects']['start_balance'] = $pmodel->start_balance;
-            $model->attributes = $_POST['Subjects'];
-            if ($model->save()) {
-                $pmodel->start_balance = 0;
-                $pmodel->save();
-                //如果是新的子科目，将post中科目表id修改为新id
-//                $sbj_id = trim($_POST['Subjects']['sbj_number']);
-                $sbj_id = $new_sbj[0];
-                if (strlen($sbj_id) > 4 && $sbj_type == 2)  ////1为同级科目，2为子科目
-                {
-                    Post::model()->tranPost($sbj_id);
-                    Transition::model()->updateSubject($old_sbj_number, $sbj_id);
-                    Subjects::model()->hasSub($sbj_id);
-                }
-                OperatingRecords::insertLog(['msg'=>'添加科目：'.$model->sbj_number.', '.$model->sbj_name]);
+            $res = $this->saveSubj($_POST, $model);
+
+            if ($res['status'] == 'success') {
                 Yii::app()->user->setFlash('success', "添加成功!");
                 $this->redirect(array('update', 'id' => $model->id));
+            } else {
+                Yii::app()->user->setFlash('error', $res['msg']);
+                $this->redirect(array('create'));
             }
         }
 
@@ -117,15 +101,20 @@ class SubjectsController extends Controller
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Subjects'])) {
+            //如果系统 默认的不能修改名称
+            if ($model->is_initial == 1) {
+                unset($_POST['Subjects']['sbj_name']);
+            }
             $model->attributes = $_POST['Subjects'];
-
             $model->save();
+            Yii::app()->user->setFlash('success', "操作成功!");
 
             $sbj4C = substr($model->sbj_number, 0, 4);
             if (in_array($sbj4C, [6001, 6051, 6301])){
                 $model->is_ext = true;
             }
-            Yii::app()->user->setFlash('success', "操作成功!");
+
+
             $this->render('update', array(
                 'model' => $model,
             ));
@@ -240,6 +229,7 @@ class SubjectsController extends Controller
             'pageSize' => 30
         );
         $condom = Condom::model()->findByAttributes(['dbname'=>substr(SYSDB,8)]);
+        //小规模纳税人转换到一般纳税人，如果有存在3%税率的科目，需要提示修改！
         $need_chg_tax = false;
         if ($condom->taxpayer_t == 1) {
             $subjects = Subjects::model()->findByAttributes(['sbj_tax' => 3]);
@@ -341,35 +331,19 @@ class SubjectsController extends Controller
                 $sbj = Subjects::model()->findByAttributes(['sbj_name' => $bank_name, 'sbj_cat' => 1]);
                 if ($sbj === null) {
                     //
-                    $subject_yinhang = 1002;
-                    $sbj_type = 2;
-
                     $model = new Subjects;
-
-                    $new_sbj = Subjects::model()->init_new_sbj_number($subject_yinhang, $sbj_type);
-                    $pmodel = Subjects::model()->findByAttributes(['sbj_number' => $subject_yinhang]);
-
-                    $val['sbj_number'] = $new_sbj[0];
-                    $val['sbj_cat'] = $pmodel->sbj_cat;
-                    $val['start_balance'] = $pmodel->start_balance;
-                    $val['sbj_name'] = $bank_name;
-                    $val['sbj_name_en'] = '';
-
-                    $model->attributes = $val;
-                    if ($model->save()) {
-                        $pmodel->start_balance = 0;
-                        $pmodel->save();
-                        $sbj_id = $new_sbj[0];
-                        if (strlen($sbj_id) > 4 && $sbj_type == 2) {
-                            Post::model()->tranPost($sbj_id);
-                            Transition::model()->updateSubject($subject_yinhang, $sbj_id);
-                            Subjects::model()->hasSub($sbj_id);
-                        }
+                    //保存科目
+                    $_POST['Subjects']['sbj_number'] = 1002;
+                    $_POST['Subjects']['sbj_name'] = $bank_name;
+                    $_POST['Subjects']['sbj_name_en'] = '';
+                    $res = $this->saveSubj($_POST, $model);
+                    if ($res['status'] == 'success') {
+                        $arr['is_succ'] = true;
+                        $arr['sbj_name'] = $model->sbj_name;
+                        $arr['sbj_number'] = $model->sbj_number;
+                    } else {
+                        $arr['is_succ'] = false;
                     }
-                    OperatingRecords::insertLog(['msg'=>'添加科目：'.$model->sbj_number.', '.$model->sbj_name]);
-                    $arr['is_succ'] = true;
-                    $arr['sbj_name'] = $bank_name;
-                    $arr['sbj_number'] = $new_sbj[0];
 
                 } else {
                     //已经存在  不处理 前端js
@@ -450,4 +424,59 @@ class SubjectsController extends Controller
         } else
             throw new CHttpException(403, "无效的请求");
     }
+
+
+    /**
+     *  保存科目
+     *
+     *  sbj_number    科目编号
+     *  sbj_name      科目名称
+     *  sbj_name_en   科目名称 英文
+     */
+    public function saveSubj($post_arr, $model)
+    {
+        $arr['status'] = 'fail';
+        $arr['msg'] = '';
+
+        $old_sbj_number = $post_arr['Subjects']['sbj_number'];
+
+        $sbj_type = 2;
+        $new_sbj = Subjects::model()->init_new_sbj_number($old_sbj_number, $sbj_type);
+        $pmodel = Subjects::model()->findByAttributes(['sbj_number' => $old_sbj_number]);
+
+        //是否 允许有子科目   等级深度
+        if ($pmodel->is_final == 1 || $pmodel->lv_rank == 4) {
+            $arr['status'] = 'fail';
+            $arr['msg'] = '该科目下不能添加子科目';
+        } else {
+            $post_arr['Subjects']['sbj_number'] = $new_sbj[0];
+            $post_arr['Subjects']['sbj_cat'] = $pmodel->sbj_cat;
+            $post_arr['Subjects']['start_balance'] = $pmodel->start_balance;
+            //子科目等级加1
+            $post_arr['Subjects']['lv_rank'] = $pmodel->lv_rank + 1;
+
+            $model->attributes = $post_arr['Subjects'];
+
+            if ($model->save()) {
+                $pmodel->start_balance = 0;
+                $pmodel->save();
+
+                $sbj_id = $new_sbj[0];
+                if (strlen($sbj_id) > 4 && $sbj_type == 2)  ////1为同级科目，2为子科目
+                {
+                    Post::model()->tranPost($sbj_id);
+                    Transition::model()->updateSubject($old_sbj_number, $sbj_id);
+                    Subjects::model()->hasSub($sbj_id);
+                }
+
+                OperatingRecords::insertLog(['msg'=>'添加科目：'.$model->sbj_number.', '.$model->sbj_name]);
+                $arr['status'] = 'success';
+            } else {
+                $arr['status'] = 'fail';
+            }
+        }
+
+        return $arr;
+    }
+
 }

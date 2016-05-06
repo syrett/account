@@ -57,7 +57,6 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
         <div class="col-sm-10 control-label-2">
             <?php
             $data = Subjects::model()->listSubjects();
-
             $this->widget('ext.select2.ESelect2', array(
                 'model' => $model,
                 'attribute' => 'sbj_number',
@@ -89,7 +88,17 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
 	<div class="form-group form-group-lg">
 		<?php echo $form->labelEx($model,'sbj_name',array('class'=>'col-sm-2 control-label')); ?>
         <div class="col-sm-10" id="sbj_name_div">
-		<?php echo $form->textField($model,'sbj_name',array('class'=>'form-control','size'=>20,'maxlength'=>512)); ?>
+		<?php
+            $input_attr = array();
+            $input_attr['class'] = 'form-control';
+            $input_attr['size'] = 20;
+            $input_attr['maxlength'] = 512;
+            if ($model->is_initial == 1) {
+                $input_attr['readOnly'] = 'true';
+            }
+            echo $form->textField($model,'sbj_name', $input_attr);
+        ?>
+
 		<?php echo $form->error($model,'sbj_name',array('id'=>'sbj_name_msg')); ?>
             </div>
 	</div>
@@ -120,13 +129,19 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
             </div>
         </div>
     </div>
-
+    <?php
+    if($model->getIsNewRecord()) {
+        $field_final_arr = json_encode($model->getFinalArr());
+        $field_rank_arr = json_encode($model->getRankArr());
+    ?>
     <script>
+        var fieldFinalArr = <?=$field_final_arr;?>, fieldRankArr = <?=$field_rank_arr;?>;
+
         $(function(){
             $('#Subjects_sbj_number').on('change', function() {
+
                 //主营业务收入、其他业务收入、营业外收入 三种科目
                 var extArr = [6001, 6051, 6301];
-
                 var sbjNum = parseInt($(this).val().substr(0, 4));
 
                 $('#Subjects_sbj_type').val(0);
@@ -138,9 +153,24 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
                     $('.J_extSbjOptDiv').fadeIn();
                 }
 
+                $('#Subjects_sbj_name').val('');
+                $('#Subjects_sbj_name_en').val('');
+                //
+                var subjNum = $(this).val();
+                //判断是否为 不允许有子科目的科目 或者是 科目等级为 4 的
+                if (fieldFinalArr[subjNum] == 1 || fieldRankArr[subjNum] == 4) {
+                    $('#Subjects_sbj_name').attr('readonly', 'true');
+                    $('#Subjects_sbj_name_en').attr('readonly', 'true');
+                    alert('该科目下不能添加子科目');
+                } else {
+                    $('#Subjects_sbj_name').removeAttr('readonly');
+                    $('#Subjects_sbj_name_en').removeAttr('readonly');
+                }
+
             });
         });
     </script>
+    <?php } ?>
     <?php
     if($model->hasErrors()){
         echo '<div class="alert alert-danger text-left">';
