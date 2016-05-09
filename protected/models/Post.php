@@ -101,6 +101,9 @@ class Post extends CActiveRecord
         return $arr;
     }
 
+    /*
+     * 过账操作，
+     */
     public function postAll()
     {
         $lastBalanceArr = self::getLastBalance($this->year, $this->month);
@@ -115,9 +118,13 @@ class Post extends CActiveRecord
             if (isset($balance[$t['entry_subject']])) {
                 $tmp_debit = $balance[$t['entry_subject']]['debit'];
                 $tmp_credit = $balance[$t['entry_subject']]['credit'];
+                $tmp_credit_2 = $tmp_credit;
+                $tmp_debit_2 = $tmp_debit;
             } else {
                 $tmp_debit = 0;
                 $tmp_credit = 0;
+                $tmp_credit_2 = 0;
+                $tmp_debit_2 = 0;
             }
 
             //过账时，这里是重点，很容易出错
@@ -141,13 +148,24 @@ class Post extends CActiveRecord
                     else
                         $tmp_debit = $tmp_debit - floatval($t['entry_amount']);
                 }
-                if ($tmp_debit != 0 && $tmp_credit != 0) {
-                    if ($tmp_debit > $tmp_credit) {
-                        $tmp_debit = $tmp_debit - $tmp_credit;
-                        $tmp_credit = 0;
+//                if ($tmp_debit != 0 && $tmp_credit != 0) {
+//                    if ($tmp_debit > $tmp_credit) {
+//                        $tmp_debit = $tmp_debit - $tmp_credit;
+//                        $tmp_credit = 0;
+//                    } else {
+//                        $tmp_credit = $tmp_credit - $tmp_debit;
+//                        $tmp_debit = 0;
+//                    }
+//                }
+                $tmp_credit_2 = $tmp_credit;
+                $tmp_debit_2 = $tmp_debit;
+                if ($tmp_debit_2 != 0 && $tmp_credit_2 != 0) {
+                    if ($tmp_debit_2 > $tmp_credit_2) {
+                        $tmp_debit_2 = $tmp_debit_2 - $tmp_credit_2;
+                        $tmp_credit_2 = 0;
                     } else {
-                        $tmp_credit = $tmp_credit - $tmp_debit;
-                        $tmp_debit = 0;
+                        $tmp_credit_2 = $tmp_credit_2 - $tmp_debit_2;
+                        $tmp_debit_2 = 0;
                     }
                 }
             } else {
@@ -165,6 +183,8 @@ class Post extends CActiveRecord
 
             $balance[$t['entry_subject']]['debit'] = $tmp_debit;
             $balance[$t['entry_subject']]['credit'] = $tmp_credit;
+            $balance[$t['entry_subject']]['debit_2'] = $tmp_debit_2;
+            $balance[$t['entry_subject']]['credit_2'] = $tmp_credit_2;
         }
 
         // 算出余额
@@ -184,6 +204,8 @@ class Post extends CActiveRecord
                 $balance[$subject_id]['balance'] = $arr['balance'];
                 $balance[$subject_id]['debit'] = 0;
                 $balance[$subject_id]['credit'] = 0;
+                $balance[$subject_id]['debit_2'] = 0;
+                $balance[$subject_id]['credit_2'] = 0;
             }
         }
 
@@ -201,6 +223,8 @@ class Post extends CActiveRecord
             $post->subject_id = $sub;
             $post->debit = $arr['debit'];
             $post->credit = $arr['credit'];
+            $post->debit_2 = $arr['debit_2'];
+            $post->credit_2 = $arr['credit_2'];
             $post->balance = $arr['balance'];
             $post->posted = 1;
             $post->year = $year;
@@ -236,7 +260,6 @@ class Post extends CActiveRecord
             array('subject_id', 'numerical', 'integerOnly' => true),
             array('balance', 'numerical'),
             // The following rule is used by search().
-            // @todo Please remove those attributes that should not be searched.
             array('id, subject_id, month, balance', 'safe', 'on' => 'search'),
         );
     }
@@ -395,22 +418,22 @@ class Post extends CActiveRecord
         switch ($sbj_cat) {
             case 4://收入类
                 foreach ($dataArray as $post) {
-                    $balance = balance2($balance, $post["debit"], $post["credit"], $sbj_cat);
-//          $balance += $post['credit'];    //好像重复计算了金额
+                    $balance = balance2($balance, $post["debit_2"], $post["credit_2"], $sbj_cat);
+//          $balance += $post['credit_2'];    //好像重复计算了金额
                 };
                 break;
             case 5://费用类
                 foreach ($dataArray as $post) {
-                    if ($post['credit'] == $post['debit'])
-                        $balance += $post['debit'];
+                    if ($post['credit_2'] == $post['debit_2'])
+                        $balance += $post['debit_2'];
                     else
-                        $balance += $post['debit'] - $post['credit'];
-//                    $balance += $post['debit'];
+                        $balance += $post['debit_2'] - $post['credit_2'];
+//                    $balance += $post['debit_2'];
                 };
                 break;
             case 3://
                 foreach ($dataArray as $post) {
-                    $balance = balance2($balance, $post['debit'], $post['credit'], $sbj_cat);
+                    $balance = balance2($balance, $post['debit_2'], $post['credit_2'], $sbj_cat);
                 };
                 break;
             default:
