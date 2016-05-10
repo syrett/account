@@ -531,7 +531,7 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
                         <div class="tab-pane" id="tab_law_cent">
                             <?php
                             $this->widget('zii.widgets.grid.CGridView', array(
-                                'id' => 'taxes-grid',
+                                'id' => 'laws-grid',
                                 'emptyText' => Yii::t('transition', '暂无相关数据'),
                                 'dataProvider' => $blog->search(0),
                                 'rowCssClass' => array('row-odd', 'row-even'),
