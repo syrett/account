@@ -19,6 +19,18 @@ class OperatingRecords extends CActiveRecord
         return 'operating_records';
     }
 
+    public function attributeLabels()
+    {
+        return array(
+            'id' => 'ID',
+            'user_id' => Yii::t('transition', '用户'),
+            'created_at' => Yii::t('transition', '时间'),
+            'type' => Yii::t('transition', '类型'),
+            'message' => Yii::t('transition', '信息'),
+
+        );
+    }
+
 
 
     public function scopes()
@@ -36,6 +48,30 @@ class OperatingRecords extends CActiveRecord
         return array(
             'user_info'=>array(self::BELONGS_TO, 'User', 'user_id'),
         );
+    }
+
+
+    /**
+     * @param array $arr
+     */
+    public function search()
+    {
+        $criteria = new CDbCriteria;
+
+        $sort = new CSort();
+
+        $sort->defaultOrder = array(
+            'id' => CSort::SORT_DESC,
+        );
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageVar' => 'p',
+                'pageSize' => '12',
+            ),
+            'sort' => $sort,
+        ));
     }
 
 
