@@ -86,6 +86,10 @@ class Blog extends CActiveRecord
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+            'pagination' => array(
+                'pageVar' => 'p',
+                'pageSize' => '12',
+            ),
             'sort' => $sort,
 		));
 	}
