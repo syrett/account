@@ -73,9 +73,11 @@ class SiteController extends Controller
         }
 
         //日志
-        $logs = OperatingRecords::model()->recently()->findAll();
+        $logs = new OperatingRecords();
 
-        $this->render('index', ['need_chg_tax' => $need_chg_tax, 'logs' => $logs]);
+        $blog = new Blog();
+
+        $this->render('index', ['need_chg_tax' => $need_chg_tax, 'logs' => $logs, 'blog'=>$blog]);
 //        $this->redirect($this->createUrl('transition/create'));
     }
 
@@ -203,5 +205,21 @@ class SiteController extends Controller
      */
     public function actionCondomStatus(){
         $this->render('status');
+    }
+
+    /**
+     * 文章
+     */
+    public function actionBlog($id)
+    {
+        $model = new Blog();
+        $article = $model->article($id);
+
+        if ($article == null) {
+            $this->redirect('/');
+        } else {
+            $this->render('blog', array('article'=>$article));
+        }
+
     }
 }

@@ -419,7 +419,7 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
                                 <?= Yii::t('report', '税务中心') ?></a>
                         </li>
                         <li class="">
-                            <a href="#tab_tax_law" data-toggle="tab" aria-expanded="false" style="padding: 10px 25px;">
+                            <a href="#tab_law_cent" data-toggle="tab" aria-expanded="false" style="padding: 10px 25px;">
                                 <?= Yii::t('report', '法律法规') ?></a>
                         </li>
                     </ul>
@@ -466,59 +466,101 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
                         </div>
 
                         <div class="tab-pane" id="tab_info_cent">
-                            <div class="portlet light">
-                                <div class="portlet-title">
-                                    <div class="caption">
-                                        <span class="caption-subject "><?= Yii::t('home', '操作日志') ?></span>
-                                    </div>
-                                    <div class="actions">
-                                        <div class="btn-group">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="portlet-body">
-                                    <div class="col-md-12">
-                                        <table class="table table-striped table-hover">
-                                            <thead>
-                                            <tr>
-                                                <th id="subjects-grid_c0">
-                                                    时间
-                                                </th>
-                                                <th id="subjects-grid_c1">
-                                                    用户
-                                                </th>
-                                                <th id="subjects-grid_c2">
-                                                    操作信息
-                                                </th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <?php foreach ($logs as $log) { ?>
-                                                <tr>
-                                                    <td> <?= date('m月d日 H:i', $log['created_at']);?></td>
-                                                    <td>
-                                                        <?php if($log->user_info !== null){
-                                                            echo $log->user_info->username;
-                                                        }; ?>
-                                                    </td>
-                                                    <td><?= $log['message']; ?></td>
-                                                </tr>
-                                            <?php } ?>
-                                            </tbody>
-                                        </table>
 
-                                    </div>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </div>
+                            <?php
+                            $this->widget('zii.widgets.grid.CGridView', array(
+                            'id' => 'logs-grid',
+                            'emptyText' => Yii::t('transition', '暂无相关数据'),
+                            'dataProvider' => $logs->search(),
+                            'rowCssClass' => array('row-odd', 'row-even'),
+                            'pager' => array(
+                                'class' => 'CLinkPager',
+                                'header' => '',
+                                'firstPageLabel' => Yii::t('transition', '首页'),
+                                'lastPageLabel' => Yii::t('transition', '末页'),
+                                'nextPageLabel' => Yii::t('transition', '下一页'),
+                                'prevPageLabel' => Yii::t('transition', '上一页')
+                            ),
+                            'itemsCssClass' => 'table table-striped dataTable table-hover no-footer',
+                            'htmlOptions' => array('role' => 'grid'),
+                            'columns' => array(
+                                array('name'=>'created_at', 'value'=>'date("m月d日 H:i", $data->created_at)'),
+                                array('name'=>'user_id', 'value'=>'isset($data->user_info->username) ? $data->user_info->username : ""'),
+                                array('name'=>'message', 'value'=>'$data->message'),
+                            ),
+                            ));
+                            ?>
+
                         </div>
 
                         <div class="tab-pane" id="tab_tax_cent">
-                            3
+                            <?php
+                            $this->widget('zii.widgets.grid.CGridView', array(
+                            'id' => 'taxes-grid',
+                            'emptyText' => Yii::t('transition', '暂无相关数据'),
+                            'dataProvider' => $blog->search(1),
+                            'rowCssClass' => array('row-odd', 'row-even'),
+
+                            'pager' => array(
+                                'class' => 'CLinkPager',
+                                'header' => '',
+                                'firstPageLabel' => Yii::t('transition', '首页'),
+                                'lastPageLabel' => Yii::t('transition', '末页'),
+                                'nextPageLabel' => Yii::t('transition', '下一页'),
+                                'prevPageLabel' => Yii::t('transition', '上一页')
+                            ),
+                            'itemsCssClass' => 'table table-striped  dataTable table-hover no-footer',
+                            'htmlOptions' => array('role' => 'grid'),
+                            //'hideHeader' => true,
+                            'columns' => array(
+                                array('name'=>'title', 'value'=>'$data->title'),
+                                array('name'=>'created_at', 'value'=>'date("Y/m/d", $data->created_at)'),
+
+                                array(
+                                    'class' => 'CLinkColumn',
+                                    'label' => '浏览',
+                                    'urlExpression'=>'Yii::app()->createUrl("site/blog",array("id"=>$data->id))',//显示URL
+                                    //'htmlOptions' => array('style' => 'min-width: 68px;'),
+                                ),
+                            )
+
+                            ));
+                            ?>
                         </div>
 
-                        <div class="tab-pane" id="tab_tax_law">
-                            4
+                        <div class="tab-pane" id="tab_law_cent">
+                            <?php
+                            $this->widget('zii.widgets.grid.CGridView', array(
+                                'id' => 'taxes-grid',
+                                'emptyText' => Yii::t('transition', '暂无相关数据'),
+                                'dataProvider' => $blog->search(0),
+                                'rowCssClass' => array('row-odd', 'row-even'),
+
+                                'pager' => array(
+                                    'class' => 'CLinkPager',
+                                    'header' => '',
+                                    'firstPageLabel' => Yii::t('transition', '首页'),
+                                    'lastPageLabel' => Yii::t('transition', '末页'),
+                                    'nextPageLabel' => Yii::t('transition', '下一页'),
+                                    'prevPageLabel' => Yii::t('transition', '上一页')
+                                ),
+                                'itemsCssClass' => 'table table-striped  dataTable table-hover no-footer',
+                                'htmlOptions' => array('role' => 'grid'),
+                                //'hideHeader' => true,
+                                'columns' => array(
+                                    array('name'=>'title', 'value'=>'$data->title'),
+                                    array('name'=>'created_at', 'value'=>'date("Y/m/d", $data->created_at)'),
+
+                                    array(
+                                        'class' => 'CLinkColumn',
+                                        'label' => '浏览',
+                                        'urlExpression'=>'Yii::app()->createUrl("site/blog",array("id"=>$data->id))',//显示URL
+                                        //'htmlOptions' => array('style' => 'min-width: 68px;'),
+                                    ),
+                                )
+
+                            ));
+                            ?>
                         </div>
 
                     </div>
