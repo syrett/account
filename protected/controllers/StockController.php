@@ -744,9 +744,13 @@ class StockController extends Controller
                         return $v['entry_subject']==$item?true:false;
                     });
                     $amount = 0;
-                    if(count($rows) > 0)
-                    foreach ($rows as $row) {
-                        $amount += $row['in_price']*$row['count'];
+                    if(count($rows) > 0){
+                        foreach ($rows as $row) {
+                            $amount += $row['in_price']*$row['count'];
+                            //$row可能为空
+                                $balance1602 = substr($item, 0, 4)=='1601'?$balance1602 + ($row['in_price'] - $row['worth'])*$row['count']:$balance1602;
+                                $balance1702 = substr($item, 0, 4)=='1701'?$balance1702 + ($row['in_price'] - $row['worth'])*$row['count']:$balance1702;
+                        }
                     }else{
                         foreach($row as &$v)
                             $v = 0;
@@ -760,22 +764,16 @@ class StockController extends Controller
                         }
                         break;
                     }
-                    //$row可能为空
-                    if($row != []){
-                        $balance1602 = substr($item, 0, 4)=='1601'?$balance1602 + ($row['in_price'] - $row['worth'])*$row['count']:$balance1602;
-                        $balance1702 = substr($item, 0, 4)=='1701'?$balance1702 + ($row['in_price'] - $row['worth'])*$row['count']:$balance1702;
-
-                    }
                 }
-                if( Subjects::get_balance(1602) != $balance1602 ){
-                    $status = isset($status['status'])&&$status['status']!='error'? ['status' => 'error', 'msg' => '固定资产累计折旧 金额与总账期初余额不相等']:$status;
+                if( (string)Subjects::get_balance(1602) != (string)$balance1602 ){
+                    $status = (empty($status)||isset($status['status'])&&$status['status']!='error')? ['status' => 'error', 'msg' => '固定资产累计折旧 金额与总账期初余额不相等 '. $balance1602. '-'. Subjects::get_balance(1602)]:$status;
                     $sheetData = [];
                     foreach ($lists as $row) {
                         $sheetData[] = Stock::getSheetData('固定资产', $row);
                     }
                 }
-                if( Subjects::get_balance(1702) != $balance1702 ){
-                    $status = isset($status['status'])&&$status['status']!='error'? ['status' => 'error', 'msg' => '无形资产累计摊销 金额与总账期初余额不相等']:$status;
+                if( (string)Subjects::get_balance(1702) != (string)$balance1702 ){
+                    $status = (empty($status)||isset($status['status'])&&$status['status']!='error')? ['status' => 'error', 'msg' => '无形资产累计摊销 金额与总账期初余额不相等 '. $balance1702. '-'. Subjects::get_balance(1702)]:$status;
                     $sheetData = [];
                     foreach ($lists as $row) {
                         $sheetData[] = Stock::getSheetData('固定资产', $row);

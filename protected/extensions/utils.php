@@ -28,6 +28,10 @@ function getDay($date)
     return substr($date, 6, 2);
 }
 
+function lastMonth($date){
+    return date('Ymd', strtotime('-1 months', $date));
+}
+
 function accessReview($tranID)
 {
     $user = Yii::app()->user->id;

@@ -56,7 +56,7 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
         <label class="col-sm-2 control-label" ><?= Yii::t('import', '选择科目') ?></label>
         <div class="col-sm-10 control-label-2">
             <?php
-            $data = Subjects::model()->listSubjects();
+            $data = Subjects::model()->listSubjects('', 'is_final=0');
             $this->widget('ext.select2.ESelect2', array(
                 'model' => $model,
                 'attribute' => 'sbj_number',

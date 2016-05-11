@@ -210,16 +210,16 @@ class Subjects extends CActiveRecord
     /**
      * 列出科目
      */
-    public function listSubjects($sbj = '')
+    public function listSubjects($sbj = '', $where='')
     {
+        $where = $where==''?'1=1':"1=1 and $where";
         if ($sbj == '')
-            $sql = "select * from subjects order by concat(`sbj_number`) asc"; //
+            $sql = "select * from subjects where $where order by concat(`sbj_number`) asc"; //
         else
-            $sql = "select * from subjects where sbj_number like '$sbj%' and sbj_number <> '$sbj' order by concat(`sbj_number`) asc";
+            $sql = "select * from subjects where $where and sbj_number like '$sbj%' and sbj_number <> '$sbj' order by concat(`sbj_number`) asc";
         $First = Subjects::model()->findAllBySql($sql);
         if (!$First) {
-            $sql = "select * from subjects where sbj_number = '$sbj' ";
-            $First = Subjects::model()->findAllBySql($sql);
+            return [];
         }
         $arr = array();
         foreach ($First as $row) {
@@ -852,7 +852,7 @@ class Subjects extends CActiveRecord
      */
     public static function get_balance($sbj, $type = '')
     {
-        $result = 0;
+        $result = 0.0;
         if ($sbj) {
             if ($sbj == '1601' && $type == '') {    //1601为长期资产，包括固定资产1601，无形资产1701，长期待摊1801，在建工程1604
                 $arr = ['1601', '1701', '1801', '1604'];

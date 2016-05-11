@@ -387,8 +387,10 @@ class Stock extends LFSModel
             $model->hs_no = $this->initHSno($this->entry_subject);
             if ($model->save())
                 $result = true;
-            else
+            else{
+                $this->errors = $model->errors;
                 $result = false;
+            }
         }
         return $result;
 //            array_push($data, $stock);
@@ -640,6 +642,7 @@ class Stock extends LFSModel
     {
         $model = new Stock();
         $count = 0;
+        $model->in_date = lastMonth(Condom::getStartTime());
         switch ($type) {
             case '固定资产':    //1601 1701 1801
                 if (!empty($items['B']) != '' && $items['D'] != '' && $items['E'] != '') {
@@ -675,6 +678,7 @@ class Stock extends LFSModel
                 break;
 
         }
+        $model->validate();
         return ['count' => $count, $model];
     }
 

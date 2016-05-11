@@ -25,7 +25,7 @@ class SubjectBalance extends CModel
   public function attributeNames()
   {
   }
-  
+
   public function genData($fromDate, $toDate)
   {
     $year = getYear($fromDate);
@@ -123,7 +123,7 @@ class SubjectBalance extends CModel
       break;
     }
   }
-    
+
   private function cat_subjects($data) {
     $catData = array();
     foreach($data as $item){
@@ -180,7 +180,7 @@ class SubjectBalance extends CModel
 
     }
     return $data;
-    
+
   }
 
   /*
@@ -193,7 +193,7 @@ class SubjectBalance extends CModel
       $criteria->order = 'subject_id asc';
     $active_data = Post::model()->findAll($criteria);
     return $active_data;
-    
+
   }
 
   /*
@@ -228,7 +228,7 @@ class SubjectBalance extends CModel
       $data[$sbj_id]["credit"] = $row["credit"];
     }
     return $data;
-    
+
   }
 
   /*

@@ -1137,7 +1137,7 @@ class Transition extends CActiveRecord
                 $profit->date = $entry_prefix;
                 $data = $profit->genProfitData();
 
-                $lastdate = '0' . intval($month) - 3;    //上一个季度的利润
+                $lastdate = '0' . (intval($month) - 3);    //上一个季度的利润
                 $profit->date = $lastdate;
                 $data1 = $profit->genProfitData();
                 $amount = $data['net_profit']['sum_year'] - $data1['net_profit']['sum_year'];

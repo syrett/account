@@ -257,6 +257,8 @@ class SubjectsController extends Controller
             } else {
                 $p_data = array();
                 foreach ($_POST as $k => $v) {
+                    $v = str_replace(',', '', $v);
+                    $v = str_replace('￥', '', $v);
                     if (is_numeric($k) && is_numeric($v)) {
                         $p_data[$k] = $v;
                     }

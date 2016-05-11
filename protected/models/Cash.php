@@ -20,168 +20,173 @@
  */
 class Cash extends LFSModel
 {
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'cash';
-	}
+    /**
+     * @return string the associated database table name
+     */
+    public function tableName()
+    {
+        return 'cash';
+    }
 
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array(
-			array('amount, updated_at', 'required'),
-			array('parent, invoice, tax, status_id, updated_at', 'numerical', 'integerOnly'=>true),
-			array('amount', 'numerical'),
-			array('target', 'length', 'max'=>512),
-			array('date', 'length', 'max'=>64),
-			array('subject', 'length', 'max'=>16),
-			array('memo, type, pid, order_no, created_at, tax, path, relation, overworth, entry_transaction', 'safe'),
-			// The following rule is used by search().
-			array('id, target, date, memo, amount, parent, order_no, invoice, tax, status_id, created_at, updated_at', 'safe', 'on'=>'search'),
-		);
-	}
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules()
+    {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return array(
+            array('amount, updated_at', 'required'),
+            array('parent, invoice, tax, status_id, updated_at', 'numerical', 'integerOnly' => true),
+            array('amount', 'numerical'),
+            array('target', 'length', 'max' => 512),
+            array('date', 'length', 'max' => 64),
+            array('subject', 'length', 'max' => 16),
+            array('memo, type, pid, order_no, created_at, tax, path, relation, overworth, entry_transaction', 'safe'),
+            // The following rule is used by search().
+            array('id, target, date, memo, amount, parent, order_no, invoice, tax, status_id, created_at, updated_at', 'safe', 'on' => 'search'),
+        );
+    }
 
-	/**
-	 * @return array relational rules.
-	 */
-	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-		);
-	}
+    /**
+     * @return array relational rules.
+     */
+    public function relations()
+    {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array();
+    }
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'id' => 'ID',
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels()
+    {
+        return array(
+            'id' => 'ID',
             'order_no' => '订单号',
-			'target' => '交易对象',
+            'target' => '交易对象',
             'name' => '名称',
             'department_id' => '部门',
             'client_id' => '客户',
-			'date' => '日期',
-			'memo' => '说明',
-			'amount' => '金额',
-			'parent' => '父ID',
-			'subject' => '科目',
-			'invoice' => '有无发票',
-			'tax' => '税率',
-			'status_id' => 'Status',
-			'created_at' => 'Created At',
-			'updated_at' => 'Updated At',
-		);
-	}
+            'date' => '日期',
+            'memo' => '说明',
+            'amount' => '金额',
+            'parent' => '父ID',
+            'subject' => '科目',
+            'invoice' => '有无发票',
+            'tax' => '税率',
+            'status_id' => 'Status',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+        );
+    }
 
-	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
-	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
-	 */
-	public function search()
-	{
-		$criteria=new CDbCriteria;
+    /**
+     * Retrieves a list of models based on the current search/filter conditions.
+     *
+     * Typical usecase:
+     * - Initialize the model fields with values from filter form.
+     * - Execute this method to get CActiveDataProvider instance which will filter
+     * models according to data in model fields.
+     * - Pass data provider to CGridView, CListView or any similar widget.
+     *
+     * @return CActiveDataProvider the data provider that can return the models
+     * based on the search/filter conditions.
+     */
+    public function search()
+    {
+        $criteria = new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('target',$this->target,true);
-		$criteria->compare('date',$this->date,true);
-		$criteria->compare('memo',$this->memo,true);
-		$criteria->compare('amount',$this->amount);
-		$criteria->compare('parent',$this->parent);
-		$criteria->compare('order_no',$this->order_no,true);
-		$criteria->compare('subject',$this->subject,true);
-		$criteria->compare('invoice',$this->invoice);
-		$criteria->compare('tax',$this->tax);
-		$criteria->compare('status_id',$this->status_id);
-		$criteria->compare('created_at',$this->created_at,true);
-		$criteria->compare('updated_at',$this->updated_at);
+        $criteria->compare('id', $this->id);
+        $criteria->compare('target', $this->target, true);
+        $criteria->compare('date', $this->date, true);
+        $criteria->compare('memo', $this->memo, true);
+        $criteria->compare('amount', $this->amount);
+        $criteria->compare('parent', $this->parent);
+        $criteria->compare('order_no', $this->order_no, true);
+        $criteria->compare('subject', $this->subject, true);
+        $criteria->compare('invoice', $this->invoice);
+        $criteria->compare('tax', $this->tax);
+        $criteria->compare('status_id', $this->status_id);
+        $criteria->compare('created_at', $this->created_at, true);
+        $criteria->compare('updated_at', $this->updated_at);
 
-		$criteria->order = 'id desc';
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
-	}
+        $criteria->order = 'id desc';
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
 
-	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 * @param string $className active record class name.
-	 * @return Cash the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
+    /**
+     * Returns the static model of the specified AR class.
+     * Please note that you should have this exact method in all your CActiveRecord descendants!
+     * @param string $className active record class name.
+     * @return Cash the static model class
+     */
+    public static function model($className = __CLASS__)
+    {
+        return parent::model($className);
+    }
 
-	/*
+    /*
      * admin页面不同状态不同颜色
      * $var row
      * $var $saved
      * @return css class name
      */
-	public function getClass($row, $saved){
+    public function getClass($row, $saved)
+    {
 //		$class = $row%2==1 ? "row-odd" : 'row-even';
 //		if($saved==1)
         $class = "row-odd";
-		return $class;
-	}
+        return $class;
+    }
 
-	/*
-	 * 科目名称
-	 * @sbj_id Integer
-	 */
-	public function getSbjName($id){
-		if($id!='')
-			return Subjects::model()->getSbjPath($id);
-		else
-			return '';
-	}
+    /*
+     * 科目名称
+     * @sbj_id Integer
+     */
+    public function getSbjName($id)
+    {
+        if ($id != '')
+            return Subjects::model()->getSbjPath($id);
+        else
+            return '';
+    }
 
-	/*
-	 * load 加载数据
-	 */
-	public function load($item){
-        $this->setAttribute('target', isset($item['target'])?$item['target']:'');
-        $this->setAttribute('name', isset($item['entry_name'])?$item['entry_name']:(isset($item['target'])?$item['target']:''));
-        $this->setAttribute('department_id', isset($item['department_id'])?$item['department_id']:'');
-        $this->setAttribute('client_id', isset($item['client_id'])?$item['client_id']:'');
-        $this->setAttribute('order_no', isset($item['order_no'])?$item['order_no']:'');
-		$this->setAttribute('date', $item['entry_date']);
-		$this->setAttribute('memo', $item['entry_memo']);
-		$this->setAttribute('amount', $item['price']);
+    /*
+     * load 加载数据
+     */
+    public function load($item)
+    {
+        $this->setAttribute('target', isset($item['target']) ? $item['target'] : '');
+        $this->setAttribute('name', isset($item['entry_name']) ? $item['entry_name'] : (isset($item['target']) ? $item['target'] : ''));
+        $this->setAttribute('department_id', isset($item['department_id']) ? $item['department_id'] : '');
+        $this->setAttribute('client_id', isset($item['client_id']) ? $item['client_id'] : '');
+        $this->setAttribute('order_no', isset($item['order_no']) ? $item['order_no'] : '');
+        $this->setAttribute('date', $item['entry_date']);
+        $this->setAttribute('memo', $item['entry_memo']);
+        $this->setAttribute('amount', $item['price']);
         $this->setAttribute('subject', $item['entry_subject']);
         $this->setAttribute('subject_2', $item['subject_2']);
-		$this->setAttribute('parent', isset($item['parent'])?$item['parent']:'');
-		$this->setAttribute('invoice', isset($item['invoice'])?$item['invoice']:'');
-        $this->setAttribute('tax',  isset($item['tax'])?$item['tax']:'');
-        $this->setAttribute('overworth',  isset($item['overworth'])?$item['overworth']:'');
+        $this->setAttribute('parent', isset($item['parent']) ? $item['parent'] : '');
+        $this->setAttribute('invoice', isset($item['invoice']) ? $item['invoice'] : '');
+        $this->setAttribute('tax', isset($item['tax']) ? $item['tax'] : '');
+        $this->setAttribute('overworth', isset($item['overworth']) ? $item['overworth'] : '');
         $this->setAttribute('entry_transaction', $item['entry_transaction']);
-        $this->setAttribute('path',  isset($item['path'])?$item['path']:'');
-        $this->setAttribute('relation',  isset($item['relation'])?$item['relation']:'');
-		$this->setAttribute('updated_at', isset($item['updated_at'])?$item['updated_at']:'');
-	}
-	public function loadOld($item){
-		$this->setAttribute('target', $item['entry_name']);
-		$this->setAttribute('memo', $item['entry_memo']);
-	}
+        $this->setAttribute('path', isset($item['path']) ? $item['path'] : '');
+        $this->setAttribute('relation', isset($item['relation']) ? $item['relation'] : '');
+        $this->setAttribute('updated_at', isset($item['updated_at']) ? $item['updated_at'] : '');
+    }
+
+    public function loadOld($item)
+    {
+        $this->setAttribute('target', $item['entry_name']);
+        $this->setAttribute('memo', $item['entry_memo']);
+    }
+
     private static function getPay()
     {
         return [
@@ -221,11 +226,12 @@ class Cash extends LFSModel
         ];
     }
 
-    private static function getFacility($key){
+    private static function getFacility($key)
+    {
 
         $subject = new Subjects();
         $arr = [6602];
-        $result = $subject->getitem($arr, $key, ['reject'=>['工资', '社保']]);
+        $result = $subject->getitem($arr, $key, ['reject' => ['工资', '社保']]);
         return [
             'data' => $result,
             'new' => 'allow',
@@ -234,14 +240,23 @@ class Cash extends LFSModel
             'target' => true,
         ];
     }
+
     private static function getSalary()
     {
-        return [
-            'data' => [
-                '工资与奖金' => '工资与奖金',
-                '社保公积金' => '社保公积金'
-            ]
-        ];
+        //应付职工薪酬子科目
+        $sbjs = Subjects::model()->findAllByAttributes(['has_sub' => 0], 'sbj_number like "2211%"');
+        if (count($sbjs) > 0) {
+            foreach ($sbjs as $sbj) {
+                $data[$sbj->sbj_name] = $sbj->sbj_name;
+            }
+            return ['data' => $data];
+        } else
+            return [
+                'data' => [
+                    '工资与奖金' => '工资与奖金',
+                    '社保公积金' => '社保公积金'
+                ]
+            ];
     }
 
     private static function getPremium()
@@ -299,6 +314,7 @@ class Cash extends LFSModel
             'option' => [['text', '本金']],
         ];
     }
+
     /*
      * 含税或不含税
      */
@@ -307,18 +323,19 @@ class Cash extends LFSModel
         return [
             'data' => [],
 //            'option' => [['checkbox', '是否含税']],
-            'option' => [['select', 'withtax', '税率', ['0'=> '不含税', '3' => '3%增值税']]],
+            'option' => [['select', 'withtax', '税率', ['0' => '不含税', '3' => '3%增值税']]],
         ];
     }
 
     /*
      * $list Array 根据数组生成返回数据
      */
-    private static function genData($list){
+    private static function genData($list)
+    {
         $data = [];
-        foreach($list as $item){
+        foreach ($list as $item) {
             $sbj2 = explode(',', $item['subject_2']);
-            $info = mb_substr($item['order_no'],0,1, 'utf-8')=='预'?$item['order_no']:
+            $info = mb_substr($item['order_no'], 0, 1, 'utf-8') == '预' ? $item['order_no'] :
                 [
                     $item['order_no'],
                     'info' => [
@@ -331,6 +348,7 @@ class Cash extends LFSModel
         }
         return ['data' => $data];
     }
+
     /*
      * 投资种类
      * 选择项的值不能为0
@@ -392,7 +410,7 @@ class Cash extends LFSModel
     {
         $model = new Subjects();
         $arr_subj = $model->list_sub(6603, $key);
-        if(empty($arr_subj))
+        if (empty($arr_subj))
             $arr_subj = $model->list_sub(6603);
         $list = [];
         foreach ($arr_subj as $subj) {
@@ -470,7 +488,7 @@ class Cash extends LFSModel
             $new = 'allow';
             $options['reject'] = [];
             $employees = Employee::model()->findAll();
-            if(!empty($employees)){
+            if (!empty($employees)) {
                 foreach ($employees as $item) {
                     $options['reject'][] = $item['name'];
                 }
@@ -506,14 +524,14 @@ class Cash extends LFSModel
      * @type Integer 没有凭证就不显示
      * @version Integer version为2，为1表示普通用户版，表示vip版
      */
-    private static function getSupplier($key, $type=1, $version=1)
+    private static function getSupplier($key, $type = 1, $version = 1)
     {
         $subject = new Subjects();
         $arr = [2202, 2241];
         $list = [];
-        if($version == 1)
+        if ($version == 1)
             $list = $subject->getitem($arr, $key, ['type' => 0]);
-        else{
+        else {
             $list = Vendor::model()->list_vendors();
 //            foreach($vendors as $vendor){
 //                $list += $subject->getitem($arr, $vendor['company'], ['type' => 0]);
@@ -523,10 +541,10 @@ class Cash extends LFSModel
 //        $result = $subject->getitem($arr,$key,['工资','社保','公积金','折旧费','研发费']);
 //        $tax = self::getTax();
         $result = [];
-        if($type==2)
+        if ($type == 2)
             foreach ($list as $key => $item) {
-                $model = Transition::model()->findByAttributes(['entry_subject' => substr($key,1)]);
-                if($model)
+                $model = Transition::model()->findByAttributes(['entry_subject' => substr($key, 1)]);
+                if ($model)
                     $result[$item] = $item;
             }
         else
@@ -549,7 +567,7 @@ class Cash extends LFSModel
     {
         $subject = new Subjects();
         $arr = [1601, 1403, 1405, 6602, 6601, 6401, 1701];
-        $result = $subject->getitem($arr, $key, ['type'=>1, 'reject' => ['工资', '社保', '公积金', '折旧费', '研发费']]);
+        $result = $subject->getitem($arr, $key, ['type' => 1, 'reject' => ['工资', '社保', '公积金', '折旧费', '研发费']]);
         //在建工程和长期待摊，需要判断是否已经转固或完工 1604 1801
         $result += ProjectB::model()->getProject($key);
         $result += ProjectLong::model()->getProject($key);
@@ -561,7 +579,7 @@ class Cash extends LFSModel
     /*
      *  列出所有员工
      */
-    private static function getEmployee($key = '', $new=false)
+    private static function getEmployee($key = '', $new = false)
 
     {
         $model = new Employee();
@@ -598,8 +616,8 @@ eof;
         foreach ($list as $item) {
             $result['_' . $item['id']] = $item['department']['name'] . '/' . $item['name'];
         }
-        $list = Yii::app()->db->createCommand('select id,name from '.Department::model()->tableSchema->name )->queryAll();
-        if($new)
+        $list = Yii::app()->db->createCommand('select id,name from ' . Department::model()->tableSchema->name)->queryAll();
+        if ($new)
             return [
                 'data' => $result,
                 'new' => 'employee',
@@ -676,7 +694,7 @@ eof;
     private static function getSale($key = '')
     {
         $subject = new Subjects();
-        $arr = [ 6001];
+        $arr = [6001];
         $result = $subject->getitem($arr, '', ['type' => 0, 'sbj_number' => 6001]);
         return [
             'data' => array_flip(array_flip($result)),
@@ -687,20 +705,23 @@ eof;
         ];
     }
 
-    private static function getTaxFee($key = ''){
+    private static function getTaxFee($key = '')
+    {
         $subject = new Subjects();
         $arr = [2221];
         $result['个人所得税费用'] = '个人所得税费用';
         $result['营业税金及附加'] = '营业税金及附加';
         $result += $subject->getitem($arr, $key);
-        $sbj = $subject->getitem([6801,660207], $key, ['level'=>0, 'type'=>2]); //印花税
-        if(!empty($sbj))
+        $sbj = $subject->getitem([6801, 660207], $key, ['level' => 0, 'type' => 2]); //印花税
+        if (!empty($sbj))
             $result += $sbj;
         return [
             'data' => $result,
         ];
     }
-    private static function getTaxFee2($key = ''){
+
+    private static function getTaxFee2($key = '')
+    {
         $subject = new Subjects();
         $arr = [6403];
         $result = $subject->getitem($arr, $key);
@@ -708,30 +729,37 @@ eof;
             'data' => $result,
         ];
     }
+
     //不可调整 处理长期资产 的顺序
-    private static function getOtherOutcome($key = ''){
+    private static function getOtherOutcome($key = '')
+    {
         return [
-            'data' => ['处置长期资产','罚款','捐赠','税务罚款','补贴','其他'],
+            'data' => ['处置长期资产', '罚款', '捐赠', '税务罚款', '补贴', '其他'],
         ];
     }
-    private static function getOtherIncome($key = ''){
+
+    private static function getOtherIncome($key = '')
+    {
         return [
-            'data' => ['处置长期资产','罚款','捐赠','税收返还','补贴','其他'],
+            'data' => ['处置长期资产', '罚款', '捐赠', '税收返还', '补贴', '其他'],
         ];
     }
+
     //报废的资产
-    private static function getAssets($key = ''){
-        $stocks = Stock::model()->findAllByAttributes(['status'=>4, 'status_scrap'=>0]);
-        if($stocks){
-            foreach($stocks as $stock){
-                $result[$stock->id] = $stock->hs_no. '_'. $stock->name. '_'.  $stock->model;
+    private static function getAssets($key = '')
+    {
+        $stocks = Stock::model()->findAllByAttributes(['status' => 4, 'status_scrap' => 0]);
+        if ($stocks) {
+            foreach ($stocks as $stock) {
+                $result[$stock->id] = $stock->hs_no . '_' . $stock->name . '_' . $stock->model;
             }
-        }else
+        } else
             $result[] = '其他';
         return [
             'data' => $result
         ];
     }
+
     /*
      * 选项
      * 1支出 2收入
@@ -753,7 +781,7 @@ eof;
      */
     public static function chooseOption($type, $options, $data)
     {
-        $version = User2::model()->checkVIP()?2:1;
+        $version = User2::model()->checkVIP() ? 2 : 1;
         $result = [];
         $options = explode(",", $options);
         $data = explode("|", $data);
@@ -772,7 +800,7 @@ eof;
                         $result = self::getFacility($data[1]);
                     break;
                 case '工资社保'  :
-                    if($version==1){
+                    if ($version == 1) {
                         if (isset($options[3])) {
                             if (isset($options[4])) {
                                 $department = Employee::getDepart($options[4]);
@@ -790,11 +818,11 @@ eof;
 //                        }
                         } else
                             $result = self::getSalary();
-                    } else{
-                        if(isset($options[3])){
+                    } else {
+                        if (isset($options[3])) {
                             $result = Subjects::matchSubject($options[3], 2211);
                             return self::endOption($result);
-                        }else{
+                        } else {
                             $result = self::getSalary();
                         }
                     }
@@ -828,22 +856,21 @@ eof;
                         $result = self::getDeposit($type, $data[1]);
                     break;
                 case '供应商采购'  :
-                    if($version==1){
+                    if ($version == 1) {
                         if (isset($options[3]))
                             return self::endOption($options[3]);
                         $result = self::afterSupplier($data[1]);
                         $result['type'] = 'droplist';
-                    }
-                    else{
+                    } else {
                         if (isset($options[3])) {
                             if (isset($options[4])) {
                                 return self::endOption($options[4]);
-                            }else{
+                            } else {
                                 $order = Vendor::listOrders($options[3]);
-                                if(!empty($order))
+                                if (!empty($order))
                                     $result = self::genData($order);
                             }
-                        }else{
+                        } else {
                             $vendors = Vendor::getVendors($data[1]);
                             $result = ['data' => $vendors];
                         }
@@ -851,18 +878,18 @@ eof;
                     break;
                 case '员工报销'  :
                     //若付款金额小于上期预提的金额，则将其他应付款2241作为一级科目，该员工名称作为二级科目形成分录；
-                    if($version==1){
+                    if ($version == 1) {
                         if (isset($options[3]))
                             return self::endOption($options[3]);
                         $result = self::afterEmployee($data[1]);
                         $result['type'] = 'droplist';
-                    }else{
+                    } else {
                         if (isset($options[3])) {
                             if (isset($options[4])) {
-                                if($options[4]=='预支款'){
-                                    $sbj = Subjects::matchSubject($options[3],['1221']);
+                                if ($options[4] == '预支款') {
+                                    $sbj = Subjects::matchSubject($options[3], ['1221']);
                                     return self::endOption($sbj);
-                                }else {
+                                } else {
                                     $option = [];
                                     //员工报销需要把报销的项目列出来供选择 多选
                                     $rem = Reimburse::model()->findByAttributes(['order_no' => $options[4]]);
@@ -870,26 +897,26 @@ eof;
                                     if ($rem) {
                                         $checkbox = [];
                                         $tmp3 = explode(',', $rem['subject_2']);
-                                        if(count($tmp3) > 1){   //报销的贷方科目只有其他应付和其他应收这2项
+                                        if (count($tmp3) > 1) {   //报销的贷方科目只有其他应付和其他应收这2项
                                             $sbj = $tmp3[0];
-                                        }else
+                                        } else
                                             $sbj = $rem['subject_2'];
                                         $pro_arr = ['travel', 'benefit', 'traffic', 'phone', 'entertainment', 'office', 'rent', 'watere', 'train', 'service', 'stamping'];
                                         foreach ($pro_arr as $item) {
                                             $real_orders = json_decode($rem['paid'], true);
                                             $paid = '';
                                             $checked = 0;
-                                            if($real_orders){
+                                            if ($real_orders) {
                                                 foreach ($real_orders as $a) {
-                                                    $paid .= ','. $a;
+                                                    $paid .= ',' . $a;
                                                 }
 
-                                                if($options[0]!='0' && isset($real_orders[$options[0]])){
-                                                    if(strpos($real_orders[$options[0]], $item) !== false)
+                                                if ($options[0] != '0' && isset($real_orders[$options[0]])) {
+                                                    if (strpos($real_orders[$options[0]], $item) !== false)
                                                         $checkbox[] = ['checkbox', $item . '_amount', Reimburse::model()->getAttributeLabel($item . '_amount'), $rem[$item . '_amount'], "1"];
                                                 }
 
-                                            }else
+                                            } else
                                                 $checked = 1;
                                             $paid = array_filter(explode(',', $paid));
                                             if ($rem[$item . '_amount'] > 0 && !in_array($item . '_amount', $paid))
@@ -900,18 +927,18 @@ eof;
                                     }
                                     return self::endOption($sbj, $option);
                                 }
-                            }else{
+                            } else {
                                 //todo 报销订单支付完成判断
                                 $orders = Reimburse::listOrders($options[3]);
-                                if(!empty($orders)){
-                                    foreach($orders as $item){
+                                if (!empty($orders)) {
+                                    foreach ($orders as $item) {
                                         $tmp[$item['order_no']] = $item['order_no'];
                                     }
                                 }
-                                $tmp[] = ['预支款' =>'预支款'];
-                                $result =  ['data' => $tmp];
+                                $tmp[] = ['预支款' => '预支款'];
+                                $result = ['data' => $tmp];
                             }
-                        }else{
+                        } else {
                             $order = Reimburse::getEmployee($data[1]);
                             $result = ['data' => $order];
                         }
@@ -949,15 +976,15 @@ eof;
                         $result = self::getInterest($data[1]);
                     break;
                 case '材料销售'  :
-                    $sbj = Subjects::matchSubject($options[2],'6402');
+                    $sbj = Subjects::matchSubject($options[2], '6402');
                     return self::endOption($sbj);
                     break;
                 case '技术转让'  :
-                    $sbj = Subjects::matchSubject($options[2],'6402');
+                    $sbj = Subjects::matchSubject($options[2], '6402');
                     return self::endOption($sbj);
                     break;
                 case '资产租赁'  :
-                    $sbj = Subjects::matchSubject($options[2],'6402');
+                    $sbj = Subjects::matchSubject($options[2], '6402');
                     return self::endOption($sbj);
                     break;
 //                    if (isset($options[3])) {
@@ -973,9 +1000,8 @@ eof;
                     break;
                 case '支付税金'  :  //将应交税费2221子科目列出
                     if (isset($options[3])) {
-                        if($options[3]=='个人所得税费用')
-                        {
-                            if(isset($options[4])) {
+                        if ($options[3] == '个人所得税费用') {
+                            if (isset($options[4])) {
                                 $department = Employee::getDepartType($options[4]);
                                 switch ($department) {
                                     case 1:
@@ -992,32 +1018,30 @@ eof;
                                         break;
                                 }
                                 return self::endOption($result);
-                            }
-                            else
+                            } else
                                 $result = self::getEmployee($data[1]);
-                        }elseif($options[3]=='营业税金及附加'){
-                            if(isset($options[4]))
+                        } elseif ($options[3] == '营业税金及附加') {
+                            if (isset($options[4]))
                                 return self::endOption($options[4]);
                             else
                                 $result = self::getTaxFee2($data[1]);
-                        }
-                        else
+                        } else
                             return self::endOption($options[3]);
                     } else
                         $result = self::getTaxFee($data[1]);
                     break;
                 case '其他支出'  :
                     if (isset($options[3])) {
-                        if($options[3]==0){ //选择处置长期资产
+                        if ($options[3] == 0) { //选择处置长期资产
                             if (isset($options[4])) {
-                                if($options[4]==0)
+                                if ($options[4] == 0)
                                     return self::endOption(6711);
-                                else{
+                                else {
                                     return self::endOption(1606);
                                 }
-                            }else
+                            } else
                                 $result = self::getAssets($data[1]);
-                        }else
+                        } else
                             return self::endOption(6711);
                     } else
                         $result = self::getOtherOutcome($data[1]);
@@ -1082,17 +1106,17 @@ eof;
                         $subject = new Subjects();
                         if ($options[3] == 0) { //收回投资
                             if (isset($options[4])) {
-                                if (isset($options[5])){
+                                if (isset($options[5])) {
                                     return self::endOption($options[5]);
-                                }else{
-                                    if($options[4]==0){
-                                        $result = ['data' => ['_1101'=>'交易性金融资产']];
-                                    }else
-                                        $result = ['data' => ['_1511'=>'长期股权投资']];
+                                } else {
+                                    if ($options[4] == 0) {
+                                        $result = ['data' => ['_1101' => '交易性金融资产']];
+                                    } else
+                                        $result = ['data' => ['_1511' => '长期股权投资']];
                                 }
                             } else {
                                 $list = ['0' => '小于一年', '1' => '大于一年'];
-                                $result =  ['data' => $list,];
+                                $result = ['data' => $list,];
                             }
                         } else {  //收回借款
                             if (isset($options[4])) {
@@ -1108,7 +1132,7 @@ eof;
                         $result = self::getIncomeItem($type, $data[1]);
                     break;
                 case '销售收入'  :
-                    if($version==1){
+                    if ($version == 1) {
                         if (isset($options[3])) {
                             //如果选择的科目，其一级科目是6001，可以是接返回，否则根据名字，在6001下新建子科目再返回
                             $result = self::withVat();//是否含税
@@ -1118,7 +1142,7 @@ eof;
                             return self::endOption($options[3], $result);
                         } else
                             $result = self::getSale($data[1]);
-                    }else{
+                    } else {
                         if (isset($options[3])) {
                             if (isset($options[4])) {
 //                                if($options[4] == '2203'){  //预收款，生成一个订单号
@@ -1127,12 +1151,12 @@ eof;
 //                                    $order->save();
 //                                }
                                 return self::endOption($options[4]);
-                            }else{
+                            } else {
                                 $order = Client::listOrders($options[3]);
-                                if($order)
+                                if ($order)
                                     $result = self::genData($order);
                             }
-                        }else{
+                        } else {
                             $clients = Client::getClient($data[1]);
                             $result = ['data' => $clients];
                         }
@@ -1154,15 +1178,15 @@ eof;
                         $result = self::getInterest();
                     break;
                 case '材料销售'  :
-                    $sbj = Subjects::matchSubject($options[2],'6051');
+                    $sbj = Subjects::matchSubject($options[2], '6051');
                     return self::endOption($sbj);
                     break;
                 case '技术转让'  :
-                    $sbj = Subjects::matchSubject($options[2],'6051');
+                    $sbj = Subjects::matchSubject($options[2], '6051');
                     return self::endOption($sbj);
                     break;
                 case '资产租赁'  :
-                    $sbj = Subjects::matchSubject($options[2],'6051');
+                    $sbj = Subjects::matchSubject($options[2], '6051');
                     return self::endOption($sbj);
                     break;
                 case '收回坏账'  :
@@ -1170,16 +1194,16 @@ eof;
                     break;
                 case '其他收入'  :
                     if (isset($options[3])) {
-                        if($options[3]==0){ //选择处置长期资产
+                        if ($options[3] == 0) { //选择处置长期资产
                             if (isset($options[4])) {
-                                if($options[4]==0)
+                                if ($options[4] == 0)
                                     return self::endOption(6301);
-                                else{
+                                else {
                                     return self::endOption(1606);
                                 }
-                            }else
+                            } else
                                 $result = self::getAssets($data[1]);
-                        }else
+                        } else
                             return self::endOption(6301);
                     } else
                         $result = self::getOtherIncome($data[1]);
@@ -1225,31 +1249,33 @@ eof;
     /*
      * 修改科目凭证科目为父科目
      */
-    public static function updateSubject($sbj){
+    public static function updateSubject($sbj)
+    {
         $criteria = new CDbCriteria();
         $criteria->compare('subject', $sbj, true);
-        $rows = Bank::model()->updateAll(['subject' => substr($sbj,0,-2)], $criteria);
+        $rows = Bank::model()->updateAll(['subject' => substr($sbj, 0, -2)], $criteria);
         $criteria = new CDbCriteria();
         $criteria->compare('subject_2', $sbj, true);
-        $rows = Bank::model()->updateAll(['subject_2' => substr($sbj,0,-2)], $criteria);
+        $rows = Bank::model()->updateAll(['subject_2' => substr($sbj, 0, -2)], $criteria);
     }
 
     /*
      * 如果是采购或销售或报销，金额不能大于未支付部分
      */
-    public function checkAmount($attribute, $params){
+    public function checkAmount($attribute, $params)
+    {
         $type = $this->type;
-        if($type=='purchase' || $type=='product'){
-            if($type=='purchase')
+        if ($type == 'purchase' || $type == 'product') {
+            if ($type == 'purchase')
                 $order = Purchase::model()->findByPk($this->pid);
             else
                 $order = Product::model()->findByPk($this->pid);
-            $unpaid = floatval($order->price)*$order->count - $order->getPaid();
+            $unpaid = floatval($order->price) * $order->count - $order->getPaid();
             $unpaid = round($unpaid, 2);
-            if($unpaid > 0){
+            if ($unpaid > 0) {
                 $old = $this->findByPk($this->id);
-                $unpaid += $this->isNewRecord?0:$old->amount;
-                if($this->amount > $unpaid)
+                $unpaid += $this->isNewRecord ? 0 : $old->amount;
+                if ($this->amount > $unpaid)
                     $this->addError($attribute, "金额不能大于$unpaid");
             }
         }
@@ -1258,20 +1284,22 @@ eof;
     /*
      * 有关联的数据
      */
-    public function getRelation($type,$id){
-        $relation = Purchase::model()->findAllByAttributes([],"relation like '%\"bank\":\"$id\"%'");
-        $relation += Product::model()->findAllByAttributes([],"relation like '%\"bank\":\"$id\"%'");
-        $relation += Reimburse::model()->findAllByAttributes([],"relation like '%\"bank\":\"$id\"%'");
+    public function getRelation($type, $id)
+    {
+        $relation = Purchase::model()->findAllByAttributes([], "relation like '%\"bank\":\"$id\"%'");
+        $relation += Product::model()->findAllByAttributes([], "relation like '%\"bank\":\"$id\"%'");
+        $relation += Reimburse::model()->findAllByAttributes([], "relation like '%\"bank\":\"$id\"%'");
         return $relation;
     }
 
     /*
      * 预支订单号
      */
-    public function porder_no(){
-        $porder = Preparation::model()->findByAttributes(['type'=>'cash','pid'=>$this->id]);
-        if($porder)
-            return $this->order_no. ','. $porder->order_no;
+    public function porder_no()
+    {
+        $porder = Preparation::model()->findByAttributes(['type' => 'cash', 'pid' => $this->id]);
+        if ($porder)
+            return $this->order_no . ',' . $porder->order_no;
         else
             return $this->order_no;
     }
@@ -1283,26 +1311,26 @@ eof;
      * @sbj     具体到某个科目
      * @option  是否含税
      */
-    public function getAmount($type, $zone, $date, $keys='', $option= '', $sbj = '')
+    public function getAmount($type, $zone, $date, $keys = '', $option = '', $sbj = '')
     {
         $amount = 0;
-        if($keys == '')
+        if ($keys == '')
             $keys = Cash::getIncome();
-        if(!is_array($keys))
+        if (!is_array($keys))
             $keys = [$keys];
-        $where = $option==1?'entry_subject like "1001%"': 'entry_subject not like "1001%" and entry_subject not like "2221%"';
+        $where = $option == 1 ? 'entry_subject like "1001%"' : 'entry_subject not like "1001%" and entry_subject not like "2221%"';
         foreach ($keys as $key) {
-            if($zone=='month')
-                $whereBank = ' date <= "'. substr($date, 0, 6). '31" and date >= "'. substr($date, 0, 6). '01"';
-            else{
+            if ($zone == 'month')
+                $whereBank = ' date <= "' . substr($date, 0, 6) . '31" and date >= "' . substr($date, 0, 6) . '01"';
+            else {
                 $quarter = getQuarter($date);
                 $whereBank = " date >= '" . $quarter['start'] . "' and date <= '" . $quarter['end'] . "'";
             }
-            $banks = Cash::model()->findAllByAttributes(['status_id'=> 1, 'entry_transaction'=> $type=='支出'?1:2], "$whereBank and path like '%$type%' and path like '%$key%'");//已经生成凭证的记录才需要统计金额
-            if($banks != null){
+            $banks = Cash::model()->findAllByAttributes(['status_id' => 1, 'entry_transaction' => $type == '支出' ? 1 : 2], "$whereBank and path like '%$type%' and path like '%$key%'");//已经生成凭证的记录才需要统计金额
+            if ($banks != null) {
                 foreach ($banks as $bank) {
-                    $tran = Transition::model()->findByAttributes(['data_type'=>'bank', 'data_id'=>$bank->id], $where);
-                    if($tran != null){
+                    $tran = Transition::model()->findByAttributes(['data_type' => 'bank', 'data_id' => $bank->id], $where);
+                    if ($tran != null) {
                         $amount += $tran->entry_amount;
                     }
                 }

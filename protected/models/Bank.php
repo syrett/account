@@ -235,11 +235,12 @@ class Bank extends LFSModel
         ];
     }
 
-    private static function getFacility($key){
+    private static function getFacility($key)
+    {
 
         $subject = new Subjects();
         $arr = [6602];
-        $result = $subject->getitem($arr, $key, ['reject'=>['工资', '社保']]);
+        $result = $subject->getitem($arr, $key, ['reject' => ['工资', '社保']]);
         return [
             'data' => $result,
             'new' => 'allow',
@@ -248,14 +249,23 @@ class Bank extends LFSModel
             'target' => true,
         ];
     }
+
     private static function getSalary()
     {
-        return [
-            'data' => [
-                '工资与奖金' => '工资与奖金',
-                '社保公积金' => '社保公积金'
-            ]
-        ];
+        //应付职工薪酬子科目
+        $sbjs = Subjects::model()->findAllByAttributes(['has_sub' => 0], 'sbj_number like "2211%"');
+        if (count($sbjs) > 0) {
+            foreach ($sbjs as $sbj) {
+                $data[$sbj->sbj_name] = $sbj->sbj_name;
+            }
+            return ['data' => $data];
+        } else
+            return [
+                'data' => [
+                    '工资与奖金' => '工资与奖金',
+                    '社保公积金' => '社保公积金'
+                ]
+            ];
     }
 
     private static function getPremium()
@@ -322,7 +332,7 @@ class Bank extends LFSModel
         return [
             'data' => [],
 //            'option' => [['checkbox', 'withtax', '是否含税', '3%', '1']],
-            'option' => [['select', 'withtax', '税率', ['0'=> '不含税', '3' => '3%增值税']]],
+            'option' => [['select', 'withtax', '税率', ['0' => '不含税', '3' => '3%增值税']]],
         ];
     }
 
@@ -828,10 +838,10 @@ eof;
                         } else
                             $result = self::getSalary();
                     } else {
-                        if(isset($options[3])){
+                        if (isset($options[3])) {
                             $result = Subjects::matchSubject($options[3], 2211);
                             return self::endOption($result);
-                        }else{
+                        } else {
                             $result = self::getSalary();
                         }
                     }
@@ -1345,26 +1355,26 @@ eof;
      * @sbj     具体到某个科目
      * @option  是否含税
      */
-    public function getAmount($type, $zone, $date, $keys='', $option= '', $sbj = '')
+    public function getAmount($type, $zone, $date, $keys = '', $option = '', $sbj = '')
     {
         $amount = 0;
-        if($keys == '')
+        if ($keys == '')
             $keys = Bank::getIncome();
-        if(!is_array($keys))
+        if (!is_array($keys))
             $keys = [$keys];
-        $where = $option==1?'entry_subject like "1002%"': 'entry_subject not like "1002%" and entry_subject not like "2221%"';
+        $where = $option == 1 ? 'entry_subject like "1002%"' : 'entry_subject not like "1002%" and entry_subject not like "2221%"';
         foreach ($keys as $key) {
-            if($zone=='month')
-                $whereBank = ' date <= "'. substr($date, 0, 6). '31" and date >= "'. substr($date, 0, 6). '01"';
-            else{
+            if ($zone == 'month')
+                $whereBank = ' date <= "' . substr($date, 0, 6) . '31" and date >= "' . substr($date, 0, 6) . '01"';
+            else {
                 $quarter = getQuarter($date);
                 $whereBank = " date >= '" . $quarter['start'] . "' and date <= '" . $quarter['end'] . "'";
             }
-            $banks = Bank::model()->findAllByAttributes(['status_id'=> 1, 'entry_transaction'=> $type=='支出'?1:2], "$whereBank and path like '%$type%' and path like '%$key%'");//已经生成凭证的记录才需要统计金额
-            if($banks != null){
+            $banks = Bank::model()->findAllByAttributes(['status_id' => 1, 'entry_transaction' => $type == '支出' ? 1 : 2], "$whereBank and path like '%$type%' and path like '%$key%'");//已经生成凭证的记录才需要统计金额
+            if ($banks != null) {
                 foreach ($banks as $bank) {
-                    $tran = Transition::model()->findByAttributes(['data_type'=>'bank', 'data_id'=>$bank->id], $where);
-                    if($tran != null){
+                    $tran = Transition::model()->findByAttributes(['data_type' => 'bank', 'data_id' => $bank->id], $where);
+                    if ($tran != null) {
                         $amount += $tran->entry_amount;
                     }
                 }
