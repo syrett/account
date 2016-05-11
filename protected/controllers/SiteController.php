@@ -75,9 +75,14 @@ class SiteController extends Controller
         //日志
         $logs = new OperatingRecords();
 
+        //文章
         $blog = new Blog();
+        $blog->unsetAttributes();  // clear any default values
+        if (isset($_GET['Blog'])) {
+            $blog->attributes = $_GET['Blog'];
+        }
 
-        $this->render('index', ['need_chg_tax' => $need_chg_tax, 'logs' => $logs, 'blog'=>$blog]);
+        $this->render('index', array('need_chg_tax' => $need_chg_tax, 'logs' => $logs, 'blog'=>$blog));
 //        $this->redirect($this->createUrl('transition/create'));
     }
 

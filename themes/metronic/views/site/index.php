@@ -535,7 +535,8 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
                                 'emptyText' => Yii::t('transition', '暂无相关数据'),
                                 'dataProvider' => $blog->search(0),
                                 'rowCssClass' => array('row-odd', 'row-even'),
-
+                                'filter' => $blog,
+                                'filterCssClass' => 'filter',
                                 'pager' => array(
                                     'class' => 'CLinkPager',
                                     'header' => '',
@@ -549,7 +550,7 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
                                 //'hideHeader' => true,
                                 'columns' => array(
                                     array('name'=>'title', 'value'=>'$data->title'),
-                                    array('name'=>'created_at', 'value'=>'date("Y/m/d", $data->created_at)'),
+                                    array('name'=>'created_at', 'value'=>'date("Y/m/d", $data->created_at)', 'filter'=>''),
 
                                     array(
                                         'class' => 'CLinkColumn',
