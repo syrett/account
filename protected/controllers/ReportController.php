@@ -342,7 +342,7 @@ class ReportController extends Controller
 
         } elseif ($condom->taxpayer_t == 2) {
             $data = Product::getTax1_1();
-            $this->render("tax1", ['data' => $data]);
+            $this->render("tax1", ['data' => $data, 'date' => $date]);
 
         }
     }
