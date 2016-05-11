@@ -30,7 +30,11 @@ class Blog extends CActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-        return array();
+        return array(
+
+            array('title', 'required'),
+            //array('id, title', 'safe', 'on' => 'search'),
+        );
 	}
 
 	/**
@@ -41,7 +45,7 @@ class Blog extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-            
+
 		);
 	}
 
@@ -76,8 +80,12 @@ class Blog extends CActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-        $criteria->compare('category', $category);
         $criteria->compare('status_id', 1);
+        $criteria->compare('category', $category);
+
+        $criteria->compare('title', $this->title, true);
+
+        file_put_contents('a.txt', var_export($this->title, true)."\n", FILE_APPEND);
 
         $sort = new CSort();
         $sort->defaultOrder = array(
