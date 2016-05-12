@@ -250,22 +250,26 @@ class Bank extends LFSModel
         ];
     }
 
-    private static function getSalary()
+    private static function getSalary($version)
     {
-        //应付职工薪酬子科目
-        $sbjs = Subjects::model()->findAllByAttributes(['has_sub' => 0], 'sbj_number like "2211%"');
-        if (count($sbjs) > 0) {
-            foreach ($sbjs as $sbj) {
-                $data[$sbj->sbj_name] = $sbj->sbj_name;
-            }
-            return ['data' => $data];
-        } else
+        //应付职工薪酬子科目,如果是大众版，应该是管理费用子科目
+        if($version == 1){
             return [
                 'data' => [
                     '工资与奖金' => '工资与奖金',
                     '社保公积金' => '社保公积金'
                 ]
             ];
+
+        }else{
+            $sbjs = Subjects::model()->findAllByAttributes(['has_sub' => 0], 'sbj_number like "2211%"');
+            if (count($sbjs) > 0) {
+                foreach ($sbjs as $sbj) {
+                    $data[$sbj->sbj_name] = $sbj->sbj_name;
+                }
+                return ['data' => $data];
+            }
+        }
     }
 
     private static function getPremium()
@@ -836,13 +840,13 @@ eof;
                             $result = self::getEmployee($data[1]);//员工列表
 //                        }
                         } else
-                            $result = self::getSalary();
+                            $result = self::getSalary($version);
                     } else {
                         if (isset($options[3])) {
                             $result = Subjects::matchSubject($options[3], 2211);
                             return self::endOption($result);
                         } else {
-                            $result = self::getSalary();
+                            $result = self::getSalary($version);
                         }
                     }
                     break;

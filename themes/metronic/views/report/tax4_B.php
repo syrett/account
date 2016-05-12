@@ -129,20 +129,15 @@
                 <td class="right"><?= $data[14]['A'] ?></td>
             </tr>
             <tr item="15">
-                <td class="center" rowspan="3" colspan="2" style="vertical-align: middle;" >应纳所得税额的计算 </td>
+                <td class="center" rowspan="2" colspan="2" style="vertical-align: middle;" >应纳所得税额的计算 </td>
                 <td >税率（<?= $data[15]['tax'] ?>%）</td>
                 <td class='center'  >15</td>
                 <td class="right"><?= $data[15]['tax'] ?></td>
             </tr>
-            <tr item="16-1">
-                <td >应纳所得税额（按收入总额核定，11行×15行）</td>
-                <td class='center'  >16-1</td>
+            <tr item="16">
+                <td >应纳所得税额（11行×15行或14行×15行）</td>
+                <td class='center'  >16</td>
                 <td class="right"><?= $data[16]['A'] ?></td>
-            </tr>
-            <tr item="16-2">
-                <td >应纳所得税额（按成本费用核定，14行×15行）</td>
-                <td class='center'  >16-2</td>
-                <td class="right"><?= $data[16]['C'] ?></td>
             </tr>
             <tr item="17">
                 <td class="center" rowspan="5" colspan="2" style="vertical-align: middle;" >应补（退）所得税额的计算 </td>
@@ -160,15 +155,10 @@
                 <td class='center'  >19</td>
                 <td class="right"><input type="text" class="input-small" id="input_19_A"/></td>
             </tr>
-            <tr item="20-1">
-                <td >应补（退）所得税额（16-1行-17行-19行）</td>
-                <td class='center'  >20-1</td>
+            <tr item="20">
+                <td >应补（退）所得税额（16行-17行-19行）</td>
+                <td class='center'  >20</td>
                 <td class="right"><?= $data[20]['A'] ?></td>
-            </tr>
-            <tr item="20-2">
-                <td >应补（退）所得税额（16-2行-17行-19行）</td>
-                <td class='center'  >20-2</td>
-                <td class="right"><?= $data[20]['C'] ?></td>
             </tr>
             </tbody>
         </table>

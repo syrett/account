@@ -176,62 +176,7 @@
                 <td class="right"><?= $data[24]['A'] ?></td>
                 <td class="right"><?= $data[24]['C'] ?></td>
             </tr>
-            <tr item="25">
-                <td class="center">25</td>
-                <td class="left" colspan="4"><strong>三、按照税务机关确定的其他方法预缴</strong></td>
-            </tr>
-            <tr item="26">
-                <td class="center">26</td>
-                <td class="left" colspan="2">本月（季）税务机关确定的预缴所得税额</td>
-                <td class="right">0</td>
-                <td class="right">0</td>
-            </tr>
-            <tr item="27">
-                <td class="center">27</td>
-                <td class="left" colspan="4"><strong>总分机构纳税人</strong>
-                </td>
-            </tr>
-            <tr item="28">
-                <td class="center">28</td>
-                <td class="center" rowspan="4" style="vertical-align: middle">总机构</td>
-                <td class="left">总机构分摊所得税额(15行或24行或26行×总机构分摊预缴比例)
-                </td>
-                <td class="right">0</td>
-                <td class="right">0</td>
-            </tr>
-            <tr item="29">
-                <td class="center">29</td>
-                <td class="left">财政集中分配所得税额</td>
-                <td class="right">0</td>
-                <td class="right">0</td>
-            </tr>
-            <tr item="30">
-                <td class="center">30</td>
-                <td class="left">分支机构分摊所得税额(15行或24行或26行×分支机构分摊比例)
-                </td>
-                <td class="right">0</td>
-                <td class="right">0</td>
-            </tr>
-            <tr item="31">
-                <td class="center">31</td>
-                <td class="left">其中：总机构独立生产经营部门应分摊所得税额</td>
-                <td class="right">0</td>
-                <td class="right">0</td>
-            </tr>
-            <tr item="32">
-                <td class="center">32</td>
-                <td class="center" rowspan="2" style="vertical-align: middle">分支机构</td>
-                <td class="left">分配比例(%)
-                </td>
-                <td class="right">0</td>
-                <td class="right">0</td>
-            </tr>
-            <tr item="33">
-                <td class="center">33</td>
-                <td class="left">分配的所得税额</td>
-                <td class="right">0</td>
-                <td class="right">0</td>
-            </tr>
+
             </tbody>
         </table>
         <table class="table table-bordered tax-table tax1_footer" id="tax1_footer">

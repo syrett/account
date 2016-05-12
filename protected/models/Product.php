@@ -288,7 +288,7 @@ class Product extends LFSModel
         return $data;
     }
 
-    protected function getTax($sbj, $type, $date='', $option = 'A', $model = 'Product', $ext = '')
+    protected function getTax($sbj, $type, $date = '', $option = 'A', $model = 'Product', $ext = '')
     {
         $amount = 0;
         if ($option == 'A' || $option == '') {
@@ -301,12 +301,12 @@ class Product extends LFSModel
         if (!is_array($sbj))
             $sbj = [$sbj];
         $where = '1=1';
-        $date = $date!=='' ? $date : Transition::getCondomDate();
+        $date = $date !== '' ? $date : Transition::getCondomDate();
         $format = $model == 'Product' ? 'Ymd' : 'Y-m-d';
         if (count($sbj) > 0) {
             foreach ($sbj as $item) {
                 $subject = $model == 'Product' ? 'subject' : 'entry_subject';     //表字段不一样
-                if($item->has_sub == 1)
+                if ($item->has_sub == 1)
                     $where .= $where == '1=1' ? " and ($subject regexp '^$item->sbj_number.+'" : " or $subject regexp '^$item->sbj_number.+'";
                 else
                     $where .= $where == '1=1' ? " and ($subject = '$item->sbj_number'" : " or $subject = '$item->sbj_number'";
@@ -325,7 +325,7 @@ class Product extends LFSModel
 
             if ($model == 'Product')
                 $model2 = new Product();
-            elseif ($model == 'Transition'){
+            elseif ($model == 'Transition') {
                 $model2 = new Transition();
             }
             $products = $model2->findAllByAttributes([], $where);
@@ -338,7 +338,7 @@ class Product extends LFSModel
                 }
             }
             if ($option == 'A')
-                $data['A'] =  sprintf("%.2f", $amount);
+                $data['A'] = sprintf("%.2f", $amount);
             else
                 $data['B'] = sprintf("%.2f", $amount);
             //本年累计 货物
@@ -422,7 +422,7 @@ class Product extends LFSModel
         $data[17]['A'] = $data[12]['A'];
 
         //实际抵扣税额        栏次      18(如17<11,则为17, 否则为11)
-        $data[18]['A'] = $data[17]['A']< $data[11]['A']?$data[17]['A']:$data[11]['A'];
+        $data[18]['A'] = $data[17]['A'] < $data[11]['A'] ? $data[17]['A'] : $data[11]['A'];
         $data[18]['C'] = $data[12]['C'];
 
         //应纳税额      栏次      19=11-18
@@ -439,11 +439,11 @@ class Product extends LFSModel
 
         //本期缴纳上期应纳税额       栏次       30
         //222101增值税子科目，未交增值税 或
-        $sbj = Subjects::model()->findByAttributes(['sbj_name'=>'未交增值税'], 'sbj_number regexp "^222101"');
-        if($sbj != null)
+        $sbj = Subjects::model()->findByAttributes(['sbj_name' => '未交增值税'], 'sbj_number regexp "^222101"');
+        if ($sbj != null)
             $data[30] = Product::model()->getTax($sbj, $type, $date, 'A', 'Transition', ' and entry_transaction = 1');
         else
-            $data[30] = ['A'=>0, 'C'=>0];
+            $data[30] = ['A' => 0, 'C' => 0];
         //本期已缴税额    栏次      27=28+29+30+31
         $data[27] = $data[30];
 
@@ -452,15 +452,15 @@ class Product extends LFSModel
         $data[32]['C'] = $data[24]['C'] - $data[27]['C'];
 
         //其中：欠缴税额（≥0    栏次      33=25+26-27
-        $data[33]['A'] = - $data[27]['A'];
-        $data[33]['C'] = - $data[27]['C'];
+        $data[33]['A'] = -$data[27]['A'];
+        $data[33]['C'] = -$data[27]['C'];
 
         //本期应补(退)税额     栏次      34=24-28-29
         $data[34]['A'] = $data[24]['A'];
         $data[34]['C'] = $data[24]['C'];
 
         //期末未缴查补税    栏次       38=16+22+36-37
-        $data[38] = ['A'=> 0, 'C'=> 0];
+        $data[38] = ['A' => 0, 'C' => 0];
 
         return $data;
     }
@@ -468,7 +468,8 @@ class Product extends LFSModel
     /*
      * 企业所得税A类
      */
-    public function getTax4_a(){
+    public function getTax4_a()
+    {
         $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : 'month';
         $date = isset($_REQUEST['date']) ? $_REQUEST['date'] : date('Ymt', strtotime("-1 months"));
         $data = [];
@@ -492,10 +493,10 @@ class Product extends LFSModel
         $data[9] = $data[4];
 
         //税率        10
-        $option = Options::model()->findByAttributes(['entry_subject'=>'6801']);
-        if($option != null){
+        $option = Options::model()->findByAttributes(['entry_subject' => '6801']);
+        if ($option != null) {
             $data[10]['tax'] = $option['value'];
-        }else
+        } else
             $data[10]['tax'] = '25';
 
         //应纳所得税额（9行×10行）        11
@@ -504,17 +505,17 @@ class Product extends LFSModel
 
         // 实际已预缴所得税额        13
         $sbj = Subjects::model()->findByAttributes([], 'sbj_number regexp "^2221" and sbj_name like "%企业所得税%"');
-        if($sbj)
-            $data[13] = Product::getTax($sbj, $type, $date, '','Transition');
+        if ($sbj)
+            $data[13] = Product::getTax($sbj, $type, $date, '', 'Transition');
         else
-            $data[13] = ['A'=>0, 'C'=>0];
+            $data[13] = ['A' => 0, 'C' => 0];
 
         //应补（退）所得税额（11行-12行-13行-14行）        15
         $data[15]['C'] = $data[11]['C'] - $data[13]['C'];
 
         //第17行“本月（季）实际应补（退）所得税额”：根据相关行次计算填报。第17行“累计金额”列=15行-16行，且第17行≤0时，填0，“本期金额”列不填       17
         $data[17]['C'] = $data[15]['C'];
-        if($data[17]['C'] <= 0)
+        if ($data[17]['C'] <= 0)
             $data[17]['C'] = 0;
 
         //本月（季）应纳税所得额（19行×1/4或1/12）         20
@@ -522,9 +523,9 @@ class Product extends LFSModel
         $data[20]['C'] = 0;
 
         //税率        21
-        if($option != null){
+        if ($option != null) {
             $data[21]['tax'] = $option['value'];
-        }else
+        } else
             $data[21]['tax'] = '25';
 
         //本月（季）应纳所得税额（20行×21行）      22
@@ -538,10 +539,12 @@ class Product extends LFSModel
 
         return $data;
     }
+
     /*
      * 企业所得税B类
      */
-    public function getTax4_b(){
+    public function getTax4_b()
+    {
 
         $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : 'month';
         $date = isset($_REQUEST['date']) ? $_REQUEST['date'] : date('Ymt', strtotime("-1 months"));
@@ -567,7 +570,7 @@ class Product extends LFSModel
         $data[9]['A'] = $data[1]['A'] - $data[3]['A'];
 
         //税务机关核定的应税所得率（%）      10
-        $option = Options::model()->findByAttributes(['entry_subject'=>'6801']);
+        $option = Options::model()->findByAttributes(['entry_subject' => '6801']);
         $data[10]['tax'] = $option['year'];
 
         //应纳税所得额（9行×10行）        11
@@ -586,23 +589,26 @@ class Product extends LFSModel
         $data[13]['tax'] = $option['year'];
 
         //应纳税所得额[12行÷(100%－13行)×13行]        14
-        $data[14]['A'] = sprintf("%.2f", $data[12]['A']/(100-$option['year']) * $option['year']);
+        $data[14]['A'] = sprintf("%.2f", $data[12]['A'] / (100 - $option['year']) * $option['year']);
 
         //税率（25%）       15
         $data[15]['tax'] = $option['value'];
 
         //应纳所得税额（11行×15行或14行×15行）       16
-        $data[16]['A'] = $data[11]['A'] * $option['value'] / 100;
-        $data[16]['C'] = $data[14]['A'] * $option['value'] / 100;
+        $condom = Condom::getCondom();
+        if ($condom->income_t == 1)
+            $data[16]['A'] = $data[11]['A'] * $option['value'] / 100;
+        elseif ($condom->income_t == 2)
+            $data[16]['A'] = $data[14]['A'] * $option['value'] / 100;
 
         //应补（退）所得税额（16行-17行-19行）    20
         $data[20] = $data[16];
 
 
-        $option = Options::model()->findByAttributes(['entry_subject'=>'6801']);
-        if($option != null){
+        $option = Options::model()->findByAttributes(['entry_subject' => '6801']);
+        if ($option != null) {
             $data[15]['tax'] = $option['value'];
-        }else
+        } else
             $data[15]['tax'] = '25';
 
         return $data;

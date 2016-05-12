@@ -223,8 +223,8 @@ class Post extends CActiveRecord
             $post->subject_id = $sub;
             $post->debit = $arr['debit'];
             $post->credit = $arr['credit'];
-            $post->debit_2 = $arr['debit_2'];
-            $post->credit_2 = $arr['credit_2'];
+            $post->debit_2 = isset($arr['debit_2'])?$arr['debit_2']:0;
+            $post->credit_2 = isset($arr['credit_2'])?$arr['credit_2']:0;
             $post->balance = $arr['balance'];
             $post->posted = 1;
             $post->year = $year;

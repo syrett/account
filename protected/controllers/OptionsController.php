@@ -23,6 +23,13 @@ class OptionsController extends Controller
                 $option->attributes = $item;
                 $option->save();
             }
+
+            //保存企业所得税征收类型
+            if(isset($_REQUEST['income_t'])){
+                $condom = Condom::getCondom();
+                $condom->income_t = $_REQUEST['income_t'];
+                $condom->save();
+            }
             $this->refresh();
         }
         $this->redirect(Yii::app()->request->urlReferrer);

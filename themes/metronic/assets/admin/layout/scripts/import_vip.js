@@ -523,22 +523,27 @@ function setTax(item_id, type) {
     }else{
         tax = $("#tran_tax_" + item_id).val();
     }
-    var sbj;
-    var name = '';
+    //var sbj;
+    //var name = '';
+    //if (type == 'product')
+    //    name = '销项';
+    //else if (type == 'purchase')
+    //    name = '进项';
+    //var sbj2221 = createSubject({name: '增值税', subject: 2221});
+    //var data = {
+    //    name: name,
+    //    subject: sbj2221
+    //}
+    //科目表，进项销项科目编号初始化时，已经定义的科目不会变动
     if (type == 'product')
-        name = '销项';
+        var sbj = '22210101';
     else if (type == 'purchase')
-        name = '进项';
-    var sbj2221 = createSubject({name: '增值税', subject: 2221});
-    var data = {
-        name: name,
-        subject: sbj2221
-    }
+        var sbj = '22210102';
     if (tax == 5 || tax == 0) //  5% 为营业税专有税率，借营业税金及附加/营业税，贷应交税金/营业税，不需要单独再计算税
         $("#withtax_" + item_id).val(0);
     else {
         $("#withtax_" + item_id).val(1);
-        sbj = createSubject(data);
+        //sbj = createSubject(data);
         $("#additional_sbj0_" + item_id).val(sbj);
         var price = 0;
         if ($("#tran_price_" + item_id != ''))

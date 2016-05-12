@@ -82,13 +82,54 @@ class SiteController extends Controller
             $blog->attributes = $_GET['Blog'];
         }
 
+        //税务中心数据
+        /*
+         * 	        个人所得税222102	营业税 640304	增值税222101	企业所得税6801 	印花税660207
+         * 本月应交
+         * 上月已交
+         * 本年已交
+         */
+        $tax = [
+            ['id' => '本月应交', 'p_tax' => 0, 'b_tax' => 0, 's_tax' => 0, 'i_tax' => 0, 'o_tax' => 0],
+            ['id' => '上月已交', 'p_tax' => 0, 'b_tax' => 0, 's_tax' => 0, 'i_tax' => 0, 'o_tax' => 0],
+            ['id' => '本年已交', 'p_tax' => 0, 'b_tax' => 0, 's_tax' => 0, 'i_tax' => 0, 'o_tax' => 0]
+        ];
+        $sbjs = [
+            'p_tax' => '222102',
+            'b_tax' => '640304',
+            's_tax' => '22210101',
+            'i_tax' => '6801',
+            'o_tax' => '660207',
+        ];
+        foreach ($sbjs as $key => $sbj) {
+
+            $post = Post::model()->findByAttributes(['subject_id' => $sbj, 'year' => date('Y', time()), 'month' => date('m', time())]);
+            if (!empty($post)) {
+                $tax[0][$key] = $post['credit'];
+                $tax[1][$key] = $post['debit'];
+            } else {
+                $tax[0][$key] = 0;
+                $tax[1][$key] = 0;
+
+            }
+            $post = Post::model()->findAllByAttributes(['subject_id' => $sbj, 'year' => date('Y', time())]);
+            if (!empty($post)) {
+                $tax[2][$key] = 0;
+                foreach ($post as $item) {
+                    $tax[2][$key] += $item['debit'];
+                }
+            } else
+                $tax[2][$key] = 0;
+        }
+
+        $tax = new CArrayDataProvider($tax);
         $blog_select_arr = array(
                             array('val'=>Blog::CATEGORY_ACCOUNT, 'name'=>'会计'),
                             array('val'=>Blog::CATEGORY_TAX, 'name'=>'税法'),
                             array('val'=>Blog::CATEGORY_LAW, 'name'=>'经济')
                            );
 
-        $this->render('index', array('need_chg_tax' => $need_chg_tax, 'logs' => $logs, 'blog'=>$blog, 'select_arr'=>$blog_select_arr));
+        $this->render('index', array('need_chg_tax' => $need_chg_tax, 'logs' => $logs, 'blog'=>$blog, 'select_arr'=>$blog_select_arr, 'tax' => $tax));
 //        $this->redirect($this->createUrl('transition/create'));
     }
 

@@ -34,7 +34,7 @@ class Condom extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('dbname, company, starttime, address, cuser, cphone, note, created_at, status', 'required'),
+			array('dbname, company, starttime, created_at, status', 'required'),
 			array('starttime, created_at, updated_at, status', 'numerical', 'integerOnly'=>true),
 			array('dbname', 'length', 'max'=>32),
 			array('company, cuser', 'length', 'max'=>256),

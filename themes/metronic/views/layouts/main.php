@@ -403,7 +403,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                             </li>
                             <li>
                                 <a href="#tab_15_4" data-toggle="tab" aria-expanded="true">
-                                    <i class="fa fa-cogs"></i><?= Yii::t('home', '企业所得税'); ?>(%)
+                                    <i class="fa fa-cogs"></i><?= Yii::t('home', '企业所得税'); ?>
                                 </a>
                             </li>
                         </ul>
@@ -519,7 +519,7 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                     $year = $option == null ? 0 : $option->year;
                                     ?>
                                     <div class="form-group form-horizontal">
-                                        <label class="col-sm-3 control-label"><?= Yii::t('import', '企业所得税税率') ?></label>
+                                        <label class="col-sm-3 control-label"><?= Yii::t('import', '企业所得税税率') ?>(%)</label>
 
                                         <div class="input-group col-sm-4">
                                             <input type="text" class="form-control"
@@ -530,10 +530,16 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                     <br />
 
                                     <div class="form-group form-horizontal">
-                                        <label class="col-sm-3 control-label"></label>
-
-                                        <div class="input-group col-sm-6">
-                                            应税所得率A类请填0，B类按照实际应税所得率填写
+                                        <label class="col-sm-3 control-label"><?= Yii::t('import', '征税类型') ?></label>
+                                        <?php
+                                        $condom = Condom::getCondom();
+                                        ?>
+                                        <div class="input-group col-sm-4">
+                                            <select class="form-control" name="income_t">
+                                                <option value="0" <?= $condom->income_t==0?'selected':'' ?>>查账征收</option>
+                                                <option value="1" <?= $condom->income_t==1?'selected':'' ?>>按收入总额核定征收</option>
+                                                <option value="2" <?= $condom->income_t==2?'selected':'' ?>>按成本费用核定征收</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="form-group form-horizontal">

@@ -529,36 +529,41 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
 
                         <div class="tab-pane" id="tab_tax_cent">
                             <?php
-                            $this->widget('zii.widgets.grid.CGridView', array(
-                            'id' => 'taxes-grid',
-                            'emptyText' => Yii::t('transition', '暂无相关数据'),
-                            'dataProvider' => $blog->search(),
-                            'rowCssClass' => array('row-odd', 'row-even'),
+                            $this->widget('zii.widgets.grid.CGridView', [
+                                'id' => 'tax-grid',
+                                'emptyText' => Yii::t('transition', '暂无相关数据'),
+                                'dataProvider' => $tax,
+                                'summaryText' => '',
 
-                            'pager' => array(
-                                'class' => 'CLinkPager',
-                                'header' => '',
-                                'firstPageLabel' => Yii::t('transition', '首页'),
-                                'lastPageLabel' => Yii::t('transition', '末页'),
-                                'nextPageLabel' => Yii::t('transition', '下一页'),
-                                'prevPageLabel' => Yii::t('transition', '上一页')
-                            ),
-                            'itemsCssClass' => 'table table-striped  dataTable table-hover no-footer',
-                            'htmlOptions' => array('role' => 'grid'),
-                            //'hideHeader' => true,
-                            'columns' => array(
-                                array('name'=>'title', 'value'=>'$data->title'),
-                                array('name'=>'created_at', 'value'=>'date("Y/m/d", $data->created_at)'),
-
-                                array(
-                                    'class' => 'CLinkColumn',
-                                    'label' => '浏览',
-                                    'urlExpression'=>'Yii::app()->createUrl("site/blog",array("id"=>$data->id))',//显示URL
-                                    //'htmlOptions' => array('style' => 'min-width: 68px;'),
-                                ),
-                            )
-
-                            ));
+                                'itemsCssClass' => 'table table-striped  dataTable table-hover no-footer',
+                                'htmlOptions' => array('role' => 'grid'),
+                                'columns' => array(
+                                    [
+                                        'name' => 'id',
+                                        'header' => '<button onclick="" href="#" ><i class="fa fa-stethoscope"></i> 诊断</button>'
+                                    ],
+                                    [
+                                        'name' => 'p_tax',
+                                        'header' => '个人所得税'
+                                    ],
+                                    [
+                                        'name' => 'b_tax',
+                                        'header' => '营业税'
+                                    ],
+                                    [
+                                        'name' => 's_tax',
+                                        'header' => '增值税'
+                                    ],
+                                    [
+                                        'name' => 'i_tax',
+                                        'header' => '企业所得税'
+                                    ],
+                                    [
+                                        'name' => 'o_tax',
+                                        'header' => '印花税'
+                                    ],
+                                )
+                            ])
                             ?>
                         </div>
 

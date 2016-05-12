@@ -357,10 +357,14 @@ class ReportController extends Controller
         } else {
             $date = date('Ymt', strtotime("-1 months"));
         }
-        $type = 'A';
-        $option = Options::model()->findByAttributes(['entry_subject' => '6801']);
-        if ($option != null)
-            $type = $option->year != '' && $option->year != 0 ? 'B' : $type;
+//        $type = 'A';
+//        $option = Options::model()->findByAttributes(['entry_subject' => '6801']);
+//        if ($option != null)
+//            $type = $option->year != '' && $option->year != 0 ? 'B' : $type;
+//
+        //企业所得税征税类型
+        $condom = Condom::getCondom();
+        $type = $condom->income_t == 0?'A':'B';
 
         if ($type == 'A')
             $data = Product::getTax4_a($type);

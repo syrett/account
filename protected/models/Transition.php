@@ -1646,9 +1646,9 @@ class Transition extends CActiveRecord
 
         if ($con->taxpayer_t == 1) {  //一般纳税人
             //应交税费/营业税 贷方 + a(应交税费/增值税/销项-进项)，a<=0不计算，
-            $sbjVat = Subjects::matchSubject('增值税', 2221);
-            $sbjSal = Subjects::matchSubject('销项', $sbjVat);
-            $sbjPur = Subjects::matchSubject('进项', $sbjVat);
+//            $sbjVat = Subjects::matchSubject('增值税', 2221);
+            $sbjSal = '22210101';
+            $sbjPur = '22210102';
             $command = Yii::app()->db->createCommand();
             $command->select('SUM(entry_amount) AS amount');
             $command->from($tran1->tableName());
