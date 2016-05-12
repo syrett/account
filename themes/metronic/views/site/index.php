@@ -484,9 +484,43 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
                             'itemsCssClass' => 'table table-striped dataTable table-hover no-footer',
                             'htmlOptions' => array('role' => 'grid'),
                             'columns' => array(
-                                array('name'=>'created_at', 'value'=>'date("m月d日 H:i", $data->created_at)'),
+                                array(
+                                    'name'=>'message',
+                                    'type'=>'html',
+                                    'value'=>function($model){
+                                    $span_str = '';
+                                    switch($model->type) {
+                                        case 1:
+                                            $span_str = '<span class="glyphicon glyphicon-list-alt log-prefix-icon" title="添加科目"></span>';
+                                            break;
+                                        case 2:
+                                            $span_str = '<span class="glyphicon glyphicon-list log-prefix-icon" title="整理凭证"></span>';
+                                            break;
+                                        case 3:
+                                        case 4:
+                                            $span_str = '<span class="glyphicon glyphicon-ok log-prefix-icon1" title="凭证审核"></span>';
+                                            break;
+                                        case 5:
+                                        case 6:
+                                            $span_str = '<span class="glyphicon glyphicon-remove log-prefix-icon1" title="取消审核"></span>';
+                                            break;
+                                        case 7:
+                                            $span_str = '<span class="glyphicon glyphicon-import log-prefix-icon" title="过账"></span>';
+                                            break;
+                                        case 8:
+                                            $span_str = '<span class="glyphicon glyphicon-random log-prefix-icon" title="期末结转"></span>';
+                                            break;
+                                        case 9:
+                                            $span_str = '<span class="glyphicon glyphicon-check log-prefix-icon" title="结账"></span>';
+                                            break;
+                                        case 10:
+                                            $span_str = '<span class="glyphicon glyphicon-repeat log-prefix-icon" title="反结账"></span>';
+                                            break;
+                                    }
+                                    return '<span class="log-message">'.$span_str.$model->message.'</span>';
+                                }),
                                 array('name'=>'user_id', 'value'=>'isset($data->user_info->username) ? $data->user_info->username : ""'),
-                                array('name'=>'message', 'value'=>'$data->message'),
+                                array('name'=>'created_at', 'value'=>'date("m月d日 H:i", $data->created_at)'),
                             ),
                             ));
                             ?>
@@ -498,7 +532,7 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
                             $this->widget('zii.widgets.grid.CGridView', array(
                             'id' => 'taxes-grid',
                             'emptyText' => Yii::t('transition', '暂无相关数据'),
-                            'dataProvider' => $blog->search(1),
+                            'dataProvider' => $blog->search(),
                             'rowCssClass' => array('row-odd', 'row-even'),
 
                             'pager' => array(
@@ -533,7 +567,7 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
                             $this->widget('zii.widgets.grid.CGridView', array(
                                 'id' => 'laws-grid',
                                 'emptyText' => Yii::t('transition', '暂无相关数据'),
-                                'dataProvider' => $blog->search(0),
+                                'dataProvider' => $blog->search(),
                                 'rowCssClass' => array('row-odd', 'row-even'),
                                 'filter' => $blog,
                                 'filterCssClass' => 'filter',
@@ -549,7 +583,44 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
                                 'htmlOptions' => array('role' => 'grid'),
                                 //'hideHeader' => true,
                                 'columns' => array(
-                                    array('name'=>'title', 'value'=>'$data->title'),
+
+                                    array('name'=>'title',
+                                          'type'=>'html',
+                                          'value'=> function($model){
+                                              $span_str = '';
+                                              switch($model->category) {
+                                                  case Blog::CATEGORY_ACCOUNT:
+                                                      $span_str = '<span class="fa fa-paperclip blog-prefix-icon" title="会计"></span>';
+                                                      break;
+                                                  case Blog::CATEGORY_TAX:
+                                                      $span_str = '<span class="fa fa-tint blog-prefix-icon" title="税法"></span>';
+                                                      break;
+                                                  case Blog::CATEGORY_LAW:
+                                                      $span_str = '<span class="fa fa-eur blog-prefix-icon" title="经济"></span>';
+
+                                              }
+                                        return '<span class="blog-title">'.$span_str.$model->title.'</span>';
+                                    }),
+                                    array(
+                                        'name'=>'category',
+                                        'value'=> function ($model) {
+                                            $cat_name = '';
+                                            switch($model->category) {
+                                                case Blog::CATEGORY_ACCOUNT:
+                                                    $cat_name = '会计';
+                                                    break;
+                                                case Blog::CATEGORY_TAX:
+                                                    $cat_name = '税法';
+                                                    break;
+                                                case Blog::CATEGORY_LAW:
+                                                    $cat_name = '经济';
+
+                                            }
+                                            return $cat_name;
+                                        },
+                                        'filter'=> CHtml::listData($select_arr, 'val', 'name')
+                                    ),
+                                    array('name'=>'department', 'value'=>'$data->department'),
                                     array('name'=>'created_at', 'value'=>'date("Y/m/d", $data->created_at)', 'filter'=>''),
 
                                     array(

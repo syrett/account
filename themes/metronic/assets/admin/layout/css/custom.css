@@ -962,3 +962,26 @@ div.flash-success a {
     position: absolute;
     left: -18%;
 }
+
+.log-prefix-icon, .blog-prefix-icon {
+    margin-right: .8em;
+    color: #999;
+}
+
+.log-prefix-icon1 {
+    margin-right: .8em;
+    color: #c6c6c6;
+}
+
+.log-message {
+    /*
+    display: inline-block;
+    width: 30em;
+    overflow: hidden;
+    */
+}
+.blog-title {
+    display: inline-block;
+    width: 30em;
+    overflow: hidden;
+}

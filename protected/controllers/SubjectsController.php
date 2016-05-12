@@ -471,7 +471,7 @@ class SubjectsController extends Controller
                     Subjects::model()->hasSub($sbj_id);
                 }
 
-                OperatingRecords::insertLog(['msg'=>'添加科目：'.$model->sbj_number.', '.$model->sbj_name]);
+                OperatingRecords::insertLog(['msg'=>'添加科目：'.$model->sbj_number.', '.$model->sbj_name, 'type'=>1]);
                 $arr['status'] = 'success';
             } else {
                 $arr['status'] = 'fail';

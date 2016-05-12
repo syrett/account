@@ -607,7 +607,9 @@ $toLanguage = Yii::app()->language == 'zh_cn' ? 'en_us' : 'zh_cn';
                                 <?php
                                 $data = array();
                                 foreach ($months as $month) {
-                                    $data[$year . $month] = $month;
+                                    if (intval($year.$month) > intval($status['date'])) {
+                                        $data[$year . $month] = $month;
+                                    }
                                 }
                                 $this->widget('ext.select2.ESelect2', array(
                                     'name' => 'date',

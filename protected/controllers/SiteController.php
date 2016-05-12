@@ -82,7 +82,13 @@ class SiteController extends Controller
             $blog->attributes = $_GET['Blog'];
         }
 
-        $this->render('index', array('need_chg_tax' => $need_chg_tax, 'logs' => $logs, 'blog'=>$blog));
+        $blog_select_arr = array(
+                            array('val'=>Blog::CATEGORY_ACCOUNT, 'name'=>'会计'),
+                            array('val'=>Blog::CATEGORY_TAX, 'name'=>'税法'),
+                            array('val'=>Blog::CATEGORY_LAW, 'name'=>'经济')
+                           );
+
+        $this->render('index', array('need_chg_tax' => $need_chg_tax, 'logs' => $logs, 'blog'=>$blog, 'select_arr'=>$blog_select_arr));
 //        $this->redirect($this->createUrl('transition/create'));
     }
 

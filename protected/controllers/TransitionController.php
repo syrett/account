@@ -1131,9 +1131,9 @@ class TransitionController extends Controller
             }
             if ($has_reviewed) {
                 if ($has_part) {
-                    OperatingRecords::insertLog(['msg'=>'批量审核凭证（部分）']);
+                    OperatingRecords::insertLog(['msg'=>'批量审核凭证（部分）', 'type'=>3]);
                 } else {
-                    OperatingRecords::insertLog(['msg'=>'批量审核凭证（全部）']);
+                    OperatingRecords::insertLog(['msg'=>'批量审核凭证（全部）', 'type'=>4]);
                 }
             }
 
@@ -1182,9 +1182,9 @@ class TransitionController extends Controller
 
             if ($has_reviewed) {
                 if ($has_part) {
-                    OperatingRecords::insertLog(['msg'=>'取消审核凭证（部分）']);
+                    OperatingRecords::insertLog(['msg'=>'取消审核凭证（部分）', 'type'=>5]);
                 } else {
-                    OperatingRecords::insertLog(['msg'=>'取消审核凭证（全部）']);
+                    OperatingRecords::insertLog(['msg'=>'取消审核凭证（全部）', 'type'=>6]);
                 }
             }
 
@@ -1271,7 +1271,7 @@ class TransitionController extends Controller
             Transition::model()->settlement($entry_prefix);
         if (SYSDB != 'account_testabxc' && SYSDB != 'account_gbl' && SYSDB != 'account_201508089731')
             Stock::model()->saveWorth($entry_prefix);    //过账时的计提折旧操作，在结账时保存净值
-        OperatingRecords::insertLog(['msg'=>'期末结转：'.$entry_prefix]);
+        OperatingRecords::insertLog(['msg'=>'期末结转：'.$entry_prefix, 'type'=>8]);
         return $result;
     }
 
@@ -1303,7 +1303,7 @@ class TransitionController extends Controller
         if ($flag) {
             $tran = Transition::model()->findByAttributes(['entry_num_prefix' => $entry_prefix]);
             $tran->setClosing(1);
-            OperatingRecords::insertLog(['msg'=>'结账：'.$entry_prefix]);
+            OperatingRecords::insertLog(['msg'=>'结账：'.$entry_prefix, 'type'=>9]);
             Yii::app()->user->setFlash('success', $entry_prefix . "结账成功!");
         }
         $this->render('/site/' . ($flag ? 'success' : 'error'));
@@ -1355,7 +1355,7 @@ class TransitionController extends Controller
         if ($flag) {
             $tran = Transition::model()->findByAttributes(['entry_num_prefix' => $entry_prefix]);
             $tran->setClosing(1);
-            OperatingRecords::insertLog(['msg'=>'结账：'.$entry_prefix]);
+            OperatingRecords::insertLog(['msg'=>'结账：'.$entry_prefix, 'type'=>9]);
             Yii::app()->user->setFlash('success', $entry_prefix . "结账成功!");
         }
         $this->render('/site/' . ($flag ? 'success' : 'error'));
@@ -1389,7 +1389,7 @@ class TransitionController extends Controller
         }
 
         if ($result) {
-            OperatingRecords::insertLog(['msg'=>'反结账：'.$edate]);
+            OperatingRecords::insertLog(['msg'=>'反结账：'.$edate, 'type'=>10]);
             Yii::app()->user->setFlash('success', $lastdate . "反结账成功!");
             $this->render('/site/success');
         } elseif ($date < Condom::model()->getStartTime())

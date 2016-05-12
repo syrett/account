@@ -1264,7 +1264,7 @@ class Transition extends CActiveRecord
             $last = $row['entry_num'];
             $num++;
         }
-        OperatingRecords::insertLog(['msg' => '整理凭证：' . $prefix]);
+        OperatingRecords::insertLog(['msg' => '整理凭证：' . $prefix, 'type'=>2]);
     }
 
     public static function delData($prefix)

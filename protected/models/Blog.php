@@ -11,7 +11,12 @@
  */
 class Blog extends CActiveRecord
 {
-	public function getDbConnection() {
+    //会计，税法，经济
+    const CATEGORY_ACCOUNT = 0;
+    const CATEGORY_TAX = 1;
+    const CATEGORY_LAW = 2;
+
+    public function getDbConnection() {
 
 		return Yii::app()->dbadmin;
 	}
@@ -32,7 +37,7 @@ class Blog extends CActiveRecord
 		// will receive user inputs.
         return array(
 
-            array('title', 'required'),
+            array('title, category, department', 'required'),
             //array('id, title', 'safe', 'on' => 'search'),
         );
 	}
@@ -58,6 +63,8 @@ class Blog extends CActiveRecord
 			'id' => 'ID',
 			'title' => Yii::t('models/model','标题'),
 			'alias' => Yii::t('models/model','别名'),
+            'category' => Yii::t('models/model', '分类'),
+            'department' => Yii::t('models/model', '部门'),
 			'snippet' => Yii::t('models/model','摘要'),
             'content' => Yii::t('models/model', '正文'),
             'created_at' => Yii::t('models/model', '日期'),
@@ -76,16 +83,17 @@ class Blog extends CActiveRecord
 	 * @return CActiveDataProvider the data provider that can return the models
 	 * based on the search/filter conditions.
 	 */
-	public function search($category = '')
+	public function search()
 	{
 		$criteria=new CDbCriteria;
 
         $criteria->compare('status_id', 1);
-        $criteria->compare('category', $category);
+
+        $criteria->compare('category', $this->category);
 
         $criteria->compare('title', $this->title, true);
+        $criteria->compare('department', $this->department, true);
 
-        file_put_contents('a.txt', var_export($this->title, true)."\n", FILE_APPEND);
 
         $sort = new CSort();
         $sort->defaultOrder = array(
