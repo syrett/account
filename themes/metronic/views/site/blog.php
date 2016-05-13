@@ -22,11 +22,25 @@ a:hover {
     <span style="margin-right: .5em;"><a href="/">老法师首页</a></span>
     &gt;
     <span style="margin: 0 .5em;">
-        <?php if($article->category == 1) {
-            echo '<a href="/#tab_tax_cent">税务中心</a>';
-        } else {
-            echo '<a href="/#tab_law_cent">法律法规</a>';
-        } ?>
+        <a href="/#tab_law_cent">法律法规</a>
+    </span>
+    &gt;
+    <span style="margin: 0 .5em;">
+        <?php
+        $link_cat = '';
+        switch($article->category) {
+            case 0:
+                $link_cat = '会计';
+                break;
+            case 1:
+                $link_cat = '税法';
+                break;
+            case 2:
+                $link_cat = '经济';
+                break;
+        }
+        echo $link_cat;
+        ?>
     </span>
     &gt;
     <span style="margin-left: .5em;">正文</span>
