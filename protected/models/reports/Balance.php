@@ -94,7 +94,7 @@ class Balance extends CModel
 	  $balance = Post::model()->getLastBalanceNum($sbj_id, $lastDate);
       $sbj_cat = Subjects::model()->getCat($sbj_id);
       $arr = self::getEndNum($sbj_id, $year, $month, $day);
-      $end += balance($balance, $arr['debit'], $arr['credit'], $sbj_cat);
+      $end += balance($balance, $arr['debit'], $arr['credit'], $sbj_cat, $sbj_id);
     }
     
 	return array("start"=>$start_year,

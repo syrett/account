@@ -151,7 +151,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scrip
                          $month = $row_month;
                      } else {
 
-                         $month_balance = balance($month_balance, $month_debit, $month_credit, $sbj_cat);
+                         $month_balance = balance($month_balance, $month_debit, $month_credit, $sbj_cat, $subject_id);
                          echo "<tr>";
                          echo "<td colspan=3>" . $month . Yii::t('report', "月总计")."</td>";
                          echo '<td class="text-right">' . number_format($month_debit, 2) . "</td>";
@@ -195,7 +195,7 @@ $cs->registerScriptFile(Yii::app()->theme->baseUrl . '/assets/admin/layout/scrip
                      echo "<td colspan=3>" . $month . Yii::t('report', "月总计")."</td>";
                      echo '<td class="text-right">' . number_format($month_debit, 2) . "</td>";
                      echo '<td class="text-right">' . number_format($month_credit, 2) . "</td>";
-                     echo '<td class="text-right">' . number_format(balance($month_balance, $month_debit, $month_credit, $sbj_cat), 2) . "</td>";
+                     echo '<td class="text-right">' . number_format(balance($month_balance, $month_debit, $month_credit, $sbj_cat, $subject_id), 2) . "</td>";
                      echo "</tr>";
                  }
                  ?>

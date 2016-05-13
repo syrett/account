@@ -52,12 +52,15 @@ function accessSettle($tranID)
         return true;
 }
 
-function balance($last_balance, $debit, $credit, $sbj_cat)
+function balance($last_balance, $debit, $credit, $sbj_cat, $sbj)
 {
     $balance = 0;
     switch ($sbj_cat) {
         case 1: //资产类
-            $balance = $last_balance + $debit - $credit;
+            if(substr($sbj, 0, 4)== '1602') //累计折旧会累加
+                $balance = $last_balance - $debit + $credit;
+            else
+                $balance = $last_balance + $debit - $credit;
             break;
         case 2: //负债类
             $balance = $last_balance + $credit - $debit;

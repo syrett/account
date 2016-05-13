@@ -47,7 +47,7 @@ class SubjectBalance extends CModel
       $start_debit = $sep_balance["debit"];
       $start_credit = $sep_balance["credit"];
 
-      $end_balance = balance($start_balance, $arr["debit"], $arr["credit"], $sbj_cat);
+      $end_balance = balance($start_balance, $arr["debit"], $arr["credit"], $sbj_cat, $sbj_id);
       $sep_balance = self::sep_balance($sbj_cat, $end_balance);
         $end_credit = 0;
         $end_debit = 0;

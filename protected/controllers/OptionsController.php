@@ -6,7 +6,7 @@ class OptionsController extends Controller
 	{
         $condom = Condom::model()->findByAttributes(['dbname'=>substr(SYSDB,8)]);
         $id = $condom->id;
-        $this->redirect("http://backend.".DOMAIN."/blogs/default/update?id=$id");
+        $this->redirect("http://backend.".DOMAIN."/condoms/default/update?id=$id");
 	}
 
     public function actionSetting()
