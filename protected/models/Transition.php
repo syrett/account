@@ -36,6 +36,7 @@ class Transition extends CActiveRecord
     public $query_e_day;
     public $query_memo;
 
+    public $amount;
     public $query_multi_str;
 
     public $check_entry_amount = 0; //是否验证过借贷相等 优化处理 待改进

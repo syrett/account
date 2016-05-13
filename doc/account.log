@@ -1013,12 +1013,15 @@ alter table `subjects` add `lv_rank` tinyint(3) UNSIGNED NOT NULL;
 -- manage 表
 ALTER TABLE `yii2_start_blogs` ADD `category` INT NOT NULL COMMENT '类别 ：税务信息，法律法规' AFTER `title`;
 ALTER TABLE `yii2_start_blogs` ADD `department` VARCHAR(512) NOT NULL COMMENT '颁布的部门组织' AFTER `category`;
+ALTER TABLE `yii2_start_condom` ADD `income_t` TINYINT NOT NULL COMMENT '企业所得税是查账征收、核定征收' AFTER `companysize_t`;
 
 -- 要修改nginx 和 php配置，上传文件大小限制:
 -- nginx:      client_max_body_size 20m;
 --    php:        upload_max_filesize = 20M
 
-ALTER TABLE `post` ADD `debit_2` DOUBLE NOT NULL COMMENT '损益表和余额表公式不同' AFTER `debit`, ADD `credit_2` DOUBLE NOT NULL COMMENT '损益表和余额表公式不同' AFTER `debit_2`;
+ALTER TABLE `post` ADD `debit_2` DOUBLE NOT NULL COMMENT '损益表和余额表公式不同' AFTER `credit`,
+ADD `credit_2` DOUBLE NOT NULL COMMENT '损益表和余额表公式不同' AFTER `debit_2`;
+
 update subjects set `is_initial`= 1 , `is_final`= 1 , `lv_rank`= 1  where sbj_number = 1001 ;
 update subjects set `is_initial`= 1 , `is_final`= 0 , `lv_rank`= 3  where sbj_number = 1002 ;
 update subjects set `is_initial`= 1 , `is_final`= 0 , `lv_rank`= 3  where sbj_number = 1102 ;

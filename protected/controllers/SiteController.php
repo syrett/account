@@ -63,7 +63,7 @@ class SiteController extends Controller
     {
         // renders the view file 'protected/views/site/index.php'
         // using the default layout 'protected/views/layouts/main.php'
-        $condom = Condom::model()->findByAttributes(['dbname'=>substr(SYSDB,8)]);
+        $condom = Condom::model()->findByAttributes(['dbname' => substr(SYSDB, 8)]);
         $need_chg_tax = false;
         if ($condom->taxpayer_t == 1) {
             $subjects = Subjects::model()->findByAttributes(['sbj_tax' => 3]);
@@ -112,24 +112,47 @@ class SiteController extends Controller
                 $tax[1][$key] = 0;
 
             }
-            $post = Post::model()->findAllByAttributes(['subject_id' => $sbj, 'year' => date('Y', time())]);
-            if (!empty($post)) {
-                $tax[2][$key] = 0;
-                foreach ($post as $item) {
-                    $tax[2][$key] += $item['debit'];
+            $year = date('Y-01-01');
+            $sql = "SELECT sum(`entry_amount`) as `amount` FROM `transition` where entry_date >= '$year' and entry_subject = $sbj and entry_transaction=1 and (data_type = 'bank' or data_type = 'cash')";
+            $tran = Transition::model()->findBySql($sql);
+            $tax[2][$key] = $tran->amount ? $tran->amount : 0;
+//            $post = Post::model()->findAllByAttributes(['subject_id' => $sbj, 'year' => date('Y', time())]);
+//            if (!empty($post)) {
+//                $tax[2][$key] = 0;
+//                foreach ($post as $item) {
+//                    $tax[2][$key] += $item['debit'];
+//                }
+//            } else
+//                $tax[2][$key] = 0;
+        }
+
+        //增值税 进项明细列表
+        $taxDetail = [];
+        $trans = Transition::model()->findAllByAttributes(['entry_subject' => '22210102', 'entry_transaction' => 1]);
+        foreach ($trans as $tran) {
+            $detail = ['id'=> $tran->id, 'memo' => $tran->entry_memo, 'date' => substr($tran->entry_date, 0, 10), 'amount' => $tran->entry_amount];
+            if ($tran->data_type != null) {   //不是往来调整中添加的凭证
+                if ($tran->data_type == 'purchase') {
+                    $purchase = Purchase::model()->findByPk($tran->data_id);
+                    $vendor = Vendor::model()->findByPk($purchase->vendor_id);
+                    $detail += ['vendor' => $vendor->company, 'name' => $purchase->entry_name, 'tax' => $purchase->tax];
+                    $detail['amount'] = $purchase->price * $purchase->count;
+
                 }
-            } else
-                $tax[2][$key] = 0;
+
+            }
+            $taxDetail[] = $detail;
         }
 
         $tax = new CArrayDataProvider($tax);
+        $taxDetail = new CArrayDataProvider($taxDetail);
         $blog_select_arr = array(
-                            array('val'=>Blog::CATEGORY_ACCOUNT, 'name'=>'会计'),
-                            array('val'=>Blog::CATEGORY_TAX, 'name'=>'税法'),
-                            array('val'=>Blog::CATEGORY_LAW, 'name'=>'经济')
-                           );
+            array('val' => Blog::CATEGORY_ACCOUNT, 'name' => '会计'),
+            array('val' => Blog::CATEGORY_TAX, 'name' => '税法'),
+            array('val' => Blog::CATEGORY_LAW, 'name' => '经济')
+        );
 
-        $this->render('index', array('need_chg_tax' => $need_chg_tax, 'logs' => $logs, 'blog'=>$blog, 'select_arr'=>$blog_select_arr, 'tax' => $tax));
+        $this->render('index', array('need_chg_tax' => $need_chg_tax, 'logs' => $logs, 'blog' => $blog, 'select_arr' => $blog_select_arr, 'tax' => $tax, 'taxDetail' => $taxDetail));
 //        $this->redirect($this->createUrl('transition/create'));
     }
 
@@ -247,15 +270,17 @@ class SiteController extends Controller
     /*
      * 进度条
      */
-    public function ActionGetProgressBarData($key,$date){
-        $response = ProgressBar::get($key,$date);
+    public function ActionGetProgressBarData($key, $date)
+    {
+        $response = ProgressBar::get($key, $date);
         echo json_encode($response);
     }
 
     /*
      * 结账情况
      */
-    public function actionCondomStatus(){
+    public function actionCondomStatus()
+    {
         $this->render('status');
     }
 
@@ -270,7 +295,7 @@ class SiteController extends Controller
         if ($article == null) {
             $this->redirect('/');
         } else {
-            $this->render('blog', array('article'=>$article));
+            $this->render('blog', array('article' => $article));
         }
 
     }

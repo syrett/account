@@ -563,7 +563,40 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
                                         'header' => '印花税'
                                     ],
                                 )
-                            ])
+                            ]);
+                            $this->widget('zii.widgets.grid.CGridView', [
+                                'id' => 'taxDetail-grid',
+                                'emptyText' => Yii::t('transition', '暂无相关数据'),
+                                'dataProvider' => $taxDetail,
+                                'summaryText' => '',
+                                'itemsCssClass' => 'table table-striped  dataTable table-hover no-footer',
+                                'columns' => array(
+                                    [
+                                        'name' => 'date',
+                                        'header' => '增值税进项明细'
+                                    ],
+                                    [
+                                        'name' => 'memo',
+                                        'header' => '交易摘要'
+                                    ],
+                                    [
+                                        'name' => 'name',
+                                        'header' => '交易项目'
+                                    ],
+                                    [
+                                        'name' => 'vendor',
+                                        'header' => '供应商'
+                                    ],
+                                    [
+                                        'name' => 'amount',
+                                        'header' => '金额'
+                                    ],
+                                    [
+                                        'name' => 'tax',
+                                        'header' => '税率（%）'
+                                    ],
+                                )
+                            ]);
                             ?>
                         </div>
 
