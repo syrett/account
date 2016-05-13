@@ -231,7 +231,7 @@ return array(
             array("id" => 19, "name" => "长期应收款", "subjects" => array(1531), "to" => "unflow_property", "function" => "sum"),
             array("id" => 20, "name" => "其它非流动资产", "subjects" => array(1532, 1541, 1611, 1621, 1622, 1623, 1631, 1632, 1821, 1901), "to" => "unflow_property", "function" => "sum"),
             array("id" => 21, "name" => "固定资产", "subjects" => array(1601), "to" => "unflow_property", "function" => "sum"),
-            array("id" => 22, "name" => "减:累计折旧", "subjects" => array(1602), "to" => "unflow_property", "function" => "sum"),
+            array("id" => 22, "name" => "减:累计折旧", "subjects" => array(1602), "to" => "unflow_property", "function" => "minus"),
             array("id" => 23, "name" => "减:固定资产减值准备", "subjects" => array(1603), "to" => "unflow_property", "function" => "minus"),
             array("id" => 24, "name" => "在建工程", "subjects" => array(1604), "to" => "unflow_property", "function" => "sum"),
             array("id" => 25, "name" => "工程物资", "subjects" => array(1605), "to" => "unflow_property", "function" => "sum"),
