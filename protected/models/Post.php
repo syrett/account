@@ -418,12 +418,21 @@ class Post extends CActiveRecord
         switch ($sbj_cat) {
             case 4://收入类
                 foreach ($dataArray as $post) {
+                    if($post['debit_2'] == 0 && $post['credit_2'] == 0){
+                        $post['debit_2'] = $post['debit'];
+                        $post['credit_2'] = $post['credit'];
+                    }
+
                     $balance = balance2($balance, $post["debit_2"], $post["credit_2"], $sbj_cat);
 //          $balance += $post['credit_2'];    //好像重复计算了金额
                 };
                 break;
             case 5://费用类
                 foreach ($dataArray as $post) {
+                    if($post['debit_2'] == 0 && $post['credit_2'] == 0){
+                        $post['debit_2'] = $post['debit'];
+                        $post['credit_2'] = $post['credit'];
+                    }
                     if ($post['credit_2'] == $post['debit_2'])
                         $balance += $post['debit_2'];
                     else
@@ -433,6 +442,10 @@ class Post extends CActiveRecord
                 break;
             case 3://
                 foreach ($dataArray as $post) {
+                    if($post['debit_2'] == 0 && $post['credit_2'] == 0){
+                        $post['debit_2'] = $post['debit'];
+                        $post['credit_2'] = $post['credit'];
+                    }
                     $balance = balance2($balance, $post['debit_2'], $post['credit_2'], $sbj_cat);
                 };
                 break;
