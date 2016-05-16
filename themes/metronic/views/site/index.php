@@ -519,7 +519,7 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
                                     }
                                     return '<span class="log-message">'.$span_str.$model->message.'</span>';
                                 }),
-                                array('name'=>'user_id', 'value'=>'isset($data->user_info->username) ? $data->user_info->username : ""'),
+                                array('name'=>'user_id', 'value'=>'isset($data->user_info->email) ? $data->user_info->email : ""'),
                                 array('name'=>'created_at', 'value'=>'date("m月d日 H:i", $data->created_at)'),
                             ),
                             ));
@@ -663,7 +663,7 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
                                                       $span_str = '<span class="fa fa-eur blog-prefix-icon" title="经济"></span>';
 
                                               }
-                                        return '<span class="blog-title">'.$span_str.$model->title.'</span>';
+                                        return '<span class="blog-title">'.$span_str.'<a class="blog-title-link" href="'.Yii::app()->createUrl("site/blog",array("id"=>$model->id)).'">'.$model->title.'</a></span>';
                                     }),
                                     array(
                                         'name'=>'category',
@@ -686,13 +686,6 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
                                     ),
                                     array('name'=>'department', 'value'=>'$data->department'),
                                     array('name'=>'created_at', 'value'=>'date("Y/m/d", $data->created_at)', 'filter'=>''),
-
-                                    array(
-                                        'class' => 'CLinkColumn',
-                                        'label' => '浏览',
-                                        'urlExpression'=>'Yii::app()->createUrl("site/blog",array("id"=>$data->id))',//显示URL
-                                        //'htmlOptions' => array('style' => 'min-width: 68px;'),
-                                    ),
                                 )
 
                             ));

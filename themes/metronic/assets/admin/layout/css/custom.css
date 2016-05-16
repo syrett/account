@@ -987,3 +987,11 @@ div.flash-success a {
     width: 30em;
     overflow: hidden;
 }
+
+.blog-title-link {
+    color: #000;
+}
+
+.blog-title-link:hover {
+    color: #333;
+}
