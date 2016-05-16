@@ -405,7 +405,7 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
         <div class="portlet light">
             <div class="portlet-body">
                 <div class="tabbable-line">
-                    <ul class="nav nav-tabs ">
+                    <ul class="nav nav-tabs center width-auto">
                         <li class="active" >
                             <a href="#tab_finan_sum" data-toggle="tab" aria-expanded="true" style="padding: 10px 25px;">
                                 <?= Yii::t('report', '财务汇总') ?></a>
@@ -528,76 +528,102 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
                         </div>
 
                         <div class="tab-pane" id="tab_tax_cent">
-                            <?php
-                            $this->widget('zii.widgets.grid.CGridView', [
-                                'id' => 'tax-grid',
-                                'emptyText' => Yii::t('transition', '暂无相关数据'),
-                                'dataProvider' => $tax,
-                                'summaryText' => '',
+                            <ul class="nav nav-tabs">
+                                <li class="active">
+                                    <a href="#tab_tax_1" data-toggle="tab" aria-expanded="true">
+                                        <i class="fa fa-cogs"></i><?= Yii::t('home', '税务汇总') ?>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#tab_tax_2" data-toggle="tab" aria-expanded="true">
+                                        <i class="fa fa-cogs"></i><?= Yii::t('home', '进项税额') ?>
+                                    </a>
+                                </li>
+                            </ul>
 
-                                'itemsCssClass' => 'table table-striped  dataTable table-hover no-footer',
-                                'htmlOptions' => array('role' => 'grid'),
-                                'columns' => array(
-                                    [
-                                        'name' => 'id',
-                                        'header' => '<button onclick="" href="#" ><i class="fa fa-stethoscope"></i> 诊断</button>'
-                                    ],
-                                    [
-                                        'name' => 'p_tax',
-                                        'header' => '个人所得税'
-                                    ],
-                                    [
-                                        'name' => 'b_tax',
-                                        'header' => '营业税'
-                                    ],
-                                    [
-                                        'name' => 's_tax',
-                                        'header' => '增值税'
-                                    ],
-                                    [
-                                        'name' => 'i_tax',
-                                        'header' => '企业所得税'
-                                    ],
-                                    [
-                                        'name' => 'o_tax',
-                                        'header' => '印花税'
-                                    ],
-                                )
-                            ]);
-                            $this->widget('zii.widgets.grid.CGridView', [
-                                'id' => 'taxDetail-grid',
-                                'emptyText' => Yii::t('transition', '暂无相关数据'),
-                                'dataProvider' => $taxDetail,
-                                'summaryText' => '',
-                                'itemsCssClass' => 'table table-striped  dataTable table-hover no-footer',
-                                'columns' => array(
-                                    [
-                                        'name' => 'date',
-                                        'header' => '增值税进项明细'
-                                    ],
-                                    [
-                                        'name' => 'memo',
-                                        'header' => '交易摘要'
-                                    ],
-                                    [
-                                        'name' => 'name',
-                                        'header' => '交易项目'
-                                    ],
-                                    [
-                                        'name' => 'vendor',
-                                        'header' => '供应商'
-                                    ],
-                                    [
-                                        'name' => 'amount',
-                                        'header' => '金额'
-                                    ],
-                                    [
-                                        'name' => 'tax',
-                                        'header' => '税率（%）'
-                                    ],
-                                )
-                            ]);
-                            ?>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tab_tax_1">
+                                    <?php
+                                    $this->widget('zii.widgets.grid.CGridView', [
+                                        'id' => 'tax-grid',
+                                        'emptyText' => Yii::t('transition', '暂无相关数据'),
+                                        'dataProvider' => $tax,
+                                        'summaryText' => '',
+
+                                        'itemsCssClass' => 'table table-striped  dataTable table-hover no-footer',
+                                        'htmlOptions' => array('role' => 'grid'),
+                                        'columns' => array(
+                                            [
+                                                'name' => 'id',
+                                                'header' => '<button onclick="" href="#" ><i class="fa fa-stethoscope"></i> 诊断</button>'
+                                            ],
+                                            [
+                                                'name' => 'p_tax',
+                                                'header' => '个人所得税'
+                                            ],
+                                            [
+                                                'name' => 'b_tax',
+                                                'header' => '营业税'
+                                            ],
+                                            [
+                                                'name' => 's_tax',
+                                                'header' => '增值税'
+                                            ],
+                                            [
+                                                'name' => 'i_tax',
+                                                'header' => '企业所得税'
+                                            ],
+                                            [
+                                                'name' => 'o_tax',
+                                                'header' => '印花税'
+                                            ],
+                                        )
+                                    ]);
+                                    ?>
+                                </div>
+
+                                <div class="tab-pane" id="tab_tax_2">
+                                    <?
+                                    $this->widget('zii.widgets.grid.CGridView', [
+                                        'id' => 'taxDetail-grid',
+                                        'emptyText' => Yii::t('transition', '暂无相关数据'),
+                                        'dataProvider' => $taxDetail,
+                                        'summaryText' => '',
+                                        'itemsCssClass' => 'table table-striped  dataTable table-hover no-footer',
+                                        'columns' => array(
+                                            [
+                                                'name' => 'date',
+                                                'header' => '增值税进项明细'
+                                            ],
+                                            [
+                                                'name' => 'memo',
+                                                'header' => '交易摘要'
+                                            ],
+                                            [
+                                                'name' => 'name',
+                                                'header' => '交易项目'
+                                            ],
+                                            [
+                                                'name' => 'vendor',
+                                                'header' => '供应商'
+                                            ],
+                                            [
+                                                'name' => 'amount',
+                                                'header' => '金额'
+                                            ],
+                                            [
+                                                'name' => 'tax',
+                                                'header' => '税率（%）'
+                                            ],
+                                            [
+                                                'name' => 'tax_amount',
+                                                'header' => '税额'
+                                            ],
+                                        )
+                                    ]);
+                                    ?>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="tab-pane" id="tab_law_cent">

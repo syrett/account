@@ -871,7 +871,9 @@ div.flash-success a {
 .center {
     text-align: center;
 }
-
+.tabbable-line > .width-auto > li{
+    width: 24%
+}
 .tax-table > tbody > tr > th {
     vertical-align: middle;
     text-align: center;
