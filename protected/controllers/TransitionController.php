@@ -1906,7 +1906,7 @@ class TransitionController extends Controller
 
         $os = $oe->getActiveSheet();
 
-        $os->setTitle('出入库列表');
+        $os->setTitle('凭证列表');
         $os->getDefaultStyle()->getFont()->setName('微软雅黑');
         $os->getDefaultStyle()->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
         $os->getDefaultStyle()->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
