@@ -125,5 +125,8 @@ return [
     '折旧或摊销年限(年)' => 'Depreciation or amortization period',
     '残值率' => 'Salvage Value',
     '附加税税率' => 'Additional tax rate',
+    '税务分析' => 'Analyze',
+    '诊断' => 'Analyze',
+
 
 ];

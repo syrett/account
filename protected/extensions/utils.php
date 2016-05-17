@@ -29,13 +29,13 @@ function getDay($date)
 }
 
 function lastMonth($date){
-    return date('Ymd', strtotime('-1 months', $date));
+    return date('Ymd', strtotime('-1 months', strtotime(strlen($date)==6?$date.'01':$date)));
 }
 
 function accessReview($tranID)
 {
     $user = Yii::app()->user->id;
-    $access = Transition::model()->findByAttributes(array('id' => $tranID, 'entry_editor' => $user));
+    $access = Transition::model()->findByAttributes(array('id' => $tranID, 'entry_creater' => $user));
     if (empty($access))
         return true;
     else
