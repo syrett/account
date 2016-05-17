@@ -169,15 +169,15 @@ class Post extends CActiveRecord
                     }
                 }
             } else {
-                //结转凭证，只有未分配利润才把金额过到post表
-                if (substr($t['entry_subject'], 0, 4)== '4103'){
+//                //结转凭证，只有未分配利润才把金额过到post表
+//                if (substr($t['entry_subject'], 0, 4)== '4103'){
                     if ($t['entry_transaction'] == "1") { //1为借
                         $tmp_debit = $tmp_debit + floatval($t['entry_amount']);
                     } elseif ($t['entry_transaction'] == "2") { //2为贷
                         $tmp_credit = $tmp_credit + floatval($t['entry_amount']);
                     }
 
-                }
+//                }
             }
 
 

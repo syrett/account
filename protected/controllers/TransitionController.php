@@ -1043,13 +1043,13 @@ class TransitionController extends Controller
     public function actionReview()
     {
         if (Yii::app()->request->isPostRequest) {
-            $id = $_REQUEST[0]['id'];
+            $id = $_REQUEST['id'];
             $list = $this->getItems($id);
             $valid = true;
             foreach ($list as $item) {
                 $item = $this->loadModel($item['id']);
                 if ($valid = $item->validate() && $valid) {
-                    if ($_REQUEST[0]['action'] == 1) {
+                    if ($_REQUEST['action'] == 1) {
                         $item->unReviewed();
                     } else {
                         $item->setReviewed();
@@ -1074,13 +1074,13 @@ class TransitionController extends Controller
     public function actionunReview()
     {
         if (Yii::app()->request->isPostRequest) {
-            $id = $_REQUEST[0]['id'];
+            $id = $_REQUEST['id'];
             $list = $this->getItems($id);
             $valid = true;
             foreach ($list as $item) {
                 $item = $this->loadModel($item['id']);
                 if ($valid = $item->validate() && $valid) {
-                    if ($_REQUEST[0]['action'] == 1) {
+                    if ($_REQUEST['action'] == 1) {
                         $item->unReviewed();
                     } else {
                         $item->setReviewed();

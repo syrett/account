@@ -28,6 +28,7 @@ return [
     '订单号' => 'Order No.',
     '交易日期' => 'Date',
     '供应商ID' => 'ID',
+    '交易摘要' => 'Memo',
     '商品名称' => 'Name',
 
     '操作' => 'Operation',

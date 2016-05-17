@@ -9,6 +9,7 @@
  * @property integer $entry_date
  * @property integer $vendor_id
  * @property string $entry_name
+ * @property string $entry_memo
  * @property double $price
  * @property string $unit
  * @property integer $tax
@@ -70,6 +71,8 @@ class Purchase extends LFSModel
 			'entry_date' => Yii::t('models/model','交易日期'),
 			'vendor_id' => Yii::t('models/model','供应商ID'),
 			'entry_name' => Yii::t('models/model','商品名称'),
+			'model' => Yii::t('models/model','型号'),
+			'entry_memo' => Yii::t('models/model','交易摘要'),
             'department_id' => Yii::t('models/model','部门'),
             'price' => Yii::t('models/model','价格'),
             'count' => Yii::t('models/model','数量'),

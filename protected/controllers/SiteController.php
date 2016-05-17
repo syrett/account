@@ -84,7 +84,7 @@ class SiteController extends Controller
 
         //税务中心数据
         /*
-         * 	        个人所得税222102	营业税 640304	增值税222101	企业所得税6801 	印花税660207
+         * 	        个人所得税222102	营业税 640304	增值税 222101	企业所得税 6801 	印花税 660207
          * 本月应交
          * 上月已交
          * 本年已交
@@ -130,20 +130,31 @@ class SiteController extends Controller
         $taxDetail = [];
         $trans = Transition::model()->findAllByAttributes(['entry_subject' => '22210102', 'entry_transaction' => 1]);
         foreach ($trans as $tran) {
-            $detail = ['id'=> $tran->id, 'memo' => $tran->entry_memo, 'date' => substr($tran->entry_date, 0, 10), 'amount' => $tran->entry_amount];
+            $detail = ['id' => $tran->id, 'memo' => $tran->entry_memo, 'name' => '往来调整中添加的凭证', 'date' => substr($tran->entry_date, 0, 10), 'tax_amount' => $tran->entry_amount];
             if ($tran->data_type != null) {   //不是往来调整中添加的凭证
                 if ($tran->data_type == 'purchase') {
                     $purchase = Purchase::model()->findByPk($tran->data_id);
                     $vendor = Vendor::model()->findByPk($purchase->vendor_id);
-                    $detail += ['vendor' => $vendor->company, 'name' => $purchase->entry_name, 'tax' => $purchase->tax];
+                    $detail += ['vendor' => $vendor->company, 'memo' => $purchase->entry_memo, 'tax' => $purchase->tax];
                     $detail['amount'] = $purchase->price * $purchase->count;
+                    $detail['name'] = $purchase->entry_name;
+                    $detail['tax_amount'] = $detail['amount'] * $purchase->tax / 100;
 
                 }
 
+            } else {  //往来调整中添加的凭证，也要把贷方金额显示出来
+                $tran_2 = Transition::model()->findByAttributes(['entry_num_prefix' => $tran->entry_num_prefix, 'entry_num' => $tran->entry_num], ['order' => 'entry_amount desc']);
+                if (empty($tran_2))
+                    echo '凭证已损坏';
+                else {
+                    $detail['vendor'] = Subjects::getName($tran_2->entry_subject);
+                    $detail['amount'] = $tran_2->entry_amount;
+                }
             }
             $taxDetail[] = $detail;
         }
 
+        $taxNow = $tax;
         $tax = new CArrayDataProvider($tax);
         $taxDetail = new CArrayDataProvider($taxDetail);
         $blog_select_arr = array(
@@ -152,7 +163,24 @@ class SiteController extends Controller
             array('val' => Blog::CATEGORY_LAW, 'name' => '经济')
         );
 
-        $this->render('index', array('need_chg_tax' => $need_chg_tax, 'logs' => $logs, 'blog' => $blog, 'select_arr' => $blog_select_arr, 'tax' => $tax, 'taxDetail' => $taxDetail));
+        //税务分析，本月应交金额与上月应交金额比较，如果波动大于10%，文字提示，
+        $lastTax = [];
+        foreach ($sbjs as $key => $sbj) {
+            $lastMonth = lastMonth(date('Ymd', time()));
+            $post = Post::model()->findByAttributes(['subject_id' => $sbj, 'year' => substr($lastMonth, 0, 4), 'month' => substr($lastMonth, 4, 2)]);
+            if (!empty($post)) {
+                $lastTax[$key]['credit'] = $post['credit'];
+
+                $tmp = $lastTax[$key]['credit'] * 0.1;
+                if ($taxNow[0][$key] < $lastTax[$key]['credit'] - $tmp || $taxNow[0][$key] > $lastTax[$key]['credit'] + $tmp) {
+                    $lastTax[$key]['now'] = $taxNow[0][$key];
+                    $lastTax[$key]['status'] = 'warn';
+                }
+            }
+        }
+
+        $this->render('index', array('need_chg_tax' => $need_chg_tax, 'logs' => $logs, 'blog' => $blog, 'select_arr' => $blog_select_arr,
+            'tax' => $tax, 'taxDetail' => $taxDetail, 'lastTax' => $lastTax));
 //        $this->redirect($this->createUrl('transition/create'));
     }
 

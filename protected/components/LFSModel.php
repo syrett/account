@@ -175,4 +175,20 @@ class LFSModel extends CActiveRecord
         };
         return $qzone;
     }
+
+    //首页税收名称
+    public static function getTaxName($tax){
+        switch($tax){
+            case 'p_tax':
+                return '个人所得税';
+            case 'b_tax':
+                return '营业税';
+            case 's_tax':
+                return '增值税';
+            case 'i_tax':
+                return '企业所得税';
+            case 'o_tax':
+                return '印花税';
+        }
+    }
 }
