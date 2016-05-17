@@ -170,8 +170,7 @@ $years = Transition::model()->hasTransitionYears();
     <p class="text-right">
         <?php
         //echo '<button type="button" onclick="tableToExcel()" class="btn btn-primary"><span class="glyphicon glyphicon-export"></span>' . Yii::t('report', '导出') . '</button>';
-        echo '<a href="/?r=report/exportExcel" class="btn btn-primary"><i
-                    class="glyphicon glyphicon-export"></i>'.Yii::t('report', '导出').'</a>';
+        echo '<a href="/?r=report/exportsubjects" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>'.Yii::t('report', '导出').'</a>';
         }
         echo CHtml::endForm();
         ?>

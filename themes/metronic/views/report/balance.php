@@ -233,7 +233,8 @@ function echoData($key, $data, $name = "default")
     <input type="hidden" name="name" id="name" value="<?= $excel_name ?>"/>
     <p class="text-right">
         <?php
-        echo '<button type="button" onclick="tableToExcel()" class="btn btn-primary"><span class="glyphicon glyphicon-export"></span>' . Yii::t('import', '导出') . '</button>';
+        //echo '<button type="button" onclick="tableToExcel()" class="btn btn-primary"><span class="glyphicon glyphicon-export"></span>' . Yii::t('import', '导出') . '</button>';
+        echo '<a href="/?r=report/exportbalance" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>'.Yii::t('report', '导出').'</a>';
         }
         echo CHtml::endForm();
         ?>
