@@ -1906,7 +1906,7 @@ class TransitionController extends Controller
 
         $os = $oe->getActiveSheet();
 
-        $os->setTitle('出入库列表');
+        $os->setTitle('凭证列表');
         $os->getDefaultStyle()->getFont()->setName('微软雅黑');
         $os->getDefaultStyle()->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
         $os->getDefaultStyle()->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
@@ -2383,28 +2383,29 @@ class TransitionController extends Controller
                     }
                     //工资借方金额要加上公司需要支付的那部分
 
-                    $tran_extends = [
-                        [
+                    if((float)$arr['social_company'] + (float)$arr['provident_company'] > 0)
+                        $tran_extends = [
                             [
-                                'entry_subject' => Department::matchSubject(Employee::getDepart($employee->id), '社保公积金'),
-                                'entry_amount' => (float)$arr['social_company'] + (float)$arr['provident_company'],
-                                'entry_memo' => '社保公积金公司部分',
-                                'entry_transaction' => 1
-                            ],
-                            [
-                                'entry_subject' => Subjects::matchSubject('应付社保', '2241'),
-                                'entry_amount' => $arr['social_company'],
-                                'entry_memo' => '社保公司部分',
-                                'entry_transaction' => 2
-                            ],
-                            [
-                                'entry_subject' => Subjects::matchSubject('应付公积金', '2241'),
-                                'entry_amount' => $arr['provident_company'],
-                                'entry_memo' => '公积金公司部分',
-                                'entry_transaction' => 2
+                                [
+                                    'entry_subject' => Department::matchSubject(Employee::getDepart($employee->id), '社保公积金'),
+                                    'entry_amount' => (float)$arr['social_company'] + (float)$arr['provident_company'],
+                                    'entry_memo' => '社保公积金公司部分',
+                                    'entry_transaction' => 1
+                                ],
+                                [
+                                    'entry_subject' => Subjects::matchSubject('应付社保', '2241'),
+                                    'entry_amount' => $arr['social_company'],
+                                    'entry_memo' => '社保公司部分',
+                                    'entry_transaction' => 2
+                                ],
+                                [
+                                    'entry_subject' => Subjects::matchSubject('应付公积金', '2241'),
+                                    'entry_amount' => $arr['provident_company'],
+                                    'entry_memo' => '公积金公司部分',
+                                    'entry_transaction' => 2
+                                ]
                             ]
-                        ]
-                    ];
+                        ];
                     break;
                 case 'reimburse':
                     $lists = [

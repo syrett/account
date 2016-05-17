@@ -871,7 +871,9 @@ div.flash-success a {
 .center {
     text-align: center;
 }
-
+.tabbable-line > .width-auto > li{
+    width: 24%
+}
 .tax-table > tbody > tr > th {
     vertical-align: middle;
     text-align: center;
@@ -984,4 +986,12 @@ div.flash-success a {
     display: inline-block;
     width: 30em;
     overflow: hidden;
+}
+
+.blog-title-link {
+    color: #000;
+}
+
+.blog-title-link:hover {
+    color: #333;
 }

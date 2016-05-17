@@ -86,6 +86,7 @@ class ReportController extends Controller
      */
     public function actionSubjects() //fm:fromMonth; tm: toMonth
     {
+        $session = Yii::app()->session;
         if (isset($_REQUEST['year']) && $_REQUEST['year'] != '') {
             $year = $_REQUEST['year'];
             $fm = $_REQUEST['fm'];
@@ -101,6 +102,9 @@ class ReportController extends Controller
             $tm = date('m', strtotime("-1 months"));
             $tm = $tm == 12 ? '01' : $tm;
         }
+        $session[__METHOD__.'_year'] = $year;
+        $session[__METHOD__.'_fm'] = $fm;
+        $session[__METHOD__.'_tm'] = $tm;
 
 
         $model = new SubjectBalance();
@@ -403,5 +407,151 @@ class ReportController extends Controller
 
     }
 
+    /**
+     * 导出excel
+     */
+    public function actionExportExcel()
+    {
+        $session = Yii::app()->session;
+        $mStr = 'ReportController::actionSubjects';
+        if (isset($session[$mStr.'_year'])){
+            $year = $session[$mStr.'_year'];
+            $fm = $session[$mStr.'_fm'];
+            $tm = $session[$mStr.'_tm'];
+        } else {
+            $year = date('Y', time());
+            $fm = '01';
+            $tm = date('m', strtotime("-1 months"));
+            $tm = $tm == 12 ? '01' : $tm;
+        }
+
+        $model = new SubjectBalance();
+        $data = $model->genData($year . $fm, $year . $tm);
+
+        $fm = intval($fm);
+        if ($fm < 10) {
+            $fm = '0'.$fm;
+        }
+        $tm = intval($tm);
+        if ($tm < 10) {
+            $tm = '0'.$tm;
+        }
+
+        $xlsName = '科目余额表_'.$year.$fm.'-'.$year.$tm;
+
+        Yii::import('ext.phpexcel.PHPExcel');
+        $oe = new PHPExcel();
+        $ow = new PHPExcel_Writer_Excel5($oe);
+
+        $os = $oe->getActiveSheet();
+
+
+        $os->setTitle('科目余额表');
+        $os->getDefaultStyle()->getFont()->setName('微软雅黑');
+        $os->getDefaultStyle()->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
+        $os->getDefaultStyle()->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $os->getDefaultStyle()->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+
+
+        $os->getColumnDimension('A')->setWidth(16);
+        $os->getColumnDimension('B')->setWidth(24);
+        $os->getColumnDimension('C')->setWidth(14);
+        $os->getColumnDimension('D')->setWidth(14);
+        $os->getColumnDimension('E')->setWidth(14);
+        $os->getColumnDimension('F')->setWidth(14);
+        $os->getColumnDimension('G')->setWidth(14);
+        $os->getColumnDimension('H')->setWidth(14);
+
+        $os->getStyle('A1')->getAlignment()->setShrinkToFit(true);
+        $os->getStyle('A1')->getAlignment()->setWrapText(true);
+
+        $os->getStyle('A1')->getFont()->setSize(10);
+        $os->getStyle('A1')->getFont()->getColor()->setARGB('FF00A0FF');
+        $os->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+        $os->setCellValue('A1', "生成时刻：\n" . date('Y-m-d H:i'));
+
+        $os->getStyle('C1:H1')->getFont()->setSize(14);
+        $os->mergeCells('C1:H1');
+        $os->setCellValue('C1', '科目余额表    ('.$year.'-'.$fm.' 至 '.$year.'-'.$tm.')');
+
+        $os->getStyle('A3:H3')->getFont()->setSize(13);
+        $os->getStyle('A3:H3')->getFill()->setFillType(PHPExcel_style_Fill::FILL_SOLID);
+        $os->getStyle('A3:H3')->getFill()->getStartColor()->setARGB('FFFFA030');
+
+        $os->setCellValue('A3', "科目编码");
+        $os->setCellValue('B3', "科目名称");
+        $os->setCellValue('C3', "期初借方");
+        $os->setCellValue('D3', "期初贷方");
+        $os->setCellValue('E3', "本期发生借方");
+        $os->setCellValue('F3', "本期发生贷方");
+        $os->setCellValue('G3', "期末借方");
+        $os->setCellValue('H3', "期末贷方");
+
+        $os->freezepane('A4');
+
+        $ri = 4;
+
+        foreach ($data as $sbjCat => $sbjCat_info) {
+            switch ($sbjCat) {
+                case "1":
+                    $sbjCat_name = Yii::t('report', "资产小计");
+                    break;
+                case "2":
+                    $sbjCat_name = Yii::t('report', "负债小计");
+                    break;
+                case "3":
+                    $sbjCat_name = Yii::t('report', "权益小计");
+                    break;
+                case "4":
+                    $sbjCat_name = Yii::t('report', "收入小计");
+                    break;
+                case "5":
+                    $sbjCat_name = Yii::t('report', "费用小计");
+                    break;
+
+            };
+            $items = $sbjCat_info["items"];
+
+            foreach ($items as $info) {
+                $os->setCellValueExplicit('A' . $ri, $info["subject_id"], PHPExcel_Cell_DataType::TYPE_STRING);
+                $os->setCellValueExplicit('B' . $ri, $info["subject_name"], PHPExcel_Cell_DataType::TYPE_STRING);
+                $os->setCellValue('C' . $ri, $info["start_debit"]);
+                $os->setCellValue('D' . $ri, $info["start_credit"]);
+                $os->setCellValue('E' . $ri, $info["sum_debit"]);
+                $os->setCellValue('F' . $ri, $info["sum_credit"]);
+                $os->setCellValue('G' . $ri, $info["end_debit"]);
+                $os->setCellValue('H' . $ri, $info["end_credit"]);
+                $ri ++;
+            };
+
+            $os->getStyle('A'.$ri.':H'.$ri)->getFill()->setFillType(PHPExcel_style_Fill::FILL_SOLID);
+            $os->getStyle('A'.$ri.':H'.$ri)->getFill()->getStartColor()->setARGB('FFC0E0FF');
+            $os->mergeCells('A'.$ri.':B'.$ri);
+            $os->getStyle('A'.$ri)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $os->setCellValueExplicit('A' . $ri, $sbjCat_name, PHPExcel_Cell_DataType::TYPE_STRING);
+            $os->setCellValue('C' . $ri, $sbjCat_info["start_debit"]);
+            $os->setCellValue('D' . $ri, $sbjCat_info["start_credit"]);
+            $os->setCellValue('E' . $ri, $sbjCat_info["sum_debit"]);
+            $os->setCellValue('F' . $ri, $sbjCat_info["sum_credit"]);
+            $os->setCellValue('G' . $ri, $sbjCat_info["end_debit"]);
+            $os->setCellValue('H' . $ri, $sbjCat_info["end_credit"]);
+            $ri ++;
+            $ri++;
+        }
+
+        header('Content-Type: application/force-download');
+        header('Content-Type: application/octet-stream');
+        header('Content-Type: application/download');
+        header('Content-Disposition:inline;filename='
+            . urldecode(urlencode($xlsName))
+            . '.xls');
+        header('Content-Transfer-Encoding: binary');
+        header('Expires:Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified:' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Cache-Control: myst-revalidate, post-check=0, pre-check=0');
+        header('Pragma: no-cache');
+        $ow->save('php://output');
+
+    }
 
 }
