@@ -59,7 +59,7 @@ foreach ($bank_out as $item) {
         if ($path[2] == '行政支出') {
             //管理费用
             $tmp_key = isset($path[3]) ? $path[3] : '';
-            $data_manage[$tmp_key] = isset( $data_manage[$tmp_key]) ?  $data_manage[$tmp_key] + $item['amount'] : $item['amount'];
+            $data_manage[$tmp_key] = isset($data_manage[$tmp_key]) ? $data_manage[$tmp_key] + $item['amount'] : $item['amount'];
             $pie_manage_total += $item['amount'];
         }
         if ($path[2] == '供应商采购') {
@@ -128,7 +128,7 @@ foreach ($cash_out as $item) {
         if ($path[2] == '行政支出') {
             //管理费用
             $tmp_key = isset($path[3]) ? $path[3] : '';
-            $data_manage[$tmp_key] = isset( $data_manage[$tmp_key]) ?  $data_manage[$tmp_key] + $item['amount'] : $item['amount'];
+            $data_manage[$tmp_key] = isset($data_manage[$tmp_key]) ? $data_manage[$tmp_key] + $item['amount'] : $item['amount'];
             $pie_manage_total += $item['amount'];
         }
         if ($path[2] == '供应商采购') {
@@ -331,13 +331,13 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
 <!-- BEGIN DASHBOARD STATS -->
 
 <?php if (isset($need_chg_tax) && $need_chg_tax) { ?>
-<div class="row">
-    <div class="col-md-12">
-        <div class="flash-error">
-            作为一般纳税人，科目表中不能存在3%税率，请修改！
+    <div class="row">
+        <div class="col-md-12">
+            <div class="flash-error">
+                作为一般纳税人，科目表中不能存在3%税率，请修改！
+            </div>
         </div>
     </div>
-</div>
 <?php } ?>
 
 <div class="row">
@@ -406,12 +406,13 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
             <div class="portlet-body">
                 <div class="tabbable-line">
                     <ul class="nav nav-tabs center width-auto">
-                        <li class="active" >
+                        <li class="active">
                             <a href="#tab_finan_sum" data-toggle="tab" aria-expanded="true" style="padding: 10px 25px;">
                                 <?= Yii::t('report', '财务汇总') ?></a>
                         </li>
-                        <li class="" >
-                            <a href="#tab_info_cent" data-toggle="tab" aria-expanded="false" style="padding: 10px 25px;">
+                        <li class="">
+                            <a href="#tab_info_cent" data-toggle="tab" aria-expanded="false"
+                               style="padding: 10px 25px;">
                                 <?= Yii::t('report', '信息中心') ?></a>
                         </li>
                         <li class="">
@@ -430,8 +431,12 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
                             <div class="row pie-m-height">
                                 <div class="pull-left pie-block">
                                     <div class="pie-block-header">
-                                        <div><span class="caption-subject font-green-sharp bold uppercase"><?= Yii::t('home', '运营收入') ?></span></div>
-                                        <div><?php  if($pie_in_total != 0) {echo $pie_in_total.'元';} ?></div>
+                                        <div><span
+                                                class="caption-subject font-green-sharp bold uppercase"><?= Yii::t('home', '运营收入') ?></span>
+                                        </div>
+                                        <div><?php if ($pie_in_total != 0) {
+                                                echo $pie_in_total . '元';
+                                            } ?></div>
                                     </div>
                                     <div class="pie-block-body">
                                         <div id="pie-in-div">
@@ -441,8 +446,12 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
                                 </div>
                                 <div class="pull-left pie-block">
                                     <div class="pie-block-header">
-                                        <div><span class="caption-subject font-green-sharp bold uppercase"><?= Yii::t('home', '运营支出') ?></span></div>
-                                        <div><?php if($pie_out_total != 0) {echo $pie_out_total.'元';} ?></div>
+                                        <div><span
+                                                class="caption-subject font-green-sharp bold uppercase"><?= Yii::t('home', '运营支出') ?></span>
+                                        </div>
+                                        <div><?php if ($pie_out_total != 0) {
+                                                echo $pie_out_total . '元';
+                                            } ?></div>
                                     </div>
                                     <div class="pie-block-body">
                                         <div id="pie-out-div">
@@ -452,8 +461,12 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
                                 </div>
                                 <div class="pull-left pie-block">
                                     <div class="pie-block-header">
-                                        <div><span class="caption-subject font-green-sharp bold uppercase"><?= Yii::t('home', '管理费用') ?></span></div>
-                                        <div><?php if($pie_manage_total != 0) {echo $pie_manage_total.'元';} ?></div>
+                                        <div><span
+                                                class="caption-subject font-green-sharp bold uppercase"><?= Yii::t('home', '管理费用') ?></span>
+                                        </div>
+                                        <div><?php if ($pie_manage_total != 0) {
+                                                echo $pie_manage_total . '元';
+                                            } ?></div>
                                     </div>
                                     <div class="pie-block-body">
                                         <div id="pie-manage-div">
@@ -469,59 +482,59 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
 
                             <?php
                             $this->widget('zii.widgets.grid.CGridView', array(
-                            'id' => 'logs-grid',
-                            'emptyText' => Yii::t('transition', '暂无相关数据'),
-                            'dataProvider' => $logs->search(),
-                            'rowCssClass' => array('row-odd', 'row-even'),
-                            'pager' => array(
-                                'class' => 'CLinkPager',
-                                'header' => '',
-                                'firstPageLabel' => Yii::t('transition', '首页'),
-                                'lastPageLabel' => Yii::t('transition', '末页'),
-                                'nextPageLabel' => Yii::t('transition', '下一页'),
-                                'prevPageLabel' => Yii::t('transition', '上一页')
-                            ),
-                            'itemsCssClass' => 'table table-striped dataTable table-hover no-footer',
-                            'htmlOptions' => array('role' => 'grid'),
-                            'columns' => array(
-                                array(
-                                    'name'=>'message',
-                                    'type'=>'html',
-                                    'value'=>function($model){
-                                    $span_str = '';
-                                    switch($model->type) {
-                                        case 1:
-                                            $span_str = '<span class="glyphicon glyphicon-list-alt log-prefix-icon" title="添加科目"></span>';
-                                            break;
-                                        case 2:
-                                            $span_str = '<span class="glyphicon glyphicon-list log-prefix-icon" title="整理凭证"></span>';
-                                            break;
-                                        case 3:
-                                        case 4:
-                                            $span_str = '<span class="glyphicon glyphicon-ok log-prefix-icon1" title="凭证审核"></span>';
-                                            break;
-                                        case 5:
-                                        case 6:
-                                            $span_str = '<span class="glyphicon glyphicon-remove log-prefix-icon1" title="取消审核"></span>';
-                                            break;
-                                        case 7:
-                                            $span_str = '<span class="glyphicon glyphicon-import log-prefix-icon" title="过账"></span>';
-                                            break;
-                                        case 8:
-                                            $span_str = '<span class="glyphicon glyphicon-random log-prefix-icon" title="期末结转"></span>';
-                                            break;
-                                        case 9:
-                                            $span_str = '<span class="glyphicon glyphicon-check log-prefix-icon" title="结账"></span>';
-                                            break;
-                                        case 10:
-                                            $span_str = '<span class="glyphicon glyphicon-repeat log-prefix-icon" title="反结账"></span>';
-                                            break;
-                                    }
-                                    return '<span class="log-message">'.$span_str.$model->message.'</span>';
-                                }),
-                                array('name'=>'user_id', 'value'=>'isset($data->user_info->email) ? $data->user_info->email : ""'),
-                                array('name'=>'created_at', 'value'=>'date("m月d日 H:i", $data->created_at)'),
-                            ),
+                                'id' => 'logs-grid',
+                                'emptyText' => Yii::t('transition', '暂无相关数据'),
+                                'dataProvider' => $logs->search(),
+                                'rowCssClass' => array('row-odd', 'row-even'),
+                                'pager' => array(
+                                    'class' => 'CLinkPager',
+                                    'header' => '',
+                                    'firstPageLabel' => Yii::t('transition', '首页'),
+                                    'lastPageLabel' => Yii::t('transition', '末页'),
+                                    'nextPageLabel' => Yii::t('transition', '下一页'),
+                                    'prevPageLabel' => Yii::t('transition', '上一页')
+                                ),
+                                'itemsCssClass' => 'table table-striped dataTable table-hover no-footer',
+                                'htmlOptions' => array('role' => 'grid'),
+                                'columns' => array(
+                                    array(
+                                        'name' => 'message',
+                                        'type' => 'html',
+                                        'value' => function ($model) {
+                                            $span_str = '';
+                                            switch ($model->type) {
+                                                case 1:
+                                                    $span_str = '<span class="glyphicon glyphicon-list-alt log-prefix-icon" title="添加科目"></span>';
+                                                    break;
+                                                case 2:
+                                                    $span_str = '<span class="glyphicon glyphicon-list log-prefix-icon" title="整理凭证"></span>';
+                                                    break;
+                                                case 3:
+                                                case 4:
+                                                    $span_str = '<span class="glyphicon glyphicon-ok log-prefix-icon1" title="凭证审核"></span>';
+                                                    break;
+                                                case 5:
+                                                case 6:
+                                                    $span_str = '<span class="glyphicon glyphicon-remove log-prefix-icon1" title="取消审核"></span>';
+                                                    break;
+                                                case 7:
+                                                    $span_str = '<span class="glyphicon glyphicon-import log-prefix-icon" title="过账"></span>';
+                                                    break;
+                                                case 8:
+                                                    $span_str = '<span class="glyphicon glyphicon-random log-prefix-icon" title="期末结转"></span>';
+                                                    break;
+                                                case 9:
+                                                    $span_str = '<span class="glyphicon glyphicon-check log-prefix-icon" title="结账"></span>';
+                                                    break;
+                                                case 10:
+                                                    $span_str = '<span class="glyphicon glyphicon-repeat log-prefix-icon" title="反结账"></span>';
+                                                    break;
+                                            }
+                                            return '<span class="log-message">' . $span_str . $model->message . '</span>';
+                                        }),
+                                    array('name' => 'user_id', 'value' => 'isset($data->user_info->email) ? $data->user_info->email : ""'),
+                                    array('name' => 'created_at', 'value' => 'date("m月d日 H:i", $data->created_at)'),
+                                ),
                             ));
                             ?>
 
@@ -555,7 +568,7 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
                                         'columns' => array(
                                             [
                                                 'name' => 'id',
-                                                'header' => '<button onclick="" href="#" ><i class="fa fa-stethoscope"></i> 诊断</button>'
+                                                'header' => '<button href="" data-target="#analyze" data-toggle="modal"><i class="fa fa-stethoscope"></i> '. Yii::t('home', '诊断'). '</button>'
                                             ],
                                             [
                                                 'name' => 'p_tax',
@@ -648,28 +661,28 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
                                 //'hideHeader' => true,
                                 'columns' => array(
 
-                                    array('name'=>'title',
-                                          'type'=>'html',
-                                          'value'=> function($model){
-                                              $span_str = '';
-                                              switch($model->category) {
-                                                  case Blog::CATEGORY_ACCOUNT:
-                                                      $span_str = '<span class="fa fa-paperclip blog-prefix-icon" title="会计"></span>';
-                                                      break;
-                                                  case Blog::CATEGORY_TAX:
-                                                      $span_str = '<span class="fa fa-tint blog-prefix-icon" title="税法"></span>';
-                                                      break;
-                                                  case Blog::CATEGORY_LAW:
-                                                      $span_str = '<span class="fa fa-eur blog-prefix-icon" title="经济"></span>';
+                                    array('name' => 'title',
+                                        'type' => 'html',
+                                        'value' => function ($model) {
+                                            $span_str = '';
+                                            switch ($model->category) {
+                                                case Blog::CATEGORY_ACCOUNT:
+                                                    $span_str = '<span class="fa fa-paperclip blog-prefix-icon" title="会计"></span>';
+                                                    break;
+                                                case Blog::CATEGORY_TAX:
+                                                    $span_str = '<span class="fa fa-tint blog-prefix-icon" title="税法"></span>';
+                                                    break;
+                                                case Blog::CATEGORY_LAW:
+                                                    $span_str = '<span class="fa fa-eur blog-prefix-icon" title="经济"></span>';
 
-                                              }
-                                        return '<span class="blog-title">'.$span_str.'<a class="blog-title-link" href="'.Yii::app()->createUrl("site/blog",array("id"=>$model->id)).'">'.$model->title.'</a></span>';
-                                    }),
+                                            }
+                                            return '<span class="blog-title">' . $span_str . '<a class="blog-title-link" href="' . Yii::app()->createUrl("site/blog", array("id" => $model->id)) . '">' . $model->title . '</a></span>';
+                                        }),
                                     array(
-                                        'name'=>'category',
-                                        'value'=> function ($model) {
+                                        'name' => 'category',
+                                        'value' => function ($model) {
                                             $cat_name = '';
-                                            switch($model->category) {
+                                            switch ($model->category) {
                                                 case Blog::CATEGORY_ACCOUNT:
                                                     $cat_name = '会计';
                                                     break;
@@ -682,10 +695,10 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
                                             }
                                             return $cat_name;
                                         },
-                                        'filter'=> CHtml::listData($select_arr, 'val', 'name')
+                                        'filter' => CHtml::listData($select_arr, 'val', 'name')
                                     ),
-                                    array('name'=>'department', 'value'=>'$data->department'),
-                                    array('name'=>'created_at', 'value'=>'date("Y/m/d", $data->created_at)', 'filter'=>''),
+                                    array('name' => 'department', 'value' => '$data->department'),
+                                    array('name' => 'created_at', 'value' => 'date("Y/m/d", $data->created_at)', 'filter' => ''),
                                 )
 
                             ));
@@ -706,4 +719,32 @@ $cs->registerScript('pieManage', $js_manage_str, CClientScript::POS_READY);
 
 <!-- END DASHBOARD STATS -->
 <div class="clearfix">
+</div>
+
+<div class="modal fade" id="analyze" tabindex="-1" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title"><?= Yii::t('home', '税务分析') ?></h4>
+            </div>
+            <div class="modal-body">
+                <?
+                if(empty($lastTax)){
+                    echo '各项税收信息均正常,无异常现象';
+                }else{
+                    $msg = '<p>本期应缴纳税额与上期应缴纳的金额波动较大，请仔细核对。</p><br />';
+                    foreach ($lastTax as $key => $item) {
+                        if(isset($item['status']))
+                            $msg .= '<p>'. LFSModel::getTaxName($key). ': 上月应交 '. $item['credit']. '; 本月应交 '. $item['now']. '</p>';
+                    }
+                    echo $msg;
+                }
+                ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn"><?= Yii::t('home', '关闭')?></button>
+            </div>
+        </div>
+    </div>
 </div>
