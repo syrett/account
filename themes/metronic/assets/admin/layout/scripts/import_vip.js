@@ -509,7 +509,7 @@ function setTax(item_id, type) {
             success: function (data) {
                 data = JSON.parse(data);
                 if(data.status == 'success'){
-                    tax = data.sbj.sbj_tax;
+                    tax = (data.sbj.sbj_tax==''||isNaN(data.sbj.sbj_tax))?0:data.sbj.sbj_tax;
                 }
                 else{
                     removeTax(id, type);
@@ -557,6 +557,7 @@ function setTax(item_id, type) {
 }
 function removeTax(item_id, type) {
     $("#withtax_" + item_id).val(0);
+    $("#tran_tax_" + item_id).val(0)
     $("#additional_sbj0_" + item_id).val('');
     var price = parseFloat($("#tran_price_" + item_id).val()) * parseFloat($("#tran_count_" + item_id).val());
     $("#entry_amount_" + item_id).val(price);
