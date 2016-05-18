@@ -70,10 +70,14 @@ class ReportController extends Controller
      */
     public function actionProfit()
     {
+        $session = Yii::app()->session;
         if (isset($_REQUEST['date']) && $_REQUEST['date'] != '') {
             $date = $_REQUEST['date'];
         } else
             $date = date("Ymt", strtotime("-1 months"));
+
+        $session[__METHOD__.'_date'] = $date;
+
         $model = new Profit();
         $model->date = $date;
         $data = $model->genProfitData();
@@ -177,6 +181,7 @@ class ReportController extends Controller
      */
     public function actionMoney() //fm:fromMonth; tm: toMonth
     {
+        $session = Yii::app()->session;
         if (isset($_REQUEST['date']) && $_REQUEST['date'] != '' && $_POST['type'] != '') {
             $type = $_POST['type'];
             $date = $_REQUEST['date'];
@@ -184,6 +189,10 @@ class ReportController extends Controller
             $type = 1;
             $date = date('Ymt', strtotime("-1 months"));
         }
+
+        $session[__METHOD__.'_date'] = $date;
+        $session[__METHOD__.'_type'] = $type;
+
         $model = new Money();
         $model->is_closed = 1;
         $model->date = $date;
@@ -493,117 +502,115 @@ class ReportController extends Controller
 
         $os->freezepane('A5');
 
-
         $ri = 5;
 
-        $this->displayBalanceRow($os, $ri, $this->echoData(0, $data, Yii::t('report', "流动资产")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(0, $data, Yii::t('report', "流动负债")), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(0, $data, Yii::t('report', "流动资产")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(0, $data, Yii::t('report', "流动负债")), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(1, $data, Yii::t('report', "货币资金")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(31, $data, Yii::t('report', "短期借款")), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(1, $data, Yii::t('report', "货币资金")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(31, $data, Yii::t('report', "短期借款")), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(2, $data, Yii::t('report', "交易性金融资产")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(32, $data, Yii::t('report', "交易性金融负债")), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(2, $data, Yii::t('report', "交易性金融资产")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(32, $data, Yii::t('report', "交易性金融负债")), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(3, $data, Yii::t('report', "应收票据")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(33, $data, Yii::t('report', "应付票据")), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(3, $data, Yii::t('report', "应收票据")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(33, $data, Yii::t('report', "应付票据")), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(4, $data, Yii::t('report', "应收账款")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(34, $data), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(4, $data, Yii::t('report', "应收账款")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(34, $data), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(9, $data, Yii::t('report', "减:坏账准备")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(35, $data), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(9, $data, Yii::t('report', "减:坏账准备")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(35, $data), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(5, $data, Yii::t('report', "预付账款")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(36, $data), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(5, $data, Yii::t('report', "预付账款")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(36, $data), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(8, $data, Yii::t('report', "其他应收款")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(37, $data), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(8, $data, Yii::t('report', "其他应收款")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(37, $data), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(11, $data, Yii::t('report', "存货")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(39, $data), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(11, $data, Yii::t('report', "存货")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(39, $data), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(12, $data, Yii::t('report', "减:存货跌价准备")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(40, $data), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(12, $data, Yii::t('report', "减:存货跌价准备")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(40, $data), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(0, $data, Yii::t('report', "一年内到期的非流动资产")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(0, $data, Yii::t('report', "一年内到期的非流动负债")), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(0, $data, Yii::t('report', "一年内到期的非流动资产")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(0, $data, Yii::t('report', "一年内到期的非流动负债")), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(10, $data, Yii::t('report', "其他流动资产")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(41, $data), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(10, $data, Yii::t('report', "其他流动资产")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(41, $data), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData('flow_property', $data, Yii::t('report', "流动资产合计")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData('flow_debt', $data, Yii::t('report', "流动负债合计")), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance('flow_property', $data, Yii::t('report', "流动资产合计")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance('flow_debt', $data, Yii::t('report', "流动负债合计")), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData('empty', $data, Yii::t('report', "非流动资产")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData('empty', $data, ''), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance('empty', $data, Yii::t('report', "非流动资产")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance('empty', $data, ''), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(15, $data, Yii::t('report', "可供出售金融资产")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(0, $data, Yii::t('report', "非流动负债")), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(15, $data, Yii::t('report', "可供出售金融资产")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(0, $data, Yii::t('report', "非流动负债")), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(0, $data, Yii::t('report', "减:可供出售金融资产减值准备")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(42, $data), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(0, $data, Yii::t('report', "减:可供出售金融资产减值准备")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(42, $data), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(13, $data, Yii::t('report', "持有至到期投资")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(43, $data), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(13, $data, Yii::t('report', "持有至到期投资")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(43, $data), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(14, $data, Yii::t('report', "减:持有至到期投资减值准备")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(45, $data), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(14, $data, Yii::t('report', "减:持有至到期投资减值准备")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(45, $data), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(19, $data, Yii::t('report', "长期应收款")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(46, $data), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(19, $data, Yii::t('report', "长期应收款")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(46, $data), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(16, $data, Yii::t('report', "长期股权投资")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(47, $data), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(16, $data, Yii::t('report', "长期股权投资")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(47, $data), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(17, $data, Yii::t('report', "减:长期股权投资减值准备")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(48, $data), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(17, $data, Yii::t('report', "减:长期股权投资减值准备")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(48, $data), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(18, $data, Yii::t('report', "投资性房地产")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(44, $data), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(18, $data, Yii::t('report', "投资性房地产")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(44, $data), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(0, $data, Yii::t('report', "减:投资性房地产减值准备")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData('unflow_debt', $data, Yii::t('report', "非流动负债合计")), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(0, $data, Yii::t('report', "减:投资性房地产减值准备")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance('unflow_debt', $data, Yii::t('report', "非流动负债合计")), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(21, $data, Yii::t('report', "固定资产")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData('debt', $data, Yii::t('report', "负债合计")), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(21, $data, Yii::t('report', "固定资产")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance('debt', $data, Yii::t('report', "负债合计")), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(22, $data, Yii::t('report', "减:累计折旧")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(0, $data, Yii::t('report', "上级拨入")), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(22, $data, Yii::t('report', "减:累计折旧")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(0, $data, Yii::t('report', "上级拨入")), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(23, $data, Yii::t('report', "减:固定资产减值准备")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(0, $data, Yii::t('report', "股东权益(所有者权益)")), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(23, $data, Yii::t('report', "减:固定资产减值准备")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(0, $data, Yii::t('report', "股东权益(所有者权益)")), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(24, $data, Yii::t('report', "在建工程")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(50, $data), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(24, $data, Yii::t('report', "在建工程")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(50, $data), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(0, $data, Yii::t('report', "固定资产清理")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(51, $data), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(0, $data, Yii::t('report', "固定资产清理")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(51, $data), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(26, $data, Yii::t('report', "无形资产")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(52, $data), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(26, $data, Yii::t('report', "无形资产")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(52, $data), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(28, $data, Yii::t('report', "商誉")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData('undistributed_profit', $data, Yii::t('report', "未分配利润")), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(28, $data, Yii::t('report', "商誉")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance('undistributed_profit', $data, Yii::t('report', "未分配利润")), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(29, $data, Yii::t('report', "长期待摊费用")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData('parent_owner', $data, Yii::t('report', "归属于母公司股东权益(所有者权益)合计")), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(29, $data, Yii::t('report', "长期待摊费用")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance('parent_owner', $data, Yii::t('report', "归属于母公司股东权益(所有者权益)合计")), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(30, $data, Yii::t('report', "递延所得税资产")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData(0, $data, Yii::t('report', "少数股东权益")), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(30, $data, Yii::t('report', "递延所得税资产")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(0, $data, Yii::t('report', "少数股东权益")), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(20, $data, Yii::t('report', "其他非流动资产")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData('empty', $data, ''), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(20, $data, Yii::t('report', "其他非流动资产")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance('empty', $data, ''), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData('unflow_property', $data, Yii::t('report', "非流动资产合计")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData('owner', $data, Yii::t('report', "股东权益(所有者权益)合计")), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance('unflow_property', $data, Yii::t('report', "非流动资产合计")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance('owner', $data, Yii::t('report', "股东权益(所有者权益)合计")), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData(0, $data, Yii::t('report', "拨付所属资金")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData('empty', $data, ''), 2);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance(0, $data, Yii::t('report', "拨付所属资金")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance('empty', $data, ''), 2);
         $ri++;
-        $this->displayBalanceRow($os, $ri, $this->echoData('property', $data, Yii::t('report', "资产合计")), 1);
-        $this->displayBalanceRow($os, $ri, $this->echoData('debt_owner', $data, Yii::t('report', "负债及股东权益(所有者权益)合计")), 2);
-
+        $this->displayBalanceRow($os, $ri, $this->echoBalance('property', $data, Yii::t('report', "资产合计")), 1);
+        $this->displayBalanceRow($os, $ri, $this->echoBalance('debt_owner', $data, Yii::t('report', "负债及股东权益(所有者权益)合计")), 2);
 
         header('Content-Type: application/force-download');
         header('Content-Type: application/octet-stream');
@@ -625,6 +632,139 @@ class ReportController extends Controller
      */
     public function actionExportProfit()
     {
+        $session = Yii::app()->session;
+        $mStr = 'ReportController::actionProfit';
+        if (isset($session[$mStr.'_date'])) {
+            $date = $session[$mStr.'_date'];
+        } else {
+            $date = date("Ymt", strtotime("-1 months"));
+        }
+
+        $model = new Profit();
+        $model->date = $date;
+        $data = $model->genProfitData();
+
+        $company = Condom::model()->getName();
+
+        $xlsName = '损益表_'.$date;
+
+        Yii::import('ext.phpexcel.PHPExcel');
+        $oe = new PHPExcel();
+        $ow = new PHPExcel_Writer_Excel5($oe);
+
+        $os = $oe->getActiveSheet();
+
+        $os->setTitle('损益表');
+        $os->getDefaultStyle()->getFont()->setName('微软雅黑');
+        $os->getDefaultStyle()->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
+        $os->getDefaultStyle()->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $os->getDefaultStyle()->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+
+        $os->getColumnDimension('A')->setWidth(30);
+        $os->getColumnDimension('B')->setWidth(16);
+        $os->getColumnDimension('C')->setWidth(16);
+
+
+        $os->getStyle('A1')->getAlignment()->setShrinkToFit(true);
+        $os->getStyle('A1')->getAlignment()->setWrapText(true);
+
+        $os->getStyle('A1')->getFont()->setSize(10);
+        $os->getStyle('A1')->getFont()->getColor()->setARGB('FF00A0FF');
+        $os->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+        $os->setCellValue('A1', "生成时刻：\n" . date('Y-m-d H:i'));
+        $os->getRowDimension('2')->setRowHeight(36);
+        $os->mergeCells('A2:F2');
+        $os->getStyle('A2')->getFont()->setSize(18)->setBold(true);
+        $os->setCellValue('A2', '损 益 表');
+
+        $os->getRowDimension('3')->setRowHeight(28);
+        $os->setCellValue('A3', '日期：'.date('Y-m-d', strtotime($date)));
+
+        $os->setCellValue('B3', '编制单位：'.$company);
+
+        $os->getStyle('C3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+        $os->setCellValue('C3', '金额单位：元');
+
+        $os->getStyle('A4:C4')->getFont()->setSize(13);
+        $os->getStyle('A4:C4')->getFill()->setFillType(PHPExcel_style_Fill::FILL_SOLID);
+        $os->getStyle('A4:C4')->getFill()->getStartColor()->setARGB('FFFFA030');
+
+        $os->setCellValue('A4', "项目");
+        $os->setCellValue('B4', "本年累计发生额");
+        $os->setCellValue('C4', "本期发生额");
+
+        $os->freezepane('A5');
+
+        $ri = 5;
+
+        $this->displayProfitRow($os, $ri, $this->echoProfit(55, $data, Yii::t('report', "一、营业收入")), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit(61, $data), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit(62, $data), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit(64, $data), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit(65, $data), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit(63, $data), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit(66, $data), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit(57, $data), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit(58, $data), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit('trading_profit', $data, Yii::t('report', "二、营业利润")), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit(60, $data), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit(67, $data), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit('profit_sum', $data, Yii::t('report', "三、利润总额")), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit(68, $data), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit('net_profit', $data, Yii::t('report', "四、净利润")), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit('net_profit', $data, Yii::t('report', "其中：归属于母公司所有者的净利润")), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit('report', $data, Yii::t('report', "加：年(期)初未分配利润")), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit(0, $data, Yii::t('report', "其他转入")), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit(0, $data, Yii::t('report', "减：提取法定盈余公积")), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit(0, $data, Yii::t('report', "提取储备基金")), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit(0, $data, Yii::t('report', "提取企业发展基金")), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit(0, $data, Yii::t('report', "提取职工奖励及福利基金")), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit(0, $data, Yii::t('report', "提取任意盈余公积")), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit(0, $data, Yii::t('report', "应付现金股利(利润)")), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit(0, $data, Yii::t('report', "其中：分配控股母公司现金股利")), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit(0, $data, Yii::t('report', "转作股本的普通股股利")), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit(0, $data, Yii::t('report', "盈余公积补亏")), 1);
+        $ri++;
+        $this->displayProfitRow($os, $ri, $this->echoProfit('undistributed_profit', $data, Yii::t('report', "五、未分配利润")), 1);
+
+        header('Content-Type: application/force-download');
+        header('Content-Type: application/octet-stream');
+        header('Content-Type: application/download');
+        header('Content-Disposition:inline;filename='
+            . urldecode(urlencode($xlsName))
+            . '.xls');
+        header('Content-Transfer-Encoding: binary');
+        header('Expires:Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified:' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Cache-Control: myst-revalidate, post-check=0, pre-check=0');
+        header('Pragma: no-cache');
+        $ow->save('php://output');
 
     }
 
@@ -775,7 +915,205 @@ class ReportController extends Controller
 
     }
 
+    /**
+     * 导出 现金流量表 表格
+     *
+     */
+    public function actionExportMoney()
+    {
+        $session = Yii::app()->session;
+        $mStr = 'ReportController::actionMoney';
 
+        if (isset($session[$mStr.'_date'])) {
+            $type = $session[$mStr.'_type'];
+            $date = $session[$mStr.'_date'];
+        } else {
+            $type = 1;
+            $date = date('Ymt', strtotime("-1 months"));
+        }
+
+        $model = new Money();
+        $model->is_closed = 1;
+        $model->date = $date;
+        $data = $model->genMoneyData('', $type);
+
+        $company = Condom::model()->getName();
+
+
+        $xlsName = '现金流量表_'.$date;
+
+        Yii::import('ext.phpexcel.PHPExcel');
+        $oe = new PHPExcel();
+        $ow = new PHPExcel_Writer_Excel5($oe);
+
+        $os = $oe->getActiveSheet();
+
+
+        $os->setTitle('现金流量表');
+        $os->getDefaultStyle()->getFont()->setName('微软雅黑');
+        $os->getDefaultStyle()->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
+        $os->getDefaultStyle()->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $os->getDefaultStyle()->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+
+
+        $os->getColumnDimension('A')->setWidth(30);
+        $os->getColumnDimension('B')->setWidth(14);
+        $os->getColumnDimension('C')->setWidth(30);
+        $os->getColumnDimension('D')->setWidth(14);
+
+
+        $os->getStyle('A1')->getAlignment()->setShrinkToFit(true);
+        $os->getStyle('A1')->getAlignment()->setWrapText(true);
+
+        $os->getStyle('A1')->getFont()->setSize(10);
+        $os->getStyle('A1')->getFont()->getColor()->setARGB('FF00A0FF');
+        $os->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+        $os->setCellValue('A1', "生成时刻：\n" . date('Y-m-d H:i'));
+
+        $os->getRowDimension('2')->setRowHeight(36);
+        $os->mergeCells('A2:F2');
+        $os->getStyle('A2')->getFont()->setSize(18)->setBold(true);
+        $os->setCellValue('A2', '现 金 流 量 表');
+
+        $os->getRowDimension('3')->setRowHeight(28);
+
+        $os->setCellValue('A3', '日期：'.date('Y-m-d', strtotime($date)));
+        $os->mergeCells('B3:C3');
+        $os->setCellValue('B3', '编制单位：'.$company);
+        $os->getStyle('D3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+        $os->setCellValue('D3', '金额单位：元');
+
+        $os->getStyle('A4:D4')->getFont()->setSize(13);
+        $os->getStyle('A4:D4')->getFill()->setFillType(PHPExcel_style_Fill::FILL_SOLID);
+        $os->getStyle('A4:D4')->getFill()->getStartColor()->setARGB('FFFFA030');
+
+        $os->setCellValue('A4', "项目");
+        $os->setCellValue('B4', '金额');
+        $os->setCellValue('C4', "补充资料");
+        $os->setCellValue('D4', "金额");
+
+        $os->freezepane('A5');
+
+        $ri = 5;
+
+
+        $this->echoDisplayMoney($os, $ri, 1, 'empty', $data, Yii::t('report', "一、经营活动产生的现金流量："));
+        $this->echoDisplayMoney($os, $ri, 2, 'empty', $data, Yii::t('report', "1、将净利润调节为经营活动现金流量："));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 1, $data, Yii::t('report', "销售商品、提供劳务收到的现金"));
+        $this->echoDisplayMoney($os, $ri, 2, 57, $data, Yii::t('report', "净利润"));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 3, $data, Yii::t('report', "收到的税费返还"));
+        $this->echoDisplayMoney($os, $ri, 2, 58, $data, Yii::t('report', "加：计提的资产减值准备"));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 8, $data, Yii::t('report', "收到的其他与经营活动有关的现金"));
+        $this->echoDisplayMoney($os, $ri, 2, 59, $data, Yii::t('report', "固定资产折旧"));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 9, $data, Yii::t('report', "现金流入小计"));
+        $this->echoDisplayMoney($os, $ri, 2, 60, $data, Yii::t('report', "无形资产摊销"));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 10, $data, Yii::t('report', "购买商品、接受劳务支付的现金"));
+        $this->echoDisplayMoney($os, $ri, 2, 61, $data, Yii::t('report', "长期待摊费用摊销"));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 12, $data, Yii::t('report', "支付给职工以及为职工支付的现金"));
+        $this->echoDisplayMoney($os, $ri, 2, 64, $data, Yii::t('report', "待摊费用减少 （减：增加）"));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 13, $data, Yii::t('report', "支付的各项税费"));
+        $this->echoDisplayMoney($os, $ri, 2, 65, $data, Yii::t('report', "预提费用增加  (减：减少）"));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 18, $data, Yii::t('report', "支付的其他与经营活动有关的现金"));
+        $this->echoDisplayMoney($os, $ri, 2, 66, $data, Yii::t('report', "处置固定资产、无形资产和其他长期资产的损失（减：收益）"));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 20, $data, Yii::t('report', "现金流出小计"));
+        $this->echoDisplayMoney($os, $ri, 2, 67, $data, Yii::t('report', "固定资产报废损失"));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 21, $data, Yii::t('report', "经营活动产生的现金流量净额"));
+        $this->echoDisplayMoney($os, $ri, 2, 68, $data, Yii::t('report', "财务费用"));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 0, $data, Yii::t('report', "二、投资活动产生的现金流量"));
+        $this->echoDisplayMoney($os, $ri, 2, 69, $data, Yii::t('report', "投资损失（减：收益）"));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 22, $data, Yii::t('report', "收回投资所收到的现金"));
+        $this->echoDisplayMoney($os, $ri, 2, 70, $data, Yii::t('report', "递延税款贷项（减：借项）"));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 23, $data, Yii::t('report', "取得投资收益所收到的现金"));
+        $this->echoDisplayMoney($os, $ri, 2, 71, $data, Yii::t('report', "存货的减少（减：增加）"));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 25, $data, Yii::t('report', "处置固定资产、无形资产和其他长期资产所收回的现金净额"));
+        $this->echoDisplayMoney($os, $ri, 2, 72, $data, Yii::t('report', "经营性应收项目的减少（减：增加）"));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 28, $data, Yii::t('report', "收到的其他与投资活动有关的现金"));
+        $this->echoDisplayMoney($os, $ri, 2, 73, $data, Yii::t('report', "经营性应付项目的增加（减：减少）"));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 29, $data, Yii::t('report', "现金流入小计"));
+        $this->echoDisplayMoney($os, $ri, 2, 74, $data, Yii::t('report', "其他"));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 30, $data,  Yii::t('report', "购建固定资产、无形资产和其他长期资产所支付的现金"));
+        $this->echoDisplayMoney($os, $ri, 2, 75, $data,  Yii::t('report', "经营活动产生的现金流量净额"));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 31, $data, Yii::t('report', "投资所支付的现金"));
+        $this->echoDisplayMoney($os, $ri, 2, 'empty', $data, '');
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 35, $data, Yii::t('report', "支付的其他与投资活动有关的现金"));
+        $this->echoDisplayMoney($os, $ri, 2, 'empty', $data, '');
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 36, $data, Yii::t('report', "现金流出小计"));
+        $this->echoDisplayMoney($os, $ri, 2, 'empty', $data, '');
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 37, $data, Yii::t('report', "投资活动产生的现金流量净额"));
+        $this->echoDisplayMoney($os, $ri, 2, 0, $data, Yii::t('report', "2、不涉及现金收支的投资和筹资活动："));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 0, $data, Yii::t('report', "三、筹资活动产生的现金流量："));
+        $this->echoDisplayMoney($os, $ri, 2, 76, $data, Yii::t('report', "债务转为资本"));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 38, $data, Yii::t('report', "吸收投资所收到的现金"));
+        $this->echoDisplayMoney($os, $ri, 2, 77, $data, Yii::t('report', "一年内到期的可转换公司债券"));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 40, $data, Yii::t('report', "借款所收到的现金"));
+        $this->echoDisplayMoney($os, $ri, 2, 78, $data, Yii::t('report', "融资租入固定资产"));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 43, $data, Yii::t('report', "收到的其他与筹资活动有关的现金"));
+        $this->echoDisplayMoney($os, $ri, 2, 'empty', $data, '');
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 44, $data, Yii::t('report', "现金流入小计"));
+        $this->echoDisplayMoney($os, $ri, 2, 'empty', $data, '');
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 45, $data, Yii::t('report', "归还债务所支付的现金"));
+        $this->echoDisplayMoney($os, $ri, 2, 'empty', $data, '');
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 46, $data, Yii::t('report', "分配股利、利润或偿付利息所支付的现金"));
+        $this->echoDisplayMoney($os, $ri, 2, 0, $data, Yii::t('report', "3、现金及现金等价物净增加情况"));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 52, $data, Yii::t('report', "支付的其他与筹资活动有关的现金"));
+        $this->echoDisplayMoney($os, $ri, 2, 79, $data, Yii::t('report', "现金的期末余额"));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 53, $data, Yii::t('report', "现金流出小计"));
+        $this->echoDisplayMoney($os, $ri, 2, 80, $data, Yii::t('report', "减：现金的期初余额"));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 54, $data, Yii::t('report', "筹资活动产生的现金流量净额"));
+        $this->echoDisplayMoney($os, $ri, 2, 81, $data, Yii::t('report', "加：现金等价物的期末余额"));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 55, $data, Yii::t('report', "四、汇率变动对现金的影响"));
+        $this->echoDisplayMoney($os, $ri, 2, 82, $data, Yii::t('report', "减：现金等价物的期初余额"));
+        $ri++;
+        $this->echoDisplayMoney($os, $ri, 1, 56, $data, Yii::t('report', "五、现金及现金等价物净增加额"));
+        $this->echoDisplayMoney($os, $ri, 2, 83, $data, Yii::t('report', "现金及现金等价物净增加额"));
+
+
+        header('Content-Type: application/force-download');
+        header('Content-Type: application/octet-stream');
+        header('Content-Type: application/download');
+        header('Content-Disposition:inline;filename='
+            . urldecode(urlencode($xlsName))
+            . '.xls');
+        header('Content-Transfer-Encoding: binary');
+        header('Expires:Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified:' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Cache-Control: myst-revalidate, post-check=0, pre-check=0');
+        header('Pragma: no-cache');
+        $ow->save('php://output');
+
+    }
 
 
 
@@ -786,7 +1124,7 @@ class ReportController extends Controller
      *
      * @beused balance
      */
-    private function echoData($key, $data, $name = "default")
+    private function echoBalance($key, $data, $name = "default")
     {
         $res = [];
         if ($key === "empty") {
@@ -825,7 +1163,7 @@ class ReportController extends Controller
                 switch($k) {
                     case 0:
                         $os->setCellValue('A'.$ri, $v);
-                        $os->getStyle('A'.$ri, $v)->getFont()->setBold( true);
+                        $os->getStyle('A'.$ri)->getFont()->setBold( true);
                         break;
                     case 1:
                         $os->setCellValue('B'.$ri, $v);
@@ -841,7 +1179,7 @@ class ReportController extends Controller
                 switch($k) {
                     case 0:
                         $os->setCellValue('D'.$ri, $v);
-                        $os->getStyle('D'.$ri, $v)->getFont()->setBold( true);
+                        $os->getStyle('D'.$ri)->getFont()->setBold( true);
                         break;
                     case 1:
                         $os->setCellValue('E'.$ri, $v);
@@ -853,5 +1191,109 @@ class ReportController extends Controller
             }
         }
 
+    }
+
+
+    /**
+     *
+     *
+     */
+    private function echoProfit($key, $data, $name = "default")
+    {
+        $res = [];
+        if (empty($data[$key])) {
+            $res[] = $name;
+            $res[] = '0.00';
+            $res[] = '0.00';
+        } else {
+            $arr = $data[$key];
+            if ($name === "default") {
+                $res[] = Yii::t('report', $arr['name']);
+            } else {
+                $res[] = $name;
+            }
+            $res[] = $arr['sum_year'];
+            $res[] = $arr['sum_month'];
+        }
+        return $res;
+    }
+
+
+    /**
+     *
+     *
+     *
+     */
+    private function displayProfitRow($os, $ri, $data, $type)
+    {
+        if ($type == 1) {
+            foreach($data as $k=>$v) {
+                switch($k) {
+                    case 0:
+                        $os->setCellValue('A'.$ri, $v);
+                        $os->getStyle('A'.$ri)->getFont()->setBold( true);
+                        break;
+                    case 1:
+                        $os->setCellValue('B'.$ri, $v);
+                        break;
+                    case 2:
+                        $os->setCellValue('C'.$ri, $v);
+                        break;
+                }
+            }
+        }
+    }
+
+    /**
+     *
+     *
+     */
+    private function echoDisplayMoney($os, $ri, $type, $key, $data, $name = "default")
+    {
+        $strong = [9,20,21,29,36,37,44,53,54,55,56,75, 83];
+        if ($type == 1) {
+            if ($key === "empty" || $key === 0) {
+                $os->setCellValue('A'.$ri, $name);
+                $os->getStyle('A'.$ri)->getFont()->setBold( true);
+                $os->setCellValue('B'.$ri, '');
+            } elseif (empty($data[$key])) {
+                $os->setCellValue('A'.$ri, $name);
+                //$os->getStyle('A'.$ri)->getFont()->setBold( true);
+                $os->setCellValue('B'.$ri, 0.00);
+            } else {
+                $arr = $data[$key];
+                if ($name === "default") {
+                    $os->setCellValue('A'.$ri, $arr['name']);
+                } else {
+                    $os->setCellValue('A'.$ri, $name);
+                    if (in_array($key, $strong)) {
+                        $os->getStyle('A'.$ri)->getFont()->setBold( true);
+                    }
+                }
+                $os->setCellValue('B'.$ri, $arr["end"]);
+            }
+        }
+        if ($type == 2) {
+            if ($key === "empty" || $key === 0) {
+                $os->setCellValue('C'.$ri, $name);
+                $os->getStyle('C'.$ri)->getFont()->setBold( true);
+                $os->setCellValue('D'.$ri, '');
+            } elseif (empty($data[$key])) {
+                $os->setCellValue('C'.$ri, $name);
+                //$os->getStyle('A'.$ri)->getFont()->setBold( true);
+                $os->setCellValue('D'.$ri, 0.00);
+            } else {
+                $arr = $data[$key];
+                if ($name === "default") {
+                    $os->setCellValue('C'.$ri, $arr['name']);
+                } else {
+                    $os->setCellValue('C'.$ri, $name);
+                    if (in_array($key, $strong)) {
+                        $os->getStyle('C'.$ri)->getFont()->setBold( true);
+                    }
+                }
+                $os->setCellValue('D'.$ri, $arr["end"]);
+            }
+        }
     }
 }
