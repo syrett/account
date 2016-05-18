@@ -6,6 +6,8 @@ require_once(dirname(__FILE__).'/../viewfunctions.php');
 /* @var $form CActiveForm */
 
 CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
+//大众版 user->vip = 0,  标准版 user->vip = 1;
+$user = User2::model()->findByPk(Yii::app()->user->id);
 ?>
 
 <div class="form">
@@ -109,26 +111,27 @@ CHtml::$afterRequiredLabel = '';   //   remove * from required labelEx();
             <?php echo $form->error($model,'sbj_name_en',array('id'=>'sbj_name_en_msg')); ?>
         </div>
     </div>
-    <div style="min-height: 140px;">
-        <div class="J_extSbjOptDiv" <?php if ($model->is_ext !== true) {?> style="display: none;"<?php }?> >
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'sbj_type', array('class' => 'col-sm-2 control-label')); ?>
-                <div class="col-sm-10">
-                    <?php echo $form->dropDownList($model, 'sbj_type', $model->typeArray, array('class' => 'form-control')); ?>
-                </div>
-                <div class="col-sm-2"></div>
-                <?php echo $form->error($model, 'sbj_type',array('class' => 'col-sm-10')); ?>
+    <?php if ($user->vip == 1) { ?>
+    <div class="J_extSbjOptDiv" <?php if ($model->is_ext !== true) {?> style="display: none;"<?php }?> >
+        <div class="form-group">
+            <?php echo $form->labelEx($model, 'sbj_type', array('class' => 'col-sm-2 control-label')); ?>
+            <div class="col-sm-10">
+                <?php echo $form->dropDownList($model, 'sbj_type', $model->typeArray, array('class' => 'form-control')); ?>
             </div>
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'sbj_tax', array('class' => 'col-sm-2 control-label')); ?>
-                <div class="col-sm-10">
-                    <?php echo $form->dropDownList($model, 'sbj_tax', Subjects::getTaxArray(), array('class' => 'form-control')); ?>
-                </div>
-                <div class="col-sm-2"></div>
-                <?php echo $form->error($model, 'sbj_tax',array('class' => 'col-sm-10')); ?>
+            <div class="col-sm-2"></div>
+            <?php echo $form->error($model, 'sbj_type',array('class' => 'col-sm-10')); ?>
+        </div>
+        <div class="form-group">
+            <?php echo $form->labelEx($model, 'sbj_tax', array('class' => 'col-sm-2 control-label')); ?>
+            <div class="col-sm-10">
+                <?php echo $form->dropDownList($model, 'sbj_tax', Subjects::getTaxArray(), array('class' => 'form-control')); ?>
             </div>
+            <div class="col-sm-2"></div>
+            <?php echo $form->error($model, 'sbj_tax',array('class' => 'col-sm-10')); ?>
         </div>
     </div>
+    <?php } ?>
+
     <?php
     if($model->getIsNewRecord()) {
         $field_final_arr = json_encode($model->getFinalArr());

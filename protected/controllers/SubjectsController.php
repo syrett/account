@@ -219,6 +219,7 @@ class SubjectsController extends Controller
      */
     public function actionAdmin()
     {
+        $user = User2::model()->findByPk(Yii::app()->user->id);
         $model = new Subjects('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Subjects']))
@@ -240,6 +241,7 @@ class SubjectsController extends Controller
         $this->render('admin', array(
             'dataProvider' => $dataProvider,
             'model' => $model,
+            'user' => $user,
             'need_chg_tax' => $need_chg_tax,
         ));
     }

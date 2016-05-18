@@ -54,6 +54,36 @@ $this->breadcrumbs = array(
         <div class="operations">
         <!-- search-form -->
         <?php
+
+        $grid_column_arr = array();
+        $grid_column_arr[] = 'sbj_number';
+        $grid_column_arr[] = 'sbj_name';
+        $grid_column_arr[] = 'sbj_name_en';
+        if ($user->vip == 1) {
+            $grid_column_arr[] = array(
+                'name'=>'sbj_tax',
+                'value'=> 'in_array(substr($data->sbj_number, 0, 4), array(6001, 6051, 6301)) ? $data->sbj_tax : "" '
+            );
+        }
+        $grid_column_arr[] = array(
+            'class' => 'CButtonColumn',
+            'buttons' => array(
+                'update' => array(
+                    'options' => array('class' => 'btn btn-default tip btn-xs', 'title' => Yii::t('import', '编辑')),
+                    'label' => '<span class="glyphicon glyphicon-pencil"></span>',
+                    'imageUrl' => false,
+                ),
+                'delete' => array(
+                    'options' => array('class' => 'btn btn-default tip delete btn-xs', 'title' => Yii::t('import', '删除')),
+                    'label' => '<span class="glyphicon glyphicon-trash"></span>',
+                    'imageUrl' => false,
+                ),
+            ),
+            'template' => '<div class="btn-group">{update} {delete}</div>',
+            'deleteConfirmation' => '确定要删除该条记录？',
+            'afterDelete' => 'function(link,success,data){if(success) alert(data);}'
+        );
+
         $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'subjects-grid',
             'dataProvider' => $dataProvider,
@@ -61,43 +91,7 @@ $this->breadcrumbs = array(
             'filterCssClass' => 'filter',
             'itemsCssClass' => 'table table-striped table-hover',
             //                'filterSelector'=>'{filter}, #sbj_cat',
-            'columns' => array(
-                'sbj_number',
-//						array(
-//							'name'=>'sbj_number',
-//							'filter'=>CHtml::tag('div',array('class'=>'select2-search'),CHtml::textField('sbj_number','',array('class'=>'select2-input'))),
-//							),
-				'sbj_name',
-				'sbj_name_en',
-                //                    array(
-                //                        'name'=>'sbj_cat',
-                //                            'filter'=>Select2::dropDownList('Subjects[sbj_cat]',$model->sbj_cat,CHtml::listData(Subjects::model()->findall(), 'sbj_cat', 'sbj_cat')),
-                //                    ),
-                //                    array('name'=>'sbj_cat','header'=>'Active','filter'=>array('1'=>'a','2'=>'b'),'value'=>'$data->sbj_cat'),
-                //                    'sbj_table',
-                array(
-                    'name'=>'sbj_tax',
-                    'value'=> 'in_array(substr($data->sbj_number, 0, 4), array(6001, 6051, 6301)) ? $data->sbj_tax : "" '
-                ),
-                array(
-                    'class' => 'CButtonColumn',
-                    'buttons' => array(
-                        'update' => array(
-                            'options' => array('class' => 'btn btn-default tip btn-xs', 'title' => Yii::t('import', '编辑')),
-                            'label' => '<span class="glyphicon glyphicon-pencil"></span>',
-                            'imageUrl' => false,
-                        ),
-                        'delete' => array(
-                            'options' => array('class' => 'btn btn-default tip delete btn-xs', 'title' => Yii::t('import', '删除')),
-                            'label' => '<span class="glyphicon glyphicon-trash"></span>',
-                            'imageUrl' => false,
-                        ),
-                    ),
-                    'template' => '<div class="btn-group">{update} {delete}</div>',
-                    'deleteConfirmation' => '确定要删除该条记录？',
-                    'afterDelete' => 'function(link,success,data){if(success) alert(data);}'
-                ),
-            ),
+            'columns' => $grid_column_arr,
             'pager' => array('class' => 'CLinkPager', 'header' => '', 'firstPageLabel' => Yii::t('import', '首页'), 'lastPageLabel' => Yii::t('import', '末页'), 'nextPageLabel' => Yii::t('import', '下一页'), 'prevPageLabel' => Yii::t('import', '上一页')),
         ));
         //            echo Select2::dropDownList('Subjects[sbj_cat]',$model->sbj_cat,array('1'=>'资产类','2'=>'负债类','3'=>'权益类','4'=>'收入类','5'=>'费用类',));
